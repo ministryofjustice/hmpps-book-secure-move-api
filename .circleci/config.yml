@@ -1,0 +1,134 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+
+references:
+  app_containers: &app_containers
+    docker:
+      - image: circleci/ruby:2.6.2
+        environment:
+          RAILS_ENV: test
+          RACK_ENV: test
+          DATABASE_URL: "postgres://postgres@localhost/pecs-move-platform-backend"
+          EXTERNAL_URL: mocked_in_tests
+      - image: circleci/postgres:10.4
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: pecs-move-platform-backend
+  cloud_container: &cloud_container
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: family-justice
+
+jobs:
+  test:
+    <<: *app_containers
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+            yarn install --frozen-lockfile
+
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Database setup
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
+
+      - run:
+          name: run tests
+          command: bundle exec rake
+
+  build_staging:
+    <<: *cloud_container
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: build docker image
+          command: |
+            export BUILD_DATE=$(date -Is) >> $BASH_ENV
+            source $BASH_ENV
+
+            docker build \
+              --label build.git.sha=${CIRCLE_SHA1} \
+              --label build.git.branch=${CIRCLE_BRANCH} \
+              --label build.date=${BUILD_DATE} \
+              --build-arg APP_BUILD_DATE=${BUILD_DATE} \
+              --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
+              --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
+              -t app .
+
+      - run:
+          name: push docker image
+          command: |
+            login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
+            ${login}
+
+            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
+
+  deploy_staging:
+    <<: *cloud_container
+    steps:
+      - checkout
+
+      - run:
+          name: kubectl use context
+          command: |
+            setup-kube-auth
+            kubectl config use-context staging
+
+      - deploy:
+          name: rolling update image to staging
+          command: |
+            export BUILD_DATE=$(date -Is) >> $BASH_ENV
+            source $BASH_ENV
+
+            kubectl set image -n pecs-move-platform-backend-staging \
+                    deployment/pecs-move-platform-backend-deployment-staging \
+                    pecs-move-platform-backend-web-staging="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            kubectl annotate -n pecs-move-platform-backend-staging \
+                    deployment/pecs-move-platform-backend-deployment-staging \
+                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+
+workflows:
+  version: 2
+
+  test-build-deploy:
+    jobs:
+      - test
+      - build_staging:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - deploy_staging:
+          requires:
+            - build_staging
