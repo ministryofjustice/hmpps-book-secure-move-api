@@ -1,0 +1,19 @@
+# Simplify running the application inside a container locally.
+# Usage: `docker-compose up`
+#
+# Do not use docker-compose in production environments.
+#
+version: '3'
+
+services:
+  db:
+    image: postgres
+  web:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://postgres@db/pecs-move-platform-backend
+      - SECRET_KEY_BASE=h463472fhaa91f4a277002e9652f86f330e636358e2090d86ab4a4f06845ege1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
