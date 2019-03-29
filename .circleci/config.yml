@@ -22,7 +22,7 @@ references:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
-          GITHUB_TEAM_NAME_SLUG: family-justice
+          GITHUB_TEAM_NAME_SLUG: pecs
 
 jobs:
   test:
