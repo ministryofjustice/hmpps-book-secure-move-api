@@ -9,6 +9,7 @@ references:
     docker:
       - image: circleci/ruby:2.6.2
         environment:
+          BUNDLER_VERSION: 2.0.1
           RAILS_ENV: test
           RACK_ENV: test
           DATABASE_URL: "postgres://postgres@localhost/pecs-move-platform-backend"
@@ -39,9 +40,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-
-            yarn install --frozen-lockfile
+            sudo gem update --system
+            sudo gem uninstall bundler
+            sudo rm /usr/local/bin/bundle
+            sudo rm /usr/local/bin/bundler
+            sudo gem install bundler
+            bundle install
 
 
       - save_cache:
@@ -51,7 +55,7 @@ jobs:
 
       # Database setup
       - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
+      #- run: bundle exec rake db:schema:load
 
       - run:
           name: run tests
