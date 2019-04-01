@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 AllCops:
   # Exclude anything that isn't really part of our code.
   # rails_helper is excluded because it's full of solecisms, but it's mostly
@@ -6,7 +8,6 @@ AllCops:
     - 'vendor/**/*'
     - 'db/**/*'
     - 'bin/**/*'
-    - 'spec/**/*'
     - 'config/**/*'
 
 Style/Documentation:
