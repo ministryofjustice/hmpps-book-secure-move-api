@@ -28,4 +28,5 @@
 
 # Ignore user's individual .env files
 .env
+.envrc
 .env.test
