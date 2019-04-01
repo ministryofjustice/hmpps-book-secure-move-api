@@ -11,6 +11,7 @@ gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rspec-rails'
 end
 
 group :development do
