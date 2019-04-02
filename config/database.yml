@@ -3,7 +3,7 @@ default: &default
 
 development:
   <<: *default
+  database: pecs_move_platform_backend_development
 test:
   <<: *default
-production:
-  <<: *default
+  database: pecs_move_platform_backend_test
