@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pecs-move-platform-backend-deployment-staging
+  namespace: pecs-move-platform-backend-staging
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: pecs-move-platform-backend-web-staging
+        tier: backend
+    spec:
+      containers:
+      - name: webapp
+        image: 926803513772.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/pecs/pecs-move-platform-backend:master.latest
+        envFrom:
+          - configMapRef:
+              name: pecs-move-platform-backend-configmap-staging
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: rds-instance-pecs-move-platform-backend-staging
+                key: url

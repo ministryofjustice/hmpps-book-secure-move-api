@@ -87,7 +87,7 @@ jobs:
       - run:
           name: push docker image
           command: |
-            login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
+            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
             ${login}
 
             docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
@@ -115,7 +115,7 @@ jobs:
 
             kubectl set image -n pecs-move-platform-backend-staging \
                     deployment/pecs-move-platform-backend-deployment-staging \
-                    pecs-move-platform-backend-web-staging="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
             kubectl annotate -n pecs-move-platform-backend-staging \
                     deployment/pecs-move-platform-backend-deployment-staging \
