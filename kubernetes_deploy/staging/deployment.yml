@@ -15,11 +15,26 @@ spec:
     metadata:
       labels:
         app: pecs-move-platform-backend-web-staging
-        tier: backend
+        tier: frontend
     spec:
       containers:
       - name: webapp
-        image: 926803513772.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/pecs/pecs-move-platform-backend:master.latest
+        image: 926803513772.dkr.ecr.eu-west-1.amazonaws.com/pecs/pecs-move-platform-backend:master.latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /ping.json
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /ping.json
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
         envFrom:
           - configMapRef:
               name: pecs-move-platform-backend-configmap-staging
