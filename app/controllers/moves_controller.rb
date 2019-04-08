@@ -2,6 +2,6 @@
 
 class MovesController < ApplicationController
   def index
-    render jsonapi: Move.all
+    render json: Move.all
   end
 end
