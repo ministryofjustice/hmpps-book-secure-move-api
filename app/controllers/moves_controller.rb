@@ -2,9 +2,5 @@
 
 class MovesController < ApplicationController
   def index
-
   end
-
-  private
 end
-
