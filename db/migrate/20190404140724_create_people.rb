@@ -4,6 +4,6 @@ class CreatePeople < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_foreign_key :moves, :people
+    add_foreign_key :moves, :people, name: :fk_rails_moves_person_id
   end
 end

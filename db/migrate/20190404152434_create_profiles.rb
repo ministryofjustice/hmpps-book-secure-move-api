@@ -13,6 +13,6 @@ class CreateProfiles < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_foreign_key :profiles, :people
+    add_foreign_key :profiles, :people, name: :profiles_person_id
   end
 end

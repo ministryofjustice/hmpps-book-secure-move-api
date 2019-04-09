@@ -7,7 +7,7 @@ class CreateLocations < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_foreign_key :moves, :locations, column: :from_location_id
-    add_foreign_key :moves, :locations, column: :to_location_id
+    add_foreign_key :moves, :locations, column: :from_location_id, name: :fk_rails_moves_from_location_id
+    add_foreign_key :moves, :locations, column: :to_location_id, name: :fk_rails_moves_to_location_id
   end
 end
