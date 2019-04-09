@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Profile, type: :model do
-  subject(:profile) { described_class.new }
-
   it { is_expected.to belong_to(:person) }
+
+  it { is_expected.to validate_presence_of(:person) }
+  it { is_expected.to validate_presence_of(:surname) }
+  it { is_expected.to validate_presence_of(:forenames) }
 end
