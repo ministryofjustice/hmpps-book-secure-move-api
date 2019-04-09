@@ -2,10 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Profile do
+RSpec.describe Profile, type: :model do
   subject(:profile) { described_class.new }
 
-  it 'works' do
-    expect(profile).to be_present
-  end
+  it { is_expected.to belong_to(:person) }
 end

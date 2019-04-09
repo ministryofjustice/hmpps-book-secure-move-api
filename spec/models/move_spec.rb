@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Move do
   subject(:move) { described_class.new }
 
-  it 'works' do
-    expect(move).to be_present
-  end
+  it { is_expected.to belong_to(:from_location) }
+  it { is_expected.to belong_to(:to_location) }
 end
