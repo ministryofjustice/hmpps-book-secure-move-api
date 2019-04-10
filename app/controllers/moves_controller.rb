@@ -16,6 +16,9 @@ class MovesController < ApplicationController
     scope = scope.where(filter_params.slice(:from_location_id, :to_location_id, :status))
     scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
     scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+    scope = scope.
+      joins(:to_location).
+      where(locations: { location_type: filter_params[:location_type] }) if filter_params.key?(:location_type)
     scope
   end
 
