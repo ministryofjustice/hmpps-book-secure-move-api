@@ -13,4 +13,13 @@ ENV RAILS_ENV production
 ENV PUMA_PORT 3000
 EXPOSE $PUMA_PORT
 
+# Run the application as user `moj` (created in the base image)
+# uid=1000(moj) gid=1000(moj) groups=1000(moj)
+# Some directories/files need to be chowned otherwise we get Errno::EACCES
+#
+# RUN chown $APPUSER:$APPUSER ./db/schema.rb
+
+ENV APPUID 1000
+USER $APPUID
+
 ENTRYPOINT ["./run.sh"]
