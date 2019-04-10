@@ -25,21 +25,7 @@ RSpec.describe MovesController do
     end
 
     context 'with move data' do
-      let(:from_location) { Location.create!(label: 'Pentonville', location_type: 'prison') }
-      let(:to_location) { Location.create!(label: 'Guildford Crown Court', location_type: 'court') }
-      let(:person) { Person.create! }
-      let(:valid_attributes) do
-        {
-          from_location: from_location,
-          to_location: to_location,
-          person: person,
-          date: Date.today,
-          time_due: Time.now,
-          move_type: 'foo',
-          status: 'draft'
-        }
-      end
-      let!(:move) { Move.create!(valid_attributes) }
+      let!(:move) { create :move }
       let(:move_id) { move.id }
 
       it 'returns a success code' do

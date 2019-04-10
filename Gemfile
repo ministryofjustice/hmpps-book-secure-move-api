@@ -12,6 +12,7 @@ gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 
 group :development, :test do
+  gem 'factory_bot'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-json_expectations'
