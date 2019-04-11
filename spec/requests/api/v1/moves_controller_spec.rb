@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController do
-  let(:valid_headers) { { 'CONTENT_TYPE': 'application/vnd.api+json' } }
+  let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /moves' do
     context 'when there is no data' do
@@ -15,6 +15,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns an empty list' do
         get '/api/v1/moves', headers: valid_headers
         expect(JSON.parse(response.body)).to include_json(data: [])
+      end
+
+      it 'sets the correct content type header' do
+        get '/api/v1/moves', headers: valid_headers
+        expect(response.headers['Content-Type']).to match('application\/vnd.api\+json')
       end
 
       it 'fails if I set the wrong `content-type` header' do
