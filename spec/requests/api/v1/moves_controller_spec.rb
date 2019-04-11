@@ -19,8 +19,7 @@ RSpec.describe Api::V1::MovesController do
 
       it 'fails if I set the wrong `content-type` header' do
         get '/api/v1/moves', headers: { 'CONTENT_TYPE': 'application/xml' }
-        pending 'content-type header enforcement not implemented yet'
-        expect(response).not_to be_successful
+        expect(response.code).to eql '415'
       end
     end
 

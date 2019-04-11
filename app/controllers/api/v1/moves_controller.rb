@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class MovesController < ApplicationController
+    class MovesController < ApiController
       def index
         render json: Moves::MoveFinder.new(filter_params).call
       end
