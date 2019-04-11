@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: 926803513772.dkr.ecr.eu-west-1.amazonaws.com/pecs/pecs-move-platform-backend:staging.latest
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/pecs/pecs-move-platform-backend:staging.latest
         imagePullPolicy: Always
         ports:
           - containerPort: 3000
