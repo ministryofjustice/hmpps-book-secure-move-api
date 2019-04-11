@@ -12,7 +12,7 @@ module Api
       PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
 
       def filter_params
-        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS)
+        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
     end
   end
