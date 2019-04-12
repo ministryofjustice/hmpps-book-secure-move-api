@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
 class MoveSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :type, :status, :updated_at
+
+  def type
+    object.move_type
+  end
 end

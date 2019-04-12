@@ -15,4 +15,12 @@ RSpec.describe MoveSerializer do
   it 'contains an id property' do
     expect(result[:data][:id]).to eql move.id
   end
+
+  it 'contains a type attribute' do
+    expect(result[:data][:attributes][:type]).to eql move.move_type
+  end
+
+  it 'contains an updated_at attribute' do
+    expect(result[:data][:attributes][:updated_at]).to eql move.updated_at.iso8601
+  end
 end
