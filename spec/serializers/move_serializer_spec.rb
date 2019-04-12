@@ -32,7 +32,9 @@ RSpec.describe MoveSerializer do
     expect(result[:data][:attributes][:updated_at]).to eql move.updated_at.iso8601
   end
 
-  it 'contains an embedded person' do
-    expect(result[:data][:relationships][:person]).to eql(data: { id: move.person_id, type: 'people' })
+  describe 'person' do
+    it 'contains an embedded person' do
+      expect(result[:data][:relationships][:person]).to include_json(data: { id: move.person_id, type: 'people' })
+    end
   end
 end
