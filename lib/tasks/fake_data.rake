@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
@@ -278,3 +279,4 @@ namespace :fake_data do
     'HMP Hewell Grange'
   ].freeze
 end
+# rubocop:enable Metrics/BlockLength
