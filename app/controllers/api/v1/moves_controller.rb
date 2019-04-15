@@ -4,7 +4,13 @@ module Api
   module V1
     class MovesController < ApiController
       def index
-        render json: Moves::MoveFinder.new(filter_params).call
+        render(
+          json: Moves::MoveFinder.new(filter_params).call,
+          include: {
+            from_location: %I[location_type label],
+            to_location: %I[location_type label]
+          }
+        )
       end
 
       private
