@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :location do
-    label { 'Pentonville' }
+    label { 'HMP Pentonville' }
     location_type { 'prison' }
 
     trait :court do
