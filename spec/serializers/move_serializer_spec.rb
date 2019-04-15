@@ -51,4 +51,33 @@ RSpec.describe MoveSerializer do
       expect(result[:included]).to(include_json(expected_json))
     end
   end
+
+  describe 'locations' do
+    let(:adapter_options) do
+      {
+        include: {
+          from_location: %I[location_type label],
+          to_location: %I[location_type label]
+        }
+      }
+    end
+    let(:expected_json) do
+      [
+        {
+          id: move.from_location_id,
+          type: 'locations',
+          attributes: { location_type: 'prison', label: 'HMP Pentonville' }
+        },
+        {
+          id: move.to_location_id,
+          type: 'locations',
+          attributes: { location_type: 'court', label: 'Guildford Crown Court' }
+        }
+      ]
+    end
+
+    it 'contains an included from and to location' do
+      expect(result[:included]).to(include_json(expected_json))
+    end
+  end
 end
