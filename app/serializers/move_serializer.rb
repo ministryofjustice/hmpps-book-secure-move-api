@@ -7,5 +7,5 @@ class MoveSerializer < ActiveModel::Serializer
     object.move_type
   end
 
-  has_one :person
+  has_one :person, serializer: PersonSerializer
 end

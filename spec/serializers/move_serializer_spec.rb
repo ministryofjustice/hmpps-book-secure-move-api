@@ -6,7 +6,10 @@ RSpec.describe MoveSerializer do
   subject(:serializer) { described_class.new(move) }
 
   let(:move) { create :move }
-  let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
+  let(:adapter_options) { {} }
+  let(:result) do
+    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
+  end
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'moves'
@@ -33,8 +36,14 @@ RSpec.describe MoveSerializer do
   end
 
   describe 'person' do
-    it 'contains an embedded person' do
-      expect(result[:data][:relationships][:person]).to include_json(data: { id: move.person_id, type: 'people' })
+    let(:adapter_options) { { include: { person: %I[forenames surname] } } }
+
+    it 'contains an included person' do
+      expect(result[:included]).to(
+        include_json(
+          [{ id: move.person_id, type: 'people', attributes: { forenames: 'Bob' } }]
+        )
+      )
     end
   end
 end
