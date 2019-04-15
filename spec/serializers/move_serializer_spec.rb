@@ -37,13 +37,18 @@ RSpec.describe MoveSerializer do
 
   describe 'person' do
     let(:adapter_options) { { include: { person: %I[forenames surname] } } }
+    let(:expected_json) do
+      [
+        {
+          id: move.person_id,
+          type: 'people',
+          attributes: { forenames: 'Bob', surname: 'Roberts', date_of_birth: '1980-10-20' }
+        }
+      ]
+    end
 
     it 'contains an included person' do
-      expect(result[:included]).to(
-        include_json(
-          [{ id: move.person_id, type: 'people', attributes: { forenames: 'Bob' } }]
-        )
-      )
+      expect(result[:included]).to(include_json(expected_json))
     end
   end
 end
