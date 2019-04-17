@@ -22,19 +22,27 @@ To setup the local development environment:
 3. Run `bin/setup` to install Rubygem dependencies, then setup local
    test and development databases etc.
 
-You should then be able to run the local Web server:
+### Running the application
 
-    bundle exec rails server
+After setup should then be able to run the local Web server:
+
+```bash
+bundle exec rails server
+```
 
 ### Running tests
 
 We use RSpec for testing, to run the tests:
 
-    bundle exec rspec spec
+```bash
+bundle exec rspec spec
+```
 
 We use Rubocop for code linting, to run the checks:
 
-    bundle exec rubocop
+```bash
+bundle exec rubocop
+```
 
 ## Continuous Integration
 
@@ -49,4 +57,3 @@ This application is deployed to [Cloud Platform](https://user-guide.cloud-platfo
 
 Currently we have only one `staging` environment that is automatically
 deployed on successful builds of the `master` branch on Circle CI.
-
