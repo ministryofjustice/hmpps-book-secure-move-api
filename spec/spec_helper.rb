@@ -25,3 +25,4 @@ RSpec.configure do |config|
 end
 
 require 'climate_control'
+require 'rspec/json_expectations'

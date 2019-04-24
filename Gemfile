@@ -5,14 +5,18 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.2'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'pg', '~> 1.0.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
 
 group :development, :test do
+  gem 'factory_bot'
+  gem 'faker'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
 end
