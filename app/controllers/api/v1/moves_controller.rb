@@ -4,14 +4,13 @@ module Api
   module V1
     class MovesController < ApiController
       def index
-        render(
-          json: Moves::MoveFinder.new(filter_params).call,
-          include: {
-            person: %I[forenames surname date_of_birth],
-            from_location: %I[location_type label],
-            to_location: %I[location_type label]
-          }
-        )
+        moves = Moves::MoveFinder.new(filter_params).call
+
+        paginate moves, include: {
+          person: %i[forenames surname date_of_birth],
+          from_location: %i[location_type label],
+          to_location: %i[location_type label]
+        }
       end
 
       private
