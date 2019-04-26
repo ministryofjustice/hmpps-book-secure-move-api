@@ -15,8 +15,8 @@ module OmniAuth
         site: ENV['FRONT_END_OAUTH_HOST'],
         authorize_url: "#{ENV['FRONT_END_OAUTH_HOST']}/auth/oauth/authorize",
         token_url: "#{ENV['FRONT_END_OAUTH_HOST']}/auth/oauth/token",
-        redirect_url: 'http://localhost:3000',
-        callback: 'http://localhost:3000/auth/nomis_oauth2/callback'
+        redirect_url: ENV['FRONT_END_OAUTH_REDIRECT_URL'],
+        callback: ENV['FRONT_END_OAUTH_CALLBACK_URL']
       )
 
       # These are called after authentication has succeeded. If
