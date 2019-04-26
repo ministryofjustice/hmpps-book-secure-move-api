@@ -1,24 +1,59 @@
-# README
+# PECS 4 Move Platform Back-end
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repository contains the backend API for Prisoner Escort and
+Custody Services 4.
 
-Things you may want to cover:
+## Ruby versions and other dependencies
 
 * Ruby version
+    * Ruby version 2.6
+    * Rails 5.2
 
 * System dependencies
+    * postgres
+    * redis
 
-* Configuration
+## Development Environment setup
 
-* Database creation
+To setup the local development environment:
 
-* Database initialization
+1. Install Postgres and Redis if needed.
+2. Clone this Git repository.
+3. Run `bin/setup` to install Rubygem dependencies, then setup local
+   test and development databases etc.
 
-* How to run the test suite
+### Running the application
 
-* Services (job queues, cache servers, search engines, etc.)
+After setup should then be able to run the local Web server:
 
-* Deployment instructions
+```bash
+bundle exec rails server
+```
 
-* ...
+### Running tests
+
+We use RSpec for testing, to run the tests:
+
+```bash
+bundle exec rspec spec
+```
+
+We use Rubocop for code linting, to run the checks:
+
+```bash
+bundle exec rubocop
+```
+
+## Continuous Integration
+
+We use Circle CI for continuous integration: running tests, updating the
+Docker image, pushing code staging:
+
+[![CircleCI](https://circleci.com/gh/ministryofjustice/pecs-move-platform-backend)](https://circleci.com/gh/ministryofjustice/pecs-move-platform-backend)
+
+## Deployment
+
+This application is deployed to [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/).
+
+Currently we have only one `staging` environment that is automatically
+deployed on successful builds of the `master` branch on Circle CI.

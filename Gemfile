@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.2'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'omniauth-oauth2', '~> 1.3.1' # do not remove version
 gem 'pg', '~> 1.0.0'
@@ -13,8 +14,11 @@ gem 'rails', '~> 5.2.3'
 
 group :development, :test do
   gem 'dotenv-rails'
+  gem 'factory_bot'
+  gem 'faker'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
 end
