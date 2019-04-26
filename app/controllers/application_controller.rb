@@ -9,5 +9,9 @@ class ApplicationController < ActionController::Base
     session[:current_user]
   end
 
+  def authenticated?
+    current_user.present?
+  end
+
   helper_method :current_user
 end

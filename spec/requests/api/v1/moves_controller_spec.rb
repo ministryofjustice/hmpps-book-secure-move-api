@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/logged_in_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
+  describe 'GET /moves without authentication' do
+    it 'returns an Unauthorized status code' do
+      get '/api/v1/moves', headers: valid_headers
+      expect(response).to be_unauthorized
+    end
+  end
+
   describe 'GET /moves' do
+    include_context 'logged_in'
+
     context 'when there is no data' do
       it 'returns a success code' do
         get '/api/v1/moves', headers: valid_headers
