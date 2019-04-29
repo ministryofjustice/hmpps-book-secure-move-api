@@ -3,6 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe 'Sessions', type: :request do
+  describe 'GET /auth/nomis_oauth2/new' do
+    let(:redirect_url) { 'http://example.com/after_login' }
+
+    before do
+      get "/auth/nomis_oauth2/new?redirect_url=#{redirect_url}"
+    end
+
+    it 'redirects to the login page' do
+      expect(response).to redirect_to('/auth/nomis_oauth2')
+    end
+
+    it 'stores the redirect url' do
+      expect(session[:post_authentication_redirect_url]).to eq redirect_url
+    end
+  end
+
   describe 'GET /auth/nomis_oauth2/callback' do
     let(:auth_hash) do
       {
