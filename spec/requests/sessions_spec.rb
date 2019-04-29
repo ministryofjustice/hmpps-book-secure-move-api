@@ -20,8 +20,24 @@ RSpec.describe 'Sessions', type: :request do
       expect(session[:current_user]).to eql auth_hash
     end
 
-    it 'redirects to root path' do
-      expect(response).to redirect_to('/')
+    context 'when the redirect url is NOT specified' do
+      it 'redirects to root path' do
+        expect(response).to redirect_to('/')
+      end
+    end
+
+    context 'when the redirect url is specified' do
+      let(:redirect_url) { 'http://example.com/after_login' }
+
+      before do
+        # This doesn't work - we don't have access to the session from a request spec
+        session[:post_authentication_redirect_url] = redirect_url
+      end
+
+      it 'redirects to given url' do
+        pending
+        expect(response).to redirect_to(redirect_url)
+      end
     end
   end
 end
