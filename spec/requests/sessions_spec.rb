@@ -10,9 +10,11 @@ RSpec.describe 'Sessions', type: :request do
         'uid' => '123'
       }
     end
+    let(:redirect_url) { '' }
 
     before do
       OmniAuth.config.mock_auth[:default] = OmniAuth::AuthHash.new(auth_hash)
+      get "/auth/nomis_oauth2/new?redirect_url=#{redirect_url}"
       get '/auth/nomis_oauth2/callback'
     end
 
@@ -22,20 +24,14 @@ RSpec.describe 'Sessions', type: :request do
 
     context 'when the redirect url is NOT specified' do
       it 'redirects to root path' do
-        expect(response).to redirect_to('/')
+        expect(response).to redirect_to(root_url)
       end
     end
 
     context 'when the redirect url is specified' do
       let(:redirect_url) { 'http://example.com/after_login' }
 
-      before do
-        # This doesn't work - we don't have access to the session from a request spec
-        session[:post_authentication_redirect_url] = redirect_url
-      end
-
       it 'redirects to given url' do
-        pending
         expect(response).to redirect_to(redirect_url)
       end
     end
