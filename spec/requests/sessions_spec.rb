@@ -38,6 +38,11 @@ RSpec.describe 'Sessions', type: :request do
       expect(session[:current_user]).to eql auth_hash
     end
 
+    it 'creates a UserToken record' do
+      user_token = UserToken.last
+      expect(user_token).to be_present
+    end
+
     context 'when the redirect url is NOT specified' do
       it 'redirects to root path' do
         expect(response).to redirect_to(root_url)
