@@ -7,14 +7,17 @@ class SessionsController < ApplicationController
   end
 
   def create
-    self.current_user = auth_hash
-    Sessions::UserTokenFactory.new(auth_hash).find_or_create
+    self.current_user = Sessions::UserTokenFactory.new(auth_hash).find_or_create
+    session[:token] = current_user.access_token
     redirect_to post_authentication_redirect_url
   end
 
   def destroy
+    load_current_user
+    current_user.destroy!
     self.current_user = nil
-    redirect_to '/'
+    session.delete(:token)
+    redirect_to root_url
   end
 
   protected

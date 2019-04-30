@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/logged_in_context'
 
 RSpec.describe SessionsController, type: :request do
   describe 'GET /auth/nomis_oauth2/new' do
@@ -56,11 +57,6 @@ RSpec.describe SessionsController, type: :request do
     end
 
     context 'when there is no existing UserToken record' do
-      it 'adds the current user details to the session' do
-        get '/auth/nomis_oauth2/callback'
-        expect(session[:current_user]).to eql auth_hash
-      end
-
       it 'creates a new UserToken record' do
         expect { get '/auth/nomis_oauth2/callback' }.to change(UserToken, :count).by(1)
       end
@@ -92,10 +88,9 @@ RSpec.describe SessionsController, type: :request do
         expect { get '/auth/nomis_oauth2/callback' }.not_to change(UserToken, :count)
       end
 
-      it 'associates the existing UserToken record with the current user' do
-        pending 'need to switch to token based rather than session based'
+      it 'adds the access token to the session' do
         get '/auth/nomis_oauth2/callback'
-        expect(session[:current_user]).to eql user_token
+        expect(session[:token]).to eql user_token.access_token
       end
     end
 
@@ -112,6 +107,28 @@ RSpec.describe SessionsController, type: :request do
       it 'redirects to given url' do
         get '/auth/nomis_oauth2/callback'
         expect(response).to redirect_to(redirect_url)
+      end
+    end
+  end
+
+  describe 'GET /auth/nomis_oauth2/logout' do
+    context 'when logged in' do
+      include_context 'logged_in'
+
+      before do
+        get '/auth/nomis_oauth2/logout'
+      end
+
+      it 'redirects to the root URL' do
+        expect(response).to redirect_to(root_url)
+      end
+
+      it 'removes the session token' do
+        expect(session[:token]).to be_nil
+      end
+
+      it 'deletes the UserToken record' do
+        expect(UserToken.find_by(user_name: user_name)).to be_nil
       end
     end
   end

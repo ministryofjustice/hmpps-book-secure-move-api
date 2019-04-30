@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.shared_context 'logged_in', shared_context: :metadata do
+  let(:user_name) { 'Bob' }
   let(:auth_hash) do
     {
       'provider' => 'nomis_oauth2',
       'uid' => nil,
       'info' => {
-        'name' => 'Bob',
+        'name' => user_name,
         'email' => nil
       },
       'credentials' => {
