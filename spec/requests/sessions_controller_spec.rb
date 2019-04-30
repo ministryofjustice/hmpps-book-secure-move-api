@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Sessions', type: :request do
+RSpec.describe SessionsController, type: :request do
   describe 'GET /auth/nomis_oauth2/new' do
     let(:redirect_url) { 'http://example.com/after_login' }
 

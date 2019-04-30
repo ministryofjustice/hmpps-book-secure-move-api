@@ -23,6 +23,7 @@ class ApiController < ApplicationController
   end
 
   def authenticate_session
+    load_current_user
     return if authenticated?
 
     render(
