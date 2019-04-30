@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
 
   def create
     self.current_user = auth_hash
-    Sessions::UserTokenFactory.new.create(auth_hash)
+    Sessions::UserTokenFactory.new(auth_hash).find_or_create
     redirect_to post_authentication_redirect_url
   end
 

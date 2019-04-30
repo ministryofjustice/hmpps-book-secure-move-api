@@ -53,25 +53,55 @@ RSpec.describe SessionsController, type: :request do
     before do
       OmniAuth.config.mock_auth[:default] = OmniAuth::AuthHash.new(auth_hash)
       get "/auth/nomis_oauth2/new?redirect_url=#{redirect_url}"
-      get '/auth/nomis_oauth2/callback'
     end
 
-    it 'adds the current user details to the session' do
-      expect(session[:current_user]).to eql auth_hash
+    context 'when there is no existing UserToken record' do
+      it 'adds the current user details to the session' do
+        get '/auth/nomis_oauth2/callback'
+        expect(session[:current_user]).to eql auth_hash
+      end
+
+      it 'creates a new UserToken record' do
+        expect { get '/auth/nomis_oauth2/callback' }.to change { UserToken.count }.by(1)
+      end
+
+      # rubocop:disable RSpec/MultipleExpectations
+      it 'creates a UserToken record' do
+        get '/auth/nomis_oauth2/callback'
+        expect(user_token.access_token).to eq '123456'
+        expect(user_token.refresh_token).to eq '654321'
+        expect(user_token.expires_at).to eq Time.utc(2019, 4, 29, 9, 2, 39)
+        expect(user_token.user_name).to eq 'Bob'
+        expect(user_token.user_id).to eq 'BOB_GEN'
+      end
+      # rubocop:enable RSpec/MultipleExpectations
     end
 
-    # rubocop:disable RSpec/MultipleExpectations
-    it 'creates a UserToken record' do
-      expect(user_token.access_token).to eq '123456'
-      expect(user_token.refresh_token).to eq '654321'
-      expect(user_token.expires_at).to eq Time.utc(2019, 4, 29, 9, 2, 39)
-      expect(user_token.user_name).to eq 'Bob'
-      expect(user_token.user_id).to eq 'BOB_GEN'
+    context 'when a UserToken record already exists' do
+      let!(:user_token) do
+        UserToken.create!(
+          access_token: '123456',
+          refresh_token: '654321',
+          expires_at: Time.utc(2019, 4, 29, 9, 2, 39),
+          user_name: 'Bob',
+          user_id: 'BOB_GEN'
+        )
+      end
+
+      it 'does NOT create a new UserToken record' do
+        expect { get '/auth/nomis_oauth2/callback' }.not_to change { UserToken.count }
+      end
+
+      it 'associates the existing UserToken record with the current user' do
+        pending 'need to switch to token based rather than session based'
+        get '/auth/nomis_oauth2/callback'
+        expect(session[:current_user]).to eql user_token
+      end
     end
-    # rubocop:enable RSpec/MultipleExpectations
 
     context 'when the redirect url is NOT specified' do
       it 'redirects to root path' do
+        get '/auth/nomis_oauth2/callback'
         expect(response).to redirect_to(root_url)
       end
     end
@@ -80,6 +110,7 @@ RSpec.describe SessionsController, type: :request do
       let(:redirect_url) { 'http://example.com/after_login' }
 
       it 'redirects to given url' do
+        get '/auth/nomis_oauth2/callback'
         expect(response).to redirect_to(redirect_url)
       end
     end
