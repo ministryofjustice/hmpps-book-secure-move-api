@@ -33,7 +33,7 @@ module Sessions
     end
 
     def expires_at
-      Time.at(auth_hash['credentials']['expires_at']).utc
+      Time.at(auth_hash['credentials']['expires_at'])
     end
 
     def user_name

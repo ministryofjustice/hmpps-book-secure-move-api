@@ -13,7 +13,7 @@ RSpec.shared_context 'logged_in', shared_context: :metadata do
       'credentials' => {
         'token' => '123456',
         'refresh_token' => '654321',
-        'expires_at' => 1_556_528_559,
+        'expires_at' => 20.minutes.from_now.to_i,
         'expires' => true
       },
       'extra' => {
