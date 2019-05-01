@@ -61,7 +61,7 @@ RSpec.describe SessionsController, type: :request do
         expect { get '/auth/nomis_oauth2/callback' }.to change(UserToken, :count).by(1)
       end
 
-      # rubocop:disable RSpec/MultipleExpectations
+      # rubocop:disable RSpec/MultipleExpectations, RSpec/ExampleLength
       it 'sets the correct attributes for the new UserToken record' do
         get '/auth/nomis_oauth2/callback'
         expect(user_token.access_token).to eq '123456'
@@ -70,7 +70,7 @@ RSpec.describe SessionsController, type: :request do
         expect(user_token.user_name).to eq 'Bob'
         expect(user_token.user_id).to eq 'BOB_GEN'
       end
-      # rubocop:enable RSpec/MultipleExpectations
+      # rubocop:enable RSpec/MultipleExpectations, RSpec/ExampleLength
     end
 
     context 'when a UserToken record already exists' do

@@ -9,21 +9,31 @@ module Sessions
     end
 
     def refresh
-      token = OAuth2::AccessToken.new(
+      token = create_new_token
+      token.refresh!(
+        headers: { 'Authorization' => basic_auth_header }
+      )
+      update_current_user(token)
+      current_user
+    end
+
+    private
+
+    def create_new_token
+      OAuth2::AccessToken.new(
         oauth2_client,
         current_user.access_token,
         expires_at: current_user.expires_at.to_i,
         refresh_token: current_user.refresh_token
       )
-      token.refresh!(
-        headers: { 'Authorization' => basic_auth_header }
-      )
+    end
+
+    def update_current_user(token)
       current_user.update_attributes!(
         access_token: token.token,
         refresh_token: token.refresh_token,
         expires_at: token.expires_at
       )
-      current_user
     end
 
     def oauth2_client
