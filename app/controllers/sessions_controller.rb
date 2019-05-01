@@ -8,7 +8,6 @@ class SessionsController < ApplicationController
 
   def create
     self.current_user = Sessions::UserTokenFactory.new(auth_hash).find_or_create
-    require 'pry'; binding.pry
     session[:token] = current_user.access_token
     redirect_to post_authentication_redirect_url
   end

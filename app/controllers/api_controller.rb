@@ -34,6 +34,12 @@ class ApiController < ApplicationController
     token.refresh!(
       headers: { 'Authorization' => basic_auth_header }
     )
+    current_user.update_attributes!(
+      access_token: token.token,
+      refresh_token: token.refresh_token,
+      expires_at: token.expires_at
+    )
+    self.current_user = current_user
   end
 
   def oauth2_client
