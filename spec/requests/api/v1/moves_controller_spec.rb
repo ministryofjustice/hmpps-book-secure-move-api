@@ -5,6 +5,12 @@ require 'support/logged_in_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
+  let(:refresh_service) { instance_double('Refresh Service') }
+
+  before do
+    allow(refresh_service).to receive(:refresh) { |current_user| current_user }
+    allow(Sessions::UserTokenRefresher).to receive(:new).and_return(refresh_service)
+  end
 
   describe 'GET /moves without authentication' do
     it 'returns an Unauthorized status code' do
