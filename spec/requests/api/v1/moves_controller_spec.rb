@@ -26,25 +26,21 @@ RSpec.describe Api::V1::MovesController do
 
     let(:token_expires_at) { 10.minutes.ago }
 
-    let(:new_current_user) { double() }
+    let(:new_user_token) do
+      UserToken.new(
+        access_token: '345678',
+        refresh_token: '876543',
+        expires_at: 20.minutes.from_now
+      )
+    end
 
     before do
-      allow(refresh_service).to receive(:refresh) { new_current_user }
+      allow(refresh_service).to receive(:refresh) { new_user_token }
     end
 
     it 'returns a success code' do
       get '/api/v1/moves', headers: valid_headers
       expect(response).to be_successful
-    end
-
-    it 'resets the session cookie' do
-      get '/api/v1/moves', headers: valid_headers
-      pending 'assert cookie'
-    end
-
-    it 'resets the UserToken record' do
-      get '/api/v1/moves', headers: valid_headers
-      pending 'assert user token'
     end
   end
 
