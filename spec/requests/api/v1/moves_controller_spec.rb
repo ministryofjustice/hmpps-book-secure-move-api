@@ -13,6 +13,29 @@ RSpec.describe Api::V1::MovesController do
     end
   end
 
+  describe 'GET /moves with expired session' do
+    include_context 'logged_in'
+
+    before do
+      UserToken.find_by(user_name: user_name).update_attributes(expires_at: 10.minutes.ago)
+    end
+
+    it 'returns a success code' do
+      get '/api/v1/moves', headers: valid_headers
+      expect(response).to be_successful
+    end
+
+    it 'resets the session cookie' do
+      get '/api/v1/moves', headers: valid_headers
+      pending 'assert cookie'
+    end
+
+    it 'resets the UserToken record' do
+      get '/api/v1/moves', headers: valid_headers
+      pending 'assert user token'
+    end
+  end
+
   describe 'GET /moves' do
     include_context 'logged_in'
 
