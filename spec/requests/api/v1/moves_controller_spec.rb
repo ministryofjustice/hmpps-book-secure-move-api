@@ -5,11 +5,13 @@ require 'support/logged_in_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
-  let(:refresh_service) { instance_double('Refresh Service') }
+  let(:refresh_service) { instance_double(Sessions::UserTokenRefreshService) }
+  let(:token_expires_at) { 20.minutes.from_now }
+  let(:current_user) { UserToken.find_by(user_name: 'Bob') }
 
   before do
-    allow(refresh_service).to receive(:refresh) { |current_user| current_user }
-    allow(Sessions::UserTokenRefresher).to receive(:new).and_return(refresh_service)
+    allow(refresh_service).to receive(:refresh).and_return(current_user)
+    allow(Sessions::UserTokenRefreshService).to receive(:new).and_return(refresh_service)
   end
 
   describe 'GET /moves without authentication' do
@@ -22,8 +24,12 @@ RSpec.describe Api::V1::MovesController do
   describe 'GET /moves with expired session' do
     include_context 'logged_in'
 
+    let(:token_expires_at) { 10.minutes.ago }
+
+    let(:new_current_user) { double() }
+
     before do
-      UserToken.find_by(user_name: user_name).update_attributes(expires_at: 10.minutes.ago)
+      allow(refresh_service).to receive(:refresh) { new_current_user }
     end
 
     it 'returns a success code' do

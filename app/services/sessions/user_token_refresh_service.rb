@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sessions
-  class UserTokenRefresher
+  class UserTokenRefreshService
     attr_reader :current_user
 
     def initialize(current_user)

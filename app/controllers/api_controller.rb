@@ -25,7 +25,7 @@ class ApiController < ApplicationController
   def refresh_token_if_expired
     return if current_user.expires_at > Time.now
 
-    self.current_user = Sessions::UserTokenRefresher.new(current_user).refresh
+    self.current_user = Sessions::UserTokenRefreshService.new(current_user).refresh
   end
 
   def authenticate_session
