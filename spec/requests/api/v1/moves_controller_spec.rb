@@ -70,8 +70,20 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with move data' do
-      let!(:move) { create :move }
-      let(:move_id) { move.id }
+      let!(:moves) { create_list :move, 21 }
+      let(:move_id) { moves.first.id }
+      let(:meta_pagination) do
+        {
+          per_page: 20,
+          total_pages: 2,
+          total_objects: 21,
+          links: {
+            first: '/api/v1/moves?page=1',
+            last: '/api/v1/moves?page=2',
+            next: '/api/v1/moves?page=2'
+          }
+        }
+      end
 
       it 'returns a success code' do
         get '/api/v1/moves', headers: valid_headers
@@ -81,6 +93,30 @@ RSpec.describe Api::V1::MovesController do
       it 'returns a list of moves' do
         get '/api/v1/moves', headers: valid_headers
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
+      end
+
+      it 'paginates 20 results per page' do
+        get '/api/v1/moves', headers: valid_headers
+
+        expect(JSON.parse(response.body)['data'].size).to eq 20
+      end
+
+      it 'returns 1 result on the second page' do
+        get '/api/v1/moves?page=2', headers: valid_headers
+
+        expect(JSON.parse(response.body)['data'].size).to eq 1
+      end
+
+      it 'allows setting a different page size' do
+        get '/api/v1/moves?per_page=15', headers: valid_headers
+
+        expect(JSON.parse(response.body)['data'].size).to eq 15
+      end
+
+      it 'provides meta data with pagination' do
+        get '/api/v1/moves', headers: valid_headers
+
+        expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
       end
     end
 
@@ -97,7 +133,7 @@ RSpec.describe Api::V1::MovesController do
       let(:move_finder) { double }
 
       before do
-        allow(move_finder).to receive(:call).and_return([move])
+        allow(move_finder).to receive(:call).and_return(Move.all)
         allow(Moves::MoveFinder).to receive(:new).and_return(move_finder)
       end
 

@@ -7,7 +7,9 @@ ruby '2.6.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'omniauth-oauth2', '~> 1.3.1' # do not remove version
+gem 'kaminari'
+gem 'omniauth-oauth2', '~> 1.3.1'
+gem 'pager_api'
 gem 'pg', '~> 1.0.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
