@@ -1,5 +1,120 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "location_type": {
+                "type": "string",
+                "enum": ["court", "police", "prison"]
+              }
+            }
+          }
+        }
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "forenames": {
+                "type": "string"
+              },
+              "surname": {
+                "type": "string"
+              },
+              "date_of_birth": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        }
+      },
+      "Move": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "type": {
+            "type": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["requested", "scheduled"]
+              },
+              "time_due": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "person": {
+                "$ref": "#/components/schemas/Person"
+              },
+              "from_location_id": {
+                "$ref": "#/components/schemas/Location"
+              },
+              "to_location_id": {
+                "$ref": "#/components/schemas/Location"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "info": {
     "title": "API V1",
     "version": "v1"
@@ -18,42 +133,82 @@
           {
             "name": "filter[date_from]",
             "in": "query",
-            "type": "string",
-            "format": "full-date",
-            "description": "Filters results to only include moves on and after the given date, e.g. `2019-05-02`"
+            "description": "Filters results to only include moves on and after the given date, e.g. `2019-05-02`",
+            "schema": {
+              "type": "string",
+              "example": "2019-05-09"
+            },
+            "format": "date"
           },
           {
             "name": "filter[date_to]",
             "in": "query",
-            "type": "string",
-            "format": "full-date",
-            "description": "Filters results to only include moves up to and including the given date, e.g. `2019-05-09`"
+            "description": "Filters results to only include moves up to and including the given date, e.g. `2019-05-09`",
+            "schema": {
+              "type": "string",
+              "example": "2019-05-09"
+            },
+            "format": "date"
           },
           {
             "name": "filter[status]",
             "in": "query",
-            "type": "string",
-            "enum": ["pending", "accepted"],
-            "description": "Filters results to only include moves with the given status"
+            "description": "Filters results to only include moves with the given status",
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "accepted"]
+            }
           },
           {
             "name": "filter[from_location_id]",
             "in": "query",
             "type": "string",
-            "format": "uuid",
-            "description": "Filters results to only include moves from the given location"
+            "description": "Filters results to only include moves from the given location",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid"
           },
           {
             "name": "filter[to_location_id]",
             "in": "query",
-            "type": "string",
-            "format": "uuid",
-            "description": "Filters results to only include moves to the given location"
+            "description": "Filters results to only include moves to the given location",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid"
           }
         ],
         "responses": {
           "200": {
             "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Move"
+                      }
+                    },
+                    "included": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
