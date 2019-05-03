@@ -1,0 +1,68 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/moves": {
+      "get": {
+        "summary": "Returns a list of moves",
+        "tags": [
+          "Moves"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "filter[date_from]",
+            "in": "query",
+            "type": "string",
+            "format": "full-date",
+            "description": "Filters results to only include moves on and after the given date, e.g. `2019-05-02`"
+          },
+          {
+            "name": "filter[date_to]",
+            "in": "query",
+            "type": "string",
+            "format": "full-date",
+            "description": "Filters results to only include moves up to and including the given date, e.g. `2019-05-09`"
+          },
+          {
+            "name": "filter[status]",
+            "in": "query",
+            "type": "string",
+            "enum": ["pending", "accepted"],
+            "description": "Filters results to only include moves with the given status"
+          },
+          {
+            "name": "filter[from_location_id]",
+            "in": "query",
+            "type": "string",
+            "format": "uuid",
+            "description": "Filters results to only include moves from the given location"
+          },
+          {
+            "name": "filter[to_location_id]",
+            "in": "query",
+            "type": "string",
+            "format": "uuid",
+            "description": "Filters results to only include moves to the given location"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
