@@ -22,3 +22,6 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
+
+RSpec/NestedGroups:
+  Max: 4
