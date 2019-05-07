@@ -2,6 +2,40 @@
   "openapi": "3.0.0",
   "components": {
     "schemas": {
+      "PersonReference": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "guid"
+              }
+            }
+          }
+        }
+      },
+      "LocationReference": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "format": "guid"
+              }
+            }
+          }
+        }
+      },
       "Location": {
         "type": "object",
         "properties": {
@@ -61,17 +95,10 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "format": "uuid"
           },
           "type": {
-            "type": "string",
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           "attributes": {
             "type": "object",
@@ -101,13 +128,13 @@
             "type": "object",
             "properties": {
               "person": {
-                "$ref": "#/components/schemas/Person"
+                "$ref": "#/components/schemas/PersonReference"
               },
-              "from_location_id": {
-                "$ref": "#/components/schemas/Location"
+              "from_location": {
+                "$ref": "#/components/schemas/LocationReference"
               },
-              "to_location_id": {
-                "$ref": "#/components/schemas/Location"
+              "to_location": {
+                "$ref": "#/components/schemas/LocationReference"
               }
             }
           }
