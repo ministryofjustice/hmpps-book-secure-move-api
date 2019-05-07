@@ -256,7 +256,10 @@
                     "included": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "oneOf": [
+                          { "$ref": "#/components/schemas/Location" },
+                          { "$ref": "#/components/schemas/Person" }
+                        ]
                       }
                     }
                   }
