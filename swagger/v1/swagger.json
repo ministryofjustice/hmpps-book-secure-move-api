@@ -73,7 +73,8 @@
             "type": "object",
             "properties": {
               "label": {
-                "type": "string"
+                "type": "string",
+                "example": "Guildford Crown Court"
               },
               "description": {
                 "type": "string"
@@ -102,14 +103,17 @@
             "type": "object",
             "properties": {
               "forenames": {
-                "type": "string"
+                "type": "string",
+                "example": "Bob"
               },
               "surname": {
-                "type": "string"
+                "type": "string",
+                "example": "Roberts"
               },
               "date_of_birth": {
                 "type": "string",
-                "format": "date"
+                "format": "date",
+                "example": "1965-10-24"
               }
             }
           }
@@ -148,7 +152,8 @@
               },
               "date": {
                 "type": "string",
-                "format": "date"
+                "format": "date",
+                "example": "2019-05-24"
               }
             }
           },
