@@ -2,6 +2,23 @@
   "openapi": "3.0.0",
   "components": {
     "schemas": {
+      "NotAuthorisedError": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 12345
+          },
+          "title": {
+            "type": "string",
+            "example": "Not authorized"
+          },
+          "detail": {
+            "type": "string",
+            "example": "You must be logged in to use this service"
+          }
+        }
+      },
       "PersonReference": {
         "type": "object",
         "properties": {
@@ -252,6 +269,18 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
+                  "type": "object",
+                  "required": [
+                    "errors"
+                  ],
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NotAuthorisedError"
+                      }
+                    }
+                  }
                 }
               }
             }
