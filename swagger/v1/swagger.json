@@ -294,6 +294,24 @@
             },
             "format": "uuid",
             "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of records to return, defaults to 1 (the first page)",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
           }
         ],
         "responses": {
