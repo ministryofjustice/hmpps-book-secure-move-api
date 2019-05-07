@@ -9,11 +9,13 @@
             "type": "object",
             "properties": {
               "type": {
-                "type": "string"
+                "type": "string",
+                "example": "people"
               },
               "id": {
                 "type": "string",
-                "format": "guid"
+                "format": "uuid",
+                "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
               }
             }
           }
@@ -26,11 +28,13 @@
             "type": "object",
             "properties": {
               "type": {
-                "type": "string"
+                "type": "string",
+                "example": "locations"
               },
               "id": {
                 "type": "string",
-                "format": "guid"
+                "format": "uuid",
+                "example": "3561f372-9f1c-4e13-997e-b11e1647cce1"
               }
             }
           }
@@ -41,10 +45,12 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "bf19c538-3f01-4d69-8200-69748ace1ed1"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "example": "locations"
           },
           "attributes": {
             "type": "object",
@@ -68,10 +74,12 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "88089bbd-8719-4192-b309-f9db9105d3e1"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "example": "people"
           },
           "attributes": {
             "type": "object",
@@ -95,16 +103,19 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "example": "moves"
           },
           "attributes": {
             "type": "object",
             "properties": {
               "type": {
-                "type": "string"
+                "type": "string",
+                "example": "moves"
               },
               "status": {
                 "type": "string",
@@ -194,7 +205,8 @@
             "schema": {
               "type": "string"
             },
-            "format": "uuid"
+            "format": "uuid",
+            "example": "950ef512-a25f-46d7-8ced-7ad09510659b"
           },
           {
             "name": "filter[to_location_id]",
@@ -203,7 +215,8 @@
             "schema": {
               "type": "string"
             },
-            "format": "uuid"
+            "format": "uuid",
+            "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098"
           }
         ],
         "responses": {
