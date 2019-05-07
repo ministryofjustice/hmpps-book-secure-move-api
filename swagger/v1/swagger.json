@@ -2,20 +2,57 @@
   "openapi": "3.0.0",
   "components": {
     "schemas": {
-      "NotAuthorisedError": {
+      "Move": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "example": 12345
-          },
-          "title": {
             "type": "string",
-            "example": "Not authorized"
+            "format": "uuid",
+            "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
           },
-          "detail": {
+          "type": {
             "type": "string",
-            "example": "You must be logged in to use this service"
+            "example": "moves"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "moves"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["requested", "scheduled"]
+              },
+              "time_due": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "example": "2019-05-24"
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "person": {
+                "$ref": "#/components/schemas/PersonReference"
+              },
+              "from_location": {
+                "$ref": "#/components/schemas/LocationReference"
+              },
+              "to_location": {
+                "$ref": "#/components/schemas/LocationReference"
+              }
+            }
           }
         }
       },
@@ -119,57 +156,20 @@
           }
         }
       },
-      "Move": {
+      "NotAuthorisedError": {
         "type": "object",
         "properties": {
           "id": {
+            "type": "integer",
+            "example": 12345
+          },
+          "title": {
             "type": "string",
-            "format": "uuid",
-            "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
+            "example": "Not authorized"
           },
-          "type": {
+          "detail": {
             "type": "string",
-            "example": "moves"
-          },
-          "attributes": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "moves"
-              },
-              "status": {
-                "type": "string",
-                "enum": ["requested", "scheduled"]
-              },
-              "time_due": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updated_at": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "date": {
-                "type": "string",
-                "format": "date",
-                "example": "2019-05-24"
-              }
-            }
-          },
-          "relationships": {
-            "type": "object",
-            "properties": {
-              "person": {
-                "$ref": "#/components/schemas/PersonReference"
-              },
-              "from_location": {
-                "$ref": "#/components/schemas/LocationReference"
-              },
-              "to_location": {
-                "$ref": "#/components/schemas/LocationReference"
-              }
-            }
+            "example": "You must be logged in to use this service"
           }
         }
       }
@@ -265,6 +265,66 @@
                           { "$ref": "#/components/schemas/Location" },
                           { "$ref": "#/components/schemas/Person" }
                         ]
+                      }
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+                        },
+                        "first": {
+                          "type": "string",
+                          "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+                        },
+                        "prev": {
+                          "type": "string",
+                          "example": "http://localhost:3000/api/v1/moves?page_number=2&page_size=20"
+                        },
+                        "next": {
+                          "type": "string",
+                          "example": "http://localhost:3000/api/v1/moves?page_number=4&page_size=20"
+                        },
+                        "last": {
+                          "type": "string",
+                          "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "per_page": {
+                              "type": "integer",
+                              "example": 20
+                            },
+                            "total_pages": {
+                              "type": "integer",
+                              "example": 99
+                            },
+                            "total_objects": {
+                              "type": "integer",
+                              "example": 1977
+                            },
+                            "links": {
+                              "type": "object",
+                              "properties": {
+                                "first": {
+                                  "type": "string",
+                                  "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+                                },
+                                "last": {
+                                  "type": "string",
+                                  "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                   }
