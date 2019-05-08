@@ -1,5 +1,6 @@
 {
   "PaginationLinks": {
+    "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
       "self": {

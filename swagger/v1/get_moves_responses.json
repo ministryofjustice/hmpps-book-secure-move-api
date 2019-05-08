@@ -21,17 +21,13 @@
         }
       },
       "links": {
-        "schema": {
-          "$ref": "pagination_links.json#/PaginationLinks"
-        }
+        "$ref": "pagination_links.json#/PaginationLinks"
       },
       "meta": {
         "type": "object",
         "properties": {
           "pagination": {
-            "schema": {
-              "$ref": "pagination.json#/Pagination"
-            }
+            "$ref": "pagination.json#/Pagination"
           }
         }
       }
