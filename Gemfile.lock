@@ -231,6 +231,7 @@ DEPENDENCIES
   climate_control
   factory_bot
   faker
+  json-schema
   kaminari
   listen (>= 3.0.5, < 3.2)
   pager_api
