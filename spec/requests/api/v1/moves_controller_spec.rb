@@ -106,5 +106,28 @@ RSpec.describe Api::V1::MovesController do
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
       end
     end
+
+    describe 'response schema validation' do
+      let!(:moves) { create_list :move, 1 }
+      let(:move_id) { moves.first.id }
+      let(:schema) do
+        File.open(Rails.root + 'swagger/v1/get_moves_responses.json') do |file|
+          JSON.parse(file.read)
+        end
+      end
+      let(:fragment) do
+        # '#/paths/\/api\/v1\/moves/get/responses/200/content/application\/vnd.api+json/schema'
+        '#/200'
+      end
+      let(:response_schema) do
+        schema['paths']['/api/v1/moves']['get']['responses']['200']['content']['application/vnd.api+json']['schema']
+      end
+      let(:response_json) { JSON.parse(response.body) }
+
+      it 'returns a valid JSON response' do
+        get '/api/v1/moves', headers: valid_headers
+        expect(JSON::Validator.validate!(schema, { data: [], included: [], links: {}, meta: { pagination: {} } }, strict: true, fragment: fragment)).to be true
+      end
+    end
   end
 end

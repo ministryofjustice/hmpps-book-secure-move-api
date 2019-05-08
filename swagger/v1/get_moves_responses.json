@@ -1,0 +1,40 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "array",
+        "items": {
+          "$ref": "move.json#/Move"
+        }
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            { "$ref": "location.json#/Location" },
+            { "$ref": "person.json#/Person" }
+          ]
+        }
+      },
+      "links": {
+        "schema": {
+          "$ref": "pagination_links.json#/PaginationLinks"
+        }
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "schema": {
+              "$ref": "pagination.json#/Pagination"
+            }
+          }
+        }
+      }
+    }
+  }
+}

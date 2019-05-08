@@ -1,0 +1,56 @@
+{
+  "Move": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
+      },
+      "type": {
+        "type": "string",
+        "example": "moves"
+      },
+      "attributes": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "moves"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["requested", "scheduled"]
+          },
+          "time_due": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2019-05-24"
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "$ref": "person_reference.json#/PersonReference"
+          },
+          "from_location": {
+            "$ref": "location_reference.json#/LocationReference"
+          },
+          "to_location": {
+            "$ref": "location_reference.json#/LocationReference"
+          }
+        }
+      }
+    }
+  }
+}

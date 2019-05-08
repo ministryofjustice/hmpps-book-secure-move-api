@@ -3,230 +3,28 @@
   "components": {
     "schemas": {
       "Move": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
-          },
-          "type": {
-            "type": "string",
-            "example": "moves"
-          },
-          "attributes": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "moves"
-              },
-              "status": {
-                "type": "string",
-                "enum": ["requested", "scheduled"]
-              },
-              "time_due": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updated_at": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "date": {
-                "type": "string",
-                "format": "date",
-                "example": "2019-05-24"
-              }
-            }
-          },
-          "relationships": {
-            "type": "object",
-            "properties": {
-              "person": {
-                "$ref": "#/components/schemas/PersonReference"
-              },
-              "from_location": {
-                "$ref": "#/components/schemas/LocationReference"
-              },
-              "to_location": {
-                "$ref": "#/components/schemas/LocationReference"
-              }
-            }
-          }
-        }
+        "$ref": "move.json#/Move"
       },
       "PersonReference": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "people"
-              },
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
-              }
-            }
-          }
-        }
+        "$ref": "person_reference.json#/PersonReference"
       },
       "LocationReference": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "locations"
-              },
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "example": "3561f372-9f1c-4e13-997e-b11e1647cce1"
-              }
-            }
-          }
-        }
+        "$ref": "location_reference.json#/LocationReference"
       },
       "Location": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "bf19c538-3f01-4d69-8200-69748ace1ed1"
-          },
-          "type": {
-            "type": "string",
-            "example": "locations"
-          },
-          "attributes": {
-            "type": "object",
-            "properties": {
-              "label": {
-                "type": "string",
-                "example": "Guildford Crown Court"
-              },
-              "description": {
-                "type": "string"
-              },
-              "location_type": {
-                "type": "string",
-                "enum": ["court", "police", "prison"]
-              }
-            }
-          }
-        }
+        "$ref": "location.json#/Location"
       },
       "Person": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "88089bbd-8719-4192-b309-f9db9105d3e1"
-          },
-          "type": {
-            "type": "string",
-            "example": "people"
-          },
-          "attributes": {
-            "type": "object",
-            "properties": {
-              "forenames": {
-                "type": "string",
-                "example": "Bob"
-              },
-              "surname": {
-                "type": "string",
-                "example": "Roberts"
-              },
-              "date_of_birth": {
-                "type": "string",
-                "format": "date",
-                "example": "1965-10-24"
-              }
-            }
-          }
-        }
+        "$ref": "person.json#/Person"
       },
       "NotAuthorisedError": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 12345
-          },
-          "title": {
-            "type": "string",
-            "example": "Not authorized"
-          },
-          "detail": {
-            "type": "string",
-            "example": "You must be logged in to use this service"
-          }
-        }
+        "$ref": "not_authorised_error.json#/NotAuthorisedError"
       },
       "PaginationLinks": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
-          },
-          "first": {
-            "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
-          },
-          "prev": {
-            "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=2&page_size=20"
-          },
-          "next": {
-            "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=4&page_size=20"
-          },
-          "last": {
-            "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
-          }
-        }
+        "$ref": "pagination_links.json#/PaginationLinks"
       },
       "Pagination": {
-        "type": "object",
-        "properties": {
-          "per_page": {
-            "type": "integer",
-            "example": 20
-          },
-          "total_pages": {
-            "type": "integer",
-            "example": 99
-          },
-          "total_objects": {
-            "type": "integer",
-            "example": 1977
-          },
-          "links": {
-            "type": "object",
-            "properties": {
-              "first": {
-                "type": "string",
-                "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
-              },
-              "last": {
-                "type": "string",
-                "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
-              }
-            }
-          }
-        }
+        "$ref": "pagination.json#/Pagination"
       }
     }
   },
@@ -320,38 +118,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "data"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Move"
-                      }
-                    },
-                    "included": {
-                      "type": "array",
-                      "items": {
-                        "oneOf": [
-                          { "$ref": "#/components/schemas/Location" },
-                          { "$ref": "#/components/schemas/Person" }
-                        ]
-                      }
-                    },
-                    "links": {
-                      "$ref": "#/components/schemas/PaginationLinks"
-                    },
-                    "meta": {
-                      "type": "object",
-                      "properties": {
-                        "pagination": {
-                          "$ref": "#/components/schemas/Pagination"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "get_moves_responses.json#/200"
                 }
               }
             }
@@ -369,7 +136,7 @@
                     "errors": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/NotAuthorisedError"
+                        "$ref": "not_authorised_error.json#/NotAuthorisedError"
                       }
                     }
                   }

@@ -1,0 +1,19 @@
+{
+  "NotAuthorisedError": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Not authorized"
+      },
+      "detail": {
+        "type": "string",
+        "example": "You must be logged in to use this service"
+      }
+    }
+  }
+}

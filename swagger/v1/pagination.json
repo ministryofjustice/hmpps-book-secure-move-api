@@ -1,0 +1,32 @@
+{
+  "Pagination": {
+    "type": "object",
+    "properties": {
+      "per_page": {
+        "type": "integer",
+        "example": 20
+      },
+      "total_pages": {
+        "type": "integer",
+        "example": 99
+      },
+      "total_objects": {
+        "type": "integer",
+        "example": 1977
+      },
+      "links": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "string",
+            "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+          },
+          "last": {
+            "type": "string",
+            "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
+          }
+        }
+      }
+    }
+  }
+}
