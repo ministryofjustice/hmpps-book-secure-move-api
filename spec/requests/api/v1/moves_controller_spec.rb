@@ -119,14 +119,11 @@ RSpec.describe Api::V1::MovesController do
         # '#/paths/\/api\/v1\/moves/get/responses/200/content/application\/vnd.api+json/schema'
         '#/200'
       end
-      let(:response_schema) do
-        schema['paths']['/api/v1/moves']['get']['responses']['200']['content']['application/vnd.api+json']['schema']
-      end
       let(:response_json) { JSON.parse(response.body) }
 
       it 'returns a valid JSON response' do
         get '/api/v1/moves', headers: valid_headers
-        expect(JSON::Validator.validate!(schema, { data: [], included: [], links: {}, meta: { pagination: {} } }, strict: true, fragment: fragment)).to be true
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: fragment)).to be true
       end
     end
   end
