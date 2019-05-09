@@ -5,6 +5,7 @@ require 'support/with_json_schema_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
+  let(:invalid_headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
   describe 'GET /moves' do
     context 'when there is no data' do
@@ -20,11 +21,11 @@ RSpec.describe Api::V1::MovesController do
 
       it 'sets the correct content type header' do
         get '/api/v1/moves', headers: valid_headers
-        expect(response.headers['Content-Type']).to match('application\/vnd.api\+json')
+        expect(response.headers['Content-Type']).to match(ApiController::JSON_API_CONTENT_TYPE)
       end
 
       it 'fails if I set the wrong `content-type` header' do
-        get '/api/v1/moves', headers: { 'CONTENT_TYPE': 'application/xml' }
+        get '/api/v1/moves', headers: invalid_headers
         expect(response.code).to eql '415'
       end
     end
@@ -110,19 +111,19 @@ RSpec.describe Api::V1::MovesController do
 
     describe 'response schema validation', with_json_schema: true do
       let(:schema) do
-        File.open(Rails.root + 'swagger/v1/get_moves_responses.json') do |file|
+        File.open("#{Rails.root}/swagger/v1/get_moves_responses.json") do |file|
           JSON.parse(file.read)
         end
       end
       let(:response_json) { JSON.parse(response.body) }
 
-      it 'returns a valid JSON response' do
+      it 'returns a valid 200 JSON response with move data' do
         get '/api/v1/moves', headers: valid_headers
         expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
       end
 
-      it 'returns a valid 415 response' do
-        get '/api/v1/moves', headers: { 'CONTENT_TYPE': 'application/xml' }
+      it 'returns a valid 415 JSON response' do
+        get '/api/v1/moves', headers: invalid_headers
         expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
