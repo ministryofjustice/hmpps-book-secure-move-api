@@ -21,7 +21,7 @@ RSpec.describe Api::V1::MovesController do
 
       it 'sets the correct content type header' do
         get '/api/v1/moves', headers: valid_headers
-        expect(response.headers['Content-Type']).to match(ApiController::JSON_API_CONTENT_TYPE)
+        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
 
       it 'fails if I set the wrong `content-type` header' do
