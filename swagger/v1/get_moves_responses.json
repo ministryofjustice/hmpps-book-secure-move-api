@@ -21,7 +21,7 @@
         }
       },
       "links": {
-        "$ref": "file:pagination_links.json#/PaginationLinks"
+        "$ref": "pagination_links.json#/PaginationLinks"
       },
       "meta": {
         "type": "object",

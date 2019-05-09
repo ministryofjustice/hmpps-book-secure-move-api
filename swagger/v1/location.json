@@ -19,7 +19,10 @@
             "example": "Guildford Crown Court"
           },
           "description": {
-            "type": "string"
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ]
           },
           "location_type": {
             "type": "string",

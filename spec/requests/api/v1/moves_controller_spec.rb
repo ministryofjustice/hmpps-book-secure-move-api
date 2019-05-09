@@ -108,18 +108,31 @@ RSpec.describe Api::V1::MovesController do
     end
 
     describe 'response schema validation' do
-      let!(:moves) { create_list :move, 1 }
-      let(:move_id) { moves.first.id }
       let(:schema) do
         File.open(Rails.root + 'swagger/v1/get_moves_responses.json') do |file|
           JSON.parse(file.read)
         end
       end
       let(:fragment) do
-        # '#/paths/\/api\/v1\/moves/get/responses/200/content/application\/vnd.api+json/schema'
         '#/200'
       end
       let(:response_json) { JSON.parse(response.body) }
+
+      def load_schema(file_name)
+        return unless File.file?("#{Rails.root}/swagger/v1/#{file_name}")
+
+        schema = File.open("#{Rails.root}/swagger/v1/#{file_name}") do |file|
+          JSON.parse(file.read)
+        end
+        JSON::Validator.add_schema(JSON::Schema.new(schema, file_name))
+      end
+
+      before do
+        create_list :move, 1
+        Dir.new('swagger/v1').each do |file_name|
+          load_schema(file_name)
+        end
+      end
 
       it 'returns a valid JSON response' do
         get '/api/v1/moves', headers: valid_headers
