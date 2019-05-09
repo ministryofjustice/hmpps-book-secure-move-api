@@ -1,0 +1,36 @@
+{
+  "NotAuthorisedError": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Not authorized"
+      },
+      "detail": {
+        "type": "string",
+        "example": "You must be logged in to use this service"
+      }
+    }
+  },
+  "UnsupportedMediaType": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Invalid Media Type"
+      },
+      "detail": {
+        "type": "string",
+        "example": "Content-Type must be application/vnd.api+json"
+      }
+    }
+  }
+}

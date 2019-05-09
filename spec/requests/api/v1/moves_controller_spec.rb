@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/with_json_schema_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
@@ -107,36 +108,22 @@ RSpec.describe Api::V1::MovesController do
       end
     end
 
-    describe 'response schema validation' do
+    describe 'response schema validation', with_json_schema: true do
       let(:schema) do
         File.open(Rails.root + 'swagger/v1/get_moves_responses.json') do |file|
           JSON.parse(file.read)
         end
       end
-      let(:fragment) do
-        '#/200'
-      end
       let(:response_json) { JSON.parse(response.body) }
-
-      def load_schema(file_name)
-        return unless File.file?("#{Rails.root}/swagger/v1/#{file_name}")
-
-        schema = File.open("#{Rails.root}/swagger/v1/#{file_name}") do |file|
-          JSON.parse(file.read)
-        end
-        JSON::Validator.add_schema(JSON::Schema.new(schema, file_name))
-      end
-
-      before do
-        create_list :move, 1
-        Dir.new('swagger/v1').each do |file_name|
-          load_schema(file_name)
-        end
-      end
 
       it 'returns a valid JSON response' do
         get '/api/v1/moves', headers: valid_headers
-        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: fragment)).to be true
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+      end
+
+      it 'returns a valid 415 response' do
+        get '/api/v1/moves', headers: { 'CONTENT_TYPE': 'application/xml' }
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
   end

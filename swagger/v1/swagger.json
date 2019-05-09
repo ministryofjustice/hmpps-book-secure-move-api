@@ -17,9 +17,6 @@
       "Person": {
         "$ref": "person.json#/Person"
       },
-      "NotAuthorisedError": {
-        "$ref": "not_authorised_error.json#/NotAuthorisedError"
-      },
       "PaginationLinks": {
         "$ref": "pagination_links.json#/PaginationLinks"
       },
@@ -128,18 +125,17 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "errors"
-                  ],
-                  "properties": {
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "not_authorised_error.json#/NotAuthorisedError"
-                      }
-                    }
-                  }
+                  "$ref": "get_moves_responses.json#/401"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_moves_responses.json#/415"
                 }
               }
             }

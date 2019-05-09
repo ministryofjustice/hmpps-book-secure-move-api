@@ -32,5 +32,33 @@
         }
       }
     }
+  },
+  "415": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
+  "401": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/NotAuthorisedError"
+        }
+      }
+    }
   }
 }
