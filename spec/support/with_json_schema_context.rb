@@ -11,7 +11,6 @@ RSpec.shared_context 'with json schema', shared_context: :metadata do
   end
 
   before do
-    create_list :move, 1
     Dir.new('swagger/v1').each do |file_name|
       load_schema(file_name)
     end

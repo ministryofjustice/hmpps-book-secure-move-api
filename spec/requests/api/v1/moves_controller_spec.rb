@@ -117,6 +117,8 @@ RSpec.describe Api::V1::MovesController do
       end
       let(:response_json) { JSON.parse(response.body) }
 
+      before { create :move }
+
       it 'returns a valid 200 JSON response with move data' do
         get '/api/v1/moves', headers: valid_headers
         expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
