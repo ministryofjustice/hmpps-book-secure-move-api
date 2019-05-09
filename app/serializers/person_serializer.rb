@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class PersonSerializer < ActiveModel::Serializer
-  attributes :id, :forenames, :surname, :date_of_birth
+  attributes :id, :first_names, :last_name, :date_of_birth
 
-  def forenames
-    object.latest_profile&.forenames
+  def first_names
+    object.latest_profile&.first_names
   end
 
-  def surname
-    object.latest_profile&.surname
+  def last_name
+    object.latest_profile&.last_name
   end
 
   def date_of_birth

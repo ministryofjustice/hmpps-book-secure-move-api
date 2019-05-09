@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_08_111424) do
+ActiveRecord::Schema.define(version: 2019_05_09_112313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -43,8 +43,8 @@ ActiveRecord::Schema.define(version: 2019_04_08_111424) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "surname", null: false
-    t.string "forenames", null: false
+    t.string "last_name", null: false
+    t.string "first_names", null: false
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
     t.uuid "religion_id"
@@ -53,6 +53,17 @@ ActiveRecord::Schema.define(version: 2019_04_08_111424) do
     t.uuid "nationality_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "access_token", null: false
+    t.string "refresh_token", null: false
+    t.string "user_name", null: false
+    t.string "user_id", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["access_token"], name: "index_user_tokens_on_access_token", unique: true
   end
 
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"

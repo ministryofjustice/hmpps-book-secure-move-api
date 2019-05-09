@@ -14,11 +14,11 @@
       "attributes": {
         "type": "object",
         "properties": {
-          "forenames": {
+          "first_names": {
             "type": "string",
             "example": "Bob"
           },
-          "surname": {
+          "last_name": {
             "type": "string",
             "example": "Roberts"
           },
