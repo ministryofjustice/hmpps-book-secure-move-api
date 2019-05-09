@@ -3,29 +3,34 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController do
-  let(:valid_headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
-  let(:invalid_headers) { { 'CONTENT_TYPE': 'application/xml' } }
+  let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /moves' do
     context 'when there is no data' do
-      it 'returns a success code' do
-        get '/api/v1/moves', headers: valid_headers
-        expect(response).to be_successful
+      context 'with the correct CONTENT_TYPE header' do
+        it 'returns a success code' do
+          get '/api/v1/moves', headers: headers
+          expect(response).to be_successful
+        end
+
+        it 'returns an empty list' do
+          get '/api/v1/moves', headers: headers
+          expect(JSON.parse(response.body)).to include_json(data: [])
+        end
+
+        it 'sets the correct content type header' do
+          get '/api/v1/moves', headers: headers
+          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+        end
       end
 
-      it 'returns an empty list' do
-        get '/api/v1/moves', headers: valid_headers
-        expect(JSON.parse(response.body)).to include_json(data: [])
-      end
+      context 'with an invalid CONTENT_TYPE header' do
+        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'sets the correct content type header' do
-        get '/api/v1/moves', headers: valid_headers
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
-      end
-
-      it 'fails if I set the wrong `content-type` header' do
-        get '/api/v1/moves', headers: invalid_headers
-        expect(response.code).to eql '415'
+        it 'fails if I set the wrong `content-type` header' do
+          get '/api/v1/moves', headers: headers
+          expect(response.code).to eql '415'
+        end
       end
     end
 
@@ -46,35 +51,35 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'returns a success code' do
-        get '/api/v1/moves', headers: valid_headers
+        get '/api/v1/moves', headers: headers
         expect(response).to be_successful
       end
 
       it 'returns a list of moves' do
-        get '/api/v1/moves', headers: valid_headers
+        get '/api/v1/moves', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
       end
 
       it 'paginates 20 results per page' do
-        get '/api/v1/moves', headers: valid_headers
+        get '/api/v1/moves', headers: headers
 
         expect(JSON.parse(response.body)['data'].size).to eq 20
       end
 
       it 'returns 1 result on the second page' do
-        get '/api/v1/moves?page=2', headers: valid_headers
+        get '/api/v1/moves?page=2', headers: headers
 
         expect(JSON.parse(response.body)['data'].size).to eq 1
       end
 
       it 'allows setting a different page size' do
-        get '/api/v1/moves?per_page=15', headers: valid_headers
+        get '/api/v1/moves?per_page=15', headers: headers
 
         expect(JSON.parse(response.body)['data'].size).to eq 15
       end
 
       it 'provides meta data with pagination' do
-        get '/api/v1/moves', headers: valid_headers
+        get '/api/v1/moves', headers: headers
 
         expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
       end
@@ -98,12 +103,12 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'delegates the query execution to Moves::MoveFinder with the correct filters' do
-        get '/api/v1/moves', headers: valid_headers, params: { filter: filters }
+        get '/api/v1/moves', headers: headers, params: { filter: filters }
         expect(Moves::MoveFinder).to have_received(:new).with(from_location_id: move.from_location_id)
       end
 
       it 'returns results from Moves::MoveFinder' do
-        get '/api/v1/moves', headers: valid_headers, params: { filter: filters }
+        get '/api/v1/moves', headers: headers, params: { filter: filters }
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
       end
     end
