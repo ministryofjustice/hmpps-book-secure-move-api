@@ -1,0 +1,31 @@
+{
+  "Nationality": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "83d189eb-3301-4d69-f200-69e482ce1ed8"
+      },
+      "type": {
+        "type": "string",
+        "example": "nationalities"
+      },
+      "attributes": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "British"
+          },
+          "description": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
