@@ -1,0 +1,31 @@
+{
+  "Gender": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "3fa9c528-3301-4d69-f200-69e482ce1ed8"
+      },
+      "type": {
+        "type": "string",
+        "example": "genders"
+      },
+      "attributes": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Male"
+          },
+          "description": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

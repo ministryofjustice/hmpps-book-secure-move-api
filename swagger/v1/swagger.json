@@ -21,6 +21,9 @@
       "Person": {
         "$ref": "person.json#/Person"
       },
+      "Gender": {
+        "$ref": "gender.json#/Gender"
+      },
       "PaginationLinks": {
         "$ref": "pagination_links.json#/PaginationLinks"
       },
@@ -140,6 +143,50 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "get_moves_responses.json#/415"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/genders": {
+      "get": {
+        "summary": "Returns a list of genders",
+        "tags": [
+          "Genders"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_genders_responses.json#/200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_genders_responses.json#/401"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_genders_responses.json#/415"
                 }
               }
             }
