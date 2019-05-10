@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/with_json_schema_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
@@ -110,6 +111,33 @@ RSpec.describe Api::V1::MovesController do
       it 'returns results from Moves::MoveFinder' do
         get '/api/v1/moves', headers: headers, params: { filter: filters }
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
+      end
+    end
+
+    describe 'response schema validation', with_json_schema: true do
+      let(:schema) do
+        File.open("#{Rails.root}/swagger/v1/get_moves_responses.json") do |file|
+          JSON.parse(file.read)
+        end
+      end
+      let(:response_json) { JSON.parse(response.body) }
+
+      before { create :move }
+
+      context 'with the correct CONTENT_TYPE header' do
+        it 'returns a valid 200 JSON response with move data' do
+          get '/api/v1/moves', headers: headers
+          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+        end
+      end
+
+      context 'with an invalid CONTENT_TYPE header' do
+        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+
+        it 'returns a valid 415 JSON response' do
+          get '/api/v1/moves', headers: headers
+          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
+        end
       end
     end
   end
