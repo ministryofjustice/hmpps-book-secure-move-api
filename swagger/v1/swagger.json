@@ -21,6 +21,9 @@
       "Person": {
         "$ref": "person.json#/Person"
       },
+      "EthnicCode": {
+        "$ref": "ethnic_code.json#/EthnicCode"
+      },
       "Gender": {
         "$ref": "gender.json#/Gender"
       },
@@ -187,6 +190,50 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "get_genders_responses.json#/415"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ethnic_codes": {
+      "get": {
+        "summary": "Returns a list of ethnic codes",
+        "tags": [
+          "EthnicCodes"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_ethnic_codes_responses.json#/200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_ethnic_codes_responses.json#/401"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_ethnic_codes_responses.json#/415"
                 }
               }
             }
