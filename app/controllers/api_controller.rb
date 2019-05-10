@@ -12,7 +12,11 @@ class ApiController < ApplicationController
     return if request.content_type == JSON_API_CONTENT_TYPE
 
     render(
-      json: { errors: [{ title: "Content-Type must be #{JSON_API_CONTENT_TYPE}" }] },
+      json: { errors: [{
+        id: 415,
+        title: 'Invalid Media Type',
+        detail: "Content-Type must be #{JSON_API_CONTENT_TYPE}"
+      }] },
       status: 415
     )
   end

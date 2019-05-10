@@ -1,0 +1,64 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "array",
+        "items": {
+          "$ref": "move.json#/Move"
+        }
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            { "$ref": "location.json#/Location" },
+            { "$ref": "person.json#/Person" }
+          ]
+        }
+      },
+      "links": {
+        "$ref": "pagination_links.json#/PaginationLinks"
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "pagination.json#/Pagination"
+          }
+        }
+      }
+    }
+  },
+  "415": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
+  "401": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/NotAuthorisedError"
+        }
+      }
+    }
+  }
+}

@@ -7,12 +7,14 @@ ruby '2.6.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'json-schema'
 gem 'kaminari'
 gem 'oauth2'
 gem 'pager_api'
 gem 'pg', '~> 1.0.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
+gem 'rswag'
 
 group :development, :test do
   gem 'factory_bot'

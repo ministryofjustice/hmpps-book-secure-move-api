@@ -6,6 +6,6 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to belong_to(:person) }
 
   it { is_expected.to validate_presence_of(:person) }
-  it { is_expected.to validate_presence_of(:surname) }
-  it { is_expected.to validate_presence_of(:forenames) }
+  it { is_expected.to validate_presence_of(:last_name) }
+  it { is_expected.to validate_presence_of(:first_names) }
 end

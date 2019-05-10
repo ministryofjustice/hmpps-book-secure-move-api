@@ -7,8 +7,8 @@ namespace :fake_data do
     50.times do
       person = Person.create!
       person.profiles << Profile.new(
-        forenames: Faker::Name.first_name,
-        surname: Faker::Name.last_name,
+        first_names: Faker::Name.first_name,
+        last_name: Faker::Name.last_name,
         date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago)
       )
     end

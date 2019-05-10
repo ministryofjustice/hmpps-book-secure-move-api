@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PECS front-end API",
+    "version": "1.0"
+  },
+  "components": {
+    "schemas": {
+      "Move": {
+        "$ref": "move.json#/Move"
+      },
+      "PersonReference": {
+        "$ref": "person_reference.json#/PersonReference"
+      },
+      "LocationReference": {
+        "$ref": "location_reference.json#/LocationReference"
+      },
+      "Location": {
+        "$ref": "location.json#/Location"
+      },
+      "Person": {
+        "$ref": "person.json#/Person"
+      },
+      "PaginationLinks": {
+        "$ref": "pagination_links.json#/PaginationLinks"
+      },
+      "Pagination": {
+        "$ref": "pagination.json#/Pagination"
+      }
+    }
+  },
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/moves": {
+      "get": {
+        "summary": "Returns a list of moves",
+        "tags": [
+          "Moves"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "filter[date_from]",
+            "in": "query",
+            "description": "Filters results to only include moves on and after the given date, e.g. `2019-05-02`",
+            "schema": {
+              "type": "string",
+              "example": "2019-05-09"
+            },
+            "format": "date"
+          },
+          {
+            "name": "filter[date_to]",
+            "in": "query",
+            "description": "Filters results to only include moves up to and including the given date, e.g. `2019-05-09`",
+            "schema": {
+              "type": "string",
+              "example": "2019-05-09"
+            },
+            "format": "date"
+          },
+          {
+            "name": "filter[status]",
+            "in": "query",
+            "description": "Filters results to only include moves with the given status",
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "accepted"]
+            }
+          },
+          {
+            "name": "filter[from_location_id]",
+            "in": "query",
+            "type": "string",
+            "description": "Filters results to only include moves from the given location",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "example": "950ef512-a25f-46d7-8ced-7ad09510659b"
+          },
+          {
+            "name": "filter[to_location_id]",
+            "in": "query",
+            "description": "Filters results to only include moves to the given location",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of records to return, defaults to 1 (the first page)",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_moves_responses.json#/200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_moves_responses.json#/401"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_moves_responses.json#/415"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

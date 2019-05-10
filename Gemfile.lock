@@ -47,6 +47,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.6.0)
+      public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
     ast (2.4.0)
     bootsnap (1.4.3)
@@ -73,6 +75,8 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.2)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     jsonapi-renderer (0.2.0)
     jwt (2.1.0)
     kaminari (1.1.1)
@@ -130,6 +134,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     psych (3.1.0)
+    public_suffix (3.0.3)
     puma (3.12.1)
     rack (2.0.7)
     rack-test (1.1.0)
@@ -181,6 +186,19 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    rswag (2.0.5)
+      rswag-api (= 2.0.5)
+      rswag-specs (= 2.0.5)
+      rswag-ui (= 2.0.5)
+    rswag-api (2.0.5)
+      railties (>= 3.1, < 6.0)
+    rswag-specs (2.0.5)
+      activesupport (>= 3.1, < 6.0)
+      json-schema (~> 2.2)
+      railties (>= 3.1, < 6.0)
+    rswag-ui (2.0.5)
+      actionpack (>= 3.1, < 6.0)
+      railties (>= 3.1, < 6.0)
     rubocop (0.67.2)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -225,6 +243,7 @@ DEPENDENCIES
   climate_control
   factory_bot
   faker
+  json-schema
   kaminari
   listen (>= 3.0.5, < 3.2)
   oauth2
@@ -236,6 +255,7 @@ DEPENDENCIES
   rails (~> 5.2.3)
   rspec-json_expectations
   rspec-rails
+  rswag
   rubocop
   rubocop-rspec
   shoulda-matchers

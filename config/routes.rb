@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  unless Rails.env.production?
+    mount Rswag::Ui::Engine => '/api-docs'
+    mount Rswag::Api::Engine => '/api-docs'
+  end
   get '/ping', to: 'status#ping', format: :json
   get '/health', to: 'status#health', format: :json
 

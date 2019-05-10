@@ -8,6 +8,6 @@ FactoryBot.define do
     date { Date.today }
     time_due { Time.now }
     move_type { 'court' }
-    status { 'draft' }
+    status { 'requested' }
   end
 end

@@ -16,11 +16,11 @@ RSpec.describe PersonSerializer do
     expect(result[:data][:id]).to eql person.id
   end
 
-  it 'contains a forenames attribute' do
-    expect(result[:data][:attributes][:forenames]).to eql 'Bob'
+  it 'contains a first_names attribute' do
+    expect(result[:data][:attributes][:first_names]).to eql 'Bob'
   end
 
-  it 'contains a surname attribute' do
-    expect(result[:data][:attributes][:surname]).to eql 'Roberts'
+  it 'contains a last_name attribute' do
+    expect(result[:data][:attributes][:last_name]).to eql 'Roberts'
   end
 end

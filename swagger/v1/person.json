@@ -1,0 +1,34 @@
+{
+  "Person": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "88089bbd-8719-4192-b309-f9db9105d3e1"
+      },
+      "type": {
+        "type": "string",
+        "example": "people"
+      },
+      "attributes": {
+        "type": "object",
+        "properties": {
+          "first_names": {
+            "type": "string",
+            "example": "Bob"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Roberts"
+          },
+          "date_of_birth": {
+            "type": "string",
+            "format": "date",
+            "example": "1965-10-24"
+          }
+        }
+      }
+    }
+  }
+}
