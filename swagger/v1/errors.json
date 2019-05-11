@@ -16,6 +16,23 @@
       }
     }
   },
+  "ResourceNotFound": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Resource not found"
+      },
+      "detail": {
+        "type": "string",
+        "example": "The requested resource was not found"
+      }
+    }
+  },
   "UnsupportedMediaType": {
     "type": "object",
     "properties": {

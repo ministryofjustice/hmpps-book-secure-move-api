@@ -334,6 +334,72 @@
           }
         }
       }
+    },
+    "/api/v1/moves/{moveId}": {
+      "get": {
+        "summary": "Returns the details of a move",
+        "tags": [
+          "Moves"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "moveId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the move",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "example": "00525ecb-7316-492a-aae2-f69334b2a155"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_move_responses.json#/200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_move_responses.json#/401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_move_responses.json#/404"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_move_responses.json#/415"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
