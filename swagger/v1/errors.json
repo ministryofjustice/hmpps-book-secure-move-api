@@ -1,4 +1,21 @@
 {
+  "BadRequest": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Bad request"
+      },
+      "detail": {
+        "type": "string",
+        "example": "The server cannot or will not process the request due to an apparent client error"
+      }
+    }
+  },
   "NotAuthorisedError": {
     "type": "object",
     "properties": {
@@ -47,6 +64,23 @@
       "detail": {
         "type": "string",
         "example": "Content-Type must be application/vnd.api+json"
+      }
+    }
+  },
+  "UnprocessableEntity": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "example": 12345
+      },
+      "title": {
+        "type": "string",
+        "example": "Unprocessable entity"
+      },
+      "detail": {
+        "type": "string",
+        "example": "The request was well-formed but was unable to be followed due to semantic errors"
       }
     }
   }
