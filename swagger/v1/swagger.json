@@ -159,7 +159,7 @@
         }
       }
     },
-    "/api/v1/genders": {
+    "/api/v1/reference/genders": {
       "get": {
         "summary": "Returns a list of genders",
         "tags": [
@@ -203,7 +203,7 @@
         }
       }
     },
-    "/api/v1/ethnic_codes": {
+    "/api/v1/reference/ethnic_codes": {
       "get": {
         "summary": "Returns a list of ethnic codes",
         "tags": [
@@ -247,7 +247,7 @@
         }
       }
     },
-    "/api/v1/religions": {
+    "/api/v1/reference/religions": {
       "get": {
         "summary": "Returns a list of religions",
         "tags": [
@@ -291,7 +291,7 @@
         }
       }
     },
-    "/api/v1/nationalities": {
+    "/api/v1/reference/nationalities": {
       "get": {
         "summary": "Returns a list of nationalities",
         "tags": [
