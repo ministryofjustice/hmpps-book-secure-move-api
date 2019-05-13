@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "ethnic_code.json#/EthnicCode"
+          "$ref": "ethnicity.json#/Ethnicity"
         }
       }
     }
