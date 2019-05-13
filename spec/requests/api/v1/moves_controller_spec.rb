@@ -115,11 +115,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     describe 'response schema validation', with_json_schema: true do
-      let(:schema) do
-        File.open("#{Rails.root}/swagger/v1/get_moves_responses.json") do |file|
-          JSON.parse(file.read)
-        end
-      end
+      let(:schema) { load_json_schema('get_moves_responses.json') }
       let(:response_json) { JSON.parse(response.body) }
 
       before { create :move }
