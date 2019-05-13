@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_09_112313) do
+ActiveRecord::Schema.define(version: 2019_05_13_141723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 2019_05_09_112313) do
     t.string "aliases", default: [], array: true
     t.uuid "religion_id"
     t.uuid "gender_id"
-    t.uuid "ethnic_code_id"
+    t.uuid "ethnicity_id"
     t.uuid "nationality_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
