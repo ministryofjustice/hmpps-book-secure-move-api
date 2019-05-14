@@ -70,17 +70,30 @@
   "UnprocessableEntity": {
     "type": "object",
     "properties": {
-      "id": {
+      "status": {
         "type": "integer",
-        "example": 12345
+        "example": 422
       },
       "title": {
         "type": "string",
         "example": "Unprocessable entity"
       },
+      "code": {
+        "type": "string",
+        "example": "validation_error"
+      },
       "detail": {
         "type": "string",
         "example": "The request was well-formed but was unable to be followed due to semantic errors"
+      },
+      "source": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "example": "/data/attributes/property"
+          }
+        }
       }
     }
   }
