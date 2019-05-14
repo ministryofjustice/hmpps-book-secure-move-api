@@ -44,6 +44,16 @@ We use Rubocop for code linting, to run the checks:
 bundle exec rubocop
 ```
 
+### Create fake data
+
+To create fake data to use for testing run:
+
+```
+bundle exec rails fake_data:recreate_all
+```
+
+**Note:** This will delete all existing data
+
 ## Continuous Integration
 
 We use Circle CI for continuous integration: running tests, updating the
