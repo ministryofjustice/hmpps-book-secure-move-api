@@ -27,7 +27,7 @@ RSpec.describe Api::V1::GendersController do
         expect(response).to be_successful
       end
 
-      it 'returns an empty list' do
+      it 'returns the correct data' do
         pending 'not implemented yet'
         get '/api/v1/reference/genders', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: expected_data)

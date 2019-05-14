@@ -11,11 +11,11 @@ RSpec.describe Api::V1::EthnicitiesController do
       [
         {
           id: 'ade88298-9727-4f1c-9f79-0e25657f2f28',
-          title: 'Female'
+          title: 'White British'
         },
         {
           id: '259c0156-8ae2-408e-898c-94f485492ab6',
-          title: 'Male'
+          title: 'Asian or Asian British (Indian)'
         }
       ]
     end
@@ -27,7 +27,7 @@ RSpec.describe Api::V1::EthnicitiesController do
         expect(response).to be_successful
       end
 
-      it 'returns an empty list' do
+      it 'returns the correct data' do
         pending 'not implemented yet'
         get '/api/v1/reference/ethnicities', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: expected_data)
