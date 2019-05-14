@@ -1,0 +1,21 @@
+{
+  "AlertReference": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "alerts"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3561f372-9f1c-4e13-997e-b11e1647cce1"
+          }
+        }
+      }
+    }
+  }
+}

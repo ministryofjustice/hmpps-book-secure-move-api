@@ -49,6 +49,12 @@
           },
           "ethnicity": {
             "$ref": "ethnicity_reference.json#/EthnicityReference"
+          },
+          "alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "alert_reference.json#/AlertReference"
+            }
           }
         }
       }
