@@ -1,6 +1,10 @@
 {
   "Person": {
     "type": "object",
+    "required": [
+      "id",
+      "type"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -13,6 +17,10 @@
       },
       "attributes": {
         "type": "object",
+        "required": [
+          "first_names",
+          "last_name"
+        ],
         "properties": {
           "first_names": {
             "type": "string",
