@@ -26,6 +26,21 @@
             "type": "string",
             "format": "date",
             "example": "1965-10-24"
+          },
+          "custody_reference": {
+            "type": "string",
+            "example": "CR451905001"
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "$ref": "gender_reference.json#/GenderReference"
+          },
+          "ethnicity": {
+            "$ref": "ethnicity_reference.json#/EthnicityReference"
           }
         }
       }
