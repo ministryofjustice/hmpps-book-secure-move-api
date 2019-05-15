@@ -1,0 +1,51 @@
+{
+  "RiskAlert": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "3e22c55a-3301-4d69-f200-69e482ce1ed8"
+      },
+      "type": {
+        "type": "string",
+        "example": "risk_alerts"
+      },
+      "attributes": {
+        "type": "object",
+        "properties": {
+          "alert_type": {
+            "type": "string",
+            "example": "R"
+          },
+          "alert_code": {
+            "type": "string",
+            "example": "ROM"
+          },
+          "alert_date": {
+            "type": "string",
+            "example": "2019-05-06"
+          },
+          "alert_expiry_date": {
+            "type": "string",
+            "example": "2019-06-06"
+          },
+          "description": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "example": "Risk to older people"
+          },
+          "comments": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "example": "Mugged an old lady"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "RiskAlertReference": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "required": ["type", "id"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "risk_alerts"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
+          }
+        }
+      }
+    }
+  }
+}

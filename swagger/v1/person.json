@@ -50,10 +50,16 @@
           "ethnicity": {
             "$ref": "ethnicity_reference.json#/EthnicityReference"
           },
-          "alerts": {
+          "risk_alerts": {
             "type": "array",
             "items": {
-              "$ref": "alert_reference.json#/AlertReference"
+              "$ref": "risk_alert_reference.json#/RiskAlertReference"
+            }
+          },
+          "health_alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "health_alert_reference.json#/HealthAlertReference"
             }
           }
         }

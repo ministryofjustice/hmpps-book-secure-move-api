@@ -15,6 +15,12 @@
       "LocationReference": {
         "$ref": "location_reference.json#/LocationReference"
       },
+      "RiskAlertReference": {
+        "$ref": "risk_alert_reference.json#/RiskAlertReference"
+      },
+      "HealthAlertReference": {
+        "$ref": "health_alert_reference.json#/HealthAlertReference"
+      },
       "Location": {
         "$ref": "location.json#/Location"
       },
@@ -32,6 +38,12 @@
       },
       "Religion": {
         "$ref": "religion.json#/Religion"
+      },
+      "HealthAlert": {
+        "$ref": "health_alert.json#/HealthAlert"
+      },
+      "RiskAlert": {
+        "$ref": "risk_alert.json#/RiskAlert"
       },
       "PaginationLinks": {
         "$ref": "pagination_links.json#/PaginationLinks"
