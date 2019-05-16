@@ -58,7 +58,7 @@ RSpec.describe Api::V1::EthnicitiesController do
         it 'returns a valid 200 JSON response with move data' do
           pending 'not implemented yet'
           get '/api/v1/reference/ethnicities', headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
         end
       end
 
@@ -68,7 +68,7 @@ RSpec.describe Api::V1::EthnicitiesController do
         it 'returns a valid 415 JSON response' do
           pending 'not implemented yet'
           get '/api/v1/reference/ethnicities', headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
         end
       end
     end
