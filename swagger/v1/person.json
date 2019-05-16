@@ -38,6 +38,10 @@
           "custody_reference": {
             "type": "string",
             "example": "CR451905001"
+          },
+          "offence_details": {
+            "type": "string",
+            "example": "Armed Robbery"
           }
         }
       },
