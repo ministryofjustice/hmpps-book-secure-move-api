@@ -1,6 +1,11 @@
 {
   "Nationality": {
     "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -13,6 +18,9 @@
       },
       "attributes": {
         "type": "object",
+        "required": [
+          "title"
+        ],
         "properties": {
           "title": {
             "type": "string",

@@ -3,7 +3,8 @@
     "type": "object",
     "required": [
       "id",
-      "type"
+      "type",
+      "attributes"
     ],
     "properties": {
       "id": {

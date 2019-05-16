@@ -1,6 +1,10 @@
 {
   "EthnicityReference": {
     "type": "object",
+    "required": [
+      "id",
+      "type"
+    ],
     "properties": {
       "data": {
         "type": "object",

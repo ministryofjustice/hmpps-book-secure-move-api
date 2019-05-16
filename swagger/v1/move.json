@@ -1,6 +1,11 @@
 {
   "Move": {
     "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -13,11 +18,11 @@
       },
       "attributes": {
         "type": "object",
+        "required": [
+          "status",
+          "date"
+        ],
         "properties": {
-          "type": {
-            "type": "string",
-            "example": "moves"
-          },
           "status": {
             "type": "string",
             "enum": ["requested", "scheduled"]

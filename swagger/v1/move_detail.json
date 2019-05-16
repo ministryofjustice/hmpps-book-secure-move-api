@@ -1,6 +1,12 @@
 {
   "MoveDetail": {
     "type": "object",
+    "required": [
+      "id",
+      "type",
+      "description",
+      "move_detail_type_id"
+    ],
     "properties": {
       "id": {
         "type": "string",
