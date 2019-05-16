@@ -7,38 +7,29 @@
         "format": "uuid",
         "example": "7cc9c528-3301-4d69-f200-69e482ce1ed8"
       },
-      "type": {
+      "date": {
         "type": "string",
-        "example": "move_details"
+        "example": "2019-05-06"
       },
-      "attributes": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string",
-            "example": "2019-05-06"
-          },
-          "expiry_date": {
-            "type": "string",
-            "example": "2019-06-06"
-          },
-          "description": {
-            "type": "string",
-            "example": "Asthmatic"
-          },
-          "comments": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "null" }
-            ],
-            "example": "Needs an inhaler"
-          },
-          "move_detail_type_id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "49fa81ee-3301-4d69-f200-69e482ce1ed8"
-          }
-        }
+      "expiry_date": {
+        "type": "string",
+        "example": "2019-06-06"
+      },
+      "description": {
+        "type": "string",
+        "example": "Asthmatic"
+      },
+      "comments": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "null" }
+        ],
+        "example": "Needs an inhaler"
+      },
+      "move_detail_type_id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "49fa81ee-3301-4d69-f200-69e482ce1ed8"
       }
     }
   }

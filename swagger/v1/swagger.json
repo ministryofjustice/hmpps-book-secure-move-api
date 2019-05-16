@@ -15,9 +15,6 @@
       "LocationReference": {
         "$ref": "location_reference.json#/LocationReference"
       },
-      "MoveDetailReference": {
-        "$ref": "move_detail_reference.json#/MoveDetailReference"
-      },
       "Location": {
         "$ref": "location.json#/Location"
       },
