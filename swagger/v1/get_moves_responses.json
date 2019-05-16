@@ -19,8 +19,7 @@
             { "$ref": "person.json#/Person" },
             { "$ref": "gender.json#/Gender" },
             { "$ref": "ethnicity.json#/Ethnicity" },
-            { "$ref": "health_alert.json#/HealthAlert" },
-            { "$ref": "risk_alert.json#/RiskAlert" }
+            { "$ref": "move_detail.json#/MoveDetail" }
           ]
         }
       },
