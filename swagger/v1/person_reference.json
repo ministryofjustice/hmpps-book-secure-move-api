@@ -2,8 +2,7 @@
   "PersonReference": {
     "type": "object",
     "required": [
-      "id",
-      "type"
+      "data"
     ],
     "properties": {
       "data": {
