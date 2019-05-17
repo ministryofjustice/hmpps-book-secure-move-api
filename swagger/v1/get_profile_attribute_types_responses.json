@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "move_detail_type.json#/MoveDetailType"
+          "$ref": "profile_attribute_type.json#/ProfileAttributeType"
         }
       }
     }

@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class MoveDetailTypesController < ApiController
+    class ProfileAttributeTypesController < ApiController
       def index; end
     end
   end

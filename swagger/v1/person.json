@@ -58,25 +58,25 @@
           "risk_alerts": {
             "type": "array",
             "items": {
-              "$ref": "move_detail.json#/MoveDetail"
+              "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           },
           "health_alerts": {
             "type": "array",
             "items": {
-              "$ref": "move_detail.json#/MoveDetail"
+              "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           },
           "hold_reasons": {
             "type": "array",
             "items": {
-              "$ref": "move_detail.json#/MoveDetail"
+              "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           },
           "court_information": {
             "type": "array",
             "items": {
-              "$ref": "move_detail.json#/MoveDetail"
+              "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           }
         }

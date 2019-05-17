@@ -1,5 +1,5 @@
 {
-  "MoveDetailType": {
+  "ProfileAttributeType": {
     "type": "object",
     "properties": {
       "id": {
@@ -9,12 +9,12 @@
       },
       "type": {
         "type": "string",
-        "example": "move_detail_types"
+        "example": "profile_attribute_types"
       },
       "attributes": {
         "type": "object",
         "properties": {
-          "move_detail_category": {
+          "profile_attribute_category": {
             "type": "String",
             "enum": ["health", "risk", "court_information", "no_release_reason"]
           },
