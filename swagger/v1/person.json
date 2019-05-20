@@ -1,6 +1,11 @@
 {
   "Person": {
     "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -13,6 +18,10 @@
       },
       "attributes": {
         "type": "object",
+        "required": [
+          "first_names",
+          "last_name"
+        ],
         "properties": {
           "first_names": {
             "type": "string",
@@ -26,6 +35,41 @@
             "type": "string",
             "format": "date",
             "example": "1965-10-24"
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "$ref": "gender_reference.json#/GenderReference"
+          },
+          "ethnicity": {
+            "$ref": "ethnicity_reference.json#/EthnicityReference"
+          },
+          "risk_alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "profile_attribute.json#/ProfileAttribute"
+            }
+          },
+          "health_alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "profile_attribute.json#/ProfileAttribute"
+            }
+          },
+          "court_information": {
+            "type": "array",
+            "items": {
+              "$ref": "profile_attribute.json#/ProfileAttribute"
+            }
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "profile_identifier.json#/ProfileIdentifier"
+            }
           }
         }
       }

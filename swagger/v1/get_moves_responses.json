@@ -14,9 +14,11 @@
       "included": {
         "type": "array",
         "items": {
-          "oneOf": [
+          "anyOf": [
             { "$ref": "location.json#/Location" },
-            { "$ref": "person.json#/Person" }
+            { "$ref": "person.json#/Person" },
+            { "$ref": "gender.json#/Gender" },
+            { "$ref": "ethnicity.json#/Ethnicity" }
           ]
         }
       },

@@ -1,5 +1,5 @@
 {
-  "PersonReference": {
+  "EthnicityReference": {
     "type": "object",
     "required": [
       "data"
@@ -7,16 +7,19 @@
     "properties": {
       "data": {
         "type": "object",
-        "required": ["type", "id"],
+        "required": [
+          "id",
+          "type"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "example": "people"
+            "example": "ethnicities"
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
+            "example": "3561f372-9f1c-4e13-997e-b11e1647cce1"
           }
         }
       }

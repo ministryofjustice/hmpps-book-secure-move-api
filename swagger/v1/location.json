@@ -13,6 +13,10 @@
       },
       "attributes": {
         "type": "object",
+        "required": [
+          "label",
+          "location_type"
+        ],
         "properties": {
           "label": {
             "type": "string",

@@ -1,9 +1,16 @@
 {
   "LocationReference": {
     "type": "object",
+    "required": [
+      "data"
+    ],
     "properties": {
       "data": {
         "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
         "properties": {
           "type": {
             "type": "string",

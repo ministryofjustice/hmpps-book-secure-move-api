@@ -3,23 +3,23 @@
 require 'rails_helper'
 require 'support/with_json_schema_context'
 
-RSpec.describe Api::V1::ReligionsController do
+RSpec.describe Api::V1::ProfileAttributeTypesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
-  describe 'GET /api/v1/reference/religions' do
+  describe 'GET /api/v1/reference/profile_attribute_types' do
     let(:expected_data) do
       [
         {
-          id: 'ade88298-9727-4f1c-9f79-0e25657f2f28',
-          title: 'Christian'
-        },
-        {
-          id: '259c0156-8ae2-408e-898c-94f485492ab6',
-          title: 'Hindu'
-        },
-        {
-          id: 'fe28dbee-7395-4e28-b5bc-deeae3792867',
-          title: 'Muslim'
+          id: '3852df1a-3301-4d69-f200-69e482ce1ed8',
+          type: 'profile_attribute_types',
+          attributes: {
+            profile_attribute_category: 'health',
+            user_type: 'prison',
+            alert_type: 'M',
+            alert_code: 'MSI',
+            type_description: 'Medical',
+            description: 'Sight Impaired'
+          }
         }
       ]
     end
@@ -27,19 +27,19 @@ RSpec.describe Api::V1::ReligionsController do
     context 'with the correct CONTENT_TYPE header' do
       it 'returns a success code' do
         pending 'not implemented yet'
-        get '/api/v1/reference/religions', headers: headers
+        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response).to be_successful
       end
 
       it 'returns the correct data' do
         pending 'not implemented yet'
-        get '/api/v1/reference/religions', headers: headers
+        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: expected_data)
       end
 
       it 'sets the correct content type header' do
         pending 'not implemented yet'
-        get '/api/v1/reference/religions', headers: headers
+        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
     end
@@ -49,20 +49,22 @@ RSpec.describe Api::V1::ReligionsController do
 
       it 'fails if I set the wrong `content-type` header' do
         pending 'not implemented yet'
-        get '/api/v1/reference/religions', headers: headers
+        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.code).to eql '415'
       end
     end
 
+    describe 'filtering'
+
     describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_religions_responses.json') }
+      let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
       let(:response_json) { JSON.parse(response.body) }
 
       context 'with the correct CONTENT_TYPE header' do
         it 'returns a valid 200 JSON response with move data' do
           pending 'not implemented yet'
-          get '/api/v1/reference/religions', headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+          get '/api/v1/reference/profile_attribute_types', headers: headers
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
         end
       end
 
@@ -71,8 +73,8 @@ RSpec.describe Api::V1::ReligionsController do
 
         it 'returns a valid 415 JSON response' do
           pending 'not implemented yet'
-          get '/api/v1/reference/religions', headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
+          get '/api/v1/reference/profile_attribute_types', headers: headers
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
         end
       end
     end
