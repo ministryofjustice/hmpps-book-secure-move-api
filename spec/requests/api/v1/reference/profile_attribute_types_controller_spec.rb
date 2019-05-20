@@ -7,24 +7,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/profile_attribute_types' do
-    let(:expected_data) do
-      [
-        {
-          id: '3852df1a-3301-4d69-f200-69e482ce1ed8',
-          type: 'profile_attribute_types',
-          attributes: {
-            profile_attribute_category: 'health',
-            user_type: 'prison',
-            alert_type: 'M',
-            alert_code: 'MSI',
-            type_description: 'Medical',
-            description: 'Sight Impaired'
-          }
-        }
-      ]
-    end
-
-    before do
+    let!(:profile_attribute_type) do
       FactoryBot.create(
         :profile_attribute_type,
         category: 'health',
@@ -33,6 +16,21 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
         alert_code: 'MSI',
         description: 'Sight Impaired'
       )
+    end
+    let(:expected_data) do
+      [
+        {
+          id: profile_attribute_type.id,
+          type: 'profile_attribute_types',
+          attributes: {
+            category: 'health',
+            user_type: 'prison',
+            alert_type: 'M',
+            alert_code: 'MSI',
+            description: 'Sight Impaired'
+          }
+        }
+      ]
     end
 
     context 'with the correct CONTENT_TYPE header' do
