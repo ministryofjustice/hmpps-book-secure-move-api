@@ -24,6 +24,17 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
       ]
     end
 
+    before do
+      FactoryBot.create(
+        :profile_attribute_type,
+        category: 'health',
+        user_type: 'prison',
+        alert_type: 'M',
+        alert_code: 'MSI',
+        description: 'Sight Impaired'
+      )
+    end
+
     context 'with the correct CONTENT_TYPE header' do
       it 'returns a success code' do
         get '/api/v1/reference/profile_attribute_types', headers: headers
