@@ -16,7 +16,7 @@
         "properties": {
           "profile_attribute_category": {
             "type": "String",
-            "enum": ["health", "risk", "court_information", "no_release_reason"]
+            "enum": ["health", "risk", "court_information"]
           },
           "user_type": {
             "type": "String",

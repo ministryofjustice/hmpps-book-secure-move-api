@@ -3,7 +3,6 @@
     "type": "object",
     "required": [
       "id",
-      "type",
       "description",
       "profile_attribute_type_id"
     ],

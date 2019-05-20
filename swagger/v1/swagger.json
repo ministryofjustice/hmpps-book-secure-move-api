@@ -39,6 +39,9 @@
       "ProfileAttributeType": {
         "$ref": "profile_attribute_type.json#/ProfileAttributeType"
       },
+      "ProfileIdentifier": {
+        "$ref": "profile_identifier.json#/ProfileIdentifier"
+      },
       "PaginationLinks": {
         "$ref": "pagination_links.json#/PaginationLinks"
       },
@@ -652,7 +655,7 @@
             "description": "Filters results to only include move detail types for the given category",
             "schema": {
               "type": "string",
-              "enum": ["risks", "health", "court_information", "no_release_reason"]
+              "enum": ["risks", "health", "court_information"]
             }
           },
           {

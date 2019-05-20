@@ -35,10 +35,6 @@
             "type": "string",
             "format": "date",
             "example": "1965-10-24"
-          },
-          "custody_reference": {
-            "type": "string",
-            "example": "CR451905001"
           }
         }
       },
@@ -63,16 +59,16 @@
               "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           },
-          "hold_reasons": {
+          "court_information": {
             "type": "array",
             "items": {
               "$ref": "profile_attribute.json#/ProfileAttribute"
             }
           },
-          "court_information": {
+          "identifiers": {
             "type": "array",
             "items": {
-              "$ref": "profile_attribute.json#/ProfileAttribute"
+              "$ref": "profile_identifier.json#/ProfileIdentifier"
             }
           }
         }
