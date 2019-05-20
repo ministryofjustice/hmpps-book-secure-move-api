@@ -30,9 +30,6 @@
       "Nationality": {
         "$ref": "nationality.json#/Nationality"
       },
-      "Religion": {
-        "$ref": "religion.json#/Religion"
-      },
       "ProfileAttribute": {
         "$ref": "profile_attribute.json#/ProfileAttribute"
       },
@@ -249,50 +246,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "get_ethnicities_responses.json#/415"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/reference/religions": {
-      "get": {
-        "summary": "Returns a list of religions",
-        "tags": [
-          "Religions"
-        ],
-        "consumes": [
-          "application/vnd.api+json"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "get_religions_responses.json#/200"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "unauthorized",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "get_religions_responses.json#/401"
-                }
-              }
-            }
-          },
-          "415": {
-            "description": "invalid media type",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "get_religions_responses.json#/415"
                 }
               }
             }

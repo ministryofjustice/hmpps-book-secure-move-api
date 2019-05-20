@@ -6,7 +6,6 @@ class CreateProfiles < ActiveRecord::Migration[5.2]
       t.string :forenames, null: false
       t.date :date_of_birth
       t.string :aliases, array: true, default: []
-      t.uuid :religion_id
       t.uuid :gender_id
       t.uuid :ethnic_code_id
       t.uuid :nationality_id
