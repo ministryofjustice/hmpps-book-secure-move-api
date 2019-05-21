@@ -5,38 +5,41 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "3852df1a-3301-4d69-f200-69e482ce1ed8"
+        "example": "3852df1a-3301-4d69-f200-69e482ce1ed8",
+        "description": "The unique identifier (UUID) of this profile attribute type"
       },
       "type": {
         "type": "string",
-        "example": "profile_attribute_types"
+        "example": "profile_attribute_types",
+        "description": "The type of this object - always `profile_attribute_types`"
       },
       "attributes": {
         "type": "object",
         "properties": {
           "profile_attribute_category": {
             "type": "String",
-            "enum": ["health", "risk", "court_information"]
+            "enum": ["health", "risk", "court_information"],
+            "description": "Category is the section in the Create Move form that a profile attribute appears in, e.g. Health or Risks"
           },
           "user_type": {
             "type": "String",
-            "enum": ["prison", "police"]
+            "enum": ["prison", "police"],
+            "description": "Profile attribute types can be applied to certain user types such as Police or Prison staff or to everybody (indicated by a null value)"
           },
           "alert_type": {
             "type": "String",
-            "example": "M"
+            "example": "M",
+            "description": "The NOMIS alert type for this profile attribute type"
           },
           "alert_code": {
             "type": "String",
-            "example": "MSI"
-          },
-          "type_description": {
-            "type": "String",
-            "example": "Medical"
+            "example": "MSI",
+            "description": "The NOMIS alert code for this profile attribute type"
           },
           "description": {
             "type": "String",
-            "example": "Sight Impaired"
+            "example": "Sight Impaired",
+            "description": "The label displayed on the Create Move form for this profile attribute type"
           }
         }
       }
