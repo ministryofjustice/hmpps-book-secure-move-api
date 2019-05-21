@@ -10,11 +10,13 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "88089bbd-8719-4192-b309-f9db9105d3e1"
+        "example": "88089bbd-8719-4192-b309-f9db9105d3e1",
+        "description": "The unique identifier (UUID) of this object"
       },
       "type": {
         "type": "string",
-        "example": "people"
+        "example": "people",
+        "description": "The type of this object - always `people`"
       },
       "attributes": {
         "type": "object",
