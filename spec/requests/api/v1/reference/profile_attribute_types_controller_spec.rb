@@ -59,7 +59,44 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
       end
     end
 
-    describe 'filtering'
+    describe 'filtering' do
+      let(:category_filter) { :health }
+      let(:user_type_filter) { :prison }
+      let(:params) { { filter: { category: category_filter, user_type: user_type_filter } } }
+      let(:expected_data) do
+        [
+          {
+            id: profile_attribute_type.id
+          }
+        ]
+      end
+
+      before do
+        get '/api/v1/reference/profile_attribute_types', headers: headers, params: params
+      end
+
+      context 'with matching filters' do
+        it 'returns the matching item' do
+          expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        end
+      end
+
+      context 'with a mis-matched `user_type` filter' do
+        let(:user_type_filter) { :police }
+
+        it 'does not return the mis-matched item' do
+          expect(JSON.parse(response.body)).not_to include_json(data: expected_data)
+        end
+      end
+
+      context 'with a mis-matched `category` filter' do
+        let(:category_filter) { :risk }
+
+        it 'does not return the mis-matched item' do
+          expect(JSON.parse(response.body)).not_to include_json(data: expected_data)
+        end
+      end
+    end
 
     describe 'response schema validation', with_json_schema: true do
       let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
