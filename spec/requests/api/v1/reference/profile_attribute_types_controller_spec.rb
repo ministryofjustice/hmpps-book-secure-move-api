@@ -7,16 +7,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/profile_attribute_types' do
-    let!(:profile_attribute_type) do
-      FactoryBot.create(
-        :profile_attribute_type,
-        category: 'health',
-        user_type: 'prison',
-        alert_type: 'M',
-        alert_code: 'MSI',
-        description: 'Sight Impaired'
-      )
-    end
+    let!(:profile_attribute_type) { FactoryBot.create(:profile_attribute_type) }
     let(:expected_data) do
       [
         {
