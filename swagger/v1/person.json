@@ -27,16 +27,19 @@
         "properties": {
           "first_names": {
             "type": "string",
-            "example": "Bob"
+            "example": "Bob",
+            "description": "Person's first names"
           },
           "last_name": {
             "type": "string",
-            "example": "Roberts"
+            "example": "Roberts",
+            "description": "Person's surname"
           },
           "date_of_birth": {
             "type": "string",
             "format": "date",
-            "example": "1965-10-24"
+            "example": "1965-10-24",
+            "description": "Person's date of birth in ISO 8601 format"
           }
         }
       },
@@ -44,34 +47,40 @@
         "type": "object",
         "properties": {
           "gender": {
-            "$ref": "gender_reference.json#/GenderReference"
+            "$ref": "gender_reference.json#/GenderReference",
+            "description": "Person's gender"
           },
           "ethnicity": {
-            "$ref": "ethnicity_reference.json#/EthnicityReference"
+            "$ref": "ethnicity_reference.json#/EthnicityReference",
+            "description": "Person's ethnicity"
           },
           "risk_alerts": {
             "type": "array",
             "items": {
               "$ref": "profile_attribute.json#/ProfileAttribute"
-            }
+            },
+            "description": "Collection of risk alerts that escorts need to be aware of for safety, security and other reasons"
           },
           "health_alerts": {
             "type": "array",
             "items": {
               "$ref": "profile_attribute.json#/ProfileAttribute"
-            }
+            },
+            "description": "Collection of health alerts that escorts need to be aware for the well being of the person and other reasons"
           },
           "court_information": {
             "type": "array",
             "items": {
               "$ref": "profile_attribute.json#/ProfileAttribute"
-            }
+            },
+            "description": "Collection of information that the court needs to be aware of"
           },
           "identifiers": {
             "type": "array",
             "items": {
               "$ref": "profile_identifier.json#/ProfileIdentifier"
-            }
+            },
+            "description": "Collection of identifiers used to identify the person. Different services have various id schemes such police criminal records number, prison number etc. We may need to record several of these."
           }
         }
       }

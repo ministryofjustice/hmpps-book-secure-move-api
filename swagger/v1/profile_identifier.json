@@ -15,11 +15,13 @@
       },
       "value": {
         "type": "string",
-        "example": "CR451905001"
+        "example": "CR451905001",
+        "description": "The value of this profile identifier"
       },
       "identifier_type": {
         "type": "string",
-        "enum": ["pnc_number", "cro_number", "prison_number", "niche_reference", "athena_reference"]
+        "enum": ["pnc_number", "cro_number", "prison_number", "niche_reference", "athena_reference"],
+        "description": "Different services have different schemes for identifying people, e.g. police PNC number, prison number."
       }
     }
   }

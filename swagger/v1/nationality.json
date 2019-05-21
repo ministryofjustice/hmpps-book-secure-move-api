@@ -26,13 +26,15 @@
         "properties": {
           "title": {
             "type": "string",
-            "example": "British"
+            "example": "British",
+            "description": "Label for the nationality"
           },
           "description": {
             "oneOf": [
               { "type": "string" },
               { "type": "null" }
-            ]
+            ],
+            "description": "Description for the nationality (optional)"
           }
         }
       }
