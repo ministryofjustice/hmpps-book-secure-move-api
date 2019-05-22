@@ -12,15 +12,17 @@ RSpec.describe Api::V1::Reference::LocationsController do
         {
           type: 'locations',
           attributes: {
-            label: 'Guildford Crown Court',
-            location_type: 'court'
+            description: 'Guildford Crown Court',
+            location_type: 'court',
+            location_code: 'GCC'
           }
         },
         {
           type: 'locations',
           attributes: {
-            label: 'HMP Pentonville',
-            location_type: 'prison'
+            description: 'HMP Pentonville',
+            location_type: 'prison',
+            location_code: 'PEI'
           }
         }
       ]
