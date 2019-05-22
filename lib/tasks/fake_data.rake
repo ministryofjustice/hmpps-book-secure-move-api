@@ -16,9 +16,9 @@ namespace :fake_data do
 
   desc 'create fake prisons'
   task create_prisons: :environment do
-    PRISON_NAMES.each do |label|
+    PRISON_NAMES.each do |description|
       Location.create!(
-        label: label,
+        description: description,
         location_type: :prison
       )
     end

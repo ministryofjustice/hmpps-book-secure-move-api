@@ -16,26 +16,24 @@
       "attributes": {
         "type": "object",
         "required": [
-          "label",
+          "description",
           "location_type"
         ],
         "properties": {
-          "label": {
+          "description": {
             "type": "string",
             "example": "Guildford Crown Court",
-            "description": "The name of the location"
-          },
-          "description": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "null" }
-            ],
             "description": "The description of the location"
           },
           "location_type": {
             "type": "string",
             "enum": ["court", "police", "prison"],
             "description": "Location type indicates whether this a prison, police station, court etc."
+          },
+          "location_code": {
+            "type": "string",
+            "example": "BAI",
+            "description": "The NOMIS `agency_id`, for prisons this is a 3-letter code"
           }
         }
       }

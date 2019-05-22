@@ -596,7 +596,7 @@
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
-          "Move Detail Types"
+          "Profile Attribute Types"
         ],
         "consumes": [
           "application/vnd.api+json"
@@ -648,6 +648,60 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "get_profile_attribute_types_responses.json#/415"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reference/locations": {
+      "get": {
+        "summary": "Returns a list of locations optionally filtered by type",
+        "tags": [
+          "Locations"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "filter[location_type]",
+            "in": "query",
+            "description": "Filters results by location type, e.g. court or prison",
+            "schema": {
+              "type": "string",
+              "enum": ["court", "police", "prison"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_locations_responses.json#/200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_locations_responses.json#/401"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "get_locations_responses.json#/415"
                 }
               }
             }
