@@ -6,7 +6,7 @@ module Api
       class LocationsController < ApiController
         def index
           types = Locations::Finder.new(filter_params).call
-          render json: types
+          paginate types
         end
 
         private
