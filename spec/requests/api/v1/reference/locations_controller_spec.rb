@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'support/with_json_schema_context'
 
-RSpec.describe Api::V1::LocationsController do
+RSpec.describe Api::V1::Reference::LocationsController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/locations' do
