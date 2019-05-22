@@ -26,7 +26,7 @@ RSpec.describe Api::V1::Reference::LocationsController do
       ]
     end
 
-    let!(:locations) do
+    before do
       data.map do |location|
         Location.create!(location[:attributes])
       end
