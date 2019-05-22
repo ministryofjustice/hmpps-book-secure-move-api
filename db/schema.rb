@@ -24,11 +24,11 @@ ActiveRecord::Schema.define(version: 2019_05_22_152348) do
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "label", null: false
-    t.string "description"
+    t.string "description", null: false
     t.string "location_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "location_code"
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

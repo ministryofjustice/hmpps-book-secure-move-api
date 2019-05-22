@@ -8,8 +8,8 @@ module Api
 
         paginate moves, include: {
           person: %i[first_names last_name date_of_birth],
-          from_location: %i[location_type label],
-          to_location: %i[location_type label]
+          from_location: %i[location_type description],
+          to_location: %i[location_type description]
         }
       end
 

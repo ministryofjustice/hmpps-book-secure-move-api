@@ -20,7 +20,11 @@ RSpec.describe LocationSerializer do
     expect(result[:data][:attributes][:location_type]).to eql 'prison'
   end
 
-  it 'contains a label attribute' do
-    expect(result[:data][:attributes][:label]).to eql 'HMP Pentonville'
+  it 'contains a description attribute' do
+    expect(result[:data][:attributes][:description]).to eql 'HMP Pentonville'
+  end
+
+  it 'contains a location_code attribute' do
+    expect(result[:data][:attributes][:location_code]).to eql 'PEI'
   end
 end
