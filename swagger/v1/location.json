@@ -5,11 +5,13 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "bf19c538-3f01-4d69-8200-69748ace1ed1"
+        "example": "bf19c538-3f01-4d69-8200-69748ace1ed1",
+        "description": "The unique identifier (UUID) of this object"
       },
       "type": {
         "type": "string",
-        "example": "locations"
+        "example": "locations",
+        "description": "The type of this object - always `locations`"
       },
       "attributes": {
         "type": "object",
@@ -20,17 +22,20 @@
         "properties": {
           "label": {
             "type": "string",
-            "example": "Guildford Crown Court"
+            "example": "Guildford Crown Court",
+            "description": "The name of the location"
           },
           "description": {
             "oneOf": [
               { "type": "string" },
               { "type": "null" }
-            ]
+            ],
+            "description": "The description of the location"
           },
           "location_type": {
             "type": "string",
-            "enum": ["court", "police", "prison"]
+            "enum": ["court", "police", "prison"],
+            "description": "Location type indicates whether this a prison, police station, court etc."
           }
         }
       }

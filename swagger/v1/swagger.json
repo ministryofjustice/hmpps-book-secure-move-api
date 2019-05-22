@@ -603,7 +603,7 @@
         ],
         "parameters": [
           {
-            "name": "filter[profile_attribute_category]",
+            "name": "filter[category]",
             "in": "query",
             "description": "Filters results to only include move detail types for the given category",
             "schema": {
@@ -612,7 +612,7 @@
             }
           },
           {
-            "name": "filter[user_category]",
+            "name": "filter[user_type]",
             "in": "query",
             "description": "Filters results to only include move detail types for the given user type",
             "schema": {

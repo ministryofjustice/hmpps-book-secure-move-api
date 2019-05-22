@@ -3,21 +3,21 @@
 require 'rails_helper'
 require 'support/with_json_schema_context'
 
-RSpec.describe Api::V1::ProfileAttributeTypesController do
+RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/profile_attribute_types' do
-    let(:expected_data) do
+    let!(:profile_attribute_type) { FactoryBot.create(:profile_attribute_type) }
+    let(:data) do
       [
         {
-          id: '3852df1a-3301-4d69-f200-69e482ce1ed8',
+          id: profile_attribute_type.id,
           type: 'profile_attribute_types',
           attributes: {
-            profile_attribute_category: 'health',
+            category: 'health',
             user_type: 'prison',
             alert_type: 'M',
             alert_code: 'MSI',
-            type_description: 'Medical',
             description: 'Sight Impaired'
           }
         }
@@ -26,19 +26,16 @@ RSpec.describe Api::V1::ProfileAttributeTypesController do
 
     context 'with the correct CONTENT_TYPE header' do
       it 'returns a success code' do
-        pending 'not implemented yet'
         get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response).to be_successful
       end
 
       it 'returns the correct data' do
-        pending 'not implemented yet'
         get '/api/v1/reference/profile_attribute_types', headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to include_json(data: data)
       end
 
       it 'sets the correct content type header' do
-        pending 'not implemented yet'
         get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
@@ -48,13 +45,49 @@ RSpec.describe Api::V1::ProfileAttributeTypesController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'fails if I set the wrong `content-type` header' do
-        pending 'not implemented yet'
         get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.code).to eql '415'
       end
     end
 
-    describe 'filtering'
+    describe 'filtering' do
+      let(:category_filter) { :health }
+      let(:user_type_filter) { :prison }
+      let(:params) { { filter: { category: category_filter, user_type: user_type_filter } } }
+      let(:data) do
+        [
+          {
+            id: profile_attribute_type.id
+          }
+        ]
+      end
+
+      before do
+        get '/api/v1/reference/profile_attribute_types', headers: headers, params: params
+      end
+
+      context 'with matching filters' do
+        it 'returns the matching item' do
+          expect(JSON.parse(response.body)).to include_json(data: data)
+        end
+      end
+
+      context 'with a mis-matched `user_type` filter' do
+        let(:user_type_filter) { :police }
+
+        it 'does not return the mis-matched item' do
+          expect(JSON.parse(response.body)).not_to include_json(data: data)
+        end
+      end
+
+      context 'with a mis-matched `category` filter' do
+        let(:category_filter) { :risk }
+
+        it 'does not return the mis-matched item' do
+          expect(JSON.parse(response.body)).not_to include_json(data: data)
+        end
+      end
+    end
 
     describe 'response schema validation', with_json_schema: true do
       let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
@@ -62,7 +95,6 @@ RSpec.describe Api::V1::ProfileAttributeTypesController do
 
       context 'with the correct CONTENT_TYPE header' do
         it 'returns a valid 200 JSON response with move data' do
-          pending 'not implemented yet'
           get '/api/v1/reference/profile_attribute_types', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
         end
@@ -72,7 +104,6 @@ RSpec.describe Api::V1::ProfileAttributeTypesController do
         let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
         it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
           get '/api/v1/reference/profile_attribute_types', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
         end
