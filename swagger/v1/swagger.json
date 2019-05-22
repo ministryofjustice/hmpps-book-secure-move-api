@@ -681,7 +681,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_location_responses.json#/200"
+                  "$ref": "get_locations_responses.json#/200"
                 }
               }
             }
@@ -691,7 +691,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_location_responses.json#/401"
+                  "$ref": "get_locations_responses.json#/401"
                 }
               }
             }
@@ -701,7 +701,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_location_responses.json#/415"
+                  "$ref": "get_locations_responses.json#/415"
                 }
               }
             }

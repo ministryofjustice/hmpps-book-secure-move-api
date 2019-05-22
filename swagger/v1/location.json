@@ -31,6 +31,11 @@
           "location_type": {
             "type": "string",
             "enum": ["court", "police", "prison"]
+          },
+          "location_code": {
+            "type": "string",
+            "example": "BAI",
+            "description": "The NOMIS `agency_id`, for prisons this is a 3-letter code"
           }
         }
       }
