@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 2019_05_22_105849) do
     t.string "first_names", null: false
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
-    t.uuid "religion_id"
     t.uuid "gender_id"
     t.uuid "ethnicity_id"
     t.uuid "nationality_id"
