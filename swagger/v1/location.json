@@ -14,19 +14,13 @@
       "attributes": {
         "type": "object",
         "required": [
-          "label",
+          "description",
           "location_type"
         ],
         "properties": {
-          "label": {
+          "description": {
             "type": "string",
             "example": "Guildford Crown Court"
-          },
-          "description": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "null" }
-            ]
           },
           "location_type": {
             "type": "string",
