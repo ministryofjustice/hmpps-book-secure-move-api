@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :moves, only: :index
       namespace :reference do
         resources :locations, only: :index
+        resources :profile_attribute_types, only: :index
       end
     end
   end

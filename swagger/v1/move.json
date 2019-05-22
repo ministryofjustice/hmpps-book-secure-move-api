@@ -10,11 +10,13 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6"
+        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6",
+        "description": "The unique identifier (UUID) of this object"
       },
       "type": {
         "type": "string",
-        "example": "moves"
+        "example": "moves",
+        "description": "The type of this object - always `moves`"
       },
       "attributes": {
         "type": "object",
@@ -25,20 +27,24 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["requested", "scheduled"]
+            "enum": ["requested", "scheduled"],
+            "description": "Indicates the stage in it's lifecycle that this move is at"
           },
           "time_due": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Time due at the destination, e.g. court appointment time"
           },
           "updated_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Timestamp of when the move was last created or updated"
           },
           "date": {
             "type": "string",
             "format": "date",
-            "example": "2019-05-24"
+            "example": "2019-05-24",
+            "description": "Date on which the move is scheduled"
           }
         }
       },
@@ -46,13 +52,16 @@
         "type": "object",
         "properties": {
           "person": {
-            "$ref": "person_reference.json#/PersonReference"
+            "$ref": "person_reference.json#/PersonReference",
+            "description": "The person being moved"
           },
           "from_location": {
-            "$ref": "location_reference.json#/LocationReference"
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location that the person is being moved from"
           },
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference"
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location that the person is being moved to"
           }
         }
       }

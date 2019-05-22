@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class NationalitiesController < ApiController
+    class LocationsController < ApiController
       def index; end
     end
   end
