@@ -8,7 +8,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
 
   describe 'GET /api/v1/reference/profile_attribute_types' do
     let!(:profile_attribute_type) { FactoryBot.create(:profile_attribute_type) }
-    let(:expected_data) do
+    let(:data) do
       [
         {
           id: profile_attribute_type.id,
@@ -32,7 +32,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
 
       it 'returns the correct data' do
         get '/api/v1/reference/profile_attribute_types', headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to include_json(data: data)
       end
 
       it 'sets the correct content type header' do
@@ -54,7 +54,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
       let(:category_filter) { :health }
       let(:user_type_filter) { :prison }
       let(:params) { { filter: { category: category_filter, user_type: user_type_filter } } }
-      let(:expected_data) do
+      let(:data) do
         [
           {
             id: profile_attribute_type.id
@@ -68,7 +68,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
 
       context 'with matching filters' do
         it 'returns the matching item' do
-          expect(JSON.parse(response.body)).to include_json(data: expected_data)
+          expect(JSON.parse(response.body)).to include_json(data: data)
         end
       end
 
@@ -76,7 +76,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
         let(:user_type_filter) { :police }
 
         it 'does not return the mis-matched item' do
-          expect(JSON.parse(response.body)).not_to include_json(data: expected_data)
+          expect(JSON.parse(response.body)).not_to include_json(data: data)
         end
       end
 
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
         let(:category_filter) { :risk }
 
         it 'does not return the mis-matched item' do
-          expect(JSON.parse(response.body)).not_to include_json(data: expected_data)
+          expect(JSON.parse(response.body)).not_to include_json(data: data)
         end
       end
     end
