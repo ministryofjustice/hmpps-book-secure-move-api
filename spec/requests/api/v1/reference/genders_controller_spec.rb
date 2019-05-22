@@ -7,17 +7,25 @@ RSpec.describe Api::V1::Reference::GendersController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/genders' do
-    let(:expected_data) do
+    let(:data) do
       [
         {
-          id: 'ade88298-9727-4f1c-9f79-0e25657f2f28',
-          title: 'Female'
+          type: 'genders',
+          attributes: {
+            title: 'Female'
+          }
         },
         {
-          id: '259c0156-8ae2-408e-898c-94f485492ab6',
-          title: 'Male'
+          type: 'genders',
+          attributes: {
+            title: 'Male'
+          }
         }
       ]
+    end
+
+    before do
+      data.map { |gender| Gender.create!(gender[:attributes]) }
     end
 
     context 'with the correct CONTENT_TYPE header' do
@@ -28,7 +36,7 @@ RSpec.describe Api::V1::Reference::GendersController do
 
       it 'returns the correct data' do
         get '/api/v1/reference/genders', headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to include_json(data: data)
       end
 
       it 'sets the correct content type header' do
