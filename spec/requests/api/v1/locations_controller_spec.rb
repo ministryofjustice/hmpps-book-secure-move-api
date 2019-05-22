@@ -10,14 +10,20 @@ RSpec.describe Api::V1::LocationsController do
     let(:expected_data) do
       [
         {
-          id: 'ade88298-9727-4f1c-9f79-0e25657f2f28',
-          label: 'Guildford Crown Court',
-          location_type: 'court'
+          type: 'locations',
+          attributes: {
+            description: 'Guildford Crown Court',
+            location_type: 'court',
+            location_code: 'GCC'
+          }
         },
         {
-          id: '259c0156-8ae2-408e-898c-94f485492ab6',
-          label: 'HMP Pentonville',
-          location_type: 'prison'
+          type: 'locations',
+          attributes: {
+            description: 'HMP Pentonville',
+            location_type: 'prison',
+            location_code: 'PEI'
+          }
         }
       ]
     end

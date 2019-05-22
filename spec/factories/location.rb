@@ -2,12 +2,14 @@
 
 FactoryBot.define do
   factory :location do
-    label { 'HMP Pentonville' }
+    description { 'HMP Pentonville' }
     location_type { 'prison' }
+    location_code { 'PEI' }
 
     trait :court do
-      label { 'Guildford Crown Court' }
+      description { 'Guildford Crown Court' }
       location_type { 'court' }
+      location_code { 'GUICCT' }
     end
   end
 end
