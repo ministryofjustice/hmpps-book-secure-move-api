@@ -22,19 +22,16 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
 
     context 'with the correct CONTENT_TYPE header' do
       it 'returns a success code' do
-        pending 'not implemented yet'
         get '/api/v1/reference/ethnicities', headers: headers
         expect(response).to be_successful
       end
 
       it 'returns the correct data' do
-        pending 'not implemented yet'
         get '/api/v1/reference/ethnicities', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: expected_data)
       end
 
       it 'sets the correct content type header' do
-        pending 'not implemented yet'
         get '/api/v1/reference/ethnicities', headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
@@ -44,7 +41,6 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'fails if I set the wrong `content-type` header' do
-        pending 'not implemented yet'
         get '/api/v1/reference/ethnicities', headers: headers
         expect(response.code).to eql '415'
       end
@@ -56,7 +52,6 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
 
       context 'with the correct CONTENT_TYPE header' do
         it 'returns a valid 200 JSON response with move data' do
-          pending 'not implemented yet'
           get '/api/v1/reference/ethnicities', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
         end
@@ -66,7 +61,6 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
         let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
         it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
           get '/api/v1/reference/ethnicities', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
         end
