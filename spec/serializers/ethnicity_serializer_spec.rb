@@ -16,7 +16,15 @@ RSpec.describe EthnicitySerializer do
     expect(result[:data][:id]).to eql ethnicity.id
   end
 
+  it 'contains a code property' do
+    expect(result[:data][:attributes][:code]).to eql ethnicity.code
+  end
+
   it 'contains a title attribute' do
-    expect(result[:data][:attributes][:value]).to eql 'IC1'
+    expect(result[:data][:attributes][:title]).to eql ethnicity.title
+  end
+
+  it 'contains a description attribute' do
+    expect(result[:data][:attributes][:description]).to eql ethnicity.description
   end
 end

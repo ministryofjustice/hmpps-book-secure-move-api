@@ -2,12 +2,14 @@
 
 FactoryBot.define do
   factory :ethnicity do
-    value { 'IC1' }
-    description { 'White British' }
+    code { 'W1' }
+    title { 'White British' }
+    description { 'W1 - White British' }
 
     trait :asian do
-      value { 'IC4' }
-      description { 'Asian or Asian British (Indian)' }
+      code { 'A1' }
+      title { 'Asian or Asian British (Indian)' }
+      description { 'A1 - Asian or Asian British (Indian)' }
     end
   end
 end

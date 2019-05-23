@@ -17,7 +17,8 @@ ActiveRecord::Schema.define(version: 2019_05_23_071912) do
   enable_extension "plpgsql"
 
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "value", null: false
+    t.string "code", null: false
+    t.string "title", null: false
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

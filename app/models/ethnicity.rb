@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 class Ethnicity < ApplicationRecord
-  validates :value, presence: true
+  validates :code, presence: true
+  validates :title, presence: true
 end
