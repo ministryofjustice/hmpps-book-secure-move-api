@@ -3,7 +3,7 @@
 class NomisClient
   class << self
     def get(path, params = {})
-      token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params: params)
+      token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
     end
 
     private
