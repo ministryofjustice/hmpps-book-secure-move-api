@@ -7,17 +7,28 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'GET /api/v1/reference/ethnicities' do
-    let(:expected_data) do
+    let(:data) do
       [
         {
-          id: 'ade88298-9727-4f1c-9f79-0e25657f2f28',
-          title: 'White British'
+          type: 'ethnicities',
+          attributes: {
+            value: 'IC1',
+            description: 'White British'
+          }
         },
         {
-          id: '259c0156-8ae2-408e-898c-94f485492ab6',
-          title: 'Asian or Asian British (Indian)'
+          type: 'ethnicities',
+          attributes: {
+            value: 'IC4',
+            description: 'Asian or Asian British (Indian)'
+          }
         }
       ]
+    end
+
+    before do
+      create :ethnicity
+      create :ethnicity, :asian
     end
 
     context 'with the correct CONTENT_TYPE header' do
@@ -28,7 +39,7 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
 
       it 'returns the correct data' do
         get '/api/v1/reference/ethnicities', headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to include_json(data: data)
       end
 
       it 'sets the correct content type header' do
