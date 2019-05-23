@@ -1,7 +1,7 @@
 class CreateLocations < ActiveRecord::Migration[5.2]
   def change
     create_table :locations, id: :uuid do |t|
-      t.string :label,label, null: false
+      t.string :label, null: false
       t.string :description
       t.string :location_type
       t.timestamps
