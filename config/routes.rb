@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :moves, only: :index
       namespace :reference do
+        resources :locations, only: :index
         resources :profile_attribute_types, only: :index
       end
     end

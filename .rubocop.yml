@@ -25,3 +25,6 @@ Metrics/BlockLength:
 
 RSpec/NestedGroups:
   Max: 4
+
+RSpec/LetSetup:
+  Enabled: false
