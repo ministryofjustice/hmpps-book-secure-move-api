@@ -28,7 +28,7 @@ namespace :fake_data do
   task create_courts: :environment do
     TOWN_NAMES.each do |town|
       Location.create!(
-        label: "#{town} #{%w[County Crown Magistrates].sample} Court",
+        description: "#{town} #{%w[County Crown Magistrates].sample} Court",
         location_type: :court
       )
     end
