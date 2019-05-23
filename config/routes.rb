@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       namespace :reference do
         resources :locations, only: :index
         resources :profile_attribute_types, only: :index
+        resources :genders, only: :index
       end
     end
   end
