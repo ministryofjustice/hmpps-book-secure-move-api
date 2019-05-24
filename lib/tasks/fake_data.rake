@@ -89,7 +89,8 @@ namespace :fake_data do
   ETHNICITIES = [
     { code: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
     { code: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
-    { code: 'A3', title: 'Asian or Asian British (Bangladeshi)', description: 'A3 - Asian or Asian British (Bangladeshi)' },
+    { code: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+      description: 'A3 - Asian or Asian British (Bangladeshi)' },
     { code: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
     { code: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },
     { code: 'B2', title: 'Black (African)', description: 'B2 - Black (African)' },
