@@ -6,6 +6,14 @@ require 'support/with_json_schema_context'
 RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
+  let(:move_to_json) do
+    ActionController::Base.render json: move, include: {
+      person: %i[first_names last_name date_of_birth],
+      from_location: %i[location_type description],
+      to_location: %i[location_type description]
+    }
+  end
+
   describe 'GET /moves' do
     context 'when there is no data' do
       context 'with the correct CONTENT_TYPE header' do
@@ -142,23 +150,17 @@ RSpec.describe Api::V1::MovesController do
     let!(:move) { create :move }
 
     context 'when successful' do
-      # TODO: define expected data
-      let(:expected_data) { move.to_json }
-
       it 'returns a success code' do
-        pending 'not implemented yet'
         get "/api/v1/moves/#{move.id}", headers: headers
         expect(response).to be_successful
       end
 
       it 'returns the correct data' do
-        pending 'not implemented yet'
         get "/api/v1/moves/#{move.id}", headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to include_json(JSON.parse(move_to_json))
       end
 
       it 'sets the correct content type header' do
-        pending 'not implemented yet'
         get "/api/v1/moves/#{move.id}", headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
@@ -174,7 +176,6 @@ RSpec.describe Api::V1::MovesController do
 
     context 'when resource is not found' do
       it 'returns a resource not found error code' do
-        pending 'not implemented yet'
         get '/api/v1/moves/UUID-not-found', headers: headers
         expect(response).to have_http_status(404)
       end
@@ -184,7 +185,6 @@ RSpec.describe Api::V1::MovesController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'returns invalid media type error code' do
-        pending 'not implemented yet'
         get "/api/v1/moves/#{move.id}", headers: headers
         expect(response).to have_http_status(415)
       end
@@ -196,9 +196,8 @@ RSpec.describe Api::V1::MovesController do
 
       context 'when successful' do
         it 'returns a valid 200 JSON response' do
-          pending 'not implemented yet'
           get "/api/v1/moves/#{move.id}", headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
         end
       end
 
@@ -212,7 +211,6 @@ RSpec.describe Api::V1::MovesController do
 
       context 'when resource is not found' do
         it 'returns a valid 404 JSON response' do
-          pending 'not implemented yet'
           get '/api/v1/moves/UUID-not-found', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
         end
@@ -222,7 +220,6 @@ RSpec.describe Api::V1::MovesController do
         let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
         it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
           get "/api/v1/moves/#{move.id}", headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
         end
@@ -543,7 +540,6 @@ RSpec.describe Api::V1::MovesController do
 
     context 'when resource is not found' do
       it 'returns a resource not found error code' do
-        pending 'not implemented yet'
         get '/api/v1/moves/UUID-not-found', headers: headers
         expect(response).to have_http_status(404)
       end
@@ -581,7 +577,6 @@ RSpec.describe Api::V1::MovesController do
 
       context 'when resource is not found' do
         it 'returns a valid 404 JSON response' do
-          pending 'not implemented yet'
           get '/api/v1/moves/UUID-not-found', headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
         end
