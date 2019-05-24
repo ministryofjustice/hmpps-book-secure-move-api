@@ -4,7 +4,10 @@ module Api
   module V1
     module Reference
       class NationalitiesController < ApiController
-        def index; end
+        def index
+          nationalities = Nationality.all
+          render json: nationalities
+        end
       end
     end
   end

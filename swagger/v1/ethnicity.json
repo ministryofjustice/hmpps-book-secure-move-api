@@ -21,18 +21,23 @@
       "attributes": {
         "type": "object",
         "properties": {
-          "value": {
+          "code": {
             "type": "string",
-            "example": "IC1",
+            "example": "W1",
             "description": "Ethnicity code"
+          },
+          "title": {
+            "type": "string",
+            "example": "White British",
+            "description": "Human readable label for this ethnicity"
           },
           "description": {
             "oneOf": [
               { "type": "string" },
               { "type": "null" }
             ],
-            "example": "White British",
-            "description": "Human readable label for this ethnicity"
+            "example": "W1 - White British",
+            "description": "Human readable long label for this ethnicity"
           }
         }
       }
