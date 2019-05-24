@@ -100,15 +100,15 @@ RSpec.describe Api::V1::MovesController do
 
       before do
         allow(move_finder).to receive(:call).and_return(Move.all)
-        allow(Moves::MoveFinder).to receive(:new).and_return(move_finder)
+        allow(Moves::Finder).to receive(:new).and_return(move_finder)
       end
 
-      it 'delegates the query execution to Moves::MoveFinder with the correct filters' do
+      it 'delegates the query execution to Moves::Finder with the correct filters' do
         get '/api/v1/moves', headers: headers, params: { filter: filters }
-        expect(Moves::MoveFinder).to have_received(:new).with(from_location_id: move.from_location_id)
+        expect(Moves::Finder).to have_received(:new).with(from_location_id: move.from_location_id)
       end
 
-      it 'returns results from Moves::MoveFinder' do
+      it 'returns results from Moves::Finder' do
         get '/api/v1/moves', headers: headers, params: { filter: filters }
         expect(JSON.parse(response.body)).to include_json(data: [{ id: move_id }])
       end

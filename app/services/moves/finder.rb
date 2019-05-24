@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Moves
-  class MoveFinder
+  class Finder
     attr_accessor :filter_params
 
     def initialize(filter_params)

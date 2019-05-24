@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Moves::MoveFinder do
+RSpec.describe Moves::Finder do
   subject(:move_finder) { described_class.new(filter_params) }
 
   let!(:move) { create :move }
@@ -80,6 +80,15 @@ RSpec.describe Moves::MoveFinder do
       it 'returns empty result set' do
         expect(move_finder.call.to_a).to eql []
       end
+    end
+  end
+
+  describe 'ordering' do
+    let(:prison) { create :location }
+    let!(:move_to_prison) { create :move, to_location: prison }
+
+    it 'returns moves in the correct order' do
+      expect(move_finder.call.pluck(:id)).to eql [move.id, move_to_prison.id]
     end
   end
 end
