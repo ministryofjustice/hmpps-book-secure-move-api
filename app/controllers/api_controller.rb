@@ -6,11 +6,32 @@ class ApiController < ApplicationController
 
   JSON_API_CONTENT_TYPE = 'application/vnd.api+json'
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
+
   private
 
   def restrict_content_type
     return if request.content_type == JSON_API_CONTENT_TYPE
 
+    render_invalid_media_type_error
+  end
+
+  def set_content_type
+    self.content_type = JSON_API_CONTENT_TYPE
+  end
+
+  def render_resource_not_found_error
+    render(
+      json: { errors: [{
+        id: 404,
+        title: 'Resource not found',
+        detail: 'The requested resource was not found'
+      }] },
+      status: 404
+    )
+  end
+
+  def render_invalid_media_type_error
     render(
       json: { errors: [{
         id: 415,
@@ -19,9 +40,5 @@ class ApiController < ApplicationController
       }] },
       status: 415
     )
-  end
-
-  def set_content_type
-    self.content_type = JSON_API_CONTENT_TYPE
   end
 end
