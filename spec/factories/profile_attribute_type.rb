@@ -7,5 +7,17 @@ FactoryBot.define do
     alert_type { 'M' }
     alert_code { 'MSI' }
     description { 'Sight Impaired' }
+
+    trait :risk do
+      category { 'risk' }
+    end
+
+    trait :health do
+      category { 'health' }
+    end
+
+    trait :court_information do
+      category { 'court_information' }
+    end
   end
 end

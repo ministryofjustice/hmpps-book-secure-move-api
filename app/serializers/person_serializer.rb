@@ -25,4 +25,16 @@ class PersonSerializer < ActiveModel::Serializer
   def gender
     object.latest_profile&.gender
   end
+
+  def risk_alerts
+    object.latest_profile&.profile_attributes&.select(&:risk_alert?) || []
+  end
+
+  def health_alerts
+    object.latest_profile&.profile_attributes&.select(&:risk_alert?) || []
+  end
+
+  def court_information
+    object.latest_profile&.profile_attributes&.select(&:court_information?) || []
+  end
 end
