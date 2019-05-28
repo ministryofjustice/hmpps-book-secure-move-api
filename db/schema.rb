@@ -73,17 +73,6 @@ ActiveRecord::Schema.define(version: 2019_05_28_101425) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "profile_attributes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "profile_id", null: false
-    t.uuid "profile_attribute_type_id", null: false
-    t.date "date"
-    t.date "expiry_date"
-    t.string "description", null: false
-    t.string "comments"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
     t.string "last_name", null: false
@@ -95,6 +84,7 @@ ActiveRecord::Schema.define(version: 2019_05_28_101425) do
     t.uuid "nationality_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "profile_attributes"
   end
 
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
