@@ -29,17 +29,43 @@ RSpec.describe PersonSerializer do
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: { ethnicity: %I[code title description] } } }
+    let(:ethnicity) { person.latest_profile&.ethnicity }
     let(:expected_json) do
       [
         {
-          id: person.latest_profile&.ethnicity&.id,
+          id: ethnicity&.id,
           type: 'ethnicities',
-          attributes: { code: person.latest_profile&.ethnicity&.code }
+          attributes: {
+            code: ethnicity&.code,
+            title: ethnicity&.title,
+            description: ethnicity&.description
+          }
         }
       ]
     end
 
     it 'contains an included ethnicity' do
+      expect(result[:included]).to(include_json(expected_json))
+    end
+  end
+
+  describe 'gender' do
+    let(:adapter_options) { { include: { gender: %I[title description] } } }
+    let(:gender) { person.latest_profile&.gender }
+    let(:expected_json) do
+      [
+        {
+          id: gender&.id,
+          type: 'genders',
+          attributes: {
+            title: gender&.title,
+            description: gender&.description
+          }
+        }
+      ]
+    end
+
+    it 'contains an included gender' do
       expect(result[:included]).to(include_json(expected_json))
     end
   end
