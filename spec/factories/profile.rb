@@ -5,5 +5,7 @@ FactoryBot.define do
     first_names { 'Bob' }
     last_name { 'Roberts' }
     date_of_birth { Date.new(1980, 10, 20) }
+    association(:ethnicity)
+    association(:gender)
   end
 end

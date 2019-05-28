@@ -3,6 +3,9 @@
 class PersonSerializer < ActiveModel::Serializer
   attributes :id, :first_names, :last_name, :date_of_birth
 
+  has_one :ethnicity, serializer: EthnicitySerializer
+  has_one :gender, serializer: GenderSerializer
+
   def first_names
     object.latest_profile&.first_names
   end
@@ -13,5 +16,13 @@ class PersonSerializer < ActiveModel::Serializer
 
   def date_of_birth
     object.latest_profile&.date_of_birth
+  end
+
+  def ethnicity
+    object.latest_profile&.ethnicity
+  end
+
+  def gender
+    object.latest_profile&.gender
   end
 end
