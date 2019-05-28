@@ -92,6 +92,20 @@ RSpec.describe Api::V1::MovesController do
 
         expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
       end
+
+      it 'includes an associated Person' do
+        get '/api/v1/moves', headers: headers
+
+        # i have not included full JSON response - just focusing
+        expect(JSON.parse(response.body)['included']).to include_json(
+          [
+            {
+              id: moves.first.person.id,
+              type: 'people'
+            }
+          ]
+        )
+      end
     end
 
     describe 'params' do
