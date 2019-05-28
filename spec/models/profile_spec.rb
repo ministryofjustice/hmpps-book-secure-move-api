@@ -7,6 +7,8 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to belong_to(:ethnicity).optional }
   it { is_expected.to belong_to(:gender).optional }
 
+  it { is_expected.to have_many(:profile_attributes) }
+
   it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:first_names) }
