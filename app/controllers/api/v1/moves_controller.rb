@@ -7,7 +7,7 @@ module Api
         moves = Moves::Finder.new(filter_params).call
 
         paginate moves, include: {
-          person: %i[first_names last_name date_of_birth],
+          person: %i[first_names last_name date_of_birth ethnicity gender],
           from_location: %i[location_type description],
           to_location: %i[location_type description]
         }
