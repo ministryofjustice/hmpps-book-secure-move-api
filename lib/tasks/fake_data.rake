@@ -34,6 +34,20 @@ namespace :fake_data do
     end
   end
 
+  desc 'create genders'
+  task create_genders: :environment do
+    GENDERS.each do |gender|
+      Gender.create!(title: gender)
+    end
+  end
+
+  desc 'create ethnicities'
+  task create_ethnicities: :environment do
+    ETHNICITIES.each do |attributes|
+      Ethnicity.create!(attributes)
+    end
+  end
+
   desc 'create fake moves'
   task create_moves: :environment do
     people = Person.all
@@ -58,15 +72,39 @@ namespace :fake_data do
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person].each(&:destroy_all)
+      [Move, Location, Profile, Person, Ethnicity, Gender].each(&:destroy_all)
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
+      Rake::Task['fake_data:create_ethnicities'].invoke
+      Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_moves'].invoke
     else
       puts 'you can only run this in the development environment'
     end
   end
+
+  GENDERS = %w[female male transexual].freeze
+
+  ETHNICITIES = [
+    { code: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
+    { code: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
+    { code: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+      description: 'A3 - Asian or Asian British (Bangladeshi)' },
+    { code: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
+    { code: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },
+    { code: 'B2', title: 'Black (African)', description: 'B2 - Black (African)' },
+    { code: 'B9', title: 'Black (Other)', description: 'B9 - Black (Other)' },
+    { code: 'M1', title: 'Mixed (White and Black Caribbean)', description: 'M1 - Mixed (White and Black Caribbean)' },
+    { code: 'M2', title: 'Mixed (White and Black African)', description: 'M2 - Mixed (White and Black African)' },
+    { code: 'M3', title: 'Mixed (White and Asian)', description: 'M3 - Mixed (White and Asian)' },
+    { code: 'M9', title: 'Mixed (Any other mixed background)', description: 'M9 - Mixed (Any other mixed background)' },
+    { code: 'O1', title: 'Chinese', description: 'O1 - Chinese' },
+    { code: 'O9', title: 'Any other ethnic group', description: 'O9 - Any other ethnic group' },
+    { code: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
+    { code: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
+    { code: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' }
+  ].freeze
 
   TOWN_NAMES = [
     'Bedford',
