@@ -30,9 +30,7 @@ RSpec.describe Profile, type: :model do
       profile.profile_attributes = profile_attributes
       profile.save
       reloaded_profile = Profile.find(profile.id)
-      expect(reloaded_profile.profile_attributes&.first&.as_json).to eql(
-        profile_attributes.first
-      )
+      expect(reloaded_profile.profile_attributes&.first&.as_json).to eql(profile_attributes.first)
     end
 
     it 'deserializes profile attributes to an array of ProfileAttribute objects' do
