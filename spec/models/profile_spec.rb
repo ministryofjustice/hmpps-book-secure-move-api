@@ -14,7 +14,24 @@ RSpec.describe Profile, type: :model do
   it 'serializes profile attributes correctly' do
     person = create :person
     profile = person.profiles.first
-    profile.profile_attributes = [{ description: 'test', comments: 'just a test', profile_attribute_id: 123 }]
+    profile.profile_attributes = [
+      {
+        description: 'test',
+        comments: 'just a test',
+        profile_attribute_type_id: 123,
+        date: Date.civil(2019, 5, 30),
+        expiry_date: Date.civil(2019, 6, 30)
+      }
+    ]
     profile.save
+    profile.profile_attributes
+    profile = Profile.find(profile.id)
+    expect(profile.profile_attributes&.first&.as_json).to eql(
+      description: 'test',
+      comments: 'just a test',
+      profile_attribute_type_id: 123,
+      date: Date.civil(2019, 5, 30),
+      expiry_date: Date.civil(2019, 6, 30)
+    )
   end
 end
