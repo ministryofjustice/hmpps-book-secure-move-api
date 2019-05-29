@@ -33,6 +33,11 @@ RSpec.describe Profile, type: :model do
       expect(reloaded_profile.profile_attributes&.first&.as_json).to eql(profile_attributes.first)
     end
 
+    it 'deserializes profile attributes to an array' do
+      profile.profile_attributes = profile_attributes
+      expect(profile.profile_attributes).to be_an(Array)
+    end
+
     it 'deserializes profile attributes to an array of ProfileAttribute objects' do
       profile.profile_attributes = profile_attributes
       expect(profile.profile_attributes.first).to be_a(Profile::ProfileAttribute)
