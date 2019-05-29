@@ -1,18 +1,22 @@
-class Profile::ProfileAttributes
-  extend Forwardable
+# frozen_string_literal: true
 
-  def_delegators :@collection, *[].public_methods
+class Profile
+  class ProfileAttributes
+    extend Forwardable
 
-  def initialize(array = [])
-    array = JSON.parse(array) if array.is_a? String
-    collection = Array(array).map do |profile_attribute|
-      profile_attribute.is_a?(Profile::ProfileAttribute) ? profile_attribute : Profile::ProfileAttribute.new(profile_attribute)
+    def_delegators :@collection, *[].public_methods
+
+    def initialize(array = [])
+      array = JSON.parse(array) if array.is_a? String
+      collection = Array(array).map do |item|
+        item.is_a?(Profile::ProfileAttribute) ? item : Profile::ProfileAttribute.new(item)
+      end
+
+      @collection = collection.reject(&:empty?)
     end
 
-    @collection = collection.reject(&:empty?)
-  end
-
-  def to_a
-    @collection
+    def to_a
+      @collection
+    end
   end
 end
