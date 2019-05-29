@@ -20,8 +20,10 @@ class Profile::ProfileAttributes::Type < ActiveRecord::Type::Value
 
   def serialize(value)
     case value
-    when Array, Hash, Profile::ProfileAttributes
+    when Array, Hash
       ::ActiveSupport::JSON.encode(value)
+    when Profile::ProfileAttributes
+      ::ActiveSupport::JSON.encode(value.as_json)
     else
       super
     end

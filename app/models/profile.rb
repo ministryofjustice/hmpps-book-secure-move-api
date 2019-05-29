@@ -13,16 +13,15 @@ class Profile < ApplicationRecord
 
   attribute :profile_attributes, Profile::ProfileAttributes::Type.new
 
-  # TODO: Define ProfileAttributeSerializer
-  serialize :profile_attributes, Profile::ProfileAttributeSerializer # responds to load and dump methods
+  # serialize :profile_attributes, Profile::ProfileAttributeSerializer # responds to load and dump methods
 
-  def profile_attributes=(value)
-    value = Profile::ProfileAttributes.new(value)
-    super
-  end
+  # def profile_attributes=(value)
+  #   value = Profile::ProfileAttributes.new(value)
+  #   super
+  # end
 
-  def write_attribute(name, value)
-    value = Profile::ProfileAttributes.new(value) if name == :profile_attributes
-    super
-  end
+#   def write_attribute(name, value)
+#     value = Profile::ProfileAttributes.new(value) if name == :profile_attributes
+#     super
+#   end
 end

@@ -1,5 +1,5 @@
 class Profile::ProfileAttribute
-  attr_reader :description, :comments, :date, :expiry_date, :profile_attribute_type_id
+  attr_accessor :description, :comments, :date, :expiry_date, :profile_attribute_type_id
 
   def initialize(attributes = {})
     attributes.symbolize_keys!

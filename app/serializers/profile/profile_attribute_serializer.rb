@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class Profile::ProfileAttributeSerializer < ActiveModel::Serializer
-  attributes :description, :comments, :date, :expiry_date, :profile_attribute_type_id
-
+class Profile::ProfileAttributeSerializer
   def initialize; end
+
+  def load; end
+
+  def dump; end
 end
