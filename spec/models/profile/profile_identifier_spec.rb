@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe Profile::ProfileIdentifier, type: :model do
   subject(:profile_identifier) { described_class.new(attribute_values) }
 
-  let(:description) { 'test' }
+  let(:value) { 'ABC123456' }
   let(:attribute_values) do
     {
-      value: 'ABC123456',
+      value: value,
       identifier_type: 'pnc_number'
     }
   end
