@@ -4,12 +4,16 @@
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
+    ethnicities = Ethnicity.all.to_a
+    genders = Gender.all.to_a
     50.times do
       person = Person.create!
       person.profiles << Profile.new(
         first_names: Faker::Name.first_name,
         last_name: Faker::Name.last_name,
-        date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago)
+        date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago),
+        ethnicity: ethnicities.sample,
+        gender: genders.sample
       )
     end
   end
@@ -73,11 +77,11 @@ namespace :fake_data do
   task recreate_all: :environment do
     if Rails.env.development?
       [Move, Location, Profile, Person, Ethnicity, Gender].each(&:destroy_all)
+      Rake::Task['fake_data:create_ethnicities'].invoke
+      Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
-      Rake::Task['fake_data:create_ethnicities'].invoke
-      Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_moves'].invoke
     else
       puts 'you can only run this in the development environment'
