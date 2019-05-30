@@ -38,6 +38,13 @@ namespace :fake_data do
     end
   end
 
+  desc 'create profile attribute types'
+  task create_profile_attribute_types: :environment do
+    PROFILE_ATTRIBUTE_TYPES.each do |attribute_values|
+      ProfileAttributeType.create!(attribute_values)
+    end
+  end
+
   desc 'create genders'
   task create_genders: :environment do
     GENDERS.each do |gender|
@@ -76,9 +83,10 @@ namespace :fake_data do
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, Ethnicity, Gender].each(&:destroy_all)
+      [Move, Location, Profile, Person, ProfileAttributeType, Ethnicity, Gender].each(&:destroy_all)
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
+      Rake::Task['fake_data:create_profile_attribute_types'].invoke
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
@@ -87,6 +95,24 @@ namespace :fake_data do
       puts 'you can only run this in the development environment'
     end
   end
+
+  PROFILE_ATTRIBUTE_TYPES = [
+    { user_type: :police, category: :risk, description: 'Violent' },
+    { user_type: :police, category: :risk, description: 'Escape' },
+    { user_type: :police, category: :risk, description: 'Must be held separately' },
+    { user_type: :police, category: :risk, description: 'Self harm' },
+    { user_type: :police, category: :risk, description: 'Concealed items' },
+    { user_type: :police, category: :risk, description: 'Any other risks' },
+    { user_type: :police, category: :health, description: 'Special diet or allergy' },
+    { user_type: :police, category: :health, description: 'Health issue' },
+    { user_type: :police, category: :health, description: 'Medication' },
+    { user_type: :police, category: :health, description: 'Wheelchair user' },
+    { user_type: :police, category: :health, description: 'Pregnant' },
+    { user_type: :police, category: :health, description: 'Any other requirements' },
+    { user_type: :police, category: :court_information, description: 'Solicitor or other legal representation' },
+    { user_type: :police, category: :court_information, description: 'Sign or other language interpreter' },
+    { user_type: :police, category: :court_information, description: 'Any other information' }
+  ].freeze
 
   GENDERS = %w[female male transexual].freeze
 
