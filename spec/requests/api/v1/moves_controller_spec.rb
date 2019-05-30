@@ -7,11 +7,7 @@ RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   let(:move_to_json) do
-    ActionController::Base.render json: move, include: {
-      person: %i[first_names last_name date_of_birth],
-      from_location: %i[location_type description],
-      to_location: %i[location_type description]
-    }
+    ActionController::Base.render json: move, include: MoveSerializer::INCLUDED_DETAIL
   end
 
   describe 'GET /moves' do
@@ -58,6 +54,14 @@ RSpec.describe Api::V1::MovesController do
           }
         }
       end
+      let(:data_with_person) do
+        [
+          {
+            id: moves.first.person.id,
+            type: 'people'
+          }
+        ]
+      end
 
       it 'returns a success code' do
         get '/api/v1/moves', headers: headers
@@ -91,6 +95,13 @@ RSpec.describe Api::V1::MovesController do
         get '/api/v1/moves', headers: headers
 
         expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
+      end
+
+      it 'includes an associated Person' do
+        get '/api/v1/moves', headers: headers
+
+        # have not included full JSON response - just focusing on people
+        expect(JSON.parse(response.body)['included']).to include_json(data_with_person)
       end
     end
 

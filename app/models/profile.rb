@@ -2,6 +2,10 @@
 
 class Profile < ApplicationRecord
   belongs_to :person
+  belongs_to :ethnicity, optional: true
+  belongs_to :gender, optional: true
+
+  has_many :profile_attributes
 
   validates :person, presence: true
   validates :last_name, presence: true

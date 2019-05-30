@@ -10,4 +10,14 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :person, serializer: PersonSerializer
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer
+
+  INCLUDED_OVERVIEW = {
+    person: %i[first_names last_name date_of_birth],
+    from_location: %i[location_type description],
+    to_location: %i[location_type description]
+  }.freeze
+
+  INCLUDED_DETAIL = INCLUDED_OVERVIEW.deep_merge(
+    person: %i[ethnicity gender]
+  ).freeze
 end
