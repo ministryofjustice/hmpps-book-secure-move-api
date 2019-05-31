@@ -11,6 +11,36 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:first_names) }
 
+  describe '#profile_identifiers' do
+    let!(:person) { create :person }
+    let(:profile) { person.profiles.first }
+    let(:profile_identifiers) do
+      [
+        {
+          value: 'ABC123456',
+          identifier_type: 'pnc_number'
+        }
+      ]
+    end
+
+    it 'serializes profile identifiers correctly' do
+      profile.profile_identifiers = profile_identifiers
+      profile.save
+      reloaded_profile = Profile.find(profile.id)
+      expect(reloaded_profile.profile_identifiers&.first&.as_json).to eql(profile_identifiers.first)
+    end
+
+    it 'deserializes profile identifiers to an array' do
+      profile.profile_identifiers = profile_identifiers
+      expect(profile.profile_identifiers).to be_an(Array)
+    end
+
+    it 'deserializes profile identifiers to an array of ProfileIdentifier objects' do
+      profile.profile_identifiers = profile_identifiers
+      expect(profile.profile_identifiers.first).to be_a(Profile::ProfileIdentifier)
+    end
+  end
+
   describe '#profile_attributes' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
