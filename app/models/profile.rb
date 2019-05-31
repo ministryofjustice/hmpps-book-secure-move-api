@@ -10,4 +10,5 @@ class Profile < ApplicationRecord
   validates :first_names, presence: true
 
   attribute :profile_attributes, Profile::ProfileAttributes::Type.new
+  attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
 end
