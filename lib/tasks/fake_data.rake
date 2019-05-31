@@ -21,40 +21,63 @@ namespace :fake_data do
   end
 
   PROFILE_ATTRIBUTES = [
-    { category: :risk, description: 'Violent', comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, description: 'Escape', comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, description: 'Must be held separately', comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, description: 'Self harm', comments: ['Attempted suicide'] },
-    { category: :risk, description: 'Concealed items', comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, description: 'Any other risks', comments: ['Train spotter', ''] },
-    { category: :health, description: 'Special diet or allergy', comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, description: 'Health issue', comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, description: 'Medication', comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
+    { category: :risk, description: 'Violent',
+      comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
+    { category: :risk, description: 'Escape',
+      comments: ['Large poster in cell', 'Climber', 'Former miner'] },
+    { category: :risk, description: 'Must be held separately',
+      comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
+    { category: :risk, description: 'Self harm',
+      comments: ['Attempted suicide'] },
+    { category: :risk, description: 'Concealed items',
+      comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
+    { category: :risk, description: 'Any other risks',
+      comments: ['Train spotter', ''] },
+    { category: :health, description: 'Special diet or allergy',
+      comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
+    { category: :health, description: 'Health issue',
+      comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
+    { category: :health, description: 'Medication',
+      comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
     { category: :health, description: 'Wheelchair user', comments: [''] },
     { category: :health, description: 'Pregnant', comments: [''] },
-    { category: :health, description: 'Any other requirements', comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court_information, description: 'Solicitor or other legal representation', comments: [''] },
-    { category: :court_information, description: 'Sign or other language interpreter', comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court_information, description: 'Any other information', comments: ['Former prison officer'] }
+    { category: :health, description: 'Any other requirements',
+      comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
+    { category: :court_information, description: 'Solicitor or other legal representation',
+      comments: [''] },
+    { category: :court_information, description: 'Sign or other language interpreter',
+      comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
+    { category: :court_information, description: 'Any other information',
+      comments: ['Former prison officer'] }
   ].freeze
 
   def fake_profile_attributes
     PROFILE_ATTRIBUTES.sample(3).map do |profile_attribute|
-      profile_attribute_type = ProfileAttributeType.where(
-        category: profile_attribute[:category],
-        description: profile_attribute[:description]
-      ).first
-      return [] unless profile_attribute_type
-
-      {
-        description: profile_attribute_type.description,
-        profile_attribute_type_id: profile_attribute_type.id,
-        comments: profile_attribute[:comments].sample
-      }
+      fake_profile_attribute(profile_attribute)
     end
   end
 
+  def fake_profile_attribute(profile_attribute)
+    profile_attribute_type = ProfileAttributeType.where(
+      category: profile_attribute[:category],
+      description: profile_attribute[:description]
+    ).first
+    return [] unless profile_attribute_type
+
+    {
+      description: profile_attribute_type.description,
+      profile_attribute_type_id: profile_attribute_type.id,
+      comments: profile_attribute[:comments].sample
+    }
+  end
+
   def fake_profile_identifiers
+    Profile::IDENTIFIER_TYPES.sample(2).map do |identifier_type|
+      {
+        identifier_type: identifier_type,
+        value: rand(1_000_000).to_s
+      }
+    end
   end
 
   desc 'create fake prisons'

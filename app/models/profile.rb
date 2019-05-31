@@ -11,4 +11,6 @@ class Profile < ApplicationRecord
 
   attribute :profile_attributes, Profile::ProfileAttributes::Type.new
   attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
+
+  IDENTIFIER_TYPES = %w[pnc_number cro_number prison_number niche_reference athena_reference].freeze
 end
