@@ -12,7 +12,11 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :to_location, serializer: LocationSerializer
 
   INCLUDED_OVERVIEW = {
+<<<<<<< HEAD
     person: %i[first_names last_name date_of_birth risk_alerts health_alerts court_information indentifiers],
+=======
+    person: %i[first_names last_name date_of_birth risk_alerts health_alerts],
+>>>>>>> First attempt to add profile attributes to responses
     from_location: %i[location_type description],
     to_location: %i[location_type description]
   }.freeze

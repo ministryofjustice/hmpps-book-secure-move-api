@@ -15,6 +15,8 @@ class PersonSerializer < ActiveModel::Serializer
   has_one :ethnicity, serializer: EthnicitySerializer
   has_one :gender, serializer: GenderSerializer
 
+  # has_many :risk_alerts, serializer: ProfileAttributeSerializer
+
   def first_names
     object.latest_profile&.first_names
   end
