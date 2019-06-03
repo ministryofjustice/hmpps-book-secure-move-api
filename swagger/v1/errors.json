@@ -2,10 +2,6 @@
   "BadRequest": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "example": 12345
-      },
       "title": {
         "type": "string",
         "example": "Bad request"
@@ -19,10 +15,6 @@
   "NotAuthorisedError": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "example": 12345
-      },
       "title": {
         "type": "string",
         "example": "Not authorized"
@@ -36,10 +28,6 @@
   "ResourceNotFound": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "example": 12345
-      },
       "title": {
         "type": "string",
         "example": "Resource not found"
@@ -53,10 +41,6 @@
   "UnsupportedMediaType": {
     "type": "object",
     "properties": {
-      "id": {
-        "type": "integer",
-        "example": 12345
-      },
       "title": {
         "type": "string",
         "example": "Invalid Media Type"
@@ -70,10 +54,6 @@
   "UnprocessableEntity": {
     "type": "object",
     "properties": {
-      "status": {
-        "type": "integer",
-        "example": 422
-      },
       "title": {
         "type": "string",
         "example": "Unprocessable entity"

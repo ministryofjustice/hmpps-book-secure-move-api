@@ -23,7 +23,6 @@ class ApiController < ApplicationController
   def render_resource_not_found_error
     render(
       json: { errors: [{
-        id: 404,
         title: 'Resource not found',
         detail: 'The requested resource was not found'
       }] },
@@ -34,7 +33,6 @@ class ApiController < ApplicationController
   def render_invalid_media_type_error
     render(
       json: { errors: [{
-        id: 415,
         title: 'Invalid Media Type',
         detail: "Content-Type must be #{JSON_API_CONTENT_TYPE}"
       }] },
