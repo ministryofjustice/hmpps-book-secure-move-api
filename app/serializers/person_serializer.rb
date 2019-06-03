@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
 class PersonSerializer < ActiveModel::Serializer
-  attributes :id, :first_names, :last_name, :date_of_birth, :risk_alerts
+  attributes(
+    :id,
+    :first_names,
+    :last_name,
+    :date_of_birth,
+    :risk_alerts,
+    :health_alerts,
+    :court_information,
+    :identifiers
+  )
 
   has_one :ethnicity, serializer: EthnicitySerializer
   has_one :gender, serializer: GenderSerializer
-
-  # has_many :risk_alerts, serializer: ProfileAttributeSerializer
 
   def first_names
     object.latest_profile&.first_names
@@ -38,5 +45,9 @@ class PersonSerializer < ActiveModel::Serializer
 
   def court_information
     object.latest_profile&.profile_attributes&.select(&:court_information?) || []
+  end
+
+  def identifiers
+    object.latest_profile&.profile_identifiers || []
   end
 end
