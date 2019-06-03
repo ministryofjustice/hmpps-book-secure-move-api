@@ -176,7 +176,7 @@ namespace :fake_data do
     { user_type: :police, category: :court_information, description: 'Any other information' }
   ].freeze
 
-  GENDERS = %w[female male transexual].freeze
+  GENDERS = %w[Female Male Transexual].freeze
 
   ETHNICITIES = [
     { code: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
