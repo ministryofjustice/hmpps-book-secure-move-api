@@ -40,19 +40,6 @@
             "format": "date",
             "example": "1965-10-24",
             "description": "Person's date of birth in ISO 8601 format"
-          }
-        }
-      },
-      "relationships": {
-        "type": "object",
-        "properties": {
-          "gender": {
-            "$ref": "gender_reference.json#/GenderReference",
-            "description": "Person's gender"
-          },
-          "ethnicity": {
-            "$ref": "ethnicity_reference.json#/EthnicityReference",
-            "description": "Person's ethnicity"
           },
           "risk_alerts": {
             "type": "array",
@@ -81,6 +68,19 @@
               "$ref": "profile_identifier.json#/ProfileIdentifier"
             },
             "description": "Collection of identifiers used to identify the person. Different services have various id schemes such police criminal records number, prison number etc. We may need to record several of these."
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "$ref": "gender_reference.json#/GenderReference",
+            "description": "Person's gender"
+          },
+          "ethnicity": {
+            "$ref": "ethnicity_reference.json#/EthnicityReference",
+            "description": "Person's ethnicity"
           }
         }
       }
