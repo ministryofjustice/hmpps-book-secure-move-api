@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Profile
-  class ProfileAttribute
+  class ProfileAttribute < ActiveModelSerializers::Model
+    attributes :description, :comments, :profile_attribute_type_id, :date, :expiry_date
+
     attr_accessor :description, :comments, :profile_attribute_type_id
     attr_reader :date, :expiry_date
 
@@ -13,6 +15,7 @@ class Profile
       self.date = attributes[:date]
       self.expiry_date = attributes[:expiry_date]
       self.profile_attribute_type_id = attributes[:profile_attribute_type_id]
+      super
     end
 
     def date=(value)
@@ -35,6 +38,21 @@ class Profile
         expiry_date: expiry_date,
         profile_attribute_type_id: profile_attribute_type_id
       }
+    end
+
+    def risk_alert?
+      # TODO: Cache profile attribute types
+      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'risk'
+    end
+
+    def health_alert?
+      # TODO: Cache profile attribute types
+      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'health'
+    end
+
+    def court_information?
+      # TODO: Cache profile attribute types
+      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'court_information'
     end
   end
 end
