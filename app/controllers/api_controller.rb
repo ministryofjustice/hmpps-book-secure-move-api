@@ -20,11 +20,11 @@ class ApiController < ApplicationController
     self.content_type = JSON_API_CONTENT_TYPE
   end
 
-  def render_resource_not_found_error
+  def render_resource_not_found_error(exception)
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: 'The requested resource was not found'
+        detail: exception.to_s
       }] },
       status: 404
     )
