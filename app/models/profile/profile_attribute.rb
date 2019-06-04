@@ -2,9 +2,17 @@
 
 class Profile
   class ProfileAttribute < ActiveModelSerializers::Model
-    attributes :description, :comments, :profile_attribute_type_id, :date, :expiry_date
+    attributes(
+      :description,
+      :comments,
+      :profile_attribute_type_id,
+      :date,
+      :expiry_date,
+      :category,
+      :user_type
+    )
 
-    attr_accessor :description, :comments, :profile_attribute_type_id
+    attr_accessor :description, :comments, :profile_attribute_type_id, :category, :user_type
     attr_reader :date, :expiry_date
 
     def initialize(attributes = {})
@@ -15,6 +23,8 @@ class Profile
       self.date = attributes[:date]
       self.expiry_date = attributes[:expiry_date]
       self.profile_attribute_type_id = attributes[:profile_attribute_type_id]
+      self.category = attributes[:category]
+      self.user_type = attributes[:user_type]
       super
     end
 
@@ -36,23 +46,30 @@ class Profile
         comments: comments,
         date: date,
         expiry_date: expiry_date,
-        profile_attribute_type_id: profile_attribute_type_id
+        profile_attribute_type_id: profile_attribute_type_id,
+        category: category,
+        user_type: user_type
       }
     end
 
     def risk_alert?
-      # TODO: Cache profile attribute types
-      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'risk'
+      category == 'risk'
     end
 
     def health_alert?
-      # TODO: Cache profile attribute types
-      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'health'
+      category == 'health'
     end
 
     def court_information?
-      # TODO: Cache profile attribute types
-      ProfileAttributeType.find(profile_attribute_type_id)&.category == 'court_information'
+      category == 'court_information'
+    end
+
+    def set_category_and_user_type
+      return unless profile_attribute_type_id.present? && category.blank?
+
+      profile_attribute_type = ProfileAttributeType.find(profile_attribute_type_id)
+      self.category = profile_attribute_type.category
+      self.user_type = profile_attribute_type.user_type
     end
   end
 end
