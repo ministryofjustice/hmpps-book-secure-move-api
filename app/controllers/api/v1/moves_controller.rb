@@ -5,13 +5,11 @@ module Api
     class MovesController < ApiController
       def index
         moves = Moves::Finder.new(filter_params).call
-
         paginate moves, include: MoveSerializer::INCLUDED_OVERVIEW
       end
 
       def show
-        move = Move.find(params[:id])
-
+        move = find_move
         render_move(move, 200)
       end
 
@@ -33,6 +31,12 @@ module Api
 
       def render_move(move, status)
         render json: move, status: status, include: MoveSerializer::INCLUDED_DETAIL
+      end
+
+      def find_move
+        Move
+          .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
+          .find(params[:id])
       end
     end
   end

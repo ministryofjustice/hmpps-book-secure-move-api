@@ -15,6 +15,7 @@ module Moves
     private
 
     def apply_filters(scope)
+      scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
       scope = scope.where(filter_params.slice(:from_location_id, :to_location_id, :status))
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
