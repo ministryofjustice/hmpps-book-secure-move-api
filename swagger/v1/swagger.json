@@ -1,9 +1,15 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "PECS front-end API",
-    "version": "1.0"
+    "title": "PECS frontend API",
+    "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "https://pecs-move-platform-backend-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1",
+      "description": "Staging server"
+    }
+  ],
   "components": {
     "schemas": {
       "Move": {
@@ -47,12 +53,11 @@
       }
     }
   },
-  "info": {
-    "title": "API V1",
-    "version": "v1"
-  },
+  "consumes": [
+    "application/vnd.api+json"
+  ],
   "paths": {
-    "/api/v1/moves": {
+    "/moves": {
       "get": {
         "summary": "Returns a list of moves",
         "tags": [
@@ -62,6 +67,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "filter[date_from]",
             "in": "query",
@@ -122,7 +137,7 @@
             "example": 1
           },
           {
-            "name": "page_size",
+            "name": "per_page",
             "in": "query",
             "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
             "schema": {
@@ -235,9 +250,9 @@
             }
           }
         }
-      }      
+      }
     },
-    "/api/v1/reference/genders": {
+    "/reference/genders": {
       "get": {
         "summary": "Returns a list of genders",
         "tags": [
@@ -246,7 +261,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -281,7 +307,7 @@
         }
       }
     },
-    "/api/v1/reference/ethnicities": {
+    "/reference/ethnicities": {
       "get": {
         "summary": "Returns a list of ethnicities",
         "tags": [
@@ -290,7 +316,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -325,7 +362,7 @@
         }
       }
     },
-    "/api/v1/reference/nationalities": {
+    "/reference/nationalities": {
       "get": {
         "summary": "Returns a list of nationalities",
         "tags": [
@@ -334,7 +371,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -369,7 +417,7 @@
         }
       }
     },
-    "/api/v1/moves/{moveId}": {
+    "/moves/{moveId}": {
       "get": {
         "summary": "Returns the details of a move",
         "tags": [
@@ -379,6 +427,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "moveId",
             "in": "path",
@@ -592,7 +650,7 @@
         }
       }
     },
-    "/api/v1/reference/profile_attribute_types": {
+    "/reference/profile_attribute_types": {
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
@@ -602,6 +660,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "filter[category]",
             "in": "query",
@@ -655,7 +723,7 @@
         }
       }
     },
-    "/api/v1/reference/locations": {
+    "/reference/locations": {
       "get": {
         "summary": "Returns a list of locations optionally filtered by type",
         "tags": [
@@ -665,6 +733,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "filter[location_type]",
             "in": "query",
