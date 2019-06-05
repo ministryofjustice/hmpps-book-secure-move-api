@@ -4,7 +4,7 @@ class Profile
   class ProfileIdentifiers
     extend Forwardable
 
-    def_delegators :@collection, *[].public_methods
+    def_delegators :@collection, *[].public_methods - %i[object_id __send__]
 
     def initialize(array = [])
       array = JSON.parse(array) if array.is_a? String
