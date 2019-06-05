@@ -12,7 +12,9 @@ RSpec.describe Profile::ProfileAttribute, type: :model do
       comments: 'just a test',
       profile_attribute_type_id: 123,
       date: Date.civil(2019, 5, 30),
-      expiry_date: Date.civil(2019, 6, 30)
+      expiry_date: Date.civil(2019, 6, 30),
+      category: 'risk',
+      user_type: 'police'
     }
   end
 
@@ -46,7 +48,7 @@ RSpec.describe Profile::ProfileAttribute, type: :model do
     end
   end
 
-  describe '#empty' do
+  describe '#empty?' do
     context 'when description is missing' do
       let(:description) { '' }
 
@@ -61,6 +63,31 @@ RSpec.describe Profile::ProfileAttribute, type: :model do
       it 'returns false' do
         expect(profile_attribute.empty?).to be false
       end
+    end
+  end
+
+  describe '#set_category_and_user_type' do
+    let(:profile_attribute_type) { create :profile_attribute_type, category: 'health', user_type: 'prison' }
+    let(:attribute_values) do
+      {
+        description: description,
+        comments: 'just a test',
+        profile_attribute_type_id: profile_attribute_type.id,
+        date: Date.civil(2019, 5, 30),
+        expiry_date: Date.civil(2019, 6, 30)
+      }
+    end
+
+    before do
+      profile_attribute.set_category_and_user_type
+    end
+
+    it 'sets the category' do
+      expect(profile_attribute.category).to eql 'health'
+    end
+
+    it 'sets the user_type' do
+      expect(profile_attribute.user_type).to eql 'prison'
     end
   end
 end
