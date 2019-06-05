@@ -47,6 +47,9 @@
       }
     }
   },
+  "consumes": [
+    "application/vnd.api+json"
+  ],
   "paths": {
     "/moves": {
       "get": {
@@ -58,6 +61,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "filter[date_from]",
             "in": "query",
@@ -242,7 +255,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -286,7 +310,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -330,7 +365,18 @@
         "consumes": [
           "application/vnd.api+json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -375,6 +421,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "moveId",
             "in": "path",
@@ -599,6 +655,16 @@
         ],
         "parameters": [
           {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
+          {
             "name": "filter[category]",
             "in": "query",
             "description": "Filters results to only include move detail types for the given category",
@@ -661,6 +727,16 @@
           "application/vnd.api+json"
         ],
         "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Accepted request content type",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api+json"
+            },
+            "required": true
+          },
           {
             "name": "filter[location_type]",
             "in": "query",
