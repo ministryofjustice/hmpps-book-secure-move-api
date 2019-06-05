@@ -15,6 +15,14 @@ module Api
         render_move(move, 200)
       end
 
+      def destroy
+        move = Move.find(params[:id])
+
+        move.destroy!
+
+        render_move(move, 200)
+      end
+
       private
 
       PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
