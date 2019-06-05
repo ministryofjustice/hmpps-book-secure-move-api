@@ -131,7 +131,7 @@
             "example": 1
           },
           {
-            "name": "page_size",
+            "name": "per_page",
             "in": "query",
             "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
             "schema": {
