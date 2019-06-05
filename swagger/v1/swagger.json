@@ -48,7 +48,7 @@
     }
   },
   "paths": {
-    "/api/v1/moves": {
+    "/moves": {
       "get": {
         "summary": "Returns a list of moves",
         "tags": [
@@ -233,7 +233,7 @@
         }
       }
     },
-    "/api/v1/reference/genders": {
+    "/reference/genders": {
       "get": {
         "summary": "Returns a list of genders",
         "tags": [
@@ -277,7 +277,7 @@
         }
       }
     },
-    "/api/v1/reference/ethnicities": {
+    "/reference/ethnicities": {
       "get": {
         "summary": "Returns a list of ethnicities",
         "tags": [
@@ -321,7 +321,7 @@
         }
       }
     },
-    "/api/v1/reference/nationalities": {
+    "/reference/nationalities": {
       "get": {
         "summary": "Returns a list of nationalities",
         "tags": [
@@ -365,7 +365,7 @@
         }
       }
     },
-    "/api/v1/moves/{moveId}": {
+    "/moves/{moveId}": {
       "get": {
         "summary": "Returns the details of a move",
         "tags": [
@@ -588,7 +588,7 @@
         }
       }
     },
-    "/api/v1/reference/profile_attribute_types": {
+    "/reference/profile_attribute_types": {
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
@@ -651,7 +651,7 @@
         }
       }
     },
-    "/api/v1/reference/locations": {
+    "/reference/locations": {
       "get": {
         "summary": "Returns a list of locations optionally filtered by type",
         "tags": [
