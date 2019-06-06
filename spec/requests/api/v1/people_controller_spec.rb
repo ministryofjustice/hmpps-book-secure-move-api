@@ -78,30 +78,32 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'with validation errors' do
+      let(:person_params) do
+        {
+          data: {
+            type: 'people',
+            attributes: { first_names: 'Bob' }
+          }
+        }
+      end
+
       let(:errors) do
         [
           {
-            'source' => { 'pointer' => '/data/attributes/from_location' },
+            'source' => { 'pointer' => '/data/attributes/last_name' },
             'code' => 'validation_error',
-            'detail' => 'must exist'
-          },
-          {
-            'source' => { 'pointer' => '/data/attributes/from_location' },
-            'code' => 'validation_error',
-            'detail' => 'can\'t be blank'
+            'detail' => "Last name can't be blank"
           }
         ]
       end
 
       it 'returns unprocessable entity error code' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response).to have_http_status(422)
       end
 
       it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(JSON.parse(response.body)).to include_json(errors: errors)
       end
     end
