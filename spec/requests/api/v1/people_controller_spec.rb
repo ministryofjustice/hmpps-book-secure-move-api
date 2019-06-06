@@ -7,22 +7,35 @@ RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'POST /people' do
-    let(:person_params) { {} }
+    let(:person_params) do
+      {
+        data: {
+          type: 'people',
+          attributes: {
+            first_names: 'Bob',
+            last_name: 'Roberts',
+            date_of_birth: Date.civil(1980, 1, 1)
+          }
+        }
+      }
+    end
 
     context 'when successful' do
       let(:expected_data) { {} }
 
       it 'returns a success code' do
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response).to have_http_status(:created)
       end
 
       it 'returns the correct data' do
+        pending 'not implemented yet'
         post '/api/v1/people', params: { person: person_params }, headers: headers
         expect(JSON.parse(response.body)).to include_json(data: expected_data)
       end
 
       it 'sets the correct content type header' do
+        pending 'not implemented yet'
         post '/api/v1/people', params: { person: person_params }, headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
@@ -30,6 +43,7 @@ RSpec.describe Api::V1::PeopleController do
 
     context 'with a bad request' do
       it 'returns bad request error code' do
+        pending 'not implemented yet'
         post '/api/v1/people', params: { person: person_params }, headers: headers
         expect(response).to have_http_status(400)
       end
@@ -53,7 +67,6 @@ RSpec.describe Api::V1::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'returns a invalid media type error code' do
-        pending 'not implemented yet'
         post '/api/v1/people', params: { person: person_params }, headers: headers
         expect(response).to have_http_status(415)
       end
