@@ -4,8 +4,8 @@ module Api
   module V1
     class PeopleController < ApiController
       def create
-        person = People::Creator.new(person_params).call
-        render_person(person, 201)
+        creator.call
+        render_person(creator.person, 201)
       end
 
       private
@@ -13,6 +13,10 @@ module Api
       # TODO: Complete the list of attributes and relationships
       PERSON_ATTRIBUTES = [:first_names, :last_name, :date_of_birth].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
+
+      def creator
+        @creator ||= People::Creator.new(person_params)
+      end
 
       def render_person(person, status)
         render json: person, status: status

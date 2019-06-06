@@ -16,11 +16,19 @@ RSpec.describe People::Creator do
     }
   end
 
-  context 'with valid input params' do
-    before { creator.call }
+  let(:new_profile) { Profile.last }
+  let(:new_person) { Person.last }
 
-    let(:new_profile) { Profile.last }
-    let(:new_person) { Person.last }
+  context 'with valid input params' do
+    let!(:result) { creator.call }
+
+    it 'result to be true' do
+      expect(result).to be true
+    end
+
+    it 'new profile to be accessible' do
+      expect(creator.profile).to be_persisted
+    end
 
     it 'creates a new Profile' do
       expect(new_profile).to be_present
@@ -36,6 +44,25 @@ RSpec.describe People::Creator do
 
     it 'associates Person and Profile' do
       expect(new_profile.person).to eql new_person
+    end
+  end
+
+  context 'with missing required attributes' do
+    let(:params) do
+      {
+        type: 'people',
+        attributes: { first_names: 'Bob' }
+      }
+    end
+
+    it 'raises an error' do
+      expect { creator.call }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'makes validation errors available via exception' do
+      creator.call
+    rescue ActiveRecord::RecordInvalid => e
+      expect(e.record.errors.messages).to include(last_name: ["can't be blank"])
     end
   end
 end
