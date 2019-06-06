@@ -28,6 +28,12 @@ RSpec.describe Api::V1::PeopleController do
         expect(response).to have_http_status(:created)
       end
 
+      it 'creates a new person' do
+        expect do
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
+        end.to change(Person, :count).by(1)
+      end
+
       it 'returns the correct data' do
         pending 'not implemented yet'
         post '/api/v1/people', params: { person: person_params }, headers: headers
