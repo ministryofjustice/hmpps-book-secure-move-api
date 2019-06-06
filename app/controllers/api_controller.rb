@@ -6,7 +6,9 @@ class ApiController < ApplicationController
 
   JSON_API_CONTENT_TYPE = 'application/vnd.api+json'
 
+  rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
+  rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
 
   private
 
@@ -18,6 +20,16 @@ class ApiController < ApplicationController
 
   def set_content_type
     self.content_type = JSON_API_CONTENT_TYPE
+  end
+
+  def render_bad_request_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Bad request',
+        detail: exception.to_s
+      }] },
+      status: 400
+    )
   end
 
   def render_resource_not_found_error(exception)
@@ -38,5 +50,23 @@ class ApiController < ApplicationController
       }] },
       status: 415
     )
+  end
+
+  def render_unprocessable_entity_error(exception)
+    render(
+      json: { errors: validation_errors(exception.record.errors) },
+      status: 422
+    )
+  end
+
+  def validation_errors(errors)
+    errors.map do |field, error|
+      {
+        title: 'Unprocessable entity',
+        detail: [field, error].join(' ').humanize,
+        code: errors.details[field].first.values.first,
+        source: { pointer: "/data/attributes/#{field}" }
+      }
+    end
   end
 end

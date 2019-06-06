@@ -38,6 +38,20 @@
       }
     }
   },
+  "404": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/ResourceNotFound"
+        }
+      }
+    }
+  },
   "415": {
     "type": "object",
     "required": [

@@ -229,6 +229,16 @@
               }
             }
           },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_moves_responses.json#/404"
+                }
+              }
+            }
+          },
           "415": {
             "description": "invalid media type",
             "content": {

@@ -13,6 +13,12 @@ module Api
         render_move(move, 200)
       end
 
+      def create
+        move = Move.create!(move_attributes)
+
+        render_move(move, 201)
+      end
+
       def destroy
         move = Move.find(params[:id])
 
@@ -24,9 +30,22 @@ module Api
       private
 
       PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
+      PERMITTED_MOVE_PARAMS = [:type, attributes: %i[date time_due status move_type], relationships: {}].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+      end
+
+      def move_params
+        params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
+      end
+
+      def move_attributes
+        move_params[:attributes].merge(
+          person: Person.find(move_params.dig(:relationships, :person, :data, :id)),
+          from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
+          to_location: Location.find(move_params.dig(:relationships, :to_location, :data, :id))
+        )
       end
 
       def render_move(move, status)

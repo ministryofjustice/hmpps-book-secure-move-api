@@ -10,11 +10,21 @@ RSpec.describe Api::V1::MovesController do
     ActionController::Base.render json: move, include: MoveSerializer::INCLUDED_DETAIL
   end
 
+  let(:errors_400) do
+    [
+      {
+        'title' => 'Bad request',
+        'detail' => 'param is missing or the value is empty: data'
+      }
+    ]
+  end
+
+  let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
   let(:errors_404) do
     [
       {
         'title' => 'Resource not found',
-        'detail' => "Couldn't find Move with 'id'=UUID-not-found"
+        'detail' => detail_404
       }
     ]
   end
@@ -24,6 +34,23 @@ RSpec.describe Api::V1::MovesController do
       {
         'title' => 'Invalid Media Type',
         'detail' => 'Content-Type must be application/vnd.api+json'
+      }
+    ]
+  end
+
+  let(:errors_422) do
+    [
+      {
+        'title' => 'Unprocessable entity',
+        'detail' => "Date can't be blank",
+        'source' => { 'pointer' => '/data/attributes/date' },
+        'code' => 'blank'
+      },
+      {
+        'title' => 'Unprocessable entity',
+        'detail' => "Status can't be blank",
+        'source' => { 'pointer' => '/data/attributes/status' },
+        'code' => 'blank'
       }
     ]
   end
@@ -292,51 +319,79 @@ RSpec.describe Api::V1::MovesController do
   end
 
   describe 'POST /moves' do
-    # TODO: define move params
-    let(:move_params) { {} }
+    let(:move_attributes) { attributes_for(:move) }
+    let!(:from_location) { create :location }
+    let!(:to_location) { create :location, :court }
+    let!(:person) { create(:person) }
+    let(:data) do
+      {
+        type: 'moves',
+        attributes: move_attributes,
+        relationships: {
+          person: { data: { type: 'people', id: person.id } },
+          from_location: { data: { type: 'locations', id: from_location.id } },
+          to_location: { data: { type: 'locations', id: to_location.id } }
+        }
+      }
+    end
+
+    before { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
 
     context 'when successful' do
-      # TODO: define expected_data
-      let(:expected_data) { {} }
+      let(:move) { Move.first }
 
       it 'returns a success code' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(201)
+      end
+
+      it 'creates a move', skip_before: true do
+        expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+          .to change(Move, :count).by(1)
       end
 
       it 'returns the correct data' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        expect(JSON.parse(response.body)).to eq JSON.parse(move_to_json)
       end
 
       it 'sets the correct content type header' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
     end
 
     context 'with a bad request' do
+      let(:data) { nil }
+
       it 'returns bad request error code' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(response).to have_http_status(400)
+      end
+
+      it 'returns errors in the body of the response' do
+        expect(JSON.parse(response.body)).to include_json(errors: errors_400)
       end
     end
 
     context 'when not authorized' do
       it 'returns not authorized error code' do
         pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(response).to have_http_status(401)
       end
 
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
+      end
+    end
+
+    context 'with a reference to a missing relationship' do
+      let(:person) { Person.new }
+      let(:detail_404) { "Couldn't find Person without an ID" }
+
+      it 'returns a resource not found error code' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns errors in the body of the response' do
+        expect(JSON.parse(response.body)).to include_json(errors: errors_404)
       end
     end
 
@@ -344,44 +399,23 @@ RSpec.describe Api::V1::MovesController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'returns a invalid media type error code' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(response).to have_http_status(415)
       end
 
       it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
       end
     end
 
     context 'with validation errors' do
-      let(:errors) do
-        [
-          {
-            'source' => { 'pointer' => '/data/attributes/from_location' },
-            'code' => 'validation_error',
-            'detail' => 'must exist'
-          },
-          {
-            'source' => { 'pointer' => '/data/attributes/from_location' },
-            'code' => 'validation_error',
-            'detail' => 'can\'t be blank'
-          }
-        ]
-      end
+      let(:move_attributes) { attributes_for(:move).except(:date, :status) }
 
       it 'returns unprocessable entity error code' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
         expect(response).to have_http_status(422)
       end
 
       it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        post '/api/v1/moves', params: { move: move_params }, headers: headers
-        expect(JSON.parse(response.body)).to include_json(errors: errors)
+        expect(JSON.parse(response.body)).to include_json(errors: errors_422)
       end
     end
 
@@ -391,16 +425,14 @@ RSpec.describe Api::V1::MovesController do
 
       context 'when successful' do
         it 'returns a valid 201 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/moves', params: { move: move_params }, headers: headers
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/201')).to be true
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/201')).to be true
         end
       end
 
       context 'with a bad request' do
+        let(:data) { nil }
+
         it 'returns a valid 400 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/moves', params: { move: move_params }, headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
         end
       end
@@ -408,8 +440,15 @@ RSpec.describe Api::V1::MovesController do
       context 'when not authorized' do
         it 'returns a valid 401 JSON response' do
           pending 'not implemented yet'
-          post '/api/v1/moves', params: { move: move_params }, headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
+        end
+      end
+
+      context 'with a reference to a missing relationship' do
+        let(:person) { Person.new }
+
+        it 'returns a valid 404 JSON response' do
+          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
         end
       end
 
@@ -417,16 +456,14 @@ RSpec.describe Api::V1::MovesController do
         let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
         it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/moves', params: { move: move_params }, headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
         end
       end
 
       context 'with validation errors' do
+        let(:move_attributes) { attributes_for(:move).except(:date, :status) }
+
         it 'returns a valid 422 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/moves', params: { move: move_params }, headers: headers
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
         end
       end
