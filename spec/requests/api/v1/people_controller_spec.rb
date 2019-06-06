@@ -21,7 +21,16 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when successful' do
-      let(:expected_data) { {} }
+      let(:expected_data) do
+        {
+          type: 'people',
+          attributes: {
+            first_names: 'Bob',
+            last_name: 'Roberts',
+            date_of_birth: Date.civil(1980, 1, 1).iso8601
+          }
+        }
+      end
 
       it 'returns a success code' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
@@ -35,36 +44,26 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'returns the correct data' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
+        expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
       it 'sets the correct content type header' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
-      end
-    end
-
-    context 'with a bad request' do
-      it 'returns bad request error code' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
-        expect(response).to have_http_status(400)
       end
     end
 
     context 'when not authorized' do
       it 'returns not authorized error code' do
         pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response).to have_http_status(401)
       end
 
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
       end
     end
@@ -73,14 +72,8 @@ RSpec.describe Api::V1::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
       it 'returns a invalid media type error code' do
-        post '/api/v1/people', params: { person: person_params }, headers: headers
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: { person: person_params }, headers: headers
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
       end
     end
 
