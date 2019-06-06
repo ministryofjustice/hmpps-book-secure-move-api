@@ -11,7 +11,7 @@ module Api
       private
 
       # TODO: Complete the list of attributes and relationships
-      PERSON_ATTRIBUTES = [:first_names, :last_name, :date_of_birth].freeze
+      PERSON_ATTRIBUTES = %i[first_names last_name date_of_birth].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
 
       def creator
