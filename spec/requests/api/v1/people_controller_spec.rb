@@ -16,7 +16,15 @@ RSpec.describe Api::V1::PeopleController do
           attributes: {
             first_names: 'Bob',
             last_name: 'Roberts',
-            date_of_birth: Date.civil(1980, 1, 1)
+            date_of_birth: Date.civil(1980, 1, 1),
+            risk_alerts: [
+              { identifier_type: 'pnc_number', value: 'ABC123' },
+              { identifier_type: 'prison_number', value: 'XYZ987' }
+            ],
+            identifiers: [
+              { identifier_type: 'pnc_number', value: 'ABC123' },
+              { identifier_type: 'prison_number', value: 'XYZ987' }
+            ]
           },
           relationships: {
             ethnicity: {
