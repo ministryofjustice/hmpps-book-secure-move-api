@@ -55,17 +55,7 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when not authorized' do
-      it 'returns not authorized error code' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -114,8 +104,7 @@ RSpec.describe Api::V1::PeopleController do
 
       context 'when successful' do
         it 'returns a valid 201 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/people', params: { person: person_params }, headers: headers
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/201')).to be true
         end
       end
@@ -123,7 +112,7 @@ RSpec.describe Api::V1::PeopleController do
       context 'with a bad request' do
         it 'returns a valid 400 JSON response' do
           pending 'not implemented yet'
-          post '/api/v1/people', params: { person: person_params }, headers: headers
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
         end
       end
@@ -131,7 +120,7 @@ RSpec.describe Api::V1::PeopleController do
       context 'when not authorized' do
         it 'returns a valid 401 JSON response' do
           pending 'not implemented yet'
-          post '/api/v1/people', params: { person: person_params }, headers: headers
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
         end
       end
@@ -140,8 +129,7 @@ RSpec.describe Api::V1::PeopleController do
         let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
         it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/people', params: { person: person_params }, headers: headers
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
         end
       end
@@ -149,7 +137,7 @@ RSpec.describe Api::V1::PeopleController do
       context 'with validation errors' do
         it 'returns a valid 422 JSON response' do
           pending 'not implemented yet'
-          post '/api/v1/people', params: { person: person_params }, headers: headers
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
           expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
         end
       end
