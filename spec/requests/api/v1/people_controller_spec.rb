@@ -118,9 +118,10 @@ RSpec.describe Api::V1::PeopleController do
       let(:errors_422) do
         [
           {
+            'title' => 'Unprocessable entity',
+            'detail' => "Last name can't be blank",
             'source' => { 'pointer' => '/data/attributes/last_name' },
-            'code' => 'validation_error',
-            'detail' => "Last name can't be blank"
+            'code' => 'blank'
           }
         ]
       end
