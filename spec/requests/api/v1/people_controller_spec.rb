@@ -7,6 +7,8 @@ RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'POST /people' do
+    let(:ethnicity) { create :ethnicity }
+    let(:gender) { create :gender }
     let(:person_params) do
       {
         data: {
@@ -15,6 +17,20 @@ RSpec.describe Api::V1::PeopleController do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1)
+          },
+          relationships: {
+            ethnicity: {
+              data: {
+                id: ethnicity.id,
+                type: 'ethnicities'
+              }
+            },
+            gender: {
+              data: {
+                id: gender.id,
+                type: 'genders'
+              }
+            }
           }
         }
       }
