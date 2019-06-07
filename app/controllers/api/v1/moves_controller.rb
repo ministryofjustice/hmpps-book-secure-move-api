@@ -15,15 +15,12 @@ module Api
 
       def create
         move = Move.create!(move_attributes)
-
         render_move(move, 201)
       end
 
       def destroy
-        move = Move.find(params[:id])
-
+        move = find_move
         move.destroy!
-
         render_move(move, 200)
       end
 
