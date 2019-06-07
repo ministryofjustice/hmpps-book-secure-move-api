@@ -5,7 +5,7 @@ class Profile
     attr_accessor :identifier_type, :value
 
     def initialize(attribute_values = {})
-      attribute_values.symbolize_keys!
+      attribute_values.symbolize_keys! if attribute_values.respond_to?(:symbolize_keys!)
 
       self.identifier_type = attribute_values[:identifier_type]
       self.value = attribute_values[:value]

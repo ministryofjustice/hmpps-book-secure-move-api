@@ -23,7 +23,13 @@ module People
 
     def create_profile
       Profile.transaction do
-        self.profile = Profile.new(profile_params.merge(person: Person.new).merge(relationships))
+        self.profile = Profile.new(
+          profile_params
+            .merge(person: Person.new)
+            .merge(relationships)
+            .merge(profile_attributes)
+            .merge(profile_identifiers)
+        )
         profile.save!
       end
     end
@@ -32,6 +38,30 @@ module People
       (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map do |attribute, value|
         ["#{attribute}_id", value[:data][:id]]
       end.to_h
+    end
+
+    def profile_attributes
+      {
+        profile_attributes: risk_alerts + health_alerts + court_information
+      }
+    end
+
+    def risk_alerts
+      params[:attributes][:risk_alerts] || []
+    end
+
+    def health_alerts
+      params[:attributes][:health_alerts] || []
+    end
+
+    def court_information
+      params[:attributes][:court_information] || []
+    end
+
+    def profile_identifiers
+      {
+        profile_identifiers: params[:attributes][:identifiers]
+      }
     end
 
     def profile_params
