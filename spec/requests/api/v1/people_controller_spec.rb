@@ -9,6 +9,8 @@ RSpec.describe Api::V1::PeopleController do
   describe 'POST /people' do
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
+    let(:risk_type_1) { create :profile_attribute_type, :risk }
+    let(:risk_type_2) { create :profile_attribute_type, :risk }
     let(:person_params) do
       {
         data: {
@@ -18,8 +20,8 @@ RSpec.describe Api::V1::PeopleController do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
             risk_alerts: [
-              { identifier_type: 'pnc_number', value: 'ABC123' },
-              { identifier_type: 'prison_number', value: 'XYZ987' }
+              { description: 'Escape risk', profile_attribute_type_id: risk_type_1.id },
+              { description: 'Violent', profile_attribute_type_id: risk_type_2.id }
             ],
             identifiers: [
               { identifier_type: 'pnc_number', value: 'ABC123' },
@@ -51,7 +53,15 @@ RSpec.describe Api::V1::PeopleController do
           attributes: {
             first_names: 'Bob',
             last_name: 'Roberts',
-            date_of_birth: Date.civil(1980, 1, 1).iso8601
+            date_of_birth: Date.civil(1980, 1, 1).iso8601,
+            risk_alerts: [
+              { description: 'Escape risk', profile_attribute_type_id: risk_type_1.id },
+              { description: 'Violent', profile_attribute_type_id: risk_type_2.id }
+            ],
+            identifiers: [
+              { identifier_type: 'pnc_number', value: 'ABC123' },
+              { identifier_type: 'prison_number', value: 'XYZ987' }
+            ]
           }
         }
       end
@@ -69,6 +79,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
+        require 'pry'; binding.pry
         expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
