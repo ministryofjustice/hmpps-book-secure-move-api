@@ -6,6 +6,8 @@ require 'support/with_json_schema_context'
 RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
+  let(:response_json) { JSON.parse(response.body) }
+
   let(:move_to_json) do
     JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_DETAIL))
   end
@@ -65,6 +67,8 @@ RSpec.describe Api::V1::MovesController do
   end
 
   describe 'GET /moves' do
+    let(:schema) { load_json_schema('get_moves_responses.json') }
+
     let!(:moves) { create_list :move, 21 }
     let(:params) { {} }
 
@@ -81,6 +85,10 @@ RSpec.describe Api::V1::MovesController do
 
       it 'sets the correct content type header' do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+      end
+
+      it 'returns a valid 200 JSON response with move data', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
       end
 
       describe 'filtering results' do
@@ -158,6 +166,11 @@ RSpec.describe Api::V1::MovesController do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
       end
+
+      it 'returns a valid 401 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -170,36 +183,16 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
       end
-    end
 
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_moves_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'with the correct CONTENT_TYPE header' do
-        it 'returns a valid 200 JSON response with move data' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
-        end
+      it 'returns a valid 415 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
       end
     end
   end
 
   describe 'GET /moves/{moveId}' do
+    let(:schema) { load_json_schema('get_move_responses.json') }
+
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
@@ -217,6 +210,10 @@ RSpec.describe Api::V1::MovesController do
       it 'sets the correct content type header' do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
+
+      it 'returns a valid 200 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
+      end
     end
 
     context 'when not authorized' do
@@ -228,6 +225,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
+      end
+
+      it 'returns a valid 401 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
       end
     end
 
@@ -241,6 +243,10 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_404)
       end
+
+      it 'returns a valid 404 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -253,44 +259,16 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
       end
-    end
 
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
+      it 'returns a valid 415 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
   end
 
   describe 'POST /moves' do
+    let(:schema) { load_json_schema('post_moves_responses.json') }
+
     let(:move_attributes) { attributes_for(:move) }
     let!(:from_location) { create :location }
     let!(:to_location) { create :location, :court }
@@ -332,6 +310,10 @@ RSpec.describe Api::V1::MovesController do
       it 'sets the correct content type header' do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
+
+      it 'returns a valid 201 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/201')).to be true
+      end
     end
 
     context 'with a bad request' do
@@ -344,6 +326,10 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_400)
       end
+
+      it 'returns a valid 400 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
+      end
     end
 
     context 'when not authorized' do
@@ -355,6 +341,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
+      end
+
+      it 'returns a valid 401 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
       end
     end
 
@@ -369,6 +360,10 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_404)
       end
+
+      it 'returns a valid 404 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -380,6 +375,10 @@ RSpec.describe Api::V1::MovesController do
 
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
+      end
+
+      it 'returns a valid 415 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
 
@@ -393,60 +392,16 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_422)
       end
-    end
 
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('post_moves_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 201 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/201')).to be true
-        end
-      end
-
-      context 'with a bad request' do
-        let(:data) { nil }
-
-        it 'returns a valid 400 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'with a reference to a missing relationship' do
-        let(:person) { Person.new }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
-
-      context 'with validation errors' do
-        let(:move_attributes) { attributes_for(:move).except(:date, :status) }
-
-        it 'returns a valid 422 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
-        end
+      it 'returns a valid 422 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
       end
     end
   end
 
   describe 'PUT /moves/{moveId}' do
+    let(:schema) { load_json_schema('put_move_responses.json') }
+
     let!(:move) { create :move }
     let(:move_id) { move.id }
     let(:move_attributes) { attributes_for(:move) }
@@ -482,6 +437,11 @@ RSpec.describe Api::V1::MovesController do
         pending 'not implemented yet'
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
+
+      it 'returns a valid 200 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
+      end
     end
 
     context 'with a bad request' do
@@ -490,6 +450,16 @@ RSpec.describe Api::V1::MovesController do
       it 'returns bad request error code' do
         pending 'not implemented yet'
         expect(response).to have_http_status(400)
+      end
+
+      it 'returns errors in the body of the response' do
+        pending 'not implemented yet'
+        expect(JSON.parse(response.body)).to include_json(errors: errors_400)
+      end
+
+      it 'returns a valid 400 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
       end
     end
 
@@ -502,6 +472,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
+      end
+
+      it 'returns a valid 401 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
       end
     end
 
@@ -517,6 +492,11 @@ RSpec.describe Api::V1::MovesController do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_404)
       end
+
+      it 'returns a valid 404 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -530,6 +510,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
+      end
+
+      it 'returns a valid 415 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
 
@@ -545,63 +530,17 @@ RSpec.describe Api::V1::MovesController do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_422)
       end
-    end
 
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('put_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'with a bad request' do
-        it 'returns a valid 400 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
-
-      context 'with validation errors' do
-        let(:move_attributes) { attributes_for(:move).except(:date, :status) }
-
-        it 'returns a valid 422 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
-        end
+      it 'returns a valid 422 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
       end
     end
   end
 
   describe 'DELETE /moves/{moveId}' do
+    let(:schema) { load_json_schema('delete_move_responses.json') }
+
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
@@ -632,6 +571,10 @@ RSpec.describe Api::V1::MovesController do
       it 'sets the correct content type header' do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
+
+      it 'returns a valid 200 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
+      end
     end
 
     context 'when not authorized' do
@@ -643,6 +586,11 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         pending 'not implemented yet'
         expect(JSON.parse(response.body)).to include_json(errors: errors_401)
+      end
+
+      it 'returns a valid 401 JSON response', with_json_schema: true do
+        pending 'not implemented yet'
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
       end
     end
 
@@ -656,6 +604,10 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_404)
       end
+
+      it 'returns a valid 404 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
@@ -668,39 +620,9 @@ RSpec.describe Api::V1::MovesController do
       it 'returns errors in the body of the response' do
         expect(JSON.parse(response.body)).to include_json(errors: errors_415)
       end
-    end
 
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('delete_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
+      it 'returns a valid 415 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
       end
     end
   end
