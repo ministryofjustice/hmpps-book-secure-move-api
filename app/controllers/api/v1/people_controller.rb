@@ -10,7 +10,6 @@ module Api
 
       private
 
-      # TODO: Complete the list of attributes and relationships
       PERSON_ATTRIBUTES = [
         :first_names,
         :last_name,
