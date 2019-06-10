@@ -2,8 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController do
-  let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
+RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
 
   describe 'POST /people' do
     let(:schema) { load_json_schema('post_people_responses.json') }
@@ -91,14 +92,14 @@ RSpec.describe Api::V1::PeopleController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', with_invalid_auth_headers: true do
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 

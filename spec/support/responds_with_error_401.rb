@@ -11,17 +11,14 @@ RSpec.shared_examples 'an endpoint that responds with error 401' do
   end
 
   it 'returns a not authorized error code' do
-    pending 'not implemented yet'
     expect(response).to have_http_status(401)
   end
 
   it 'returns errors in the body of the response' do
-    pending 'not implemented yet'
     expect(JSON.parse(response.body)).to include_json(errors: errors_401)
   end
 
   it 'returns a valid 401 JSON response', with_json_schema: true do
-    pending 'not implemented yet'
     expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
   end
 

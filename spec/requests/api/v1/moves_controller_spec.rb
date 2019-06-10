@@ -2,8 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController do
-  let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
+RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
 
   let(:response_json) { JSON.parse(response.body) }
 
@@ -93,12 +94,12 @@ RSpec.describe Api::V1::MovesController do
       end
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', with_invalid_auth_headers: true do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -120,7 +121,7 @@ RSpec.describe Api::V1::MovesController do
       end
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', with_invalid_auth_headers: true do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
@@ -131,7 +132,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -183,7 +184,7 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', with_invalid_auth_headers: true do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
@@ -195,7 +196,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -253,7 +254,7 @@ RSpec.describe Api::V1::MovesController do
       end
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', with_invalid_auth_headers: true do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
@@ -264,7 +265,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

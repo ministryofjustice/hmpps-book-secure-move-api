@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'support/with_json_schema_context'
 
-RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
-  let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
+RSpec.describe Api::V1::Reference::ProfileAttributeTypesController, with_client_authentication: true do
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
+  let(:params) { {} }
 
   describe 'GET /api/v1/reference/profile_attribute_types' do
     let!(:profile_attribute_type) { FactoryBot.create(:profile_attribute_type) }
@@ -23,29 +24,35 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
         }
       ]
     end
+    let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
+    let(:response_json) { JSON.parse(response.body) }
+
+    before do
+      get '/api/v1/reference/profile_attribute_types', headers: headers, params: params
+    end
 
     context 'with the correct CONTENT_TYPE header' do
       it 'returns a success code' do
-        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response).to be_successful
       end
 
       it 'returns the correct data' do
-        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(JSON.parse(response.body)).to include_json(data: data)
       end
 
       it 'sets the correct content type header' do
-        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
       end
     end
 
+    context 'when not authorized', with_invalid_auth_headers: true do
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
     context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+      let(:content_type) { 'application/xml' }
 
       it 'fails if I set the wrong `content-type` header' do
-        get '/api/v1/reference/profile_attribute_types', headers: headers
         expect(response.code).to eql '415'
       end
     end
@@ -60,10 +67,6 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
             id: profile_attribute_type.id
           }
         ]
-      end
-
-      before do
-        get '/api/v1/reference/profile_attribute_types', headers: headers, params: params
       end
 
       context 'with matching filters' do
@@ -90,9 +93,6 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController do
     end
 
     describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
       context 'with the correct CONTENT_TYPE header' do
         it 'returns a valid 200 JSON response with move data' do
           get '/api/v1/reference/profile_attribute_types', headers: headers
