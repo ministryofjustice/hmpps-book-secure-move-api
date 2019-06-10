@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'support/with_json_schema_context'
 
 RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
@@ -93,9 +92,9 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'with an invalid CONTENT_TYPE header' do
-      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
-
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+
+      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -123,6 +122,12 @@ RSpec.describe Api::V1::PeopleController do
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 422'
+    end
+
+    context 'with a bad request' do
+      before { post '/api/v1/people', params: nil, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 400'
     end
   end
 end
