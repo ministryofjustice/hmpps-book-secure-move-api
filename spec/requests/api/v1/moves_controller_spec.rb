@@ -1,70 +1,21 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'support/with_json_schema_context'
 
 RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
-  let(:move_to_json) do
+  let(:response_json) { JSON.parse(response.body) }
+
+  let(:resource_to_json) do
     JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_DETAIL))
   end
 
-  let(:errors_400) do
-    [
-      {
-        'title' => 'Bad request',
-        'detail' => 'param is missing or the value is empty: data'
-      }
-    ]
-  end
-
-  let(:errors_401) do
-    [
-      {
-        'title' => 'Not authorized',
-        'detail' => 'Token expired or invalid'
-      }
-    ]
-  end
-
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
-  let(:errors_404) do
-    [
-      {
-        'title' => 'Resource not found',
-        'detail' => detail_404
-      }
-    ]
-  end
-
-  let(:errors_415) do
-    [
-      {
-        'title' => 'Invalid Media Type',
-        'detail' => 'Content-Type must be application/vnd.api+json'
-      }
-    ]
-  end
-
-  let(:errors_422) do
-    [
-      {
-        'title' => 'Unprocessable entity',
-        'detail' => "Date can't be blank",
-        'source' => { 'pointer' => '/data/attributes/date' },
-        'code' => 'blank'
-      },
-      {
-        'title' => 'Unprocessable entity',
-        'detail' => "Status can't be blank",
-        'source' => { 'pointer' => '/data/attributes/status' },
-        'code' => 'blank'
-      }
-    ]
-  end
 
   describe 'GET /moves' do
+    let(:schema) { load_json_schema('get_moves_responses.json') }
+
     let!(:moves) { create_list :move, 21 }
     let(:params) { {} }
 
@@ -75,13 +26,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'when successful' do
-      it 'returns a success code' do
-        expect(response).to have_http_status(200)
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
-      end
+      it_behaves_like 'an endpoint that responds with success 200'
 
       describe 'filtering results' do
         let(:from_location_id) { moves.first.from_location_id }
@@ -149,148 +94,52 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'when not authorized' do
-      it 'returns a not authorized error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'returns invalid media type error code' do
-        expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_moves_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'with the correct CONTENT_TYPE header' do
-        it 'returns a valid 200 JSON response with move data' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 
   describe 'GET /moves/{moveId}' do
+    let(:schema) { load_json_schema('get_move_responses.json') }
+
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
     before { get "/api/v1/moves/#{move_id}", headers: headers }
 
     context 'when successful' do
-      it 'returns a success code' do
-        expect(response).to have_http_status(200)
-      end
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq move_to_json
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+        expect(JSON.parse(response.body)).to eq resource_to_json
       end
     end
 
     context 'when not authorized' do
-      it 'returns a not authorized error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'when resource is not found' do
       let(:move_id) { 'UUID-not-found' }
 
-      it 'returns a resource not found error code' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_404)
-      end
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'returns invalid media type error code' do
-        expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('get_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 
   describe 'POST /moves' do
+    let(:schema) { load_json_schema('post_moves_responses.json') }
+
     let(:move_attributes) { attributes_for(:move) }
     let!(:from_location) { create :location }
     let!(:to_location) { create :location, :court }
@@ -316,9 +165,7 @@ RSpec.describe Api::V1::MovesController do
     context 'when successful' do
       let(:move) { Move.first }
 
-      it 'returns a success code' do
-        expect(response).to have_http_status(201)
-      end
+      it_behaves_like 'an endpoint that responds with success 201'
 
       it 'creates a move', skip_before: true do
         expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
@@ -326,282 +173,60 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq move_to_json
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+        expect(JSON.parse(response.body)).to eq resource_to_json
       end
     end
 
     context 'with a bad request' do
       let(:data) { nil }
 
-      it 'returns bad request error code' do
-        expect(response).to have_http_status(400)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_400)
-      end
+      it_behaves_like 'an endpoint that responds with error 400'
     end
 
     context 'when not authorized' do
-      it 'returns not authorized error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with a reference to a missing relationship' do
       let(:person) { Person.new }
       let(:detail_404) { "Couldn't find Person without an ID" }
 
-      it 'returns a resource not found error code' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_404)
-      end
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'returns a invalid media type error code' do
-        expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'with validation errors' do
       let(:move_attributes) { attributes_for(:move).except(:date, :status) }
 
-      it 'returns unprocessable entity error code' do
-        expect(response).to have_http_status(422)
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Date can't be blank",
+            'source' => { 'pointer' => '/data/attributes/date' },
+            'code' => 'blank'
+          },
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Status can't be blank",
+            'source' => { 'pointer' => '/data/attributes/status' },
+            'code' => 'blank'
+          }
+        ]
       end
 
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_422)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('post_moves_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 201 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/201')).to be true
-        end
-      end
-
-      context 'with a bad request' do
-        let(:data) { nil }
-
-        it 'returns a valid 400 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'with a reference to a missing relationship' do
-        let(:person) { Person.new }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
-
-      context 'with validation errors' do
-        let(:move_attributes) { attributes_for(:move).except(:date, :status) }
-
-        it 'returns a valid 422 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
-        end
-      end
-    end
-  end
-
-  describe 'PUT /moves/{moveId}' do
-    let!(:move) { create :move }
-    let(:move_id) { move.id }
-    let(:move_attributes) { attributes_for(:move) }
-    let!(:from_location) { create :location }
-    let!(:to_location) { create :location, :court }
-    let!(:person) { create(:person) }
-    let(:data) do
-      {
-        type: 'moves',
-        attributes: move_attributes,
-        relationships: {
-          person: { data: { type: 'people', id: person.id } },
-          from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: { data: { type: 'locations', id: to_location.id } }
-        }
-      }
-    end
-
-    # before { put "/api/v1/moves/#{move.id}", params: { data: data }, headers: headers }
-
-    context 'when successful' do
-      it 'returns a success code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(200)
-      end
-
-      it 'returns the correct data' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(data: expected_data)
-      end
-
-      it 'sets the correct content type header' do
-        pending 'not implemented yet'
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
-      end
-    end
-
-    context 'with a bad request' do
-      let(:data) { nil }
-
-      it 'returns bad request error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(400)
-      end
-    end
-
-    context 'when not authorized' do
-      it 'returns not authorized error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
-    end
-
-    context 'when resource is not found' do
-      let(:move_id) { 'UUID-not-found' }
-
-      it 'returns a resource not found error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_404)
-      end
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-      it 'returns a invalid media type error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
-      end
-    end
-
-    context 'with validation errors' do
-      let(:move_attributes) { attributes_for(:move).except(:date, :status) }
-
-      it 'returns unprocessable entity error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(422)
-      end
-
-      it 'provides errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_422)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('put_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'with a bad request' do
-        it 'returns a valid 400 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
-
-      context 'with validation errors' do
-        let(:move_attributes) { attributes_for(:move).except(:date, :status) }
-
-        it 'returns a valid 422 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 422'
     end
   end
 
   describe 'DELETE /moves/{moveId}' do
+    let(:schema) { load_json_schema('delete_move_responses.json') }
+
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
@@ -612,9 +237,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'when successful' do
-      it 'returns a success code' do
-        expect(response).to have_http_status(200)
-      end
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'deletes the move', skip_before: true do
         expect { delete "/api/v1/moves/#{move_id}", headers: headers }
@@ -626,82 +249,24 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq move_to_json
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+        expect(JSON.parse(response.body)).to eq resource_to_json
       end
     end
 
     context 'when not authorized' do
-      it 'returns a not authorized error code' do
-        pending 'not implemented yet'
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns errors in the body of the response' do
-        pending 'not implemented yet'
-        expect(JSON.parse(response.body)).to include_json(errors: errors_401)
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'when resource is not found' do
       let(:move_id) { 'UUID-not-found' }
 
-      it 'returns a resource not found error code' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_404)
-      end
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'returns invalid media type error code' do
-        expect(response).to have_http_status(415)
-      end
-
-      it 'returns errors in the body of the response' do
-        expect(JSON.parse(response.body)).to include_json(errors: errors_415)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('delete_move_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 200 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'when resource is not found' do
-        let(:move_id) { 'UUID-not-found' }
-
-        it 'returns a valid 404 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/404')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end
