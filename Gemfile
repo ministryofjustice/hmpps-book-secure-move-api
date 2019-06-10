@@ -7,6 +7,7 @@ ruby '2.6.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'doorkeeper'
 gem 'json-schema'
 gem 'kaminari'
 gem 'oauth2'

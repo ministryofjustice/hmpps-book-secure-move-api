@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+
   if !Rails.env.production? || ENV['SERVE_API_DOCS']
     mount Rswag::Ui::Engine => '/api-docs'
     mount Rswag::Api::Engine => '/api-docs'
   end
+
   get '/ping', to: 'status#ping', format: :json
   get '/health', to: 'status#health', format: :json
 
