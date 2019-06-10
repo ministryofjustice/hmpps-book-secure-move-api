@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  unless Rails.env.production?
+  if !Rails.env.production? || ENV['SERVE_API_DOCS']
     mount Rswag::Ui::Engine => '/api-docs'
     mount Rswag::Api::Engine => '/api-docs'
   end
