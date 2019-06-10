@@ -6,3 +6,4 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
+Doorkeeper::Rake.load_tasks
