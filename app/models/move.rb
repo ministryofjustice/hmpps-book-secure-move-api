@@ -12,4 +12,13 @@ class Move < ApplicationRecord
   validates :person, presence: true
   validates :status, presence: true
   validates :move_type, presence: true
+  validates :reference, presence: true
+
+  before_validation :set_reference
+
+  private
+
+  def set_reference
+    self.reference ||= Moves::ReferenceGenerator.new.call
+  end
 end

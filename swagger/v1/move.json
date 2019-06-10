@@ -22,9 +22,15 @@
         "type": "object",
         "required": [
           "status",
-          "date"
+          "date",
+          "reference"
         ],
         "properties": {
+          "reference": {
+            "type": "string",
+            "example": "TM7B3A2S",
+            "description": "Unique human-readable identifier for the Move"
+          },
           "status": {
             "type": "string",
             "enum": ["requested", "scheduled"],
