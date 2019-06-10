@@ -16,7 +16,7 @@ class Profile
     attr_reader :date, :expiry_date
 
     def initialize(attributes = {})
-      attributes.symbolize_keys!
+      attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
 
       self.description = attributes[:description]
       self.comments = attributes[:comments]

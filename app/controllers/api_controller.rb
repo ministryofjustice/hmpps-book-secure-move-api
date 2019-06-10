@@ -64,7 +64,7 @@ class ApiController < ApplicationController
       {
         title: 'Unprocessable entity',
         detail: [field, error].join(' ').humanize,
-        code: errors.details[field].first.values.first,
+        code: 'validation_error',
         source: { pointer: "/data/attributes/#{field}" }
       }
     end
