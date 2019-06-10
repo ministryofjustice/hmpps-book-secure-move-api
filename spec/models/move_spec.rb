@@ -14,4 +14,26 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:time_due) }
   it { is_expected.to validate_presence_of(:move_type) }
   it { is_expected.to validate_presence_of(:status) }
+
+  context 'without automatic reference generation' do
+    # rubocop:disable RSpec/AnyInstance
+    before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
+    # rubocop:enable RSpec/AnyInstance
+
+    it { is_expected.to validate_presence_of(:reference) }
+  end
+
+  describe '#reference' do
+    subject(:move) { described_class.new }
+
+    it 'generates a new unique reference before validation' do
+      move.valid?
+      expect(move.reference).to be_present
+    end
+
+    it 'does not overwrite an existing reference on validation' do
+      move = described_class.new(reference: '12345678')
+      expect(move.reference).to eq '12345678'
+    end
+  end
 end

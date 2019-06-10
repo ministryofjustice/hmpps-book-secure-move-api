@@ -5,9 +5,7 @@ require 'rails_helper'
 RSpec.describe Moves::ReferenceGenerator do
   subject(:generator) { described_class.new }
 
-  before do
-    srand 1
-  end
+  before { srand 1 }
 
   let(:existing_reference) { '12345678' }
   let!(:move) { create :move, reference: existing_reference }
