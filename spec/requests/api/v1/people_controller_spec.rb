@@ -85,6 +85,12 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
+    context 'with a bad request' do
+      before { post '/api/v1/people', params: nil, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
+
     context 'when not authorized' do
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
@@ -122,12 +128,6 @@ RSpec.describe Api::V1::PeopleController do
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 422'
-    end
-
-    context 'with a bad request' do
-      before { post '/api/v1/people', params: nil, headers: headers, as: :json }
-
-      it_behaves_like 'an endpoint that responds with error 400'
     end
   end
 end
