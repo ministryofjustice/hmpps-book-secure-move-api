@@ -16,6 +16,11 @@ RSpec.describe Moves::ReferenceGenerator do
     expect(generator.call).to eql 'JUWPTYK6'
   end
 
+  it 'generates a different reference on each call' do
+    references = Array.new(10).map { generator.call }
+    expect(references.uniq.length).to be 10
+  end
+
   context 'when there is a clash with an existing reference' do
     let(:existing_reference) { 'JUWPTYK6' }
 

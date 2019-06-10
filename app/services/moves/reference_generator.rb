@@ -3,7 +3,10 @@
 module Moves
   class ReferenceGenerator
     def call
-      PERMISSIBLE_CHARACTERS.sample(REFERENCE_LENGTH).join
+      loop do
+        reference = PERMISSIBLE_CHARACTERS.sample(REFERENCE_LENGTH).join
+        break reference unless Move.where(reference: reference).exists?
+      end
     end
 
     REFERENCE_LENGTH = 8
