@@ -209,13 +209,13 @@ RSpec.describe Api::V1::MovesController do
             'title' => 'Unprocessable entity',
             'detail' => "Date can't be blank",
             'source' => { 'pointer' => '/data/attributes/date' },
-            'code' => 'blank'
+            'code' => 'validation_error'
           },
           {
             'title' => 'Unprocessable entity',
             'detail' => "Status can't be blank",
             'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'blank'
+            'code' => 'validation_error'
           }
         ]
       end

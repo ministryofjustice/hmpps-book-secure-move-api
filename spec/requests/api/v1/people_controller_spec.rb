@@ -7,6 +7,8 @@ RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
   describe 'POST /people' do
+    let(:schema) { load_json_schema('post_people_responses.json') }
+    let(:response_json) { JSON.parse(response.body) }
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
     let(:risk_type_1) { create :profile_attribute_type, :risk }
@@ -66,15 +68,10 @@ RSpec.describe Api::V1::PeopleController do
         }
       end
 
-      it 'returns a success code' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(response).to have_http_status(:created)
-      end
+      context 'with valid params' do
+        before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
-      it 'creates a new person' do
-        expect do
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-        end.to change(Person, :count).by(1)
+        it_behaves_like 'an endpoint that responds with success 201'
       end
 
       it 'returns the correct data' do
@@ -82,23 +79,25 @@ RSpec.describe Api::V1::PeopleController do
         expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
-      it 'sets the correct content type header' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+      it 'creates a new person' do
+        expect do
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
+        end.to change(Person, :count).by(1)
       end
     end
 
     context 'when not authorized' do
+      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
+
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
+      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
+
       let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-      it 'returns a invalid media type error code' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(response).to have_http_status(415)
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'with validation errors' do
@@ -111,7 +110,7 @@ RSpec.describe Api::V1::PeopleController do
         }
       end
 
-      let(:errors) do
+      let(:errors_422) do
         [
           {
             'source' => { 'pointer' => '/data/attributes/last_name' },
@@ -121,60 +120,9 @@ RSpec.describe Api::V1::PeopleController do
         ]
       end
 
-      it 'returns unprocessable entity error code' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(response).to have_http_status(422)
-      end
+      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
-      it 'returns errors in the body of the response' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(JSON.parse(response.body)).to include_json(errors: errors)
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      let(:schema) { load_json_schema('post_people_responses.json') }
-      let(:response_json) { JSON.parse(response.body) }
-
-      context 'when successful' do
-        it 'returns a valid 201 JSON response' do
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/201')).to be true
-        end
-      end
-
-      context 'with a bad request' do
-        it 'returns a valid 400 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
-        end
-      end
-
-      context 'when not authorized' do
-        it 'returns a valid 401 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
-
-        it 'returns a valid 415 JSON response' do
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/415')).to be true
-        end
-      end
-
-      context 'with validation errors' do
-        it 'returns a valid 422 JSON response' do
-          pending 'not implemented yet'
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
-          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/422')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 422'
     end
   end
 end
