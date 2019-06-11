@@ -14,7 +14,8 @@ gem 'pager_api'
 gem 'pg', '~> 1.0.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
-gem 'rswag'
+gem 'rswag-api'
+gem 'rswag-ui'
 
 group :development, :test do
   gem 'factory_bot'
@@ -23,6 +24,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
+  gem 'rswag-specs'
   gem 'shoulda-matchers'
 end
 
