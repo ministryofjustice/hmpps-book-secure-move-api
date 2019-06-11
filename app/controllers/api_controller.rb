@@ -60,13 +60,15 @@ class ApiController < ApplicationController
   end
 
   def validation_errors(errors)
-    errors.map do |field, error|
-      {
-        title: 'Unprocessable entity',
-        detail: [field, error].join(' ').humanize,
-        code: 'validation_error',
-        source: { pointer: "/data/attributes/#{field}" }
-      }
+    errors.keys.flat_map do |field|
+      Array.new(errors[field].size) do |index|
+        {
+          title: 'Unprocessable entity',
+          detail: "#{field} #{errors[field][index]}".humanize,
+          source: { pointer: "/data/attributes/#{field}" },
+          code: errors.details[field][index][:error]
+        }
+      end
     end
   end
 end
