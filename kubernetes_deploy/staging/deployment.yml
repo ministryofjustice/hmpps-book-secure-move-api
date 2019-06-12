@@ -37,7 +37,7 @@ spec:
           periodSeconds: 10
         envFrom:
           - configMapRef:
-              name: pecs-move-platform-backend-configmap-staging
+              name: pecs-move-platform-backend-configmap-staging-v2
         env:
           - name: DATABASE_URL
             valueFrom:

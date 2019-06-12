@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pecs-move-platform-backend-configmap-staging
+  name: pecs-move-platform-backend-configmap-staging-v2
   namespace: pecs-move-platform-backend-staging
 data:
   LOG_LEVEL: debug
