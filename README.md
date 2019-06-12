@@ -49,7 +49,15 @@ Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 grant_type=client_credentials
 ```
 
-The Authorization header includes the encoded credentials for the client.
+The Authorization header includes the encoded credentials for the client, represented as a Base64-encoded (without line breaks) string of the form `<client_id>:<client_secret>`.
+
+You will receive a JSON payload containing an `access_token` and `expires_in`. You can then sign following requests with the following header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+The `expires_in` response denotes the time in seconds from the token request after which the token will expire.
 
 ### Running tests
 
