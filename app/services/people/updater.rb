@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module People
-  class Updater
+  class Updater < People::Creator
     attr_accessor :id, :params, :profile
 
     def initialize(id, params)
@@ -27,9 +27,11 @@ module People
     end
 
     def update_person(person)
+
     end
 
     def update_profile(profile)
+      profile.update!(profile_params)
     end
   end
 end
