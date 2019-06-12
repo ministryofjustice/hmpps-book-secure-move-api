@@ -5,13 +5,14 @@ require 'rails_helper'
 RSpec.describe Api::V1::Reference::LocationsController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
-  let(:params) { {} }
+  let(:response_json) { JSON.parse(response.body) }
 
   describe 'GET /api/v1/reference/locations' do
     let(:schema) { load_json_schema('get_locations_responses.json') }
-    let(:response_json) { JSON.parse(response.body) }
 
-    context 'with the correct CONTENT_TYPE header' do
+    let(:params) { {} }
+
+    context 'when successful' do
       let(:data) do
         [
           {
@@ -34,23 +35,15 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
 
       before do
-        data.map do |location|
-          Location.create!(location[:attributes])
-        end
+        data.each { |location| Location.create!(location[:attributes]) }
 
         get '/api/v1/reference/locations', headers: headers, params: params
       end
 
-      it 'returns a success code' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to include_json(data: data)
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+        expect(response_json).to include_json(data: data)
       end
     end
 
@@ -63,16 +56,14 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      it 'fails if I set the wrong `content-type` header' do
-        get '/api/v1/reference/locations', headers: headers, params: params
-        expect(response.code).to eql '415'
-      end
+      before { get '/api/v1/reference/locations', headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     describe 'pagination' do
       let!(:prisons) { create_list :location, 11 }
       let!(:courts) { create_list :location, 10, :court }
-      let(:location_id) { prisons.first.id }
       let(:meta_pagination) do
         {
           per_page: 20,
@@ -90,11 +81,11 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
 
       context 'with no pagination parameters' do
         it 'paginates 20 results per page' do
-          expect(JSON.parse(response.body)['data'].size).to eq 20
+          expect(response_json['data'].size).to eq 20
         end
 
         it 'provides meta data with pagination' do
-          expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
+          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
         end
       end
 
@@ -102,7 +93,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         let(:params) { { page: 2 } }
 
         it 'returns 1 result on the second page' do
-          expect(JSON.parse(response.body)['data'].size).to eq 1
+          expect(response_json['data'].size).to eq 1
         end
       end
 
@@ -110,7 +101,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         let(:params) { { per_page: 15 } }
 
         it 'allows setting a different page size' do
-          expect(JSON.parse(response.body)['data'].size).to eq 15
+          expect(response_json['data'].size).to eq 15
         end
       end
     end
@@ -118,12 +109,11 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     describe 'filters' do
       let!(:location) { create :location }
       let(:filters) { { location_type: 'prison' } }
-      let(:location_finder) { double }
       let(:params) { { filter: filters } }
 
       before do
-        allow(location_finder).to receive(:call).and_return(Location.all)
-        allow(Locations::Finder).to receive(:new).and_return(location_finder)
+        locations_finder = instance_double('Locations::Finder', call: Location.all)
+        allow(Locations::Finder).to receive(:new).and_return(locations_finder)
 
         get '/api/v1/reference/locations', headers: headers, params: params
       end
@@ -133,25 +123,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
 
       it 'returns results from Locations::Finder' do
-        expect(JSON.parse(response.body)).to include_json(data: [{ id: location.id }])
-      end
-    end
-
-    describe 'response schema validation', with_json_schema: true do
-      before { get '/api/v1/reference/locations', headers: headers, params: params }
-
-      context 'with the correct CONTENT_TYPE header' do
-        it 'returns a valid 200 JSON response with move data' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
-        end
+        expect(response_json).to include_json(data: [{ id: location.id }])
       end
     end
   end

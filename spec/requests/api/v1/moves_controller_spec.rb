@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
-
   let(:response_json) { JSON.parse(response.body) }
 
   let(:resource_to_json) do
@@ -50,11 +49,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         end
 
         it 'filters the results' do
-          expect(JSON.parse(response.body)['data'].size).to be 1
+          expect(response_json['data'].size).to be 1
         end
 
         it 'returns the move that matches the filter' do
-          expect(JSON.parse(response.body)).to include_json(data: [{ id: moves.first.id }])
+          expect(response_json).to include_json(data: [{ id: moves.first.id }])
         end
       end
 
@@ -73,23 +72,23 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         end
 
         it 'paginates 20 results per page' do
-          expect(JSON.parse(response.body)['data'].size).to eq 20
+          expect(response_json['data'].size).to eq 20
         end
 
         it 'returns 1 result on the second page', skip_before: true do
           get '/api/v1/moves?page=2', headers: headers
 
-          expect(JSON.parse(response.body)['data'].size).to eq 1
+          expect(response_json['data'].size).to eq 1
         end
 
         it 'allows setting a different page size', skip_before: true do
           get '/api/v1/moves?per_page=15', headers: headers
 
-          expect(JSON.parse(response.body)['data'].size).to eq 15
+          expect(response_json['data'].size).to eq 15
         end
 
         it 'provides meta data with pagination' do
-          expect(JSON.parse(response.body)['meta']['pagination']).to include_json(meta_pagination)
+          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
         end
       end
     end
@@ -117,7 +116,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq resource_to_json
+        expect(response_json).to eq resource_to_json
       end
     end
 
@@ -174,7 +173,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq resource_to_json
+        expect(response_json).to eq resource_to_json
       end
     end
 
@@ -250,7 +249,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to eq resource_to_json
+        expect(response_json).to eq resource_to_json
       end
     end
 

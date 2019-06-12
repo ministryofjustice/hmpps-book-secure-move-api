@@ -5,8 +5,11 @@ require 'rails_helper'
 RSpec.describe Api::V1::Reference::GendersController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
+  let(:response_json) { JSON.parse(response.body) }
 
   describe 'GET /api/v1/reference/genders' do
+    let(:schema) { load_json_schema('get_genders_responses.json') }
+
     let(:data) do
       [
         {
@@ -23,33 +26,18 @@ RSpec.describe Api::V1::Reference::GendersController, with_client_authentication
         }
       ]
     end
-    let(:schema) { load_json_schema('get_genders_responses.json') }
-    let(:response_json) { JSON.parse(response.body) }
 
     before do
-      data.map { |gender| Gender.create!(gender[:attributes]) }
+      data.each { |gender| Gender.create!(gender[:attributes]) }
+
       get '/api/v1/reference/genders', headers: headers
     end
 
-    context 'with the correct CONTENT_TYPE header' do
-      it 'returns a success code' do
-        expect(response).to be_successful
-      end
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(JSON.parse(response.body)).to include_json(data: data)
-      end
-
-      it 'sets the correct content type header' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
-      end
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it 'fails if I set the wrong `content-type` header' do
-        expect(response.code).to eql '415'
+        expect(response_json).to include_json(data: data)
       end
     end
 
@@ -57,20 +45,10 @@ RSpec.describe Api::V1::Reference::GendersController, with_client_authentication
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
-    describe 'response schema validation', with_json_schema: true do
-      context 'with the correct CONTENT_TYPE header' do
-        it 'returns a valid 200 JSON response with move data' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-        end
-      end
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
 
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it 'returns a valid 415 JSON response' do
-          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

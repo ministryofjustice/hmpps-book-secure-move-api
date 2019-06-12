@@ -5,10 +5,11 @@ require 'rails_helper'
 RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
+  let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /people' do
     let(:schema) { load_json_schema('post_people_responses.json') }
-    let(:response_json) { JSON.parse(response.body) }
+
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
     let(:risk_type_1) { create :profile_attribute_type, :risk }
@@ -76,7 +77,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
 
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
+        expect(response_json).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
       it 'creates a new person' do
