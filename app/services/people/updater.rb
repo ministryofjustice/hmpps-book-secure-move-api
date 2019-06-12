@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module People
-  class Updater < People::Creator
+  class Updater < People::Crud
     attr_accessor :id, :params, :profile
 
     def initialize(id, params)
       self.id = id
-      self.params = params
+      super(params)
     end
 
     def call
@@ -14,24 +14,21 @@ module People
       update(person)
     end
 
-    PROFILE_ATTRIBUTES = %i[first_names last_name date_of_birth].freeze
-    PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
-
     private
 
     def update(person)
       Profile.transaction do
-        update_person(person)
         update_profile(person.latest_profile)
       end
     end
 
-    def update_person(person)
-
-    end
-
     def update_profile(profile)
-      profile.update!(profile_params)
+      profile.update!(
+        profile_params
+          .merge(relationships)
+          .merge(profile_attributes)
+          .merge(profile_identifiers)
+      )
     end
   end
 end

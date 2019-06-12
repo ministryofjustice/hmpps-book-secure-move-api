@@ -10,7 +10,7 @@ RSpec.describe People::Updater do
     {
       type: 'people',
       attributes: {
-        first_names: 'Bob',
+        first_names: 'Alice',
         last_name: 'Roberts',
         date_of_birth: Date.civil(1980, 1, 1)
       }
@@ -36,69 +36,46 @@ RSpec.describe People::Updater do
     end
   end
 
-  # context 'with valid input params including relationships' do
-  #   let(:ethnicity) { create :ethnicity }
-  #   let(:gender) { create :gender }
-  #   let(:params) do
-  #     {
-  #       type: 'people',
-  #       attributes: {
-  #         first_names: 'Bob',
-  #         last_name: 'Roberts',
-  #         date_of_birth: Date.civil(1980, 1, 1)
-  #       },
-  #       relationships: {
-  #         ethnicity: {
-  #           data: {
-  #             id: ethnicity.id,
-  #             type: 'ethnicities'
-  #           }
-  #         },
-  #         gender: {
-  #           data: {
-  #             id: gender.id,
-  #             type: 'genders'
-  #           }
-  #         }
-  #       }
-  #     }
-  #   end
+  context 'with valid input params including relationships' do
+    let(:ethnicity) { create :ethnicity }
+    let(:gender) { create :gender }
+    let(:params) do
+      {
+        type: 'people',
+        attributes: {
+          first_names: 'Bob',
+          last_name: 'Roberts',
+          date_of_birth: Date.civil(1980, 1, 1)
+        },
+        relationships: {
+          ethnicity: {
+            data: {
+              id: ethnicity.id,
+              type: 'ethnicities'
+            }
+          },
+          gender: {
+            data: {
+              id: gender.id,
+              type: 'genders'
+            }
+          }
+        }
+      }
+    end
 
-  #   let!(:result) { updater.call }
+    let!(:result) { updater.call }
 
-  #   it 'result to be true' do
-  #     expect(result).to be true
-  #   end
+    it 'result to be true' do
+      expect(result).to be true
+    end
 
-  #   it 'new profile to be accessible' do
-  #     expect(updater.profile).to be_persisted
-  #   end
+    it 'sets the correct Profile ethnicity' do
+      expect(updated_profile.ethnicity_id).to eql ethnicity.id
+    end
 
-  #   it 'sets the correct Profile ethnicity' do
-  #     expect(new_profile.ethnicity_id).to eql ethnicity.id
-  #   end
-
-  #   it 'sets the correct Profile gender' do
-  #     expect(new_profile.gender_id).to eql gender.id
-  #   end
-  # end
-
-  # context 'with missing required attributes' do
-  #   let(:params) do
-  #     {
-  #       type: 'people',
-  #       attributes: { first_names: 'Bob' }
-  #     }
-  #   end
-
-  #   it 'raises an error' do
-  #     expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid)
-  #   end
-
-  #   it 'makes validation errors available via exception' do
-  #     updater.call
-  #   rescue ActiveRecord::RecordInvalid => e
-  #     expect(e.record.errors.messages).to include(last_name: ["can't be blank"])
-  #   end
-  # end
+    it 'sets the correct Profile gender' do
+      expect(updated_profile.gender_id).to eql gender.id
+    end
+  end
 end
