@@ -70,32 +70,32 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       context 'with valid params' do
-        before { put '/api/v1/people', params: person_params, headers: headers, as: :json }
+        before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
-        it_behaves_like 'an endpoint that responds with success 201'
+        it_behaves_like 'an endpoint that responds with success 200'
       end
 
       it 'returns the correct data' do
-        put '/api/v1/people', params: person_params, headers: headers, as: :json
+        put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
         expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
       it 'updates an existing person' do
         expect do
-          put '/api/v1/people', params: person_params, headers: headers, as: :json
+          put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
         end.to change(Person, :count).by(0)
         # TODO: Assertions about data changes
       end
     end
 
     # context 'with a bad request' do
-    #   before { put '/api/v1/people', params: nil, headers: headers, as: :json }
+    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
     #   it_behaves_like 'an endpoint that responds with error 400'
     # end
 
     # context 'when not authorized' do
-    #   before { put '/api/v1/people', params: person_params, headers: headers, as: :json }
+    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
     #   it_behaves_like 'an endpoint that responds with error 401'
     # end
@@ -103,7 +103,7 @@ RSpec.describe Api::V1::PeopleController do
     # context 'with an invalid CONTENT_TYPE header' do
     #   let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-    #   before { put '/api/v1/people', params: person_params, headers: headers, as: :json }
+    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
     #   it_behaves_like 'an endpoint that responds with error 415'
     # end
@@ -129,7 +129,7 @@ RSpec.describe Api::V1::PeopleController do
     #     ]
     #   end
 
-    #   before { put '/api/v1/people', params: person_params, headers: headers, as: :json }
+    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
     #   it_behaves_like 'an endpoint that responds with error 422'
     # end
