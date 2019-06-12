@@ -21,7 +21,7 @@
       },
       "detail": {
         "type": "string",
-        "example": "You must be logged in to use this service"
+        "example": "Token expired or invalid"
       }
     }
   },

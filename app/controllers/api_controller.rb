@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
+  before_action :doorkeeper_authorize!
   before_action :restrict_content_type
   after_action :set_content_type
 
@@ -11,6 +12,19 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
 
   private
+
+  def doorkeeper_unauthorized_render_options(*)
+    {
+      json: {
+        errors: [
+          {
+            title: 'Not authorized',
+            detail: 'Token expired or invalid'
+          }
+        ]
+      }
+    }
+  end
 
   def restrict_content_type
     return if request.content_type == JSON_API_CONTENT_TYPE

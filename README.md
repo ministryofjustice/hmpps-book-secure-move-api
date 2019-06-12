@@ -30,6 +30,35 @@ After setup should then be able to run the local Web server:
 bundle exec rails server
 ```
 
+### Creating client credentials
+
+The application implements OAuth2 client credentials flow. To generate new application client credentials, use the following Rake task:
+
+```bash
+bundle exec rake auth:create_client_application NAME=test
+```
+
+Please note; the automatically generated secret is hashed and cannot be retrieved later.
+
+To get an access token with client credentials flow, do a POST request to the `/oauth/token` endpoint:
+
+```
+POST /oauth/token
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+grant_type=client_credentials
+```
+
+The Authorization header includes the encoded credentials for the client, represented as a Base64-encoded (without line breaks) string of the form `<client_id>:<client_secret>`.
+
+You will receive a JSON payload containing an `access_token` and `expires_in`. You can then sign following requests with the following header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+The `expires_in` response denotes the time in seconds from the token request after which the token will expire.
+
 ### Running tests
 
 We use RSpec for testing, to run the tests:
