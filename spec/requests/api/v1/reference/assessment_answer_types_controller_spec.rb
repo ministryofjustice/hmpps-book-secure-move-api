@@ -18,10 +18,9 @@ RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_
           type: 'assessment_answer_types',
           attributes: {
             category: 'health',
-            user_type: 'prison',
-            alert_type: 'M',
-            alert_code: 'MSI',
-            description: 'Sight Impaired'
+            nomis_alert_type: 'M',
+            nomis_alert_code: 'MSI',
+            title: 'Sight Impaired'
           }
         }
       ]
@@ -53,8 +52,7 @@ RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_
 
     describe 'filtering' do
       let(:category_filter) { :health }
-      let(:user_type_filter) { :prison }
-      let(:params) { { filter: { category: category_filter, user_type: user_type_filter } } }
+      let(:params) { { filter: { category: category_filter } } }
       let(:data) do
         [
           {
@@ -66,14 +64,6 @@ RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_
       context 'with matching filters' do
         it 'returns the matching item' do
           expect(response_json).to include_json(data: data)
-        end
-      end
-
-      context 'with a mis-matched `user_type` filter' do
-        let(:user_type_filter) { :police }
-
-        it 'does not return the mis-matched item' do
-          expect(response_json).not_to include_json(data: data)
         end
       end
 

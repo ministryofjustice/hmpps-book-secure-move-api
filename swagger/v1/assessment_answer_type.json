@@ -21,17 +21,12 @@
             "enum": ["health", "risk", "court_information"],
             "description": "Category is the section in the Create Move form that a profile attribute appears in, e.g. Health or Risks"
           },
-          "user_type": {
-            "type": "String",
-            "enum": ["prison", "police"],
-            "description": "Profile attribute types can be applied to certain user types such as Police or Prison staff or to everybody (indicated by a null value)"
-          },
-          "alert_type": {
+          "nomis_alert_type": {
             "type": "String",
             "example": "M",
             "description": "The NOMIS alert type for this profile attribute type"
           },
-          "alert_code": {
+          "nomis_alert_code": {
             "type": "String",
             "example": "MSI",
             "description": "The NOMIS alert code for this profile attribute type"

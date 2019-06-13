@@ -44,11 +44,11 @@ RSpec.describe Profile, type: :model do
   describe '#assessment_answers' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
-    let(:assessment_answer_type) { create :assessment_answer_type, category: 'health', user_type: 'prison' }
+    let(:assessment_answer_type) { create :assessment_answer_type, category: 'health' }
     let(:assessment_answers) do
       [
         {
-          description: 'test',
+          title: 'test',
           comments: 'just a test',
           assessment_answer_type_id: assessment_answer_type.id,
           date: Date.civil(2019, 5, 30),
@@ -57,7 +57,7 @@ RSpec.describe Profile, type: :model do
       ]
     end
     let(:expected_attributes) do
-      assessment_answers.first.merge(category: 'health', user_type: 'prison')
+      assessment_answers.first.merge(category: 'health')
     end
 
     it 'serializes profile attributes correctly' do

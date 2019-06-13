@@ -47,8 +47,8 @@ RSpec.describe People::Updater do
           last_name: 'Roberts',
           date_of_birth: Date.civil(1980, 1, 1),
           risk_alerts: [
-            { description: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
-            { description: 'Violent', assessment_answer_type_id: risk_type_2.id }
+            { title: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
+            { title: 'Violent', assessment_answer_type_id: risk_type_2.id }
           ],
           identifiers: [
             { identifier_type: 'pnc_number', value: 'ABC123' },

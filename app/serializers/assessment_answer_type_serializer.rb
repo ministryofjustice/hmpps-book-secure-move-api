@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class AssessmentAnswerTypeSerializer < ActiveModel::Serializer
-  attributes :id, :category, :user_type, :description, :alert_type, :alert_code
+  attributes :id, :category, :title, :nomis_alert_type, :nomis_alert_code
 end

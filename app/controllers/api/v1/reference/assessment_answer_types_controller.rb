@@ -11,7 +11,7 @@ module Api
 
         private
 
-        PERMITTED_FILTER_PARAMS = %i[category user_type].freeze
+        PERMITTED_FILTER_PARAMS = %i[category].freeze
 
         def filter_params
           params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h

@@ -5,18 +5,18 @@ require 'rails_helper'
 RSpec.describe Profile::AssessmentAnswers, type: :model do
   subject(:assessment_answers) { described_class.new(data) }
 
-  let(:description) { 'test' }
+  let(:title) { 'test' }
   let(:data) do
     [
       {
-        description: description,
+        title: title,
         comments: 'just a test',
         assessment_answer_type_id: 123,
         date: Date.civil(2019, 6, 30),
         expiry_date: Date.civil(2019, 7, 30)
       },
       {
-        description: description,
+        title: title,
         comments: 'just a test',
         assessment_answer_type_id: 456,
         date: Date.civil(2019, 5, 30),
@@ -35,7 +35,7 @@ RSpec.describe Profile::AssessmentAnswers, type: :model do
     end
 
     context 'with an empty item' do
-      subject(:assessment_answers) { described_class.new(data + [{ description: '' }]) }
+      subject(:assessment_answers) { described_class.new(data + [{ title: '' }]) }
 
       it 'strips out the empty item' do
         expect(assessment_answers.to_a.size).to be 2

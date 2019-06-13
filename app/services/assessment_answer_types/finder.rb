@@ -9,7 +9,7 @@ module AssessmentAnswerTypes
     end
 
     def call
-      AssessmentAnswerType.where(filter_params.slice(:user_type, :category))
+      AssessmentAnswerType.where(filter_params.slice(:category))
     end
   end
 end

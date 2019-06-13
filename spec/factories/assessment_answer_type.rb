@@ -3,10 +3,9 @@
 FactoryBot.define do
   factory :assessment_answer_type do
     category { 'health' }
-    user_type { 'prison' }
-    alert_type { 'M' }
-    alert_code { 'MSI' }
-    description { 'Sight Impaired' }
+    nomis_alert_type { 'M' }
+    nomis_alert_code { 'MSI' }
+    title { 'Sight Impaired' }
 
     trait :risk do
       category { 'risk' }

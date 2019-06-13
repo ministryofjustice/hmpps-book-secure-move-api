@@ -21,33 +21,33 @@ namespace :fake_data do
   end
 
   ASSESSMENT_ANSWERS = [
-    { category: :risk, description: 'Violent',
+    { category: :risk, title: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, description: 'Escape',
+    { category: :risk, title: 'Escape',
       comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, description: 'Must be held separately',
+    { category: :risk, title: 'Must be held separately',
       comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, description: 'Self harm',
+    { category: :risk, title: 'Self harm',
       comments: ['Attempted suicide'] },
-    { category: :risk, description: 'Concealed items',
+    { category: :risk, title: 'Concealed items',
       comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, description: 'Any other risks',
+    { category: :risk, title: 'Any other risks',
       comments: ['Train spotter', ''] },
-    { category: :health, description: 'Special diet or allergy',
+    { category: :health, title: 'Special diet or allergy',
       comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, description: 'Health issue',
+    { category: :health, title: 'Health issue',
       comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, description: 'Medication',
+    { category: :health, title: 'Medication',
       comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
-    { category: :health, description: 'Wheelchair user', comments: [''] },
-    { category: :health, description: 'Pregnant', comments: [''] },
-    { category: :health, description: 'Any other requirements',
+    { category: :health, title: 'Wheelchair user', comments: [''] },
+    { category: :health, title: 'Pregnant', comments: [''] },
+    { category: :health, title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court_information, description: 'Solicitor or other legal representation',
+    { category: :court_information, title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court_information, description: 'Sign or other language interpreter',
+    { category: :court_information, title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court_information, description: 'Any other information',
+    { category: :court_information, title: 'Any other information',
       comments: ['Former prison officer'] }
   ].freeze
 
@@ -60,12 +60,12 @@ namespace :fake_data do
   def fake_assessment_answer(assessment_answer)
     assessment_answer_type = AssessmentAnswerType.where(
       category: assessment_answer[:category],
-      description: assessment_answer[:description]
+      title: assessment_answer[:title]
     ).first
     return [] unless assessment_answer_type
 
     {
-      description: assessment_answer_type.description,
+      title: assessment_answer_type.title,
       assessment_answer_type_id: assessment_answer_type.id,
       comments: assessment_answer[:comments].sample
     }
@@ -159,21 +159,21 @@ namespace :fake_data do
   end
 
   ASSESSMENT_ANSWER_TYPES = [
-    { user_type: :police, category: :risk, description: 'Violent' },
-    { user_type: :police, category: :risk, description: 'Escape' },
-    { user_type: :police, category: :risk, description: 'Must be held separately' },
-    { user_type: :police, category: :risk, description: 'Self harm' },
-    { user_type: :police, category: :risk, description: 'Concealed items' },
-    { user_type: :police, category: :risk, description: 'Any other risks' },
-    { user_type: :police, category: :health, description: 'Special diet or allergy' },
-    { user_type: :police, category: :health, description: 'Health issue' },
-    { user_type: :police, category: :health, description: 'Medication' },
-    { user_type: :police, category: :health, description: 'Wheelchair user' },
-    { user_type: :police, category: :health, description: 'Pregnant' },
-    { user_type: :police, category: :health, description: 'Any other requirements' },
-    { user_type: :police, category: :court_information, description: 'Solicitor or other legal representation' },
-    { user_type: :police, category: :court_information, description: 'Sign or other language interpreter' },
-    { user_type: :police, category: :court_information, description: 'Any other information' }
+    { category: :risk, title: 'Violent' },
+    { category: :risk, title: 'Escape' },
+    { category: :risk, title: 'Must be held separately' },
+    { category: :risk, title: 'Self harm' },
+    { category: :risk, title: 'Concealed items' },
+    { category: :risk, title: 'Any other risks' },
+    { category: :health, title: 'Special diet or allergy' },
+    { category: :health, title: 'Health issue' },
+    { category: :health, title: 'Medication' },
+    { category: :health, title: 'Wheelchair user' },
+    { category: :health, title: 'Pregnant' },
+    { category: :health, title: 'Any other requirements' },
+    { category: :court_information, title: 'Solicitor or other legal representation' },
+    { category: :court_information, title: 'Sign or other language interpreter' },
+    { category: :court_information, title: 'Any other information' }
   ].freeze
 
   GENDERS = %w[Female Male Transexual].freeze

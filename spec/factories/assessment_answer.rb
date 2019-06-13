@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :assessment_answer do
-    description { 'Needs to wear spectacles to read a book' }
+    title { 'Needs to wear spectacles to read a book' }
     association(:profile)
     association(:assessment_answer_type)
   end
