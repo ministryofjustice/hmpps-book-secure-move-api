@@ -10,7 +10,7 @@ module Api
 
       def update
         updater.call
-        render_person(creator.person, 200)
+        render_person(updater.person, 200)
       end
 
       private

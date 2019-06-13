@@ -2,7 +2,7 @@
 
 module People
   class Updater < People::Crud
-    attr_accessor :id, :params, :profile
+    attr_accessor :id, :params, :profile, :person
 
     def initialize(id, params)
       self.id = id
@@ -10,7 +10,7 @@ module People
     end
 
     def call
-      person = Person.find(id)
+      self.person = Person.find(id)
       update(person)
     end
 

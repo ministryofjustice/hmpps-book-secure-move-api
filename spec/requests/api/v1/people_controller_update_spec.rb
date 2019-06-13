@@ -6,7 +6,7 @@ RSpec.describe Api::V1::PeopleController do
   describe 'PUT /api/v1/people' do
     let(:headers) { { 'CONTENT_TYPE': ApiController::JSON_API_CONTENT_TYPE } }
 
-    let(:person) { create :person }
+    let!(:person) { create :person }
     let(:schema) { load_json_schema('post_people_responses.json') }
     let(:response_json) { JSON.parse(response.body) }
     let(:ethnicity) { create :ethnicity }
