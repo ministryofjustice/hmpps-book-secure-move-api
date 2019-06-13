@@ -7,7 +7,6 @@ FactoryBot.define do
     association(:to_location, :court, factory: :location)
     date { Date.today }
     time_due { Time.now }
-    move_type { 'court' }
     status { 'requested' }
   end
 end

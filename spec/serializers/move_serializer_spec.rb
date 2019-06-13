@@ -19,16 +19,16 @@ RSpec.describe MoveSerializer do
     expect(result[:data][:id]).to eql move.id
   end
 
+  it 'contains a status attribute' do
+    expect(result[:data][:attributes][:status]).to eql move.status
+  end
+
   it 'contains a date attribute' do
     expect(result[:data][:attributes][:date]).to eql move.date.iso8601
   end
 
   it 'contains a time attribute' do
     expect(result[:data][:attributes][:time_due]).to eql move.time_due.iso8601
-  end
-
-  it 'contains a type attribute' do
-    expect(result[:data][:attributes][:type]).to eql move.move_type
   end
 
   it 'contains an updated_at attribute' do
