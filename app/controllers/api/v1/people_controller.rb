@@ -8,6 +8,11 @@ module Api
         render_person(creator.person, 201)
       end
 
+      def update
+        updater.call
+        render_person(updater.person, 200)
+      end
+
       private
 
       PERSON_ATTRIBUTES = [
@@ -23,6 +28,10 @@ module Api
 
       def creator
         @creator ||= People::Creator.new(person_params)
+      end
+
+      def updater
+        @updater ||= People::Updater.new(params[:id], person_params)
       end
 
       def render_person(person, status)
