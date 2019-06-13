@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class ProfileAttributeType < ApplicationRecord
-  validates :description, presence: true
-  validates :category, presence: true
-  validates :user_type, presence: true
-
   enum category: {
     health: 'health',
     risk: 'risk',
@@ -16,4 +12,8 @@ class ProfileAttributeType < ApplicationRecord
     prison: 'prison',
     police: 'police'
   }
+
+  validates :description, presence: true
+  validates :category, inclusion: { in: categories }
+  validates :user_type, inclusion: { in: user_types }
 end
