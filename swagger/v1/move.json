@@ -33,7 +33,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["requested", "scheduled"],
+            "enum": ["requested", "cancelled"],
             "description": "Indicates the stage in it's lifecycle that this move is at"
           },
           "time_due": {
