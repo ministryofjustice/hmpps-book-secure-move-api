@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class ProfileAttributeSerializer < ActiveModel::Serializer
+class AssessmentAnswerSerializer < ActiveModel::Serializer
   attributes :description
 end

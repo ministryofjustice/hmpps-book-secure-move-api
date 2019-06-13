@@ -1,5 +1,5 @@
 {
-  "ProfileAttributeType": {
+  "AssessmentAnswerType": {
     "type": "object",
     "properties": {
       "id": {
@@ -10,13 +10,13 @@
       },
       "type": {
         "type": "string",
-        "example": "profile_attribute_types",
-        "description": "The type of this object - always `profile_attribute_types`"
+        "example": "assessment_answer_types",
+        "description": "The type of this object - always `assessment_answer_types`"
       },
       "attributes": {
         "type": "object",
         "properties": {
-          "profile_attribute_category": {
+          "assessment_answer_category": {
             "type": "String",
             "enum": ["health", "risk", "court_information"],
             "description": "Category is the section in the Create Move form that a profile attribute appears in, e.g. Health or Risks"

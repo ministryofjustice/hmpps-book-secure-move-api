@@ -36,15 +36,15 @@ class PersonSerializer < ActiveModel::Serializer
   end
 
   def risk_alerts
-    object.latest_profile&.profile_attributes&.select(&:risk_alert?) || []
+    object.latest_profile&.assessment_answers&.select(&:risk_alert?) || []
   end
 
   def health_alerts
-    object.latest_profile&.profile_attributes&.select(&:health_alert?) || []
+    object.latest_profile&.assessment_answers&.select(&:health_alert?) || []
   end
 
   def court_information
-    object.latest_profile&.profile_attributes&.select(&:court_information?) || []
+    object.latest_profile&.assessment_answers&.select(&:court_information?) || []
   end
 
   def identifiers

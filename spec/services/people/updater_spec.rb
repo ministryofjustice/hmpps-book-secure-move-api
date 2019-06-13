@@ -37,8 +37,8 @@ RSpec.describe People::Updater do
   end
 
   context 'with valid input params including nested data' do
-    let(:risk_type_1) { create :profile_attribute_type, :risk }
-    let(:risk_type_2) { create :profile_attribute_type, :risk }
+    let(:risk_type_1) { create :assessment_answer_type, :risk }
+    let(:risk_type_2) { create :assessment_answer_type, :risk }
     let(:params) do
       {
         type: 'people',
@@ -47,8 +47,8 @@ RSpec.describe People::Updater do
           last_name: 'Roberts',
           date_of_birth: Date.civil(1980, 1, 1),
           risk_alerts: [
-            { description: 'Escape risk', profile_attribute_type_id: risk_type_1.id },
-            { description: 'Violent', profile_attribute_type_id: risk_type_2.id }
+            { description: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
+            { description: 'Violent', assessment_answer_type_id: risk_type_2.id }
           ],
           identifiers: [
             { identifier_type: 'pnc_number', value: 'ABC123' },
@@ -69,7 +69,7 @@ RSpec.describe People::Updater do
     end
 
     it 'sets the risk_alerts attribute' do
-      expect(updated_profile.profile_attributes.as_json).to include_json(params[:attributes][:risk_alerts])
+      expect(updated_profile.assessment_answers.as_json).to include_json(params[:attributes][:risk_alerts])
     end
   end
 

@@ -20,7 +20,7 @@ module People
           profile_params
             .merge(person: Person.new)
             .merge(relationships)
-            .merge(profile_attributes)
+            .merge(assessment_answers)
             .merge(profile_identifiers)
         )
         profile.save!

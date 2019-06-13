@@ -3,9 +3,9 @@
 module Api
   module V1
     module Reference
-      class ProfileAttributeTypesController < ApiController
+      class AssessmentAnswerTypesController < ApiController
         def index
-          types = ProfileAttributeTypes::Finder.new(filter_params).call
+          types = AssessmentAnswerTypes::Finder.new(filter_params).call
           render json: types
         end
 

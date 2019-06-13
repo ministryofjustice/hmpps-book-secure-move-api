@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :profile_attribute do
+  factory :assessment_answer do
     description { 'Needs to wear spectacles to read a book' }
     association(:profile)
-    association(:profile_attribute_type)
+    association(:assessment_answer_type)
   end
 end

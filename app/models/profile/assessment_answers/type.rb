@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class Profile
-  class ProfileAttributes
+  class AssessmentAnswers
     class Type < ActiveRecord::Type::Value
       def type
         :jsonb
       end
 
       def cast(value)
-        Profile::ProfileAttributes.new(value)
+        Profile::AssessmentAnswers.new(value)
       end
 
       def deserialize(value)
@@ -18,7 +18,7 @@ class Profile
                     rescue StandardError
                       nil
                     end
-          Profile::ProfileAttributes.new(decoded)
+          Profile::AssessmentAnswers.new(decoded)
         else
           super
         end
@@ -28,7 +28,7 @@ class Profile
         case value
         when Array, Hash
           ::ActiveSupport::JSON.encode(value)
-        when Profile::ProfileAttributes
+        when Profile::AssessmentAnswers
           ::ActiveSupport::JSON.encode(value.as_json)
         else
           super

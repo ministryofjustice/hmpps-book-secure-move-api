@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 class Profile
-  class ProfileAttribute < ActiveModelSerializers::Model
+  class AssessmentAnswer < ActiveModelSerializers::Model
     attributes(
       :description,
       :comments,
-      :profile_attribute_type_id,
+      :assessment_answer_type_id,
       :date,
       :expiry_date,
       :category,
       :user_type
     )
 
-    attr_accessor :description, :comments, :profile_attribute_type_id, :category, :user_type
+    attr_accessor :description, :comments, :assessment_answer_type_id, :category, :user_type
     attr_reader :date, :expiry_date
 
     def initialize(attributes = {})
@@ -22,7 +22,7 @@ class Profile
       self.comments = attributes[:comments]
       self.date = attributes[:date]
       self.expiry_date = attributes[:expiry_date]
-      self.profile_attribute_type_id = attributes[:profile_attribute_type_id]
+      self.assessment_answer_type_id = attributes[:assessment_answer_type_id]
       self.category = attributes[:category]
       self.user_type = attributes[:user_type]
       super
@@ -46,7 +46,7 @@ class Profile
         comments: comments,
         date: date,
         expiry_date: expiry_date,
-        profile_attribute_type_id: profile_attribute_type_id,
+        assessment_answer_type_id: assessment_answer_type_id,
         category: category,
         user_type: user_type
       }
@@ -65,11 +65,11 @@ class Profile
     end
 
     def set_category_and_user_type
-      return unless profile_attribute_type_id.present? && category.blank?
+      return unless assessment_answer_type_id.present? && category.blank?
 
-      profile_attribute_type = ProfileAttributeType.find(profile_attribute_type_id)
-      self.category = profile_attribute_type.category
-      self.user_type = profile_attribute_type.user_type
+      assessment_answer_type = AssessmentAnswerType.find(assessment_answer_type_id)
+      self.category = assessment_answer_type.category
+      self.user_type = assessment_answer_type.user_type
     end
   end
 end

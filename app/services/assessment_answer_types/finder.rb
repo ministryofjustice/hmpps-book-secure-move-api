@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ProfileAttributeTypes
+module AssessmentAnswerTypes
   class Finder
     attr_accessor :filter_params
 
@@ -9,7 +9,7 @@ module ProfileAttributeTypes
     end
 
     def call
-      ProfileAttributeType.where(filter_params.slice(:user_type, :category))
+      AssessmentAnswerType.where(filter_params.slice(:user_type, :category))
     end
   end
 end

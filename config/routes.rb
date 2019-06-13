@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       resources :people, only: %i[create update]
       namespace :reference do
         resources :locations, only: :index
-        resources :profile_attribute_types, only: :index
+        resources :assessment_answer_types, only: :index
         resources :genders, only: :index
         resources :ethnicities, only: :index
         resources :nationalities, only: :index

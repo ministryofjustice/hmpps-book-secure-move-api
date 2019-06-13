@@ -2,19 +2,19 @@
 
 require 'rails_helper'
 
-RSpec.describe ProfileAttributeTypes::Finder do
+RSpec.describe AssessmentAnswerTypes::Finder do
   subject(:finder) { described_class.new(filter_params) }
 
-  let!(:profile_attribute_type) { create :profile_attribute_type }
-  let(:id) { profile_attribute_type.id }
+  let!(:assessment_answer_type) { create :assessment_answer_type }
+  let(:id) { assessment_answer_type.id }
   let(:filter_params) { {} }
 
   describe 'filtering' do
     context 'with matching `user_type` filter' do
-      let(:filter_params) { { user_type: profile_attribute_type.user_type } }
+      let(:filter_params) { { user_type: assessment_answer_type.user_type } }
 
       it 'returns profile attribute type matching `user_type`' do
-        expect(finder.call.pluck(:id)).to eql [profile_attribute_type.id]
+        expect(finder.call.pluck(:id)).to eql [assessment_answer_type.id]
       end
     end
 
@@ -27,10 +27,10 @@ RSpec.describe ProfileAttributeTypes::Finder do
     end
 
     context 'with matching `category` filter' do
-      let(:filter_params) { { category: profile_attribute_type.category } }
+      let(:filter_params) { { category: assessment_answer_type.category } }
 
       it 'returns profile attribute type matching `category`' do
-        expect(finder.call.pluck(:id)).to eql [profile_attribute_type.id]
+        expect(finder.call.pluck(:id)).to eql [assessment_answer_type.id]
       end
     end
 

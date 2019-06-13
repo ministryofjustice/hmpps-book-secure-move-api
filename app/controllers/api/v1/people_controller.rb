@@ -19,9 +19,9 @@ module Api
         :first_names,
         :last_name,
         :date_of_birth,
-        risk_alerts: [%i[date expiry_data description comments profile_attribute_type_id]],
-        health_alerts: [%i[date expiry_data description comments profile_attribute_type_id]],
-        court_information: [%i[date expiry_data description comments profile_attribute_type_id]],
+        risk_alerts: [%i[date expiry_data description comments assessment_answer_type_id]],
+        health_alerts: [%i[date expiry_data description comments assessment_answer_type_id]],
+        court_information: [%i[date expiry_data description comments assessment_answer_type_id]],
         identifiers: [%i[value identifier_type]]
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze

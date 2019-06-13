@@ -36,11 +36,11 @@
       "Nationality": {
         "$ref": "nationality.json#/Nationality"
       },
-      "ProfileAttribute": {
-        "$ref": "profile_attribute.json#/ProfileAttribute"
+      "AssessmentAnswer": {
+        "$ref": "assessment_answer.json#/AssessmentAnswer"
       },
-      "ProfileAttributeType": {
-        "$ref": "profile_attribute_type.json#/ProfileAttributeType"
+      "AssessmentAnswerType": {
+        "$ref": "assessment_answer_type.json#/AssessmentAnswerType"
       },
       "ProfileIdentifier": {
         "$ref": "profile_identifier.json#/ProfileIdentifier"
@@ -660,7 +660,7 @@
         }
       }
     },
-    "/reference/profile_attribute_types": {
+    "/reference/assessment_answer_types": {
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
@@ -705,7 +705,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/200"
+                  "$ref": "get_assessment_answer_types_responses.json#/200"
                 }
               }
             }
@@ -715,7 +715,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/401"
+                  "$ref": "get_assessment_answer_types_responses.json#/401"
                 }
               }
             }
@@ -725,7 +725,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/415"
+                  "$ref": "get_assessment_answer_types_responses.json#/415"
                 }
               }
             }

@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "profile_attribute_type.json#/ProfileAttributeType"
+          "$ref": "assessment_answer_type.json#/AssessmentAnswerType"
         }
       }
     }

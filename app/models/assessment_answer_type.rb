@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProfileAttributeType < ApplicationRecord
+class AssessmentAnswerType < ApplicationRecord
   validates :description, presence: true
   validates :category, presence: true
   validates :user_type, presence: true

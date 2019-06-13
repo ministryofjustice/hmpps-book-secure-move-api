@@ -29,20 +29,20 @@ RSpec.describe PersonSerializer do
 
   describe '#profile attributes' do
     let(:risk_alert_type) do
-      create :profile_attribute_type, :risk
+      create :assessment_answer_type, :risk
     end
     let(:health_alert_type) do
-      create :profile_attribute_type, :health
+      create :assessment_answer_type, :health
     end
     let(:court_information_type) do
-      create :profile_attribute_type, :court_information
+      create :assessment_answer_type, :court_information
     end
 
     let(:risk_alert) do
       {
         description: 'Escape risk',
         comments: 'Former miner',
-        profile_attribute_type_id: risk_alert_type.id
+        assessment_answer_type_id: risk_alert_type.id
       }
     end
 
@@ -50,7 +50,7 @@ RSpec.describe PersonSerializer do
       {
         description: 'Medication',
         comments: 'Needs something for a headache',
-        profile_attribute_type_id: health_alert_type.id
+        assessment_answer_type_id: health_alert_type.id
       }
     end
 
@@ -58,13 +58,13 @@ RSpec.describe PersonSerializer do
       {
         description: 'Interpreter required',
         comments: 'Only speaks Spanish',
-        profile_attribute_type_id: court_information_type.id
+        assessment_answer_type_id: court_information_type.id
       }
     end
 
     before do
       profile = person.latest_profile
-      profile.profile_attributes = [
+      profile.assessment_answers = [
         risk_alert,
         health_alert,
         court_information

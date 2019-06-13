@@ -2,20 +2,20 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::Reference::ProfileAttributeTypesController, with_client_authentication: true do
+RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'GET /api/v1/reference/profile_attribute_types' do
-    let(:schema) { load_json_schema('get_profile_attribute_types_responses.json') }
+  describe 'GET /api/v1/reference/assessment_answer_types' do
+    let(:schema) { load_json_schema('get_assessment_answer_types_responses.json') }
 
-    let!(:profile_attribute_type) { FactoryBot.create(:profile_attribute_type) }
+    let!(:assessment_answer_type) { FactoryBot.create(:assessment_answer_type) }
     let(:data) do
       [
         {
-          id: profile_attribute_type.id,
-          type: 'profile_attribute_types',
+          id: assessment_answer_type.id,
+          type: 'assessment_answer_types',
           attributes: {
             category: 'health',
             user_type: 'prison',
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController, with_client_
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/profile_attribute_types', headers: headers, params: params
+      get '/api/v1/reference/assessment_answer_types', headers: headers, params: params
     end
 
     context 'when successful' do
@@ -58,7 +58,7 @@ RSpec.describe Api::V1::Reference::ProfileAttributeTypesController, with_client_
       let(:data) do
         [
           {
-            id: profile_attribute_type.id
+            id: assessment_answer_type.id
           }
         ]
       end

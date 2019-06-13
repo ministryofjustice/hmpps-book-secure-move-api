@@ -14,13 +14,13 @@ namespace :fake_data do
         date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
-        profile_attributes: fake_profile_attributes,
+        assessment_answers: fake_assessment_answers,
         profile_identifiers: fake_profile_identifiers
       )
     end
   end
 
-  PROFILE_ATTRIBUTES = [
+  ASSESSMENT_ANSWERS = [
     { category: :risk, description: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
     { category: :risk, description: 'Escape',
@@ -51,23 +51,23 @@ namespace :fake_data do
       comments: ['Former prison officer'] }
   ].freeze
 
-  def fake_profile_attributes
-    PROFILE_ATTRIBUTES.sample(3).map do |profile_attribute|
-      fake_profile_attribute(profile_attribute)
+  def fake_assessment_answers
+    ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
+      fake_assessment_answer(assessment_answer)
     end
   end
 
-  def fake_profile_attribute(profile_attribute)
-    profile_attribute_type = ProfileAttributeType.where(
-      category: profile_attribute[:category],
-      description: profile_attribute[:description]
+  def fake_assessment_answer(assessment_answer)
+    assessment_answer_type = AssessmentAnswerType.where(
+      category: assessment_answer[:category],
+      description: assessment_answer[:description]
     ).first
-    return [] unless profile_attribute_type
+    return [] unless assessment_answer_type
 
     {
-      description: profile_attribute_type.description,
-      profile_attribute_type_id: profile_attribute_type.id,
-      comments: profile_attribute[:comments].sample
+      description: assessment_answer_type.description,
+      assessment_answer_type_id: assessment_answer_type.id,
+      comments: assessment_answer[:comments].sample
     }
   end
 
@@ -101,9 +101,9 @@ namespace :fake_data do
   end
 
   desc 'create profile attribute types'
-  task create_profile_attribute_types: :environment do
-    PROFILE_ATTRIBUTE_TYPES.each do |attribute_values|
-      ProfileAttributeType.create!(attribute_values)
+  task create_assessment_answer_types: :environment do
+    ASSESSMENT_ANSWER_TYPES.each do |attribute_values|
+      AssessmentAnswerType.create!(attribute_values)
     end
   end
 
@@ -145,10 +145,10 @@ namespace :fake_data do
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, ProfileAttributeType, Ethnicity, Gender].each(&:destroy_all)
+      [Move, Location, Profile, Person, AssessmentAnswerType, Ethnicity, Gender].each(&:destroy_all)
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
-      Rake::Task['fake_data:create_profile_attribute_types'].invoke
+      Rake::Task['fake_data:create_assessment_answer_types'].invoke
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
@@ -158,7 +158,7 @@ namespace :fake_data do
     end
   end
 
-  PROFILE_ATTRIBUTE_TYPES = [
+  ASSESSMENT_ANSWER_TYPES = [
     { user_type: :police, category: :risk, description: 'Violent' },
     { user_type: :police, category: :risk, description: 'Escape' },
     { user_type: :police, category: :risk, description: 'Must be held separately' },

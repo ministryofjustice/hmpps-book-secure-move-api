@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :profile_attribute_type do
+  factory :assessment_answer_type do
     category { 'health' }
     user_type { 'prison' }
     alert_type { 'M' }

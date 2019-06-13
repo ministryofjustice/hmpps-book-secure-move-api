@@ -26,7 +26,7 @@ module People
       profile.update!(
         profile_params
           .merge(relationships)
-          .merge(profile_attributes)
+          .merge(assessment_answers)
           .merge(profile_identifiers)
       )
     end
