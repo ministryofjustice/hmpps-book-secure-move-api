@@ -85,7 +85,11 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         expect do
           put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
         end.to change(Person, :count).by(0)
-        # TODO: Assertions about data changes
+      end
+
+      it 'changes the profile attributes' do
+        put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        expect(person.latest_profile.reload.first_names).to include(expected_data[:attributes][:first_names])
       end
     end
 
