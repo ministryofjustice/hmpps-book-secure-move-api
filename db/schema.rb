@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_10_081612) do
+ActiveRecord::Schema.define(version: 2019_06_13_110722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "assessment_answer_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "category", null: false
+    t.string "nomis_alert_type"
+    t.string "nomis_alert_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "code", null: false
@@ -103,16 +112,6 @@ ActiveRecord::Schema.define(version: 2019_06_10_081612) do
   end
 
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "profile_attribute_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "description", null: false
-    t.string "category", null: false
-    t.string "user_type", null: false
-    t.string "alert_type"
-    t.string "alert_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
