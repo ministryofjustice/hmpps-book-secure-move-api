@@ -88,50 +88,50 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
-    # context 'with a bad request' do
-    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+    context 'with a bad request' do
+      before { put "/api/v1/people/#{person.id}", params: {}, headers: headers, as: :json }
 
-    #   it_behaves_like 'an endpoint that responds with error 400'
-    # end
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
 
-    # context 'when not authorized' do
-    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+    context 'when not authorized' do
+      before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
-    #   it_behaves_like 'an endpoint that responds with error 401'
-    # end
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
 
-    # context 'with an invalid CONTENT_TYPE header' do
-    #   let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:headers) { { 'CONTENT_TYPE': 'application/xml' } }
 
-    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
-    #   it_behaves_like 'an endpoint that responds with error 415'
-    # end
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
 
-    # context 'with validation errors' do
-    #   let(:person_params) do
-    #     {
-    #       data: {
-    #         type: 'people',
-    #         attributes: { first_names: 'Bob' }
-    #       }
-    #     }
-    #   end
+    context 'with validation errors' do
+      let(:person_params) do
+        {
+          data: {
+            type: 'people',
+            attributes: { last_name: '' }
+          }
+        }
+      end
 
-    #   let(:errors_422) do
-    #     [
-    #       {
-    #         'title' => 'Unprocessable entity',
-    #         'detail' => "Last name can't be blank",
-    #         'source' => { 'pointer' => '/data/attributes/last_name' },
-    #         'code' => 'blank'
-    #       }
-    #     ]
-    #   end
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Last name can't be blank",
+            'source' => { 'pointer' => '/data/attributes/last_name' },
+            'code' => 'blank'
+          }
+        ]
+      end
 
-    #   before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
-    #   it_behaves_like 'an endpoint that responds with error 422'
-    # end
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
   end
 end
