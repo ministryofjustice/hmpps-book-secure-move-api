@@ -2,7 +2,6 @@
 
 class AssessmentAnswerType < ApplicationRecord
   validates :title, presence: true
-  validates :category, inclusion: { in: categories }
 
   enum category: {
     health: 'health',
@@ -10,4 +9,6 @@ class AssessmentAnswerType < ApplicationRecord
     court_information: 'court_information',
     reasons_for_no_release: 'reasons_for_no_release'
   }
+
+  validates :category, inclusion: { in: categories }
 end
