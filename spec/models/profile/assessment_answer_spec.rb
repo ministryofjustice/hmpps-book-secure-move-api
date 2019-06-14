@@ -10,7 +10,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     {
       title: title,
       comments: 'just a test',
-      assessment_answer_type_id: 123,
+      assessment_question_id: 123,
       date: Date.civil(2019, 5, 30),
       expiry_date: Date.civil(2019, 6, 30),
       category: 'risk'
@@ -66,12 +66,12 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   end
 
   describe '#set_category' do
-    let(:assessment_answer_type) { create :assessment_answer_type, category: 'health' }
+    let(:assessment_question) { create :assessment_question, category: 'health' }
     let(:attribute_values) do
       {
         title: title,
         comments: 'just a test',
-        assessment_answer_type_id: assessment_answer_type.id,
+        assessment_question_id: assessment_question.id,
         date: Date.civil(2019, 5, 30),
         expiry_date: Date.civil(2019, 6, 30)
       }

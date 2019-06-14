@@ -37,8 +37,8 @@ RSpec.describe People::Updater do
   end
 
   context 'with valid input params including nested data' do
-    let(:risk_type_1) { create :assessment_answer_type, :risk }
-    let(:risk_type_2) { create :assessment_answer_type, :risk }
+    let(:risk_type_1) { create :assessment_question, :risk }
+    let(:risk_type_2) { create :assessment_question, :risk }
     let(:params) do
       {
         type: 'people',
@@ -47,8 +47,8 @@ RSpec.describe People::Updater do
           last_name: 'Roberts',
           date_of_birth: Date.civil(1980, 1, 1),
           assessment_answers: [
-            { title: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
-            { title: 'Violent', assessment_answer_type_id: risk_type_2.id }
+            { title: 'Escape risk', assessment_question_id: risk_type_1.id },
+            { title: 'Violent', assessment_question_id: risk_type_2.id }
           ],
           identifiers: [
             { identifier_type: 'pnc_number', value: 'ABC123' },

@@ -58,15 +58,15 @@ namespace :fake_data do
   end
 
   def fake_assessment_answer(assessment_answer)
-    assessment_answer_type = AssessmentAnswerType.where(
+    assessment_question = AssessmentQuestion.where(
       category: assessment_answer[:category],
       title: assessment_answer[:title]
     ).first
-    return [] unless assessment_answer_type
+    return [] unless assessment_question
 
     {
-      title: assessment_answer_type.title,
-      assessment_answer_type_id: assessment_answer_type.id,
+      title: assessment_question.title,
+      assessment_question_id: assessment_question.id,
       comments: assessment_answer[:comments].sample
     }
   end
@@ -101,9 +101,9 @@ namespace :fake_data do
   end
 
   desc 'create profile attribute types'
-  task create_assessment_answer_types: :environment do
-    ASSESSMENT_ANSWER_TYPES.each do |attribute_values|
-      AssessmentAnswerType.create!(attribute_values)
+  task create_assessment_questions: :environment do
+    ASSESSMENT_QUESTIONS.each do |attribute_values|
+      AssessmentQuestion.create!(attribute_values)
     end
   end
 
@@ -145,10 +145,10 @@ namespace :fake_data do
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, AssessmentAnswerType, Ethnicity, Gender].each(&:destroy_all)
+      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender].each(&:destroy_all)
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
-      Rake::Task['fake_data:create_assessment_answer_types'].invoke
+      Rake::Task['fake_data:create_assessment_questions'].invoke
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
@@ -158,7 +158,7 @@ namespace :fake_data do
     end
   end
 
-  ASSESSMENT_ANSWER_TYPES = [
+  ASSESSMENT_QUESTIONS = [
     { category: :risk, title: 'Violent' },
     { category: :risk, title: 'Escape' },
     { category: :risk, title: 'Must be held separately' },

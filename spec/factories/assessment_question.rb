@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :assessment_answer_type do
+  factory :assessment_question do
     category { 'health' }
     nomis_alert_type { 'M' }
     nomis_alert_code { 'MSI' }

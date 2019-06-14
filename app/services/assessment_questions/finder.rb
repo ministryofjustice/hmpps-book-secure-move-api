@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AssessmentAnswerTypes
+module AssessmentQuestions
   class Finder
     attr_accessor :filter_params
 
@@ -9,7 +9,7 @@ module AssessmentAnswerTypes
     end
 
     def call
-      AssessmentAnswerType.where(filter_params.slice(:category))
+      AssessmentQuestion.where(filter_params.slice(:category))
     end
   end
 end

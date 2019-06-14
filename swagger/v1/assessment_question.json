@@ -1,5 +1,5 @@
 {
-  "AssessmentAnswerType": {
+  "AssessmentQuestion": {
     "type": "object",
     "properties": {
       "id": {
@@ -10,8 +10,8 @@
       },
       "type": {
         "type": "string",
-        "example": "assessment_answer_types",
-        "description": "The type of this object - always `assessment_answer_types`"
+        "example": "assessment_questions",
+        "description": "The type of this object - always `assessment_questions`"
       },
       "attributes": {
         "type": "object",

@@ -5,13 +5,13 @@ class Profile
     attributes(
       :title,
       :comments,
-      :assessment_answer_type_id,
+      :assessment_question_id,
       :date,
       :expiry_date,
       :category
     )
 
-    attr_accessor :title, :comments, :assessment_answer_type_id, :category
+    attr_accessor :title, :comments, :assessment_question_id, :category
     attr_reader :date, :expiry_date
 
     def initialize(attributes = {})
@@ -21,7 +21,7 @@ class Profile
       self.comments = attributes[:comments]
       self.date = attributes[:date]
       self.expiry_date = attributes[:expiry_date]
-      self.assessment_answer_type_id = attributes[:assessment_answer_type_id]
+      self.assessment_question_id = attributes[:assessment_answer_type_id]
       self.category = attributes[:category]
       super
     end
@@ -44,7 +44,7 @@ class Profile
         comments: comments,
         date: date,
         expiry_date: expiry_date,
-        assessment_answer_type_id: assessment_answer_type_id,
+        assessment_question_id: assessment_question_id,
         category: category
       }
     end
@@ -62,10 +62,10 @@ class Profile
     end
 
     def set_category
-      return unless assessment_answer_type_id.present? && category.blank?
+      return unless assessment_question_id.present? && category.blank?
 
-      assessment_answer_type = AssessmentAnswerType.find(assessment_answer_type_id)
-      self.category = assessment_answer_type.category
+      assessment_question = AssessmentQuestion.find(assessment_question_id)
+      self.category = assessment_question.category
     end
   end
 end

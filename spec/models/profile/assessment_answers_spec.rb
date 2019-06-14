@@ -11,14 +11,14 @@ RSpec.describe Profile::AssessmentAnswers, type: :model do
       {
         title: title,
         comments: 'just a test',
-        assessment_answer_type_id: 123,
+        assessment_question_id: 123,
         date: Date.civil(2019, 6, 30),
         expiry_date: Date.civil(2019, 7, 30)
       },
       {
         title: title,
         comments: 'just a test',
-        assessment_answer_type_id: 456,
+        assessment_question_id: 456,
         date: Date.civil(2019, 5, 30),
         expiry_date: Date.civil(2019, 6, 30)
       }

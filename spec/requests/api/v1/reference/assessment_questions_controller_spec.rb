@@ -2,20 +2,20 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_authentication: true do
+RSpec.describe Api::V1::Reference::AssessmentQuestionsController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'GET /api/v1/reference/assessment_answer_types' do
-    let(:schema) { load_json_schema('get_assessment_answer_types_responses.json') }
+  describe 'GET /api/v1/reference/assessment_questions' do
+    let(:schema) { load_json_schema('get_assessment_questions_responses.json') }
 
-    let!(:assessment_answer_type) { FactoryBot.create(:assessment_answer_type) }
+    let!(:assessment_question) { FactoryBot.create(:assessment_question) }
     let(:data) do
       [
         {
-          id: assessment_answer_type.id,
-          type: 'assessment_answer_types',
+          id: assessment_question.id,
+          type: 'assessment_questions',
           attributes: {
             category: 'health',
             nomis_alert_type: 'M',
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/assessment_answer_types', headers: headers, params: params
+      get '/api/v1/reference/assessment_questions', headers: headers, params: params
     end
 
     context 'when successful' do
@@ -56,7 +56,7 @@ RSpec.describe Api::V1::Reference::AssessmentAnswerTypesController, with_client_
       let(:data) do
         [
           {
-            id: assessment_answer_type.id
+            id: assessment_question.id
           }
         ]
       end

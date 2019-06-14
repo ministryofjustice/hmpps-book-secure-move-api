@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AssessmentAnswerType < ApplicationRecord
+class AssessmentQuestion < ApplicationRecord
   validates :title, presence: true
 
   enum category: {

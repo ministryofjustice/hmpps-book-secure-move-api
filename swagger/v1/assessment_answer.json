@@ -3,7 +3,7 @@
     "type": "object",
     "required": [
       "title",
-      "assessment_answer_type_id"
+      "assessment_question_id"
     ],
     "properties": {
       "date": {
@@ -35,7 +35,7 @@
         "example": "Needs an inhaler",
         "description": "Additional information for this attribute (optional)"
       },
-      "assessment_answer_type_id": {
+      "assessment_question_id": {
         "type": "string",
         "format": "uuid",
         "example": "49fa81ee-3301-4d69-f200-69e482ce1ed8",

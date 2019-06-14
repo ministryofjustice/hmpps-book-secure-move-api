@@ -44,13 +44,13 @@ RSpec.describe Profile, type: :model do
   describe '#assessment_answers' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
-    let(:assessment_answer_type) { create :assessment_answer_type, category: 'health' }
+    let(:assessment_question) { create :assessment_question, category: 'health' }
     let(:assessment_answers) do
       [
         {
           title: 'test',
           comments: 'just a test',
-          assessment_answer_type_id: assessment_answer_type.id,
+          assessment_question_id: assessment_question.id,
           date: Date.civil(2019, 5, 30),
           expiry_date: Date.civil(2019, 6, 30)
         }
