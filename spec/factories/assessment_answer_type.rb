@@ -15,8 +15,8 @@ FactoryBot.define do
       category { 'health' }
     end
 
-    trait :court_information do
-      category { 'court_information' }
+    trait :court do
+      category { 'court' }
     end
   end
 end

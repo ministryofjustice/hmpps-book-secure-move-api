@@ -49,16 +49,16 @@ class Profile
       }
     end
 
-    def risk_alert?
+    def risk?
       category == 'risk'
     end
 
-    def health_alert?
+    def health?
       category == 'health'
     end
 
-    def court_information?
-      category == 'court_information'
+    def court?
+      category == 'court'
     end
 
     def set_category

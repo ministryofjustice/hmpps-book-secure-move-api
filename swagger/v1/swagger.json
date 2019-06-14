@@ -686,7 +686,7 @@
             "description": "Filters results to only include move detail types for the given category",
             "schema": {
               "type": "string",
-              "enum": ["risks", "health", "court_information"]
+              "enum": ["risks", "health", "court"]
             }
           }
         ],

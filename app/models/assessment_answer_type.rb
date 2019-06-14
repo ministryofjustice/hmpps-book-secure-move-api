@@ -6,7 +6,7 @@ class AssessmentAnswerType < ApplicationRecord
   enum category: {
     health: 'health',
     risk: 'risk',
-    court_information: 'court_information',
+    court: 'court',
     reasons_for_no_release: 'reasons_for_no_release'
   }
 

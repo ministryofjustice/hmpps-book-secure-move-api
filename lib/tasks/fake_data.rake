@@ -43,11 +43,11 @@ namespace :fake_data do
     { category: :health, title: 'Pregnant', comments: [''] },
     { category: :health, title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court_information, title: 'Solicitor or other legal representation',
+    { category: :court, title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court_information, title: 'Sign or other language interpreter',
+    { category: :court, title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court_information, title: 'Any other information',
+    { category: :court, title: 'Any other information',
       comments: ['Former prison officer'] }
   ].freeze
 
@@ -171,9 +171,9 @@ namespace :fake_data do
     { category: :health, title: 'Wheelchair user' },
     { category: :health, title: 'Pregnant' },
     { category: :health, title: 'Any other requirements' },
-    { category: :court_information, title: 'Solicitor or other legal representation' },
-    { category: :court_information, title: 'Sign or other language interpreter' },
-    { category: :court_information, title: 'Any other information' }
+    { category: :court, title: 'Solicitor or other legal representation' },
+    { category: :court, title: 'Sign or other language interpreter' },
+    { category: :court, title: 'Any other information' }
   ].freeze
 
   GENDERS = %w[Female Male Transexual].freeze

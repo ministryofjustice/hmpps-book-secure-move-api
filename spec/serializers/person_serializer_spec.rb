@@ -34,8 +34,8 @@ RSpec.describe PersonSerializer do
     let(:health_alert_type) do
       create :assessment_answer_type, :health
     end
-    let(:court_information_type) do
-      create :assessment_answer_type, :court_information
+    let(:court_type) do
+      create :assessment_answer_type, :court
     end
 
     let(:risk_alert) do
@@ -54,11 +54,11 @@ RSpec.describe PersonSerializer do
       }
     end
 
-    let(:court_information) do
+    let(:court) do
       {
         title: 'Interpreter required',
         comments: 'Only speaks Spanish',
-        assessment_answer_type_id: court_information_type.id
+        assessment_answer_type_id: court_type.id
       }
     end
 
@@ -67,7 +67,7 @@ RSpec.describe PersonSerializer do
       profile.assessment_answers = [
         risk_alert,
         health_alert,
-        court_information
+        court
       ]
       profile.save!
     end

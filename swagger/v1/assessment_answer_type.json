@@ -18,7 +18,7 @@
         "properties": {
           "assessment_answer_category": {
             "type": "String",
-            "enum": ["health", "risk", "court_information"],
+            "enum": ["health", "risk", "court"],
             "description": "Category is the section in the Create Move form that a profile attribute appears in, e.g. Health or Risks"
           },
           "nomis_alert_type": {
