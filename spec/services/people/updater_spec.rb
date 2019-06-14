@@ -46,7 +46,7 @@ RSpec.describe People::Updater do
           first_names: 'Bob',
           last_name: 'Roberts',
           date_of_birth: Date.civil(1980, 1, 1),
-          risk_alerts: [
+          assessment_answers: [
             { title: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
             { title: 'Violent', assessment_answer_type_id: risk_type_2.id }
           ],
@@ -68,8 +68,8 @@ RSpec.describe People::Updater do
       expect(updated_profile.profile_identifiers.as_json).to include_json(params[:attributes][:identifiers])
     end
 
-    it 'sets the risk_alerts attribute' do
-      expect(updated_profile.assessment_answers.as_json).to include_json(params[:attributes][:risk_alerts])
+    it 'sets the assessment_answers attribute' do
+      expect(updated_profile.assessment_answers.as_json).to include_json(params[:attributes][:assessment_answers])
     end
   end
 

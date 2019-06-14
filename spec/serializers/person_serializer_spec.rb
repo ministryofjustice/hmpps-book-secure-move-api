@@ -72,22 +72,10 @@ RSpec.describe PersonSerializer do
       profile.save!
     end
 
-    it 'contains a `risk_alerts` nested collection' do
-      expect(result[:data][:attributes][:risk_alerts].map do |alert|
+    it 'contains an `assessment_answers` nested collection' do
+      expect(result[:data][:attributes][:assessment_answers].map do |alert|
         alert[:title]
-      end).to eql ['Escape risk']
-    end
-
-    it 'contains a `health_alerts` nested collection' do
-      expect(result[:data][:attributes][:health_alerts].map do |alert|
-        alert[:title]
-      end).to eql ['Medication']
-    end
-
-    it 'contains a `court_information` nested collection' do
-      expect(result[:data][:attributes][:court_information].map do |alert|
-        alert[:title]
-      end).to eql ['Interpreter required']
+      end).to match_array ['Escape risk', 'Medication', 'Interpreter required']
     end
   end
 

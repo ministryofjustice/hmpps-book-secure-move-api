@@ -22,7 +22,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
-            risk_alerts: [
+            assessment_answers: [
               { title: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
               { title: 'Violent', assessment_answer_type_id: risk_type_2.id }
             ],
@@ -57,7 +57,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
-            risk_alerts: [
+            assessment_answers: [
               { title: 'Escape risk', assessment_answer_type_id: risk_type_1.id },
               { title: 'Violent', assessment_answer_type_id: risk_type_2.id }
             ],

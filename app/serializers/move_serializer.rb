@@ -12,7 +12,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :to_location, serializer: LocationSerializer
 
   INCLUDED_OVERVIEW = {
-    person: %i[first_names last_name date_of_birth risk_alerts health_alerts court_information indentifiers],
+    person: %i[first_names last_name date_of_birth assessment_answers indentifiers],
     from_location: %i[location_type description],
     to_location: %i[location_type description]
   }.freeze

@@ -41,26 +41,12 @@
             "example": "1965-10-24",
             "description": "Person's date of birth in ISO 8601 format"
           },
-          "risk_alerts": {
+          "assessment_answers": {
             "type": "array",
             "items": {
               "$ref": "assessment_answer.json#/AssessmentAnswer"
             },
-            "description": "Collection of risk alerts that escorts need to be aware of for safety, security and other reasons"
-          },
-          "health_alerts": {
-            "type": "array",
-            "items": {
-              "$ref": "assessment_answer.json#/AssessmentAnswer"
-            },
-            "description": "Collection of health alerts that escorts need to be aware for the well being of the person and other reasons"
-          },
-          "court_information": {
-            "type": "array",
-            "items": {
-              "$ref": "assessment_answer.json#/AssessmentAnswer"
-            },
-            "description": "Collection of information that the court needs to be aware of"
+            "description": "Collection of court information, risk and alerts that escorts need to be aware of for safety, security and other reasons"
           },
           "identifiers": {
             "type": "array",

@@ -6,9 +6,7 @@ class PersonSerializer < ActiveModel::Serializer
     :first_names,
     :last_name,
     :date_of_birth,
-    :risk_alerts,
-    :health_alerts,
-    :court_information,
+    :assessment_answers,
     :identifiers
   )
 
@@ -35,16 +33,8 @@ class PersonSerializer < ActiveModel::Serializer
     object.latest_profile&.gender
   end
 
-  def risk_alerts
-    object.latest_profile&.assessment_answers&.select(&:risk_alert?) || []
-  end
-
-  def health_alerts
-    object.latest_profile&.assessment_answers&.select(&:health_alert?) || []
-  end
-
-  def court_information
-    object.latest_profile&.assessment_answers&.select(&:court_information?) || []
+  def assessment_answers
+    object.latest_profile&.assessment_answers || []
   end
 
   def identifiers
