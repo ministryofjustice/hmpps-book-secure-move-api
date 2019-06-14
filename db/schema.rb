@@ -23,10 +23,11 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.string "nomis_alert_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key", null: false
   end
 
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "code", null: false
+    t.string "key", null: false
     t.string "title", null: false
     t.string "description"
     t.datetime "created_at", null: false
@@ -38,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key", null: false
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -46,6 +48,7 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "location_code"
+    t.string "key", null: false
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -66,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key", null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|

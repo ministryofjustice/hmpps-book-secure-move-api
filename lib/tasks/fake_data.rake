@@ -110,7 +110,7 @@ namespace :fake_data do
   desc 'create genders'
   task create_genders: :environment do
     GENDERS.each do |gender|
-      Gender.create!(title: gender)
+      Gender.create!(key: gender.parameterize(separator: '_'), title: gender)
     end
   end
 
@@ -141,10 +141,19 @@ namespace :fake_data do
     end
   end
 
+  desc 'drop all the fake data - CAUTION: this deletes all existing data'
+  task drop_all: :environment do
+    if Rails.env.development?
+      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender].each(&:destroy_all)
+    else
+      puts 'you can only run this in the development environment'
+    end
+  end
+
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender].each(&:destroy_all)
+      Rake::Task['fake_data:drop_all'].invoke
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_assessment_questions'].invoke
@@ -158,43 +167,43 @@ namespace :fake_data do
   end
 
   ASSESSMENT_QUESTIONS = [
-    { category: :risk, title: 'Violent' },
-    { category: :risk, title: 'Escape' },
-    { category: :risk, title: 'Must be held separately' },
-    { category: :risk, title: 'Self harm' },
-    { category: :risk, title: 'Concealed items' },
-    { category: :risk, title: 'Any other risks' },
-    { category: :health, title: 'Special diet or allergy' },
-    { category: :health, title: 'Health issue' },
-    { category: :health, title: 'Medication' },
-    { category: :health, title: 'Wheelchair user' },
-    { category: :health, title: 'Pregnant' },
-    { category: :health, title: 'Any other requirements' },
-    { category: :court, title: 'Solicitor or other legal representation' },
-    { category: :court, title: 'Sign or other language interpreter' },
-    { category: :court, title: 'Any other information' }
+    { key: :violent, category: :risk, title: 'Violent' },
+    { key: :escape, category: :risk, title: 'Escape' },
+    { key: :hold_separately, category: :risk, title: 'Must be held separately' },
+    { key: :self_harm, category: :risk, title: 'Self harm' },
+    { key: :concealed_items, category: :risk, title: 'Concealed items' },
+    { key: :other_risks, category: :risk, title: 'Any other risks' },
+    { key: :special_diet_or_allergy, category: :health, title: 'Special diet or allergy' },
+    { key: :health_issue, category: :health, title: 'Health issue' },
+    { key: :medication, category: :health, title: 'Medication' },
+    { key: :wheelchair, category: :health, title: 'Wheelchair user' },
+    { key: :pregnant, category: :health, title: 'Pregnant' },
+    { key: :other_requirements, category: :health, title: 'Any other requirements' },
+    { key: :solicitor, category: :court, title: 'Solicitor or other legal representation' },
+    { key: :interpreter, category: :court, title: 'Sign or other language interpreter' },
+    { key: :other_information, category: :court, title: 'Any other information' }
   ].freeze
 
   GENDERS = %w[Female Male Transexual].freeze
 
   ETHNICITIES = [
-    { code: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
-    { code: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
-    { code: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+    { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
+    { key: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
+    { key: 'A3', title: 'Asian or Asian British (Bangladeshi)',
       description: 'A3 - Asian or Asian British (Bangladeshi)' },
-    { code: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
-    { code: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },
-    { code: 'B2', title: 'Black (African)', description: 'B2 - Black (African)' },
-    { code: 'B9', title: 'Black (Other)', description: 'B9 - Black (Other)' },
-    { code: 'M1', title: 'Mixed (White and Black Caribbean)', description: 'M1 - Mixed (White and Black Caribbean)' },
-    { code: 'M2', title: 'Mixed (White and Black African)', description: 'M2 - Mixed (White and Black African)' },
-    { code: 'M3', title: 'Mixed (White and Asian)', description: 'M3 - Mixed (White and Asian)' },
-    { code: 'M9', title: 'Mixed (Any other mixed background)', description: 'M9 - Mixed (Any other mixed background)' },
-    { code: 'O1', title: 'Chinese', description: 'O1 - Chinese' },
-    { code: 'O9', title: 'Any other ethnic group', description: 'O9 - Any other ethnic group' },
-    { code: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
-    { code: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
-    { code: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' }
+    { key: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
+    { key: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },
+    { key: 'B2', title: 'Black (African)', description: 'B2 - Black (African)' },
+    { key: 'B9', title: 'Black (Other)', description: 'B9 - Black (Other)' },
+    { key: 'M1', title: 'Mixed (White and Black Caribbean)', description: 'M1 - Mixed (White and Black Caribbean)' },
+    { key: 'M2', title: 'Mixed (White and Black African)', description: 'M2 - Mixed (White and Black African)' },
+    { key: 'M3', title: 'Mixed (White and Asian)', description: 'M3 - Mixed (White and Asian)' },
+    { key: 'M9', title: 'Mixed (Any other mixed background)', description: 'M9 - Mixed (Any other mixed background)' },
+    { key: 'O1', title: 'Chinese', description: 'O1 - Chinese' },
+    { key: 'O9', title: 'Any other ethnic group', description: 'O9 - Any other ethnic group' },
+    { key: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
+    { key: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
+    { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' }
   ].freeze
 
   TOWN_NAMES = [
