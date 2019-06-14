@@ -13,7 +13,7 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_presence_of(:time_due) }
   it { is_expected.to validate_presence_of(:move_type) }
-  it { is_expected.to validate_presence_of(:status) }
+  it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
   context 'without automatic reference generation' do
     # rubocop:disable RSpec/AnyInstance

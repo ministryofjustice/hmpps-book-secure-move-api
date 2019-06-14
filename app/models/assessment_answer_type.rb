@@ -2,7 +2,7 @@
 
 class AssessmentAnswerType < ApplicationRecord
   validates :title, presence: true
-  validates :category, presence: true
+  validates :category, inclusion: { in: categories }
 
   enum category: {
     health: 'health',

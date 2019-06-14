@@ -201,7 +201,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'with validation errors' do
-      let(:move_attributes) { attributes_for(:move).except(:date, :status) }
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'invalid') }
 
       let(:errors_422) do
         [
@@ -213,9 +213,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           },
           {
             'title' => 'Unprocessable entity',
-            'detail' => "Status can't be blank",
+            'detail' => 'Status is not included in the list',
             'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'blank'
+            'code' => 'inclusion'
           }
         ]
       end
