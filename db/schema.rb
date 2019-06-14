@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_092236) do
     t.uuid "person_id", null: false
     t.string "move_type", null: false
     t.string "status", default: "requested", null: false
-    t.time "time_due", null: false
+    t.time "time_due"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reference", null: false
