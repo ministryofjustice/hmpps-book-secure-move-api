@@ -136,7 +136,7 @@ namespace :fake_data do
         person: people.sample,
         from_location: prisons.sample,
         to_location: courts.sample,
-        status: 'scheduled',
+        status: 'requested',
         move_type: :court
       )
     end
