@@ -82,10 +82,10 @@ namespace :fake_data do
 
   desc 'create fake prisons'
   task create_prisons: :environment do
-    PRISON_NAMES.each do |description|
+    PRISON_NAMES.each do |title|
       Location.create!(
-        key: description.parameterize(separator: '_'),
-        description: description,
+        key: title.parameterize(separator: '_'),
+        title: title,
         location_type: :prison
       )
     end
@@ -94,10 +94,10 @@ namespace :fake_data do
   desc 'create fake courts'
   task create_courts: :environment do
     TOWN_NAMES.each do |town|
-      description = "#{town} #{%w[County Crown Magistrates].sample} Court"
+      title = "#{town} #{%w[County Crown Magistrates].sample} Court"
       Location.create!(
-        key: description.parameterize(separator: '_'),
-        description: description,
+        key: title.parameterize(separator: '_'),
+        title: title,
         location_type: :court
       )
     end

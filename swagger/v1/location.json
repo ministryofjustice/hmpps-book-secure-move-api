@@ -16,7 +16,7 @@
       "attributes": {
         "type": "object",
         "required": [
-          "description",
+          "title",
           "location_type"
         ],
         "properties": {
@@ -25,10 +25,10 @@
             "example": "guildford_crown_court",
             "description": "Machine readable unique key string attribute"
           },
-          "description": {
+          "title": {
             "type": "string",
             "example": "Guildford Crown Court",
-            "description": "The description of the location"
+            "description": "The human-readable label for the location"
           },
           "location_type": {
             "type": "string",

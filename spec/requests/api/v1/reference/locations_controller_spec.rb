@@ -19,7 +19,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
             type: 'locations',
             attributes: {
               key: 'guildford_crown_court',
-              description: 'Guildford Crown Court',
+              title: 'Guildford Crown Court',
               location_type: 'court',
               location_code: 'GCC'
             }
@@ -28,7 +28,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
             type: 'locations',
             attributes: {
               key: 'hmp_pentonville',
-              description: 'HMP Pentonville',
+              title: 'HMP Pentonville',
               location_type: 'prison',
               location_code: 'PEI'
             }
