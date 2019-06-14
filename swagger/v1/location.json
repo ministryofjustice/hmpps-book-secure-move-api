@@ -20,6 +20,11 @@
           "location_type"
         ],
         "properties": {
+          "key": {
+            "type": "string",
+            "example": "guildford_crown_court",
+            "description": "Machine readable unique key string attribute"
+          },
           "description": {
             "type": "string",
             "example": "Guildford Crown Court",
