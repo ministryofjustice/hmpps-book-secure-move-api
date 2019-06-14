@@ -15,12 +15,14 @@ RSpec.describe Api::V1::Reference::NationalitiesController, with_client_authenti
         {
           type: 'nationalities',
           attributes: {
+            key: 'british',
             title: 'British'
           }
         },
         {
           type: 'nationalities',
           attributes: {
+            key: 'french',
             title: 'French'
           }
         }

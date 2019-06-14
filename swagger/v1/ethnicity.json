@@ -21,7 +21,7 @@
       "attributes": {
         "type": "object",
         "properties": {
-          "code": {
+          "key": {
             "type": "string",
             "example": "W1",
             "description": "Ethnicity code"

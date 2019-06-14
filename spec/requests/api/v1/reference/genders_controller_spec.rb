@@ -15,12 +15,14 @@ RSpec.describe Api::V1::Reference::GendersController, with_client_authentication
         {
           type: 'genders',
           attributes: {
+            key: 'female',
             title: 'Female'
           }
         },
         {
           type: 'genders',
           attributes: {
+            key: 'male',
             title: 'Male'
           }
         }

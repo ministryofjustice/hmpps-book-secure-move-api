@@ -16,6 +16,10 @@ RSpec.describe NationalitySerializer do
     expect(result[:data][:id]).to eql nationality.id
   end
 
+  it 'contains a key attribute' do
+    expect(result[:data][:attributes][:key]).to eql 'british'
+  end
+
   it 'contains a title attribute' do
     expect(result[:data][:attributes][:title]).to eql 'British'
   end
