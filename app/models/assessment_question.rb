@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class AssessmentQuestion < ApplicationRecord
+  validates :key, presence: true
   validates :title, presence: true
 
   enum category: {
     health: 'health',
     risk: 'risk',
-    court: 'court',
-    reasons_for_no_release: 'reasons_for_no_release'
+    court: 'court'
   }
 
   validates :category, inclusion: { in: categories }
