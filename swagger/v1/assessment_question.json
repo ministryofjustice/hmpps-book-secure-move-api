@@ -31,7 +31,7 @@
             "example": "MSI",
             "description": "The NOMIS alert code for this assessment question"
           },
-          "description": {
+          "title": {
             "type": "String",
             "example": "Sight Impaired",
             "description": "The label displayed on the Create Move form for this assessment question"
