@@ -15,7 +15,6 @@ class Move < ApplicationRecord
   validates :date, presence: true
   validates :person, presence: true
   validates :status, inclusion: { in: statuses }
-  validates :move_type, presence: true
   validates :reference, presence: true
 
   before_validation :set_reference

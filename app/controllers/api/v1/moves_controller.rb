@@ -27,7 +27,7 @@ module Api
       private
 
       PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
-      PERMITTED_MOVE_PARAMS = [:type, attributes: %i[date time_due status move_type], relationships: {}].freeze
+      PERMITTED_MOVE_PARAMS = [:type, attributes: %i[date time_due status], relationships: {}].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
