@@ -56,8 +56,8 @@ RSpec.describe MoveSerializer do
     let(:adapter_options) do
       {
         include: {
-          from_location: %I[location_type description],
-          to_location: %I[location_type description]
+          from_location: %I[location_type title],
+          to_location: %I[location_type title]
         }
       }
     end
@@ -66,12 +66,12 @@ RSpec.describe MoveSerializer do
         {
           id: move.from_location_id,
           type: 'locations',
-          attributes: { location_type: 'prison', description: 'HMP Pentonville' }
+          attributes: { location_type: 'prison', title: 'HMP Pentonville' }
         },
         {
           id: move.to_location_id,
           type: 'locations',
-          attributes: { location_type: 'court', description: 'Guildford Crown Court' }
+          attributes: { location_type: 'court', title: 'Guildford Crown Court' }
         }
       ]
     end

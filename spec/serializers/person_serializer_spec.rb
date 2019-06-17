@@ -105,7 +105,7 @@ RSpec.describe PersonSerializer do
   end
 
   describe 'ethnicity' do
-    let(:adapter_options) { { include: { ethnicity: %I[code title description] } } }
+    let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
     let(:ethnicity) { person.latest_profile&.ethnicity }
     let(:expected_json) do
       [
@@ -113,7 +113,7 @@ RSpec.describe PersonSerializer do
           id: ethnicity&.id,
           type: 'ethnicities',
           attributes: {
-            code: ethnicity&.code,
+            key: ethnicity&.key,
             title: ethnicity&.title,
             description: ethnicity&.description
           }

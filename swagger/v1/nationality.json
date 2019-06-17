@@ -24,6 +24,11 @@
           "title"
         ],
         "properties": {
+          "key": {
+            "type": "string",
+            "example": "british",
+            "description": "Machine readable unique key string attribute"
+          },
           "title": {
             "type": "string",
             "example": "British",

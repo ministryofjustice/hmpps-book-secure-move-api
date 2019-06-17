@@ -9,7 +9,7 @@ module Moves
     end
 
     def call
-      apply_filters(Move).order('locations.description')
+      apply_filters(Move).order('locations.title')
     end
 
     private
