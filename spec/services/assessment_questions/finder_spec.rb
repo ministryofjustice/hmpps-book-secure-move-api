@@ -13,7 +13,7 @@ RSpec.describe AssessmentQuestions::Finder do
     context 'with matching `category` filter' do
       let(:filter_params) { { category: assessment_question.category } }
 
-      it 'returns profile attribute type matching `category`' do
+      it 'returns assessment questions matching `category`' do
         expect(finder.call.pluck(:id)).to eql [assessment_question.id]
       end
     end

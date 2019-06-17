@@ -100,7 +100,7 @@ namespace :fake_data do
     end
   end
 
-  desc 'create profile attribute types'
+  desc 'create assessment questions'
   task create_assessment_questions: :environment do
     ASSESSMENT_QUESTIONS.each do |attribute_values|
       AssessmentQuestion.create!(attribute_values)

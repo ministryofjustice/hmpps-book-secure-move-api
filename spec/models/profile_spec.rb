@@ -60,19 +60,19 @@ RSpec.describe Profile, type: :model do
       assessment_answers.first.merge(category: 'health')
     end
 
-    it 'serializes profile attributes correctly' do
+    it 'serializes assessment answers correctly' do
       profile.assessment_answers = assessment_answers
       profile.save
       reloaded_profile = Profile.find(profile.id)
       expect(reloaded_profile.assessment_answers&.first&.as_json).to eql expected_attributes
     end
 
-    it 'deserializes profile attributes to an array' do
+    it 'deserializes assessment answers to an array' do
       profile.assessment_answers = assessment_answers
       expect(profile.assessment_answers).to be_an(Array)
     end
 
-    it 'deserializes profile attributes to an array of AssessmentAnswer objects' do
+    it 'deserializes assessment answers to an array of AssessmentAnswer objects' do
       profile.assessment_answers = assessment_answers
       expect(profile.assessment_answers.first).to be_a(Profile::AssessmentAnswer)
     end

@@ -664,7 +664,7 @@
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
-          "Profile Attribute Types"
+          "Assessment Questions"
         ],
         "consumes": [
           "application/vnd.api+json"

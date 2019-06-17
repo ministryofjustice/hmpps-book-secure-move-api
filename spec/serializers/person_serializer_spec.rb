@@ -27,7 +27,7 @@ RSpec.describe PersonSerializer do
     expect(result[:data][:attributes][:last_name]).to eql 'Roberts'
   end
 
-  describe '#profile attributes' do
+  describe '#assessment_answers' do
     let(:risk_alert_type) do
       create :assessment_question, :risk
     end
