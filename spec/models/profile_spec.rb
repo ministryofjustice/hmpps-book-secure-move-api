@@ -41,40 +41,40 @@ RSpec.describe Profile, type: :model do
     end
   end
 
-  describe '#profile_attributes' do
+  describe '#assessment_answers' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
-    let(:profile_attribute_type) { create :profile_attribute_type, category: 'health', user_type: 'prison' }
-    let(:profile_attributes) do
+    let(:assessment_question) { create :assessment_question, category: 'health' }
+    let(:assessment_answers) do
       [
         {
-          description: 'test',
+          title: 'test',
           comments: 'just a test',
-          profile_attribute_type_id: profile_attribute_type.id,
+          assessment_question_id: assessment_question.id,
           date: Date.civil(2019, 5, 30),
           expiry_date: Date.civil(2019, 6, 30)
         }
       ]
     end
     let(:expected_attributes) do
-      profile_attributes.first.merge(category: 'health', user_type: 'prison')
+      assessment_answers.first.merge(category: 'health')
     end
 
-    it 'serializes profile attributes correctly' do
-      profile.profile_attributes = profile_attributes
+    it 'serializes assessment answers correctly' do
+      profile.assessment_answers = assessment_answers
       profile.save
       reloaded_profile = Profile.find(profile.id)
-      expect(reloaded_profile.profile_attributes&.first&.as_json).to eql expected_attributes
+      expect(reloaded_profile.assessment_answers&.first&.as_json).to eql expected_attributes
     end
 
-    it 'deserializes profile attributes to an array' do
-      profile.profile_attributes = profile_attributes
-      expect(profile.profile_attributes).to be_an(Array)
+    it 'deserializes assessment answers to an array' do
+      profile.assessment_answers = assessment_answers
+      expect(profile.assessment_answers).to be_an(Array)
     end
 
-    it 'deserializes profile attributes to an array of ProfileAttribute objects' do
-      profile.profile_attributes = profile_attributes
-      expect(profile.profile_attributes.first).to be_a(Profile::ProfileAttribute)
+    it 'deserializes assessment answers to an array of AssessmentAnswer objects' do
+      profile.assessment_answers = assessment_answers
+      expect(profile.assessment_answers.first).to be_a(Profile::AssessmentAnswer)
     end
   end
 end

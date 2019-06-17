@@ -14,60 +14,60 @@ namespace :fake_data do
         date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
-        profile_attributes: fake_profile_attributes,
+        assessment_answers: fake_assessment_answers,
         profile_identifiers: fake_profile_identifiers
       )
     end
   end
 
-  PROFILE_ATTRIBUTES = [
-    { category: :risk, description: 'Violent',
+  ASSESSMENT_ANSWERS = [
+    { category: :risk, title: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, description: 'Escape',
+    { category: :risk, title: 'Escape',
       comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, description: 'Must be held separately',
+    { category: :risk, title: 'Must be held separately',
       comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, description: 'Self harm',
+    { category: :risk, title: 'Self harm',
       comments: ['Attempted suicide'] },
-    { category: :risk, description: 'Concealed items',
+    { category: :risk, title: 'Concealed items',
       comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, description: 'Any other risks',
+    { category: :risk, title: 'Any other risks',
       comments: ['Train spotter', ''] },
-    { category: :health, description: 'Special diet or allergy',
+    { category: :health, title: 'Special diet or allergy',
       comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, description: 'Health issue',
+    { category: :health, title: 'Health issue',
       comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, description: 'Medication',
+    { category: :health, title: 'Medication',
       comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
-    { category: :health, description: 'Wheelchair user', comments: [''] },
-    { category: :health, description: 'Pregnant', comments: [''] },
-    { category: :health, description: 'Any other requirements',
+    { category: :health, title: 'Wheelchair user', comments: [''] },
+    { category: :health, title: 'Pregnant', comments: [''] },
+    { category: :health, title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court_information, description: 'Solicitor or other legal representation',
+    { category: :court, title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court_information, description: 'Sign or other language interpreter',
+    { category: :court, title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court_information, description: 'Any other information',
+    { category: :court, title: 'Any other information',
       comments: ['Former prison officer'] }
   ].freeze
 
-  def fake_profile_attributes
-    PROFILE_ATTRIBUTES.sample(3).map do |profile_attribute|
-      fake_profile_attribute(profile_attribute)
+  def fake_assessment_answers
+    ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
+      fake_assessment_answer(assessment_answer)
     end
   end
 
-  def fake_profile_attribute(profile_attribute)
-    profile_attribute_type = ProfileAttributeType.where(
-      category: profile_attribute[:category],
-      description: profile_attribute[:description]
+  def fake_assessment_answer(assessment_answer)
+    assessment_question = AssessmentQuestion.where(
+      category: assessment_answer[:category],
+      title: assessment_answer[:title]
     ).first
-    return [] unless profile_attribute_type
+    return [] unless assessment_question
 
     {
-      description: profile_attribute_type.description,
-      profile_attribute_type_id: profile_attribute_type.id,
-      comments: profile_attribute[:comments].sample
+      title: assessment_question.title,
+      assessment_question_id: assessment_question.id,
+      comments: assessment_answer[:comments].sample
     }
   end
 
@@ -100,10 +100,10 @@ namespace :fake_data do
     end
   end
 
-  desc 'create profile attribute types'
-  task create_profile_attribute_types: :environment do
-    PROFILE_ATTRIBUTE_TYPES.each do |attribute_values|
-      ProfileAttributeType.create!(attribute_values)
+  desc 'create assessment questions'
+  task create_assessment_questions: :environment do
+    ASSESSMENT_QUESTIONS.each do |attribute_values|
+      AssessmentQuestion.create!(attribute_values)
     end
   end
 
@@ -144,10 +144,10 @@ namespace :fake_data do
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, ProfileAttributeType, Ethnicity, Gender].each(&:destroy_all)
+      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender].each(&:destroy_all)
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
-      Rake::Task['fake_data:create_profile_attribute_types'].invoke
+      Rake::Task['fake_data:create_assessment_questions'].invoke
       Rake::Task['fake_data:create_people'].invoke
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
@@ -157,22 +157,22 @@ namespace :fake_data do
     end
   end
 
-  PROFILE_ATTRIBUTE_TYPES = [
-    { user_type: :police, category: :risk, description: 'Violent' },
-    { user_type: :police, category: :risk, description: 'Escape' },
-    { user_type: :police, category: :risk, description: 'Must be held separately' },
-    { user_type: :police, category: :risk, description: 'Self harm' },
-    { user_type: :police, category: :risk, description: 'Concealed items' },
-    { user_type: :police, category: :risk, description: 'Any other risks' },
-    { user_type: :police, category: :health, description: 'Special diet or allergy' },
-    { user_type: :police, category: :health, description: 'Health issue' },
-    { user_type: :police, category: :health, description: 'Medication' },
-    { user_type: :police, category: :health, description: 'Wheelchair user' },
-    { user_type: :police, category: :health, description: 'Pregnant' },
-    { user_type: :police, category: :health, description: 'Any other requirements' },
-    { user_type: :police, category: :court_information, description: 'Solicitor or other legal representation' },
-    { user_type: :police, category: :court_information, description: 'Sign or other language interpreter' },
-    { user_type: :police, category: :court_information, description: 'Any other information' }
+  ASSESSMENT_QUESTIONS = [
+    { category: :risk, title: 'Violent' },
+    { category: :risk, title: 'Escape' },
+    { category: :risk, title: 'Must be held separately' },
+    { category: :risk, title: 'Self harm' },
+    { category: :risk, title: 'Concealed items' },
+    { category: :risk, title: 'Any other risks' },
+    { category: :health, title: 'Special diet or allergy' },
+    { category: :health, title: 'Health issue' },
+    { category: :health, title: 'Medication' },
+    { category: :health, title: 'Wheelchair user' },
+    { category: :health, title: 'Pregnant' },
+    { category: :health, title: 'Any other requirements' },
+    { category: :court, title: 'Solicitor or other legal representation' },
+    { category: :court, title: 'Sign or other language interpreter' },
+    { category: :court, title: 'Any other information' }
   ].freeze
 
   GENDERS = %w[Female Male Transexual].freeze

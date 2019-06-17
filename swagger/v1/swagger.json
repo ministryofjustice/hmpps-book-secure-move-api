@@ -36,11 +36,11 @@
       "Nationality": {
         "$ref": "nationality.json#/Nationality"
       },
-      "ProfileAttribute": {
-        "$ref": "profile_attribute.json#/ProfileAttribute"
+      "AssessmentAnswer": {
+        "$ref": "assessment_answer.json#/AssessmentAnswer"
       },
-      "ProfileAttributeType": {
-        "$ref": "profile_attribute_type.json#/ProfileAttributeType"
+      "AssessmentQuestion": {
+        "$ref": "assessment_question.json#/AssessmentQuestion"
       },
       "ProfileIdentifier": {
         "$ref": "profile_identifier.json#/ProfileIdentifier"
@@ -660,11 +660,11 @@
         }
       }
     },
-    "/reference/profile_attribute_types": {
+    "/reference/assessment_questions": {
       "get": {
         "summary": "Returns a list of move detail types filtered by category and/or user type",
         "tags": [
-          "Profile Attribute Types"
+          "Assessment Questions"
         ],
         "consumes": [
           "application/vnd.api+json"
@@ -686,16 +686,7 @@
             "description": "Filters results to only include move detail types for the given category",
             "schema": {
               "type": "string",
-              "enum": ["risks", "health", "court_information"]
-            }
-          },
-          {
-            "name": "filter[user_type]",
-            "in": "query",
-            "description": "Filters results to only include move detail types for the given user type",
-            "schema": {
-              "type": "string",
-              "enum": ["prisons", "police"]
+              "enum": ["risks", "health", "court"]
             }
           }
         ],
@@ -705,7 +696,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/200"
+                  "$ref": "get_assessment_questions_responses.json#/200"
                 }
               }
             }
@@ -715,7 +706,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/401"
+                  "$ref": "get_assessment_questions_responses.json#/401"
                 }
               }
             }
@@ -725,7 +716,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "get_profile_attribute_types_responses.json#/415"
+                  "$ref": "get_assessment_questions_responses.json#/415"
                 }
               }
             }

@@ -27,67 +27,55 @@ RSpec.describe PersonSerializer do
     expect(result[:data][:attributes][:last_name]).to eql 'Roberts'
   end
 
-  describe '#profile attributes' do
+  describe '#assessment_answers' do
     let(:risk_alert_type) do
-      create :profile_attribute_type, :risk
+      create :assessment_question, :risk
     end
     let(:health_alert_type) do
-      create :profile_attribute_type, :health
+      create :assessment_question, :health
     end
-    let(:court_information_type) do
-      create :profile_attribute_type, :court_information
+    let(:court_type) do
+      create :assessment_question, :court
     end
 
     let(:risk_alert) do
       {
-        description: 'Escape risk',
+        title: 'Escape risk',
         comments: 'Former miner',
-        profile_attribute_type_id: risk_alert_type.id
+        assessment_question_id: risk_alert_type.id
       }
     end
 
     let(:health_alert) do
       {
-        description: 'Medication',
+        title: 'Medication',
         comments: 'Needs something for a headache',
-        profile_attribute_type_id: health_alert_type.id
+        assessment_question_id: health_alert_type.id
       }
     end
 
-    let(:court_information) do
+    let(:court) do
       {
-        description: 'Interpreter required',
+        title: 'Interpreter required',
         comments: 'Only speaks Spanish',
-        profile_attribute_type_id: court_information_type.id
+        assessment_question_id: court_type.id
       }
     end
 
     before do
       profile = person.latest_profile
-      profile.profile_attributes = [
+      profile.assessment_answers = [
         risk_alert,
         health_alert,
-        court_information
+        court
       ]
       profile.save!
     end
 
-    it 'contains a `risk_alerts` nested collection' do
-      expect(result[:data][:attributes][:risk_alerts].map do |alert|
-        alert[:description]
-      end).to eql ['Escape risk']
-    end
-
-    it 'contains a `health_alerts` nested collection' do
-      expect(result[:data][:attributes][:health_alerts].map do |alert|
-        alert[:description]
-      end).to eql ['Medication']
-    end
-
-    it 'contains a `court_information` nested collection' do
-      expect(result[:data][:attributes][:court_information].map do |alert|
-        alert[:description]
-      end).to eql ['Interpreter required']
+    it 'contains an `assessment_answers` nested collection' do
+      expect(result[:data][:attributes][:assessment_answers].map do |alert|
+        alert[:title]
+      end).to match_array ['Escape risk', 'Medication', 'Interpreter required']
     end
   end
 

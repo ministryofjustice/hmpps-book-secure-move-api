@@ -12,8 +12,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
 
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
-    let(:risk_type_1) { create :profile_attribute_type, :risk }
-    let(:risk_type_2) { create :profile_attribute_type, :risk }
+    let(:risk_type_1) { create :assessment_question, :risk }
+    let(:risk_type_2) { create :assessment_question, :risk }
     let(:person_params) do
       {
         data: {
@@ -22,9 +22,9 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
-            risk_alerts: [
-              { description: 'Escape risk', profile_attribute_type_id: risk_type_1.id },
-              { description: 'Violent', profile_attribute_type_id: risk_type_2.id }
+            assessment_answers: [
+              { title: 'Escape risk', assessment_question_id: risk_type_1.id },
+              { title: 'Violent', assessment_question_id: risk_type_2.id }
             ],
             identifiers: [
               { identifier_type: 'pnc_number', value: 'ABC123' },
@@ -57,9 +57,9 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
-            risk_alerts: [
-              { description: 'Escape risk', profile_attribute_type_id: risk_type_1.id },
-              { description: 'Violent', profile_attribute_type_id: risk_type_2.id }
+            assessment_answers: [
+              { title: 'Escape risk', assessment_question_id: risk_type_1.id },
+              { title: 'Violent', assessment_question_id: risk_type_2.id }
             ],
             identifiers: [
               { identifier_type: 'pnc_number', value: 'ABC123' },

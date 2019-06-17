@@ -8,7 +8,7 @@ module People
       self.params = params
     end
 
-    PROFILE_ATTRIBUTES = %i[first_names last_name date_of_birth].freeze
+    ATTRIBUTES = %i[first_names last_name date_of_birth].freeze
     PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
 
     private
@@ -19,32 +19,20 @@ module People
       end.to_h
     end
 
-    def profile_attributes
+    def assessment_answers
       {
-        profile_attributes: risk_alerts + health_alerts + court_information
+        assessment_answers: params[:attributes][:assessment_answers] || []
       }
-    end
-
-    def risk_alerts
-      params[:attributes][:risk_alerts] || []
-    end
-
-    def health_alerts
-      params[:attributes][:health_alerts] || []
-    end
-
-    def court_information
-      params[:attributes][:court_information] || []
     end
 
     def profile_identifiers
       {
-        profile_identifiers: params[:attributes][:identifiers]
+        profile_identifiers: params[:attributes][:identifiers] || []
       }
     end
 
     def profile_params
-      params[:attributes].slice(*PROFILE_ATTRIBUTES)
+      params[:attributes].slice(*ATTRIBUTES)
     end
   end
 end

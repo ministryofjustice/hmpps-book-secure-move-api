@@ -16,6 +16,15 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
+  create_table "assessment_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "category", null: false
+    t.string "nomis_alert_type"
+    t.string "nomis_alert_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "code", null: false
     t.string "title", null: false
@@ -106,16 +115,6 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "profile_attribute_types", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "description", null: false
-    t.string "category", null: false
-    t.string "user_type", null: false
-    t.string "alert_type"
-    t.string "alert_code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
     t.string "last_name", null: false
@@ -127,7 +126,7 @@ ActiveRecord::Schema.define(version: 2019_06_17_093938) do
     t.uuid "nationality_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "profile_attributes"
+    t.jsonb "assessment_answers"
     t.jsonb "profile_identifiers"
   end
 
