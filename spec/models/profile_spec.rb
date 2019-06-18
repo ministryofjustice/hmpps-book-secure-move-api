@@ -48,7 +48,7 @@ RSpec.describe Profile, type: :model do
     let(:assessment_answers) do
       [
         {
-          title: 'test',
+          title: 'Test',
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
           date: Date.civil(2019, 5, 30),
@@ -57,7 +57,7 @@ RSpec.describe Profile, type: :model do
       ]
     end
     let(:expected_attributes) do
-      assessment_answers.first.merge(category: 'health')
+      assessment_answers.first.merge(category: 'health', key: 'sight_impaired')
     end
 
     it 'serializes assessment answers correctly' do

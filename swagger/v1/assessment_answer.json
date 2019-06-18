@@ -44,7 +44,12 @@
       "category": {
         "type": "string",
         "example": "risk",
-        "description": "The category in which the type belongs, e.g. risk, health or court"
+        "description": "The category in which the associated assessment question belongs, e.g. risk, health or court"
+      },
+      "key": {
+        "type": "string",
+        "example": "asthmatic",
+        "description": "The unique string key of the associated assessment question"
       }
     }
   }
