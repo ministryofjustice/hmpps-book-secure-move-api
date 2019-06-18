@@ -13,7 +13,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       assessment_question_id: 123,
       date: Date.civil(2019, 5, 30),
       expiry_date: Date.civil(2019, 6, 30),
-      category: 'risk'
+      category: 'risk',
+      key: 'just_a_test'
     }
   end
 
@@ -65,7 +66,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  describe '#set_category' do
+  describe '#set_category_and_key' do
     let(:assessment_question) { create :assessment_question, category: 'health' }
     let(:attribute_values) do
       {
@@ -78,11 +79,15 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
 
     before do
-      assessment_answer.set_category
+      assessment_answer.set_category_and_key
     end
 
     it 'sets the category' do
       expect(assessment_answer.category).to eql 'health'
+    end
+
+    it 'sets the key' do
+      expect(assessment_answer.key).to eql 'sight_impaired'
     end
   end
 end

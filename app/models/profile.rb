@@ -19,6 +19,6 @@ class Profile < ApplicationRecord
   private
 
   def set_assessment_answers
-    assessment_answers.each(&:set_category)
+    assessment_answers.each(&:set_category_and_key)
   end
 end

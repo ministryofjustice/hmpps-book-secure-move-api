@@ -8,10 +8,11 @@ class Profile
       :assessment_question_id,
       :date,
       :expiry_date,
-      :category
+      :category,
+      :key
     )
 
-    attr_accessor :title, :comments, :assessment_question_id, :category
+    attr_accessor :title, :comments, :assessment_question_id, :category, :key
     attr_reader :date, :expiry_date
 
     def initialize(attributes = {})
@@ -23,6 +24,7 @@ class Profile
       self.expiry_date = attributes[:expiry_date]
       self.assessment_question_id = attributes[:assessment_answer_type_id]
       self.category = attributes[:category]
+      self.key = attributes[:key]
       super
     end
 
@@ -45,7 +47,8 @@ class Profile
         date: date,
         expiry_date: expiry_date,
         assessment_question_id: assessment_question_id,
-        category: category
+        category: category,
+        key: key
       }
     end
 
@@ -61,11 +64,12 @@ class Profile
       category == 'court'
     end
 
-    def set_category
+    def set_category_and_key
       return unless assessment_question_id.present? && category.blank?
 
       assessment_question = AssessmentQuestion.find(assessment_question_id)
       self.category = assessment_question.category
+      self.key = assessment_question.key
     end
   end
 end
