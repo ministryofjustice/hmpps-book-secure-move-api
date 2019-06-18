@@ -19,7 +19,7 @@ module Api
         :first_names,
         :last_name,
         :date_of_birth,
-        assessment_answers: [%i[date expiry_data category title comments assessment_question_id]],
+        assessment_answers: [%i[key date expiry_data category title comments assessment_question_id]],
         identifiers: [%i[value identifier_type]]
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
