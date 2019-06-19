@@ -12,12 +12,12 @@ references:
           BUNDLER_VERSION: 2.0.1
           RAILS_ENV: test
           RACK_ENV: test
-          DATABASE_URL: "postgres://postgres@localhost/pecs-move-platform-backend"
+          DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
           EXTERNAL_URL: mocked_in_tests
       - image: circleci/postgres:10.4
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: pecs-move-platform-backend
+          POSTGRES_DB: hmpps-book-secure-move-api
   cloud_container: &cloud_container
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
@@ -113,12 +113,12 @@ jobs:
             export BUILD_DATE=$(date -Is) >> $BASH_ENV
             source $BASH_ENV
 
-            kubectl set image -n pecs-move-platform-backend-staging \
-                    deployment/pecs-move-platform-backend-deployment-staging \
+            kubectl set image -n hmpps-book-secure-move-api-staging \
+                    deployment/hmpps-book-secure-move-api-deployment-staging \
                     webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
-            kubectl annotate -n pecs-move-platform-backend-staging \
-                    deployment/pecs-move-platform-backend-deployment-staging \
+            kubectl annotate -n hmpps-book-secure-move-api-staging \
+                    deployment/hmpps-book-secure-move-api-deployment-staging \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
 workflows:
