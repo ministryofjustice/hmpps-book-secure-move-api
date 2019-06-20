@@ -873,8 +873,8 @@
       }
     },
     "/people/{personId}": {
-      "put": {
-        "summary": "Updates an existing person and their associated profile",
+      "patch": {
+        "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{personId}.",
         "tags": [
           "People"
         ],
