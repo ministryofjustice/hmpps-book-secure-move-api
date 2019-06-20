@@ -13,6 +13,8 @@ class PersonSerializer < ActiveModel::Serializer
   has_one :ethnicity, serializer: EthnicitySerializer
   has_one :gender, serializer: GenderSerializer
 
+  INCLUDED_DETAIL = %i[ethnicity gender].freeze
+
   def first_names
     object.latest_profile&.first_names
   end

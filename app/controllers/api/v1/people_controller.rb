@@ -33,7 +33,7 @@ module Api
       end
 
       def render_person(person, status)
-        render json: person, status: status
+        render json: person, status: status, include: PersonSerializer::INCLUDED_DETAIL
       end
 
       def person_params

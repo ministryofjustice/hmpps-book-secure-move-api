@@ -82,6 +82,24 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
           }
         }
       end
+      let(:expected_included) do
+        [
+          {
+            id: ethnicity.id,
+            type: 'ethnicities',
+            attributes: {
+              key: ethnicity.key
+            }
+          },
+          {
+            id: gender.id,
+            type: 'genders',
+            attributes: {
+              key: gender.key
+            }
+          }
+        ]
+      end
 
       context 'with valid params' do
         before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
@@ -92,6 +110,11 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
         expect(response_json).to include_json(data: expected_data.merge(id: Person.last&.id))
+      end
+
+      it 'returns the correct included resources' do
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
+        expect(response_json).to include_json(included: expected_included)
       end
 
       it 'creates a new person' do
