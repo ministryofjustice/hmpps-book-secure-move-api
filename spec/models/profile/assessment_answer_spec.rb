@@ -66,7 +66,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  describe '#set_category_and_key' do
+  describe '#copy_question_attributes' do
     let(:assessment_question) { create :assessment_question, category: 'health', title: 'Sight Impaired' }
     let(:attribute_values) do
       {
@@ -80,7 +80,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
 
     before do
-      assessment_answer.set_category_and_key
+      assessment_answer.copy_question_attributes
     end
 
     it 'sets the category' do

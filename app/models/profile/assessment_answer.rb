@@ -64,7 +64,7 @@ class Profile
       category == 'court'
     end
 
-    def set_category_and_key
+    def copy_question_attributes
       return unless assessment_question_id.present?
 
       assessment_question = AssessmentQuestion.find(assessment_question_id)
