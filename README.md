@@ -88,7 +88,7 @@ bundle exec rails fake_data:recreate_all
 We use Circle CI for continuous integration: running tests, updating the
 Docker image, pushing code staging:
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/pecs-move-platform-backend)](https://circleci.com/gh/ministryofjustice/pecs-move-platform-backend)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-book-secure-move-api)](https://circleci.com/gh/ministryofjustice/hmpps-book-secure-move-api)
 
 ## Deployment
 
