@@ -15,6 +15,8 @@ class Profile
     attr_accessor :title, :comments, :assessment_question_id, :category, :key
     attr_reader :date, :expiry_date
 
+    validates :assessment_question_id, presence: true
+
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
 

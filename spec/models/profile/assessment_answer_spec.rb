@@ -18,6 +18,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     }
   end
 
+
+
   describe '#as_json' do
     it 'returns a hash of all values' do
       expect(assessment_answer.as_json).to eql attribute_values

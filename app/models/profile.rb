@@ -10,6 +10,7 @@ class Profile < ApplicationRecord
   validates :person, presence: true
   validates :last_name, presence: true
   validates :first_names, presence: true
+  validate :validate_assessment_answers
 
   attribute :assessment_answers, Profile::AssessmentAnswers::Type.new
   attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
@@ -20,5 +21,11 @@ class Profile < ApplicationRecord
 
   def set_assessment_answers
     assessment_answers.each(&:copy_question_attributes)
+  end
+
+  def validate_assessment_answers
+    return if assessment_answers.all?(&:valid?)
+
+    errors.add(:assessment_answers, 'One or more assessment answers is invalid')
   end
 end

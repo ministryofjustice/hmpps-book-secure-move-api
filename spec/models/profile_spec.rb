@@ -11,6 +11,43 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:first_names) }
 
+  describe '#validate_assessment_answers' do
+    subject(:profile) { described_class.new(attributes) }
+    context 'with a valid assessment answer' do
+      let(:attributes) do
+        {
+          person: create(:person),
+          first_names: 'Bob',
+          last_name: 'Roberts',
+          assessment_answers: [
+            { assessment_question_id: '49fa81ee-3301-4d69-f200-69e482ce1ed8' }
+          ]
+        }
+      end
+
+      it 'the profile is valid' do
+        expect(profile).to be_valid
+      end
+    end
+
+    context 'with an invalid assessment answer' do
+      let(:attributes) do
+        {
+          person: create(:person),
+          first_names: 'Bob',
+          last_name: 'Roberts',
+          assessment_answers: [
+            { key: 'some-key-value' }
+          ]
+        }
+      end
+
+      it 'the profile is invalid' do
+        expect(profile).not_to be_valid
+      end
+    end
+  end
+
   describe '#profile_identifiers' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
@@ -48,7 +85,7 @@ RSpec.describe Profile, type: :model do
     let(:assessment_answers) do
       [
         {
-          title: 'Test',
+          title: 'Sight Impaired',
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
           date: Date.civil(2019, 5, 30),
