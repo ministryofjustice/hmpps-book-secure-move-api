@@ -5,13 +5,27 @@ require 'rails_helper'
 RSpec.describe People::Updater do
   subject(:updater) { described_class.new(person.id, params) }
 
+  let(:risk_type_1) { create :assessment_question, :risk }
+  let(:risk_type_2) { create :assessment_question, :risk }
+  let(:original_attributes) do
+    {
+      first_names: 'Robbie',
+      last_name: 'Roberts',
+      date_of_birth: Date.civil(1980, 6, 1),
+      assessment_answers: [
+        { title: 'Escape risk', assessment_question_id: risk_type_1.id }
+      ],
+      identifiers: [
+        { identifier_type: 'pnc_number', value: 'ABC123' }
+      ]
+    }
+  end
   let(:person) { create :person }
   let(:params) do
     {
       type: 'people',
       attributes: {
         first_names: 'Alice',
-        last_name: 'Roberts',
         date_of_birth: Date.civil(1980, 1, 1)
       }
     }
@@ -34,11 +48,21 @@ RSpec.describe People::Updater do
     it 'sets the correct Profile attibutes' do
       expect(updated_profile.attributes.with_indifferent_access).to include(params[:attributes])
     end
+
+    it 'does not change original last_name' do
+      expect(updated_profile.last_name).to eq original_attributes[:last_name]
+    end
+
+    it 'does not change original assessment_answers' do
+      expect(updated_profile.assessment_answers).to eq original_attributes[:assessment_answers]
+    end
+
+    it 'does not change original identifiers' do
+      expect(updated_profile.identifiers).to eq original_attributes[:identifiers]
+    end
   end
 
   context 'with valid input params including nested data' do
-    let(:risk_type_1) { create :assessment_question, :risk }
-    let(:risk_type_2) { create :assessment_question, :risk }
     let(:params) do
       {
         type: 'people',
