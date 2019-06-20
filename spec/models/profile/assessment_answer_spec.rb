@@ -67,14 +67,15 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   end
 
   describe '#set_category_and_key' do
-    let(:assessment_question) { create :assessment_question, category: 'health' }
+    let(:assessment_question) { create :assessment_question, category: 'health', title: 'Sight Impaired' }
     let(:attribute_values) do
       {
-        title: title,
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
         date: Date.civil(2019, 5, 30),
-        expiry_date: Date.civil(2019, 6, 30)
+        expiry_date: Date.civil(2019, 6, 30),
+        category: 'foo',
+        title: 'foo'
       }
     end
 
@@ -88,6 +89,10 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
 
     it 'sets the key' do
       expect(assessment_answer.key).to eql 'sight_impaired'
+    end
+
+    it 'sets the title' do
+      expect(assessment_answer.title).to eql 'Sight Impaired'
     end
   end
 end
