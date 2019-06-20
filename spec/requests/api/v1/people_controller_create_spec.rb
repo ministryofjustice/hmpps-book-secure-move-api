@@ -65,6 +65,20 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
               { identifier_type: 'pnc_number', value: 'ABC123' },
               { identifier_type: 'prison_number', value: 'XYZ987' }
             ]
+          },
+          relationships: {
+            gender: {
+              data: {
+                type: 'genders',
+                id: gender.id
+              }
+            },
+            ethnicity: {
+              data: {
+                type: 'ethnicities',
+                id: ethnicity.id
+              }
+            }
           }
         }
       end
