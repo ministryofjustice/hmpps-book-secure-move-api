@@ -5,13 +5,27 @@ require 'rails_helper'
 RSpec.describe People::Updater do
   subject(:updater) { described_class.new(person.id, params) }
 
+  let(:risk_type_1) { create :assessment_question, :risk }
+  let(:risk_type_2) { create :assessment_question, :risk }
+  let(:original_attributes) do
+    {
+      first_names: 'Robbie',
+      last_name: 'Roberts',
+      date_of_birth: Date.civil(1980, 6, 1),
+      assessment_answers: [
+        { title: 'Escape risk', assessment_question_id: risk_type_1.id }
+      ],
+      profile_identifiers: [
+        { identifier_type: 'pnc_number', value: 'ABC123' }
+      ]
+    }
+  end
   let(:person) { create :person }
   let(:params) do
     {
       type: 'people',
       attributes: {
         first_names: 'Alice',
-        last_name: 'Roberts',
         date_of_birth: Date.civil(1980, 1, 1)
       }
     }
@@ -19,6 +33,10 @@ RSpec.describe People::Updater do
 
   let(:updated_person) { person.reload }
   let(:updated_profile) { updated_person.latest_profile }
+
+  before do
+    person.latest_profile.update(original_attributes)
+  end
 
   context 'with valid input params' do
     let!(:result) { updater.call }
@@ -34,11 +52,25 @@ RSpec.describe People::Updater do
     it 'sets the correct Profile attibutes' do
       expect(updated_profile.attributes.with_indifferent_access).to include(params[:attributes])
     end
+
+    it 'does not change original last_name' do
+      expect(updated_profile.last_name).to eq original_attributes[:last_name]
+    end
+
+    it 'does not change original assessment_answers' do
+      expect(updated_profile.assessment_answers.map(&:title)).to match_array(
+        original_attributes[:assessment_answers].pluck(:title)
+      )
+    end
+
+    it 'does not change original identifiers' do
+      expect(updated_profile.profile_identifiers.map(&:value)).to match_array(
+        original_attributes[:profile_identifiers].pluck(:value)
+      )
+    end
   end
 
   context 'with valid input params including nested data' do
-    let(:risk_type_1) { create :assessment_question, :risk }
-    let(:risk_type_2) { create :assessment_question, :risk }
     let(:params) do
       {
         type: 'people',

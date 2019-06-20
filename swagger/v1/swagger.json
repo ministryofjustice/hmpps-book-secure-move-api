@@ -262,6 +262,185 @@
         }
       }
     },
+    "/people": {
+      "post": {
+        "summary": "Creates a new person and their associated profile",
+        "tags": [
+          "People"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The person object to be created",
+            "schema": {
+              "$ref": "person.json#/Person"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/201"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/404"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/415"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unprocessable entity",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "post_people_responses.json#/422"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people/{personId}": {
+      "patch": {
+        "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{personId}.",
+        "tags": [
+          "People"
+        ],
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the person",
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "example": "00525ecb-7316-492a-aae2-f69334b2a155"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "The person object to be updated",
+            "schema": {
+              "$ref": "person.json#/Person"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "updated",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/201"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/401"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/404"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "invalid media type",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/415"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unprocessable entity",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "put_people_responses.json#/422"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reference/genders": {
       "get": {
         "summary": "Returns a list of genders",
@@ -781,172 +960,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "get_locations_responses.json#/415"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/people": {
-      "post": {
-        "summary": "Creates a new person and their associated profile",
-        "tags": [
-          "People"
-        ],
-        "consumes": [
-          "application/vnd.api+json"
-        ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "description": "The person object to be created",
-            "schema": {
-              "$ref": "person.json#/Person"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/201"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "bad request",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/400"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "unauthorized",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/401"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "resource not found",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/404"
-                }
-              }
-            }
-          },
-          "415": {
-            "description": "invalid media type",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/415"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "unprocessable entity",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "post_people_responses.json#/422"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Updates an existing person and their associated profile",
-        "tags": [
-          "People"
-        ],
-        "consumes": [
-          "application/vnd.api+json"
-        ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "description": "The person object to be updated",
-            "schema": {
-              "$ref": "person.json#/Person"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "updated",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/201"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "bad request",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/400"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "unauthorized",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/401"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "resource not found",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/404"
-                }
-              }
-            }
-          },
-          "415": {
-            "description": "invalid media type",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/415"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "unprocessable entity",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "put_people_responses.json#/422"
                 }
               }
             }

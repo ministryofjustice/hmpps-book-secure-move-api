@@ -24,10 +24,7 @@ module People
 
     def update_profile(profile)
       profile.update!(
-        profile_params
-          .merge(relationships)
-          .merge(assessment_answers)
-          .merge(profile_identifiers)
+        profile_params.merge(relationships).merge(assessment_answers).merge(profile_identifiers)
       )
     end
   end

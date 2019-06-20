@@ -20,15 +20,12 @@ module People
     end
 
     def assessment_answers
-      {
-        assessment_answers: params[:attributes][:assessment_answers] || []
-      }
+      params[:attributes].slice(:assessment_answers)
     end
 
     def profile_identifiers
-      {
-        profile_identifiers: params[:attributes][:identifiers] || []
-      }
+      value = params[:attributes][:identifiers]
+      value ? { profile_identifiers: value } : {}
     end
 
     def profile_params
