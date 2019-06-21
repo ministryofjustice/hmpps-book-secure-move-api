@@ -15,6 +15,8 @@ class Profile
     attr_accessor :title, :comments, :assessment_question_id, :category, :key
     attr_reader :date, :expiry_date
 
+    validates :assessment_question_id, presence: true
+
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
 
@@ -22,7 +24,7 @@ class Profile
       self.comments = attributes[:comments]
       self.date = attributes[:date]
       self.expiry_date = attributes[:expiry_date]
-      self.assessment_question_id = attributes[:assessment_answer_type_id]
+      self.assessment_question_id = attributes[:assessment_question_id]
       self.category = attributes[:category]
       self.key = attributes[:key]
       super
@@ -37,7 +39,7 @@ class Profile
     end
 
     def empty?
-      title.blank?
+      assessment_question_id.blank?
     end
 
     def as_json
@@ -64,12 +66,13 @@ class Profile
       category == 'court'
     end
 
-    def set_category_and_key
-      return unless assessment_question_id.present? && category.blank?
+    def copy_question_attributes
+      return unless assessment_question_id.present?
 
       assessment_question = AssessmentQuestion.find(assessment_question_id)
       self.category = assessment_question.category
       self.key = assessment_question.key
+      self.title = assessment_question.title
     end
   end
 end
