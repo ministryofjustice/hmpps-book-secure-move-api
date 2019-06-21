@@ -6,11 +6,12 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   subject(:assessment_answer) { described_class.new(attribute_values) }
 
   let(:title) { 'test' }
+  let(:assessment_question_id) { 'c1913bca-04f2-4688-b372-a547db9a6ce8' }
   let(:attribute_values) do
     {
       title: title,
       comments: 'just a test',
-      assessment_question_id: 123,
+      assessment_question_id: assessment_question_id,
       date: Date.civil(2019, 5, 30),
       expiry_date: Date.civil(2019, 6, 30),
       category: 'risk',
@@ -18,7 +19,32 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     }
   end
 
+  describe 'validations' do
+    context 'without an assessment_question_id' do
+      let(:attribute_values) do
+        {
+          title: title,
+          comments: 'just a test'
+        }
+      end
 
+      it 'is not valid' do
+        expect(assessment_answer.valid?).to be false
+      end
+    end
+
+    context 'with an assessment_question_id' do
+      let(:attribute_values) do
+        {
+          assessment_question_id: 123
+        }
+      end
+
+      it 'is valid' do
+        expect(assessment_answer.valid?).to be true
+      end
+    end
+  end
 
   describe '#as_json' do
     it 'returns a hash of all values' do
@@ -51,17 +77,15 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   end
 
   describe '#empty?' do
-    context 'when title is missing' do
-      let(:title) { '' }
+    context 'when assessment_question_id is missing' do
+      let(:assessment_question_id) { '' }
 
       it 'returns true' do
         expect(assessment_answer.empty?).to be true
       end
     end
 
-    context 'when title is present' do
-      let(:title) { 'test' }
-
+    context 'when assessment_question_id is present' do
       it 'returns false' do
         expect(assessment_answer.empty?).to be false
       end

@@ -39,7 +39,7 @@ class Profile
     end
 
     def empty?
-      title.blank?
+      assessment_question_id.blank?
     end
 
     def as_json

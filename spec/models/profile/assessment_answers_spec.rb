@@ -34,14 +34,6 @@ RSpec.describe Profile::AssessmentAnswers, type: :model do
       expect(assessment_answers.to_a).to all(be_a Profile::AssessmentAnswer)
     end
 
-    context 'with an empty item' do
-      subject(:assessment_answers) { described_class.new(data + [{ title: '' }]) }
-
-      it 'strips out the empty item' do
-        expect(assessment_answers.to_a.size).to be 2
-      end
-    end
-
     context 'with serialized input' do
       subject(:assessment_answers) { described_class.new(data.to_json) }
 

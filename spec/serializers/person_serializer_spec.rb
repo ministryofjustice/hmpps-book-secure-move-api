@@ -40,7 +40,7 @@ RSpec.describe PersonSerializer do
 
     let(:risk_alert) do
       {
-        title: 'Escape risk',
+        title: risk_alert_type.title,
         comments: 'Former miner',
         assessment_question_id: risk_alert_type.id
       }
@@ -48,7 +48,7 @@ RSpec.describe PersonSerializer do
 
     let(:health_alert) do
       {
-        title: 'Medication',
+        title: health_alert_type.title,
         comments: 'Needs something for a headache',
         assessment_question_id: health_alert_type.id
       }
@@ -56,7 +56,7 @@ RSpec.describe PersonSerializer do
 
     let(:court) do
       {
-        title: 'Interpreter required',
+        title: court_type.title,
         comments: 'Only speaks Spanish',
         assessment_question_id: court_type.id
       }
@@ -75,7 +75,7 @@ RSpec.describe PersonSerializer do
     it 'contains an `assessment_answers` nested collection' do
       expect(result[:data][:attributes][:assessment_answers].map do |alert|
         alert[:title]
-      end).to match_array ['Escape risk', 'Medication', 'Interpreter required']
+      end).to match_array [risk_alert_type.title, health_alert_type.title, court_type.title]
     end
   end
 

@@ -13,17 +13,23 @@ RSpec.describe Profile, type: :model do
 
   describe '#validate_assessment_answers' do
     subject(:profile) { described_class.new(attributes) }
+
+    let(:attributes) do
+      {
+        person: create(:person),
+        first_names: 'Bob',
+        last_name: 'Roberts'
+      }
+    end
+
     context 'with a valid assessment answer' do
-      let(:attributes) do
-        {
-          person: create(:person),
-          first_names: 'Bob',
-          last_name: 'Roberts',
-          assessment_answers: [
-            { assessment_question_id: '49fa81ee-3301-4d69-f200-69e482ce1ed8' }
-          ]
-        }
+      before do
+        profile.assessment_answers = [
+          { assessment_question_id: assessment_question.id }
+        ]
       end
+
+      let(:assessment_question) { create :assessment_question }
 
       it 'the profile is valid' do
         expect(profile).to be_valid
@@ -31,15 +37,10 @@ RSpec.describe Profile, type: :model do
     end
 
     context 'with an invalid assessment answer' do
-      let(:attributes) do
-        {
-          person: create(:person),
-          first_names: 'Bob',
-          last_name: 'Roberts',
-          assessment_answers: [
-            { key: 'some-key-value' }
-          ]
-        }
+      before do
+        profile.assessment_answers = [
+          { key: 'foo' }
+        ]
       end
 
       it 'the profile is invalid' do

@@ -12,7 +12,7 @@ class Profile
         item.is_a?(Profile::AssessmentAnswer) ? item : Profile::AssessmentAnswer.new(item)
       end
 
-      @collection = collection.reject(&:empty?)
+      @collection = collection
     end
 
     def to_a
