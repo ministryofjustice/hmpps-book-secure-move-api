@@ -10,7 +10,7 @@ RSpec.describe Api::V1::Reference::IdentifierTypesController, with_client_authen
   describe 'GET /api/v1/reference/identifier_types' do
     let(:schema) { load_json_schema('get_identifier_types_responses.json') }
 
-    let(:identifier_types) do
+    let!(:identifier_types) do
       [
         create(:identifier_type),
         create(:identifier_type, :prison_number),
@@ -40,7 +40,7 @@ RSpec.describe Api::V1::Reference::IdentifierTypesController, with_client_authen
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data: expected_response)
       end
     end
 

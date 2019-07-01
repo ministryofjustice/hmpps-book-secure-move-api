@@ -6,14 +6,13 @@ FactoryBot.define do
     title { 'PNC ID' }
 
     trait :prison_number do
-      key { 'prison_number' }
+      id { 'prison_number' }
       title { 'Prisoner No' }
     end
 
     trait :cro_number do
-      key { 'cro_number' }
+      id { 'cro_number' }
       title { 'CRO No' }
     end
   end
 end
-
