@@ -5,12 +5,9 @@ module Api
     module Reference
       class IdentifierTypesController < ApiController
         def index
-          genders = Gender.all
-          render json: genders
+          identifier_types = IdentifierType.all
+          render json: identifier_types
         end
-
-        private
-
       end
     end
   end
