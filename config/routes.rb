@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         resources :genders, only: :index
         resources :ethnicities, only: :index
         resources :nationalities, only: :index
+        resources :identifier_types, only: :index
       end
     end
   end
