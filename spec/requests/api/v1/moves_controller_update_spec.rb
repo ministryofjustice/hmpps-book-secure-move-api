@@ -19,7 +19,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
-    # let(:move_attributes) { attributes_for(:move) }
     let(:move_params) do
       {
         type: 'moves',
@@ -71,27 +70,28 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with error 415'
     end
 
-    # context 'with validation errors' do
-    #   let(:move_attributes) { attributes_for(:move).merge(status: 'invalid') }
+    context 'with validation errors' do
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'invalid'
+          }
+        }
+      end
 
-    #   let(:errors_422) do
-    #     [
-    #       {
-    #         'title' => 'Unprocessable entity',
-    #         'detail' => "Date can't be blank",
-    #         'source' => { 'pointer' => '/data/attributes/date' },
-    #         'code' => 'blank'
-    #       },
-    #       {
-    #         'title' => 'Unprocessable entity',
-    #         'detail' => 'Status is not included in the list',
-    #         'source' => { 'pointer' => '/data/attributes/status' },
-    #         'code' => 'inclusion'
-    #       }
-    #     ]
-    #   end
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => 'Status is not included in the list',
+            'source' => { 'pointer' => '/data/attributes/status' },
+            'code' => 'inclusion'
+          }
+        ]
+      end
 
-    #   it_behaves_like 'an endpoint that responds with error 422'
-    # end
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
   end
 end
