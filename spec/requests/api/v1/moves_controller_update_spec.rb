@@ -8,7 +8,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:response_json) { JSON.parse(response.body) }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::INCLUDED_DETAIL))
+    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::INCLUDED_ATTRIBUTES))
   end
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
