@@ -35,7 +35,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'when successful' do
-      # it_behaves_like 'an endpoint that responds with success 200'
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'updates the status of a move', skip_before: true do
         patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
