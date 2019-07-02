@@ -31,7 +31,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
-        patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
+
+      patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
     end
 
     context 'when successful' do
