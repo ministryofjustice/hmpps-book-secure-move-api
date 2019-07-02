@@ -8,7 +8,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:response_json) { JSON.parse(response.body) }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_DETAIL))
+    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::INCLUDED_DETAIL))
   end
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
@@ -29,22 +29,22 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       }
     end
 
-    # before do
-    #   next if RSpec.current_example.metadata[:skip_before]
-    #   patch '/api/v1/moves', params: { data: move_params }, headers: headers, as: :json
-    # end
+    before do
+      next if RSpec.current_example.metadata[:skip_before]
+        patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
+    end
 
     context 'when successful' do
-      # it_behaves_like 'an endpoint that responds with success 201'
+      # it_behaves_like 'an endpoint that responds with success 200'
 
       it 'updates the status of a move', skip_before: true do
         patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.status).to eq 'cancelled'
       end
 
-      # it 'returns the correct data' do
-      #   expect(response_json).to eq resource_to_json
-      # end
+      it 'returns the correct data' do
+        expect(response_json).to eq resource_to_json
+      end
     end
 
     # context 'with a bad request' do
