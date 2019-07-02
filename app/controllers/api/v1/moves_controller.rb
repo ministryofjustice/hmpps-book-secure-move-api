@@ -5,7 +5,7 @@ module Api
     class MovesController < ApiController
       def index
         moves = Moves::Finder.new(filter_params).call
-        paginate moves, include: MoveSerializer::INCLUDED_OVERVIEW
+        paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
       def show
@@ -46,7 +46,7 @@ module Api
       end
 
       def render_move(move, status)
-        render json: move, status: status, include: MoveSerializer::INCLUDED_DETAIL
+        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
       def find_move
