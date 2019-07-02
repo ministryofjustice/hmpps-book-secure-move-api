@@ -13,7 +13,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
-  describe 'PUT /moves' do
+  describe 'PATCH /moves' do
     let(:schema) { load_json_schema('patch_move_responses.json') }
 
     let!(:move) { create :move }
