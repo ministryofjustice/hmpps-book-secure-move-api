@@ -31,16 +31,14 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
     # before do
     #   next if RSpec.current_example.metadata[:skip_before]
-    #   put '/api/v1/moves', params: { data: move_params }, headers: headers, as: :json
+    #   patch '/api/v1/moves', params: { data: move_params }, headers: headers, as: :json
     # end
 
     context 'when successful' do
-      let(:move) { Move.first }
-
       # it_behaves_like 'an endpoint that responds with success 201'
 
       it 'updates the status of a move', skip_before: true do
-        put '/api/v1/moves', params: { data: move_params }, headers: headers, as: :json
+        patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.status).to eq 'cancelled'
       end
 
