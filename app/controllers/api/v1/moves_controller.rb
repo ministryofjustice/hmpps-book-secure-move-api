@@ -18,6 +18,12 @@ module Api
         render_move(move, 201)
       end
 
+      def update
+        move = find_move
+        move.update!(patch_move_attributes)
+        render_move(move, 200)
+      end
+
       def destroy
         move = find_move
         move.destroy!
@@ -28,6 +34,7 @@ module Api
 
       PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
       PERMITTED_MOVE_PARAMS = [:type, attributes: %i[date time_due status], relationships: {}].freeze
+      PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status]].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
@@ -37,12 +44,20 @@ module Api
         params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
       end
 
+      def patch_move_params
+        params.require(:data).permit(PERMITTED_PATCH_MOVE_PARAMS).to_h
+      end
+
       def move_attributes
         move_params[:attributes].merge(
           person: Person.find(move_params.dig(:relationships, :person, :data, :id)),
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find(move_params.dig(:relationships, :to_location, :data, :id))
         )
+      end
+
+      def patch_move_attributes
+        move_params[:attributes]
       end
 
       def render_move(move, status)
