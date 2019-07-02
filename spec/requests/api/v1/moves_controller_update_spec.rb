@@ -47,6 +47,33 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
     end
 
+    context 'with a read-only attribute' do
+      let!(:move) { create :move }
+
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'cancelled',
+            reference: 'new reference'
+          }
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'updates the status of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(move.reload.status).to eq 'cancelled'
+      end
+
+      it 'does NOT update the reference of a move', skip_before: true do
+        expect { patch("/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json) }.not_to(
+          change { move.reload.reference }
+        )
+      end
+    end
+
     context 'with a bad request' do
       let(:move_params) { nil }
 
