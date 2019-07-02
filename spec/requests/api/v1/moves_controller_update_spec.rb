@@ -32,14 +32,14 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
+      patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'updates the status of a move', skip_before: true do
-        patch "/api/v1/moves/#{move.id}", params: { data: move_params }, headers: headers, as: :json
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.status).to eq 'cancelled'
       end
 
@@ -48,31 +48,31 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
     end
 
-    # context 'with a bad request' do
-    #   let(:data) { nil }
+    context 'with a bad request' do
+      let(:move_params) { nil }
 
-    #   it_behaves_like 'an endpoint that responds with error 400'
-    # end
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
 
-    # context 'when not authorized', with_invalid_auth_headers: true do
-    #   it_behaves_like 'an endpoint that responds with error 401'
-    # end
+    context 'when not authorized', with_invalid_auth_headers: true do
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
 
-    # context 'with a reference to a missing relationship' do
-    #   let(:person) { Person.new }
-    #   let(:detail_404) { "Couldn't find Person without an ID" }
+    context 'with a missing move' do
+      let(:move_id) { 'null' }
+      let(:detail_404) { "Couldn't find Move with 'id'=null" }
 
-    #   it_behaves_like 'an endpoint that responds with error 404'
-    # end
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
 
-    # context 'with an invalid CONTENT_TYPE header' do
-    #   let(:content_type) { 'application/xml' }
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
 
-    #   it_behaves_like 'an endpoint that responds with error 415'
-    # end
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
 
     # context 'with validation errors' do
-    #   let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'invalid') }
+    #   let(:move_attributes) { attributes_for(:move).merge(status: 'invalid') }
 
     #   let(:errors_422) do
     #     [
