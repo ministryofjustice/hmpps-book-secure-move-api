@@ -681,8 +681,8 @@
           }
         }
       },
-      "put": {
-        "summary": "Updates a move",
+      "patch": {
+        "summary": "Updates a move. Aliased as PUT /moves/{moveId}.",
         "tags": [
           "Moves"
         ],
