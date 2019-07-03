@@ -218,9 +218,9 @@ namespace :fake_data do
   ].freeze
 
   IDENTIFIER_TYPES = [
-    { id: 'pnc_number', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
+    { id: 'police_national_computer', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
     { id: 'prison_number', title: 'Prisoner No', description: 'Prisoner ID used in NOMIS and other systems' },
-    { id: 'cro_number', title: 'CRO No', description: 'Criminal Records Office ID used by Police' }
+    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' }
   ].freeze
 
   TOWN_NAMES = [

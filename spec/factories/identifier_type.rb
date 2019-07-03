@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :identifier_type do
-    id { 'pnc_number' }
+    id { 'police_national_computer' }
     title { 'PNC ID' }
 
     trait :prison_number do
@@ -10,8 +10,8 @@ FactoryBot.define do
       title { 'Prisoner No' }
     end
 
-    trait :cro_number do
-      id { 'cro_number' }
+    trait :criminal_records_office do
+      id { 'criminal_records_office' }
       title { 'CRO No' }
     end
   end

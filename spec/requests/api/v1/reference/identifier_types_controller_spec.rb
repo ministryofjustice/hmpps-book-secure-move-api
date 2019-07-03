@@ -14,7 +14,7 @@ RSpec.describe Api::V1::Reference::IdentifierTypesController, with_client_authen
       [
         create(:identifier_type),
         create(:identifier_type, :prison_number),
-        create(:identifier_type, :cro_number)
+        create(:identifier_type, :criminal_records_office)
       ]
     end
 
