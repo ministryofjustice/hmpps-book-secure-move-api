@@ -131,25 +131,23 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
   end
 
   describe 'GET /api/v1/reference/locations/:id' do
-    let(:schema) { load_json_schema('get_locations_responses.json') }
-
+    let(:schema) { load_json_schema('get_location_responses.json') }
     let(:params) { {} }
+    let(:data) do
+      {
+        type: 'locations',
+        attributes: {
+          key: 'hmp_pentonville',
+          title: 'HMP Pentonville',
+          location_type: 'prison',
+          location_code: 'PEI'
+        }
+      }
+    end
+
+    let!(:location) { Location.create!(data[:attributes]) }
 
     context 'when successful' do
-      let(:data) do
-        {
-          type: 'locations',
-          attributes: {
-            key: 'hmp_pentonville',
-            title: 'HMP Pentonville',
-            location_type: 'prison',
-            location_code: 'PEI'
-          }
-        }
-      end
-
-      let!(:location) { Location.create!(data[:attributes]) }
-
       before { get "/api/v1/reference/locations/#{location.id}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with success 200'
