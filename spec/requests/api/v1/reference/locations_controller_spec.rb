@@ -146,9 +146,10 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     end
 
     let!(:location) { Location.create!(data[:attributes]) }
+    let(:location_id) { location.id }
 
     context 'when successful' do
-      before { get "/api/v1/reference/locations/#{location.id}", headers: headers, params: params }
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -158,7 +159,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
-      before { get "/api/v1/reference/locations/#{location.id}", headers: headers, params: params }
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -166,13 +167,18 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { get "/api/v1/reference/locations/#{location.id}", headers: headers, params: params }
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
 
-    context 'with a missing id' do
-      it 'returns a 404'
+    context 'when resource is not found' do
+      let(:location_id) { 'UUID-not-found' }
+      let(:detail_404) { "Couldn't find Location with 'id'=UUID-not-found" }
+
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
   end
 end
