@@ -129,4 +129,56 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
     end
   end
+
+  describe 'GET /api/v1/reference/locations/:id' do
+    let(:schema) { load_json_schema('get_location_responses.json') }
+    let(:params) { {} }
+    let(:data) do
+      {
+        type: 'locations',
+        attributes: {
+          key: 'hmp_pentonville',
+          title: 'HMP Pentonville',
+          location_type: 'prison',
+          location_code: 'PEI'
+        }
+      }
+    end
+
+    let!(:location) { Location.create!(data[:attributes]) }
+    let(:location_id) { location.id }
+
+    context 'when successful' do
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'returns the correct data' do
+        expect(response_json).to include_json(data: data)
+      end
+    end
+
+    context 'when not authorized', with_invalid_auth_headers: true do
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
+
+    context 'when resource is not found' do
+      let(:location_id) { 'UUID-not-found' }
+      let(:detail_404) { "Couldn't find Location with 'id'=UUID-not-found" }
+
+      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
+  end
 end

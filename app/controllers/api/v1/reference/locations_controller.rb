@@ -9,7 +9,20 @@ module Api
           paginate types
         end
 
+        def show
+          location = find_location
+          render_location(location, 200)
+        end
+
         private
+
+        def find_location
+          Location.find(params[:id])
+        end
+
+        def render_location(location, status)
+          render json: location, status: status
+        end
 
         PERMITTED_FILTER_PARAMS = %i[location_type].freeze
 

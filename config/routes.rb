@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       resources :moves, only: %i[index show create destroy update]
       resources :people, only: %i[create update]
       namespace :reference do
-        resources :locations, only: :index
+        resources :locations, only: %i[index show]
         resources :assessment_questions, only: :index
         resources :genders, only: :index
         resources :ethnicities, only: :index
