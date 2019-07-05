@@ -56,7 +56,7 @@ RSpec.describe Profile, type: :model do
       [
         {
           value: 'ABC123456',
-          identifier_type: 'pnc_number'
+          identifier_type: 'police_national_computer'
         }
       ]
     end

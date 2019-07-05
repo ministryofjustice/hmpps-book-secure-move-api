@@ -72,9 +72,9 @@ namespace :fake_data do
   end
 
   def fake_profile_identifiers
-    Profile::IDENTIFIER_TYPES.sample(2).map do |identifier_type|
+    IDENTIFIER_TYPES.sample(2).map do |identifier_type|
       {
-        identifier_type: identifier_type,
+        identifier_type: identifier_type[:id],
         value: rand(1_000_000).to_s
       }
     end
@@ -124,6 +124,13 @@ namespace :fake_data do
     end
   end
 
+  desc 'create identifier types'
+  task create_identifier_types: :environment do
+    IDENTIFIER_TYPES.each do |attributes|
+      IdentifierType.create!(attributes)
+    end
+  end
+
   desc 'create fake moves'
   task create_moves: :environment do
     people = Person.all
@@ -147,7 +154,7 @@ namespace :fake_data do
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     if Rails.env.development?
-      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender].each(&:destroy_all)
+      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType].each(&:destroy_all)
     else
       puts 'you can only run this in the development environment'
     end
@@ -157,6 +164,7 @@ namespace :fake_data do
   task recreate_all: :environment do
     if Rails.env.development?
       Rake::Task['fake_data:drop_all'].invoke
+      Rake::Task['fake_data:create_identifier_types'].invoke
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_assessment_questions'].invoke
@@ -207,6 +215,12 @@ namespace :fake_data do
     { key: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
     { key: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
     { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' }
+  ].freeze
+
+  IDENTIFIER_TYPES = [
+    { id: 'police_national_computer', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
+    { id: 'prison_number', title: 'Prisoner No', description: 'Prisoner ID used in NOMIS and other systems' },
+    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' }
   ].freeze
 
   TOWN_NAMES = [

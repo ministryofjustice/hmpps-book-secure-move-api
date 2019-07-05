@@ -9,7 +9,7 @@ RSpec.describe Profile::ProfileIdentifier, type: :model do
   let(:attribute_values) do
     {
       value: value,
-      identifier_type: 'pnc_number'
+      identifier_type: 'police_national_computer'
     }
   end
 

@@ -15,7 +15,9 @@ class Profile < ApplicationRecord
   attribute :assessment_answers, Profile::AssessmentAnswers::Type.new
   attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
 
-  IDENTIFIER_TYPES = %w[pnc_number cro_number prison_number niche_reference athena_reference].freeze
+  IDENTIFIER_TYPES = %w[
+    police_national_computer criminal_records_office prison_number niche_reference athena_reference
+  ].freeze
 
   private
 

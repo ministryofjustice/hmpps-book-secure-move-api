@@ -27,7 +27,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
             ],
             identifiers: [
-              { identifier_type: 'pnc_number', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: 'ABC123' },
               { identifier_type: 'prison_number', value: 'XYZ987' }
             ]
           },
@@ -62,7 +62,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
             ],
             identifiers: [
-              { identifier_type: 'pnc_number', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: 'ABC123' },
               { identifier_type: 'prison_number', value: 'XYZ987' }
             ]
           },
