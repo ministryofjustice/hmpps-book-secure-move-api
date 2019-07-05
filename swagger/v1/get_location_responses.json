@@ -10,20 +10,6 @@
       }
     }
   },
-  "415": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/UnsupportedMediaType"
-        }
-      }
-    }
-  },
   "401": {
     "type": "object",
     "required": [
@@ -34,6 +20,34 @@
         "type": "array",
         "items": {
           "$ref": "errors.json#/NotAuthorisedError"
+        }
+      }
+    }
+  },
+  "404": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/ResourceNotFound"
+        }
+      }
+    }
+  },
+  "415": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnsupportedMediaType"
         }
       }
     }
