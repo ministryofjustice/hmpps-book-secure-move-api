@@ -13,14 +13,14 @@ RSpec.describe Profile::AssessmentAnswers, type: :model do
         comments: 'just a test',
         assessment_question_id: 123,
         created_at: Date.civil(2019, 6, 30),
-        expiry_date: Date.civil(2019, 7, 30)
+        expires_at: Date.civil(2019, 7, 30)
       },
       {
         title: title,
         comments: 'just a test',
         assessment_question_id: 456,
         created_at: Date.civil(2019, 5, 30),
-        expiry_date: Date.civil(2019, 6, 30)
+        expires_at: Date.civil(2019, 6, 30)
       }
     ]
   end

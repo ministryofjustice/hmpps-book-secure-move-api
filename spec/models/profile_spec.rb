@@ -90,7 +90,7 @@ RSpec.describe Profile, type: :model do
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
           created_at: Date.civil(2019, 5, 30),
-          expiry_date: Date.civil(2019, 6, 30)
+          expires_at: Date.civil(2019, 6, 30)
         }
       ]
     end

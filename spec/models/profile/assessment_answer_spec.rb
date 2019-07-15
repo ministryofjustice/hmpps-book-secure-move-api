@@ -13,7 +13,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       comments: 'just a test',
       assessment_question_id: assessment_question_id,
       created_at: Date.civil(2019, 5, 30),
-      expiry_date: Date.civil(2019, 6, 30),
+      expires_at: Date.civil(2019, 6, 30),
       category: 'risk',
       key: 'just_a_test'
     }
@@ -64,15 +64,15 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  describe '#expiry_date=' do
+  describe '#expires_at=' do
     it 'converts strings to dates' do
-      assessment_answer.expiry_date = '2019-05-30'
-      expect(assessment_answer.expiry_date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.expires_at = '2019-05-30'
+      expect(assessment_answer.expires_at).to eql Date.civil(2019, 5, 30)
     end
 
     it 'stores dates as they are' do
-      assessment_answer.expiry_date = Date.civil(2019, 5, 30)
-      expect(assessment_answer.expiry_date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.expires_at = Date.civil(2019, 5, 30)
+      expect(assessment_answer.expires_at).to eql Date.civil(2019, 5, 30)
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
         created_at: Date.civil(2019, 5, 30),
-        expiry_date: Date.civil(2019, 6, 30),
+        expires_at: Date.civil(2019, 6, 30),
         category: 'foo',
         title: 'foo'
       }
@@ -131,7 +131,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
         created_at: initial_date,
-        expiry_date: initial_expiry_date
+        expires_at: initial_expiry_date
       }
     end
 

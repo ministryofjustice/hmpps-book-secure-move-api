@@ -7,13 +7,13 @@ class Profile
       :comments,
       :assessment_question_id,
       :created_at,
-      :expiry_date,
+      :expires_at,
       :category,
       :key
     )
 
     attr_accessor :title, :comments, :assessment_question_id, :category, :key
-    attr_reader :created_at, :expiry_date
+    attr_reader :created_at, :expires_at
 
     validates :assessment_question_id, presence: true
 
@@ -23,7 +23,7 @@ class Profile
       self.title = attributes[:title]
       self.comments = attributes[:comments]
       self.created_at = attributes[:created_at]
-      self.expiry_date = attributes[:expiry_date]
+      self.expires_at = attributes[:expires_at]
       self.assessment_question_id = attributes[:assessment_question_id]
       self.category = attributes[:category]
       self.key = attributes[:key]
@@ -34,8 +34,8 @@ class Profile
       @created_at = value.is_a?(String) ? Date.parse(value) : value
     end
 
-    def expiry_date=(value)
-      @expiry_date = value.is_a?(String) ? Date.parse(value) : value
+    def expires_at=(value)
+      @expires_at = value.is_a?(String) ? Date.parse(value) : value
     end
 
     def empty?
@@ -47,7 +47,7 @@ class Profile
         title: title,
         comments: comments,
         created_at: created_at,
-        expiry_date: expiry_date,
+        expires_at: expires_at,
         assessment_question_id: assessment_question_id,
         category: category,
         key: key
