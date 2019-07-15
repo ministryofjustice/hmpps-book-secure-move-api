@@ -89,7 +89,7 @@ RSpec.describe Profile, type: :model do
           title: 'Sight Impaired',
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
-          date: Date.civil(2019, 5, 30),
+          created_at: Date.civil(2019, 5, 30),
           expiry_date: Date.civil(2019, 6, 30)
         }
       ]
