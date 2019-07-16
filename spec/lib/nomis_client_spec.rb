@@ -9,7 +9,6 @@ RSpec.describe NomisClient do
     instance_double('OAuth2::AccessToken',
       get: oauth2_response,
       expires?: true,
-      refresh!: true,
       expires_at: token_expires_at)
   end
   let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
@@ -38,6 +37,13 @@ RSpec.describe NomisClient do
 
         it 'returns a response object with status 200' do
           expect(response.status).to eq 200
+        end
+
+        it 'reuses the token on multiple requests' do
+          described_class.get(api_endpoint)
+          described_class.get(api_endpoint)
+
+          expect(client_credentials).to have_received(:get_token).once
         end
       end
 
@@ -73,10 +79,11 @@ RSpec.describe NomisClient do
       let(:response_body) { '' }
       let(:response_status) { 200 }
 
-      it 'refreshes the token' do
-        response
+      it 'gets a new token' do
+        described_class.get(api_endpoint)
+        described_class.get(api_endpoint)
 
-        expect(token).to have_received(:refresh!)
+        expect(client_credentials).to have_received(:get_token).twice
       end
     end
 
@@ -85,10 +92,11 @@ RSpec.describe NomisClient do
       let(:response_body) { '' }
       let(:response_status) { 200 }
 
-      it 'refreshes the token' do
-        response
+      it 'gets a new token' do
+        described_class.get(api_endpoint)
+        described_class.get(api_endpoint)
 
-        expect(token).to have_received(:refresh!)
+        expect(client_credentials).to have_received(:get_token).twice
       end
     end
   end

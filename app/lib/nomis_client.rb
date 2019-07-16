@@ -10,6 +10,12 @@ class NomisClient
 
     REFRESH_TOKEN_TIMEFRAME_IN_SECONDS = 5
 
+    def token
+      return @token if @token && !token_expired_or_to_expire?
+
+      @token = client.client_credentials.get_token
+    end
+
     def client
       @client ||= OAuth2::Client.new(
         ENV['NOMIS_CLIENT_ID'],
@@ -19,12 +25,6 @@ class NomisClient
         token_url: "#{ENV['NOMIS_AUTH_PATH_PREFIX']}/oauth/token",
         raise_errors: false
       )
-    end
-
-    def token
-      @token ||= client.client_credentials.get_token
-      @token.refresh! if token_expired_or_to_expire?
-      @token
     end
 
     def token_expired_or_to_expire?
