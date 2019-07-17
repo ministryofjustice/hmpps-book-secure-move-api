@@ -13,7 +13,6 @@ RSpec.describe NomisClient::Ethnicities, with_nomis_client_authentication: true 
       context 'when a resource is found' do
         let(:response_status) { 200 }
         let(:response_body) { file_fixture('nomis_get_ethnicities_200.json').read }
-        let(:response_json) { JSON.parse(response_body) }
 
         it 'has the correct number of results' do
           expect(response_json.count).to be 22
