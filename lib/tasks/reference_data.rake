@@ -10,4 +10,9 @@ namespace :reference_data do
   task create_genders: :environment do
     Genders::Importer.new(NomisClient::Genders.get).call
   end
+
+  desc 'create identifier types'
+  task create_identifier_types: :environment do
+    IdentifierTypes::Importer.new.call
+  end
 end
