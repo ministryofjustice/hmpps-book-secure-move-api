@@ -29,6 +29,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rswag-specs'
   gem 'shoulda-matchers'
+  gem 'timecop'
 end
 
 group :development do

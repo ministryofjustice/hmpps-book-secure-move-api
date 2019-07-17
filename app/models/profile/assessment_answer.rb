@@ -6,14 +6,14 @@ class Profile
       :title,
       :comments,
       :assessment_question_id,
-      :date,
-      :expiry_date,
+      :created_at,
+      :expires_at,
       :category,
       :key
     )
 
     attr_accessor :title, :comments, :assessment_question_id, :category, :key
-    attr_reader :date, :expiry_date
+    attr_reader :created_at, :expires_at
 
     validates :assessment_question_id, presence: true
 
@@ -22,20 +22,20 @@ class Profile
 
       self.title = attributes[:title]
       self.comments = attributes[:comments]
-      self.date = attributes[:date]
-      self.expiry_date = attributes[:expiry_date]
+      self.created_at = attributes[:created_at]
+      self.expires_at = attributes[:expires_at]
       self.assessment_question_id = attributes[:assessment_question_id]
       self.category = attributes[:category]
       self.key = attributes[:key]
       super
     end
 
-    def date=(value)
-      @date = value.is_a?(String) ? Date.parse(value) : value
+    def created_at=(value)
+      @created_at = value.is_a?(String) ? Date.parse(value) : value
     end
 
-    def expiry_date=(value)
-      @expiry_date = value.is_a?(String) ? Date.parse(value) : value
+    def expires_at=(value)
+      @expires_at = value.is_a?(String) ? Date.parse(value) : value
     end
 
     def empty?
@@ -46,8 +46,8 @@ class Profile
       {
         title: title,
         comments: comments,
-        date: date,
-        expiry_date: expiry_date,
+        created_at: created_at,
+        expires_at: expires_at,
         assessment_question_id: assessment_question_id,
         category: category,
         key: key
@@ -73,6 +73,10 @@ class Profile
       self.category = assessment_question.category
       self.key = assessment_question.key
       self.title = assessment_question.title
+    end
+
+    def set_timestamps
+      self.created_at ||= Time.zone.now
     end
   end
 end

@@ -12,8 +12,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       title: title,
       comments: 'just a test',
       assessment_question_id: assessment_question_id,
-      date: Date.civil(2019, 5, 30),
-      expiry_date: Date.civil(2019, 6, 30),
+      created_at: Date.civil(2019, 5, 30),
+      expires_at: Date.civil(2019, 6, 30),
       category: 'risk',
       key: 'just_a_test'
     }
@@ -52,27 +52,27 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  describe '#date=' do
+  describe '#created_at=' do
     it 'converts strings to dates' do
-      assessment_answer.date = '2019-05-30'
-      expect(assessment_answer.date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.created_at = '2019-05-30'
+      expect(assessment_answer.created_at).to eql Date.civil(2019, 5, 30)
     end
 
     it 'stores dates as they are' do
-      assessment_answer.date = Date.civil(2019, 5, 30)
-      expect(assessment_answer.date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.created_at = Date.civil(2019, 5, 30)
+      expect(assessment_answer.created_at).to eql Date.civil(2019, 5, 30)
     end
   end
 
-  describe '#expiry_date=' do
+  describe '#expires_at=' do
     it 'converts strings to dates' do
-      assessment_answer.expiry_date = '2019-05-30'
-      expect(assessment_answer.expiry_date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.expires_at = '2019-05-30'
+      expect(assessment_answer.expires_at).to eql Date.civil(2019, 5, 30)
     end
 
     it 'stores dates as they are' do
-      assessment_answer.expiry_date = Date.civil(2019, 5, 30)
-      expect(assessment_answer.expiry_date).to eql Date.civil(2019, 5, 30)
+      assessment_answer.expires_at = Date.civil(2019, 5, 30)
+      expect(assessment_answer.expires_at).to eql Date.civil(2019, 5, 30)
     end
   end
 
@@ -98,8 +98,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       {
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
-        date: Date.civil(2019, 5, 30),
-        expiry_date: Date.civil(2019, 6, 30),
+        created_at: Date.civil(2019, 5, 30),
+        expires_at: Date.civil(2019, 6, 30),
         category: 'foo',
         title: 'foo'
       }
@@ -119,6 +119,44 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
 
     it 'sets the title' do
       expect(assessment_answer.title).to eql 'Sight Impaired'
+    end
+  end
+
+  describe '#set_timestamps' do
+    let(:assessment_question) { create :assessment_question, category: 'health', title: 'Sight Impaired' }
+    let(:initial_date) { nil }
+    let(:initial_expiry_date) { nil }
+    let(:attribute_values) do
+      {
+        comments: 'just a test',
+        assessment_question_id: assessment_question.id,
+        created_at: initial_date,
+        expires_at: initial_expiry_date
+      }
+    end
+
+    around do |example|
+      Timecop.freeze
+      example.run
+      Timecop.return
+    end
+
+    before do
+      assessment_answer.set_timestamps
+    end
+
+    context 'when #created_at is NOT already set' do
+      it 'sets the #created_at attribute' do
+        expect(assessment_answer.created_at).to be_present
+      end
+    end
+
+    context 'when #created_at is already set' do
+      let(:initial_date) { 2.days.ago }
+
+      it 'does not overwrite the #created_at attribute' do
+        expect(assessment_answer.created_at).to eql initial_date
+      end
     end
   end
 end
