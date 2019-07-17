@@ -47,4 +47,3 @@ RSpec.describe IdentifierTypes::Importer do
     end
   end
 end
-
