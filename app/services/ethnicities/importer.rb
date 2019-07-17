@@ -11,8 +11,8 @@ module Ethnicities
     def call
       items.each do |ethnicity|
         Ethnicity
-          .find_or_initialize_by(key: ethnicity[:key])
-          .update(ethnicity.slice(:title, :nomis_code))
+          .find_or_initialize_by(nomis_code: ethnicity[:nomis_code])
+          .update(ethnicity.slice(:title, :key))
       end
     end
   end
