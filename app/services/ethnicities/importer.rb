@@ -2,19 +2,17 @@
 
 module Ethnicities
   class Importer
-    attr_accessor :nomis_data
+    attr_accessor :items
 
-    def initialize(nomis_data)
-      self.nomis_data = nomis_data
+    def initialize(items)
+      self.items = items
     end
 
     def call
-      nomis_data.each do |ethnicity|
-        next if ethnicity['activeFlag'] == 'N'
-
+      items.each do |ethnicity|
         Ethnicity
-          .find_or_initialize_by(key: ethnicity['code'])
-          .update_attributes(title: ethnicity['description'])
+          .find_or_initialize_by(key: ethnicity[:key])
+          .update_attributes(title: ethnicity[:title])
       end
     end
   end

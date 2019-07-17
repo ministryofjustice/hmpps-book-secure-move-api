@@ -6,24 +6,19 @@ RSpec.describe NomisClient::Ethnicities, with_nomis_client_authentication: true 
   describe '.get' do
     let(:response) { described_class.get }
     let(:api_endpoint) { '/reference-domains/domains/ETHNICITY' }
+    let(:response_status) { 200 }
+    let(:response_body) { file_fixture('nomis_get_ethnicities_200.json').read }
 
-    context 'with a valid token' do
-      let(:token_expires_at) { 1.hour.from_now.to_i }
+    it 'has the correct number of results' do
+      expect(response.count).to be 20
+    end
 
-      context 'when a resource is found' do
-        let(:response_status) { 200 }
-        let(:response_body) { file_fixture('nomis_get_ethnicities_200.json').read }
+    it 'returns the correct data for the first match' do
+      expect(response.first).to eq(key: 'A1', title: 'Asian/Asian British: Indian')
+    end
 
-        it 'has the correct number of results' do
-          expect(response_json.count).to be 22
-        end
-
-        it 'returns the correct data for the first match' do
-          expect(response_json.first.symbolize_keys).to eq(
-            activeFlag: 'Y', code: 'A1', description: 'Asian/Asian British: Indian', domain: 'ETHNICITY'
-          )
-        end
-      end
+    it 'does not return inactive items' do
+      expect(response.select { |item| item[:key] == 'W8' }.count).to be_zero
     end
   end
 end

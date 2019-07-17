@@ -12,13 +12,15 @@ RSpec.describe NomisClient::Genders, with_nomis_client_authentication: true do
       let(:response_body) { file_fixture('nomis_get_genders_200.json').read }
 
       it 'has the correct number of results' do
-        expect(response_json.count).to be 5
+        expect(response.count).to be 4
       end
 
       it 'returns the correct data for the first match' do
-        expect(response_json.first.symbolize_keys).to eq(
-          domain: 'SEX', code: 'F', description: 'Female', activeFlag: 'Y'
-        )
+        expect(response.first.symbolize_keys).to eq(key: 'F', title: 'Female')
+      end
+
+      it 'does not return inactive items' do
+        expect(response.select { |item| item[:key] == 'REF' }.count).to be_zero
       end
     end
   end

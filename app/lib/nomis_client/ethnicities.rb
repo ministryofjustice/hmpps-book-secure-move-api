@@ -4,10 +4,18 @@ class NomisClient
   class Ethnicities
     class << self
       def get
-        NomisClient.get(
-          '/reference-domains/domains/ETHNICITY',
-          headers: { 'Page-Limit' => '1000' }
-        ).parsed
+        attributes_for(
+          NomisClient.get(
+            '/reference-domains/domains/ETHNICITY',
+            headers: { 'Page-Limit' => '1000' }
+          ).parsed
+        )
+      end
+
+      def attributes_for(nomis_data)
+        nomis_data.reject { |item| item['activeFlag'] == 'N' }.map do |item|
+          { key: item['code'], title: item['description'] }
+        end
       end
     end
   end

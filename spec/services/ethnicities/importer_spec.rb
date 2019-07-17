@@ -8,16 +8,12 @@ RSpec.describe Ethnicities::Importer do
   let(:input_data) do
     [
       {
-        'domain' => 'ETHNICITY',
-        'code' => 'A1',
-        'description' => 'Asian/Asian British: Indian',
-        'activeFlag' => 'Y'
+        key: 'A1',
+        title: 'Asian/Asian British: Indian'
       },
       {
-        'domain' => 'ETHNICITY',
-        'code' => 'W9',
-        'description' => 'White: Any other background',
-        'activeFlag' => 'Y'
+        key: 'W9',
+        title: 'White: Any other background'
       }
     ]
   end

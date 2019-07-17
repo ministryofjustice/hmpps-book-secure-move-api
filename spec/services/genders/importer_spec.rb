@@ -8,16 +8,12 @@ RSpec.describe Genders::Importer do
   let(:input_data) do
     [
       {
-        'domain' => 'SEX',
-        'code' => 'F',
-        'description' => 'Female',
-        'activeFlag' => 'Y'
+        key: 'F',
+        title: 'Female'
       },
       {
-        'domain' => 'SEX',
-        'code' => 'M',
-        'description' => 'Male',
-        'activeFlag' => 'Y'
+        key: 'M',
+        title: 'Male'
       }
     ]
   end

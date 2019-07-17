@@ -2,19 +2,19 @@
 
 module Genders
   class Importer
-    attr_accessor :nomis_data
+    attr_accessor :items
 
-    def initialize(nomis_data)
-      self.nomis_data = nomis_data
+    def initialize(items)
+      self.items = items
     end
 
     def call
-      nomis_data.each do |gender|
+      items.each do |gender|
         next if gender['activeFlag'] == 'N'
 
         Gender
-          .find_or_initialize_by(key: gender['code'])
-          .update_attributes(title: gender['description'])
+          .find_or_initialize_by(key: gender[:key])
+          .update_attributes(title: gender[:title])
       end
     end
   end
