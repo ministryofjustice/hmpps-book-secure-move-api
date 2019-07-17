@@ -24,8 +24,8 @@ RSpec.describe NomisClient::Ethnicities do
   before { allow(OAuth2::Client).to receive(:new).and_return(oauth2_client) }
 
   after do
-    described_class.instance_variable_set(:@client, nil)
-    described_class.instance_variable_set(:@token, nil)
+    NomisClient.instance_variable_set(:@client, nil)
+    NomisClient.instance_variable_set(:@token, nil)
   end
 
   describe '.get' do
@@ -38,10 +38,16 @@ RSpec.describe NomisClient::Ethnicities do
       context 'when a resource is found' do
         let(:response_status) { 200 }
         let(:response_body) { file_fixture('nomis_get_ethnicities_200.json').read }
-        let(:response_json) { JSON.parse(response) }
+        let(:response_json) { JSON.parse(response_body) }
 
-        it 'returns a response object with JSON data in the body' do
-          expect(JSON.parse(response).count).to be 20
+        it 'has the correct number of results' do
+          expect(response_json.count).to be 22
+        end
+
+        it 'returns the correct data for the first match' do
+          expect(response_json.first.symbolize_keys).to eq(
+            activeFlag: 'Y', code: 'A1', description: 'Asian/Asian British: Indian', domain: 'ETHNICITY'
+          )
         end
       end
     end
