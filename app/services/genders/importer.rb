@@ -13,8 +13,8 @@ module Genders
         next if gender['activeFlag'] == 'N'
 
         Gender
-          .create_with(title: gender['description'])
-          .find_or_create_by(key: gender['code'])
+          .find_or_initialize_by(key: gender['code'])
+          .update_attributes(title: gender['description'])
       end
     end
   end

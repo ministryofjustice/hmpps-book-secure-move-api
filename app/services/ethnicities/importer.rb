@@ -13,8 +13,8 @@ module Ethnicities
         next if ethnicity['activeFlag'] == 'N'
 
         Ethnicity
-          .create_with(title: ethnicity['description'])
-          .find_or_create_by(key: ethnicity['code'])
+          .find_or_initialize_by(key: ethnicity['code'])
+          .update_attributes(title: ethnicity['description'])
       end
     end
   end

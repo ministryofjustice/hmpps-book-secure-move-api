@@ -28,6 +28,13 @@ RSpec.describe Ethnicities::Importer do
     end
 
     it 'creates a1' do
+      importer.call
+      expect(Ethnicity.find_by(key: 'A1', title: 'Asian/Asian British: Indian')).to be_present
+    end
+
+    it 'creates w9' do
+      importer.call
+      expect(Ethnicity.find_by(key: 'W9', title: 'White: Any other background')).to be_present
     end
   end
 
