@@ -4,10 +4,7 @@ class NomisClient
   class Ethnicities
     class << self
       def get
-        NomisClient.get(
-          '/reference-domains/domains/ETHNICITY',
-          headers: { 'Page-Limit' => '100' }
-        ).parsed
+        NomisClient.get('/reference-domains/domains/ETHNICITY').parsed
       end
     end
   end

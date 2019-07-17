@@ -3,27 +3,23 @@
 namespace :reference_data do
   desc 'create ethnicities'
   task create_ethnicities: :environment do
-    Ethnicity.destroy_all
     NomisClient::Ethnicities.get.each do |ethnicity|
       next if ethnicity['activeFlag'] == 'N'
 
-      Ethnicity.create!(
-        key: ethnicity['code'],
-        title: ethnicity['description']
-      )
+      Ethnicity
+        .create_with(title: ethnicity['description'])
+        .find_or_create_by(key: ethnicity['code'])
     end
   end
 
   desc 'create genders'
   task create_genders: :environment do
-    Gender.destroy_all
     NomisClient::Genders.get.each do |gender|
       next if gender['activeFlag'] == 'N'
 
-      Gender.create!(
-        key: gender['code'],
-        title: gender['description']
-      )
+      Gender
+        .create_with(title: gender['description'])
+        .find_or_create_by(key: gender['code'])
     end
   end
 end
