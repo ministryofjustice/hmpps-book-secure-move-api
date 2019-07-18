@@ -12,7 +12,7 @@ module IdentifierTypes
       IDENTIFIER_TYPES.each do |attributes|
         IdentifierType
           .find_or_initialize_by(id: attributes[:id])
-          .update_attributes(title: attributes[:title], description: attributes[:description])
+          .update(title: attributes[:title], description: attributes[:description])
       end
     end
   end

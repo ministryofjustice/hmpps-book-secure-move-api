@@ -14,7 +14,7 @@ module Genders
 
         Gender
           .find_or_initialize_by(key: gender[:key])
-          .update_attributes(title: gender[:title])
+          .update(title: gender[:title])
       end
     end
   end
