@@ -110,7 +110,7 @@
   {
     "domain": "ETHNICITY",
     "code": "W2",
-    "description": "White : Irish",
+    "description": "White: Irish",
     "activeFlag": "Y"
   },
   {
@@ -122,7 +122,7 @@
   {
     "domain": "ETHNICITY",
     "code": "W8",
-    "description": "White : Irish Traveller/Gypsy",
+    "description": "White: Irish Traveller/Gypsy",
     "activeFlag": "N"
   },
   {
