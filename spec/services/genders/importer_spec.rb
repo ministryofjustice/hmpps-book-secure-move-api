@@ -12,15 +12,19 @@ RSpec.describe Genders::Importer do
         title: 'Female'
       },
       {
-        key: 'M',
-        title: 'Male'
+        key: 'R',
+        title: 'Refused'
+      },
+      {
+        key: 'NK',
+        title: 'Not Known'
       }
     ]
   end
 
   context 'with no existing records' do
     it 'creates all the input items' do
-      expect { importer.call }.to change(Gender, :count).by(2)
+      expect { importer.call }.to change(Gender, :count).by(5)
     end
 
     it 'creates F' do
@@ -32,6 +36,11 @@ RSpec.describe Genders::Importer do
       importer.call
       expect(Gender.find_by(key: 'M', title: 'Male')).to be_present
     end
+
+    it 'creates R' do
+      importer.call
+      expect(Gender.find_by(key: 'R', title: 'Refused')).to be_present
+    end
   end
 
   context 'with one existing record' do
@@ -40,7 +49,7 @@ RSpec.describe Genders::Importer do
     end
 
     it 'creates only the missing item' do
-      expect { importer.call }.to change(Gender, :count).by(1)
+      expect { importer.call }.to change(Gender, :count).by(4)
     end
   end
 
@@ -52,6 +61,22 @@ RSpec.describe Genders::Importer do
     it 'updates the title of the existing record' do
       importer.call
       expect(male.reload.title).to eq 'Male'
+    end
+  end
+
+  context 'with additional items containing a conflicting title' do
+    let(:input_data) do
+      [
+        {
+          key: 'M',
+          title: 'Mail'
+        }
+      ]
+    end
+
+    it 'DOES NOT update the title of the visible record' do
+      importer.call
+      expect(Gender.find_by(key: 'M', title: 'Male')).to be_present
     end
   end
 end
