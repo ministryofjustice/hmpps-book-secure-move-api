@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "nomis_code"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -40,6 +41,8 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key", null: false
+    t.boolean "visible", default: false, null: false
+    t.string "nomis_code"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|

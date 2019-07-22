@@ -1,0 +1,32 @@
+[
+  {
+    "domain": "SEX",
+    "code": "F",
+    "description": "Female",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "SEX",
+    "code": "M",
+    "description": "Male",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "SEX",
+    "code": "NK",
+    "description": "Not Known / Not Recorded",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "SEX",
+    "code": "NS",
+    "description": "Not Specified (Indeterminate)",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "SEX",
+    "code": "REF",
+    "description": "Refused",
+    "activeFlag": "N"
+  }
+]

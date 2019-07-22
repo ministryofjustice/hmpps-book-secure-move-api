@@ -113,7 +113,7 @@ namespace :fake_data do
   desc 'create genders'
   task create_genders: :environment do
     GENDERS.each do |gender|
-      Gender.create!(key: gender.parameterize(separator: '_'), title: gender)
+      Gender.create!(key: gender.parameterize(separator: '_'), title: gender, visible: true)
     end
   end
 
@@ -195,7 +195,7 @@ namespace :fake_data do
     { key: :other_court, category: :court, title: 'Any other information' }
   ].freeze
 
-  GENDERS = %w[Female Male Transexual].freeze
+  GENDERS = %w[Female Male Trans].freeze
 
   ETHNICITIES = [
     { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },

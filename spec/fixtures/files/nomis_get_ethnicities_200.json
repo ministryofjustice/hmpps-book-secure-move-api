@@ -1,0 +1,134 @@
+[
+  {
+    "domain": "ETHNICITY",
+    "code": "A1",
+    "description": "Asian/Asian British: Indian",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "A2",
+    "description": "Asian/Asian British: Pakistani",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "A3",
+    "description": "Asian/Asian British: Bangladeshi",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "A4",
+    "description": "Asian/Asian British: Chinese",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "A9",
+    "description": "Asian/Asian British: Any other backgr'nd",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "B1",
+    "description": "Black/Black British: Caribbean",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "B2",
+    "description": "Black/Black British: African",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "B9",
+    "description": "Black/Black British: Any other Backgr'nd",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "M1",
+    "description": "Mixed: White and Black Caribbean",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "M2",
+    "description": "Mixed: White and Black African",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "M3",
+    "description": "Mixed: White and Asian",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "M9",
+    "description": "Mixed: Any other background",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "MERGE",
+    "description": "Needs to be confirmed following Merge",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "NS",
+    "description": "Prefer not to say",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "O1",
+    "description": "Chinese",
+    "activeFlag": "N"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "O2",
+    "description": "Other: Arab",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "O9",
+    "description": "Other: Any other background",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "W1",
+    "description": "White: Eng./Welsh/Scot./N.Irish/British",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "W2",
+    "description": "White: Irish",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "W3",
+    "description": "White: Gypsy or Irish Traveller",
+    "activeFlag": "Y"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "W8",
+    "description": "White: Irish Traveller/Gypsy",
+    "activeFlag": "N"
+  },
+  {
+    "domain": "ETHNICITY",
+    "code": "W9",
+    "description": "White: Any other background",
+    "activeFlag": "Y"
+  }
+]
