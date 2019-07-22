@@ -21,7 +21,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               key: 'guildford_crown_court',
               title: 'Guildford Crown Court',
               location_type: 'court',
-              location_code: 'GCC'
+              nomis_agency_id: 'GCC'
             }
           },
           {
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               key: 'hmp_pentonville',
               title: 'HMP Pentonville',
               location_type: 'prison',
-              location_code: 'PEI'
+              nomis_agency_id: 'PEI'
             }
           }
         ]
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
           key: 'hmp_pentonville',
           title: 'HMP Pentonville',
           location_type: 'prison',
-          location_code: 'PEI'
+          nomis_agency_id: 'PEI'
         }
       }
     end

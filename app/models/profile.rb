@@ -22,6 +22,7 @@ class Profile < ApplicationRecord
   private
 
   def set_assessment_answers
+    assessment_answers.each(&:set_timestamps)
     assessment_answers.each(&:copy_question_attributes)
   end
 

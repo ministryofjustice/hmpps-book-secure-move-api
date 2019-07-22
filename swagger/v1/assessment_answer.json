@@ -6,7 +6,7 @@
       "assessment_question_id"
     ],
     "properties": {
-      "date": {
+      "created_at": {
         "oneOf": [
           { "type": "string" },
           { "type": "null" }
@@ -14,7 +14,7 @@
         "example": "2019-05-06",
         "description": "The date on which this attribute was added to the profile"
       },
-      "expiry_date": {
+      "expires_at": {
         "oneOf": [
           { "type": "string" },
           { "type": "null" }
