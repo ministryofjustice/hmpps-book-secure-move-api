@@ -35,7 +35,7 @@
             "enum": ["court", "police", "prison"],
             "description": "Location type indicates whether this a prison, police station, court etc."
           },
-          "location_code": {
+          "nomis_agency_id": {
             "type": "string",
             "example": "BAI",
             "description": "The NOMIS `agency_id`, for prisons this is a 3-letter code"
