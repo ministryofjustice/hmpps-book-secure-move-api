@@ -15,4 +15,9 @@ namespace :reference_data do
   task create_identifier_types: :environment do
     IdentifierTypes::Importer.new.call
   end
+
+  desc 'create assessment questions'
+  task created_assessment_questions: :environment do
+    AssessmentQuestions::Importer.new.call
+  end
 end
