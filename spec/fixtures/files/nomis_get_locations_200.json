@@ -1,0 +1,47 @@
+[
+  {
+    "agencyId":"218434",
+    "description":"Havant Probation Office",
+    "agencyType":"COMM"
+  },
+  {
+    "agencyId":"456740",
+    "description":"Southampton Probation Office",
+    "agencyType":"COMM"
+  },
+  {
+    "agencyId":"ABDALE",
+    "description":"Abbey Dale Court, London",
+    "agencyType":"HSHOSP"
+  },
+  {
+    "agencyId":"ABDRCT",
+    "description":"Aberdare County Court",
+    "agencyType":"CRT"
+  },
+  {
+    "agencyId":"ABDRMC",
+    "description":"Aberdare MC",
+    "agencyType":"CRT"
+  },
+  {
+    "agencyId":"ACI",
+    "description":"ALTCOURSE (HMP)",
+    "agencyType":"INST"
+  },
+  {
+    "agencyId":"AGI",
+    "description":"ASKHAM GRANGE (HMP & YOI)",
+    "agencyType":"INST"
+  },
+  {
+    "agencyId":"ASPAP1",
+    "description":"Ashley House Approved Premises",
+    "agencyType":"APPR"
+  },
+  {
+    "agencyId":"BARNCR",
+    "description":"Barnsley CRC",
+    "agencyType":"CRC"
+  }
+]

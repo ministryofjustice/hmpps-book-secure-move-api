@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 namespace :reference_data do
+  desc 'create locations'
+  task create_locations: :environment do
+    Locations::Importer.new(NomisClient::Locations.get).call
+  end
+
   desc 'create ethnicities'
   task create_ethnicities: :environment do
     Ethnicities::Importer.new(NomisClient::Ethnicities.get).call
