@@ -17,7 +17,7 @@ namespace :reference_data do
   end
 
   desc 'create assessment questions'
-  task created_assessment_questions: :environment do
+  task create_assessment_questions: :environment do
     AssessmentQuestions::Importer.new.call
   end
 end
