@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :gender do
     key { 'female' }
     title { 'Female' }
+    visible { true }
 
     trait :male do
       key { 'male' }

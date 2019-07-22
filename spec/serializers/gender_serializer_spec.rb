@@ -12,15 +12,19 @@ RSpec.describe GenderSerializer do
     expect(result[:data][:type]).to eql 'genders'
   end
 
-  it 'contains an id property' do
+  it 'contains an `id` property' do
     expect(result[:data][:id]).to eql gender.id
   end
 
-  it 'contains a key attribute' do
+  it 'contains a `key` attribute' do
     expect(result[:data][:attributes][:key]).to eql 'female'
   end
 
-  it 'contains a title attribute' do
+  it 'contains a `title` attribute' do
     expect(result[:data][:attributes][:title]).to eql 'Female'
+  end
+
+  it 'contains a `visible` attribute' do
+    expect(result[:data][:attributes][:visible]).to be true
   end
 end
