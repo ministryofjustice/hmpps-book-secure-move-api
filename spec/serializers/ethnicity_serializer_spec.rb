@@ -27,4 +27,8 @@ RSpec.describe EthnicitySerializer do
   it 'contains a description attribute' do
     expect(result[:data][:attributes][:description]).to eql ethnicity.description
   end
+
+  it 'contains a nomis_code attribute' do
+    expect(result[:data][:attributes][:nomis_code]).to eql ethnicity.nomis_code
+  end
 end

@@ -27,4 +27,8 @@ RSpec.describe GenderSerializer do
   it 'contains a `visible` attribute' do
     expect(result[:data][:attributes][:visible]).to be true
   end
+
+  it 'contains a `nomis_code` attribute' do
+    expect(result[:data][:attributes][:nomis_code]).to eql 'F'
+  end
 end

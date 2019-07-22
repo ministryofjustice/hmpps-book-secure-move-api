@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_19_095553) do
+ActiveRecord::Schema.define(version: 2019_07_22_095730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2019_07_19_095553) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "nomis_code"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -41,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_07_19_095553) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.boolean "visible", default: false, null: false
+    t.string "nomis_code"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
