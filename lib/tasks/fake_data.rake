@@ -195,7 +195,7 @@ namespace :fake_data do
     { key: :other_court, category: :court, title: 'Any other information' }
   ].freeze
 
-  GENDERS = %w[Female Male Transexual].freeze
+  GENDERS = %w[Female Male Trans].freeze
 
   ETHNICITIES = [
     { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
