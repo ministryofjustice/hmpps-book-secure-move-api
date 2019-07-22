@@ -14,7 +14,7 @@ class NomisClient
 
       def attributes_for(nomis_data)
         nomis_data.reject { |item| item['activeFlag'] == 'N' }.map do |item|
-          { key: item['code'], title: item['description'] }
+          { key: item['code']&.downcase, nomis_code: item['code'], title: item['description'] }
         end
       end
     end

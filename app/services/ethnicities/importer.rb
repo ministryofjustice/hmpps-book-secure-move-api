@@ -12,7 +12,7 @@ module Ethnicities
       items.each do |ethnicity|
         Ethnicity
           .find_or_initialize_by(key: ethnicity[:key])
-          .update(title: ethnicity[:title])
+          .update(ethnicity.slice(:title, :nomis_code))
       end
     end
   end

@@ -8,15 +8,18 @@ RSpec.describe Genders::Importer do
   let(:input_data) do
     [
       {
-        key: 'F',
+        key: 'f',
+        nomis_code: 'F',
         title: 'Female'
       },
       {
-        key: 'R',
+        key: 'r',
+        nomis_code: 'R',
         title: 'Refused'
       },
       {
-        key: 'NK',
+        key: 'nk',
+        nomis_code: 'NK',
         title: 'Not Known'
       }
     ]
@@ -27,25 +30,25 @@ RSpec.describe Genders::Importer do
       expect { importer.call }.to change(Gender, :count).by(5)
     end
 
-    it 'creates F' do
+    it 'creates Female' do
       importer.call
-      expect(Gender.find_by(key: 'F', title: 'Female')).to be_present
+      expect(Gender.find_by(key: 'female', nomis_code: 'F', title: 'Female')).to be_present
     end
 
-    it 'creates M' do
+    it 'creates Male' do
       importer.call
-      expect(Gender.find_by(key: 'M', title: 'Male')).to be_present
+      expect(Gender.find_by(key: 'male', nomis_code: 'M', title: 'Male')).to be_present
     end
 
-    it 'creates R' do
+    it 'creates Refused' do
       importer.call
-      expect(Gender.find_by(key: 'R', title: 'Refused')).to be_present
+      expect(Gender.find_by(key: 'r', nomis_code: 'R', title: 'Refused')).to be_present
     end
   end
 
   context 'with one existing record' do
     before do
-      Gender.create!(key: 'M', title: 'Male')
+      Gender.create!(key: 'male', nomis_code: 'M', title: 'Male')
     end
 
     it 'creates only the missing item' do
@@ -55,7 +58,7 @@ RSpec.describe Genders::Importer do
 
   context 'with one existing record with the wrong title' do
     let!(:male) do
-      Gender.create!(key: 'M', title: 'Mail')
+      Gender.create!(key: 'male', nomis_code: 'M', title: 'Mail')
     end
 
     it 'updates the title of the existing record' do
@@ -68,7 +71,7 @@ RSpec.describe Genders::Importer do
     let(:input_data) do
       [
         {
-          key: 'M',
+          key: 'male',
           title: 'Mail'
         }
       ]
@@ -76,7 +79,7 @@ RSpec.describe Genders::Importer do
 
     it 'DOES NOT update the title of the visible record' do
       importer.call
-      expect(Gender.find_by(key: 'M', title: 'Male')).to be_present
+      expect(Gender.find_by(key: 'male', title: 'Male')).to be_present
     end
   end
 end

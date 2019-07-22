@@ -8,11 +8,13 @@ RSpec.describe Ethnicities::Importer do
   let(:input_data) do
     [
       {
-        key: 'A1',
+        key: 'a1',
+        nomis_code: 'A1',
         title: 'Asian/Asian British: Indian'
       },
       {
-        key: 'W9',
+        key: 'w9',
+        nomis_code: 'W9',
         title: 'White: Any other background'
       }
     ]
@@ -25,19 +27,20 @@ RSpec.describe Ethnicities::Importer do
 
     it 'creates a1' do
       importer.call
-      expect(Ethnicity.find_by(key: 'A1', title: 'Asian/Asian British: Indian')).to be_present
+      expect(Ethnicity.find_by(key: 'a1', nomis_code: 'A1', title: 'Asian/Asian British: Indian')).to be_present
     end
 
     it 'creates w9' do
       importer.call
-      expect(Ethnicity.find_by(key: 'W9', title: 'White: Any other background')).to be_present
+      expect(Ethnicity.find_by(key: 'w9', nomis_code: 'W9', title: 'White: Any other background')).to be_present
     end
   end
 
   context 'with one existing record' do
     before do
       Ethnicity.create!(
-        key: 'W9',
+        key: 'w9',
+        nomis_code: 'W9',
         title: 'White: Any other background'
       )
     end
@@ -50,7 +53,8 @@ RSpec.describe Ethnicities::Importer do
   context 'with one existing record with the wrong title' do
     let!(:w9) do
       Ethnicity.create!(
-        key: 'W9',
+        key: 'w9',
+        nomis_code: 'W9',
         title: 'Other white'
       )
     end

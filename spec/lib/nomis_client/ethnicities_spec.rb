@@ -14,11 +14,11 @@ RSpec.describe NomisClient::Ethnicities, with_nomis_client_authentication: true 
     end
 
     it 'returns the correct data for the first match' do
-      expect(response.first).to eq(key: 'A1', title: 'Asian/Asian British: Indian')
+      expect(response.first).to eq(key: 'a1', nomis_code: 'A1', title: 'Asian/Asian British: Indian')
     end
 
     it 'does not return inactive items' do
-      expect(response.select { |item| item[:key] == 'W8' }.count).to be_zero
+      expect(response.select { |item| item[:key] == 'w8' }.count).to be_zero
     end
   end
 end

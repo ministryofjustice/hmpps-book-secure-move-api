@@ -16,11 +16,11 @@ RSpec.describe NomisClient::Genders, with_nomis_client_authentication: true do
       end
 
       it 'returns the correct data for the first match' do
-        expect(response.first.symbolize_keys).to eq(key: 'F', title: 'Female')
+        expect(response.first.symbolize_keys).to eq(key: 'f', nomis_code: 'F', title: 'Female')
       end
 
       it 'does not return inactive items' do
-        expect(response.select { |item| item[:key] == 'REF' }.count).to be_zero
+        expect(response.select { |item| item[:key] == 'ref' }.count).to be_zero
       end
     end
   end
