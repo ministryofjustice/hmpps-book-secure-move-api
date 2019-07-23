@@ -25,10 +25,10 @@ references:
           GITHUB_TEAM_NAME_SLUG: pecs
 
 commands:
-  build:
+  build_for_k8s:
     description: "Builds a Docker image for staging/production and pushes to ECR"
     parameters:
-      environment:
+      env:
         type: string
     steps:
       - checkout
@@ -63,10 +63,10 @@ commands:
             docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${<< parameters.environment >>}.latest"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${<< parameters.environment >>}.latest"
 
-  deploy:
+  deploy_to_k8s:
     description: "Deploys a previously built Docker image to staging/production k8s environment"
     parameters:
-      environment:
+      env:
         type: string
     steps:
       - checkout
@@ -191,14 +191,14 @@ jobs:
   build_production:
     <<: *cloud_container
     steps:
-      - build:
-         environment: production
+      - build_for_k8s:
+         env: "production"
 
   deploy_production:
     <<: *cloud_container
     steps:
-      - deploy:
-         environment: production
+      - deploy_to_k8s:
+         env: "production"
 
 workflows:
   version: 2
