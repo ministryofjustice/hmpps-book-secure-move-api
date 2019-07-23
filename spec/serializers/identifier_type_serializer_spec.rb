@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe IdentifierTypeSerializer do
   subject(:serializer) { described_class.new(identifier_type) }
 
-  let(:identifier_type) { create :identifier_type }
+  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:identifier_type) { create :identifier_type, disabled_at: disabled_at }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
@@ -22,5 +23,9 @@ RSpec.describe IdentifierTypeSerializer do
 
   it 'contains a title attribute' do
     expect(result[:data][:attributes][:title]).to eql 'PNC ID'
+  end
+
+  it 'contains a disabled_at attribute' do
+    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end
 end

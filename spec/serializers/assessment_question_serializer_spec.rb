@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe AssessmentQuestionSerializer do
   subject(:serializer) { described_class.new(assessment_question) }
 
-  let(:assessment_question) { create :assessment_question }
+  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:assessment_question) { create :assessment_question, disabled_at: disabled_at }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
@@ -34,5 +35,9 @@ RSpec.describe AssessmentQuestionSerializer do
 
   it 'contains a nomis_alert_type attribute' do
     expect(result[:data][:attributes][:nomis_alert_type]).to eql 'M'
+  end
+
+  it 'contains a disabled_at attribute' do
+    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end
 end
