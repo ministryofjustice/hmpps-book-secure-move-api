@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe GenderSerializer do
   subject(:serializer) { described_class.new(gender) }
 
-  let(:gender) { create :gender }
+  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:gender) { create :gender, disabled_at: disabled_at }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
@@ -24,11 +25,11 @@ RSpec.describe GenderSerializer do
     expect(result[:data][:attributes][:title]).to eql 'Female'
   end
 
-  it 'contains a `disabled_at` attribute' do
-    expect(result[:data][:attributes][:disabled_at]).to be_nil
-  end
-
   it 'contains a `nomis_code` attribute' do
     expect(result[:data][:attributes][:nomis_code]).to eql 'F'
+  end
+
+  it 'contains a disabled_at attribute' do
+    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end
 end

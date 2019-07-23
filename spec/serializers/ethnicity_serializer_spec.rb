@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe EthnicitySerializer do
   subject(:serializer) { described_class.new(ethnicity) }
 
-  let(:ethnicity) { create :ethnicity }
+  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:ethnicity) { create :ethnicity, disabled_at: disabled_at }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
@@ -30,5 +31,9 @@ RSpec.describe EthnicitySerializer do
 
   it 'contains a nomis_code attribute' do
     expect(result[:data][:attributes][:nomis_code]).to eql ethnicity.nomis_code
+  end
+
+  it 'contains a disabled_at attribute' do
+    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end
 end
