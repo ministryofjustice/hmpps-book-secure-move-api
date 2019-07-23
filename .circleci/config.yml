@@ -63,33 +63,33 @@ commands:
             docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${<< parameters.env >>}.latest"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${<< parameters.env >>}.latest"
 
-  deploy_to_k8s:
-    description: "Deploys a previously built Docker image to staging/production k8s environment"
-    parameters:
-      env:
-        type: string
-    steps:
-      - checkout
-
-      - run:
-        name: kubectl use context
-        command: |
-          setup-kube-auth
-          kubectl config use-context << parameters.env >>
-
-      - deploy:
-          name: rolling update image to << parameters.env >>
-          command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
-
-            kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
-                    deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
-                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
-            kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
-                    deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
-                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+# deploy_to_k8s:
+#   description: "Deploys a previously built Docker image to staging/production k8s environment"
+#   parameters:
+#     env:
+#       type: string
+#   steps:
+#     - checkout
+#
+#     - run:
+#       name: kubectl use context
+#       command: |
+#         setup-kube-auth
+#         kubectl config use-context << parameters.env >>
+#
+#     - deploy:
+#         name: rolling update image to << parameters.env >>
+#         command: |
+#           export BUILD_DATE=$(date -Is) >> $BASH_ENV
+#           source $BASH_ENV
+#
+#           kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+#                   deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
+#                   webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+#
+#           kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+#                   deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
+#                   kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
 jobs:
   test:
@@ -219,6 +219,6 @@ workflows:
           type: approval
           requires:
             - test
-      - deploy_production:
-          requires:
-            - build_production
+#     - deploy_production:
+#         requires:
+#           - build_production
