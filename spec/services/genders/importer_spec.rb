@@ -10,17 +10,20 @@ RSpec.describe Genders::Importer do
       {
         key: 'f',
         nomis_code: 'F',
-        title: 'Female'
+        title: 'Female',
+        disabled_at: nil
       },
       {
         key: 'r',
         nomis_code: 'R',
-        title: 'Refused'
+        title: 'Refused',
+        disabled_at: 1.day.ago
       },
       {
         key: 'nk',
         nomis_code: 'NK',
-        title: 'Not Known'
+        title: 'Not Known',
+        disabled_at: 1.day.ago
       }
     ]
   end
