@@ -30,7 +30,6 @@ commands:
     parameters:
       environment:
         type: string
-    <<: *cloud_container
     steps:
       - checkout
 
@@ -69,7 +68,6 @@ commands:
     parameters:
       environment:
         type: string
-    <<: *cloud_container
     steps:
       - checkout
 
@@ -191,11 +189,13 @@ jobs:
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
   build_production:
+    <<: *cloud_container
     steps:
       - build:
          environment: production
 
   deploy_production:
+    <<: *cloud_container
     steps:
       - deploy:
          environment: production
