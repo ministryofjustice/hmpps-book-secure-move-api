@@ -219,6 +219,9 @@ workflows:
           type: approval
           requires:
             - test
+          filters:
+            branches:
+              only: master
       - build_production:
           requires:
             - hold_production
