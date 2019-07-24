@@ -215,13 +215,13 @@ workflows:
       - deploy_staging:
           requires:
             - build_staging
-      - build_production:
+      - hold_production:
           type: approval
           requires:
             - test
-          filters:
-            branches:
-              only: master
+      - build_production:
+          requires:
+            - hold_production
       - deploy_production:
           requires:
             - build_production
