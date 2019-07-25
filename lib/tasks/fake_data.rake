@@ -113,7 +113,7 @@ namespace :fake_data do
   desc 'create genders'
   task create_genders: :environment do
     GENDERS.each do |gender|
-      Gender.create!(key: gender.parameterize(separator: '_'), title: gender, visible: true)
+      Gender.create!(key: gender.parameterize(separator: '_'), title: gender)
     end
   end
 

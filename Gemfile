@@ -19,6 +19,7 @@ gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
 gem 'rswag-api'
 gem 'rswag-ui'
+gem 'sentry-raven'
 
 group :development, :test do
   gem 'factory_bot_rails'

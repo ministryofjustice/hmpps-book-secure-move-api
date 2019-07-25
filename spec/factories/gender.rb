@@ -5,7 +5,6 @@ FactoryBot.define do
     key { 'female' }
     nomis_code { 'F' }
     title { 'Female' }
-    visible { true }
 
     trait :male do
       key { 'male' }

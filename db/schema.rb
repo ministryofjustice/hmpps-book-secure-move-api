@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_100527) do
+ActiveRecord::Schema.define(version: 2019_07_23_105249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key", null: false
+    t.datetime "disabled_at"
   end
 
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -33,6 +34,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nomis_code"
+    t.datetime "disabled_at"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -41,13 +43,14 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key", null: false
-    t.boolean "visible", default: false, null: false
     t.string "nomis_code"
+    t.datetime "disabled_at"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
+    t.datetime "disabled_at"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -57,6 +60,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "updated_at", null: false
     t.string "nomis_agency_id"
     t.string "key", null: false
+    t.datetime "disabled_at"
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -78,6 +82,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_100527) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key", null: false
+    t.datetime "disabled_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|

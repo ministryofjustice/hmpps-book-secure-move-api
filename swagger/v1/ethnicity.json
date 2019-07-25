@@ -38,6 +38,12 @@
             ],
             "example": "W1 - White British",
             "description": "Human readable long label for this ethnicity"
+          },
+          "disabled_at": {
+            "type": "String",
+            "format": "date-time",
+            "example": "2017-07-21T17:32:28Z",
+            "description": "The date-time at which a value was disabled, in ISO-8601 format, or null if it is enabled"
           }
         }
       }
