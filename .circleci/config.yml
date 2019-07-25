@@ -131,62 +131,14 @@ jobs:
   build_staging:
     <<: *cloud_container
     steps:
-      - checkout
-
-      - setup_remote_docker:
-          docker_layer_caching: true
-
-      - run:
-          name: build docker image
-          command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
-
-            docker build \
-              --label build.git.sha=${CIRCLE_SHA1} \
-              --label build.git.branch=${CIRCLE_BRANCH} \
-              --label build.date=${BUILD_DATE} \
-              --build-arg APP_BUILD_DATE=${BUILD_DATE} \
-              --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
-              --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
-
-      - run:
-          name: push docker image
-          command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
+      - build_for_k8s:
+         env: "staging"
 
   deploy_staging:
     <<: *cloud_container
     steps:
-      - checkout
-
-      - run:
-          name: kubectl use context
-          command: |
-            setup-kube-auth
-            kubectl config use-context staging
-
-      - deploy:
-          name: rolling update image to staging
-          command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
-
-            kubectl set image -n hmpps-book-secure-move-api-staging \
-                    deployment/hmpps-book-secure-move-api-deployment-staging \
-                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
-            kubectl annotate -n hmpps-book-secure-move-api-staging \
-                    deployment/hmpps-book-secure-move-api-deployment-staging \
-                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+      - deploy_to_k8s:
+         env: "staging"
 
   build_production:
     <<: *cloud_container
@@ -219,9 +171,6 @@ workflows:
           type: approval
           requires:
             - test
-          filters:
-            branches:
-              only: master
       - build_production:
           requires:
             - hold_production
