@@ -38,14 +38,29 @@ RSpec.describe Genders::Importer do
       expect(Gender.find_by(key: 'female', nomis_code: 'F', title: 'Female')).to be_present
     end
 
+    it 'does not disable Female' do
+      importer.call
+      expect(Gender.find_by(key: 'female').disabled_at).to be_nil
+    end
+
     it 'creates Male' do
       importer.call
       expect(Gender.find_by(key: 'male', nomis_code: 'M', title: 'Male')).to be_present
     end
 
+    it 'does not disable Male' do
+      importer.call
+      expect(Gender.find_by(key: 'male').disabled_at).to be_nil
+    end
+
     it 'creates Refused' do
       importer.call
       expect(Gender.find_by(key: 'r', nomis_code: 'R', title: 'Refused')).to be_present
+    end
+
+    it 'does disable Refused' do
+      importer.call
+      expect(Gender.find_by(key: 'r').disabled_at).to be_present
     end
   end
 
