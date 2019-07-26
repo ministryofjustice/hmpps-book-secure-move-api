@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.1
 
 references:
   app_containers: &app_containers
@@ -23,6 +23,73 @@ references:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
           GITHUB_TEAM_NAME_SLUG: pecs
+
+commands:
+  build_for_k8s:
+    description: "Builds a Docker image for staging/production and pushes to ECR"
+    parameters:
+      env:
+        type: string
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: build docker image
+          command: |
+            export BUILD_DATE=$(date -Is) >> $BASH_ENV
+            source $BASH_ENV
+
+            docker build \
+              --label build.git.sha=${CIRCLE_SHA1} \
+              --label build.git.branch=${CIRCLE_BRANCH} \
+              --label build.date=${BUILD_DATE} \
+              --build-arg APP_BUILD_DATE=${BUILD_DATE} \
+              --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
+              --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
+              -t app .
+
+      - run:
+          name: push docker image
+          command: |
+            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${login}
+
+            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
+
+  deploy_to_k8s:
+    description: "Deploys a previously built Docker image to staging/production k8s environment"
+    parameters:
+      env:
+        type: string
+    steps:
+      - checkout
+
+      - run:
+          name: kubectl use context
+          command: |
+            setup-kube-auth
+            kubectl config use-context << parameters.env >>
+
+      - deploy:
+          name: rolling update image to << parameters.env >>
+          command: |
+            export BUILD_DATE=$(date -Is) >> $BASH_ENV
+            source $BASH_ENV
+
+            kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
+                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
+                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
 jobs:
   test:
@@ -64,62 +131,26 @@ jobs:
   build_staging:
     <<: *cloud_container
     steps:
-      - checkout
-
-      - setup_remote_docker:
-          docker_layer_caching: true
-
-      - run:
-          name: build docker image
-          command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
-
-            docker build \
-              --label build.git.sha=${CIRCLE_SHA1} \
-              --label build.git.branch=${CIRCLE_BRANCH} \
-              --label build.date=${BUILD_DATE} \
-              --build-arg APP_BUILD_DATE=${BUILD_DATE} \
-              --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
-              --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
-
-      - run:
-          name: push docker image
-          command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:staging.latest"
+      - build_for_k8s:
+         env: "staging"
 
   deploy_staging:
     <<: *cloud_container
     steps:
-      - checkout
+      - deploy_to_k8s:
+         env: "staging"
 
-      - run:
-          name: kubectl use context
-          command: |
-            setup-kube-auth
-            kubectl config use-context staging
+  build_production:
+    <<: *cloud_container
+    steps:
+      - build_for_k8s:
+         env: "production"
 
-      - deploy:
-          name: rolling update image to staging
-          command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
-
-            kubectl set image -n hmpps-book-secure-move-api-staging \
-                    deployment/hmpps-book-secure-move-api-deployment-staging \
-                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
-            kubectl annotate -n hmpps-book-secure-move-api-staging \
-                    deployment/hmpps-book-secure-move-api-deployment-staging \
-                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+  deploy_production:
+    <<: *cloud_container
+    steps:
+      - deploy_to_k8s:
+         env: "production"
 
 workflows:
   version: 2
@@ -136,3 +167,16 @@ workflows:
       - deploy_staging:
           requires:
             - build_staging
+      - hold_production:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - build_production:
+          requires:
+            - hold_production
+      - deploy_production:
+          requires:
+            - build_production
