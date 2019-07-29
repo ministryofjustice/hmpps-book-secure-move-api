@@ -85,6 +85,17 @@ RSpec.describe Genders::Importer do
     end
   end
 
+  context 'with one existing non-visible record with no `disabled_at`' do
+    let!(:male) do
+      Gender.create!(key: 'r', nomis_code: 'R', title: 'Refused', disabled_at: nil)
+    end
+
+    it 'sets the `disabled_at` of the existing record' do
+      importer.call
+      expect(male.reload.disabled_at).to be_present
+    end
+  end
+
   context 'with additional items containing a conflicting title' do
     let(:input_data) do
       [
