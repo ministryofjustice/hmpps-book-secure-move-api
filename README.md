@@ -75,13 +75,32 @@ bundle exec rubocop
 
 ### Create fake data
 
-To create fake data to use for testing run:
+To create fake data to use for testing and in a development environment run:
 
 ```
 bundle exec rails fake_data:recreate_all
 ```
 
-**Note:** This will delete all existing data
+**WARNING:** This will delete all existing data
+
+### Create reference data
+
+To create reference data (seed data) needed in production run the
+following rake tasks:
+
+```
+bundle exec rails reference_data:create_assessment_questions
+bundle exec rails reference_data:create_ethnicities
+bundle exec rails reference_data:create_genders
+bundle exec rails reference_data:create_identifier_types
+bundle exec rails reference_data:create_locations 
+```
+
+Some of these tasks pull data from NOMIS and therefore require
+environment variables configured with the relevant security credentials.
+
+These tasks are designed to be non-destructive. They can be run multiple
+times and will only modify data if the original data source has changed.
 
 ## Continuous Integration
 
