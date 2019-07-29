@@ -16,14 +16,24 @@ RSpec.describe Api::V1::Reference::GendersController, with_client_authentication
           type: 'genders',
           attributes: {
             key: 'female',
-            title: 'Female'
+            title: 'Female',
+            disabled_at: nil
           }
         },
         {
           type: 'genders',
           attributes: {
             key: 'male',
-            title: 'Male'
+            title: 'Male',
+            disabled_at: nil
+          }
+        },
+        {
+          type: 'genders',
+          attributes: {
+            key: 'r',
+            title: 'Refused',
+            disabled_at: '2019-07-24T00:00:00Z'
           }
         }
       ]
