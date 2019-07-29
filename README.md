@@ -94,5 +94,19 @@ Docker image, pushing code staging:
 
 This application is deployed to [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/).
 
-Currently we have only one `staging` environment that is automatically
-deployed on successful builds of the `master` branch on Circle CI.
+Currently we have a `staging` and `production` environment on Cloud
+Platform with the following namespace names:
+
+* hmpps-book-secure-move-api-staging
+* hmpps-book-secure-move-api-production
+
+`staging` that is automatically deployed on successful builds of the
+`master` branch on Circle CI.
+
+`production` can be deployed on any successful build of `master` but
+requires manual intervention to approve the `hold_production` step in
+the workflow. To approve a particular deploy for build log into
+CircleCI, find the build that you want to deploy and click the
+`test-build-deploy` link. This should take you to the workflow graph for
+that build where you can click the `hold_production` step to kick off
+the production deploy.
