@@ -11,7 +11,7 @@ RSpec.describe Moves::ReferenceGenerator do
   let!(:move) { create :move, reference: existing_reference }
 
   it 'generates a new reference' do
-    expect(generator.call).to eql 'JUWPTYK6'
+    expect(generator.call).to eql 'JUW9825J'
   end
 
   it 'generates a different reference on each call' do
@@ -20,10 +20,10 @@ RSpec.describe Moves::ReferenceGenerator do
   end
 
   context 'when there is a clash with an existing reference' do
-    let(:existing_reference) { 'JUWPTYK6' }
+    let(:existing_reference) { 'JUW9825J' }
 
     it 'generates a different reference' do
-      expect(generator.call).not_to eql 'JUWPTYK6'
+      expect(generator.call).not_to eql 'JUW9825J'
     end
   end
 end
