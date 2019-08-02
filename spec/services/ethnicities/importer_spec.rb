@@ -16,13 +16,18 @@ RSpec.describe Ethnicities::Importer do
         key: 'w9',
         nomis_code: 'W9',
         title: 'White: Any other background'
+      },
+      {
+        key: 'merge',
+        nomis_code: 'MERGE',
+        title: 'Needs to be confirmed following Merge'
       }
     ]
   end
 
   context 'with no existing records' do
     it 'creates all the input items' do
-      expect { importer.call }.to change(Ethnicity, :count).by(2)
+      expect { importer.call }.to change(Ethnicity, :count).by(3)
     end
 
     it 'creates a1' do
@@ -33,6 +38,13 @@ RSpec.describe Ethnicities::Importer do
     it 'creates w9' do
       importer.call
       expect(Ethnicity.find_by(key: 'w9', nomis_code: 'W9', title: 'White: Any other background')).to be_present
+    end
+
+    it 'creates merge' do
+      importer.call
+      expect(
+        Ethnicity.find_by(key: 'merge', nomis_code: 'MERGE', title: 'Needs to be confirmed following Merge')
+      ).to be_present
     end
   end
 
@@ -45,8 +57,8 @@ RSpec.describe Ethnicities::Importer do
       )
     end
 
-    it 'creates only the missing item' do
-      expect { importer.call }.to change(Ethnicity, :count).by(1)
+    it 'creates only the missing items' do
+      expect { importer.call }.to change(Ethnicity, :count).by(2)
     end
   end
 
@@ -62,6 +74,22 @@ RSpec.describe Ethnicities::Importer do
     it 'updates the title of the existing record' do
       importer.call
       expect(w9.reload.title).to eq 'White: Any other background'
+    end
+  end
+
+  context 'with one existing record that should be hidden' do
+    let!(:merge) do
+      Ethnicity.create!(
+        key: 'merge',
+        nomis_code: 'MERGE',
+        title: 'Needs to be confirmed following Merge',
+        disabled_at: nil
+      )
+    end
+
+    it 'sets the `#disabled_at` of the "hidden" record' do
+      importer.call
+      expect(merge.reload.disabled_at).not_to be_nil
     end
   end
 end
