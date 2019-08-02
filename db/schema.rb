@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_23_105249) do
+ActiveRecord::Schema.define(version: 2019_08_02_150644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2019_07_23_105249) do
     t.string "key", null: false
     t.string "nomis_code"
     t.datetime "disabled_at"
+    t.boolean "prompt_for_additional_information", default: false, null: false
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
@@ -145,6 +146,7 @@ ActiveRecord::Schema.define(version: 2019_07_23_105249) do
     t.datetime "updated_at", null: false
     t.jsonb "assessment_answers"
     t.jsonb "profile_identifiers"
+    t.string "additional_gender_information"
   end
 
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
