@@ -127,8 +127,13 @@ RSpec.describe PersonSerializer do
   end
 
   describe 'gender' do
+    before do
+      person.latest_profile.update(additional_gender_information: additional_gender_information)
+    end
+
     let(:adapter_options) { { include: { gender: %I[title description] } } }
     let(:gender) { person.latest_profile&.gender }
+    let(:additional_gender_information) { 'more info about the person' }
     let(:expected_json) do
       [
         {
@@ -144,6 +149,10 @@ RSpec.describe PersonSerializer do
 
     it 'contains an included gender' do
       expect(result[:included]).to(include_json(expected_json))
+    end
+
+    it 'contains additional_gender_information' do
+      expect(result[:data][:attributes][:additional_gender_information]).to eql additional_gender_information
     end
   end
 end
