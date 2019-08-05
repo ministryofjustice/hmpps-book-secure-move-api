@@ -5,7 +5,7 @@ module Genders
     VISIBLE_GENDERS = [
       { key: 'female', nomis_code: 'F', title: 'Female', disabled_at: nil },
       { key: 'male', nomis_code: 'M', title: 'Male', disabled_at: nil },
-      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil }
+      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil, prompt_for_additional_information: true }
     ].freeze
 
     attr_accessor :additional_items
@@ -23,16 +23,18 @@ module Genders
       VISIBLE_GENDERS.each do |attributes|
         Gender
           .find_or_initialize_by(key: attributes[:key])
-          .update(attributes.slice(:title, :nomis_code, :disabled_at))
+          .update(attributes.slice(:title, :nomis_code, :disabled_at, :prompt_for_additional_information))
       end
     end
 
     def import_nomis_genders
       additional_items.each do |item|
         gender = Gender.find_or_initialize_by(nomis_code: item[:nomis_code])
-        unless VISIBLE_GENDERS.map { |visible_gender| visible_gender[:key] }.include?(gender.key)
-          gender.update(item.slice(:title, :key).merge(disabled_at: gender.disabled_at || 1.day.ago))
-        end
+        next if VISIBLE_GENDERS.map { |visible_gender| visible_gender[:key] }.include?(gender.key)
+
+        gender
+          .update(item.slice(:title, :key)
+          .merge(disabled_at: gender.disabled_at || 1.day.ago))
       end
     end
   end
