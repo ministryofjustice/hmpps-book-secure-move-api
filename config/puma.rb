@@ -32,3 +32,9 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# run a new process instrumenter after work boot
+on_worker_boot do
+  require 'prometheus_exporter/instrumentation'
+  PrometheusExporter::Instrumentation::Process.start(type: 'web')
+end
