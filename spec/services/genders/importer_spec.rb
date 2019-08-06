@@ -85,17 +85,6 @@ RSpec.describe Genders::Importer do
     end
   end
 
-  context 'with one existing record with the wrong prompt_for_additional_information value' do
-    let!(:trans) do
-      Gender.create!(key: 'trans', title: 'Trans', prompt_for_additional_information: false)
-    end
-
-    it 'updates the prompt_for_additional_information value of the existing record' do
-      importer.call
-      expect(trans.reload.prompt_for_additional_information).to be true
-    end
-  end
-
   context 'with one existing non-visible record with no `disabled_at`' do
     let!(:male) do
       Gender.create!(key: 'r', nomis_code: 'R', title: 'Refused', disabled_at: nil)

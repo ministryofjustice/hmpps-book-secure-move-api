@@ -5,7 +5,7 @@ module Genders
     VISIBLE_GENDERS = [
       { key: 'female', nomis_code: 'F', title: 'Female', disabled_at: nil },
       { key: 'male', nomis_code: 'M', title: 'Male', disabled_at: nil },
-      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil, prompt_for_additional_information: true }
+      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil }
     ].freeze
 
     attr_accessor :additional_items
@@ -23,7 +23,7 @@ module Genders
       VISIBLE_GENDERS.each do |attributes|
         Gender
           .find_or_initialize_by(key: attributes[:key])
-          .update(attributes.slice(:title, :nomis_code, :disabled_at, :prompt_for_additional_information))
+          .update(attributes.slice(:title, :nomis_code, :disabled_at))
       end
     end
 

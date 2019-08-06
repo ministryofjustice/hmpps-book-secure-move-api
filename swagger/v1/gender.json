@@ -46,11 +46,6 @@
             "format": "date-time",
             "example": "2017-07-21T17:32:28Z",
             "description": "The date-time at which a value was disabled, in ISO-8601 format, or null if it is enabled"
-          },
-          "prompt_for_additional_information": {
-            "type": "Boolean",
-            "example": "false",
-            "description": "Indicates whether the frontend should prompt for gender_additional_information for this Gender"
           }
         }
       }
