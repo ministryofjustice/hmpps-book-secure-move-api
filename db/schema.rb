@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_05_094511) do
+ActiveRecord::Schema.define(version: 2019_08_02_142638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -45,7 +45,6 @@ ActiveRecord::Schema.define(version: 2019_08_05_094511) do
     t.string "key", null: false
     t.string "nomis_code"
     t.datetime "disabled_at"
-    t.boolean "prompt_for_additional_information", default: false, null: false
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
