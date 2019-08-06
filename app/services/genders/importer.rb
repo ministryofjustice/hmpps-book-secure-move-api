@@ -30,9 +30,11 @@ module Genders
     def import_nomis_genders
       additional_items.each do |item|
         gender = Gender.find_or_initialize_by(nomis_code: item[:nomis_code])
-        unless VISIBLE_GENDERS.map { |visible_gender| visible_gender[:key] }.include?(gender.key)
-          gender.update(item.slice(:title, :key).merge(disabled_at: gender.disabled_at || 1.day.ago))
-        end
+        next if VISIBLE_GENDERS.map { |visible_gender| visible_gender[:key] }.include?(gender.key)
+
+        gender
+          .update(item.slice(:title, :key)
+          .merge(disabled_at: gender.disabled_at || 1.day.ago))
       end
     end
   end

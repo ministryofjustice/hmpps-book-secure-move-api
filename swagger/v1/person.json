@@ -54,6 +54,13 @@
               "$ref": "profile_identifier.json#/ProfileIdentifier"
             },
             "description": "Collection of identifiers used to identify the person. Different services have various id schemes such police criminal records number, prison number etc. We may need to record several of these."
+          },
+          "gender_additional_information": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "description": "Supporting information for detainees of certain genders to capture any relevant transport information"
           }
         }
       },
