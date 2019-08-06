@@ -905,7 +905,7 @@
     },
     "/reference/locations": {
       "get": {
-        "summary": "Returns a list of locations optionally filtered by type",
+        "summary": "Returns a list of locations, optionally filtered by type or NOMIS agency ID",
         "tags": [
           "Locations"
         ],
@@ -930,6 +930,14 @@
             "schema": {
               "type": "string",
               "enum": ["court", "police", "prison"]
+            }
+          },
+          {
+            "name": "filter[nomis_agency_id]",
+            "in": "query",
+            "description": "Filters results by NOMIS agency ID",
+            "schema": {
+              "type": "string"
             }
           }
         ],

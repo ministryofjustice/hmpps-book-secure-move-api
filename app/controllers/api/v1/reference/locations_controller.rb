@@ -24,7 +24,7 @@ module Api
           render json: location, status: status
         end
 
-        PERMITTED_FILTER_PARAMS = %i[location_type].freeze
+        PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id].freeze
 
         def filter_params
           params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
