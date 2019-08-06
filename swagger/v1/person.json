@@ -55,7 +55,7 @@
             },
             "description": "Collection of identifiers used to identify the person. Different services have various id schemes such police criminal records number, prison number etc. We may need to record several of these."
           },
-          "additional_gender_information": {
+          "gender_additional_information": {
             "oneOf": [
               { "type": "string" },
               { "type": "null" }

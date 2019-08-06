@@ -50,7 +50,7 @@
           "prompt_for_additional_information": {
             "type": "Boolean",
             "example": "false",
-            "description": "Indicates whether the frontend should prompt for additional_gender_information for this Gender"
+            "description": "Indicates whether the frontend should prompt for gender_additional_information for this Gender"
           }
         }
       }

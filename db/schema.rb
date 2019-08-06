@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 2019_08_05_094511) do
     t.datetime "updated_at", null: false
     t.jsonb "assessment_answers"
     t.jsonb "profile_identifiers"
-    t.string "additional_gender_information"
+    t.string "gender_additional_information"
   end
 
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
