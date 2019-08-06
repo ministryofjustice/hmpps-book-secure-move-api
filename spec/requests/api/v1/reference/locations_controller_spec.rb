@@ -110,7 +110,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
 
     describe 'filters' do
       let!(:location) { create :location }
-      let(:filters) { { location_type: 'prison' } }
+      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI' } }
       let(:params) { { filter: filters } }
 
       before do
@@ -121,7 +121,10 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
 
       it 'delegates the query execution to Locations::Finder with the correct filters' do
-        expect(Locations::Finder).to have_received(:new).with(location_type: location.location_type)
+        expect(Locations::Finder).to have_received(:new).with(
+          location_type: location.location_type,
+          nomis_agency_id: location.nomis_agency_id
+        )
       end
 
       it 'returns results from Locations::Finder' do
