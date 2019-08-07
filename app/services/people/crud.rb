@@ -8,7 +8,7 @@ module People
       self.params = params
     end
 
-    ATTRIBUTES = %i[first_names last_name date_of_birth].freeze
+    ATTRIBUTES = %i[first_names last_name date_of_birth gender_additional_information].freeze
     PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
 
     private

@@ -14,6 +14,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
     let(:gender) { create :gender }
     let(:risk_type_1) { create :assessment_question, :risk }
     let(:risk_type_2) { create :assessment_question, :risk }
+    let(:gender_additional_information) { nil }
     let(:person_params) do
       {
         data: {
@@ -22,6 +23,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
+            gender_additional_information: gender_additional_information,
             assessment_answers: [
               { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
@@ -121,6 +123,15 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         expect do
           post '/api/v1/people', params: person_params, headers: headers, as: :json
         end.to change(Person, :count).by(1)
+      end
+    end
+
+    context 'with gender_additional_information' do
+      let(:gender_additional_information) { 'some additional info' }
+
+      it 'updates an existing person' do
+        post '/api/v1/people', params: person_params, headers: headers, as: :json
+        expect(Person.last.reload.latest_profile.gender_additional_information).to eq gender_additional_information
       end
     end
 
