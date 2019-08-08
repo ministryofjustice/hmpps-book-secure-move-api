@@ -6,6 +6,12 @@ class Move < ApplicationRecord
     cancelled: 'cancelled'
   }
 
+  enum move_type: {
+    court_appearance: 'court_appearance',
+    prison_recall: 'prison_recall',
+    prison_transfer: 'prison_transfer'
+  }
+
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
   belongs_to :person
@@ -13,9 +19,10 @@ class Move < ApplicationRecord
   validates :from_location, presence: true
   validates :to_location, presence: true
   validates :date, presence: true
+  validates :move_type, inclusion: { in: move_types }
   validates :person, presence: true
-  validates :status, inclusion: { in: statuses }
   validates :reference, presence: true
+  validates :status, inclusion: { in: statuses }
 
   before_validation :set_reference
 
