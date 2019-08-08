@@ -56,6 +56,10 @@
             "format": "date",
             "example": "2019-05-24",
             "description": "Date on which the move is scheduled"
+          },
+          "additional_information": {
+            "type": "string",
+            "description": "Additional information about the move that the supplier should be made aware of"
           }
         }
       },
