@@ -39,6 +39,10 @@ RSpec.describe MoveSerializer do
     expect(result[:data][:attributes][:updated_at]).to eql move.updated_at.iso8601
   end
 
+  it 'contains an additional_information attribute' do
+    expect(result[:data][:attributes][:additional_information]).to eql move.additional_information
+  end
+
   describe 'person' do
     let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
     let(:expected_json) do
