@@ -36,6 +36,11 @@
             "enum": ["requested", "cancelled"],
             "description": "Indicates the stage in it's lifecycle that this move is at"
           },
+          "move_type": {
+            "type": "string",
+            "enum": ["court_appearance", "prison_recall", "prison_transfer"],
+            "description": "Indicates the type of move, e.g. prison transfer or court appearance"
+          },
           "time_due": {
             "type": "string",
             "format": "date-time",
