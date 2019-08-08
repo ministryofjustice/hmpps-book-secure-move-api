@@ -22,6 +22,7 @@ gem 'rswag-ui'
 gem 'sentry-raven'
 
 group :development, :test do
+  gem 'dotenv'
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'pry-byebug'
@@ -31,6 +32,7 @@ group :development, :test do
   gem 'rswag-specs'
   gem 'shoulda-matchers'
   gem 'timecop'
+  gem 'vcr'
 end
 
 group :development do
