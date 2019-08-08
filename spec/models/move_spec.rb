@@ -8,11 +8,22 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:person) }
 
   it { is_expected.to validate_presence_of(:from_location) }
-  it { is_expected.to validate_presence_of(:to_location) }
   it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
   it { is_expected.to validate_inclusion_of(:move_type).in_array(described_class.move_types.values) }
+
+  it 'validates presence of `to_location` if `move_type` is NOT prision_recall' do
+    expect(described_class.new(move_type: 'prison_transfer')).to(
+      validate_presence_of(:to_location)
+    )
+  end
+
+  it 'does NOT validate presence of `to_location` if `move_type` is prision_recall' do
+    expect(described_class.new(move_type: 'prison_recall')).not_to(
+      validate_presence_of(:to_location)
+    )
+  end
 
   context 'without automatic reference generation' do
     # rubocop:disable RSpec/AnyInstance

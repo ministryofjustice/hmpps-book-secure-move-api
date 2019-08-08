@@ -17,7 +17,11 @@ class Move < ApplicationRecord
   belongs_to :person
 
   validates :from_location, presence: true
-  validates :to_location, presence: true
+  validates(
+    :to_location,
+    presence: true,
+    unless: ->(move) { move.move_type == 'prison_recall' }
+  )
   validates :date, presence: true
   validates :move_type, inclusion: { in: move_types }
   validates :person, presence: true
