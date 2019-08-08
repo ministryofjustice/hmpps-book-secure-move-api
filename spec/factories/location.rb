@@ -13,5 +13,12 @@ FactoryBot.define do
       location_type { 'court' }
       nomis_agency_id { 'GUICCT' }
     end
+
+    trait :police do
+      key { 'guildford_police_station' }
+      title { 'Guildford Police Station' }
+      location_type { 'police' }
+      nomis_agency_id { 'GUIPS' }
+    end
   end
 end
