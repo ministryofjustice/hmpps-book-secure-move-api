@@ -58,7 +58,10 @@
             "description": "Date on which the move is scheduled"
           },
           "additional_information": {
-            "type": "string",
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
             "description": "Additional information about the move that the supplier should be made aware of"
           }
         }
