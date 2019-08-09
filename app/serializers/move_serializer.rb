@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MoveSerializer < ActiveModel::Serializer
-  attributes :id, :reference, :status, :updated_at, :time_due, :date
+  attributes :id, :reference, :status, :updated_at, :time_due, :date, :move_type, :additional_information
 
   has_one :person, serializer: PersonSerializer
   has_one :from_location, serializer: LocationSerializer

@@ -8,10 +8,21 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:person) }
 
   it { is_expected.to validate_presence_of(:from_location) }
-  it { is_expected.to validate_presence_of(:to_location) }
   it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+  it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
+    expect(build(:move, move_type: 'prison_transfer')).to(
+      validate_presence_of(:to_location)
+    )
+  end
+
+  it 'does NOT validate presence of `to_location` if `move_type` is prison_recall' do
+    expect(build(:move, move_type: 'prison_recall')).not_to(
+      validate_presence_of(:to_location)
+    )
+  end
 
   context 'without automatic reference generation' do
     # rubocop:disable RSpec/AnyInstance
@@ -32,6 +43,38 @@ RSpec.describe Move do
     it 'does not overwrite an existing reference on validation' do
       move = described_class.new(reference: '12345678')
       expect(move.reference).to eq '12345678'
+    end
+  end
+
+  describe '#move_type' do
+    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: nil }
+
+    let(:from_location) { build :location, :police }
+
+    before { move.valid? }
+
+    context 'with no `to_location`' do
+      let(:to_location) { nil }
+
+      it 'sets the move type to `prison_recall` at validation time' do
+        expect(move.move_type).to eq 'prison_recall'
+      end
+    end
+
+    context 'with a court for it\'s `to_location`' do
+      let(:to_location) { build :location, :court }
+
+      it 'sets the move type to `court_appearance` at validation time' do
+        expect(move.move_type).to eq 'court_appearance'
+      end
+    end
+
+    context 'with a prison for it\'s `to_location`' do
+      let(:to_location) { build :location }
+
+      it 'sets the move type to `prison_transfer` at validation time' do
+        expect(move.move_type).to eq 'prison_transfer'
+      end
     end
   end
 end
