@@ -129,7 +129,11 @@ namespace :nomis_fixtures do
     }.with_indifferent_access
   end
 
-  def save_person_response(_anonymised_person_response)
+  def save_person_response(anonymised_person_response)
+    file_name = "#{Rails.root}/db/fixtures/nomis/person-#{anonymised_person_response[:offenderNo]}.json"
+    File.open(file_name, 'w+') do |file|
+      file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
+    end
   end
 
   desc 'create anonymised moves/people'
@@ -150,8 +154,9 @@ namespace :nomis_fixtures do
         else
           anonymised_person_response = anonymise_person(person_response.first)
           save_person_response(anonymised_person_response)
-          puts "Anonymising #{anonymised_person_response['offenderNo']}..."
-          anonymise_move(anonymised_person_response['offenderNo'], move)
+          puts "Anonymising #{anonymised_person_response[:offenderNo]}..."
+          pp anonymised_person_response
+          anonymise_move(anonymised_person_response[:offenderNo], move)
         end
       end
     end
