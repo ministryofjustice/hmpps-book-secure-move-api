@@ -15,4 +15,44 @@ RSpec.describe NomisClient::Moves do
       end
     end
   end
+
+  describe '.anonymise' do
+    let(:original) do
+      {
+        'offenderNo': 'V6537TX',
+        'createDateTime': '2019-07-24T08:10:58',
+        'eventId': 123,
+        'fromAgency': 'WEI',
+        'fromAgencyDescription': 'WEALSTUN (HMP)',
+        'toAgency': 'LEI',
+        'toAgencyDescription': 'LEEDS (HMP)',
+        'eventDate': '2019-07-24',
+        'startTime': '2019-07-24T17:00:00',
+        'endTime': nil,
+        'eventClass': 'EXT_MOV',
+        'eventType': 'CRT',
+        'eventSubType': 'PR',
+        'eventStatus': 'COMP',
+        'judgeName': 'Bob',
+        'directionCode': 'IN',
+        'commentText': 'Comment about the move',
+        'bookingActiveFlag': true,
+        'bookingInOutStatus': 'IN'
+      }
+    end
+    let(:offender_number) { 'D1234VG' }
+    let(:anonymised) { described_class.anonymise(offender_number, original) }
+
+    it 'changes the offender number' do
+      expect(anonymised[:offenderNo]).to eq offender_number
+    end
+
+    it 'resets commentText' do
+      expect(anonymised[:commentText]).to be_nil
+    end
+
+    it 'resets judgeName' do
+      expect(anonymised[:judgeName]).to be_nil
+    end
+  end
 end
