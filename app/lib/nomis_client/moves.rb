@@ -22,6 +22,14 @@ class NomisClient
           movements: true
         }
       end
+
+      def anonymise(offender_number, move_response)
+        move_response.merge(
+          offenderNo: offender_number,
+          judgeName: nil,
+          commentText: nil
+        ).with_indifferent_access
+      end
     end
   end
 end
