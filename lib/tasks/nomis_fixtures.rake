@@ -93,8 +93,12 @@ end
 namespace :nomis_fixtures do
   NOMIS_AGENCY_IDS = %w[LEI].freeze
 
-  def anonymise_move(move_response, _offender_number)
-    move_response
+  def anonymise_move(offender_number, move_response)
+    move_response.merge(
+      offenderNo: offender_number,
+      judgeName: nil,
+      commentText: nil
+    ).with_indifferent_access
   end
 
   def prisons
@@ -136,6 +140,13 @@ namespace :nomis_fixtures do
     end
   end
 
+  def save_moves_response(anonymised_moves_response, date, location)
+    file_name = "#{Rails.root}/db/fixtures/nomis/moves-#{date}-#{location}.json"
+    File.open(file_name, 'w+') do |file|
+      file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
+    end
+  end
+
   desc 'create anonymised moves/people'
   task import_moves: :environment do
     date = DateTime.civil(2019, 7, 8, 12, 23, 45)
@@ -143,22 +154,25 @@ namespace :nomis_fixtures do
       moves_response = NomisClient::Moves.get(
         nomis_agency_ids: nomis_agency_id,
         date: date
-      ).values.flatten
-      moves_response.map do |move|
-        real_offender_number = move['offenderNo']
-        person_response = NomisClient::People.get(
-          nomis_offender_number: real_offender_number
-        )
-        if person_response.empty?
-          puts "Can't find person #{real_offender_number}"
-        else
-          anonymised_person_response = anonymise_person(person_response.first)
-          save_person_response(anonymised_person_response)
-          puts "Anonymising #{anonymised_person_response[:offenderNo]}..."
-          pp anonymised_person_response
-          anonymise_move(anonymised_person_response[:offenderNo], move)
-        end
+      )
+      anonymised_moves_response = moves_response.transform_values do |moves|
+        moves.map do |move|
+          real_offender_number = move['offenderNo']
+          person_response = NomisClient::People.get(
+            nomis_offender_number: real_offender_number
+          )
+          if person_response.empty?
+            puts "Can't find person #{real_offender_number}"
+            nil
+          else
+            anonymised_person_response = anonymise_person(person_response.first)
+            save_person_response(anonymised_person_response)
+            puts "Anonymising #{anonymised_person_response[:offenderNo]}..."
+            anonymise_move(anonymised_person_response[:offenderNo], move)
+          end
+        end.compact
       end
+      save_moves_response(anonymised_moves_response, date.to_date.iso8601, nomis_agency_id)
     end
   end
 end
