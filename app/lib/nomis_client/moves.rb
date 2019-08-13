@@ -23,13 +23,21 @@ class NomisClient
         }
       end
 
-      def anonymise(offender_number, move_response)
+      # rubocop:disable Lint/UselessAssignment
+      def anonymise(offender_number, day_offset, move_response)
+        now = Time.now + day_offset.days
+        start_time = move_response['startTime'].present? ? Time.parse(move_response['startTime']).change(year: now.year, month: now.month, day: now.day) : nil
+
         move_response.merge(
           offenderNo: offender_number,
           judgeName: nil,
-          commentText: nil
+          commentText: nil,
+          createDateTime: '<%= now&.iso8601 %>',
+          eventDate: '<%= now&.to_date&.iso8601 %>',
+          startTime: '<%= start_time&.to_date&.iso8601 %>'
         ).with_indifferent_access
       end
+      # rubocop:enable Lint/UselessAssignment
     end
   end
 end

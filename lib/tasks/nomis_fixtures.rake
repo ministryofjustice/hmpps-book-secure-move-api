@@ -9,7 +9,7 @@ namespace :nomis_fixtures do
 
   def save_person_response(anonymised_person_response)
     FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
-    file_name = "#{FIXTURE_DIRECTORY}/person-#{anonymised_person_response[:offenderNo]}.json"
+    file_name = "#{FIXTURE_DIRECTORY}/person-#{anonymised_person_response[:offenderNo]}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
     end
@@ -17,7 +17,7 @@ namespace :nomis_fixtures do
 
   def save_moves_response(anonymised_moves_response, date, location)
     FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
-    file_name = "#{FIXTURE_DIRECTORY}/moves-#{date}-#{location}.json"
+    file_name = "#{FIXTURE_DIRECTORY}/moves-#{date}-#{location}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
     end
@@ -25,9 +25,9 @@ namespace :nomis_fixtures do
 
   desc 'create anonymised moves/people'
   task import_moves: :environment do
-    sunday = DateTime.civil(2019, 7, 7)
-    (0..4).each do |day_offset|
-      date = sunday + day_offset.days
+    today = DateTime.civil(2019, 7, 10)
+    (-2..2).each do |day_offset|
+      date = today + day_offset.days
       moves_response = nil
       NOMIS_AGENCY_IDS.each do |nomis_agency_id|
         (1..5).each do |attempt|
@@ -53,11 +53,11 @@ namespace :nomis_fixtures do
               anonymised_person_response = NomisClient::People.anonymise(person_response.first)
               save_person_response(anonymised_person_response)
               puts "Anonymising #{anonymised_person_response[:offenderNo]}..."
-              NomisClient::Moves.anonymise(anonymised_person_response[:offenderNo], move)
+              NomisClient::Moves.anonymise(anonymised_person_response[:offenderNo], day_offset, move)
             end
           end.compact
         end
-        save_moves_response(anonymised_moves_response, date.to_date.iso8601, nomis_agency_id)
+        save_moves_response(anonymised_moves_response, day_offset, nomis_agency_id)
       end
     end
   end
