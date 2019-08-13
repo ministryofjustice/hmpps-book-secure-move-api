@@ -5,16 +5,19 @@ require 'nomis/faker'
 # rubocop:disable Metrics/BlockLength
 namespace :nomis_fixtures do
   NOMIS_AGENCY_IDS = %w[LEI PVI MRI].freeze
+  FIXTURE_DIRECTORY = "#{Rails.root}/db/fixtures/nomis"
 
   def save_person_response(anonymised_person_response)
-    file_name = "#{Rails.root}/db/fixtures/nomis/person-#{anonymised_person_response[:offenderNo]}.json"
+    FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
+    file_name = "#{FIXTURE_DIRECTORY}/person-#{anonymised_person_response[:offenderNo]}.json"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
     end
   end
 
   def save_moves_response(anonymised_moves_response, date, location)
-    file_name = "#{Rails.root}/db/fixtures/nomis/moves-#{date}-#{location}.json"
+    FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
+    file_name = "#{FIXTURE_DIRECTORY}/moves-#{date}-#{location}.json"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
     end
@@ -22,22 +25,20 @@ namespace :nomis_fixtures do
 
   desc 'create anonymised moves/people'
   task import_moves: :environment do
-    date = DateTime.civil(2019, 7, 8)
+    sunday = DateTime.civil(2019, 7, 7)
     (0..4).each do |day_offset|
+      date = sunday + day_offset.days
       moves_response = nil
       NOMIS_AGENCY_IDS.each do |nomis_agency_id|
-        5.times do
-          errors = 0
-          begin
-            puts "Fetching moves for #{nomis_agency_id} on #{date.iso8601} (attempt #{errors + 1})..."
-            moves_response = NomisClient::Moves.get(
-              nomis_agency_ids: nomis_agency_id,
-              date: date + day_offset.days
-            )
-            break
-          rescue Net::ReadTimeout
-            puts 'timed out'
-          end
+        (1..5).each do |attempt|
+          puts "Fetching moves for #{nomis_agency_id} on #{date.to_date.iso8601} (attempt #{attempt})..."
+          moves_response = NomisClient::Moves.get(
+            nomis_agency_ids: nomis_agency_id,
+            date: date
+          )
+          break
+        rescue Net::ReadTimeout
+          puts 'timed out'
         end
         anonymised_moves_response = moves_response.transform_values do |moves|
           moves.map do |move|
