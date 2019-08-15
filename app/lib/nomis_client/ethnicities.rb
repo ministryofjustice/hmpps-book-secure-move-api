@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class NomisClient
+module NomisClient
   class Ethnicities
     class << self
       def get
         attributes_for(
-          NomisClient.get(
+          NomisClient::Base.get(
             '/reference-domains/domains/ETHNICITY',
             headers: { 'Page-Limit' => '1000' }
           ).parsed

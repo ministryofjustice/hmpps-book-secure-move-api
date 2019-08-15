@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class NomisClient
+module NomisClient
   class Moves
     class << self
       def get(nomis_agency_ids:, date:)
-        NomisClient.get(
+        NomisClient::Base.get(
           '/movements/transfers',
           params: params_for(nomis_agency_ids, date),
           headers: { 'Page-Limit' => '1000' }

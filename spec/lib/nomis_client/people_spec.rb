@@ -42,7 +42,7 @@ RSpec.describe NomisClient::People do
     let(:response) { described_class.get(nomis_offender_number: nomis_offender_number) }
 
     before do
-      allow(NomisClient).to(
+      allow(NomisClient::Base).to(
         receive(:get)
         .with('/prisoners/A1378MN', params: {}, headers: { 'Page-Limit' => '1000' })
         .and_return(nomis_response)

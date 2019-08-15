@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient do
+RSpec.describe NomisClient::Base do
   let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
   let(:token) do

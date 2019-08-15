@@ -2,11 +2,11 @@
 
 require 'nomis/faker'
 
-class NomisClient
+module NomisClient
   class People
     class << self
       def get(nomis_offender_number:)
-        NomisClient.get(
+        NomisClient::Base.get(
           "/prisoners/#{nomis_offender_number}",
           params: {},
           headers: { 'Page-Limit' => '1000' }

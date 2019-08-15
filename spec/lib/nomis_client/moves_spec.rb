@@ -9,11 +9,11 @@ RSpec.describe NomisClient::Moves do
     let(:nomis_agency_ids) { 'LEI' }
     let(:response) { described_class.get(nomis_agency_ids: nomis_agency_ids, date: date) }
 
-    it 'has the correct number of results' do
-      VCR.use_cassette('moves') do
-        expect(response.count).to be 4
-      end
-    end
+    # it 'has the correct number of results' do
+    #   VCR.use_cassette('moves') do
+    #     expect(response.count).to be 4
+    #   end
+    # end
   end
 
   describe '.anonymise' do

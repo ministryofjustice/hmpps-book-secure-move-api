@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class NomisClient
+module NomisClient
   class Genders
     class << self
       def get
         attributes_for(
-          NomisClient.get(
+          NomisClient::Base.get(
             '/reference-domains/domains/SEX',
             headers: { 'Page-Limit' => '1000' }
           ).parsed
