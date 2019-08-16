@@ -52,6 +52,10 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         expect(response_json).to eq resource_to_json
       end
 
+      it 'sets the additional_information' do
+        expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
+      end
+
       context 'without a `to_location`' do
         let(:to_location) { nil }
         let(:data) do
