@@ -11,6 +11,9 @@ module NomisClient
         ).parsed
       end
 
+      def get_test_mode(nomis_agency_id:, date:)
+      end
+
       def params_for(nomis_agency_ids, date)
         {
           agencyId: nomis_agency_ids,

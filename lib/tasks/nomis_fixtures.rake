@@ -5,19 +5,22 @@ require 'nomis/faker'
 # rubocop:disable Metrics/BlockLength
 namespace :nomis_fixtures do
   NOMIS_AGENCY_IDS = %w[LEI PVI MRI].freeze
-  FIXTURE_DIRECTORY = "#{Rails.root}/db/fixtures/nomis"
 
-  def save_person_response(anonymised_person_response)
-    FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
-    file_name = "#{FIXTURE_DIRECTORY}/person-#{anonymised_person_response[:offenderNo]}.json.erb"
+  def create_fixture_directory
+    FileUtils.mkdir_p(NomisClient::Base.FIXTURE_DIRECTORY) unless File.directory?(NomisClient::Base.FIXTURE_DIRECTORY)
+  end
+
+  def save_person_response(anonymised_person_response, nomis_offender_number)
+    create_fixture_directory
+    file_name = "#{NomisClient::Base.FIXTURE_DIRECTORY}/person-#{anonymised_person_response[:offenderNo]}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
     end
   end
 
-  def save_moves_response(anonymised_moves_response, date, location)
-    FileUtils.mkdir_p(FIXTURE_DIRECTORY) unless File.directory?(FIXTURE_DIRECTORY)
-    file_name = "#{FIXTURE_DIRECTORY}/moves-#{date}-#{location}.json.erb"
+  def save_moves_response(anonymised_moves_response, date, nomis_agency_id)
+    create_fixture_directory
+    file_name = "#{NomisClient::Base.FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
     end

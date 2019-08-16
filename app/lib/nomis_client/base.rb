@@ -2,6 +2,8 @@
 
 module NomisClient
   class Base
+    FIXTURE_DIRECTORY = "#{Rails.root}/db/fixtures/nomis"
+
     class << self
       def get(path, params = {})
         token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
