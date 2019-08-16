@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module NomisClient
-  class Moves
+  class Moves < NomisClient::Base
     class << self
       def get(nomis_agency_ids:, date:)
+        return get_test_mode(nomis_agency_id: nomis_agency_ids, date: date) if ENV['NOMIS_TEST_MODE'] == 'true'
+
         NomisClient::Base.get(
           '/movements/transfers',
           params: params_for(nomis_agency_ids, date),
@@ -12,6 +14,8 @@ module NomisClient
       end
 
       def get_test_mode(nomis_agency_id:, date:)
+        file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
+        JSON.parse(ERB.new(File.read(file_name)).result)
       end
 
       def params_for(nomis_agency_ids, date)

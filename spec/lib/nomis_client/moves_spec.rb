@@ -89,6 +89,27 @@ RSpec.describe NomisClient::Moves do
     it 'has the correct number of results' do
       expect(response.count).to be 4
     end
+
+    context 'when in test mode' do
+      let(:date) { '2' }
+      let(:nomis_agency_id) { 'LEI' }
+      let(:expected_file_name) { "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb" }
+
+      before do
+        allow(File).to receive(:read).and_return(json_response)
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('NOMIS_TEST_MODE').and_return('true')
+      end
+
+      it 'uses the correct file name' do
+        described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+        expect(File).to have_received(:read).with(expected_file_name)
+      end
+
+      it 'returns the correct data' do
+        expect(response.count).to be 4
+      end
+    end
   end
 
   describe '.anonymise' do
