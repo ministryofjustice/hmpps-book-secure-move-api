@@ -91,12 +91,72 @@ RSpec.describe NomisClient::Moves do
     end
 
     context 'when in test mode' do
+      around do |example|
+        Timecop.freeze(now)
+        example.run
+        Timecop.return
+      end
+
+      let(:now) { Time.local(2019, 8, 24, 12, 0, 0) }
       let(:date) { '2' }
       let(:nomis_agency_id) { 'LEI' }
       let(:expected_file_name) { "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb" }
+      let(:erb_test_fixture) do
+        <<-ERB
+        {
+          "courtEvents": [
+            {
+              "offenderNo": "Y2489HY",
+              "createDateTime": "<%= (Time.now + -1.days)&.iso8601 %>",
+              "eventId": 436867017,
+              "fromAgency": "WEI",
+              "fromAgencyDescription": "WEALSTUN (HMP)",
+              "toAgency": "LEI",
+              "toAgencyDescription": "LEEDS (HMP)",
+              "eventDate": "<%= (Time.now + -1.days)&.strftime('%Y-%m-%d') %>",
+              "startTime": "<%= (Time.now + -1.days)&.strftime('%Y-%m-%d') + 'T' + '17:00:00' %>",
+              "endTime": null,
+              "eventClass": "EXT_MOV",
+              "eventType": "CRT",
+              "eventSubType": "PS",
+              "eventStatus": "COMP",
+              "judgeName": null,
+              "directionCode": "IN",
+              "commentText": null,
+              "bookingActiveFlag": true,
+              "bookingInOutStatus": "IN"
+            },
+            {
+              "offenderNo": "K2186XE",
+              "createDateTime": "<%= (Time.now + -1.days)&.iso8601 %>",
+              "eventId": 436867018,
+              "fromAgency": "OUT",
+              "fromAgencyDescription": "OUTSIDE",
+              "toAgency": "LEI",
+              "toAgencyDescription": "LEEDS (HMP)",
+              "eventDate": "<%= (Time.now + -1.days)&.strftime('%Y-%m-%d') %>",
+              "startTime": "<%= (Time.now + -1.days)&.strftime('%Y-%m-%d') + 'T' + '17:00:00' %>",
+              "endTime": null,
+              "eventClass": "COMM",
+              "eventType": "CRT",
+              "eventSubType": "PR",
+              "eventStatus": "EXP",
+              "judgeName": null,
+              "directionCode": "IN",
+              "commentText": null,
+              "bookingActiveFlag": false,
+              "bookingInOutStatus": "OUT"
+            }
+          ],
+          "transferEvents": [],
+          "releaseEvents": [],
+          "movements": []
+        }
+        ERB
+      end
 
       before do
-        allow(File).to receive(:read).and_return(json_response)
+        allow(File).to receive(:read).and_return(erb_test_fixture)
         allow(ENV).to receive(:[]).and_call_original
         allow(ENV).to receive(:[]).with('NOMIS_TEST_MODE').and_return('true')
       end
@@ -108,6 +168,10 @@ RSpec.describe NomisClient::Moves do
 
       it 'returns the correct data' do
         expect(response.count).to be 4
+      end
+
+      it 'processes the ERB content (dates)' do
+        expect(response['courtEvents'].first['startTime']).to eq '2019-08-23T17:00:00'
       end
     end
   end
@@ -153,7 +217,7 @@ RSpec.describe NomisClient::Moves do
     end
 
     it 'sets eventDate to tomorrow' do
-      expect(anonymised[:eventDate]).to eq '<%= (Time.now + 1.days)&.to_date&.iso8601 %>'
+      expect(anonymised[:eventDate]).to eq "<%= (Time.now + 1.days)&.strftime('%Y-%m-%d') %>"
     end
 
     it 'sets createDateTime to tomorrow' do
@@ -161,7 +225,7 @@ RSpec.describe NomisClient::Moves do
     end
 
     it 'sets startTime to 17:00' do
-      expect(anonymised[:startTime]).to eq "<%= (Time.now + 1.days)&.iso8601 + 'T' + '17:00:00' %>"
+      expect(anonymised[:startTime]).to eq "<%= (Time.now + 1.days)&.strftime('%Y-%m-%d') + 'T' + '17:00:00' %>"
     end
   end
 end
