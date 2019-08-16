@@ -241,7 +241,6 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.5.0)
-    vcr (5.0.0)
     webmock (3.6.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -285,7 +284,6 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop
-  vcr
   webmock
 
 RUBY VERSION

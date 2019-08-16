@@ -32,7 +32,6 @@ group :development, :test do
   gem 'rswag-specs'
   gem 'shoulda-matchers'
   gem 'timecop'
-  gem 'vcr'
   gem 'webmock'
 end
 
