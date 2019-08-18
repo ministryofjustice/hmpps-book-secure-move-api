@@ -166,6 +166,11 @@ RSpec.describe NomisClient::Moves do
         expect(File).to have_received(:read).with(expected_file_name)
       end
 
+      it 'does not hit the real API' do
+        described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+        expect(NomisClient::Base).not_to have_received(:get)
+      end
+
       it 'returns the correct data' do
         expect(response.count).to be 4
       end
