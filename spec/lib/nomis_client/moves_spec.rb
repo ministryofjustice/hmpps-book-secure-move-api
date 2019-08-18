@@ -90,7 +90,7 @@ RSpec.describe NomisClient::Moves do
       expect(response.count).to be 4
     end
 
-    context 'when in test mode' do
+    context 'when in test mode', with_nomis_client_test_mode: true do
       around do |example|
         Timecop.freeze(now)
         example.run
@@ -153,12 +153,6 @@ RSpec.describe NomisClient::Moves do
           "movements": []
         }
         ERB
-      end
-
-      before do
-        allow(File).to receive(:read).and_return(erb_test_fixture)
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('NOMIS_TEST_MODE').and_return('true')
       end
 
       it 'uses the correct file name' do
