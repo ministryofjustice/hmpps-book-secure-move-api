@@ -3,10 +3,15 @@
 module NomisClient
   class Base
     FIXTURE_DIRECTORY = "#{Rails.root}/db/fixtures/nomis"
+    NOMIS_TEST_MODE = 'NOMIS_TEST_MODE'
 
     class << self
       def get(path, params = {})
         token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
+      end
+
+      def test_mode?
+        ENV[NOMIS_TEST_MODE] == 'true'
       end
 
       private

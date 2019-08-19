@@ -6,7 +6,7 @@ module NomisClient
   class People
     class << self
       def get(nomis_offender_number:)
-        return get_test_mode(nomis_offender_number: nomis_offender_number) if ENV['NOMIS_TEST_MODE'] == 'true'
+        return get_test_mode(nomis_offender_number: nomis_offender_number) if NomisClient::Base.test_mode?
 
         NomisClient::Base.get(
           "/prisoners/#{nomis_offender_number}",

@@ -4,7 +4,7 @@ module NomisClient
   class Moves < NomisClient::Base
     class << self
       def get(nomis_agency_ids:, date:)
-        return get_test_mode(nomis_agency_id: nomis_agency_ids, date: date) if ENV['NOMIS_TEST_MODE'] == 'true'
+        return get_test_mode(nomis_agency_id: nomis_agency_ids, date: date) if NomisClient::Base.test_mode?
 
         NomisClient::Base.get(
           '/movements/transfers',
