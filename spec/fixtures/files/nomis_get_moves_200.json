@@ -1,0 +1,49 @@
+{
+  "courtEvents": [
+    {
+      "offenderNo": "G3239GV",
+      "createDateTime": "2019-08-19T09:04:40",
+      "eventId": 468536961,
+      "fromAgency": "BXI",
+      "fromAgencyDescription": "BRIXTON (HMP)",
+      "toAgency": "BXI",
+      "toAgencyDescription": "BRIXTON (HMP)",
+      "eventDate": "2019-08-19",
+      "startTime": "2019-08-19T17:00:00",
+      "endTime": null,
+      "eventClass": "EXT_MOV",
+      "eventType": "CRT",
+      "eventSubType": "CRT",
+      "eventStatus": "SCH",
+      "judgeName": null,
+      "directionCode": "IN",
+      "commentText": null,
+      "bookingActiveFlag": true,
+      "bookingInOutStatus": "OUT"
+    },
+    {
+      "offenderNo": "G7157AB",
+      "createDateTime": "2019-08-16T14:36:30.341178",
+      "eventId": 487463210,
+      "fromAgency": "BXI",
+      "fromAgencyDescription": "BRIXTON (HMP)",
+      "toAgency": "WDGRCC",
+      "toAgencyDescription": "Wood Green Crown Court",
+      "eventDate": "2019-08-19",
+      "startTime": "2019-08-19T09:00:00",
+      "endTime": null,
+      "eventClass": "EXT_MOV",
+      "eventType": "CRT",
+      "eventSubType": "CRT",
+      "eventStatus": "COMP",
+      "judgeName": null,
+      "directionCode": "OUT",
+      "commentText": "Email received today for production for Court.",
+      "bookingActiveFlag": true,
+      "bookingInOutStatus": "OUT"
+    }
+  ],
+  "transferEvents": [],
+  "releaseEvents": [],
+  "movements": []
+}
