@@ -14,7 +14,8 @@ module NomisClient
       end
 
       def get_test_mode(nomis_agency_id:, date:)
-        file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
+        date_offset = (date.in_time_zone.midnight - Time.zone.now.midnight).to_i / 1.days
+        file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date_offset}-#{nomis_agency_id}.json.erb"
         JSON.parse(ERB.new(File.read(file_name)).result)
       end
 

@@ -97,10 +97,8 @@ RSpec.describe NomisClient::Moves do
         Timecop.return
       end
 
-      let(:now) { Time.local(2019, 8, 24, 12, 0, 0) }
-      let(:date) { '2' }
       let(:nomis_agency_id) { 'LEI' }
-      let(:expected_file_name) { "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb" }
+      let(:expected_file_name) { "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{offset}-#{nomis_agency_id}.json.erb" }
       let(:erb_test_fixture) do
         <<-ERB
         {
@@ -154,23 +152,59 @@ RSpec.describe NomisClient::Moves do
         }
         ERB
       end
+      let(:now) { Time.local(2019, 8, 24, 12, 0, 0) }
 
-      it 'uses the correct file name' do
-        described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
-        expect(File).to have_received(:read).with(expected_file_name)
+      context 'when date is in the future' do
+        let(:date) { Time.local(2019, 8, 25, 12, 0, 0) }
+        let(:offset) { '1' }
+
+        it 'uses the correct file name' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(File).to have_received(:read).with(expected_file_name)
+        end
+
+        it 'does not hit the real API' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(NomisClient::Base).not_to have_received(:get)
+        end
+
+        it 'returns the correct data' do
+          expect(response.count).to be 4
+        end
+
+        it 'processes the ERB content (dates)' do
+          expect(response['courtEvents'].first['startTime']).to eq '2019-08-23T17:00:00'
+        end
       end
 
-      it 'does not hit the real API' do
-        described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
-        expect(NomisClient::Base).not_to have_received(:get)
+      context 'when date is today' do
+        let(:date) { Time.local(2019, 8, 24, 17, 0, 0) }
+        let(:offset) { '0' }
+
+        it 'uses the correct file name' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(File).to have_received(:read).with(expected_file_name)
+        end
+
+        it 'does not hit the real API' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(NomisClient::Base).not_to have_received(:get)
+        end
       end
 
-      it 'returns the correct data' do
-        expect(response.count).to be 4
-      end
+      context 'when date is in the past' do
+        let(:date) { Time.local(2019, 8, 22, 2, 0, 0) }
+        let(:offset) { '-2' }
 
-      it 'processes the ERB content (dates)' do
-        expect(response['courtEvents'].first['startTime']).to eq '2019-08-23T17:00:00'
+        it 'uses the correct file name' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(File).to have_received(:read).with(expected_file_name)
+        end
+
+        it 'does not hit the real API' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(NomisClient::Base).not_to have_received(:get)
+        end
       end
     end
   end
