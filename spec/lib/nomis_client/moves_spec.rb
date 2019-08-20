@@ -206,6 +206,31 @@ RSpec.describe NomisClient::Moves do
           expect(NomisClient::Base).not_to have_received(:get)
         end
       end
+
+      context 'when there is no fixture file for the given date' do
+        let(:file_exists) { false }
+        let(:date) { Time.local(2019, 8, 2, 2, 0, 0) }
+        let(:offset) { '-22' }
+
+        it 'uses the correct file name' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(File).to have_received(:exist?).with(expected_file_name)
+        end
+
+        it 'does not attempt to read the file' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(File).not_to have_received(:read).with(expected_file_name)
+        end
+
+        it 'does not hit the real API' do
+          described_class.get(nomis_agency_ids: nomis_agency_ids, date: date)
+          expect(NomisClient::Base).not_to have_received(:get)
+        end
+
+        it 'returns the correct data' do
+          expect(response.count).to be 4
+        end
+      end
     end
   end
 
