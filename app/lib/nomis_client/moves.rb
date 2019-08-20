@@ -45,20 +45,6 @@ module NomisClient
           movements: true
         }
       end
-
-      def anonymise(offender_number, day_offset, move_response)
-        start_date_time = move_response['startTime'].present? ? Time.parse(move_response['startTime']) : nil
-        start_time = start_date_time&.strftime('%H:%M:%S') || '00:00:00'
-
-        move_response.merge(
-          offenderNo: offender_number,
-          judgeName: nil,
-          commentText: nil,
-          createDateTime: "<%= (Time.now + #{day_offset}.days)&.iso8601 %>",
-          eventDate: "<%= (Time.now + #{day_offset}.days)&.strftime('%Y-%m-%d') %>",
-          startTime: "<%= (Time.now + #{day_offset}.days)&.strftime('%Y-%m-%d') + 'T' + '#{start_time}' %>"
-        ).with_indifferent_access
-      end
     end
   end
 end

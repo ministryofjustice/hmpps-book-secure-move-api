@@ -7,12 +7,12 @@ namespace :nomis_fixtures do
   NOMIS_AGENCY_IDS = %w[LEI PVI MRI].freeze
 
   def create_fixture_directory
-    FileUtils.mkdir_p(NomisClient::Base.FIXTURE_DIRECTORY) unless File.directory?(NomisClient::Base.FIXTURE_DIRECTORY)
+    FileUtils.mkdir_p(NomisClient::Base::FIXTURE_DIRECTORY) unless File.directory?(NomisClient::Base::FIXTURE_DIRECTORY)
   end
 
   def save_person_response(anonymised_person_response, nomis_offender_number)
     create_fixture_directory
-    file_name = "#{NomisClient::Base.FIXTURE_DIRECTORY}/person-#{nomis_offender_number}.json.erb"
+    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/person-#{nomis_offender_number}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
     end
@@ -20,7 +20,7 @@ namespace :nomis_fixtures do
 
   def save_moves_response(anonymised_moves_response, date, nomis_agency_id)
     create_fixture_directory
-    file_name = "#{NomisClient::Base.FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
+    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
     end
@@ -29,6 +29,7 @@ namespace :nomis_fixtures do
   desc 'create anonymised moves/people'
   task import_moves: :environment do
     today = DateTime.civil(2019, 7, 10)
+    offender_numbers = {}
     (-2..2).each do |day_offset|
       date = today + day_offset.days
       moves_response = nil
@@ -40,7 +41,7 @@ namespace :nomis_fixtures do
             date: date
           )
           break
-        rescue Net::ReadTimeout
+        rescue Faraday::TimeoutError
           puts 'timed out'
         end
         anonymised_moves_response = moves_response.transform_values do |moves|
@@ -53,11 +54,20 @@ namespace :nomis_fixtures do
               puts "Can't find person #{real_offender_number}"
               nil
             else
-              anonymised_person_response = NomisClient::People.anonymise(person_response.first)
-              nomis_offender_number = anonymised_person_response[:offenderNo]
+              nomis_offender_number =
+                if offender_numbers.key?(real_offender_number)
+                  offender_numbers[real_offender_number]
+                else
+                  offender_numbers[real_offender_number] = Nomis::Faker.nomis_offender_number
+                end
+              anonymised_person_response = People::Anonymiser.new(nomis_offender_number: nomis_offender_number).call
               save_person_response(anonymised_person_response, nomis_offender_number)
               puts "Anonymising #{nomis_offender_number}..."
-              NomisClient::Moves.anonymise(nomis_offender_number, day_offset, move)
+              Moves::Anonymiser.new(
+                nomis_offender_number: nomis_offender_number,
+                day_offset: day_offset,
+                move_response: move
+              ).call
             end
           end.compact
         end
