@@ -27,7 +27,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         relationships: {
           person: { data: { type: 'people', id: person.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: { data: { type: 'locations', id: to_location.id } }
+          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil
         }
       }
     end
@@ -50,6 +50,50 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
       it 'returns the correct data' do
         expect(response_json).to eq resource_to_json
+      end
+
+      it 'sets the additional_information' do
+        expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
+      end
+
+      context 'without a `to_location`' do
+        let(:to_location) { nil }
+        let(:data) do
+          {
+            type: 'moves',
+            attributes: move_attributes.merge(move_type: nil),
+            relationships: {
+              person: { data: { type: 'people', id: person.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } }
+            }
+          }
+        end
+
+        it_behaves_like 'an endpoint that responds with success 201'
+
+        it 'creates a move', skip_before: true do
+          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+            .to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `prison_recall`' do
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        end
+      end
+
+      context 'with explicit `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'prison_recall') }
+
+        it_behaves_like 'an endpoint that responds with success 201'
+
+        it 'creates a move', skip_before: true do
+          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+            .to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `prison_recall`' do
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        end
       end
     end
 

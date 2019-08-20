@@ -8,5 +8,7 @@ FactoryBot.define do
     date { Date.today }
     time_due { Time.now }
     status { 'requested' }
+    additional_information { 'some more info about the move that the supplier might need to know' }
+    move_type { 'court_appearance' }
   end
 end

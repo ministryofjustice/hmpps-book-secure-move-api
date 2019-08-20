@@ -34,6 +34,15 @@ RSpec.describe Moves::Finder do
       end
     end
 
+    context 'with no location type and no location' do
+      let!(:move) { create :move, move_type: 'prison_recall', to_location: nil }
+      let(:filter_params) { {} }
+
+      it 'returns all moves' do
+        expect(move_finder.call.pluck(:id)).to eql [move.id]
+      end
+    end
+
     context 'with mis-matching location filter' do
       let(:filter_params) { { location_type: 'hospital' } }
 

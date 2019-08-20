@@ -23,7 +23,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       {
         type: 'moves',
         attributes: {
-          status: 'cancelled'
+          status: 'cancelled',
+          additional_information: 'some more info'
         }
       }
     end
@@ -40,6 +41,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it 'updates the status of a move', skip_before: true do
         patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.status).to eq 'cancelled'
+      end
+
+      it 'updates the additional_information of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(move.reload.additional_information).to eq 'some more info'
       end
 
       it 'returns the correct data' do

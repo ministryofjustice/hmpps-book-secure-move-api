@@ -29,10 +29,10 @@ module Moves
     end
 
     def apply_location_type_filters(scope)
-      scope = scope.joins(:to_location)
       return scope unless filter_params.key?(:location_type)
 
       scope
+        .joins(:to_location)
         .where(locations: { location_type: filter_params[:location_type] })
     end
   end
