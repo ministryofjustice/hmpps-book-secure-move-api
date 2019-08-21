@@ -9,7 +9,7 @@ module Moves
     end
 
     def call
-      apply_filters(Move).order('locations.title')
+      apply_filters(Move).order('moves.id')
     end
 
     private
