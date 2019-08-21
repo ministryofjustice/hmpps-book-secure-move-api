@@ -14,7 +14,7 @@ RSpec.describe NomisClient::Moves, with_nomis_client_authentication: true do
           from_location_nomis_agency_id: 'BXI',
           to_location_nomis_agency_id: 'BXI',
           date: '2019-08-19',
-          time_due: '17:00:00',
+          time_due: '2019-08-19T17:00:00',
           nomis_event_id: 468_536_961
         },
         {
@@ -22,7 +22,7 @@ RSpec.describe NomisClient::Moves, with_nomis_client_authentication: true do
           from_location_nomis_agency_id: 'BXI',
           to_location_nomis_agency_id: 'WDGRCC',
           date: '2019-08-19',
-          time_due: '09:00:00',
+          time_due: '2019-08-19T09:00:00',
           nomis_event_id: 487_463_210
         }
       ]
