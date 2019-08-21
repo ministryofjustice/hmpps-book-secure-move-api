@@ -56,15 +56,15 @@ RSpec.describe Moves::Anonymiser do
     end
 
     it 'sets eventDate to tomorrow' do
-      expect(anonymised[:eventDate]).to eq "<%= (Time.now + 1.days)&.strftime('%Y-%m-%d') %>"
+      expect(anonymised[:eventDate]).to eq "<%= date.toISOString().split('T')[0] %>"
     end
 
     it 'sets createDateTime to tomorrow' do
-      expect(anonymised[:createDateTime]).to eq '<%= (Time.now + 1.days)&.iso8601 %>'
+      expect(anonymised[:createDateTime]).to eq "<%= date.toISOString().split('.')[0] %>"
     end
 
     it 'sets startTime to 17:00' do
-      expect(anonymised[:startTime]).to eq "<%= (Time.now + 1.days)&.strftime('%Y-%m-%d') + 'T' + '17:00:00' %>"
+      expect(anonymised[:startTime]).to eq "<%= date.toISOString().split('T')[0] + 'T' + '17:00:00' %>"
     end
   end
 end

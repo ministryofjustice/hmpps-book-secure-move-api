@@ -12,7 +12,7 @@ namespace :nomis_fixtures do
 
   def save_person_response(anonymised_person_response, nomis_offender_number)
     create_fixture_directory
-    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/person-#{nomis_offender_number}.json.erb"
+    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/person-#{nomis_offender_number}.json"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate([anonymised_person_response], indent: '  '))
     end
@@ -20,7 +20,7 @@ namespace :nomis_fixtures do
 
   def save_moves_response(anonymised_moves_response, date, nomis_agency_id)
     create_fixture_directory
-    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.erb"
+    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/moves-#{date}-#{nomis_agency_id}.json.ejs"
     File.open(file_name, 'w+') do |file|
       file.write(JSON.pretty_generate(anonymised_moves_response, indent: '  '))
     end
