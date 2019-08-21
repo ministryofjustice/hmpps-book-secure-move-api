@@ -31,14 +31,15 @@ namespace :nomis_fixtures do
     today = DateTime.civil(2019, 7, 10)
     offender_numbers = {}
     (-2..2).each do |day_offset|
-      date = today + day_offset.days
+      date = (today + day_offset.days).to_date
       moves_response = nil
       NOMIS_AGENCY_IDS.each do |nomis_agency_id|
         (1..5).each do |attempt|
-          puts "Fetching moves for #{nomis_agency_id} on #{date.to_date.iso8601} (attempt #{attempt})..."
-          moves_response = NomisClient::Moves.get(
-            nomis_agency_ids: nomis_agency_id,
-            date: date
+          puts "Fetching moves for #{nomis_agency_id} on #{date.iso8601} (attempt #{attempt})..."
+          moves_response = NomisClient::Moves.get_response(
+            nomis_agency_id: nomis_agency_id,
+            date: date,
+            event_type: :courtEvents
           )
           break
         rescue Faraday::TimeoutError
@@ -47,7 +48,7 @@ namespace :nomis_fixtures do
         anonymised_moves_response = moves_response.transform_values do |moves|
           moves.map do |move|
             real_offender_number = move['offenderNo']
-            person_response = NomisClient::People.get(
+            person_response = NomisClient::People.get_response(
               nomis_offender_number: real_offender_number
             )
             if person_response.empty?

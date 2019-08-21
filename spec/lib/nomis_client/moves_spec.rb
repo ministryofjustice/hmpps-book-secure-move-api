@@ -4,9 +4,9 @@ require 'rails_helper'
 require 'dotenv/load'
 
 RSpec.describe NomisClient::Moves do
-  describe '.get' do
-    let(:date) { DateTime.civil(2019, 7, 8, 12, 23, 45) }
-    let(:nomis_agency_ids) { 'LEI' }
+  describe '.get_response' do
+    let(:date) { DateTime.civil(2019, 7, 8, 12, 23, 45).to_date }
+    let(:nomis_agency_id) { 'LEI' }
     let(:json_response) do
       <<-JSON
       {
@@ -61,16 +61,16 @@ RSpec.describe NomisClient::Moves do
       JSON
     end
     let(:nomis_response) { instance_double('response', parsed: JSON.parse(json_response)) }
-    let(:response) { described_class.get(nomis_agency_ids: nomis_agency_ids, date: date) }
+    let(:response) { described_class.get_response(nomis_agency_id: nomis_agency_id, date: date) }
     let(:params) do
       {
         agencyId: 'LEI',
         courtEvents: true,
         fromDateTime: '2019-07-08T00:00:00',
         toDateTime: '2019-07-09T00:00:00',
-        movements: true,
-        releaseEvents: true,
-        transferEvents: true
+        movements: false,
+        releaseEvents: false,
+        transferEvents: false
       }
     end
 
@@ -80,7 +80,7 @@ RSpec.describe NomisClient::Moves do
         .with(
           '/movements/transfers',
           params: params,
-          headers: { 'Page-Limit' => '1000' }
+          headers: { 'Page-Limit' => '500' }
         )
         .and_return(nomis_response)
       )
@@ -88,6 +88,41 @@ RSpec.describe NomisClient::Moves do
 
     it 'has the correct number of results' do
       expect(response.count).to be 4
+    end
+  end
+
+  describe '.get', with_nomis_client_authentication: true do
+    let(:nomis_agency_id) { 'BXI' }
+    let(:date) { Date.parse('2019-08-19') }
+    let(:response) { described_class.get(nomis_agency_id, date) }
+    let(:client_response) do
+      [
+        {
+          person_nomis_prison_number: 'G3239GV',
+          from_location_nomis_agency_id: 'BXI',
+          to_location_nomis_agency_id: 'BXI',
+          date: '2019-08-19',
+          time_due: '17:00:00',
+          nomis_event_id: 468_536_961
+        },
+        {
+          person_nomis_prison_number: 'G7157AB',
+          from_location_nomis_agency_id: 'BXI',
+          to_location_nomis_agency_id: 'WDGRCC',
+          date: '2019-08-19',
+          time_due: '09:00:00',
+          nomis_event_id: 487_463_210
+        }
+      ]
+    end
+
+    context 'when results are present' do
+      let(:response_status) { 200 }
+      let(:response_body) { file_fixture('nomis_get_moves_200.json').read }
+
+      it 'returns the correct moves data' do
+        expect(response).to eq client_response
+      end
     end
   end
 end

@@ -1,26 +1,44 @@
 # frozen_string_literal: true
 
 module NomisClient
-  class Moves < NomisClient::Base
+  class Moves
     class << self
-      def get(nomis_agency_ids:, date:)
+      def get(nomis_agency_id, date, event_type = :courtEvents)
+        attributes_for(
+          get_response(nomis_agency_id: nomis_agency_id, date: date, event_type: event_type),
+          event_type
+        )
+      end
+
+      def get_response(nomis_agency_id:, date:, event_type: :courtEvents)
         NomisClient::Base.get(
           '/movements/transfers',
-          params: params_for(nomis_agency_ids, date),
-          headers: { 'Page-Limit' => '1000' }
+          params: { agencyId: nomis_agency_id, **date_params(date), **event_params(event_type) },
+          headers: { 'Page-Limit' => '500' }
         ).parsed
       end
 
-      def params_for(nomis_agency_ids, date)
-        {
-          agencyId: nomis_agency_ids,
-          fromDateTime: date.beginning_of_day.iso8601.split('+').first,
-          toDateTime: (date + 1.day).beginning_of_day.iso8601.split('+').first,
-          courtEvents: true,
-          releaseEvents: true,
-          transferEvents: true,
-          movements: true
-        }
+      private
+
+      def attributes_for(nomis_data, event_type)
+        nomis_data[event_type.to_s].map do |item|
+          {
+            person_nomis_prison_number: item['offenderNo'],
+            from_location_nomis_agency_id: item['fromAgency'],
+            to_location_nomis_agency_id: item['toAgency'],
+            date: item['eventDate'],
+            time_due: item['startTime'] ? item['startTime'].split('T').last : nil,
+            nomis_event_id: item['eventId']
+          }
+        end
+      end
+
+      def date_params(date)
+        { fromDateTime: date.to_s(:nomis), toDateTime: (date + 1).to_s(:nomis) }
+      end
+
+      def event_params(event_type)
+        %i[courtEvents movements releaseEvents transferEvents].map { |event| [event, event == event_type] }.to_h
       end
     end
   end
