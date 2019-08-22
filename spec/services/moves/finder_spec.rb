@@ -97,7 +97,7 @@ RSpec.describe Moves::Finder do
     let!(:move_to_prison) { create :move, to_location: prison }
 
     it 'returns moves in the correct order' do
-      expect(move_finder.call.pluck(:id)).to eql [move.id, move_to_prison.id]
+      expect(move_finder.call.pluck(:id)).to eql [move.id, move_to_prison.id].sort 
     end
   end
 end
