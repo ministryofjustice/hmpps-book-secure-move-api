@@ -27,7 +27,7 @@ module NomisClient
             from_location_nomis_agency_id: item['fromAgency'],
             to_location_nomis_agency_id: item['toAgency'],
             date: item['eventDate'],
-            time_due: item['startTime'] ? item['startTime'].split('T').last : nil,
+            time_due: item['startTime'],
             nomis_event_id: item['eventId']
           }
         end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_08_151619) do
+ActiveRecord::Schema.define(version: 2019_08_21_095338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -69,12 +69,13 @@ ActiveRecord::Schema.define(version: 2019_08_08_151619) do
     t.uuid "to_location_id"
     t.uuid "person_id", null: false
     t.string "status", default: "requested", null: false
-    t.time "time_due"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reference", null: false
     t.string "move_type"
     t.string "additional_information"
+    t.integer "nomis_event_id"
+    t.datetime "time_due"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
@@ -132,6 +133,7 @@ ActiveRecord::Schema.define(version: 2019_08_08_151619) do
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "nomis_prison_number"
   end
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -11,6 +11,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'doorkeeper'
 gem 'json-schema'
 gem 'kaminari'
+gem 'nokogiri', '>= 1.10.4'
 gem 'oauth2'
 gem 'pager_api'
 gem 'pg', '~> 1.0.0'
