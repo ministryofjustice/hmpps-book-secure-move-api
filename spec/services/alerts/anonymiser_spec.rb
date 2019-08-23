@@ -21,14 +21,14 @@ RSpec.describe Alerts::Anonymiser do
         alertCode: 'XER',
         alertCodeDescription: 'Escape Risk',
         comment: 'some personal details',
-        dateCreated: '2011-09-28',
+        dateCreated: '2001-09-28',
         expired: false,
         active: true,
-        addedByFirstName: 'REFUGIO',
-        addedByLastName: 'ROGAHN',
+        addedByFirstName: 'PAMMY-BARBARA',
+        addedByLastName: 'SUMMERBURGER',
         expiredByFirstName: 'GLENNA',
         expiredByLastName: 'FLATLEY',
-        dateExpires: '2016-12-26'
+        dateExpires: '2006-12-26'
       },
       {
         alertId: 2,
@@ -37,14 +37,14 @@ RSpec.describe Alerts::Anonymiser do
         alertCode: 'XEL',
         alertCodeDescription: 'Escape List',
         comment: 'some more personal details',
-        dateCreated: '2011-11-14',
+        dateCreated: '2001-11-14',
         expired: false,
         active: true,
-        addedByFirstName: 'AUGUSTUS',
-        addedByLastName: 'WILLIAMSON',
+        addedByFirstName: 'BILLY-BOB',
+        addedByLastName: 'GREYGARDINER',
         expiredByFirstName: 'TOMMY',
         expiredByLastName: 'POLLICH',
-        dateExpires: '2018-02-06'
+        dateExpires: '2008-02-06'
       }
     ]
   end
@@ -58,8 +58,20 @@ RSpec.describe Alerts::Anonymiser do
       expect(anonymised[:comment]).to be_nil
     end
 
-    it 'resets names' do
-      expect(anonymised[:addedByFirstName]).not_to eql 'AUGUSTUS'
+    it 'resets first name' do
+      expect(anonymised[:addedByFirstName]).not_to eql 'PAMMY-BARBARA'
+    end
+
+    it 'resets last name' do
+      expect(anonymised[:addedByLastName]).not_to eql 'SUMMERBURGER'
+    end
+
+    it 'resets created date' do
+      expect(anonymised[:dateCreated]).not_to eql '2001-11-14'
+    end
+
+    it 'resets expires date' do
+      expect(anonymised[:dateCreated]).not_to eql '2008-02-06'
     end
   end
 end
