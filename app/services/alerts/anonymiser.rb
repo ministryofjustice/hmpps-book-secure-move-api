@@ -10,17 +10,29 @@ module Alerts
     end
 
     def call
-      alerts.map do |alert|
-        alert.merge(
-          addedByFirstName: Faker::Name.first_name.upcase,
-          addedByLastName: Faker::Name.last_name.upcase,
-          expiredByFirstName: Faker::Name.first_name.upcase,
-          expiredByLastName: Faker::Name.last_name.upcase,
-          dateCreated: Faker::Date.between(10.years.ago, 6.years.ago).iso8601,
-          dateExpires: Faker::Date.between(5.years.ago, 1.years.ago).iso8601,
-          comment: ''
-        ).with_indifferent_access
-      end
+      alerts.map { |alert| anonymise_alert(alert) }
+    end
+
+    private
+
+    def anonymise_alert(alert)
+      alert.merge(
+        addedByFirstName: Faker::Name.first_name.upcase,
+        addedByLastName: Faker::Name.last_name.upcase,
+        expiredByFirstName: Faker::Name.first_name.upcase,
+        expiredByLastName: Faker::Name.last_name.upcase,
+        dateCreated: fake_date_created,
+        dateExpires: fake_date_expires,
+        comment: ''
+      ).with_indifferent_access
+    end
+
+    def fake_date_created
+      Faker::Date.between(10.years.ago, 6.years.ago).iso8601
+    end
+
+    def fake_date_expires
+      Faker::Date.between(5.years.ago, 1.years.ago).iso8601
     end
   end
 end
