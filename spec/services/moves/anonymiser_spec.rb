@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'dotenv/load'
 
 RSpec.describe Moves::Anonymiser do
   subject(:anonymiser) do

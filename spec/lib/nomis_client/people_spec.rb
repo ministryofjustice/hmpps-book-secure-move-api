@@ -3,7 +3,6 @@
 require 'rails_helper'
 require 'nomis_client'
 require 'nomis_client/moves'
-require 'dotenv/load'
 
 RSpec.describe NomisClient::People do
   describe '.get_response' do
