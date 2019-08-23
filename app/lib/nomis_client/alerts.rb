@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class NomisClient
-  class Alerts
+module NomisClient
+  class Alerts < NomisClient::Base
     class << self
       def get(prison_number)
-        NomisClient.get("/bookings/offenderNo/#{prison_number}/alerts").parsed.map do |alert|
+        NomisClient::Base.get("/bookings/offenderNo/#{prison_number}/alerts").parsed.map do |alert|
           attributes_for(alert)
         end
       end
