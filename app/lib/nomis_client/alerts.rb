@@ -4,9 +4,13 @@ module NomisClient
   class Alerts < NomisClient::Base
     class << self
       def get(prison_number)
-        NomisClient::Base.get("/bookings/offenderNo/#{prison_number}/alerts").parsed.map do |alert|
+        get_response(prison_number).parsed.map do |alert|
           attributes_for(alert)
         end
+      end
+
+      def get_response(nomis_offender_number:)
+        NomisClient::Base.get("/bookings/offenderNo/#{nomis_offender_number}/alerts")
       end
 
       # rubocop:disable Metrics/MethodLength
