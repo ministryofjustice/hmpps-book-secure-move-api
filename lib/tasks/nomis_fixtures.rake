@@ -14,7 +14,7 @@ namespace :nomis_fixtures do
     create_fixture_directory
     file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/alerts-#{nomis_offender_number}.json"
     File.open(file_name, 'w+') do |file|
-      file.write(JSON.pretty_generate([anonymised_alerts_response], indent: '  '))
+      file.write(JSON.pretty_generate(anonymised_alerts_response, indent: '  '))
     end
   end
 
