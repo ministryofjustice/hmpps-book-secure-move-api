@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
-class NomisClient
+require 'nomis/faker'
+
+module NomisClient
   class People
     class << self
       def get(prison_number)
         attributes_for(
-          NomisClient.get("/prisoners/#{prison_number}").parsed.first
+          get_response(nomis_offender_number: prison_number).first
         )
+      end
+
+      def get_response(nomis_offender_number:)
+        NomisClient::Base.get(
+          "/prisoners/#{nomis_offender_number}",
+          params: {},
+          headers: { 'Page-Limit' => '1000' }
+        ).parsed
       end
 
       # rubocop:disable Metrics/MethodLength

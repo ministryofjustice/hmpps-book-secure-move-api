@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-class NomisClient
+module NomisClient
   class Moves
     class << self
       def get(nomis_agency_id, date, event_type = :courtEvents)
         attributes_for(
-          get_nomis_moves(nomis_agency_id, date, event_type),
+          get_response(nomis_agency_id: nomis_agency_id, date: date, event_type: event_type),
           event_type
         )
       end
 
-      private
-
-      def get_nomis_moves(nomis_agency_id, date, event_type)
-        NomisClient.get(
+      def get_response(nomis_agency_id:, date:, event_type: :courtEvents)
+        NomisClient::Base.get(
           '/movements/transfers',
           params: { agencyId: nomis_agency_id, **date_params(date), **event_params(event_type) },
           headers: { 'Page-Limit' => '500' }
         ).parsed
       end
+
+      private
 
       def attributes_for(nomis_data, event_type)
         nomis_data[event_type.to_s].map do |item|

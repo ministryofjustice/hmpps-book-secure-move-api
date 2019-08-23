@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class NomisClient
+module NomisClient
   class Locations
     class << self
       def get
         attributes_for(
-          NomisClient.get(
+          NomisClient::Base.get(
             '/agencies',
             headers: { 'Page-Limit' => '5000' }
           ).parsed

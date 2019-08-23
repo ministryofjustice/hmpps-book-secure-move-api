@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
   describe '.get' do
     let(:response) { described_class.get }
