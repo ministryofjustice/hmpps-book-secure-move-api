@@ -4,7 +4,7 @@ module NomisClient
   class Alerts < NomisClient::Base
     class << self
       def get(prison_number)
-        get_response(prison_number).parsed.map do |alert|
+        get_response(nomis_offender_number: prison_number).parsed.map do |alert|
           attributes_for(alert)
         end
       end
