@@ -10,6 +10,14 @@ namespace :nomis_fixtures do
     FileUtils.mkdir_p(NomisClient::Base::FIXTURE_DIRECTORY) unless File.directory?(NomisClient::Base::FIXTURE_DIRECTORY)
   end
 
+  def save_alerts_response(anonymised_alerts_response, nomis_offender_number)
+    create_fixture_directory
+    file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/alerts-#{nomis_offender_number}.json"
+    File.open(file_name, 'w+') do |file|
+      file.write(JSON.pretty_generate(anonymised_alerts_response, indent: '  '))
+    end
+  end
+
   def save_person_response(anonymised_person_response, nomis_offender_number)
     create_fixture_directory
     file_name = "#{NomisClient::Base::FIXTURE_DIRECTORY}/person-#{nomis_offender_number}.json"
@@ -64,6 +72,16 @@ namespace :nomis_fixtures do
               anonymised_person_response = People::Anonymiser.new(nomis_offender_number: nomis_offender_number).call
               save_person_response(anonymised_person_response, nomis_offender_number)
               puts "Anonymising #{nomis_offender_number}..."
+
+              alerts_response = NomisClient::Alerts.get_response(
+                nomis_offender_number: real_offender_number
+              ).parsed
+              anonymised_alerts_response = Alerts::Anonymiser.new(
+                nomis_offender_number: nomis_offender_number,
+                alerts: alerts_response
+              ).call
+              save_alerts_response(anonymised_alerts_response, nomis_offender_number)
+
               Moves::Anonymiser.new(
                 nomis_offender_number: nomis_offender_number,
                 day_offset: day_offset,
