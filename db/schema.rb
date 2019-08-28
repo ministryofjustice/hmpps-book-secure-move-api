@@ -91,7 +91,8 @@ ActiveRecord::Schema.define(version: 2019_08_28_103544) do
   create_table "nomis_alerts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "nomis_alert_type", null: false
     t.string "nomis_alert_code", null: false
-    t.string "description", null: false
+    t.string "nomis_alert_code_description", null: false
+    t.string "nomis_alert_type_description", null: false
     t.uuid "assessment_question_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
