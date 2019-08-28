@@ -12,6 +12,12 @@ class Move < ApplicationRecord
     prison_transfer: 'prison_transfer'
   }
 
+  enum cancellation_reason: {
+    created_by_mistake: 'created_by_mistake',
+    supplier_cannot_move: 'supplier_cannot_move',
+    other: 'other'
+  }
+
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person
