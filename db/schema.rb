@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_21_095338) do
+ActiveRecord::Schema.define(version: 2019_08_28_103544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(version: 2019_08_21_095338) do
     t.string "reference", null: false
     t.string "move_type"
     t.string "additional_information"
-    t.integer "nomis_event_id"
     t.datetime "time_due"
+    t.integer "nomis_event_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
@@ -86,6 +86,15 @@ ActiveRecord::Schema.define(version: 2019_08_21_095338) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.datetime "disabled_at"
+  end
+
+  create_table "nomis_alerts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "nomis_alert_type", null: false
+    t.string "nomis_alert_code", null: false
+    t.string "description", null: false
+    t.uuid "assessment_question_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
