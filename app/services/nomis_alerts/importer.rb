@@ -16,17 +16,29 @@ module NomisAlerts
     }.freeze
 
     def initialize(alert_types:, alert_codes:)
-      self.alert_types = alert_types
+      self.alert_types = alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h
       self.alert_codes = alert_codes
     end
 
     def call
       alert_codes.each do |alert|
-        record = NomisAlert.find_or_initialize_by(nomis_code: alert[:code])
-        puts record.id
+        import_alert(alert)
       end
     end
 
     private
+
+    def import_alert(alert)
+      alert_type = alert_type_for(alert)
+      record = NomisAlert.find_or_initialize_by(code: alert[:code], type_code: alert[:parent_code])
+      record.update!(
+        description: alert[:description],
+        type_description: alert_type[:description]
+      )
+    end
+
+    def alert_type_for(alert)
+      alert_types.fetch(alert[:parent_code])
+    end
   end
 end
