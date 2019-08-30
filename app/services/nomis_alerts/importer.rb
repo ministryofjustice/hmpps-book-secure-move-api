@@ -16,7 +16,7 @@ module NomisAlerts
     }.freeze
 
     def initialize(alert_types:, alert_codes:)
-      self.alert_types = alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h
+      self.alert_types = alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
       self.alert_codes = alert_codes
     end
 
@@ -30,15 +30,15 @@ module NomisAlerts
 
     def import_alert(alert)
       alert_type = alert_type_for(alert)
+      puts "Missing alert type #{alert[:parent_code]}" if alert_type.nil?
+      return if alert_type.nil?
+
       record = NomisAlert.find_or_initialize_by(code: alert[:code], type_code: alert[:parent_code])
-      record.update!(
-        description: alert[:description],
-        type_description: alert_type[:description]
-      )
+      record.update!(description: alert[:description], type_description: alert_type[:description])
     end
 
     def alert_type_for(alert)
-      alert_types.fetch(alert[:parent_code])
+      alert_types[alert[:parent_code]]
     end
   end
 end

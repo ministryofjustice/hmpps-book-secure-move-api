@@ -10,7 +10,10 @@ module NomisClient
       end
 
       def fetch_response
-        NomisClient::Base.get('/reference-domains/alertTypes')
+        NomisClient::Base.get(
+          '/reference-domains/domains/ALERT',
+          headers: { 'Page-Limit' => '1000' }
+        )
       end
 
       def attributes_for(alert_type)
