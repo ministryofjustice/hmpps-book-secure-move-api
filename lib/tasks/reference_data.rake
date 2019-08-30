@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
@@ -34,3 +35,4 @@ namespace :reference_data do
     ).call
   end
 end
+# rubocop:enable Metrics/BlockLength
