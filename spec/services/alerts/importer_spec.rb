@@ -43,8 +43,9 @@ RSpec.describe Alerts::Importer do
     ]
   end
 
-  it 'works' do
-    importer.call
-    expect(profile.assessment_answers.count).to be 2
+  context 'when there are no relevant nomis alert mappings' do
+    it 'creates new assessment answers with nomis alert code and type' do
+      expect { importer.call }.to change { profile.reload.assessment_answers.count }.by(2)
+    end
   end
 end

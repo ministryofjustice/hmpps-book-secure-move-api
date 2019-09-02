@@ -19,6 +19,10 @@ class Profile < ApplicationRecord
     police_national_computer criminal_records_office prison_number niche_reference athena_reference
   ].freeze
 
+  def merge_assessment_answers!(assessment_answers)
+    self.assessment_answers = assessment_answers
+  end
+
   private
 
   def set_assessment_answers
