@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe NomisAlerts::Importer do
-  subject(:importer) { described_class.new(alert_types: alert_types, alert_codes: alert_codes) }
+  subject(:importer) { described_class.new(alert_codes: alert_codes) }
 
   let(:alert_types) do
     [
@@ -45,6 +45,10 @@ RSpec.describe NomisAlerts::Importer do
         active_flag: 'Y'
       }
     ]
+  end
+
+  before do
+    allow(NomisClient::AlertTypes).to receive(:get).and_return(alert_types)
   end
 
   context 'with no existing records' do

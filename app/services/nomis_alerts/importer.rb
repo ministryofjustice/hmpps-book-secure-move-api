@@ -126,8 +126,9 @@ module NomisAlerts
       'Health and medical' => :health_issue
     }.freeze
 
-    def initialize(alert_types:, alert_codes:)
-      self.alert_types = alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
+    def initialize(alert_codes:)
+      self.alert_types =
+        nomis_alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
       self.alert_codes = alert_codes
     end
 
@@ -138,6 +139,10 @@ module NomisAlerts
     end
 
     private
+
+    def nomis_alert_types
+      NomisClient::AlertTypes.get
+    end
 
     def import_alert(alert)
       alert_type = alert_type_for(alert)

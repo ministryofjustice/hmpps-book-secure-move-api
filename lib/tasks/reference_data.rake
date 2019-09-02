@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
@@ -29,10 +28,6 @@ namespace :reference_data do
 
   desc 'create NOMIS alert mappings'
   task create_nomis_alerts: :environment do
-    NomisAlerts::Importer.new(
-      alert_types: NomisClient::AlertTypes.get,
-      alert_codes: NomisClient::AlertCodes.get
-    ).call
+    NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
   end
 end
-# rubocop:enable Metrics/BlockLength
