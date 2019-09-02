@@ -98,4 +98,20 @@ RSpec.describe NomisAlerts::Importer do
       expect(risk.reload.type_description).to eq 'Risk'
     end
   end
+
+  context 'with a valid assessment assessment_question mapping' do
+    let!(:hold_separately_question) do
+      create :assessment_question, key: :hold_separately
+    end
+
+    it 'updates the assessment question mapping for a known question key' do
+      importer.call
+      expect(NomisAlert.find_by(code: 'RDP').assessment_question_id).to eq hold_separately_question.id
+    end
+
+    it 'ignores the assessment question mapping for an unknown question key' do
+      importer.call
+      expect(NomisAlert.find_by(code: 'RDA').assessment_question_id).to be_nil
+    end
+  end
 end

@@ -5,4 +5,6 @@ class NomisAlert < ApplicationRecord
   validates :code, presence: true
   validates :type_description, presence: true
   validates :description, presence: true
+
+  belongs_to :assessment_question, optional: true
 end
