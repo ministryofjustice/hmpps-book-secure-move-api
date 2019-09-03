@@ -9,6 +9,10 @@ module NomisClient
         end
       end
 
+      def as_hash
+        get.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
+      end
+
       def fetch_response
         NomisClient::Base.get(
           '/reference-domains/domains/ALERT',

@@ -136,15 +136,10 @@ module NomisAlerts
       end
     end
 
-    def alert_types
-      @alert_types ||=
-        nomis_alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
-    end
-
     private
 
-    def nomis_alert_types
-      NomisClient::AlertTypes.get
+    def alert_types
+      @alert_types ||= NomisClient::AlertTypes.as_hash
     end
 
     def import_alert(alert)
