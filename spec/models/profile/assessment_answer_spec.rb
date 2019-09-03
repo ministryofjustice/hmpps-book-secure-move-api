@@ -20,7 +20,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   end
 
   describe 'validations' do
-    context 'without an assessment_question_id' do
+    context 'without an assessment_question_id or nomis_alert_type and nomis_alert_code' do
       let(:attribute_values) do
         {
           title: title,
@@ -37,6 +37,19 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       let(:attribute_values) do
         {
           assessment_question_id: 123
+        }
+      end
+
+      it 'is valid' do
+        expect(assessment_answer.valid?).to be true
+      end
+    end
+
+    context 'with a nomis_alert_code and nomis_alert_type' do
+      let(:attribute_values) do
+        {
+          nomis_alert_type: 'A',
+          nomis_alert_code: 'ABC'
         }
       end
 

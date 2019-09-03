@@ -17,7 +17,7 @@ class Profile
     attr_accessor :title, :comments, :assessment_question_id, :category, :key
     attr_reader :created_at, :expires_at
 
-    # validates :assessment_question_id, presence: true
+    validate :assessment_question_or_nomis_code_present
 
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
@@ -79,6 +79,12 @@ class Profile
 
     def set_timestamps
       self.created_at ||= Time.zone.now
+    end
+
+    def assessment_question_or_nomis_code_present
+      return if assessment_question_id.present? || (nomis_alert_type.present? && nomis_alert_code.present?)
+
+      errors.add(:assessment_question_id, "can't be blank unless nomis_alert_type and nomis_alert_code are present")
     end
   end
 end
