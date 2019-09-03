@@ -25,4 +25,9 @@ namespace :reference_data do
   task create_assessment_questions: :environment do
     AssessmentQuestions::Importer.new.call
   end
+
+  desc 'create NOMIS alert mappings'
+  task create_nomis_alerts: :environment do
+    NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
+  end
 end
