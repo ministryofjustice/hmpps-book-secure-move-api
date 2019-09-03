@@ -15,7 +15,10 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       created_at: Date.civil(2019, 5, 30),
       expires_at: Date.civil(2019, 6, 30),
       category: 'risk',
-      key: 'just_a_test'
+      key: 'just_a_test',
+      nomis_alert_code: nil,
+      nomis_alert_type: nil,
+      imported_from_nomis: false
     }
   end
 
@@ -114,7 +117,10 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         created_at: Date.civil(2019, 5, 30),
         expires_at: Date.civil(2019, 6, 30),
         category: 'foo',
-        title: 'foo'
+        title: 'foo',
+        nomis_alert_code: nil,
+        nomis_alert_type: nil,
+        imported_from_nomis: false
       }
     end
 

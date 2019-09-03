@@ -31,7 +31,8 @@ module Alerts
         category: assessment_question&.category || :risk,
         key: assessment_question&.key || alert[:alert_code],
         nomis_alert_code: alert[:alert_code],
-        nomis_alert_type: alert[:alert_type]
+        nomis_alert_type: alert[:alert_type],
+        imported_from_nomis: true
       ).tap(&:set_timestamps)
     end
     # rubocop:enable Metrics/MethodLength

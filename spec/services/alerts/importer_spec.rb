@@ -62,6 +62,11 @@ RSpec.describe Alerts::Importer do
       importer.call
       expect(profile.reload.assessment_answers&.first&.assessment_question_id).to be_nil
     end
+
+    it 'sets imported_from_nomis' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.imported_from_nomis).to be true
+    end
   end
 
   context 'with a relevant nomis alert mapping' do

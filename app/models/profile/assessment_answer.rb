@@ -11,30 +11,29 @@ class Profile
       :category,
       :key,
       :nomis_alert_code,
-      :nomis_alert_type
+      :nomis_alert_type,
+      :imported_from_nomis
     )
 
-    attr_accessor :title, :comments, :assessment_question_id, :category, :key, :nomis_alert_code, :nomis_alert_type
+    attr_accessor(
+      :title,
+      :comments,
+      :assessment_question_id,
+      :category,
+      :key,
+      :nomis_alert_code,
+      :nomis_alert_type,
+      :imported_from_nomis
+    )
     attr_reader :created_at, :expires_at
 
     validate :assessment_question_or_nomis_code_present
 
-    # rubocop:disable Metrics/MethodLength
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
-
-      self.title = attributes[:title]
-      self.comments = attributes[:comments]
-      self.created_at = attributes[:created_at]
-      self.expires_at = attributes[:expires_at]
-      self.assessment_question_id = attributes[:assessment_question_id]
-      self.category = attributes[:category]
-      self.key = attributes[:key]
-      self.nomis_alert_code = attributes[:nomis_alert_code]
-      self.nomis_alert_type = attributes[:nomis_alert_type]
+      assign_attributes(attributes)
       super
     end
-    # rubocop:enable Metrics/MethodLength
 
     def created_at=(value)
       @created_at = value.is_a?(String) ? Date.parse(value) : value
@@ -59,7 +58,8 @@ class Profile
         category: category,
         key: key,
         nomis_alert_type: nomis_alert_type,
-        nomis_alert_code: nomis_alert_code
+        nomis_alert_code: nomis_alert_code,
+        imported_from_nomis: imported_from_nomis
       }
     end
     # rubocop:enable Metrics/MethodLength
@@ -89,10 +89,25 @@ class Profile
       self.created_at ||= Time.zone.now
     end
 
+    private
+
     def assessment_question_or_nomis_code_present
       return if assessment_question_id.present? || (nomis_alert_type.present? && nomis_alert_code.present?)
 
       errors.add(:assessment_question_id, "can't be blank unless nomis_alert_type and nomis_alert_code are present")
+    end
+
+    def assign_attributes(attributes)
+      self.title = attributes[:title]
+      self.comments = attributes[:comments]
+      self.created_at = attributes[:created_at]
+      self.expires_at = attributes[:expires_at]
+      self.assessment_question_id = attributes[:assessment_question_id]
+      self.category = attributes[:category]
+      self.key = attributes[:key]
+      self.nomis_alert_code = attributes[:nomis_alert_code]
+      self.nomis_alert_type = attributes[:nomis_alert_type]
+      self.imported_from_nomis = attributes[:imported_from_nomis]
     end
   end
 end
