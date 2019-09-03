@@ -117,15 +117,6 @@ module NomisAlerts
       'F1' => nil
     }.freeze
 
-    KNOWN_ALERTS = {
-      'Self harm' => :self_harm,
-      'Must be segregated' => :hold_separately,
-      'Violent' => :violent,
-      'Escape' => :escape,
-      'Not to be released' => :not_for_release,
-      'Health and medical' => :health_issue
-    }.freeze
-
     def initialize(alert_codes:)
       self.alert_codes = alert_codes
     end
