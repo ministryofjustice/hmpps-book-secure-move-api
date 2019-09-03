@@ -14,11 +14,12 @@ class Profile
       :nomis_alert_type
     )
 
-    attr_accessor :title, :comments, :assessment_question_id, :category, :key
+    attr_accessor :title, :comments, :assessment_question_id, :category, :key, :nomis_alert_code, :nomis_alert_type
     attr_reader :created_at, :expires_at
 
     validate :assessment_question_or_nomis_code_present
 
+    # rubocop:disable Metrics/MethodLength
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
 
@@ -29,8 +30,11 @@ class Profile
       self.assessment_question_id = attributes[:assessment_question_id]
       self.category = attributes[:category]
       self.key = attributes[:key]
+      self.nomis_alert_code = attributes[:nomis_alert_code]
+      self.nomis_alert_type = attributes[:nomis_alert_type]
       super
     end
+    # rubocop:enable Metrics/MethodLength
 
     def created_at=(value)
       @created_at = value.is_a?(String) ? Date.parse(value) : value
@@ -44,6 +48,7 @@ class Profile
       assessment_question_id.blank?
     end
 
+    # rubocop:disable Metrics/MethodLength
     def as_json
       {
         title: title,
@@ -52,9 +57,12 @@ class Profile
         expires_at: expires_at,
         assessment_question_id: assessment_question_id,
         category: category,
-        key: key
+        key: key,
+        nomis_alert_type: nomis_alert_type,
+        nomis_alert_code: nomis_alert_code
       }
     end
+    # rubocop:enable Metrics/MethodLength
 
     def risk?
       category == 'risk'

@@ -43,9 +43,45 @@ RSpec.describe Alerts::Importer do
     ]
   end
 
-  context 'when there are no relevant nomis alert mappings' do
-    it 'creates new assessment answers with nomis alert code and type' do
+  context 'with no relevant nomis alert mappings' do
+    it 'creates new assessment answers' do
       expect { importer.call }.to change { profile.reload.assessment_answers.count }.by(2)
+    end
+
+    it 'sets the nomis alert code' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.nomis_alert_code).to eq 'XVL'
+    end
+
+    it 'sets the nomis alert type' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.nomis_alert_type).to eq 'X'
+    end
+
+    it 'leaves the assessment question id blank' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.assessment_question_id).to be_nil
+    end
+  end
+
+  context 'with a relevant nomis alert mapping' do
+    let(:assessment_question) { create :assessment_question }
+    let!(:nomis_alert) do
+      create(
+        :nomis_alert,
+        type_code: 'X',
+        code: 'XVL',
+        assessment_question_id: assessment_question.id
+      )
+    end
+
+    it 'creates new assessment answers' do
+      expect { importer.call }.to change { profile.reload.assessment_answers.count }.by(2)
+    end
+
+    it 'sets the assessment question id' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.assessment_question_id).to eq assessment_question.id
     end
   end
 end

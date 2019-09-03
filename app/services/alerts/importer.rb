@@ -18,20 +18,9 @@ module Alerts
 
     private
 
-    # alert_id: alert['alertId'],
-    # alert_type: alert['alertType'],
-    # alert_type_description: alert['alertTypeDescription'],
-    # alert_code: alert['alertCode'],
-    # alert_code_description: alert['alertCodeDescription'],
-    # comment: alert['comment'],
-    # created_at: alert['dateCreated'],
-    # expires_at: alert['dateExpires'],
-    # expired: alert['expired'],
-    # active: alert['active'],
-    # rnum: alert['rnum']
+    # rubocop:disable Metrics/MethodLength
     def build_alert(alert)
-      #TODO: Look up assessment question mapping (NomisAlerts)
-      assessment_question = nil
+      assessment_question = find_assessment_question(alert)
 
       Profile::AssessmentAnswer.new(
         title: alert[:description],
@@ -44,6 +33,15 @@ module Alerts
         nomis_alert_code: alert[:alert_code],
         nomis_alert_type: alert[:alert_type]
       ).tap(&:set_timestamps)
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def find_assessment_question(alert)
+      nomis_alert = NomisAlert.includes(:assessment_question).find_by(
+        code: alert[:alert_code],
+        type_code: alert[:alert_type]
+      )
+      nomis_alert&.assessment_question
     end
   end
 end
