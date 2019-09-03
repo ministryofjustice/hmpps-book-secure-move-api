@@ -5,7 +5,7 @@ require 'csv'
 module NomisAlerts
   # rubocop:disable Metrics/ClassLength
   class Importer
-    attr_accessor :alert_types, :alert_codes
+    attr_accessor :alert_codes
 
     ALERT_MAPPINGS = {
       'HA' => :self_harm,
@@ -127,8 +127,6 @@ module NomisAlerts
     }.freeze
 
     def initialize(alert_codes:)
-      self.alert_types =
-        nomis_alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
       self.alert_codes = alert_codes
     end
 
@@ -136,6 +134,11 @@ module NomisAlerts
       alert_codes.each do |alert|
         import_alert(alert)
       end
+    end
+
+    def alert_types
+      @alert_types ||=
+        nomis_alert_types.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
     end
 
     private

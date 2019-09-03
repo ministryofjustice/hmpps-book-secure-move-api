@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(version: 2019_08_28_103544) do
     t.string "reference", null: false
     t.string "move_type"
     t.string "additional_information"
-    t.datetime "time_due"
     t.integer "nomis_event_id"
+    t.datetime "time_due"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
