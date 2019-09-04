@@ -51,6 +51,34 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         end
       end
 
+      context 'with a cancelled move' do
+        let(:move) { create(:move, :cancelled) }
+        let!(:moves) { [move] }
+        let(:from_location_id) { move.from_location_id }
+        let(:filters) do
+          {
+            from_location_id: from_location_id
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        # rubocop:disable RSpec/ExampleLength
+        it 'returns the correct attributes values for moves' do
+          expect(response_json).to include_json(
+            data: [
+              {
+                id: move.id,
+                attributes: {
+                  cancellation_reason: move.cancellation_reason,
+                  cancellation_reason_comment: move.cancellation_reason_comment
+                }
+              }
+            ]
+          )
+        end
+        # rubocop:enable RSpec/ExampleLength
+      end
+
       describe 'paginating results' do
         let(:meta_pagination) do
           {
