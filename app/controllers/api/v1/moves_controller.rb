@@ -4,6 +4,11 @@ module Api
   module V1
     class MovesController < ApiController
       def index
+        begin
+          import_moves_from_nomis
+        rescue StandardError => e
+          Raven.capture_exception(e)
+        end
         moves = Moves::Finder.new(filter_params).call
         paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
@@ -72,6 +77,25 @@ module Api
         Move
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
+      end
+
+      def import_moves_from_nomis
+        return unless from_location_nomis_agency_id && date
+
+        moves = NomisClient::Moves.get(from_location_nomis_agency_id, date)
+        Moves::Importer.new(moves).call
+      end
+
+      def from_location_nomis_agency_id
+        return unless filter_params[:from_location_id]
+
+        Location.find(filter_params[:from_location_id]).nomis_agency_id
+      end
+
+      def date
+        return unless filter_params[:date_from]
+
+        Date.parse(filter_params[:date_from])
       end
     end
   end

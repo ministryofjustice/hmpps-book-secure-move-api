@@ -85,6 +85,87 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           expect(response_json['meta']['pagination']).to include_json(meta_pagination)
         end
       end
+
+      describe 'importing moves from NOMIS passing all required filters (NOMIS agency_id and date)' do
+        let(:from_location) { moves.first.from_location }
+        let(:date) { Date.today }
+        let(:filters) do
+          {
+            from_location_id: from_location.id,
+            date_from: date.to_s
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          allow(NomisClient::Moves).to receive(:get).and_return([])
+
+          moves_importer = instance_double('Moves::Importer', call: [])
+          allow(Moves::Importer).to receive(:new).and_return(moves_importer)
+
+          get '/api/v1/moves', headers: headers, params: params
+        end
+
+        it 'invokes the client library to fetch moves from NOMIS', skip_before: true do
+          expect(NomisClient::Moves).to have_received(:get).with(from_location.nomis_agency_id, date)
+        end
+
+        it 'invokes the service to create moves into the database', skip_before: true do
+          expect(Moves::Importer).to have_received(:new).with([])
+        end
+      end
+
+      describe 'not importing moves from NOMIS when missing filters' do
+        let(:from_location) { moves.first.from_location }
+        let(:filters) do
+          {
+            from_location_id: from_location.id
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          allow(NomisClient::Moves).to receive(:get).and_return([])
+
+          moves_importer = instance_double('Moves::Importer', call: [])
+          allow(Moves::Importer).to receive(:new).and_return(moves_importer)
+
+          get '/api/v1/moves', headers: headers, params: params
+        end
+
+        it 'does not invoke the client library to fetch moves from NOMIS', skip_before: true do
+          expect(NomisClient::Moves).not_to have_received(:get)
+        end
+
+        it 'does not invoke the service to create moves into the database', skip_before: true do
+          expect(Moves::Importer).not_to have_received(:new)
+        end
+      end
+
+      describe 'not importing moves from NOMIS when an error occurs in NOMIS' do
+        let(:from_location) { moves.first.from_location }
+        let(:date) { Date.today }
+        let(:filters) do
+          {
+            from_location_id: from_location.id,
+            date_from: date.to_s
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          allow(NomisClient::Moves).to receive(:get).and_raise(StandardError)
+
+          moves_finder = instance_double('Moves::Finder', call: Move.all)
+          allow(Moves::Finder).to receive(:new).and_return(moves_finder)
+
+          get '/api/v1/moves', headers: headers, params: params
+        end
+
+        it 'invokes the Moves::Finder service', skip_before: true do
+          expect(Moves::Finder).to have_received(:new)
+        end
+      end
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
