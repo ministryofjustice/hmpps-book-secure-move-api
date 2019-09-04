@@ -24,7 +24,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         type: 'moves',
         attributes: {
           status: 'cancelled',
-          additional_information: 'some more info'
+          additional_information: 'some more info',
+          cancellation_reason: 'other',
+          cancellation_reason_comment: 'some other reason'
         }
       }
     end
@@ -46,6 +48,16 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it 'updates the additional_information of a move', skip_before: true do
         patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.additional_information).to eq 'some more info'
+      end
+
+      it 'updates the cancellation_reason of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(move.reload.cancellation_reason).to eq 'other'
+      end
+
+      it 'updates the cancellation_reason_comment of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(move.reload.cancellation_reason_comment).to eq 'some other reason'
       end
 
       it 'returns the correct data' do

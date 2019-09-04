@@ -76,6 +76,8 @@ ActiveRecord::Schema.define(version: 2019_08_28_103544) do
     t.string "additional_information"
     t.integer "nomis_event_id"
     t.datetime "time_due"
+    t.string "cancellation_reason"
+    t.text "cancellation_reason_comment"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 

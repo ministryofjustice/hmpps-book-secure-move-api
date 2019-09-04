@@ -63,6 +63,23 @@
               { "type": "null" }
             ],
             "description": "Additional information about the move that the supplier should be made aware of"
+          },
+          "cancellation_reason": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["made_in_error", "supplier_declined_to_move", "other"]
+              },
+              { "type": "null" }
+            ],
+            "description": "Reason the move has been cancelled"
+          },
+          "cancellation_reason_comment": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "description": "In case 'other' is chosen as cancellation_reason, further details can be specified"
           }
         }
       },

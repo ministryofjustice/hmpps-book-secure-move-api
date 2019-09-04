@@ -10,5 +10,11 @@ FactoryBot.define do
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
     move_type { 'court_appearance' }
+
+    trait :cancelled do
+      status { 'cancelled' }
+      cancellation_reason { 'other' }
+      cancellation_reason_comment { 'some other reason' }
+    end
   end
 end
