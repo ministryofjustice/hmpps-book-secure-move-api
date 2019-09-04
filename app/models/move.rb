@@ -13,8 +13,8 @@ class Move < ApplicationRecord
   }
 
   enum cancellation_reason: {
-    created_by_mistake: 'created_by_mistake',
-    supplier_cannot_move: 'supplier_cannot_move',
+    made_in_error: 'made_in_error',
+    supplier_declined_to_move: 'supplier_declined_to_move',
     other: 'other'
   }
 

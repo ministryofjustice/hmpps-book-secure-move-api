@@ -67,7 +67,7 @@
           "cancellation_reason": {
             "type": "string",
             "nullable": "true",
-            "enum": ["created_by_mistake", "other", "supplier_cannot_move"],
+            "enum": ["made_in_error", "supplier_declined_to_move", "other"],
             "description": "Reason the move has been cancelled"
           },
           "cancellation_reason_comment": {
