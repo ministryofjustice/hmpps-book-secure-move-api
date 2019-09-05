@@ -11,6 +11,7 @@ module Moves
     def call
       items.each do |move|
         import_person(move[:person_nomis_prison_number])
+        import_alerts(move[:person_nomis_prison_number])
         import_move(move)
       end
     end
@@ -20,6 +21,12 @@ module Moves
     def import_person(prison_number)
       person_attributes = NomisClient::People.get(prison_number)
       People::Importer.new(person_attributes).call
+    end
+
+    def import_alerts(prison_number)
+      person = Person.find_by(nomis_prison_number: prison_number)
+      alerts = NomisClient::Alerts.get(prison_number)
+      Alerts::Importer.new(profile: person.latest_profile, alerts: alerts).call
     end
 
     def import_move(move)
