@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe People::Importer do
   subject(:importer) { described_class.new(input_data) }
 
+  let(:gender_param) { 'F' }
+  let(:ethnicity_param) { 'White: Eng./Welsh/Scot./N.Irish/British' }
   let(:input_data) do
     {
       prison_number: 'G3239GV',
@@ -15,8 +17,8 @@ RSpec.describe People::Importer do
       aliases: nil,
       pnc_number: '82/18053V',
       cro_number: '018053/82G',
-      gender: 'F',
-      ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
+      gender: gender_param,
+      ethnicity: ethnicity_param,
       nationalities: 'British'
     }
   end
@@ -49,6 +51,32 @@ RSpec.describe People::Importer do
       importer.call
       expect(Profile.first.profile_identifiers.map(&:value))
         .to eq(['82/18053V', 'G3239GV', '018053/82G'])
+    end
+
+    context 'with a nil ethnicity input' do
+      let(:ethnicity_param) { nil }
+
+      it 'creates a profile' do
+        expect { importer.call }.to change(Profile, :count).by(1)
+      end
+
+      it 'sets a nil ethnicity' do
+        importer.call
+        expect(Profile.first.ethnicity).to be_nil
+      end
+    end
+
+    context 'with a nil gender input' do
+      let(:gender_param) { nil }
+
+      it 'creates a profile' do
+        expect { importer.call }.to change(Profile, :count).by(1)
+      end
+
+      it 'sets a nil gender' do
+        importer.call
+        expect(Profile.first.gender).to be_nil
+      end
     end
   end
 
