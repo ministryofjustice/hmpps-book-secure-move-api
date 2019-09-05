@@ -11,7 +11,7 @@ RSpec.shared_examples 'an endpoint that responds with error 400' do
   end
 
   it 'returns bad request error code' do
-    expect(response).to have_http_status(400)
+    expect(response).to have_http_status(:bad_request)
   end
 
   it 'returns errors in the body of the response' do

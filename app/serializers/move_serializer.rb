@@ -2,7 +2,7 @@
 
 class MoveSerializer < ActiveModel::Serializer
   attributes :id, :reference, :status, :updated_at, :time_due, :date, :move_type, :additional_information,
-    :cancellation_reason, :cancellation_reason_comment
+             :cancellation_reason, :cancellation_reason_comment
 
   has_one :person, serializer: PersonSerializer
   has_one :from_location, serializer: LocationSerializer

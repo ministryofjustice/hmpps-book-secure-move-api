@@ -2,7 +2,7 @@
 
 RSpec.shared_examples 'an endpoint that responds with success 200' do
   it 'returns a success code' do
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(:ok)
   end
 
   it 'returns a valid 200 JSON response', with_json_schema: true do

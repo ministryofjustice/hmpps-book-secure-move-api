@@ -11,7 +11,7 @@ RSpec.shared_examples 'an endpoint that responds with error 401' do
   end
 
   it 'returns a not authorized error code' do
-    expect(response).to have_http_status(401)
+    expect(response).to have_http_status(:unauthorized)
   end
 
   it 'returns errors in the body of the response' do

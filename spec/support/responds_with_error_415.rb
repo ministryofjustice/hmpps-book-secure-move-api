@@ -11,7 +11,7 @@ RSpec.shared_examples 'an endpoint that responds with error 415' do
   end
 
   it 'returns invalid media type error code' do
-    expect(response).to have_http_status(415)
+    expect(response).to have_http_status(:unsupported_media_type)
   end
 
   it 'returns errors in the body of the response' do
