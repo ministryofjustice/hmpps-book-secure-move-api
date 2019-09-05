@@ -25,10 +25,20 @@ module People
     def attributes
       nomis_attributes.slice(:last_name, :date_of_birth, :aliases).merge(
         first_names: first_names,
-        gender_id: Gender.find_by(nomis_code: nomis_attributes[:gender]).id,
-        ethnicity_id: Ethnicity.find_by(title: nomis_attributes[:ethnicity]).id,
+        gender_id: find_gender,
+        ethnicity_id: find_ethnicity,
         profile_identifiers: profile_identifiers
       )
+    end
+
+    def find_gender
+      gender_param = nomis_attributes[:gender]
+      gender_param ? Gender.find_by(nomis_code: gender_param).id : nil
+    end
+
+    def find_ethnicity
+      ethnicity_param = nomis_attributes[:ethnicity]
+      ethnicity_param ? Ethnicity.find_by(title: ethnicity_param).id : nil
     end
 
     def first_names
