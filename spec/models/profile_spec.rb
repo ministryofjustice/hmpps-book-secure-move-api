@@ -90,7 +90,10 @@ RSpec.describe Profile, type: :model do
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
           created_at: Date.civil(2019, 5, 30),
-          expires_at: Date.civil(2019, 6, 30)
+          expires_at: Date.civil(2019, 6, 30),
+          nomis_alert_code: nil,
+          nomis_alert_type: nil,
+          imported_from_nomis: false
         }
       ]
     end
@@ -113,6 +116,59 @@ RSpec.describe Profile, type: :model do
     it 'deserializes assessment answers to an array of AssessmentAnswer objects' do
       profile.assessment_answers = assessment_answers
       expect(profile.assessment_answers.first).to be_a(Profile::AssessmentAnswer)
+    end
+  end
+
+  describe '#merge_assessment_answers!' do
+    subject(:profile) { build :profile, assessment_answers: assessment_answers }
+
+    let(:assessment_answers) do
+      [
+        Profile::AssessmentAnswer.new(
+          key: 'hold_separately',
+          imported_from_nomis: false
+        ),
+        Profile::AssessmentAnswer.new(
+          key: 'ABC',
+          imported_from_nomis: true,
+          nomis_alert_type: 'A',
+          nomis_alert_code: 'ABC',
+          description: 'NOMIS imported item'
+        ),
+        Profile::AssessmentAnswer.new(
+          key: 'not_for_release',
+          imported_from_nomis: false
+        )
+      ]
+    end
+
+    let(:imported_assessment_answers) do
+      [
+        Profile::AssessmentAnswer.new(
+          key: 'DEF',
+          imported_from_nomis: true,
+          nomis_alert_type: 'D',
+          nomis_alert_code: 'DEF',
+          description: 'NOMIS imported item #2'
+        ),
+        Profile::AssessmentAnswer.new(
+          key: 'HIJ',
+          imported_from_nomis: true,
+          nomis_alert_type: 'H',
+          nomis_alert_code: 'HIJ',
+          description: 'NOMIS imported item #3'
+        )
+      ]
+    end
+
+    before do
+      profile.merge_assessment_answers!(imported_assessment_answers)
+    end
+
+    it 'overwrites previously imported answers and leaves other as they were' do
+      expect(profile.assessment_answers.map(&:key)).to match_array(
+        %w[not_for_release hold_separately DEF HIJ]
+      )
     end
   end
 end
