@@ -841,7 +841,7 @@
     },
     "/reference/assessment_questions": {
       "get": {
-        "summary": "Returns a list of move detail types filtered by category and/or user type",
+        "summary": "Returns a list of assessment questions, optionally filtered by category",
         "tags": [
           "Assessment Questions"
         ],
