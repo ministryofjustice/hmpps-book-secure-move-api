@@ -2,7 +2,7 @@
 
 RSpec.shared_examples 'an endpoint that responds with error 422' do
   it 'returns unprocessable entity error code' do
-    expect(response).to have_http_status(422)
+    expect(response).to have_http_status(:unprocessable_entity)
   end
 
   it 'returns errors in the body of the response' do

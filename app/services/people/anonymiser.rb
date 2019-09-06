@@ -19,7 +19,7 @@ module People
         firstName: Faker::Name.first_name,
         middleNames: Faker::Name.first_name,
         lastName: Faker::Name.last_name,
-        dateOfBirth: Faker::Date.between(80.years.ago, 20.years.ago),
+        dateOfBirth: Faker::Date.between(from: 80.years.ago, to: 20.years.ago),
         gender: %w[Male Female].sample,
         sexCode: %w[M F].sample,
         nationalities: %w[British Irish Dutch American Japanese].sample,

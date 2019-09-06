@@ -7,9 +7,9 @@ RSpec.describe NomisClient::Base do
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
   let(:token) do
     instance_double('OAuth2::AccessToken',
-      get: oauth2_response,
-      expires?: true,
-      expires_at: token_expires_at)
+                    get: oauth2_response,
+                    expires?: true,
+                    expires_at: token_expires_at)
   end
   let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
 

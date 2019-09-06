@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe ApiController, type: :request do
+  subject(:api_controller) { described_class.new }
+
   class Model
     include ActiveModel::Model
 
@@ -13,8 +15,6 @@ RSpec.describe ApiController, type: :request do
     validates :email, presence: true
     validates :email, format: { with: /\A\S+@.+\.\S+\z/ }
   end
-
-  subject(:api_controller) { described_class.new }
 
   describe '#validation_errors' do
     let(:model) { Model.new }

@@ -11,7 +11,7 @@ RSpec.shared_examples 'an endpoint that responds with error 404' do
   end
 
   it 'returns a resource not found error code' do
-    expect(response).to have_http_status(404)
+    expect(response).to have_http_status(:not_found)
   end
 
   it 'returns errors in the body of the response' do
