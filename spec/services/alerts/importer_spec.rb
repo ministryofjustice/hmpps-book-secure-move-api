@@ -67,6 +67,16 @@ RSpec.describe Alerts::Importer do
       importer.call
       expect(profile.reload.assessment_answers&.first&.imported_from_nomis).to be true
     end
+
+    it 'sets the title' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.title).to eq 'Security - Violent'
+    end
+
+    it 'sets the comments' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.comments).to eq 'Threatening to take staff hostage'
+    end
   end
 
   context 'with a relevant nomis alert mapping' do
