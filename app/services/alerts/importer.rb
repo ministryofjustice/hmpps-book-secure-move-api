@@ -23,8 +23,8 @@ module Alerts
       assessment_question = find_assessment_question(alert)
 
       Profile::AssessmentAnswer.new(
-        title: alert[:description],
-        comments: alert[:comments],
+        title: alert_title(alert),
+        comments: alert[:comment],
         assessment_question_id: assessment_question&.id,
         created_at: alert[:created_at],
         expires_at: alert[:expires_at],
@@ -36,6 +36,10 @@ module Alerts
       ).tap(&:set_timestamps)
     end
     # rubocop:enable Metrics/MethodLength
+
+    def alert_title(alert)
+      [alert[:alert_type_description], alert[:alert_code_description]].reject(&:blank?).join(' - ')
+    end
 
     def find_assessment_question(alert)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(
