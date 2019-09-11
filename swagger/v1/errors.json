@@ -12,6 +12,19 @@
       }
     }
   },
+  "Forbidden": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "example": "Forbidden"
+      },
+      "detail": {
+        "type": "string",
+        "example": "The resource is readonly"
+      }
+    }
+  },
   "NotAuthorisedError": {
     "type": "object",
     "properties": {

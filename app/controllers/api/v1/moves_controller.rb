@@ -21,6 +21,8 @@ module Api
 
       def update
         move = find_move
+        raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
+
         move.update!(patch_move_attributes)
         render_move(move, 200)
       end
