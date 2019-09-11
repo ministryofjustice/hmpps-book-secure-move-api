@@ -15,7 +15,7 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
 
     it 'returns the correct data for the first match' do
       expect(response.first)
-        .to eq(key: 'abdrct', nomis_agency_id: 'ABDRCT', title: 'Aberdare County Court', location_type: :court)
+        .to eq(key: 'abdrct', nomis_agency_id: 'ABDRCT', title: 'Aberdare County Court', location_type: 'court')
     end
 
     it 'does not return locations different from prisons and courts' do

@@ -45,7 +45,7 @@ module People
     private
 
     def prisons
-      Location.where(location_type: 'prison').all
+      Location.where(location_type: Location::LOCATION_TYPE_PRISON).all
     end
   end
 end
