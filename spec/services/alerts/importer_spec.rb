@@ -70,7 +70,17 @@ RSpec.describe Alerts::Importer do
 
     it 'sets the title' do
       importer.call
-      expect(profile.reload.assessment_answers&.first&.title).to eq 'Security - Violent'
+      expect(profile.reload.assessment_answers&.first&.title).to eq 'Security'
+    end
+
+    it 'sets the nomis_alert_type_description' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.nomis_alert_type_description).to eq 'Security'
+    end
+
+    it 'sets the nomis_alert_description' do
+      importer.call
+      expect(profile.reload.assessment_answers&.first&.nomis_alert_description).to eq 'Violent'
     end
 
     it 'sets the comments' do
