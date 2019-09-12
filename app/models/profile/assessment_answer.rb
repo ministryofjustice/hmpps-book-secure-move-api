@@ -12,6 +12,8 @@ class Profile
       :key,
       :nomis_alert_code,
       :nomis_alert_type,
+      :nomis_alert_description,
+      :nomis_alert_type_description,
       :imported_from_nomis
     )
 
@@ -23,6 +25,8 @@ class Profile
       :key,
       :nomis_alert_code,
       :nomis_alert_type,
+      :nomis_alert_description,
+      :nomis_alert_type_description,
       :imported_from_nomis
     )
     attr_reader :created_at, :expires_at
@@ -59,6 +63,8 @@ class Profile
         key: key,
         nomis_alert_type: nomis_alert_type,
         nomis_alert_code: nomis_alert_code,
+        nomis_alert_type_description: nomis_alert_type_description,
+        nomis_alert_description: nomis_alert_description,
         imported_from_nomis: imported_from_nomis
       }
     end
@@ -97,6 +103,8 @@ class Profile
       errors.add(:assessment_question_id, "can't be blank unless nomis_alert_type and nomis_alert_code are present")
     end
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def assign_attributes(attributes)
       self.title = attributes[:title]
       self.comments = attributes[:comments]
@@ -107,7 +115,11 @@ class Profile
       self.key = attributes[:key]
       self.nomis_alert_code = attributes[:nomis_alert_code]
       self.nomis_alert_type = attributes[:nomis_alert_type]
+      self.nomis_alert_description = attributes[:nomis_alert_description]
+      self.nomis_alert_type_description = attributes[:nomis_alert_type_description]
       self.imported_from_nomis = attributes[:imported_from_nomis]
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
   end
 end
