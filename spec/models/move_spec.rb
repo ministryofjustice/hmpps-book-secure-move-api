@@ -77,4 +77,24 @@ RSpec.describe Move do
       end
     end
   end
+
+  describe '#from_nomis?' do
+    subject(:move) { build :move }
+
+    context 'with nomis_event_id' do
+      before { move.nomis_event_id = 1 }
+
+      it 'is truthy' do
+        expect(move).to be_from_nomis
+      end
+    end
+
+    context 'without nomis_event_id' do
+      before { move.nomis_event_id = nil }
+
+      it 'is falsy' do
+        expect(move).not_to be_from_nomis
+      end
+    end
+  end
 end

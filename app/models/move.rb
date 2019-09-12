@@ -37,6 +37,10 @@ class Move < ApplicationRecord
   before_validation :set_reference
   before_validation :set_move_type
 
+  def from_nomis?
+    !nomis_event_id.nil?
+  end
+
   private
 
   def set_reference

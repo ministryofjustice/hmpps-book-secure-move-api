@@ -102,6 +102,23 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
+    context 'when from nomis' do
+      let!(:move) { create :move, nomis_event_id: 1 }
+      let(:detail_403) { 'Can\'t change moves coming from Nomis' }
+
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'cancelled',
+            reference: 'new reference'
+          }
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with error 403'
+    end
+
     context 'with a missing move' do
       let(:move_id) { 'null' }
       let(:detail_404) { "Couldn't find Move with 'id'=null" }

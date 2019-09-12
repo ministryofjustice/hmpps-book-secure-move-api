@@ -10,6 +10,7 @@ class ApiController < ApplicationController
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
+  rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
 
   private
 
@@ -70,6 +71,16 @@ class ApiController < ApplicationController
     render(
       json: { errors: validation_errors(exception.record.errors) },
       status: 422
+    )
+  end
+
+  def render_resource_readonly_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Forbidden',
+        detail: exception.to_s
+      }] },
+      status: 403
     )
   end
 
