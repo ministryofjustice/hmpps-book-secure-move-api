@@ -93,6 +93,8 @@ RSpec.describe Profile, type: :model do
           expires_at: Date.civil(2019, 6, 30),
           nomis_alert_code: nil,
           nomis_alert_type: nil,
+          nomis_alert_description: nil,
+          nomis_alert_type_description: nil,
           imported_from_nomis: false
         }
       ]
