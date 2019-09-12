@@ -50,6 +50,26 @@
         "type": "string",
         "example": "asthmatic",
         "description": "The unique string key of the associated assessment question"
+      },
+      "nomis_alert_type": {
+        "type": "string",
+        "example": "R",
+        "description": "NOMIS alert type code"
+      },
+      "nomis_alert_code": {
+        "type": "string",
+        "example": "RPB",
+        "description": "NOMIS alert code"
+      },
+      "nomis_alert_type_description": {
+        "type": "string",
+        "example": "Risk",
+        "description": "Description of the alert type from NOMIS"
+      },
+      "nomis_alert_description": {
+        "type": "string",
+        "example": "Risk to Public - Community",
+        "description": "Description of the alert code from NOMIS"
       }
     }
   }
