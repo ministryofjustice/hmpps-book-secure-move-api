@@ -59,14 +59,6 @@
         "example": "R",
         "description": "NOMIS alert type code"
       },
-      "nomis_alert_code": {
-        "oneOf": [
-          { "type": "string" },
-          { "type": "null" }
-        ],
-        "example": "RPB",
-        "description": "NOMIS alert code"
-      },
       "nomis_alert_type_description": {
         "oneOf": [
           { "type": "string" },
@@ -74,6 +66,14 @@
         ],
         "example": "Risk",
         "description": "Description of the alert type from NOMIS"
+      },
+      "nomis_alert_code": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "null" }
+        ],
+        "example": "RPB",
+        "description": "NOMIS alert code"
       },
       "nomis_alert_description": {
         "oneOf": [
