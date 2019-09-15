@@ -46,7 +46,11 @@ module Alerts
         code: alert[:alert_code],
         type_code: alert[:alert_type]
       )
-      nomis_alert&.assessment_question
+      nomis_alert&.assessment_question || fallback_assessment_question
+    end
+
+    def fallback_assessment_question
+      @fallback_assessment_question ||= AssessmentQuestion.find_by(key: :other_risks)
     end
   end
 end
