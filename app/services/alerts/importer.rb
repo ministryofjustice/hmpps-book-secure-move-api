@@ -4,6 +4,8 @@ module Alerts
   class Importer
     attr_accessor :profile, :alerts
 
+    FALLBACK_QUESTION_KEY = :other_risks
+
     def initialize(profile:, alerts:)
       self.profile = profile
       self.alerts = alerts
@@ -50,7 +52,7 @@ module Alerts
     end
 
     def fallback_assessment_question
-      @fallback_assessment_question ||= AssessmentQuestion.find_by(key: :other_risks)
+      @fallback_assessment_question ||= AssessmentQuestion.find_by(key: FALLBACK_QUESTION_KEY)
     end
   end
 end
