@@ -21,16 +21,6 @@
             "enum": ["health", "risk", "court"],
             "description": "Category is the section in the Create Move form that an assessment question appears in, e.g. Health or Risks"
           },
-          "nomis_alert_type": {
-            "type": "String",
-            "example": "M",
-            "description": "The NOMIS alert type for this assessment question"
-          },
-          "nomis_alert_code": {
-            "type": "String",
-            "example": "MSI",
-            "description": "The NOMIS alert code for this assessment question"
-          },
           "key": {
             "type": "String",
             "example": "sight_impaired",

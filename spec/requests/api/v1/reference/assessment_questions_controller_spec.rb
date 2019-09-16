@@ -18,8 +18,6 @@ RSpec.describe Api::V1::Reference::AssessmentQuestionsController, with_client_au
           type: 'assessment_questions',
           attributes: {
             category: 'health',
-            nomis_alert_type: 'M',
-            nomis_alert_code: 'MSI',
             title: 'Sight Impaired'
           }
         }
