@@ -18,6 +18,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       key: 'just_a_test',
       nomis_alert_code: nil,
       nomis_alert_type: nil,
+      nomis_alert_description: nil,
+      nomis_alert_type_description: nil,
       imported_from_nomis: false
     }
   end
@@ -120,6 +122,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         title: 'foo',
         nomis_alert_code: nil,
         nomis_alert_type: nil,
+        nomis_alert_description: nil,
+        nomis_alert_type_description: nil,
         imported_from_nomis: false
       }
     end

@@ -19,11 +19,12 @@ module Alerts
     private
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def build_alert(alert)
       assessment_question = find_assessment_question(alert)
 
       Profile::AssessmentAnswer.new(
-        title: alert_title(alert),
+        title: alert[:alert_type_description],
         comments: alert[:comment],
         assessment_question_id: assessment_question&.id,
         created_at: alert[:created_at],
@@ -32,14 +33,13 @@ module Alerts
         key: assessment_question&.key || alert[:alert_code],
         nomis_alert_code: alert[:alert_code],
         nomis_alert_type: alert[:alert_type],
+        nomis_alert_description: alert[:alert_code_description],
+        nomis_alert_type_description: alert[:alert_type_description],
         imported_from_nomis: true
       ).tap(&:set_timestamps)
     end
+    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
-
-    def alert_title(alert)
-      [alert[:alert_type_description], alert[:alert_code_description]].reject(&:blank?).join(' - ')
-    end
 
     def find_assessment_question(alert)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(
