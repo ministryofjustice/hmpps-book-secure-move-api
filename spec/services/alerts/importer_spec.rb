@@ -42,10 +42,9 @@ RSpec.describe Alerts::Importer do
       }
     ]
   end
+  let!(:fallback_assessment_question) { create :assessment_question, key: :other_risks, title: 'Other risks' }
 
   context 'with no relevant nomis alert mappings' do
-    let!(:fallback_assessment_question) { create :assessment_question, key: :other_risks, title: 'Other risks' }
-
     it 'creates new assessment answers' do
       expect { importer.call }.to change { profile.reload.assessment_answers.count }.by(2)
     end
