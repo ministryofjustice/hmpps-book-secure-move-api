@@ -31,7 +31,7 @@ module NomisClient
           site: ENV['NOMIS_SITE'],
           auth_scheme: ENV['NOMIS_AUTH_SCHEME'],
           token_url: "#{ENV['NOMIS_AUTH_PATH_PREFIX']}/oauth/token",
-          raise_errors: false
+          raise_errors: true
         )
       end
 
