@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
 class Move < ApplicationRecord
+  MOVE_STATUS_REQUESTED = 'requested'
+  MOVE_STATUS_COMPLETED = 'completed'
+  MOVE_STATUS_CANCELLED = 'cancelled'
+
+  NOMIS_STATUS_TYPES = {
+    'SCH' => MOVE_STATUS_REQUESTED,
+    'EXP' => MOVE_STATUS_REQUESTED,
+    'COMP' => MOVE_STATUS_COMPLETED
+  }.freeze
+
   enum status: {
-    requested: 'requested',
-    cancelled: 'cancelled'
+    requested: MOVE_STATUS_REQUESTED,
+    completed: MOVE_STATUS_COMPLETED,
+    cancelled: MOVE_STATUS_CANCELLED
   }
 
   enum move_type: {

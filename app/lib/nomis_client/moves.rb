@@ -20,6 +20,7 @@ module NomisClient
 
       private
 
+      # rubocop:disable Metrics/MethodLength
       def attributes_for(nomis_data, event_type)
         nomis_data[event_type.to_s].map do |item|
           {
@@ -28,10 +29,12 @@ module NomisClient
             to_location_nomis_agency_id: item['toAgency'],
             date: item['eventDate'],
             time_due: item['startTime'],
+            status: Move::NOMIS_STATUS_TYPES[item['eventStatus']],
             nomis_event_id: item['eventId']
           }
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def date_params(date)
         { fromDateTime: date.to_s(:nomis), toDateTime: (date + 1).to_s(:nomis) }
