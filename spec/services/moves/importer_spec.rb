@@ -13,6 +13,7 @@ RSpec.describe Moves::Importer do
         to_location_nomis_agency_id: 'WDGRCC',
         date: '2019-08-19',
         time_due: '2019-08-19T17:00:00',
+        status: 'requested',
         nomis_event_id: 468_536_961
       },
       {
@@ -21,6 +22,7 @@ RSpec.describe Moves::Importer do
         to_location_nomis_agency_id: 'BXI',
         date: '2019-08-19',
         time_due: '2019-08-19T09:00:00',
+        status: 'completed',
         nomis_event_id: 487_463_210
       }
     ]
@@ -76,6 +78,11 @@ RSpec.describe Moves::Importer do
     it 'sets the to_location of the move' do
       importer.call
       expect(move.to_location).to eq wood_green_court
+    end
+
+    it 'sets the status of the move' do
+      importer.call
+      expect(move.status).to eq 'requested'
     end
 
     it 'sets the person of the move' do
