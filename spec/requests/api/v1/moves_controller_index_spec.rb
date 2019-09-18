@@ -183,6 +183,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
         before do
           allow(NomisClient::Moves).to receive(:get).and_raise(StandardError)
+          allow(Raven).to receive(:capture_exception)
 
           moves_finder = instance_double('Moves::Finder', call: Move.all)
           allow(Moves::Finder).to receive(:new).and_return(moves_finder)
@@ -192,6 +193,10 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
         it 'invokes the Moves::Finder service', skip_before: true do
           expect(Moves::Finder).to have_received(:new)
+        end
+
+        it 'calls Raven to log the exception', skip_before: true do
+          expect(Raven).to have_received(:capture_exception)
         end
       end
     end
