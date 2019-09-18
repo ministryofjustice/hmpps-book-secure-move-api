@@ -11,7 +11,7 @@ namespace :fake_data do
       person.profiles << Profile.new(
         first_names: Faker::Name.first_name,
         last_name: Faker::Name.last_name,
-        date_of_birth: Faker::Date.between(80.years.ago, 20.years.ago),
+        date_of_birth: Faker::Date.between(from: 80.years.ago, to: 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
         assessment_answers: fake_assessment_answers,
@@ -137,7 +137,7 @@ namespace :fake_data do
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
     500.times do
-      date = Faker::Date.between(10.days.ago, 20.days.from_now)
+      date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
       Move.create!(
