@@ -27,7 +27,8 @@ module People
         first_names: first_names,
         gender_id: find_gender,
         ethnicity_id: find_ethnicity,
-        profile_identifiers: profile_identifiers
+        profile_identifiers: profile_identifiers,
+        latest_nomis_booking_id: latest_nomis_booking_id
       )
     end
 
@@ -49,6 +50,10 @@ module People
       PROFILE_IDENTIFIERS_MAPPING.map do |local, nomis|
         { value: nomis_attributes[nomis], identifier_type: local } if nomis_attributes[nomis]
       end.compact
+    end
+
+    def latest_nomis_booking_id
+      nomis_attributes[:latest_booking_id]
     end
   end
 end
