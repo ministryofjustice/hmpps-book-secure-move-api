@@ -33,7 +33,7 @@ module Moves
     def import_personal_care_needs(prison_number)
       person = Person.find_by(nomis_prison_number: prison_number)
       personal_care_needs = NomisClient::PersonalCareNeeds.get(
-        booking_id: person.latest_profile&.latest_nomis_booking_id
+        person.latest_profile&.latest_nomis_booking_id
       )
       PersonalCareNeeds::Importer.new(
         profile: person.latest_profile,
