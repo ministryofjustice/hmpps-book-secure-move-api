@@ -41,6 +41,7 @@ RSpec.describe People::Importer do
       expect { importer.call }.to change(Profile, :count).by(1)
     end
 
+    # rubocop:disable RSpec/ExampleLength
     it 'sets profile fields' do
       importer.call
       expect(Profile.first.slice(:last_name, :first_names, :date_of_birth, :latest_nomis_booking_id)).to eq(
@@ -50,6 +51,7 @@ RSpec.describe People::Importer do
         'latest_nomis_booking_id' => 123
       )
     end
+    # rubocop:enable RSpec/ExampleLength
 
     it 'sets profile identifiers' do
       importer.call
