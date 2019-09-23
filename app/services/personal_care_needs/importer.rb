@@ -5,6 +5,7 @@ module PersonalCareNeeds
     attr_accessor :profile, :personal_care_needs
 
     FALLBACK_QUESTION_KEY = :pregnant
+    ASSESSMENT_ANSWER_CATEGORY = 'health'
 
     def initialize(profile:, personal_care_needs:)
       self.profile = profile
@@ -13,7 +14,8 @@ module PersonalCareNeeds
 
     def call
       profile.merge_assessment_answers!(
-        personal_care_needs.map { |personal_care_need| build(personal_care_need) }
+        personal_care_needs.map { |personal_care_need| build(personal_care_need) },
+        ASSESSMENT_ANSWER_CATEGORY
       )
       profile.save!
     end
