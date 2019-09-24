@@ -7,7 +7,9 @@ module NomisClient
         attributes_for(
           get_response(nomis_agency_id: nomis_agency_id, date: date, event_type: event_type),
           event_type
-        )
+        ).map do |move|
+          response(move)
+        end
       end
 
       def get_response(nomis_agency_id:, date:, event_type: :courtEvents)
@@ -42,6 +44,14 @@ module NomisClient
 
       def event_params(event_type)
         %i[courtEvents movements releaseEvents transferEvents].map { |event| [event, event == event_type] }.to_h
+      end
+
+      def response(move)
+        if NomisClient::Base.test_mode?
+          ::Moves::Anonymiser.new(move: move).call
+        else
+          move
+        end
       end
     end
   end

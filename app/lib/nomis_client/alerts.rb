@@ -4,7 +4,7 @@ module NomisClient
   class Alerts < NomisClient::Base
     class << self
       def get(prison_number)
-        get_response(nomis_offender_number: prison_number).parsed.map do |alert|
+        response(prison_number).map do |alert|
           attributes_for(alert)
         end
       end
@@ -30,6 +30,17 @@ module NomisClient
         }
       end
       # rubocop:enable Metrics/MethodLength
+
+      private
+
+      def response(prison_number)
+        alerts = get_response(nomis_offender_number: prison_number).parsed
+        if NomisClient::Base.test_mode?
+          ::Alerts::Anonymiser.new(nomis_offender_number: prison_number, alerts: alerts).call
+        else
+          alerts
+        end
+      end
     end
   end
 end
