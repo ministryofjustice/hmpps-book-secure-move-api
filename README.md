@@ -93,7 +93,8 @@ bundle exec rails reference_data:create_assessment_questions
 bundle exec rails reference_data:create_ethnicities
 bundle exec rails reference_data:create_genders
 bundle exec rails reference_data:create_identifier_types
-bundle exec rails reference_data:create_locations 
+bundle exec rails reference_data:create_locations
+bundle exec rails reference_data:create_nomis_alerts
 ```
 
 Some of these tasks pull data from NOMIS and therefore require
