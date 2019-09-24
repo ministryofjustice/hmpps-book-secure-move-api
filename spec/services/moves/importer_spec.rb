@@ -108,4 +108,43 @@ RSpec.describe Moves::Importer do
       expect(Move.find_by(nomis_event_id: 468_536_961).time_due).to eq Time.zone.parse('2019-08-19T17:00:00')
     end
   end
+
+  context 'when there are two existing duplicate records with different events ids' do
+    let!(:duplicate_move1) do
+      create(
+        :move,
+        nomis_event_id: 468_536_962,
+        person_id: prisoner_one.id,
+        from_location_id: brixton_prison.id,
+        to_location_id: wood_green_court.id,
+        date: '2019-08-19',
+        status: 'requested'
+      )
+    end
+    let!(:duplicate_move2) do
+      create(
+        :move,
+        nomis_event_id: 468_536_963,
+        person_id: prisoner_one.id,
+        from_location_id: brixton_prison.id,
+        to_location_id: wood_green_court.id,
+        date: '2019-08-19',
+        status: 'requested'
+      )
+    end
+
+    it 'creates 2 moves' do
+      expect { importer.call }.to change(Move, :count).by(2)
+    end
+
+    it 'cancels the first duplicate' do
+      importer.call
+      expect(duplicate_move1.reload.status).to eq Move::MOVE_STATUS_CANCELLED
+    end
+
+    it 'cancels the second duplicate' do
+      importer.call
+      expect(duplicate_move2.reload.status).to eq Move::MOVE_STATUS_CANCELLED
+    end
+  end
 end
