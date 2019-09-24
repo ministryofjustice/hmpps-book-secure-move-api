@@ -31,7 +31,7 @@ RSpec.describe People::Anonymiser do
     end
 
     it 'populates nomis_offender_number with the given key' do
-      expect(anonymised[:offenderNo]).to eq nomis_offender_number
+      expect(anonymised[:offenderNo]).not_to eq nomis_offender_number
     end
   end
 end

@@ -2,25 +2,22 @@
 
 module Moves
   class Anonymiser
-    attr_accessor :nomis_offender_number, :day_offset, :move_response
+    attr_accessor :move
 
-    def initialize(nomis_offender_number:, day_offset:, move_response:)
-      self.nomis_offender_number = nomis_offender_number
-      self.day_offset = day_offset
-      self.move_response = move_response
+    def initialize(move:)
+      self.move = move
     end
 
     def call
-      start_date_time = move_response['startTime'].present? ? Time.parse(move_response['startTime']) : nil
+      nomis_offender_number =
+        People::Anonymiser.encrypt_offender_number(offender_number: move['offenderNo'])
+      start_date_time = move['startTime'].present? ? Time.parse(move['startTime']) : nil
       start_time = start_date_time&.strftime('%H:%M:%S') || '00:00:00'
 
-      move_response.merge(
-        offenderNo: nomis_offender_number,
-        judgeName: nil,
-        commentText: nil,
-        createDateTime: "<%= date.toISOString().split('.')[0] %>",
-        eventDate: "<%= date.toISOString().split('T')[0] %>",
-        startTime: "<%= date.toISOString().split('T')[0] + 'T' + '#{start_time}' %>"
+      move.merge(
+        person_nomis_prison_number: nomis_offender_number,
+        date: "<%= date.toISOString().split('T')[0] %>",
+        time_due: "<%= date.toISOString().split('T')[0] + 'T' + '#{start_time}' %>"
       ).with_indifferent_access
     end
   end
