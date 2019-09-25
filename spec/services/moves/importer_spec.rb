@@ -55,6 +55,7 @@ RSpec.describe Moves::Importer do
 
   context 'with no existing records' do
     let(:move) { Move.find_by(nomis_event_id: 468_536_961) }
+    let(:completed_move) { Move.find_by(nomis_event_id: 487_463_210) }
 
     it 'creates 2 moves' do
       expect { importer.call }.to change(Move, :count).by(2)
@@ -83,6 +84,11 @@ RSpec.describe Moves::Importer do
     it 'sets the status of the move' do
       importer.call
       expect(move.status).to eq 'requested'
+    end
+
+    it 'sets the status of the completed move' do
+      importer.call
+      expect(completed_move.status).to eq 'completed'
     end
 
     it 'sets the person of the move' do
