@@ -50,7 +50,20 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       end
     end
 
-    context 'with a nomis_alert_code and nomis_alert_type' do
+    context 'with an assessment_question_id and imported_from_nomis: true' do
+      let(:attribute_values) do
+        {
+          assessment_question_id: 123,
+          imported_from_nomis: true
+        }
+      end
+
+      it 'is NOT valid' do
+        expect(assessment_answer.valid?).to be false
+      end
+    end
+
+    context 'with a nomis_alert_code and nomis_alert_type but no assessment_question_id' do
       let(:attribute_values) do
         {
           nomis_alert_type: 'A',
@@ -58,8 +71,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         }
       end
 
-      it 'is valid' do
-        expect(assessment_answer.valid?).to be true
+      it 'is NOT valid' do
+        expect(assessment_answer.valid?).to be false
       end
     end
   end

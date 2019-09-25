@@ -4,6 +4,7 @@ module Alerts
   class Importer
     attr_accessor :profile, :alerts
 
+    FALLBACK_QUESTION_KEY = :other_risks
     ASSESSMENT_ANSWER_CATEGORY = 'risk'
 
     def initialize(profile:, alerts:)
@@ -49,7 +50,11 @@ module Alerts
         code: alert[:alert_code],
         type_code: alert[:alert_type]
       )
-      nomis_alert&.assessment_question
+      nomis_alert&.assessment_question || fallback_assessment_question
+    end
+
+    def fallback_assessment_question
+      @fallback_assessment_question ||= AssessmentQuestion.find_by(key: FALLBACK_QUESTION_KEY)
     end
   end
 end

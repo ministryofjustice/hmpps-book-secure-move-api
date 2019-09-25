@@ -31,7 +31,9 @@ class Profile
     )
     attr_reader :created_at, :expires_at
 
-    validate :assessment_question_or_nomis_code_present
+    validates :assessment_question_id, presence: true
+    validates :nomis_alert_type, presence: true, if: ->(assessment_answer) { assessment_answer.imported_from_nomis }
+    validates :nomis_alert_code, presence: true, if: ->(assessment_answer) { assessment_answer.imported_from_nomis }
 
     def initialize(attributes = {})
       attributes.symbolize_keys! if attributes.respond_to?(:symbolize_keys!)
@@ -96,12 +98,6 @@ class Profile
     end
 
     private
-
-    def assessment_question_or_nomis_code_present
-      return if assessment_question_id.present? || (nomis_alert_type.present? && nomis_alert_code.present?)
-
-      errors.add(:assessment_question_id, "can't be blank unless nomis_alert_type and nomis_alert_code are present")
-    end
 
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
