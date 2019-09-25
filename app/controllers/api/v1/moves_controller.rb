@@ -11,7 +11,8 @@ module Api
 
       def show
         move = find_move
-        render_move(move, 200)
+        import_moves_from_nomis(move: move)
+        render_move(move.reload, 200)
       end
 
       def create
@@ -79,8 +80,12 @@ module Api
           .find(params[:id])
       end
 
-      def import_moves_from_nomis
-        Moves::NomisSynchroniser.new(location: from_location, date: date).call
+      def import_moves_from_nomis(move: nil)
+        if move.present?
+          Moves::NomisSynchroniser.new(location: move.from_location, date: move.date).call
+        else
+          Moves::NomisSynchroniser.new(location: from_location, date: date).call
+        end
       rescue StandardError => e
         Raven.capture_exception(e)
       end

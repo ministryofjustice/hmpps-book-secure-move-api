@@ -3,8 +3,6 @@
 FactoryBot.define do
   factory :assessment_question do
     category { 'health' }
-    nomis_alert_type { 'M' }
-    nomis_alert_code { 'MSI' }
     key { 'sight_impaired' }
     title { 'Sight Impaired' }
 

@@ -13,6 +13,7 @@ RSpec.describe Moves::Importer do
         to_location_nomis_agency_id: 'WDGRCC',
         date: '2019-08-19',
         time_due: '2019-08-19T17:00:00',
+        status: 'requested',
         nomis_event_id: 468_536_961
       },
       {
@@ -21,6 +22,7 @@ RSpec.describe Moves::Importer do
         to_location_nomis_agency_id: 'BXI',
         date: '2019-08-19',
         time_due: '2019-08-19T09:00:00',
+        status: 'completed',
         nomis_event_id: 487_463_210
       }
     ]
@@ -33,12 +35,15 @@ RSpec.describe Moves::Importer do
 
   let(:people_importer) { instance_double('People::Importer', call: true) }
   let(:alerts_importer) { instance_double('Alerts::Importer', call: true) }
+  let(:personal_care_needs_importer) { instance_double('PersonalCareNeeds::Importer', call: true) }
 
   before do
     allow(NomisClient::People).to receive(:get)
     allow(NomisClient::Alerts).to receive(:get)
+    allow(NomisClient::PersonalCareNeeds).to receive(:get)
     allow(People::Importer).to receive(:new).and_return(people_importer)
     allow(Alerts::Importer).to receive(:new).and_return(alerts_importer)
+    allow(PersonalCareNeeds::Importer).to receive(:new).and_return(personal_care_needs_importer)
   end
 
   it 'calls the People::Importer service twice' do
@@ -49,6 +54,11 @@ RSpec.describe Moves::Importer do
   it 'calls the Alerts::Importer service twice' do
     importer.call
     expect(alerts_importer).to have_received(:call).twice
+  end
+
+  it 'calls the PersonalCareNeeds::Importer service twice' do
+    importer.call
+    expect(personal_care_needs_importer).to have_received(:call).twice
   end
 
   context 'with no existing records' do
@@ -76,6 +86,11 @@ RSpec.describe Moves::Importer do
     it 'sets the to_location of the move' do
       importer.call
       expect(move.to_location).to eq wood_green_court
+    end
+
+    it 'sets the status of the move' do
+      importer.call
+      expect(move.status).to eq 'requested'
     end
 
     it 'sets the person of the move' do

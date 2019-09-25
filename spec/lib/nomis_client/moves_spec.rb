@@ -102,6 +102,7 @@ RSpec.describe NomisClient::Moves do
           to_location_nomis_agency_id: 'BXI',
           date: '2019-08-19',
           time_due: '2019-08-19T17:00:00',
+          status: 'requested',
           nomis_event_id: 468_536_961
         },
         {
@@ -110,6 +111,7 @@ RSpec.describe NomisClient::Moves do
           to_location_nomis_agency_id: 'WDGRCC',
           date: '2019-08-19',
           time_due: '2019-08-19T09:00:00',
+          status: 'completed',
           nomis_event_id: 487_463_210
         }
       ]
@@ -121,6 +123,20 @@ RSpec.describe NomisClient::Moves do
 
       it 'returns the correct moves data' do
         expect(response).to eq client_response
+      end
+    end
+
+    context 'when in test mode' do
+      let(:response_status) { 200 }
+      let(:response_body) { file_fixture('nomis_get_moves_200.json').read }
+      let!(:location) { create(:location) }
+
+      before do
+        allow(NomisClient::Base).to receive(:test_mode?).and_return(true)
+      end
+
+      it 'returns the anonymised person data' do
+        expect(response).not_to eq(client_response)
       end
     end
   end

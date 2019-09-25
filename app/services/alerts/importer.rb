@@ -5,6 +5,7 @@ module Alerts
     attr_accessor :profile, :alerts
 
     FALLBACK_QUESTION_KEY = :other_risks
+    ASSESSMENT_ANSWER_CATEGORY = 'risk'
 
     def initialize(profile:, alerts:)
       self.profile = profile
@@ -13,7 +14,8 @@ module Alerts
 
     def call
       profile.merge_assessment_answers!(
-        alerts.map { |alert| build_alert(alert) }
+        alerts.map { |alert| build_alert(alert) },
+        ASSESSMENT_ANSWER_CATEGORY
       )
       profile.save!
     end

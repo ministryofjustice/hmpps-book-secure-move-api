@@ -7,7 +7,9 @@ module NomisClient
         attributes_for(
           get_response(nomis_agency_id: nomis_agency_id, date: date, event_type: event_type),
           event_type
-        )
+        ).map do |move|
+          response(move)
+        end
       end
 
       def get_response(nomis_agency_id:, date:, event_type: :courtEvents)
@@ -20,6 +22,7 @@ module NomisClient
 
       private
 
+      # rubocop:disable Metrics/MethodLength
       def attributes_for(nomis_data, event_type)
         nomis_data[event_type.to_s].map do |item|
           {
@@ -28,10 +31,12 @@ module NomisClient
             to_location_nomis_agency_id: item['toAgency'],
             date: item['eventDate'],
             time_due: item['startTime'],
+            status: Move::NOMIS_STATUS_TYPES[item['eventStatus']],
             nomis_event_id: item['eventId']
           }
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def date_params(date)
         { fromDateTime: date.to_s(:nomis), toDateTime: (date + 1).to_s(:nomis) }
@@ -39,6 +44,14 @@ module NomisClient
 
       def event_params(event_type)
         %i[courtEvents movements releaseEvents transferEvents].map { |event| [event, event == event_type] }.to_h
+      end
+
+      def response(move)
+        if NomisClient::Base.test_mode?
+          ::Moves::Anonymiser.new(move: move).call
+        else
+          move
+        end
       end
     end
   end

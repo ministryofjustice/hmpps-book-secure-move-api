@@ -19,13 +19,20 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     let!(:move) { create :move }
     let(:move_id) { move.id }
 
-    before { get "/api/v1/moves/#{move_id}", headers: headers }
+    before do
+      allow(Moves::NomisSynchroniser).to receive(:new)
+      get "/api/v1/moves/#{move_id}", headers: headers
+    end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
         expect(response_json).to eq resource_to_json
+      end
+
+      it 'syncs data' do
+        expect(Moves::NomisSynchroniser).to have_received(:new).with(location: move.from_location, date: move.date)
       end
     end
 
@@ -37,12 +44,20 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       let(:move_id) { 'UUID-not-found' }
 
       it_behaves_like 'an endpoint that responds with error 404'
+
+      it 'doesn\'t sync data' do
+        expect(Moves::NomisSynchroniser).not_to have_received(:new)
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
       it_behaves_like 'an endpoint that responds with error 415'
+
+      it 'doesn\'t sync data' do
+        expect(Moves::NomisSynchroniser).not_to have_received(:new)
+      end
     end
   end
 end

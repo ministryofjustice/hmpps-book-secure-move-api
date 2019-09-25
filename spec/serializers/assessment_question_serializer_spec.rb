@@ -29,14 +29,6 @@ RSpec.describe AssessmentQuestionSerializer do
     expect(result[:data][:attributes][:key]).to eql 'sight_impaired'
   end
 
-  it 'contains a nomis_alert_code attribute' do
-    expect(result[:data][:attributes][:nomis_alert_code]).to eql 'MSI'
-  end
-
-  it 'contains a nomis_alert_type attribute' do
-    expect(result[:data][:attributes][:nomis_alert_type]).to eql 'M'
-  end
-
   it 'contains a disabled_at attribute' do
     expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end

@@ -72,7 +72,8 @@ RSpec.describe NomisClient::People do
         cro_number: '018053/82G',
         gender: 'M',
         ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
-        nationalities: 'British'
+        nationalities: 'British',
+        latest_booking_id: 20_305
       }
     end
 
@@ -82,6 +83,20 @@ RSpec.describe NomisClient::People do
 
       it 'returns the correct person data' do
         expect(response).to eq client_response
+      end
+    end
+
+    context 'when in test mode' do
+      let(:response_status) { 200 }
+      let(:response_body) { file_fixture('nomis_get_prisoner_200.json').read }
+      let!(:location) { create(:location) }
+
+      before do
+        allow(NomisClient::Base).to receive(:test_mode?).and_return(true)
+      end
+
+      it 'returns the anonymised person data' do
+        expect(response).not_to eq(client_response)
       end
     end
   end

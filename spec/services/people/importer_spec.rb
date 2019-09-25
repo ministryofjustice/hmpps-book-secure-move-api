@@ -10,6 +10,7 @@ RSpec.describe People::Importer do
   let(:input_data) do
     {
       prison_number: 'G3239GV',
+      latest_booking_id: 123,
       last_name: 'ABBELLA',
       first_name: 'AVEILKE',
       middle_names: 'EMMANDA',
@@ -40,12 +41,17 @@ RSpec.describe People::Importer do
       expect { importer.call }.to change(Profile, :count).by(1)
     end
 
+    # rubocop:disable RSpec/ExampleLength
     it 'sets profile fields' do
       importer.call
-      expect(Profile.first.slice(:last_name, :first_names, :date_of_birth)).to eq(
-        'last_name' => 'ABBELLA', 'first_names' => 'AVEILKE EMMANDA', 'date_of_birth' => Date.parse('1965-10-15')
+      expect(Profile.first.slice(:last_name, :first_names, :date_of_birth, :latest_nomis_booking_id)).to eq(
+        'last_name' => 'ABBELLA',
+        'first_names' => 'AVEILKE EMMANDA',
+        'date_of_birth' => Date.parse('1965-10-15'),
+        'latest_nomis_booking_id' => 123
       )
     end
+    # rubocop:enable RSpec/ExampleLength
 
     it 'sets profile identifiers' do
       importer.call

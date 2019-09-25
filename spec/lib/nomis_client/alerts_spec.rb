@@ -45,5 +45,18 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
         expect(response.map(&:symbolize_keys)).to eq client_response
       end
     end
+
+    context 'when in test mode' do
+      let(:response_status) { 200 }
+      let(:response_body) { file_fixture('nomis_get_alerts_200.json').read }
+
+      before do
+        allow(NomisClient::Base).to receive(:test_mode?).and_return(true)
+      end
+
+      it 'returns the anonymised person data' do
+        expect(response).not_to eq(client_response)
+      end
+    end
   end
 end
