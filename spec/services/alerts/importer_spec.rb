@@ -42,6 +42,7 @@ RSpec.describe Alerts::Importer do
       }
     ]
   end
+  let!(:fallback_assessment_question) { create :assessment_question, key: :other_risks, title: 'Other risks' }
 
   context 'with no relevant nomis alert mappings' do
     it 'creates new assessment answers' do
@@ -58,9 +59,9 @@ RSpec.describe Alerts::Importer do
       expect(profile.reload.assessment_answers&.first&.nomis_alert_type).to eq 'X'
     end
 
-    it 'leaves the assessment question id blank' do
+    it 'sets the fallback assessment question id' do
       importer.call
-      expect(profile.reload.assessment_answers&.first&.assessment_question_id).to be_nil
+      expect(profile.reload.assessment_answers&.first&.assessment_question_id).to eq fallback_assessment_question.id
     end
 
     it 'sets imported_from_nomis' do
@@ -70,7 +71,7 @@ RSpec.describe Alerts::Importer do
 
     it 'sets the title' do
       importer.call
-      expect(profile.reload.assessment_answers&.first&.title).to eq 'Security'
+      expect(profile.reload.assessment_answers&.first&.title).to eq 'Other risks'
     end
 
     it 'sets the nomis_alert_type_description' do

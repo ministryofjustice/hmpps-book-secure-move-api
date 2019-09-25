@@ -4,16 +4,12 @@ require 'rails_helper'
 
 RSpec.describe Moves::Anonymiser do
   subject(:anonymiser) do
-    described_class.new(
-      nomis_offender_number: nomis_offender_number,
-      day_offset: day_offset,
-      move_response: move_response
-    )
+    described_class.new(move: move)
   end
 
   let(:nomis_offender_number) { 'D1234VG' }
   let(:day_offset) { 1 }
-  let(:move_response) do
+  let(:move) do
     {
       offenderNo: 'V6537TX',
       createDateTime: '2019-07-24T08:10:58',
@@ -43,27 +39,15 @@ RSpec.describe Moves::Anonymiser do
     end
 
     it 'changes the offender number' do
-      expect(anonymised[:offenderNo]).to eq nomis_offender_number
+      expect(anonymised[:person_nomis_prison_number]).not_to eq nomis_offender_number
     end
 
-    it 'resets commentText' do
-      expect(anonymised[:commentText]).to be_nil
+    it 'sets date to tomorrow' do
+      expect(anonymised[:date]).to eq "<%= date.toISOString().split('T')[0] %>"
     end
 
-    it 'resets judgeName' do
-      expect(anonymised[:judgeName]).to be_nil
-    end
-
-    it 'sets eventDate to tomorrow' do
-      expect(anonymised[:eventDate]).to eq "<%= date.toISOString().split('T')[0] %>"
-    end
-
-    it 'sets createDateTime to tomorrow' do
-      expect(anonymised[:createDateTime]).to eq "<%= date.toISOString().split('.')[0] %>"
-    end
-
-    it 'sets startTime to 17:00' do
-      expect(anonymised[:startTime]).to eq "<%= date.toISOString().split('T')[0] + 'T' + '17:00:00' %>"
+    it 'sets time_due to 17:00' do
+      expect(anonymised[:time_due]).to eq "<%= date.toISOString().split('T')[0] + 'T' + '17:00:00' %>"
     end
   end
 end

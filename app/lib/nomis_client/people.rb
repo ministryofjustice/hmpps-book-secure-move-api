@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
-require 'nomis/faker'
-
 module NomisClient
   class People
     class << self
       def get(prison_number)
-        attributes_for(
-          get_response(nomis_offender_number: prison_number).first
-        )
+        attributes_for(response(prison_number))
       end
 
       def get_response(nomis_offender_number:)
@@ -23,6 +19,7 @@ module NomisClient
       def attributes_for(person)
         {
           prison_number: person['offenderNo'],
+          latest_booking_id: person['latestBookingId'],
           last_name: person['lastName'],
           first_name: person['firstName'],
           middle_names: person['middleNames'],
@@ -36,6 +33,16 @@ module NomisClient
         }
       end
       # rubocop:enable Metrics/MethodLength
+
+      private
+
+      def response(prison_number)
+        if NomisClient::Base.test_mode?
+          ::People::Anonymiser.new(nomis_offender_number: prison_number).call
+        else
+          get_response(nomis_offender_number: prison_number).first
+        end
+      end
     end
   end
 end

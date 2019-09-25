@@ -19,8 +19,11 @@ class Profile < ApplicationRecord
     police_national_computer criminal_records_office prison_number niche_reference athena_reference
   ].freeze
 
-  def merge_assessment_answers!(assessment_answers)
-    self.assessment_answers = manually_created_assessment_answers + assessment_answers
+  def merge_assessment_answers!(new_assessment_answers, category)
+    self.assessment_answers =
+      assessment_answers.reject { |a| a.category == category } +
+      manually_created_assessment_answers.select { |a| a.category == category } +
+      new_assessment_answers
   end
 
   private

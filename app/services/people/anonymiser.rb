@@ -6,8 +6,18 @@ module People
   class Anonymiser
     attr_accessor :nomis_offender_number
 
+    class << self
+      def encrypt_offender_number(offender_number:)
+        cipher = ActiveSupport::MessageEncryptor.new(
+          Rails.application.secrets.secret_key_base[0..31]
+        )
+        cipher.encrypt_and_sign(offender_number)
+      end
+    end
+
     def initialize(nomis_offender_number:)
-      self.nomis_offender_number = nomis_offender_number
+      self.nomis_offender_number =
+        People::Anonymiser.encrypt_offender_number(offender_number: nomis_offender_number)
     end
 
     # rubocop:disable Metrics/MethodLength
