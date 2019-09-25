@@ -19,6 +19,7 @@ module NomisClient
       def attributes_for(person)
         {
           prison_number: person['offenderNo'],
+          latest_booking_id: person['latestBookingId'],
           last_name: person['lastName'],
           first_name: person['firstName'],
           middle_names: person['middleNames'],

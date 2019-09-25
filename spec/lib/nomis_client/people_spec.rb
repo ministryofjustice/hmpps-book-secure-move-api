@@ -72,7 +72,8 @@ RSpec.describe NomisClient::People do
         cro_number: '018053/82G',
         gender: 'M',
         ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
-        nationalities: 'British'
+        nationalities: 'British',
+        latest_booking_id: 20_305
       }
     end
 
