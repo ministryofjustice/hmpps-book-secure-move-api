@@ -35,15 +35,90 @@ RSpec.describe Moves::Sweeper do
     ]
   end
 
-  context 'with no existing records' do
-    it 'cancels 0 records' do
-      expect { sweeper.call }.to change{ Move.where(status: :cancelled).count }.by(0)
+  context 'with records for newly imported moves' do
+    before do
+      input_data.each do |attributes|
+        Move.create!(
+          date: attributes[:date],
+          time_due: attributes[:time_due],
+          nomis_event_id: attributes[:nomis_event_id],
+          person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
+          from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
+          to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+        )
+      end
     end
-  end
 
-  context 'with one existing record' do
-  end
+    it 'does not cancel any newly imported moves' do
+      expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(0)
+    end
 
-  context 'with one existing record with different attributes' do
+    context 'with an outdated move' do
+      let(:attributes) { input_data.first }
+      let!(:outdated_move) do
+        Move.create!(
+          date: attributes[:date],
+          time_due: attributes[:time_due],
+          nomis_event_id: 487_463_209,
+          person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
+          from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
+          to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+        )
+      end
+
+      context 'with an additional move on a different date' do
+        let!(:move_yesterday) do
+          Move.create!(
+            date: yesterday,
+            time_due: attributes[:time_due],
+            nomis_event_id: 487_463_208,
+            person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
+            from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
+            to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+          )
+        end
+
+        it 'cancels one move' do
+          expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(1)
+        end
+
+        it 'cancels the move that did match by date' do
+          sweeper.call
+          expect(outdated_move.reload.status).to eq 'cancelled'
+        end
+
+        it 'leaves the move that did not match by date' do
+          sweeper.call
+          expect(move_yesterday.reload.status).to eq 'requested'
+        end
+      end
+
+      context 'with an additional for a different location' do
+        let!(:court_move) do
+          Move.create!(
+            date: attributes[:date],
+            time_due: attributes[:time_due],
+            nomis_event_id: 487_463_208,
+            person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
+            from_location: wood_green_court,
+            to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+          )
+        end
+
+        it 'cancels one move' do
+          expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(1)
+        end
+
+        it 'cancels the move that did match by date' do
+          sweeper.call
+          expect(outdated_move.reload.status).to eq 'cancelled'
+        end
+
+        it 'leaves the move that did not match by date' do
+          sweeper.call
+          expect(court_move.reload.status).to eq 'requested'
+        end
+      end
+    end
   end
 end

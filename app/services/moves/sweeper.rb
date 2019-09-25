@@ -19,7 +19,7 @@ module Moves
     def cancel_outdated_moves!
       outdated_moves = Move.where(
         date: date,
-        from_location_id: location.id,
+        from_location_id: location.id
       ).where.not(
         nomis_event_id: current_nomis_event_ids
       )
