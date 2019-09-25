@@ -30,21 +30,7 @@ module Moves
     end
 
     def import_move(attributes)
-      move = Move.find_or_initialize_by(nomis_event_id: attributes[:nomis_event_id])
-      move.update(move_params(attributes))
-      cancel_duplicate_moves(move)
-    end
-
-    def cancel_duplicate_moves(move)
-      duplicate_moves = Move.where(
-        date: move.date,
-        from_location_id: move.from_location_id,
-        to_location_id: move.to_location_id,
-        person_id: move.person_id
-      ).where.not(
-        id: move.id
-      )
-      duplicate_moves.update(status: Move::MOVE_STATUS_CANCELLED)
+      Move.find_or_initialize_by(nomis_event_id: attributes[:nomis_event_id]).update(move_params(attributes))
     end
 
     def move_params(move)
