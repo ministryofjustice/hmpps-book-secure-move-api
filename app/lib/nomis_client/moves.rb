@@ -14,13 +14,17 @@ module NomisClient
 
       def get_response(nomis_agency_ids:, date:, event_type: :courtEvents)
         NomisClient::Base.get(
-          '/movements/transfers',
-          params: { agencyId: nomis_agency_ids, **date_params(date), **event_params(event_type) },
+          "/movements/transfers?#{agency_id_params(nomis_agency_ids)}",
+          params: { **date_params(date), **event_params(event_type) },
           headers: { 'Page-Limit' => '500' }
         ).parsed
       end
 
       private
+
+      def agency_id_params(nomis_agency_ids)
+        nomis_agency_ids.map { |id| "agencyId=#{CGI.escape(id)}" }.join('&')
+      end
 
       # rubocop:disable Metrics/MethodLength
       def attributes_for(nomis_data, event_type)

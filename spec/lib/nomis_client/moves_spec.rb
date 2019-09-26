@@ -77,8 +77,8 @@ RSpec.describe NomisClient::Moves do
       allow(NomisClient::Base).to(
         receive(:get)
         .with(
-          '/movements/transfers',
-          params: params,
+          '/movements/transfers?agencyId=LEI',
+          params: params.except(:agencyId),
           headers: { 'Page-Limit' => '500' }
         )
         .and_return(nomis_response)
@@ -93,7 +93,7 @@ RSpec.describe NomisClient::Moves do
   describe '.get', with_nomis_client_authentication: true do
     let(:nomis_agency_id) { 'BXI' }
     let(:date) { Date.parse('2019-08-19') }
-    let(:response) { described_class.get(nomis_agency_id, date) }
+    let(:response) { described_class.get([nomis_agency_id], date) }
     let(:client_response) do
       [
         {
