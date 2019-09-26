@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Moves::NomisSynchroniser do
   subject(:synchroniser) do
     described_class.new(
-      location: location,
+      locations: [location],
       date: date
     )
   end

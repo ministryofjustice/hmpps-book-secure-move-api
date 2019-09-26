@@ -82,18 +82,21 @@ module Api
 
       def import_moves_from_nomis(move: nil)
         if move.present?
-          Moves::NomisSynchroniser.new(location: move.from_location, date: move.date).call
+          Moves::NomisSynchroniser.new(locations: [move.from_location], date: move.date).call
         else
-          Moves::NomisSynchroniser.new(location: from_location, date: date).call
+          Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
         end
       rescue StandardError => e
         Raven.capture_exception(e)
       end
 
-      def from_location
-        return unless filter_params[:from_location_id]
-
-        @from_location ||= Location.find(filter_params[:from_location_id])
+      def from_locations
+        @from_locations ||=
+          if filter_params[:from_location_id]
+            [Location.find(filter_params[:from_location_id])]
+          else
+            []
+          end
       end
 
       def date

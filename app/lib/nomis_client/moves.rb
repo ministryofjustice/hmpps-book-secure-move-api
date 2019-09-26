@@ -3,19 +3,19 @@
 module NomisClient
   class Moves
     class << self
-      def get(nomis_agency_id, date, event_type = :courtEvents)
+      def get(nomis_agency_ids, date, event_type = :courtEvents)
         attributes_for(
-          get_response(nomis_agency_id: nomis_agency_id, date: date, event_type: event_type),
+          get_response(nomis_agency_ids: nomis_agency_ids, date: date, event_type: event_type),
           event_type
         ).map do |move|
           response(move)
         end
       end
 
-      def get_response(nomis_agency_id:, date:, event_type: :courtEvents)
+      def get_response(nomis_agency_ids:, date:, event_type: :courtEvents)
         NomisClient::Base.get(
           '/movements/transfers',
-          params: { agencyId: nomis_agency_id, **date_params(date), **event_params(event_type) },
+          params: { agencyId: nomis_agency_ids, **date_params(date), **event_params(event_type) },
           headers: { 'Page-Limit' => '500' }
         ).parsed
       end

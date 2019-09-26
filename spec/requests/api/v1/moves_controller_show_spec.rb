@@ -32,7 +32,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
 
       it 'syncs data' do
-        expect(Moves::NomisSynchroniser).to have_received(:new).with(location: move.from_location, date: move.date)
+        expect(Moves::NomisSynchroniser).to have_received(:new).with(locations: [move.from_location], date: move.date)
       end
     end
 
