@@ -1,10 +1,12 @@
-[
-  {
-    "problemType": "MATSTAT",
-    "problemCode": "ACCU9",
-    "problemStatus": "ON",
-    "problemDescription": "Preg, acc under 9mths",
-    "startDate": "2010-06-21",
-    "endDate": "2010-06-21"
-  }
-]
+{
+  "personalCareNeeds": [
+    {
+      "problemType": "MATSTAT",
+      "problemCode": "ACCU9",
+      "problemStatus": "ON",
+      "problemDescription": "Preg, acc under 9mths",
+      "startDate": "2010-06-21",
+      "endDate": "2010-06-21"
+    }
+  ]
+}

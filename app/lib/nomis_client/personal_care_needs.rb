@@ -2,15 +2,17 @@
 
 module NomisClient
   class PersonalCareNeeds < NomisClient::Base
+    PERSONAL_CARE_TYPES = 'MATSTAT'
+
     class << self
       def get(booking_number)
-        get_response(booking_number: booking_number).parsed.map do |personal_care_need|
+        get_response(booking_number: booking_number).parsed['personalCareNeeds'].map do |personal_care_need|
           attributes_for(personal_care_need)
         end
       end
 
       def get_response(booking_number:)
-        NomisClient::Base.get("/bookings/#{booking_number}/personal-care-needs")
+        NomisClient::Base.get("/bookings/#{booking_number}/personal-care-needs?type=#{PERSONAL_CARE_TYPES}")
       end
 
       def attributes_for(personal_care_need)
