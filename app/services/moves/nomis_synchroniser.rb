@@ -14,6 +14,7 @@ module Moves
 
       moves = NomisClient::Moves.get(nomis_agency_ids, date)
       Moves::Importer.new(moves).call
+      Moves::Sweeper.new(location, date, moves).call
     end
 
     private
