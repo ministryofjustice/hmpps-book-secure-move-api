@@ -143,6 +143,25 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         end
       end
 
+      describe 'validating dates before running queries' do
+        let(:from_location) { moves.first.from_location }
+        let(:filters) do
+          {
+            from_location_id: from_location.id,
+            date_from: 'yyyy-09-Tu'
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          get '/api/v1/moves', headers: headers, params: params
+        end
+
+        it 'returns errors' do
+          expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
+        end
+      end
+
       describe 'not importing moves from NOMIS when missing filters' do
         let(:from_location) { moves.first.from_location }
         let(:filters) do
