@@ -49,6 +49,20 @@
       }
     }
   },
+  "400": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/BadRequest"
+        }
+      }
+    }
+  },
   "401": {
     "type": "object",
     "required": [

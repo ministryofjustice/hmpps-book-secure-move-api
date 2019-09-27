@@ -157,6 +157,10 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           get '/api/v1/moves', headers: headers, params: params
         end
 
+        it 'is a bad request' do
+          expect(response.status).to eq(400)
+        end
+
         it 'returns errors' do
           expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
         end

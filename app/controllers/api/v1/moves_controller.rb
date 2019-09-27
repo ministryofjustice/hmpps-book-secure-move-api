@@ -10,7 +10,7 @@ module Api
           moves = Moves::Finder.new(filter_params).call
           paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
         else
-          render json: { error: moves_params.errors }
+          render json: { error: moves_params.errors }, status: :bad_request
         end
       end
 
