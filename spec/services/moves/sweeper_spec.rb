@@ -119,23 +119,33 @@ RSpec.describe Moves::Sweeper do
           sweeper.call
           expect(court_move.reload.status).to eq 'requested'
         end
+      end
 
-        context 'with multiple locations' do
-          let(:locations) { [brixton_prison, wood_green_court] }
+      context 'with multiple locations' do
+        let(:locations) { [brixton_prison, wood_green_court] }
+        let!(:court_move) do
+          Move.create!(
+            date: attributes[:date],
+            time_due: attributes[:time_due],
+            nomis_event_id: 487_463_208,
+            person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
+            from_location: wood_green_court,
+            to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+          )
+        end
 
-          it 'cancels two moves' do
-            expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(2)
-          end
+        it 'cancels two moves' do
+          expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(2)
+        end
 
-          it 'cancels the move that matched the first location' do
-            sweeper.call
-            expect(outdated_move.reload.status).to eq 'cancelled'
-          end
+        it 'cancels the move that matched the first location' do
+          sweeper.call
+          expect(outdated_move.reload.status).to eq 'cancelled'
+        end
 
-          it 'cancels the move that matched the second location' do
-            sweeper.call
-            expect(court_move.reload.status).to eq 'cancelled'
-          end
+        it 'cancels the move that matched the second location' do
+          sweeper.call
+          expect(court_move.reload.status).to eq 'cancelled'
         end
       end
     end
