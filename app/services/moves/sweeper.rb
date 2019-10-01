@@ -2,10 +2,10 @@
 
 module Moves
   class Sweeper
-    attr_accessor :items, :date, :location
+    attr_accessor :items, :date, :locations
 
-    def initialize(location, date, items)
-      self.location = location
+    def initialize(locations, date, items)
+      self.locations = locations
       self.date = date
       self.items = items
     end
@@ -19,7 +19,7 @@ module Moves
     def cancel_outdated_moves!
       outdated_moves = Move.where(
         date: date,
-        from_location_id: location.id
+        from_location_id: locations.map(&:id)
       ).where.not(
         nomis_event_id: current_nomis_event_ids
       )

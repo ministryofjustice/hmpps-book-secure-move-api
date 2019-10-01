@@ -5,11 +5,12 @@ require 'rails_helper'
 RSpec.describe Moves::NomisSynchroniser do
   subject(:synchroniser) do
     described_class.new(
-      location: location,
+      locations: locations,
       date: date
     )
   end
 
+  let(:locations) { [location] }
   let(:date) { Date.today }
 
   describe '.call' do
@@ -47,11 +48,30 @@ RSpec.describe Moves::NomisSynchroniser do
       end
 
       it 'calls sweeper' do
-        expect(Moves::Sweeper).to have_received(:new).with(location, date, [])
+        expect(Moves::Sweeper).to have_received(:new).with([location], date, [])
       end
 
       it 'calls the NOMIS API' do
         expect(NomisClient::Moves).to have_received(:get)
+      end
+    end
+
+    context 'with multiple locations' do
+      let(:locations) { build_list :location, 2 }
+
+      it 'calls importer' do
+        expect(Moves::Importer).to have_received(:new).with([])
+      end
+
+      it 'calls sweeper' do
+        expect(Moves::Sweeper).to have_received(:new).with(locations, date, [])
+      end
+
+      it 'calls the NOMIS API' do
+        expect(NomisClient::Moves).to have_received(:get).with(
+          locations.map(&:nomis_agency_id),
+          Date.today
+        )
       end
     end
   end

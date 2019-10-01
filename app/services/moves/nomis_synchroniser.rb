@@ -2,29 +2,29 @@
 
 module Moves
   class NomisSynchroniser
-    attr_accessor :location, :date
+    attr_accessor :locations, :date
 
-    def initialize(location:, date:)
-      self.location = location
+    def initialize(locations:, date:)
+      self.locations = locations || []
       self.date = date
     end
 
     def call
-      return unless nomis_agency_id && date && prison?
+      return unless nomis_agency_ids.present? && date && prison?
 
-      moves = NomisClient::Moves.get(nomis_agency_id, date)
+      moves = NomisClient::Moves.get(nomis_agency_ids, date)
       Moves::Importer.new(moves).call
-      Moves::Sweeper.new(location, date, moves).call
+      Moves::Sweeper.new(locations, date, moves).call
     end
 
     private
 
-    def nomis_agency_id
-      location&.nomis_agency_id
+    def nomis_agency_ids
+      locations.map(&:nomis_agency_id)
     end
 
     def prison?
-      location&.prison?
+      locations.any?(&:prison?)
     end
   end
 end
