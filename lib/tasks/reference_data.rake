@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
@@ -30,4 +31,12 @@ namespace :reference_data do
   task create_nomis_alerts: :environment do
     NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
   end
+
+  desc 'create suppliers'
+  task create_suppliers: :environment do
+    require 'active_record/fixtures'
+
+    ActiveRecord::FixtureSet.create_fixtures(File.join(Rails.root, 'db/fixtures'), 'suppliers')
+  end
 end
+# rubocop:enable Metrics/BlockLength
