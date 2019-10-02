@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Supplier, type: :model do
+  subject(:supplier) { create(:supplier) }
+
+  it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to validate_uniqueness_of(:name) }
+  it { is_expected.to validate_uniqueness_of(:key) }
+
+  context 'when not providing a key' do
+    it 'generates it from the name' do
+      expect(supplier.key).to eq('test_supplier')
+    end
+  end
+end
