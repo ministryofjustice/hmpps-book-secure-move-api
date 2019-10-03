@@ -11,10 +11,19 @@ RSpec.describe Moves::Finder do
 
   describe 'filtering' do
     context 'with matching location filter' do
-      let(:filter_params) { { from_location_id: move.from_location_id } }
+      let(:filter_params) { { from_location_id: [move.from_location_id] } }
 
       it 'returns moves matching from location' do
         expect(move_finder.call.pluck(:id)).to eql [move.id]
+      end
+    end
+
+    context 'with two location filters' do
+      let!(:second_move) { create :from_court_to_prison }
+      let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
+
+      it 'returns moves matching multiple locations' do
+        expect(move_finder.call.pluck(:id)).to eql [move.id, second_move.id]
       end
     end
 
