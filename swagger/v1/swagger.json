@@ -109,10 +109,13 @@
           {
             "name": "filter[from_location_id]",
             "in": "query",
-            "type": "string",
-            "description": "Filters results to only include moves from the given location",
-            "schema": {
+            "type": "array",
+            "items": {
               "type": "string"
+            },
+            "description": "Filters results to only include moves from the given locations",
+            "schema": {
+              "type": "array"
             },
             "format": "uuid",
             "example": "950ef512-a25f-46d7-8ced-7ad09510659b"
@@ -120,9 +123,13 @@
           {
             "name": "filter[to_location_id]",
             "in": "query",
-            "description": "Filters results to only include moves to the given location",
-            "schema": {
+            "type": "array",
+            "items": {
               "type": "string"
+            },
+            "description": "Filters results to only include moves to the given locations",
+            "schema": {
+              "type": "array"
             },
             "format": "uuid",
             "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098"

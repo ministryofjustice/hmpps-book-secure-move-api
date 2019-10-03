@@ -41,7 +41,8 @@ module Api
 
       private
 
-      PERMITTED_FILTER_PARAMS = %i[date_from date_to from_location_id location_type status].freeze
+      PERMITTED_FILTER_PARAMS = [:date_from, :date_to, :location_type, :status,
+                                 from_location_id: [], to_location_id: []].freeze
       PERMITTED_MOVE_PARAMS = [
         :type,
         attributes: %i[date time_due status move_type additional_information
@@ -98,7 +99,7 @@ module Api
       def from_locations
         @from_locations ||=
           if filter_params[:from_location_id]
-            [Location.find(filter_params[:from_location_id])]
+            filter_params[:from_location_id].collect { |id| Location.find(id) }
           elsif ENV['DEFAULT_NOMIS_AGENCY_IDS']
             Location.where('nomis_agency_id IN (?)', ENV['DEFAULT_NOMIS_AGENCY_IDS'].split(',').map(&:strip))
           else
