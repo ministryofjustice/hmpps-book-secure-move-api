@@ -11,7 +11,7 @@ RSpec.describe Supplier, type: :model do
 
   context 'when not providing a key' do
     it 'generates it from the name' do
-      expect(supplier.key).to eq('test_supplier')
+      expect(supplier.key).to eq('test_supplier_1')
     end
   end
 end

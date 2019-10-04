@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :supplier do
-    name { 'Test Supplier' }
+    name { 'Test Supplier 1' }
   end
 end
