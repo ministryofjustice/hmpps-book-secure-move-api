@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         resources :ethnicities, only: :index
         resources :nationalities, only: :index
         resources :identifier_types, only: :index
+        resources :suppliers, only: %i[index show]
       end
     end
   end

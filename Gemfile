@@ -21,6 +21,7 @@ gem 'rails', '~> 5.2.3'
 gem 'rswag-api'
 gem 'rswag-ui'
 gem 'sentry-raven'
+gem 'uuid'
 
 group :development, :test do
   gem 'factory_bot_rails'
