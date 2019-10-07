@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_02_101831) do
+ActiveRecord::Schema.define(version: 2019_10_07_150340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -59,6 +59,13 @@ ActiveRecord::Schema.define(version: 2019_10_02_101831) do
     t.string "nomis_agency_id"
     t.string "key", null: false
     t.datetime "disabled_at"
+  end
+
+  create_table "locations_suppliers", id: false, force: :cascade do |t|
+    t.uuid "location_id", null: false
+    t.uuid "supplier_id", null: false
+    t.index ["location_id"], name: "index_locations_suppliers_on_location_id"
+    t.index ["supplier_id"], name: "index_locations_suppliers_on_supplier_id"
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -171,6 +178,8 @@ ActiveRecord::Schema.define(version: 2019_10_02_101831) do
     t.index ["key"], name: "index_suppliers_on_key"
   end
 
+  add_foreign_key "locations_suppliers", "locations"
+  add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
