@@ -23,7 +23,7 @@ RSpec.describe Moves::Finder do
       let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
 
       it 'returns moves matching multiple locations' do
-        expect(move_finder.call.pluck(:id)).to eql [move.id, second_move.id]
+        expect(move_finder.call.pluck(:id).sort).to eql [move.id, second_move.id].sort
       end
     end
 
