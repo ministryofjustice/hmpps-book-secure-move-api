@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Supplier < ApplicationRecord
-  validates :name, :key, presence: true, uniqueness: true
+  has_and_belongs_to_many :locations
 
+  validates :name, :key, presence: true, uniqueness: true
   before_validation :ensure_key_has_value
 
   private
