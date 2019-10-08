@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Location do
+  it { is_expected.to have_and_belong_to_many(:suppliers) }
   it { is_expected.to have_many(:moves_from) }
   it { is_expected.to have_many(:moves_to) }
 
