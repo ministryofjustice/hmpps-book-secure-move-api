@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 2019_10_07_150340) do
   create_table "locations_suppliers", id: false, force: :cascade do |t|
     t.uuid "location_id", null: false
     t.uuid "supplier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["location_id"], name: "index_locations_suppliers_on_location_id"
     t.index ["supplier_id"], name: "index_locations_suppliers_on_supplier_id"
   end
