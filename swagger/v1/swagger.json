@@ -118,7 +118,7 @@
               "type": "array"
             },
             "format": "uuid",
-            "example": "950ef512-a25f-46d7-8ced-7ad09510659b"
+            "example": "950ef512-a25f-46d7-8ced-7ad09510659b,bfb54509-1ba1-4c2c-93f8-22fa2b9f8f7b"
           },
           {
             "name": "filter[to_location_id]",
@@ -132,7 +132,7 @@
               "type": "array"
             },
             "format": "uuid",
-            "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098"
+            "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098,bfb54509-1ba1-4c2c-93f8-22fa2b9f8f7b"
           },
           {
             "name": "page",
@@ -946,6 +946,20 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "filter[supplier_ids]",
+            "in": "query",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Filters results to only include moves from the given suppliers",
+            "schema": {
+              "type": "array"
+            },
+            "format": "uuid",
+            "example": "950ef512-a25f-46d7-8ced-7ad09510659b,bfb54509-1ba1-4c2c-93f8-22fa2b9f8f7b"
           }
         ],
         "responses": {
