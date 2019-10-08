@@ -19,11 +19,7 @@ module Api
         private
 
         def find_supplier
-          if ::UUID.validate(params[:id])
-            Supplier.find(params[:id])
-          else
-            Supplier.find_by(key: params[:id])
-          end
+          Supplier.find_by(key: params[:id])
         end
       end
     end
