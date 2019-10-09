@@ -111,7 +111,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     describe 'filters' do
       let!(:supplier) { create :supplier }
       let!(:location) { create :location, suppliers: [supplier] }
-      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_ids: [supplier.id] } }
+      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_id: supplier.id } }
       let(:params) { { filter: filters } }
 
       before do
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         expect(Locations::Finder).to have_received(:new).with(
           location_type: location.location_type,
           nomis_agency_id: location.nomis_agency_id,
-          supplier_ids: [supplier.id]
+          supplier_id: supplier.id
         )
       end
 
