@@ -66,7 +66,9 @@ ActiveRecord::Schema.define(version: 2019_10_07_150340) do
     t.uuid "supplier_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["location_id", "supplier_id"], name: "index_locations_suppliers_on_location_id_and_supplier_id", unique: true
     t.index ["location_id"], name: "index_locations_suppliers_on_location_id"
+    t.index ["supplier_id", "location_id"], name: "index_locations_suppliers_on_supplier_id_and_location_id", unique: true
     t.index ["supplier_id"], name: "index_locations_suppliers_on_supplier_id"
   end
 
