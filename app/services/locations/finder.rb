@@ -9,7 +9,7 @@ module Locations
     end
 
     def call
-      Location.where(filter_params.slice(:location_type, :nomis_agency_id, :supplier_ids))
+      Location.where(filter_params.slice(:location_type, :nomis_agency_id, :supplier_ids)).includes(:suppliers)
     end
   end
 end
