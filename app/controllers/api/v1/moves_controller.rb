@@ -41,8 +41,7 @@ module Api
 
       private
 
-      PERMITTED_FILTER_PARAMS = [:date_from, :date_to, :location_type, :status,
-                                 from_location_id: [], to_location_id: []].freeze
+      PERMITTED_FILTER_PARAMS = %i[date_from date_to location_type status from_location_id to_location_id].freeze
       PERMITTED_MOVE_PARAMS = [
         :type,
         attributes: %i[date time_due status move_type additional_information
