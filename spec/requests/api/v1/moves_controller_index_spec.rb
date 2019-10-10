@@ -23,7 +23,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with success 200'
 
       describe 'filtering results' do
-        let(:from_location_id) { [moves.first.from_location_id] }
+        let(:from_location_id) { moves.first.from_location_id }
         let(:filters) do
           {
             bar: 'bar',
@@ -54,7 +54,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       context 'with a cancelled move' do
         let(:move) { create(:move, :cancelled) }
         let!(:moves) { [move] }
-        let(:from_location_id) { [move.from_location_id] }
+        let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
             from_location_id: from_location_id
@@ -119,7 +119,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:date) { Date.today }
         let(:filters) do
           {
-            from_location_id: [from_location.id],
+            from_location_id: from_location.id,
             date_from: date.to_s
           }
         end
@@ -147,7 +147,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:from_location) { moves.first.from_location }
         let(:filters) do
           {
-            from_location_id: [from_location.id],
+            from_location_id: from_location.id,
             date_from: 'yyyy-09-Tu'
           }
         end
@@ -170,7 +170,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:from_location) { moves.first.from_location }
         let(:filters) do
           {
-            from_location_id: [from_location.id]
+            from_location_id: from_location.id
           }
         end
         let(:params) { { filter: filters } }
@@ -198,7 +198,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:date) { Date.today }
         let(:filters) do
           {
-            from_location_id: [from_location.id],
+            from_location_id: from_location.id,
             date_from: date.to_s
           }
         end
