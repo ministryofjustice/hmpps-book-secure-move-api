@@ -38,5 +38,17 @@ namespace :reference_data do
 
     ActiveRecord::FixtureSet.create_fixtures(File.join(Rails.root, 'db/fixtures'), 'suppliers')
   end
+
+  desc 'create locations/suppliers relationship'
+  task link_suppliers: :environment do
+    { geoamey: %w[SRY016 SFCUSU STCUSU], serco: %w[BXI] }.each do |supplier, codes|
+      locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }
+      locations.reject(&:nil?).each do |location|
+        location.suppliers << Supplier.find_by(key: supplier.to_s)
+      rescue ActiveRecord::RecordNotUnique
+        puts "#{location.nomis_agency_id} <=> #{supplier} already exists"
+      end
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength
