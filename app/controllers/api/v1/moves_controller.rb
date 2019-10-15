@@ -86,11 +86,12 @@ module Api
       end
 
       def import_moves_from_nomis(move: nil)
-        if move.present?
-          Moves::NomisSynchroniser.new(locations: [move.from_location], date: move.date).call
-        else
-          Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
-        end
+        # if move.present?
+        # Moves::NomisSynchroniser.new(locations: [move.from_location], date: move.date).call
+        # else
+        puts move
+        Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
+        # end
       rescue StandardError => e
         Raven.capture_exception(e)
       end
