@@ -32,7 +32,7 @@ module Moves
         Move.where(
           nomis_event_id: duplicate
         ).order(
-          created_at: :asc
+          created_at: :desc
         ).offset(1).update(status: Move::MOVE_STATUS_CANCELLED)
       end
     end
