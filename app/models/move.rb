@@ -44,6 +44,7 @@ class Move < ApplicationRecord
   validates :person, presence: true
   validates :reference, presence: true
   validates :status, inclusion: { in: statuses }
+  validates :nomis_event_id, uniqueness: true, allow_nil: true
 
   before_validation :set_reference
   before_validation :set_move_type
