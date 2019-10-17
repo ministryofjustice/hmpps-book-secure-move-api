@@ -149,52 +149,5 @@ RSpec.describe Moves::Sweeper do
         end
       end
     end
-
-    context 'with a duplicated move' do
-      let(:attributes) { input_data.first }
-      let!(:duplicated_move) do
-        Move.create!(
-          date: attributes[:date],
-          time_due: attributes[:time_due],
-          nomis_event_id: attributes[:nomis_event_id],
-          person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
-          from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
-          to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id]),
-          created_at: 5.minutes.ago
-        )
-      end
-
-      it 'cancels one move' do
-        expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(1)
-      end
-
-      it 'cancels the oldest move' do
-        sweeper.call
-        expect(duplicated_move.reload.status).to eq 'cancelled'
-      end
-
-      context 'with multiple duplicated moves' do
-        let!(:second_duplicated_move) do
-          Move.create!(
-            date: yesterday,
-            time_due: Time.now + 2.days,
-            nomis_event_id: attributes[:nomis_event_id],
-            person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
-            from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
-            to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id]),
-            created_at: 3.minutes.ago
-          )
-        end
-
-        it 'cancels two moves' do
-          expect { sweeper.call }.to change { Move.where(status: :cancelled).count }.by(2)
-        end
-
-        it 'cancels the oldest move' do
-          sweeper.call
-          expect(duplicated_move.reload.status).to eq 'cancelled'
-        end
-      end
-    end
   end
 end
