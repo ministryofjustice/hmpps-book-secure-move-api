@@ -12,7 +12,7 @@ module NomisClient
         response = token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
 
         total_request_seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - request_start_time)
-        Rails.logger.info "NomisClient request completed (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
+        Rails.logger.info "NomisClient request took (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
 
         response
       end
