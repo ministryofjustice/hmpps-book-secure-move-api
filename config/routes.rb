@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :moves, only: %i[index show create destroy update]
-      resources :people, only: %i[create update]
+      resources :people, only: %i[index create update]
       namespace :reference do
         resources :locations, only: %i[index show]
         resources :assessment_questions, only: :index
