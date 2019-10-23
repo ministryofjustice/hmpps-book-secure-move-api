@@ -44,6 +44,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
-gem "lograge", "~> 0.11.2"
-gem "logstash-event", "~> 1.2"
-gem "logstash-logger", "~> 0.26.1"
+gem 'lograge', '~> 0.11.2'
+gem 'logstash-event', '~> 1.2'
+gem 'logstash-logger', '~> 0.26.1'
