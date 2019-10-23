@@ -22,7 +22,7 @@ references:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
-          GITHUB_TEAM_NAME_SLUG: pecs
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
 
 commands:
   build_for_k8s:
