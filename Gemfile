@@ -22,7 +22,15 @@ gem 'rswag-api'
 gem 'rswag-ui'
 gem 'sentry-raven'
 
+# Augments Rails logging to output JSON for Fluentd/Kibana
+# on Cloud Platform
+gem 'lograge', '~> 0.11.2'
+gem 'logstash-event', '~> 1.2'
+gem 'logstash-logger', '~> 0.26.1'
+
 group :development, :test do
+  gem 'dotenv', '~> 2.7'
+  gem 'dotenv-rails', '~> 2.7'
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'pry-byebug'
