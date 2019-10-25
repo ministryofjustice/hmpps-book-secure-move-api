@@ -24,12 +24,41 @@ RSpec.describe Move do
     )
   end
 
+  it 'does NOT permit duplicate nomis_event_ids' do
+    move = create(:move, nomis_event_ids: [123_456])
+    move.nomis_event_ids << 123_456
+    move.save
+    expect(move.nomis_event_ids).to eq([123_456])
+  end
+
   context 'without automatic reference generation' do
     # rubocop:disable RSpec/AnyInstance
     before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
     # rubocop:enable RSpec/AnyInstance
 
     it { is_expected.to validate_presence_of(:reference) }
+  end
+
+  describe '#nomis_event_id=' do
+    subject(:move) { create :move }
+
+    context 'when nomis_event_id is not present' do
+      it 'assigns the nomis_event_id to the nomis_event_ids array' do
+        move.nomis_event_id = 123_456
+        expect(move.nomis_event_ids).to eq([123_456])
+      end
+    end
+
+    context 'when nomis_event_id is present' do
+      before do
+        move.nomis_event_id = 123_456
+      end
+
+      it 'assigns the nomis_event_id to the nomis_event_ids array without losing the old nomis_event_id' do
+        move.nomis_event_id = 654_321
+        expect(move.nomis_event_ids).to eq([123_456, 654_321])
+      end
+    end
   end
 
   describe '#reference' do
@@ -81,19 +110,32 @@ RSpec.describe Move do
   describe '#from_nomis?' do
     subject(:move) { build :move }
 
-    context 'with nomis_event_id' do
-      before { move.nomis_event_id = 1 }
+    context 'with nomis_event_ids' do
+      let(:nomis_event_id) { 12_345_678 }
+
+      before { move.nomis_event_ids = [nomis_event_id] }
 
       it 'is truthy' do
         expect(move).to be_from_nomis
       end
     end
 
-    context 'without nomis_event_id' do
-      before { move.nomis_event_id = nil }
+    context 'without nomis_event_ids' do
+      before { move.nomis_event_ids = [] }
 
       it 'is falsy' do
         expect(move).not_to be_from_nomis
+      end
+    end
+  end
+
+  describe '#existing' do
+    let!(:move) { create :move }
+    let(:duplicate) { described_class.new(move.attributes) }
+
+    context 'when querying for existing moves' do
+      it 'finds the right move' do
+        expect(duplicate.existing).to eq(move)
       end
     end
   end

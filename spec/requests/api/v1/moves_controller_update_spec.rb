@@ -103,7 +103,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'when from nomis' do
-      let!(:move) { create :move, nomis_event_id: 1 }
+      let(:nomis_event_id) { 12_345_678 }
+      let!(:move) { create :move, nomis_event_ids: [nomis_event_id] }
       let(:detail_403) { 'Can\'t change moves coming from Nomis' }
 
       let(:move_params) do

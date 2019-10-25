@@ -44,13 +44,21 @@ class Move < ApplicationRecord
   validates :person, presence: true
   validates :reference, presence: true
   validates :status, inclusion: { in: statuses }
-  validates :nomis_event_id, uniqueness: true, allow_nil: true
 
   before_validation :set_reference
   before_validation :set_move_type
+  before_validation :ensure_event_nomis_ids_uniqueness
+
+  def nomis_event_id=(event_id)
+    nomis_event_ids << event_id
+  end
 
   def from_nomis?
-    !nomis_event_id.nil?
+    !nomis_event_ids.empty?
+  end
+
+  def existing
+    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
   private
@@ -70,6 +78,10 @@ class Move < ApplicationRecord
       else
         'prison_transfer'
       end
+  end
+
+  def ensure_event_nomis_ids_uniqueness
+    nomis_event_ids.uniq!
   end
 
   def to_location_is_court?
