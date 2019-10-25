@@ -42,13 +42,25 @@ module Moves
     end
 
     def import_move(move)
-      Move
-        .find_or_initialize_by(nomis_event_id: move[:nomis_event_id])
-        .update(move_params(move))
+      return if update_move_with_same_nomis_event_id(move)
+
+      new_move = Move.new(move_params(move))
+      existing_move = new_move.existing
+
+      if existing_move
+        existing_move.update(move_params(move))
+      else
+        new_move.save
+      end
+    end
+
+    def update_move_with_same_nomis_event_id(move)
+      same_nomis_event_id_move = Move.find_by_nomis_event_ids([move[:nomis_event_id]])
+      same_nomis_event_id_move&.update(move_params(move))
     end
 
     def move_params(move)
-      move.slice(:date, :time_due, :status).merge(
+      move.slice(:date, :time_due, :status, :nomis_event_id).merge(
         person: Person.find_by(nomis_prison_number: move[:person_nomis_prison_number]),
         from_location: Location.find_by(nomis_agency_id: move[:from_location_nomis_agency_id]),
         to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id])

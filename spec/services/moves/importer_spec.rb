@@ -62,8 +62,8 @@ RSpec.describe Moves::Importer do
   end
 
   context 'with no existing records' do
-    let(:move) { Move.find_by(nomis_event_id: 468_536_961) }
-    let(:completed_move) { Move.find_by(nomis_event_id: 487_463_210) }
+    let(:move) { Move.find_by_nomis_event_ids([468_536_961]) }
+    let(:completed_move) { Move.find_by_nomis_event_ids([487_463_210]) }
 
     it 'creates 2 moves' do
       expect { importer.call }.to change(Move, :count).by(2)
@@ -106,7 +106,7 @@ RSpec.describe Moves::Importer do
   end
 
   context 'with one existing record' do
-    let!(:move) { create(:move, nomis_event_id: 468_536_961) }
+    let!(:move) { create(:move, nomis_event_ids: [468_536_961]) }
 
     it 'creates 1 move' do
       expect { importer.call }.to change(Move, :count).by(1)
@@ -115,11 +115,11 @@ RSpec.describe Moves::Importer do
 
   context 'with one existing record with different attributes' do
     let(:time_due) { Time.zone.parse('2019-08-19T09:00:00') }
-    let!(:move) { create(:move, nomis_event_id: 468_536_961, time_due: time_due) }
+    let!(:move) { create(:move, nomis_event_ids: [468_536_961], time_due: time_due) }
 
     it 'updates the field that is different' do
       importer.call
-      expect(Move.find_by(nomis_event_id: 468_536_961).time_due).to eq Time.zone.parse('2019-08-19T17:00:00')
+      expect(Move.find_by_nomis_event_ids([468_536_961]).time_due).to eq Time.zone.parse('2019-08-19T17:00:00')
     end
   end
 end
