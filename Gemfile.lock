@@ -61,6 +61,7 @@ GEM
     climate_control (0.2.0)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
+    connection_pool (2.2.2)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
@@ -132,6 +133,8 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    net-http-persistent (3.1.0)
+      connection_pool (~> 2.2)
     nio4r (2.5.1)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
@@ -278,6 +281,7 @@ DEPENDENCIES
   lograge (~> 0.11.2)
   logstash-event (~> 1.2)
   logstash-logger (~> 0.26.1)
+  net-http-persistent
   nokogiri (>= 1.10.4)
   oauth2
   pager_api
