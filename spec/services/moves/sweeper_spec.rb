@@ -42,7 +42,7 @@ RSpec.describe Moves::Sweeper do
         Move.create!(
           date: attributes[:date],
           time_due: attributes[:time_due],
-          nomis_event_id: attributes[:nomis_event_id],
+          nomis_event_ids: [attributes[:nomis_event_id]],
           person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
           from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
           to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
@@ -60,7 +60,7 @@ RSpec.describe Moves::Sweeper do
         Move.create!(
           date: attributes[:date],
           time_due: attributes[:time_due],
-          nomis_event_id: 487_463_209,
+          nomis_event_ids: [487_463_209],
           person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
           from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
           to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
@@ -72,7 +72,7 @@ RSpec.describe Moves::Sweeper do
           Move.create!(
             date: yesterday,
             time_due: attributes[:time_due],
-            nomis_event_id: 487_463_208,
+            nomis_event_ids: [487_463_208],
             person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
             from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
             to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
@@ -99,7 +99,7 @@ RSpec.describe Moves::Sweeper do
           Move.create!(
             date: attributes[:date],
             time_due: attributes[:time_due],
-            nomis_event_id: 487_463_208,
+            nomis_event_ids: [487_463_208],
             person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
             from_location: wood_green_court,
             to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
@@ -127,7 +127,7 @@ RSpec.describe Moves::Sweeper do
           Move.create!(
             date: attributes[:date],
             time_due: attributes[:time_due],
-            nomis_event_id: 487_463_208,
+            nomis_event_ids: [487_463_208],
             person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
             from_location: wood_green_court,
             to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
@@ -146,6 +146,24 @@ RSpec.describe Moves::Sweeper do
         it 'cancels the move that matched the second location' do
           sweeper.call
           expect(court_move.reload.status).to eq 'cancelled'
+        end
+      end
+
+      context 'with a move with multiple nomis_event_ids' do
+        let!(:multiple_nomis_ids_move) do
+          Move.create!(
+            date: attributes[:date],
+            time_due: attributes[:time_due],
+            nomis_event_ids: [attributes[:nomis_event_id], 123_456_789],
+            person: prisoner_one,
+            from_location: brixton_prison,
+            to_location: wood_green_court
+          )
+        end
+
+        it 'removes the outdated nomis_event_id' do
+          sweeper.call
+          expect(multiple_nomis_ids_move.reload.nomis_event_ids).to eq([attributes[:nomis_event_id]])
         end
       end
     end
