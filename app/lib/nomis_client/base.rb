@@ -17,6 +17,17 @@ module NomisClient
         response
       end
 
+      def post(path, params = {})
+        request_start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        response = token.post("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
+
+        total_request_seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - request_start_time)
+        Rails.logger.info "NomisClient request took (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
+
+        response
+      end
+
       def test_mode?
         ENV[NOMIS_TEST_MODE] == 'true'
       end

@@ -38,7 +38,7 @@ RSpec.describe Moves::Importer do
   let(:personal_care_needs_importer) { instance_double('PersonalCareNeeds::Importer', call: true) }
 
   before do
-    allow(NomisClient::People).to receive(:get)
+    allow(NomisClient::People).to receive(:get).and_return(%w[person1_json person2_json])
     allow(NomisClient::Alerts).to receive(:get)
     allow(NomisClient::PersonalCareNeeds).to receive(:get)
     allow(People::Importer).to receive(:new).and_return(people_importer)
@@ -48,6 +48,7 @@ RSpec.describe Moves::Importer do
 
   it 'calls the People::Importer service twice' do
     importer.call
+
     expect(people_importer).to have_received(:call).twice
   end
 
