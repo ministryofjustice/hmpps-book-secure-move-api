@@ -8,6 +8,7 @@ RSpec.describe NomisClient::Base do
   let(:token) do
     instance_double('OAuth2::AccessToken',
                     get: oauth2_response,
+                    post: oauth2_response,
                     expires?: true,
                     expires_at: token_expires_at)
   end
@@ -28,7 +29,7 @@ RSpec.describe NomisClient::Base do
       let(:token_expires_at) { 1.hour.from_now.to_i }
 
       context 'when a resource is found' do
-        let(:response_body) { file_fixture('nomis_get_prisoner_200.json').read }
+        let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
         let(:response_status) { 200 }
 
         it 'returns a response object with JSON data in the body' do

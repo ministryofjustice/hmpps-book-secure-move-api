@@ -9,8 +9,8 @@ module Moves
     end
 
     def call
+      import_people
       items.each do |move|
-        import_person(move[:person_nomis_prison_number])
         import_alerts(move[:person_nomis_prison_number])
         import_personal_care_needs(move[:person_nomis_prison_number])
         import_move(move)
@@ -19,9 +19,11 @@ module Moves
 
     private
 
-    def import_person(prison_number)
-      person_attributes = NomisClient::People.get(prison_number)
-      People::Importer.new(person_attributes).call
+    def import_people
+      people_nomis_prison_numbers = items.map { |item| item[:person_nomis_prison_number] }.uniq
+      NomisClient::People.get(people_nomis_prison_numbers).each do |person_attributes|
+        People::Importer.new(person_attributes).call
+      end
     end
 
     def import_alerts(prison_number)
