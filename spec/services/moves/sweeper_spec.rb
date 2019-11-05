@@ -99,7 +99,7 @@ RSpec.describe Moves::Sweeper do
           Move.create!(
             date: attributes[:date],
             time_due: attributes[:time_due],
-            nomis_event_ids: [487_463_208],
+            nomis_event_ids: [],
             person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
             from_location: wood_green_court,
             to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
