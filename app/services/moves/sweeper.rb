@@ -36,6 +36,8 @@ module Moves
         date: date,
         from_location_id: locations.map(&:id)
       )
+
+      update_nomis_event_ids_when_duplicate(scope)
       update_nomis_event_ids_containing_currents(scope)
       update_nomis_event_ids_not_containing_currents(scope)
     end
@@ -45,6 +47,15 @@ module Moves
         'ARRAY[?] && nomis_event_ids', current_nomis_event_ids
       ).each do |move|
         move.update(nomis_event_ids: move.nomis_event_ids & current_nomis_event_ids)
+      end
+    end
+
+    def update_nomis_event_ids_when_duplicate(scope)
+      items.map do |item|
+        move = scope.find_by(
+          person: Person.where(nomis_prison_number: item[:person_nomis_prison_number])
+        )
+        move.update(nomis_event_ids: move.nomis_event_ids << item[:nomis_event_id])
       end
     end
 
