@@ -23,13 +23,13 @@ RSpec.describe NomisClient::Base do
 
   describe '.get' do
     let(:response) { described_class.get(api_endpoint) }
-    let(:api_endpoint) { '/prisoners/A1234BC' }
+    let(:api_endpoint) { '/movements/transfers/BXI' }
 
     context 'with a valid token' do
       let(:token_expires_at) { 1.hour.from_now.to_i }
 
       context 'when a resource is found' do
-        let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
+        let(:response_body) { file_fixture('nomis_get_moves_200.json').read }
         let(:response_status) { 200 }
 
         it 'returns a response object with JSON data in the body' do
@@ -63,6 +63,94 @@ RSpec.describe NomisClient::Base do
 
       context 'when an unrecoverable error occurrs' do
         let(:response_body) { file_fixture('nomis_get_prisoner_500.json').read }
+        let(:response_status) { 500 }
+
+        it 'returns a response object with error message in the body' do
+          expect(response.body).to eq response_body
+        end
+
+        it 'returns a response object with status 500' do
+          expect(response.status).to eq 500
+        end
+      end
+    end
+
+    context 'with an expired token' do
+      let(:token_expires_at) { 2.hours.ago.to_i }
+      let(:response_body) { '' }
+      let(:response_status) { 200 }
+
+      it 'gets a new token' do
+        described_class.get(api_endpoint)
+        described_class.get(api_endpoint)
+
+        expect(client_credentials).to have_received(:get_token).twice
+      end
+    end
+
+    context 'with a token about to expire' do
+      let(:token_expires_at) { 3.seconds.from_now.to_i }
+      let(:response_body) { '' }
+      let(:response_status) { 200 }
+
+      it 'gets a new token' do
+        described_class.get(api_endpoint)
+        described_class.get(api_endpoint)
+
+        expect(client_credentials).to have_received(:get_token).twice
+      end
+    end
+  end
+
+  describe '.post' do
+    let(:response) do
+      described_class.post(api_endpoint,
+                           body: { offenderNos: %w[G3239GV] }.to_json,
+                           headers: {
+                             'Accept': 'application/json',
+                             'Content-Type': 'application/json'
+                           })
+    end
+    let(:api_endpoint) { '/prisoners' }
+
+    context 'with a valid token' do
+      let(:token_expires_at) { 1.hour.from_now.to_i }
+
+      context 'when a resource is found' do
+        let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
+        let(:response_status) { 200 }
+
+        it 'returns a response object with JSON data in the body' do
+          expect(response.body).to eq response_body
+        end
+
+        it 'returns a response object with status 200' do
+          expect(response.status).to eq 200
+        end
+
+        it 'reuses the token on multiple requests' do
+          response
+          response
+
+          expect(client_credentials).to have_received(:get_token).once
+        end
+      end
+
+      context 'when a resource is not found' do
+        let(:response_body) { file_fixture('nomis_post_prisoners_404.json').read }
+        let(:response_status) { 404 }
+
+        it 'returns a response object with error message in the body' do
+          expect(response.body).to eq response_body
+        end
+
+        it 'returns a response object with status 404' do
+          expect(response.status).to eq 404
+        end
+      end
+
+      context 'when an unrecoverable error occurrs' do
+        let(:response_body) { file_fixture('nomis_post_prisoners_500.json').read }
         let(:response_status) { 500 }
 
         it 'returns a response object with error message in the body' do
