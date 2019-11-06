@@ -4,7 +4,7 @@ module NomisClient
   class People
     class << self
       def get(prison_numbers)
-        response(prison_numbers).map do |prisoner|
+        get_response(nomis_offender_numbers: prison_numbers).map do |prisoner|
           attributes_for(prisoner)
         end
       end
@@ -38,12 +38,6 @@ module NomisClient
         }
       end
       # rubocop:enable Metrics/MethodLength
-
-      private
-
-      def response(prison_numbers)
-        get_response(nomis_offender_numbers: prison_numbers)
-      end
     end
   end
 end
