@@ -36,6 +36,14 @@ RSpec.describe Moves::Sweeper do
     ]
   end
 
+  context 'when initialising' do
+    let(:locations) { [brixton_prison, wood_green_court] }
+
+    it 'cleans up locations that are not prisons' do
+      expect(sweeper.locations).to eq([brixton_prison])
+    end
+  end
+
   context 'with records for newly imported moves' do
     let(:attributes) { input_data.first }
 

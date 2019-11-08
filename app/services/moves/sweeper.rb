@@ -5,7 +5,7 @@ module Moves
     attr_accessor :items, :date, :locations
 
     def initialize(locations, date, items)
-      self.locations = locations
+      self.locations = locations.select(&:prison?)
       self.date = date
       self.items = items
     end
