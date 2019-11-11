@@ -5,7 +5,7 @@ module Moves
     attr_accessor :items, :date, :locations
 
     def initialize(locations, date, items)
-      self.locations = locations
+      self.locations = locations.select(&:prison?)
       self.date = date
       self.items = items
     end
@@ -36,8 +36,20 @@ module Moves
         date: date,
         from_location_id: locations.map(&:id)
       )
+
+      update_nomis_event_ids_when_duplicate(scope)
       update_nomis_event_ids_containing_currents(scope)
       update_nomis_event_ids_not_containing_currents(scope)
+    end
+
+    def update_nomis_event_ids_when_duplicate(scope)
+      items.map do |item|
+        move = scope.find_by(
+          person: Person.where(nomis_prison_number: item[:person_nomis_prison_number]),
+          to_location: Location.where(nomis_agency_id: item[:to_location_nomis_agency_id])
+        )
+        move.update(nomis_event_ids: move.nomis_event_ids << item[:nomis_event_id])
+      end
     end
 
     def update_nomis_event_ids_containing_currents(scope)
