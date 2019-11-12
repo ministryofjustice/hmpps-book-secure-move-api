@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
   describe '.get' do
-    let(:prison_number) { 'G3239GV' }
-    let(:response) { described_class.get(prison_number) }
+    let(:prison_numbers) { %w[G3239GV A8348EC] }
+    let(:response) { described_class.get(prison_numbers) }
     let(:client_response) do
       [
         {
@@ -19,7 +19,7 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
           expires_at: '2018-06-08',
           expired: true,
           active: false,
-          rnum: 9
+          offender_no: 'A9127EK'
         },
         {
           alert_id: 11,
@@ -32,30 +32,17 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
           expires_at: '2019-01-07',
           expired: false,
           active: true,
-          rnum: 10
+          offender_no: 'C9127XK'
         }
       ]
     end
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_alerts_200.json').read }
+      let(:response_body) { file_fixture('nomis_post_alerts_200.json').read }
 
       it 'returns the correct person data' do
         expect(response.map(&:symbolize_keys)).to eq client_response
-      end
-    end
-
-    context 'when in test mode' do
-      let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_alerts_200.json').read }
-
-      before do
-        allow(NomisClient::Base).to receive(:test_mode?).and_return(true)
-      end
-
-      it 'returns the anonymised person data' do
-        expect(response).not_to eq(client_response)
       end
     end
   end

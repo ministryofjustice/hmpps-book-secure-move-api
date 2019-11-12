@@ -32,6 +32,8 @@ RSpec.describe Moves::Importer do
   let!(:wood_green_court) { create(:location, nomis_agency_id: 'WDGRCC', location_type: 'court') }
   let!(:prisoner_one) { create(:person, nomis_prison_number: 'G3239GV') }
   let!(:prisoner_two) { create(:person, nomis_prison_number: 'G7157AB') }
+  let!(:profile_one) { create(:profile, person: prisoner_one) }
+  let!(:profile_two) { create(:profile, person: prisoner_two) }
 
   let(:people_importer) { instance_double('People::Importer', call: true) }
   let(:alerts_importer) { instance_double('Alerts::Importer', call: true) }
@@ -39,7 +41,7 @@ RSpec.describe Moves::Importer do
 
   before do
     allow(NomisClient::People).to receive(:get).and_return(%w[person1_json person2_json])
-    allow(NomisClient::Alerts).to receive(:get)
+    allow(NomisClient::Alerts).to receive(:get).and_return([{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }])
     allow(NomisClient::PersonalCareNeeds).to receive(:get)
     allow(People::Importer).to receive(:new).and_return(people_importer)
     allow(Alerts::Importer).to receive(:new).and_return(alerts_importer)
@@ -48,7 +50,6 @@ RSpec.describe Moves::Importer do
 
   it 'calls the People::Importer service twice' do
     importer.call
-
     expect(people_importer).to have_received(:call).twice
   end
 
