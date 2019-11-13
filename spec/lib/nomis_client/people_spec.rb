@@ -92,8 +92,7 @@ RSpec.describe NomisClient::People do
       allow(NomisClient::Base).to(
         receive(:post)
         .with('/prisoners',
-              body: { offenderNos: nomis_offender_numbers }.to_json,
-              headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' })
+              body: { offenderNos: nomis_offender_numbers }.to_json)
         .and_return(nomis_response)
       )
     end

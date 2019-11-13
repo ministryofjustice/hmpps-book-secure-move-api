@@ -11,6 +11,7 @@ module NomisClient
       end
 
       def post(path, params = {})
+        params = update_json_headers(params)
         benchmark_request(path) { token.post("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params) }
       end
 
@@ -53,6 +54,18 @@ module NomisClient
         Rails.logger.info "NomisClient request took (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
 
         response
+      end
+
+      def update_json_headers(params)
+        return unless params
+
+        {
+          headers:
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }.deep_merge(params)
       end
     end
   end
