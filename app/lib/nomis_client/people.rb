@@ -12,11 +12,7 @@ module NomisClient
       def get_response(nomis_offender_numbers:)
         NomisClient::Base.post(
           '/prisoners',
-          body: { 'offenderNos': nomis_offender_numbers }.to_json,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
+          body: { 'offenderNos': nomis_offender_numbers }.to_json
         ).parsed
       end
 
