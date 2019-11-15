@@ -140,6 +140,18 @@ jobs:
       - deploy_to_k8s:
          env: "staging"
 
+  build_preprod:
+    <<: *cloud_container
+    steps:
+      - build_for_k8s:
+         env: "preprod"
+
+  deploy_preprod:
+    <<: *cloud_container
+    steps:
+      - deploy_to_k8s:
+         env: "preprod"
+
   build_production:
     <<: *cloud_container
     steps:
@@ -167,6 +179,19 @@ workflows:
       - deploy_staging:
           requires:
             - build_staging
+      - hold_preprod:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - build_preprod:
+          requires:
+            - hold_preprod
+      - deploy_preprod:
+          requires:
+            - build_preprod
       - hold_production:
           type: approval
           requires:
