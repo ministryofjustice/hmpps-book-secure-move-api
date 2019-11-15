@@ -3,14 +3,17 @@
 module NomisClient
   class Alerts < NomisClient::Base
     class << self
-      def get(prison_number)
-        response(prison_number).map do |alert|
+      def get(prison_numbers)
+        get_response(nomis_offender_numbers: prison_numbers).map do |alert|
           attributes_for(alert)
         end
       end
 
-      def get_response(nomis_offender_number:)
-        NomisClient::Base.get("/bookings/offenderNo/#{nomis_offender_number}/alerts")
+      def get_response(nomis_offender_numbers:)
+        NomisClient::Base.post(
+          '/bookings/offenderNo/alerts',
+          body: nomis_offender_numbers.to_json
+        ).parsed
       end
 
       # rubocop:disable Metrics/MethodLength
@@ -26,21 +29,10 @@ module NomisClient
           expires_at: alert['dateExpires'],
           expired: alert['expired'],
           active: alert['active'],
-          rnum: alert['rnum']
+          offender_no: alert['offenderNo']
         }
       end
       # rubocop:enable Metrics/MethodLength
-
-      private
-
-      def response(prison_number)
-        alerts = get_response(nomis_offender_number: prison_number).parsed
-        if NomisClient::Base.test_mode?
-          ::Alerts::Anonymiser.new(nomis_offender_number: prison_number, alerts: alerts).call
-        else
-          alerts
-        end
-      end
     end
   end
 end

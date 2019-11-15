@@ -3,15 +3,16 @@
 module NomisClient
   class People
     class << self
-      def get(prison_number)
-        attributes_for(response(prison_number))
+      def get(prison_numbers)
+        get_response(nomis_offender_numbers: prison_numbers).map do |prisoner|
+          attributes_for(prisoner)
+        end
       end
 
-      def get_response(nomis_offender_number:)
-        NomisClient::Base.get(
-          "/prisoners/#{nomis_offender_number}",
-          params: {},
-          headers: { 'Page-Limit' => '1000' }
+      def get_response(nomis_offender_numbers:)
+        NomisClient::Base.post(
+          '/prisoners',
+          body: { 'offenderNos': nomis_offender_numbers }.to_json
         ).parsed
       end
 
@@ -33,16 +34,6 @@ module NomisClient
         }
       end
       # rubocop:enable Metrics/MethodLength
-
-      private
-
-      def response(prison_number)
-        if NomisClient::Base.test_mode?
-          ::People::Anonymiser.new(nomis_offender_number: prison_number).call
-        else
-          get_response(nomis_offender_number: prison_number).first
-        end
-      end
     end
   end
 end
