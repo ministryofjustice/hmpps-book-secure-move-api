@@ -179,16 +179,12 @@ workflows:
       - deploy_staging:
           requires:
             - build_staging
-      - hold_preprod:
-          type: approval
+      - build_preprod:
           requires:
             - test
           filters:
             branches:
               only: master
-      - build_preprod:
-          requires:
-            - hold_preprod
       - deploy_preprod:
           requires:
             - build_preprod
