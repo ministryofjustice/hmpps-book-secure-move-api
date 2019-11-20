@@ -1,0 +1,48 @@
+{
+  "Document": {
+    "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "3ax9c575-5901-4f69-f234-81e489je1ed8",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": {
+        "type": "string",
+        "example": "documents",
+        "description": "The type of this object - always `documents`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "description",
+          "document_type",
+          "file"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "The document details the prisoner's behavior",
+            "description": "Human readable description of the document"
+          },
+          "document_type": {
+            "type": "string",
+            "example": "ID",
+            "description": "Human readable type of the document"
+          },
+          "file": {
+            "type": "url",
+            "example": "https://example.com.s3.amazonaws.com/file.doc",
+            "description": "URL that can be used to download the document"
+          }
+        }
+      }
+    }
+  }
+}
