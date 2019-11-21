@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Document < ApplicationRecord
-  include ActiveStorageSupport::SupportForBase64
-
-  has_one_base64_attached :file
+  has_one_attached :file
 
   before_validation :validate_file_presence
   validates :document_type, presence: true

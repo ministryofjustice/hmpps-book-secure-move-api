@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
+  let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'GET /people' do

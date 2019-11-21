@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'base64'
 
 RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::JSON_API_CONTENT_TYPE }
+  let(:content_type) { described_class::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
   before do
-    post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers, as: :json
+    post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers
   end
 
   describe 'POST /moves/:move_id/documents' do
@@ -17,13 +16,11 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
     let(:move) { create(:move) }
 
     context 'when successful' do
-      let(:filename) { 'file-sample_100kB.doc' }
-      let(:base64_file) { Base64.encode64(File.binread(File.join(Rails.root, 'spec/fixtures', filename))) }
       let(:file) do
-        {
-          data: "data:application/msword;base64,#{base64_file}",
-          filename: 'file-sample_100kB.doc'
-        }
+        Rack::Test::UploadedFile.new(
+          File.join(Rails.root, 'spec/fixtures', 'file-sample_100kB.doc'),
+          'application/msword'
+        )
       end
       let(:data) do
         {
