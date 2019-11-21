@@ -19,9 +19,13 @@ gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
+gem 'sentry-raven'
+
+# Swagger API documentation. We need CORS to enable the Swagger UI to make requests
+# against the API without an Access-Control-Allow-Origin error.
+gem 'rack-cors'
 gem 'rswag-api'
 gem 'rswag-ui'
-gem 'sentry-raven'
 
 # Augments Rails logging to output JSON for Fluentd/Kibana
 # on Cloud Platform
