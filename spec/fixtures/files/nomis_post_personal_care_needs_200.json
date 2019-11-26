@@ -1,0 +1,28 @@
+[
+  {
+    "offenderNo": "321",
+    "personalCareNeeds": [
+      {
+        "problemType": "MATSTAT",
+        "problemCode": "ACCU9",
+        "problemStatus": "ON",
+        "problemDescription": "Preg, acc under 9mths",
+        "startDate": "2010-06-21",
+        "endDate": "2010-06-21"
+      }
+    ]
+  },
+  {
+    "offenderNo": "123",
+    "personalCareNeeds": [
+      {
+        "problemType": "MATSTAT",
+        "problemCode": "ACCV4",
+        "problemStatus": "ON",
+        "problemDescription": "Preg, acc under 9mths",
+        "startDate": "2010-06-22",
+        "endDate": "2010-06-22"
+      }
+    ]
+  }
+]
