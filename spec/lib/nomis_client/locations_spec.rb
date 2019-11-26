@@ -10,11 +10,16 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
     let(:response_body) { file_fixture('nomis_get_locations_200.json').read }
 
     it 'has the correct number of results' do
-      expect(response.count).to be 4
+      expect(response.count).to be 5
     end
 
-    it 'returns the correct data for the first match' do
+    it 'returns POLICE agencies' do
       expect(response.first)
+        .to include(key: '218434', nomis_agency_id: '218434', title: 'Test Police Custody', location_type: 'police')
+    end
+
+    it 'returns the correct data for the first COURT match' do
+      expect(response.second)
         .to eq(key: 'abdrct', nomis_agency_id: 'ABDRCT', title: 'Aberdare County Court', location_type: 'court')
     end
 

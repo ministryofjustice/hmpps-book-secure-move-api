@@ -1,8 +1,8 @@
 [
   {
     "agencyId":"218434",
-    "description":"Havant Probation Office",
-    "agencyType":"COMM"
+    "description":"Test Police Custody",
+    "agencyType":"POLICE"
   },
   {
     "agencyId":"456740",
