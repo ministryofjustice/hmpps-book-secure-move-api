@@ -38,11 +38,12 @@ RSpec.describe Moves::Importer do
   let(:people_importer) { instance_double('People::Importer', call: true) }
   let(:alerts_importer) { instance_double('Alerts::Importer', call: true) }
   let(:personal_care_needs_importer) { instance_double('PersonalCareNeeds::Importer', call: true) }
+  let(:offender_numbers_response) { [{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }] }
 
   before do
     allow(NomisClient::People).to receive(:get).and_return(%w[person1_json person2_json])
-    allow(NomisClient::Alerts).to receive(:get).and_return([{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }])
-    allow(NomisClient::PersonalCareNeeds).to receive(:get)
+    allow(NomisClient::Alerts).to receive(:get).and_return(offender_numbers_response)
+    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(offender_numbers_response)
     allow(People::Importer).to receive(:new).and_return(people_importer)
     allow(Alerts::Importer).to receive(:new).and_return(alerts_importer)
     allow(PersonalCareNeeds::Importer).to receive(:new).and_return(personal_care_needs_importer)
