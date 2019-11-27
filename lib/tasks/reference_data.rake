@@ -41,7 +41,7 @@ namespace :reference_data do
 
   desc 'create locations/suppliers relationship'
   task link_suppliers: :environment do
-    { geoamey: %w[SRY016 SFCUSU STCUSU], serco: %w[BXI] }.each do |supplier, codes|
+    { geoamey: %w[SRY016 SFCUSU STCUSU], serco: %w[BXI CLP1] }.each do |supplier, codes|
       locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }
       locations.reject(&:nil?).each do |location|
         location.suppliers << Supplier.find_by(key: supplier.to_s)
