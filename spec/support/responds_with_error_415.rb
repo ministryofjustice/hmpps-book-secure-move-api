@@ -5,7 +5,7 @@ RSpec.shared_examples 'an endpoint that responds with error 415' do
     [
       {
         'title' => 'Invalid Media Type',
-        'detail' => 'Content-Type must be application/vnd.api+json'
+        'detail' => "Content-Type must be #{described_class::CONTENT_TYPE}"
       }
     ]
   end

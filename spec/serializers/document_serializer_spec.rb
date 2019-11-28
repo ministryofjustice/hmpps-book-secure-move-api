@@ -16,15 +16,11 @@ RSpec.describe DocumentSerializer do
     expect(result[:data][:id]).to eql document.id
   end
 
-  it 'contains a `description` attribute' do
-    expect(result[:data][:attributes][:description]).to eql 'some details about the document'
+  it 'contains a `filename` attribute' do
+    expect(result[:data][:attributes][:filename]).to eql 'file-sample_100kB.doc'
   end
 
-  it 'contains a `document_type` attribute' do
-    expect(result[:data][:attributes][:document_type]).to eql 'ID'
-  end
-
-  it 'contains a `file` attribute' do
-    expect(result[:data][:attributes][:file]).to match(/file-sample_100kB/)
+  it 'contains a `content_type` attribute' do
+    expect(result[:data][:attributes][:content_type]).to eql 'application/msword'
   end
 end

@@ -21,25 +21,19 @@
       "attributes": {
         "type": "object",
         "required": [
-          "description",
-          "document_type",
-          "file"
+          "filename",
+          "content_type"
         ],
         "properties": {
-          "description": {
+          "filename": {
             "type": "string",
-            "example": "The document details the prisoner's behavior",
-            "description": "Human readable description of the document"
+            "example": "file.doc",
+            "description": "The name of the uploaded file"
           },
-          "document_type": {
+          "content_type": {
             "type": "string",
-            "example": "ID",
-            "description": "Human readable type of the document"
-          },
-          "file": {
-            "type": "url",
-            "example": "https://example.com.s3.amazonaws.com/file.doc",
-            "description": "URL that can be used to download the document"
+            "example": "application/msword",
+            "description": "The MIME type of the file"
           }
         }
       }

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :people, only: %i[index create update]
       resources :moves, only: %i[index show create destroy update] do
-        resources :documents, only: %i[create]
+        resources :documents, only: %i[create destroy]
       end
       namespace :reference do
         resources :locations, only: %i[index show]

@@ -10,10 +10,16 @@ module Api
         render_document(document, 201)
       end
 
+      def destroy
+        document = Document.find(params[:id])
+        document.destroy!
+        render_document(document, 200)
+      end
+
       private
 
       PERMITTED_DOCUMENT_PARAMS = [
-        attributes: %i[description document_type file]
+        attributes: %i[file]
       ].freeze
 
       def document_params

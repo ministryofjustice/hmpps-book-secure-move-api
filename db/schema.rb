@@ -47,8 +47,6 @@ ActiveRecord::Schema.define(version: 2019_11_18_103125) do
   end
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "document_type", null: false
-    t.text "description"
     t.uuid "move_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

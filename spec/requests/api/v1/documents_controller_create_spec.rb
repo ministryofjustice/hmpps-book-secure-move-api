@@ -25,8 +25,6 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       let(:data) do
         {
           attributes: {
-            description: 'A very important document',
-            document_type: 'ID document',
             file: file
           }
         }
@@ -47,8 +45,7 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       let(:data) do
         {
           attributes: {
-            description: 'An invalid document',
-            document_type: 'NULL'
+            file: nil
           }
         }
       end

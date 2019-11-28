@@ -4,7 +4,6 @@ class Document < ApplicationRecord
   has_one_attached :file
 
   before_validation :validate_file_presence
-  validates :document_type, presence: true
 
   belongs_to :move
 
