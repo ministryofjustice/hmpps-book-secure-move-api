@@ -7,13 +7,13 @@ module Api
 
       def create
         document = Document.create!(document_attributes)
-        render_document(document, 201)
+        render json: document, status: 201
       end
 
       def destroy
         document = Document.find(params[:id])
         document.destroy!
-        render_document(document, 200)
+        render json: document, status: 200
       end
 
       private
@@ -30,10 +30,6 @@ module Api
         document_params[:attributes].merge(
           move: Move.find(params.dig(:move_id))
         )
-      end
-
-      def render_document(document, status)
-        render json: document, status: status
       end
     end
   end
