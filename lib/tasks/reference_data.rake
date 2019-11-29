@@ -62,12 +62,13 @@ namespace :reference_data do
       ]
     }
 
-    supplier_locations.each do |supplier, codes|
+    supplier_locations.each do |supplier_name, codes|
+      supplier = Supplier.find_by(key: supplier_name.to_s)
       locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
       locations.each do |location|
-        location.suppliers << Supplier.find_by(key: supplier.to_s)
+        location.suppliers << supplier
       rescue ActiveRecord::RecordNotUnique
-        puts "#{location.nomis_agency_id} <=> #{supplier} already exists"
+        puts "#{location.nomis_agency_id} <=> #{supplier_name} already exists"
       end
     end
   end
