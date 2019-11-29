@@ -2,39 +2,41 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:content_type) { described_class::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+    JSON.parse(ActionController::Base.render(json: document))
   end
 
-  let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
+  let(:detail_404) { "Couldn't find Document with 'id'=UUID-not-found" }
 
-  describe 'DELETE /moves/{moveId}' do
-    let(:schema) { load_json_schema('delete_move_responses.json') }
+  describe 'DELETE /moves/{moveId}/documents/{documentId}' do
+    let(:schema) { load_json_schema('delete_document_responses.json') }
 
     let!(:move) { create :move }
+    let!(:document) { create :document, move: move }
     let(:move_id) { move.id }
+    let(:document_id) { document.id }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      delete "/api/v1/moves/#{move_id}", headers: headers
+      delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'deletes the move', skip_before: true do
-        expect { delete "/api/v1/moves/#{move_id}", headers: headers }
-          .to change(Move, :count).by(-1)
+        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+          .to change(Document, :count).by(-1)
       end
 
-      it 'does not delete the person' do
-        expect(Person.count).to be 1
+      it 'does not delete the move' do
+        expect(Move.count).to be 1
       end
 
       it 'returns the correct data' do
@@ -47,7 +49,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'when resource is not found' do
-      let(:move_id) { 'UUID-not-found' }
+      let(:document_id) { 'UUID-not-found' }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

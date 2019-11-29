@@ -23,6 +23,6 @@ RSpec.shared_examples 'an endpoint that responds with error 401' do
   end
 
   it 'sets the correct content type header' do
-    expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::JSON_API_CONTENT_TYPE))
+    expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
   end
 end

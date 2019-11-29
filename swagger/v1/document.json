@@ -1,0 +1,42 @@
+{
+  "Document": {
+    "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "3ax9c575-5901-4f69-f234-81e489je1ed8",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": {
+        "type": "string",
+        "example": "documents",
+        "description": "The type of this object - always `documents`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "filename",
+          "content_type"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "example": "file.doc",
+            "description": "The name of the uploaded file"
+          },
+          "content_type": {
+            "type": "string",
+            "example": "application/msword",
+            "description": "The MIME type of the file"
+          }
+        }
+      }
+    }
+  }
+}

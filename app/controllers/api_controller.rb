@@ -5,12 +5,16 @@ class ApiController < ApplicationController
   before_action :restrict_content_type
   after_action :set_content_type
 
-  JSON_API_CONTENT_TYPE = 'application/vnd.api+json'
+  CONTENT_TYPE = 'application/vnd.api+json'
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
+
+  def self.valid_content_type
+    self::CONTENT_TYPE
+  end
 
   private
 
@@ -28,13 +32,13 @@ class ApiController < ApplicationController
   end
 
   def restrict_content_type
-    return if request.content_type == JSON_API_CONTENT_TYPE
+    return if request.content_type == self.class.valid_content_type
 
     render_invalid_media_type_error
   end
 
   def set_content_type
-    self.content_type = JSON_API_CONTENT_TYPE
+    self.content_type = self.class.valid_content_type
   end
 
   def render_bad_request_error(exception)
@@ -61,7 +65,7 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Invalid Media Type',
-        detail: "Content-Type must be #{JSON_API_CONTENT_TYPE}"
+        detail: "Content-Type must be #{self.class.valid_content_type}"
       }] },
       status: 415
     )

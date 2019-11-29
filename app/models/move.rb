@@ -32,6 +32,7 @@ class Move < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person
+  has_many :documents
 
   validates :from_location, presence: true
   validates(
