@@ -73,8 +73,8 @@ namespace :reference_data do
     end
 
     puts
-    puts "Summary of relationships"
-    puts "========================"
+    puts 'Summary of relationships'
+    puts '========================'
     Supplier.all.each do |supplier|
       puts
       puts "Supplier #{supplier.name}:"
