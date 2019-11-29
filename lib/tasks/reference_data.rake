@@ -71,6 +71,17 @@ namespace :reference_data do
         puts "#{location.nomis_agency_id} <=> #{supplier_name} already exists"
       end
     end
+
+    puts
+    puts "Summary of relationships"
+    puts "========================"
+    Supplier.all.each do |supplier|
+      puts
+      puts "Supplier #{supplier.name}:"
+      supplier.locations.each do |location|
+        puts " - #{location.nomis_agency_id}: #{location.title}"
+      end
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength
