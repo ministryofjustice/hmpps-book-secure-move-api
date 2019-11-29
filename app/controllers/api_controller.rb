@@ -2,8 +2,8 @@
 
 class ApiController < ApplicationController
   before_action :doorkeeper_authorize!
-  before_action :restrict_content_type
-  after_action :set_content_type
+  before_action :restrict_content_type, unless: -> { @force_content_type }
+  after_action :set_content_type, unless: -> { @force_content_type }
 
   CONTENT_TYPE = 'application/vnd.api+json'
 
