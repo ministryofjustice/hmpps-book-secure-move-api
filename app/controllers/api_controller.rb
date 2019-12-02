@@ -34,7 +34,10 @@ class ApiController < ApplicationController
   def restrict_content_type
     return if request.content_type == self.class.valid_content_type
 
-    render_invalid_media_type_error
+    # Allow always-bodyless requests (GET, DELETE HEAD) to omit the Content-Type
+    unless request.content_type.nil? && (request.get? || request.delete? || request.head? )
+      render_invalid_media_type_error
+    end
   end
 
   def set_content_type
