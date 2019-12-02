@@ -18,7 +18,24 @@
       "description": "Production API"
     }
   ],
+  "security": [
+    {
+      "pecsAuth": []
+    }
+  ],
   "components": {
+    "securitySchemes": {
+        "pecsAuth": {
+           "type": "oauth2",
+           "flows": {
+              "clientCredentials": {
+                "authorizationUrl": "/oauth/authorize",
+                "tokenUrl": "/oauth/token/",
+                "scopes": {}
+              }
+           }
+        }
+     },
     "schemas": {
       "Move": {
         "$ref": "move.json#/Move"
