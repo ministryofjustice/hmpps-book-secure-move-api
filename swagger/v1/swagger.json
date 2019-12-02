@@ -139,31 +139,32 @@
           },
           {
             "name": "filter[from_location_id]",
+            "description": "Filters results to only include moves from the given location UUIDs",
             "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Filters results to only include moves from the given locations",
+            "style": "form",
+            "explode": false,
             "schema": {
-              "type": "array"
-            },
-            "format": "uuid",
-            "example": "950ef512-a25f-46d7-8ced-7ad09510659b,bfb54509-1ba1-4c2c-93f8-22fa2b9f8f7b"
+               "type": "array",
+               "items": {
+                  "type": "string",
+                  "format": "uuid"
+               }
+            }
+            
           },
           {
             "name": "filter[to_location_id]",
+            "description": "Filters results to only include moves to the given location UUIDs",
             "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Filters results to only include moves to the given locations",
+            "style": "form",
+            "explode": false,
             "schema": {
-              "type": "array"
-            },
-            "format": "uuid",
-            "example": "92fb1419-04e2-4bda-94e7-e62abaa2f098,bfb54509-1ba1-4c2c-93f8-22fa2b9f8f7b"
+               "type": "array",
+               "items": {
+                  "type": "string",
+                  "format": "uuid"
+               }
+            }
           },
           {
             "name": "page",
