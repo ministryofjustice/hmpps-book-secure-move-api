@@ -58,7 +58,13 @@ namespace :reference_data do
         WWM4
       ],
       serco: %w[
+        CAM5
+        CAM1
+        CAM3
+        CAM4
         CLP1
+        MPS18
+        MPS23
       ]
     }
 
