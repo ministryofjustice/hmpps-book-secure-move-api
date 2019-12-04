@@ -56,8 +56,27 @@ namespace :reference_data do
         WWM3
         WWM2
         WWM4
+        CHE1
+        CHE2
+        CHE3
+        CVL3
+        DRB2
+        DRB3
+        DRB5
+        NWA1
+        NWA4
+        NWA5
+        NYK1
+        NYK2
+        NYK3
+        STF2
+        STF4
+        WLT1
+        WLT4
       ],
       serco: %w[
+        BTP1
+        BTP4
         CAM5
         CAM1
         CAM3
