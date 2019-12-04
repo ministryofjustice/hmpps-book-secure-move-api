@@ -55,5 +55,5 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Default host for url generation
-  routes.default_url_options[:host] = 'localhost:4000'
+  routes.default_url_options[:host] = "localhost:#{ENV['PORT'] || 3000}"
 end
