@@ -3,9 +3,7 @@
 module Api
   module V1
     class DocumentsController < ApiController
-      prepend_before_action :set_force_content_type
-
-      CONTENT_TYPE = 'multipart/form-data'
+      prepend_before_action :set_restricted_content_type, only: :create
 
       def create
         document = Document.create!(document_attributes)
@@ -34,8 +32,10 @@ module Api
         )
       end
 
-      def set_force_content_type
-        @force_content_type = true
+      protected
+
+      def set_restricted_content_type
+        @restricted_content_type = 'multipart/form-data'
       end
     end
   end
