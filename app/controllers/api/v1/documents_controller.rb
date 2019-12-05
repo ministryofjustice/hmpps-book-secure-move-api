@@ -8,6 +8,8 @@ module Api
       def create
         document = Document.create!(document_attributes)
         render json: document, status: 201, content_type: ApiController::CONTENT_TYPE
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        Document.create!(file: nil)
       end
 
       def destroy
