@@ -7,11 +7,11 @@ module Api
 
       CONTENT_TYPE = 'multipart/form-data'
 
-      rescue_from ActiveSupport::MessageVerifier::InvalidSignature, with: :render_unprocessable_entity_error
-
       def create
         document = Document.create!(document_attributes)
         render json: document, status: 201, content_type: ApiController::CONTENT_TYPE
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        Document.create!(file: nil)
       end
 
       def destroy
@@ -38,13 +38,6 @@ module Api
 
       def set_force_content_type
         @force_content_type = true
-      end
-
-      def render_unprocessable_entity_error
-        render(
-          json: { errors: { file: 'can\'t be blank' } },
-          status: 422
-        )
       end
     end
   end
