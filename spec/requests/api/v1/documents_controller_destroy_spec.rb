@@ -63,5 +63,11 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
+
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
   end
 end
