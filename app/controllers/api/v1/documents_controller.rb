@@ -3,11 +3,11 @@
 module Api
   module V1
     class DocumentsController < ApiController
-      prepend_before_action :set_restricted_content_type, only: :create
+      prepend_before_action :set_restricted_request_content_type, only: :create
 
       def create
         document = Document.create!(document_attributes)
-        render json: document, status: 201, content_type: ApiController::CONTENT_TYPE
+        render json: document, status: 201
       rescue ActiveSupport::MessageVerifier::InvalidSignature
         Document.create!(file: nil)
       end
@@ -15,7 +15,7 @@ module Api
       def destroy
         document = Document.find(params[:id])
         document.destroy!
-        render json: document, status: 200, content_type: ApiController::CONTENT_TYPE
+        render json: document, status: 200
       end
 
       private
@@ -36,8 +36,8 @@ module Api
 
       protected
 
-      def set_restricted_content_type
-        @restricted_content_type = 'multipart/form-data'
+      def set_restricted_request_content_type
+        @restricted_request_content_type = 'multipart/form-data'
       end
     end
   end

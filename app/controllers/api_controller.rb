@@ -2,8 +2,8 @@
 
 class ApiController < ApplicationController
   before_action :doorkeeper_authorize!
-  before_action :restrict_content_type, unless: -> { @force_content_type }
-  after_action :set_content_type, unless: -> { @force_content_type }
+  before_action :restrict_request_content_type
+  before_action :set_content_type
 
   CONTENT_TYPE = 'application/vnd.api+json'
 
@@ -27,12 +27,12 @@ class ApiController < ApplicationController
     }
   end
 
-  def restricted_content_type
-    defined?(@restricted_content_type) ? @restricted_content_type : CONTENT_TYPE
+  def restricted_request_content_type
+    defined?(@restricted_request_content_type) ? @restricted_request_content_type : CONTENT_TYPE
   end
 
-  def restrict_content_type
-    return if request.content_type == restricted_content_type
+  def restrict_request_content_type
+    return if request.content_type == restricted_request_content_type
 
     render_invalid_media_type_error
   end
@@ -65,7 +65,7 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Invalid Media Type',
-        detail: "Content-Type must be #{restricted_content_type}"
+        detail: "Content-Type must be #{restricted_request_content_type}"
       }] },
       status: 415
     )
