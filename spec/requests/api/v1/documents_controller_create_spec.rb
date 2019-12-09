@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { described_class::CONTENT_TYPE }
+  let(:content_type) { 'multipart/form-data' }
   let(:response_json) { JSON.parse(response.body) }
 
   before do

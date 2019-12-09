@@ -4,6 +4,7 @@ module NomisClient
   class Base
     FIXTURE_DIRECTORY = "#{Rails.root}/db/fixtures/nomis"
     NOMIS_TEST_MODE = 'NOMIS_TEST_MODE'
+    MAX_RETRIES = 2
 
     class << self
       def get(path, params = {})
@@ -46,6 +47,7 @@ module NomisClient
       end
 
       def benchmark_request(path)
+        retries ||= 0
         request_start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
         response = yield
@@ -54,6 +56,9 @@ module NomisClient
         Rails.logger.info "NomisClient request took (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
 
         response
+      rescue Faraday::ConnectionFailed, Faraday::TimeoutError
+        retries += 1
+        retry if retries <= MAX_RETRIES
       end
 
       def update_json_headers(params)

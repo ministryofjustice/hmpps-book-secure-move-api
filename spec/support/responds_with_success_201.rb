@@ -10,6 +10,6 @@ RSpec.shared_examples 'an endpoint that responds with success 201' do
   end
 
   it 'sets the correct content type header' do
-    expect(response.headers['Content-Type']).to match(Regexp.escape(described_class::CONTENT_TYPE))
+    expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
   end
 end
