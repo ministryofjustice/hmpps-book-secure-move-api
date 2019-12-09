@@ -3,11 +3,17 @@
 module Api
   module V1
     class DocumentsController < ApiController
-      CONTENT_TYPE = 'multipart/form-data'
+      prepend_before_action :set_restricted_request_content_type, only: :create
 
       def create
         document = Document.create!(document_attributes)
         render json: document, status: 201
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        # A call to this action with an empty file raises an InvalidSignature exception and
+        # and not a RecordInvalid one, this is the only way I found to have a behaviour that
+        # is consistent: Document.create!(file: nil) raises a RecordInvalid exception and
+        # responds with the right error json
+        Document.create!(file: nil)
       end
 
       def destroy
@@ -30,6 +36,12 @@ module Api
         document_params[:attributes].merge(
           move: Move.find(params.dig(:move_id))
         )
+      end
+
+      protected
+
+      def set_restricted_request_content_type
+        @restricted_request_content_type = 'multipart/form-data'
       end
     end
   end

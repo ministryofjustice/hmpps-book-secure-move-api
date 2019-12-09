@@ -28,7 +28,17 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
     end
 
     context 'when successful' do
-      it_behaves_like 'an endpoint that responds with success 200'
+      it 'returns a success code' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a valid 200 JSON response', with_json_schema: true do
+        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
+      end
+
+      it 'forces the content type to ApiController::CONTENT_TYPE' do
+        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+      end
 
       it 'deletes the move', skip_before: true do
         expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }

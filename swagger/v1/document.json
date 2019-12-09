@@ -21,10 +21,16 @@
       "attributes": {
         "type": "object",
         "required": [
+          "url",
           "filename",
           "content_type"
         ],
         "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://localhost:4000/storage/image.png"
+          },
           "filename": {
             "type": "string",
             "example": "file.doc",

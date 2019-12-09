@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class DocumentSerializer < ActiveModel::Serializer
-  attributes :id, :filename, :content_type
+  include Rails.application.routes.url_helpers
+
+  attributes :id, :url, :filename, :content_type
+
+  def url
+    rails_blob_path(object.file)
+  end
 
   def filename
     object.file.filename
