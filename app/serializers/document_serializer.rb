@@ -2,8 +2,9 @@
 
 class DocumentSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::NumberHelper
 
-  attributes :id, :url, :filename, :content_type
+  attributes :id, :url, :filename, :filesize, :content_type
 
   def url
     rails_blob_path(object.file)
@@ -11,6 +12,10 @@ class DocumentSerializer < ActiveModel::Serializer
 
   def filename
     object.file.filename
+  end
+
+  def filesize
+    number_to_human_size(object.file.byte_size, precision: 2)
   end
 
   def content_type
