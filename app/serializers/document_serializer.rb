@@ -7,7 +7,7 @@ class DocumentSerializer < ActiveModel::Serializer
   attributes :id, :url, :filename, :filesize, :content_type
 
   def url
-    rails_blob_path(object.file)
+    rails_blob_url(object.file)
   end
 
   def filename
