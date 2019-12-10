@@ -9,6 +9,12 @@ local:
 staging:
   service: amazon
 
+preprod:
+  service: amazon
+
+production:
+  service: amazon
+
 amazon:
   service: S3
   access_key_id: <%= ENV['S3_ACCESS_KEY_ID'] %>
