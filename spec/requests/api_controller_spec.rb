@@ -2,8 +2,21 @@
 
 require 'rails_helper'
 
-RSpec.describe ApiController, type: :request do
+RSpec.describe ApiController, type: :request, with_client_authentication: true do
   subject(:api_controller) { described_class.new }
+
+  context 'when with empty body accepts requests with no Content-Type' do
+    let(:headers) { { 'CONTENT_TYPE': nil }.merge(auth_headers) }
+    let(:api_endpoint) { '/api/v1/reference/genders' }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:schema) { load_json_schema('get_genders_responses.json') }
+
+    before do
+      get api_endpoint, headers: headers
+    end
+
+    it_behaves_like 'an endpoint that responds with success 200'
+  end
 
   class Model
     include ActiveModel::Model
