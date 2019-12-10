@@ -20,6 +20,10 @@ RSpec.describe DocumentSerializer do
     expect(result[:data][:attributes][:filename]).to eql 'file-sample_100kB.doc'
   end
 
+  it 'contains a `filesize` attribute' do
+    expect(result[:data][:attributes][:filesize]).to eql '98 KB'
+  end
+
   it 'contains a `content_type` attribute' do
     expect(result[:data][:attributes][:content_type]).to eql 'application/msword'
   end
