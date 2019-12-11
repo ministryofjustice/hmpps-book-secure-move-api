@@ -34,7 +34,7 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 plugin :tmp_restart
 
 # run a new process instrumenter after work boot
-on_worker_boot do
-  require 'prometheus_exporter/instrumentation'
-  PrometheusExporter::Instrumentation::Process.start(type: 'web')
-end
+# on_worker_boot do
+#   require 'prometheus_exporter/instrumentation'
+#   PrometheusExporter::Instrumentation::Process.start(type: 'web')
+# end
