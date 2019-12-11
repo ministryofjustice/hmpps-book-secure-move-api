@@ -8,6 +8,8 @@ class DocumentSerializer < ActiveModel::Serializer
 
   def url
     rails_blob_url(object.file)
+  rescue ArgumentError
+    object.file.service_url
   end
 
   def filename
