@@ -39,6 +39,10 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       it 'attaches a file to the document' do
         expect(move.documents.last.file).to be_attached
       end
+
+      it 'adds the right file to the document' do
+        expect(move.documents.last.file.filename).to eq 'file-sample_100kB.doc'
+      end
     end
 
     context 'with a bad request' do
