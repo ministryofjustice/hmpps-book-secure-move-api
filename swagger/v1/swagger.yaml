@@ -1,0 +1,29 @@
+---
+openapi: 3.0.1
+info:
+  title: PECS4 front-end API V1 Docs (auto-generated)
+  version: v1
+  description: Book A Secure Move supplier and frontend API.
+consumes:
+- application/vnd.api+json
+servers:
+- url: http://localhost:3000/api/v1
+  description: Local development (localhost)
+- url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  description: Staging API
+- url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  description: PreProd API
+- url: https://api.bookasecuremove.service.justice.gov.uk/api/v1
+  description: Production API
+security:
+- pecsAuth: []
+components:
+  securitySchemes:
+    pecsAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          authorizationUrl: "/oauth/authorize"
+          tokenUrl: "/oauth/token/"
+          scopes: {}
+paths: {}
