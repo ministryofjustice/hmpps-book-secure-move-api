@@ -130,10 +130,13 @@ namespace :reference_data do
         NYK1
         NYK2
         NYK3
+        SFCUSU
         SRY1
         SRY2
         SRY3
         SRY4
+        SRY016
+        STCUSU
         STF2
         STF4
         SUS1
