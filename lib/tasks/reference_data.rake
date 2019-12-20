@@ -43,47 +43,205 @@ namespace :reference_data do
   task link_suppliers: :environment do
     supplier_locations = {
       geoamey: %w[
-        SRY016
-        SFCUSU
-        STCUSU
-        SUS4
-        SUS1
-        SUS5
-        SUS3
-        SUS2
-        WWM7
-        WWM1
-        WWM3
-        WWM2
-        WWM4
+        AVS1
+        AVS2
+        AVS3
+        BDS1
+        BDS2
         CHE1
         CHE2
         CHE3
+        CMB1
+        CMB2
+        CMB3
+        CMB4
         CVL3
+        DC1
+        DC2
+        DC3
+        DC4
+        DC5
+        DC6
+        DHM2
+        DHM3
+        DHM5
+        DP1
+        DP2
+        DP3
+        DP4
+        DP5
+        DP6
+        DP7
         DRB2
         DRB3
         DRB5
+        DST1
+        DST3
+        GMP1
+        GMP2
+        GMP3
+        GMP4
+        GMP5
+        GMP6
+        GMP7
+        GMP8
+        GMP9
+        GWN1
+        GWN2
+        HMB2
+        HNT2
+        HNT4
+        HNT6
+        KNT1
+        KNT2
+        KNT3
+        KNT4
+        KNT5
+        KNT6
+        KNT7
+        LAN1
+        LAN2
+        LAN3
+        LAN4
+        LAN5
+        LAN6
+        LCS1
+        LCS2
+        LCS3
+        LNC1
+        LNC2
+        LNC3
+        LNC4
+        MRS1
+        MRS2
+        MRS3
+        MRS4
+        MRS5
+        NRU2
+        NRU3
+        NTS1
+        NTS2
+        NTS3
+        NTT1
+        NTT3
         NWA1
         NWA4
         NWA5
         NYK1
         NYK2
         NYK3
+        SRY1
+        SRY2
+        SRY3
+        SRY4
         STF2
         STF4
+        SUS1
+        SUS2
+        SUS3
+        SUS4
+        SUS5
+        SWL1
+        SWL2
+        SWL3
+        SWL4
+        SYP1
+        SYP2
+        SYP3
+        TVP1
+        TVP2
+        TVP3
+        TVP4
+        TVP5
+        TVP6
+        TVP7
+        TVP8
         WLT1
         WLT4
+        WMP2
+        WMP3
+        WMP4
+        WMP5
+        WMP7
+        WMP8
+        WWM1
+        WWM2
+        WWM3
+        WWM4
+        WWM5
+        WWM6
+        WWM7
+        WYP2
+        WYP3
+        WYP4
+        WYP5
+        WYP6
+        DHM1
+        DHM4
+        DHM6
+        DST2
+        GCS1
+        HMB3
+        HNT1
+        NWA2
+        STF1
+        WYP1
+        WYP7
       ],
       serco: %w[
         BTP1
+        BTP2
         BTP4
-        CAM5
+        BTP5
         CAM1
         CAM3
         CAM4
+        CAM5
         CLP1
+        ESX1
+        ESX2
+        ESX3
+        ESX4
+        ESX5
+        ESX6
+        ESX7
+        HRT1
+        HRT2
+        MPS1
+        MPS10
+        MPS11
+        MPS12
+        MPS13
+        MPS14
+        MPS15
+        MPS16
+        MPS17
         MPS18
+        MPS2
+        MPS20
+        MPS21
         MPS23
+        MPS24
+        MPS25
+        MPS26
+        MPS27
+        MPS29
+        MPS3
+        MPS4
+        MPS5
+        MPS6
+        MPS7
+        MPS8
+        MPS9
+        NFL1
+        NFL2
+        NFL3
+        NFL4
+        SFL1
+        SFL2
+        MPS19
+        MPS22
+        MPS28
       ]
     }
 
