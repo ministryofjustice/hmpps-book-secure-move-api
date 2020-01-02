@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
+
+def load_swagger_yaml(path)
+  YAML.safe_load(File.read(Rails.root.join('spec', 'swagger', path))).deep_symbolize_keys
+end
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
@@ -14,51 +20,57 @@ RSpec.configure do |config|
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.swagger_docs = {
     'v1/swagger.yaml' => {
+      basePath: '/api/v1',
       openapi: '3.0.1',
       info: {
-        title: 'PECS4 front-end API V1 Docs (auto-generated)',
+        title: 'PECS4 API V1 Docs',
         version: 'v1',
         description: 'Book A Secure Move supplier and frontend API.'
       },
       consumes: [
-        "application/vnd.api+json"
+        'application/vnd.api+json'
       ],
       servers: [
         {
-          url: "http://localhost:3000/api/v1",
-          description: "Local development (localhost)"
+          url: 'http://localhost:3000/api/v1',
+          description: 'Local development (localhost)'
         },
         {
-          url: "https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1",
-          description: "Staging API"
+          url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
+          description: 'Staging API'
         },
         {
-          url: "https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1",
-          description: "PreProd API"
+          url: 'https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
+          description: 'PreProd API'
         },
         {
-          url: "https://api.bookasecuremove.service.justice.gov.uk/api/v1",
-          description: "Production API"
+          url: 'https://api.bookasecuremove.service.justice.gov.uk/api/v1',
+          description: 'Production API'
         }
       ],
       security: [
         {
-          pecsAuth: []
+          oauth2: []
         }
       ],
       components: {
         securitySchemes: {
-          pecsAuth: {
-            type: "oauth2",
+          oauth2: {
+            type: :oauth2,
             flows: {
               clientCredentials: {
-                authorizationUrl: "/oauth/authorize",
-                tokenUrl: "/oauth/token/",
+                authorizationUrl: '/oauth/authorize',
+                tokenUrl: '/oauth/token/',
                 scopes: {}
               }
             }
           }
         }
+      },
+      definitions: {
+        location_reference: load_swagger_yaml('definitions/location_reference.yaml'),
+        move_object: load_swagger_yaml('definitions/move_object.yaml'),
+        person_reference: load_swagger_yaml('definitions/person_reference.yaml')
       },
       paths: {}
     }

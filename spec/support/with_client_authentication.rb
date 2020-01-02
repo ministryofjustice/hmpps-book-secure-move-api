@@ -19,6 +19,9 @@ RSpec.shared_context 'with client authentication', shared_context: :metadata do
   end
 
   let(:auth_headers) { { 'Authorization': "Bearer #{@access_token}" } }
+
+  # For RSwag tests
+  let!(:Authorization) { "Bearer #{@access_token}" }
 end
 
 RSpec.shared_context 'with invalid authentication request headers', shared_context: :metadata do
