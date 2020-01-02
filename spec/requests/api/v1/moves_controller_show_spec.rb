@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
@@ -13,7 +13,58 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
-  describe 'GET /moves/{moveId}' do
+  path '/moves/{moveId}' do
+    get 'Returns the details of a move' do
+      tags 'Moves'
+      produces 'application/json'
+
+      parameter name: :Authorization,
+                in: :header,
+                schema: {
+                  type: 'string',
+                  default: 'Bearer <your-client-token>'
+                },
+                required: true,
+                description: <<~DESCRIPTION
+                  This is "Bearer ", followed by your OAuth 2 Client token.
+                  If you're testing interactively in the web UI, you can ignore this field
+                DESCRIPTION
+
+      parameter name: 'Content-Type',
+                in: 'header',
+                description: 'Accepted request content type',
+                schema: {
+                  type: 'string',
+                  default: 'application/vnd.api+json'
+                },
+                required: true
+
+      parameter name: :moveId,
+                in: :path,
+                description: 'The ID of the move',
+                schema: {
+                  type: :string
+                },
+                format: 'uuid',
+                example: '00525ecb-7316-492a-aae2-f69334b2a155',
+                required: true
+
+      response '200', 'success' do
+        let!(:move) { create :move }
+        let(:moveId) { move.id }
+
+        after do |example|
+          example.metadata[:response][:examples] = {
+            'application/json' => JSON.parse(response.body, symbolize_names: true)
+          }
+        end
+
+        run_test!
+      end
+    end
+  end
+
+  describe 'GET /api/v1/moves/{moveId}' do
     let(:schema) { load_json_schema('get_move_responses.json') }
 
     let!(:move) { create :move }
@@ -29,10 +80,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
       it 'returns the correct data' do
         expect(response_json).to eq resource_to_json
-      end
-
-      it 'syncs data' do
-        # expect(Moves::NomisSynchroniser).to have_received(:new).with(locations: [move.from_location], date: move.date)
       end
     end
 

@@ -1,7 +1,8 @@
 ---
+basePath: "/api/v1"
 openapi: 3.0.1
 info:
-  title: PECS4 front-end API V1 Docs (auto-generated)
+  title: PECS4 API V1 Docs
   version: v1
   description: Book A Secure Move supplier and frontend API.
 consumes:
@@ -16,14 +17,185 @@ servers:
 - url: https://api.bookasecuremove.service.justice.gov.uk/api/v1
   description: Production API
 security:
-- pecsAuth: []
+- oauth2: []
 components:
   securitySchemes:
-    pecsAuth:
+    oauth2:
       type: oauth2
       flows:
         clientCredentials:
           authorizationUrl: "/oauth/authorize"
           tokenUrl: "/oauth/token/"
           scopes: {}
-paths: {}
+definitions:
+  location_reference:
+    LocationReference:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          oneOf:
+          - type: object
+            required:
+            - id
+            - type
+            properties:
+              type:
+                type: string
+                example: locations
+                description: The type of this object - always `locations`
+              id:
+                type: string
+                format: uuid
+                example: 3561f372-9f1c-4e13-997e-b11e1647cce1
+                description: The unique identifier (UUID) of object that this reference
+                  points to
+          - type: 'null'
+  move_object:
+    Move:
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+          description: The unique identifier (UUID) of this object
+        type:
+          type: string
+          example: moves
+          description: The type of this object - always `moves`
+        attributes:
+          type: object
+          required:
+          - status
+          - date
+          - reference
+          properties:
+            reference:
+              type: string
+              example: TM7B3A2S
+              description: Unique human-readable identifier for the Move
+            status:
+              type: string
+              enum:
+              - requested
+              - cancelled
+              description: Indicates the stage in it's lifecycle that this move is
+                at
+            move_type:
+              type: string
+              enum:
+              - court_appearance
+              - prison_recall
+              - prison_transfer
+              description: Indicates the type of move, e.g. prison transfer or court
+                appearance
+            time_due:
+              type: string
+              format: date-time
+              description: Time due at the destination, e.g. court appointment time
+            updated_at:
+              type: string
+              format: date-time
+              description: Timestamp of when the move was last created or updated
+            date:
+              type: string
+              format: date
+              example: '2019-05-24'
+              description: Date on which the move is scheduled
+            additional_information:
+              oneOf:
+              - type: string
+              - type: 'null'
+              description: Additional information about the move that the supplier
+                should be made aware of
+            cancellation_reason:
+              oneOf:
+              - type: string
+                enum:
+                - made_in_error
+                - supplier_declined_to_move
+                - other
+              - type: 'null'
+              description: Reason the move has been cancelled
+            cancellation_reason_comment:
+              oneOf:
+              - type: string
+              - type: 'null'
+              description: In case 'other' is chosen as cancellation_reason, further
+                details can be specified
+        relationships:
+          type: object
+          properties:
+            person:
+              "$ref": "#/definitions/person_reference#/PersonReference"
+              description: The person being moved
+            from_location:
+              "$ref": "#/definitions/location_reference#/LocationReference"
+              description: The location that the person is being moved from
+            to_location:
+              "$ref": "#/definitions/location_reference#/LocationReference"
+              description: The location that the person is being moved to
+  person_reference:
+    PersonReference:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - type
+          - id
+          properties:
+            type:
+              type: string
+              example: people
+              description: The type of this object - always `people`
+            id:
+              type: string
+              format: uuid
+              example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+              description: The unique identifier (UUID) of the object that this reference
+                points to
+paths:
+  "/moves/{moveId}":
+    get:
+      summary: Returns the details of a move
+      tags:
+      - Moves
+      produces:
+      - application/json
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+          default: Bearer <your-client-token>
+        required: true
+        description: |
+          This is "Bearer ", followed by your OAuth 2 Client token.
+          If you're testing interactively in the web UI, you can ignore this field
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: moveId
+        in: path
+        description: The ID of the move
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+        required: true
+      responses:
+        '200':
+          description: success
