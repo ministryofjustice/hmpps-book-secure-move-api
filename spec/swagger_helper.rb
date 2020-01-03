@@ -81,4 +81,14 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.swagger_format = :yaml
+
+  config.after do |example|
+    # We need to add the schema here _as well_ as the schema definition
+    # to correctly generate the swagger-ui models.
+    # See https://github.com/rswag/rswag/issues/268
+    example.metadata[:response][:content] = { example.metadata[:operation][:produces].first => {
+        schema: example.metadata[:response][:schema]
+      }
+    }
+  end
 end
