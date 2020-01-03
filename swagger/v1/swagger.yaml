@@ -60,33 +60,6 @@ definitions:
       properties:
         data:
           "$ref": "#/definitions/move/Move"
-    '401':
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            "$ref": "#/definitions/errors/NotAuthorisedError"
-    '404':
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            "$ref": "#/definitions/errors/ResourceNotFound"
-    '415':
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            "$ref": "#/definitions/errors/UnsupportedMediaType"
   move:
     Move:
       type: object
@@ -846,100 +819,19 @@ paths:
               errors:
               - title: Not authorized
                 detail: Token expired or invalid
-        '200':
-          description: success
+        '404':
+          description: not found
           schema:
-            "$ref": "#/definitions/get_move_responses/200"
+            "$ref": "#/definitions/error_responses/404"
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/definitions/get_move_responses/200"
+                "$ref": "#/definitions/error_responses/404"
           examples:
             application/vnd.api+json:
-              data:
-                id: 63f1bd8b-455a-46dc-a376-97e23c9ff809
-                type: moves
-                attributes:
-                  reference: EJH1829R
-                  status: requested
-                  updated_at: '2020-01-03T14:59:52+00:00'
-                  time_due: '2020-01-03T14:59:52+00:00'
-                  date: '2020-01-03'
-                  move_type: court_appearance
-                  additional_information: some more info about the move that the supplier
-                    might need to know
-                  cancellation_reason: 
-                  cancellation_reason_comment: 
-                relationships:
-                  person:
-                    data:
-                      id: 905d937a-7aa6-4207-bf2f-34865e659715
-                      type: people
-                  from_location:
-                    data:
-                      id: b0e33e6d-d9a9-4f00-a9d1-e979fe547f36
-                      type: locations
-                  to_location:
-                    data:
-                      id: '048a256c-c954-4bf8-9696-85efa24dc979'
-                      type: locations
-                  documents:
-                    data: []
-              included:
-              - id: 905d937a-7aa6-4207-bf2f-34865e659715
-                type: people
-                attributes:
-                  first_names: Bob
-                  last_name: Roberts
-                  date_of_birth: '1980-10-20'
-                  assessment_answers: []
-                  identifiers:
-                  - identifier_type: police_national_computer
-                    value: AB/1234567
-                  gender_additional_information: 
-                relationships:
-                  ethnicity:
-                    data:
-                      id: 1d9d88dd-84e2-46ba-80b6-cb013ef3561e
-                      type: ethnicities
-                  gender:
-                    data:
-                      id: b7a7021a-faf9-42da-8c28-c93899393b82
-                      type: genders
-              - id: 1d9d88dd-84e2-46ba-80b6-cb013ef3561e
-                type: ethnicities
-                attributes:
-                  key: w1
-                  title: White British
-                  description: W1 - White British
-                  nomis_code: W1
-                  disabled_at: 
-              - id: b7a7021a-faf9-42da-8c28-c93899393b82
-                type: genders
-                attributes:
-                  key: female
-                  title: Female
-                  description: 
-                  disabled_at: 
-                  nomis_code: F
-              - id: b0e33e6d-d9a9-4f00-a9d1-e979fe547f36
-                type: locations
-                attributes:
-                  key: hmp_pentonville
-                  title: HMP Pentonville
-                  location_type: prison
-                  nomis_agency_id: PEI
-                  disabled_at: 
-                  suppliers: []
-              - id: '048a256c-c954-4bf8-9696-85efa24dc979'
-                type: locations
-                attributes:
-                  key: guildford_crown_court
-                  title: Guildford Crown Court
-                  location_type: court
-                  nomis_agency_id: GUICCT
-                  disabled_at: 
-                  suppliers: []
+              errors:
+              - title: Resource not found
+                detail: Couldn't find Move with 'id'=dcddbe2a-9b41-442a-b360-d8b6fdc7eb60
         '415':
           description: invalid content type
           schema:
@@ -953,19 +845,100 @@ paths:
               errors:
               - title: Invalid Media Type
                 detail: Content-Type must be application/vnd.api+json
-        '404':
-          description: not found
+        '200':
+          description: success
           schema:
-            "$ref": "#/definitions/error_responses/404"
+            "$ref": "#/definitions/get_move_responses/200"
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/definitions/error_responses/404"
+                "$ref": "#/definitions/get_move_responses/200"
           examples:
             application/vnd.api+json:
-              errors:
-              - title: Resource not found
-                detail: Couldn't find Move with 'id'=00de1e54-15c6-47da-8329-7a7363bc800d
+              data:
+                id: 6b819832-9ac0-4ec3-9711-0e293044008c
+                type: moves
+                attributes:
+                  reference: XPT7865N
+                  status: requested
+                  updated_at: '2020-01-03T15:31:32+00:00'
+                  time_due: '2020-01-03T15:31:32+00:00'
+                  date: '2020-01-03'
+                  move_type: court_appearance
+                  additional_information: some more info about the move that the supplier
+                    might need to know
+                  cancellation_reason: 
+                  cancellation_reason_comment: 
+                relationships:
+                  person:
+                    data:
+                      id: e83258f0-602a-46bf-b66d-3317ac4632fd
+                      type: people
+                  from_location:
+                    data:
+                      id: c11d14ea-5b80-464d-a069-6c7534cb36a8
+                      type: locations
+                  to_location:
+                    data:
+                      id: 824141b3-d0dd-41a7-bc22-67bfd60fbaff
+                      type: locations
+                  documents:
+                    data: []
+              included:
+              - id: e83258f0-602a-46bf-b66d-3317ac4632fd
+                type: people
+                attributes:
+                  first_names: Bob
+                  last_name: Roberts
+                  date_of_birth: '1980-10-20'
+                  assessment_answers: []
+                  identifiers:
+                  - identifier_type: police_national_computer
+                    value: AB/1234567
+                  gender_additional_information: 
+                relationships:
+                  ethnicity:
+                    data:
+                      id: ee28f2ff-0923-41db-a496-528e69b987de
+                      type: ethnicities
+                  gender:
+                    data:
+                      id: 251a542c-4f59-4bae-a41e-4f18f3f75e24
+                      type: genders
+              - id: ee28f2ff-0923-41db-a496-528e69b987de
+                type: ethnicities
+                attributes:
+                  key: w1
+                  title: White British
+                  description: W1 - White British
+                  nomis_code: W1
+                  disabled_at: 
+              - id: 251a542c-4f59-4bae-a41e-4f18f3f75e24
+                type: genders
+                attributes:
+                  key: female
+                  title: Female
+                  description: 
+                  disabled_at: 
+                  nomis_code: F
+              - id: c11d14ea-5b80-464d-a069-6c7534cb36a8
+                type: locations
+                attributes:
+                  key: hmp_pentonville
+                  title: HMP Pentonville
+                  location_type: prison
+                  nomis_agency_id: PEI
+                  disabled_at: 
+                  suppliers: []
+              - id: 824141b3-d0dd-41a7-bc22-67bfd60fbaff
+                type: locations
+                attributes:
+                  key: guildford_crown_court
+                  title: Guildford Crown Court
+                  location_type: court
+                  nomis_agency_id: GUICCT
+                  disabled_at: 
+                  suppliers: []
   "/moves/{MoveId}/documents":
     post:
       summary: Creates a new document

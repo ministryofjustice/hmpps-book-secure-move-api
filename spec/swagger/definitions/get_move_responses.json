@@ -9,47 +9,5 @@
         "$ref": "#/definitions/move/Move"
       }
     }
-  },
-  "401": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/errors/NotAuthorisedError"
-        }
-      }
-    }
-  },
-  "404": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/errors/ResourceNotFound"
-        }
-      }
-    }
-  },
-  "415": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/errors/UnsupportedMediaType"
-        }
-      }
-    }
   }
 }
