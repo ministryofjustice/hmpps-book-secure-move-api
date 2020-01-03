@@ -833,6 +833,113 @@ paths:
         example: 00525ecb-7316-492a-aae2-f69334b2a155
         required: true
       responses:
+        '200':
+          description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
+          examples:
+            application/vnd.api+json:
+              data:
+                id: 3ae0b522-b075-4ba3-9863-e6bb663c2d6d
+                type: moves
+                attributes:
+                  reference: XEK2187J
+                  status: requested
+                  updated_at: '2020-01-03T14:49:54+00:00'
+                  time_due: '2020-01-03T14:49:54+00:00'
+                  date: '2020-01-03'
+                  move_type: court_appearance
+                  additional_information: some more info about the move that the supplier
+                    might need to know
+                  cancellation_reason: 
+                  cancellation_reason_comment: 
+                relationships:
+                  person:
+                    data:
+                      id: aa69ad1f-295c-486b-8f2e-91b4af46eaa6
+                      type: people
+                  from_location:
+                    data:
+                      id: 23ad6c44-57cd-4bd1-b17f-2d836d75e6cb
+                      type: locations
+                  to_location:
+                    data:
+                      id: c63f5391-a00c-4701-a7c9-8c75a1aa05eb
+                      type: locations
+                  documents:
+                    data: []
+              included:
+              - id: aa69ad1f-295c-486b-8f2e-91b4af46eaa6
+                type: people
+                attributes:
+                  first_names: Bob
+                  last_name: Roberts
+                  date_of_birth: '1980-10-20'
+                  assessment_answers: []
+                  identifiers:
+                  - identifier_type: police_national_computer
+                    value: AB/1234567
+                  gender_additional_information: 
+                relationships:
+                  ethnicity:
+                    data:
+                      id: c36d31de-ebc8-49e2-8e78-47cca0a24acf
+                      type: ethnicities
+                  gender:
+                    data:
+                      id: 47311836-f158-43b8-8f53-163a68814963
+                      type: genders
+              - id: c36d31de-ebc8-49e2-8e78-47cca0a24acf
+                type: ethnicities
+                attributes:
+                  key: w1
+                  title: White British
+                  description: W1 - White British
+                  nomis_code: W1
+                  disabled_at: 
+              - id: 47311836-f158-43b8-8f53-163a68814963
+                type: genders
+                attributes:
+                  key: female
+                  title: Female
+                  description: 
+                  disabled_at: 
+                  nomis_code: F
+              - id: 23ad6c44-57cd-4bd1-b17f-2d836d75e6cb
+                type: locations
+                attributes:
+                  key: hmp_pentonville
+                  title: HMP Pentonville
+                  location_type: prison
+                  nomis_agency_id: PEI
+                  disabled_at: 
+                  suppliers: []
+              - id: c63f5391-a00c-4701-a7c9-8c75a1aa05eb
+                type: locations
+                attributes:
+                  key: guildford_crown_court
+                  title: Guildford Crown Court
+                  location_type: court
+                  nomis_agency_id: GUICCT
+                  disabled_at: 
+                  suppliers: []
+        '401':
+          description: unauthorised
+          schema:
+            "$ref": "#/definitions/error_responses/401"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/401"
+          examples:
+            application/vnd.api+json:
+              errors:
+              - title: Not authorized
+                detail: Token expired or invalid
         '415':
           description: invalid content type
           schema:
@@ -858,114 +965,7 @@ paths:
             application/vnd.api+json:
               errors:
               - title: Resource not found
-                detail: Couldn't find Move with 'id'=cb49163d-78b0-4f82-bf6d-b093034664f6
-        '200':
-          description: success
-          schema:
-            "$ref": "#/definitions/get_move_responses/200"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/get_move_responses/200"
-          examples:
-            application/vnd.api+json:
-              data:
-                id: 93e3171d-2a62-47f1-9e64-369586aa2d16
-                type: moves
-                attributes:
-                  reference: AWE9521M
-                  status: requested
-                  updated_at: '2020-01-03T14:37:53+00:00'
-                  time_due: '2020-01-03T14:37:53+00:00'
-                  date: '2020-01-03'
-                  move_type: court_appearance
-                  additional_information: some more info about the move that the supplier
-                    might need to know
-                  cancellation_reason: 
-                  cancellation_reason_comment: 
-                relationships:
-                  person:
-                    data:
-                      id: 8ef6c9b9-0e01-4ec9-9e28-2ffa4fdcc5e7
-                      type: people
-                  from_location:
-                    data:
-                      id: 5191612f-65cd-4cad-abb1-b157fff7bb58
-                      type: locations
-                  to_location:
-                    data:
-                      id: c206c455-03d9-4ae4-9e51-9e815b091157
-                      type: locations
-                  documents:
-                    data: []
-              included:
-              - id: 8ef6c9b9-0e01-4ec9-9e28-2ffa4fdcc5e7
-                type: people
-                attributes:
-                  first_names: Bob
-                  last_name: Roberts
-                  date_of_birth: '1980-10-20'
-                  assessment_answers: []
-                  identifiers:
-                  - identifier_type: police_national_computer
-                    value: AB/1234567
-                  gender_additional_information: 
-                relationships:
-                  ethnicity:
-                    data:
-                      id: 55f0b33e-7682-4e79-8093-79052f413bc7
-                      type: ethnicities
-                  gender:
-                    data:
-                      id: 94f13e42-dab8-4d75-a6ec-a477aaf4a90e
-                      type: genders
-              - id: 55f0b33e-7682-4e79-8093-79052f413bc7
-                type: ethnicities
-                attributes:
-                  key: w1
-                  title: White British
-                  description: W1 - White British
-                  nomis_code: W1
-                  disabled_at: 
-              - id: 94f13e42-dab8-4d75-a6ec-a477aaf4a90e
-                type: genders
-                attributes:
-                  key: female
-                  title: Female
-                  description: 
-                  disabled_at: 
-                  nomis_code: F
-              - id: 5191612f-65cd-4cad-abb1-b157fff7bb58
-                type: locations
-                attributes:
-                  key: hmp_pentonville
-                  title: HMP Pentonville
-                  location_type: prison
-                  nomis_agency_id: PEI
-                  disabled_at: 
-                  suppliers: []
-              - id: c206c455-03d9-4ae4-9e51-9e815b091157
-                type: locations
-                attributes:
-                  key: guildford_crown_court
-                  title: Guildford Crown Court
-                  location_type: court
-                  nomis_agency_id: GUICCT
-                  disabled_at: 
-                  suppliers: []
-        '401':
-          description: unauthorised
-          schema:
-            "$ref": "#/definitions/error_responses/401"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/401"
-          examples:
-            application/vnd.api+json:
-              errors:
-              - title: Not authorized
-                detail: Token expired or invalid
+                detail: Couldn't find Move with 'id'=51eb0e73-d178-482d-bc87-3b5672906355
   "/moves/{MoveId}/documents":
     post:
       summary: Creates a new document

@@ -1,4 +1,6 @@
-RSpec.shared_examples "it does not trigger NomisSynchroniser" do |parameter|
+# frozen_string_literal: true
+
+RSpec.shared_examples 'it does not trigger NomisSynchroniser' do |_parameter|
   before do |example|
     allow(Moves::NomisSynchroniser).to receive(:new)
     submit_request(example.metadata)

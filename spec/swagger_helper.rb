@@ -97,12 +97,15 @@ RSpec.configure do |config|
     # We need to add the schema here _as well_ as the schema definition
     # to correctly generate the swagger-ui models.
     # See https://github.com/rswag/rswag/issues/268
-    example.metadata[:response][:content] = { example.metadata[:operation][:produces].first => {
+    example.metadata[:response][:content] = {
+      example.metadata[:operation][:produces].first => {
         schema: example.metadata[:response][:schema]
       }
     }
 
     # Save actual responses as examples for Swagger UI
-    example.metadata[:response][:examples] = { example.metadata[:operation][:produces].first => JSON.parse(response.body, symbolize_names: true) }
+    example.metadata[:response][:examples] = {
+      example.metadata[:operation][:produces].first => JSON.parse(response.body, symbolize_names: true)
+    }
   end
 end
