@@ -83,7 +83,7 @@ RSpec.configure do |config|
         errors: load_swagger_json('errors.json'),
         error_responses: load_swagger_json('error_responses.json')
       },
-      paths: {}
+      paths: load_swagger_json('hand_coded_paths.json')
     }
   }
 
