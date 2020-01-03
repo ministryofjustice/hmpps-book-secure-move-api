@@ -3,20 +3,19 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:response_json) { JSON.parse(response.body) }
+  let(:move) { create :move }
+  let(:moveId) { move.id }
 
-  let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+  before do
+    allow(Moves::NomisSynchroniser).to receive(:new)
   end
-
-  let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
   path '/moves/{moveId}' do
     get 'Returns the details of a move' do
       tags 'Moves'
-      produces 'application/json'
+      produces 'application/vnd.api+json'
 
       parameter name: :Authorization,
                 in: :header,
@@ -50,60 +49,57 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 required: true
 
       response '200', 'success' do
-        let!(:move) { create :move }
-        let(:moveId) { move.id }
-
-        after do |example|
-          example.metadata[:response][:examples] = {
-            'application/json' => JSON.parse(response.body, symbolize_names: true)
-          }
+        let(:resource_to_json) do
+          JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
         end
 
+        schema "$ref": "#/definitions/get_move_responses/200"
+        
+        run_test! do |example|
+          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
+          
+          expect(JSON.parse(response.body)).to eq resource_to_json
+
+          # TODO: this was commented out in the original test, and fails when included
+          #expect(Moves::NomisSynchroniser).to have_received(:new).with(locations: [move.from_location], date: move.date)
+        end
+      end
+
+      response '401', 'unauthorised' do
+        let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
+        
+        it_behaves_like 'a swagger 401 error'
+
         run_test!
+
+        it 'does not trigger the NomisSynchroniser' do
+          expect(Moves::NomisSynchroniser).not_to have_received(:new)
+        end
       end
-    end
-  end
 
-  describe 'GET /api/v1/moves/{moveId}' do
-    let(:schema) { load_json_schema('get_move_responses.json') }
 
-    let!(:move) { create :move }
-    let(:move_id) { move.id }
+      response '404', 'not found' do
+        let(:moveId) { SecureRandom.uuid }
+        let(:detail_404) { "Couldn't find Move with 'id'=#{moveId}" }
 
-    before do
-      allow(Moves::NomisSynchroniser).to receive(:new)
-      get "/api/v1/moves/#{move_id}", headers: headers
-    end
+        it_behaves_like 'a swagger 404 error'
 
-    context 'when successful' do
-      it_behaves_like 'an endpoint that responds with success 200'
+        run_test!
 
-      it 'returns the correct data' do
-        expect(response_json).to eq resource_to_json
+        it 'does not trigger the NomisSynchroniser' do
+          expect(Moves::NomisSynchroniser).not_to have_received(:new)
+        end
       end
-    end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
+      response '415', 'invalid content type' do
+        let(:"Content-Type") { 'application/xml' }
+        it_behaves_like 'a swagger 415 error'
 
-    context 'when resource is not found' do
-      let(:move_id) { 'UUID-not-found' }
+        run_test!
 
-      it_behaves_like 'an endpoint that responds with error 404'
-
-      it 'doesn\'t sync data' do
-        expect(Moves::NomisSynchroniser).not_to have_received(:new)
-      end
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
-
-      it 'doesn\'t sync data' do
-        expect(Moves::NomisSynchroniser).not_to have_received(:new)
+        it 'does not trigger the NomisSynchroniser' do
+          expect(Moves::NomisSynchroniser).not_to have_received(:new)
+        end
       end
     end
   end

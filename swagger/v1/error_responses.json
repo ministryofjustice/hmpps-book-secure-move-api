@@ -1,15 +1,4 @@
 {
-  "200": {
-    "type": "object",
-    "required": [
-      "data"
-    ],
-    "properties": {
-      "data": {
-        "$ref": "#/definitions/move/Move"
-      }
-    }
-  },
   "401": {
     "type": "object",
     "required": [
