@@ -2,8 +2,16 @@
 
 require 'rails_helper'
 
-def load_swagger_yaml(path)
-  YAML.safe_load(File.read(Rails.root.join('spec', 'swagger', path))).deep_symbolize_keys
+def swagger_file(*relative_path)
+  File.read(Rails.root.join('swagger', 'v1', *relative_path))
+end
+
+def load_swagger_yaml(*relative_path)
+  YAML.safe_load(swagger_file(*relative_path)).deep_symbolize_keys
+end
+
+def load_swagger_json(*relative_path)
+  JSON.parse(swagger_file(*relative_path))
 end
 
 RSpec.configure do |config|
@@ -68,9 +76,12 @@ RSpec.configure do |config|
         }
       },
       definitions: {
-        location_reference: load_swagger_yaml('definitions/location_reference.yaml'),
-        move_object: load_swagger_yaml('definitions/move_object.yaml'),
-        person_reference: load_swagger_yaml('definitions/person_reference.yaml')
+        location_reference: load_swagger_json('location_reference.json'),
+        get_move_responses: load_swagger_json('get_move_responses.json'),
+        move: load_swagger_json('move.json'),
+        person_reference: load_swagger_json('person_reference.json'),
+        errors: load_swagger_json('errors.json'),
+        error_responses: load_swagger_json('error_responses.json')
       },
       paths: {}
     }
