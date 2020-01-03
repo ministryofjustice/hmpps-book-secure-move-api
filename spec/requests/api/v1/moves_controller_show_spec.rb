@@ -3,14 +3,9 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
-
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:move) { create :move }
   let(:moveId) { move.id }
-
-  before do
-    allow(Moves::NomisSynchroniser).to receive(:new)
-  end
 
   path '/moves/{moveId}' do
     get 'Returns the details of a move' do
@@ -53,53 +48,39 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
         end
 
-        schema "$ref": "#/definitions/get_move_responses/200"
-        
-        run_test! do |example|
+        schema "$ref": '#/definitions/get_move_responses/200'
+
+        run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-          
+
           expect(JSON.parse(response.body)).to eq resource_to_json
 
           # TODO: this was commented out in the original test, and fails when included
-          #expect(Moves::NomisSynchroniser).to have_received(:new).with(locations: [move.from_location], date: move.date)
+          # expect(Moves::NomisSynchroniser).to(
+          #     have_received(:new).with(locations: [move.from_location], date: move.date)
+          #   )
         end
       end
 
       response '401', 'unauthorised' do
         let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
-        
+
         it_behaves_like 'a swagger 401 error'
-
-        run_test!
-
-        it 'does not trigger the NomisSynchroniser' do
-          expect(Moves::NomisSynchroniser).not_to have_received(:new)
-        end
+        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
-
 
       response '404', 'not found' do
         let(:moveId) { SecureRandom.uuid }
         let(:detail_404) { "Couldn't find Move with 'id'=#{moveId}" }
 
         it_behaves_like 'a swagger 404 error'
-
-        run_test!
-
-        it 'does not trigger the NomisSynchroniser' do
-          expect(Moves::NomisSynchroniser).not_to have_received(:new)
-        end
+        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
 
       response '415', 'invalid content type' do
         let(:"Content-Type") { 'application/xml' }
         it_behaves_like 'a swagger 415 error'
-
-        run_test!
-
-        it 'does not trigger the NomisSynchroniser' do
-          expect(Moves::NomisSynchroniser).not_to have_received(:new)
-        end
+        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
     end
   end
