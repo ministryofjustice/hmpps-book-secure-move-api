@@ -90,5 +90,8 @@ RSpec.configure do |config|
         schema: example.metadata[:response][:schema]
       }
     }
+
+    # Save actual responses as examples for Swagger UI
+    example.metadata[:response][:examples] = { example.metadata[:operation][:produces].first => JSON.parse(response.body, symbolize_names: true) }
   end
 end
