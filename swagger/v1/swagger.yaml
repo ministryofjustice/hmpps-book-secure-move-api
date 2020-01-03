@@ -52,7 +52,42 @@ definitions:
                 description: The unique identifier (UUID) of object that this reference
                   points to
           - type: 'null'
-  move_object:
+  get_move_responses:
+    '200':
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/definitions/move/Move"
+    '401':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/NotAuthorisedError"
+    '404':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/ResourceNotFound"
+    '415':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/UnsupportedMediaType"
+  move:
     Move:
       type: object
       required:
@@ -133,13 +168,13 @@ definitions:
           type: object
           properties:
             person:
-              "$ref": "#/definitions/person_reference#/PersonReference"
+              "$ref": "#/definitions/person_reference/PersonReference"
               description: The person being moved
             from_location:
-              "$ref": "#/definitions/location_reference#/LocationReference"
+              "$ref": "#/definitions/location_reference/LocationReference"
               description: The location that the person is being moved from
             to_location:
-              "$ref": "#/definitions/location_reference#/LocationReference"
+              "$ref": "#/definitions/location_reference/LocationReference"
               description: The location that the person is being moved to
   person_reference:
     PersonReference:
@@ -163,6 +198,100 @@ definitions:
               example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
               description: The unique identifier (UUID) of the object that this reference
                 points to
+  errors:
+    BadRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Bad request
+        detail:
+          type: string
+          example: The server cannot or will not process the request due to an apparent
+            client error
+    Forbidden:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Forbidden
+        detail:
+          type: string
+          example: The resource is readonly
+    NotAuthorisedError:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Not authorized
+        detail:
+          type: string
+          example: Token expired or invalid
+    ResourceNotFound:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Resource not found
+        detail:
+          type: string
+          example: The requested resource was not found
+    UnsupportedMediaType:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Invalid Media Type
+        detail:
+          type: string
+          example: Content-Type must be application/vnd.api+json
+    UnprocessableEntity:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Unprocessable entity
+        code:
+          type: string
+          example: validation_error
+        detail:
+          type: string
+          example: The request was well-formed but was unable to be followed due to
+            semantic errors
+        source:
+          type: object
+          properties:
+            pointer:
+              type: string
+              example: "/data/attributes/property"
+  error_responses:
+    '401':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/NotAuthorisedError"
+    '404':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/ResourceNotFound"
+    '415':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/UnsupportedMediaType"
 paths:
   "/moves/{moveId}":
     get:
@@ -170,7 +299,7 @@ paths:
       tags:
       - Moves
       produces:
-      - application/json
+      - application/vnd.api+json
       parameters:
       - name: Authorization
         in: header
@@ -197,5 +326,136 @@ paths:
         example: 00525ecb-7316-492a-aae2-f69334b2a155
         required: true
       responses:
+        '401':
+          description: unauthorised
+          schema:
+            "$ref": "#/definitions/error_responses/401"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/401"
+          examples:
+            application/vnd.api+json:
+              errors:
+              - title: Not authorized
+                detail: Token expired or invalid
+        '415':
+          description: invalid content type
+          schema:
+            "$ref": "#/definitions/error_responses/415"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/415"
+          examples:
+            application/vnd.api+json:
+              errors:
+              - title: Invalid Media Type
+                detail: Content-Type must be application/vnd.api+json
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
+          examples:
+            application/vnd.api+json:
+              errors:
+              - title: Resource not found
+                detail: Couldn't find Move with 'id'=35ed4262-ee74-4012-a693-b822fd81a784
         '200':
           description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
+          examples:
+            application/vnd.api+json:
+              data:
+                id: 2aa3951d-faad-4ec6-aab2-137af7065173
+                type: moves
+                attributes:
+                  reference: FTH2347Y
+                  status: requested
+                  updated_at: '2020-01-03T14:27:49+00:00'
+                  time_due: '2020-01-03T14:27:49+00:00'
+                  date: '2020-01-03'
+                  move_type: court_appearance
+                  additional_information: some more info about the move that the supplier
+                    might need to know
+                  cancellation_reason: 
+                  cancellation_reason_comment: 
+                relationships:
+                  person:
+                    data:
+                      id: 6d8c293a-460b-484b-95cb-73b808ea92ba
+                      type: people
+                  from_location:
+                    data:
+                      id: 23bb72c5-be3e-4885-844a-16bec8f8f9ae
+                      type: locations
+                  to_location:
+                    data:
+                      id: a1a33ec6-bd6e-4140-8f50-dab726d9afe5
+                      type: locations
+                  documents:
+                    data: []
+              included:
+              - id: 6d8c293a-460b-484b-95cb-73b808ea92ba
+                type: people
+                attributes:
+                  first_names: Bob
+                  last_name: Roberts
+                  date_of_birth: '1980-10-20'
+                  assessment_answers: []
+                  identifiers:
+                  - identifier_type: police_national_computer
+                    value: AB/1234567
+                  gender_additional_information: 
+                relationships:
+                  ethnicity:
+                    data:
+                      id: f0cf8818-71e6-46c9-8fbc-37cd653ab921
+                      type: ethnicities
+                  gender:
+                    data:
+                      id: bc07e09c-923b-4f01-82b8-f2b220316f59
+                      type: genders
+              - id: f0cf8818-71e6-46c9-8fbc-37cd653ab921
+                type: ethnicities
+                attributes:
+                  key: w1
+                  title: White British
+                  description: W1 - White British
+                  nomis_code: W1
+                  disabled_at: 
+              - id: bc07e09c-923b-4f01-82b8-f2b220316f59
+                type: genders
+                attributes:
+                  key: female
+                  title: Female
+                  description: 
+                  disabled_at: 
+                  nomis_code: F
+              - id: 23bb72c5-be3e-4885-844a-16bec8f8f9ae
+                type: locations
+                attributes:
+                  key: hmp_pentonville
+                  title: HMP Pentonville
+                  location_type: prison
+                  nomis_agency_id: PEI
+                  disabled_at: 
+                  suppliers: []
+              - id: a1a33ec6-bd6e-4140-8f50-dab726d9afe5
+                type: locations
+                attributes:
+                  key: guildford_crown_court
+                  title: Guildford Crown Court
+                  location_type: court
+                  nomis_agency_id: GUICCT
+                  disabled_at: 
+                  suppliers: []
