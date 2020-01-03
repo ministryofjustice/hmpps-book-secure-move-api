@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 def swagger_file(*relative_path)
-  File.read(Rails.root.join('swagger', 'v1', *relative_path))
+  File.read(Rails.root.join('spec', 'swagger', 'definitions', *relative_path))
 end
 
 def load_swagger_yaml(*relative_path)
