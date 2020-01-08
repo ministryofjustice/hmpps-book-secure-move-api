@@ -12,7 +12,11 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
 
-private
+  def current_user
+    doorkeeper_token&.application&.owner
+  end
+
+  private
 
   def doorkeeper_unauthorized_render_options(*)
     {

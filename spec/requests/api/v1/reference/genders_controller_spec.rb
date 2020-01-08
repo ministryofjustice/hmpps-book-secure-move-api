@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::Reference::GendersController, with_client_authentication: true do
+  let!(:application) { Doorkeeper::Application.create(name: 'test') }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }

@@ -5,8 +5,11 @@ require 'rails_helper'
 RSpec.describe ApiController, type: :request, with_client_authentication: true do
   subject(:api_controller) { described_class.new }
 
+  let!(:application) { Doorkeeper::Application.create(name: 'test') }
+
   context 'when with empty body accepts requests with no Content-Type' do
-    let(:headers) { { 'CONTENT_TYPE': nil }.merge(auth_headers) }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+    let(:content_type) { ApiController::CONTENT_TYPE }
     let(:api_endpoint) { '/api/v1/reference/genders' }
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_json_schema('get_genders_responses.json') }

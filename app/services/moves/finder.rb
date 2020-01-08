@@ -2,10 +2,11 @@
 
 module Moves
   class Finder
-    attr_accessor :filter_params
+    attr_accessor :filter_params, :ability
 
-    def initialize(filter_params)
+    def initialize(filter_params, ability = nil)
       self.filter_params = filter_params
+      self.ability = ability
     end
 
     def call
@@ -15,6 +16,7 @@ module Moves
   private
 
     def apply_filters(scope)
+      scope = scope.accessible_by(ability)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
       scope = scope.where(filter_params.slice(:status))
       scope = apply_date_range_filters(scope)

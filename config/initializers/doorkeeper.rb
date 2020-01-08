@@ -155,15 +155,15 @@ Doorkeeper.configure do
   # a registered application
   # NOTE: you must also run the rails g doorkeeper:application_owner generator
   # to provide the necessary support
-  #
-  # enable_application_owner confirmation: false
+
+  enable_application_owner confirmation: false
 
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  #
+  
   # default_scopes  :public
-  # optional_scopes :write, :update
+  # optional_scopes :read, :write
 
   # Define scopes_by_grant_type to restrict only certain scopes for grant_type
   # By default, all the scopes will be available for all the grant types.
