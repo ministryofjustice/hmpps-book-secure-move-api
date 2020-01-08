@@ -3,6 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:move) { create :move }
   let(:move_id) { move.id }

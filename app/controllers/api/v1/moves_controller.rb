@@ -7,7 +7,7 @@ module Api
         moves_params = Moves::ParamsValidator.new(params[:filter])
         if moves_params.valid?
           import_moves_from_nomis
-          moves = Moves::Finder.new(filter_params).call
+          moves = Moves::Finder.new(filter_params, current_ability).call
           paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
         else
           render json: { error: moves_params.errors }, status: :bad_request

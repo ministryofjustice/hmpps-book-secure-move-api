@@ -9,6 +9,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'cancancan'
 gem 'doorkeeper'
 gem 'json-schema'
 gem 'kaminari'
@@ -21,6 +22,7 @@ gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.2'
 gem 'rails', '~> 5.2.3'
 gem 'sentry-raven'
+gem 'tty-prompt'
 
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests
 # against the API without an Access-Control-Allow-Origin error.

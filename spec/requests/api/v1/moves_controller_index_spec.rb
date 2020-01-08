@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+  let!(:application) { Doorkeeper::Application.create(name: 'test') }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
@@ -32,6 +33,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           }
         end
         let(:params) { { filter: filters } }
+        let(:ability) { Ability.new }
+
+        before do
+          allow(Ability).to receive(:new).and_return(ability)
+        end
 
         it 'delegates the query execution to Moves::Finder with the correct filters', skip_before: true do
           moves_finder = instance_double('Moves::Finder', call: Move.all)
@@ -39,7 +45,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
           get '/api/v1/moves', headers: headers, params: params
 
-          expect(Moves::Finder).to have_received(:new).with(from_location_id: from_location_id)
+          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability)
         end
 
         it 'filters the results' do
