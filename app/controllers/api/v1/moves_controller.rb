@@ -82,6 +82,7 @@ module Api
 
       def find_move
         Move
+          .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
       end
