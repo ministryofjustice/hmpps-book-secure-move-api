@@ -7,6 +7,14 @@ ENV['RAILS_ENV'] ||= 'test'
 if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start :rails do
+    add_filter 'app/channels'
+    # No background jobs (yet)
+    add_filter 'app/jobs/application_job.rb'
+    # app doesn't send emails (yet)
+    add_filter 'app/mailers/application_mailer.rb'
+    # Ignore Prometheus metrics
+    add_filter 'lib/prometheus/move_collector.rb'
+
     minimum_coverage 78.11
     maximum_coverage_drop 0
   end
