@@ -31,10 +31,21 @@ RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication:
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_post_personal_care_needs_200.json').read }
 
-      it 'returns the correct person data' do
-        expect(response.map(&:symbolize_keys)).to eq client_response
+      context 'with a non-empty body' do
+        let(:response_body) { file_fixture('nomis_post_personal_care_needs_200.json').read }
+
+        it 'returns the correct person data' do
+          expect(response.map(&:symbolize_keys)).to eq client_response
+        end
+      end
+
+      context 'with an empty response body' do
+        let(:response_body) { [].to_json }
+
+        it 'returns an empty array' do
+          expect(response).to eq([])
+        end
       end
     end
   end

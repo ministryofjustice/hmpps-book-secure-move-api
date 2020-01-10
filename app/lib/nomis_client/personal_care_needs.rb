@@ -10,7 +10,7 @@ module NomisClient
           personal_care_needs['personalCareNeeds'].map do |personal_care_need_attributes|
             attributes_for(personal_care_needs['offenderNo'], personal_care_need_attributes)
           end
-        end.flatten!
+        end.flatten
       end
 
       def get_response(nomis_offender_numbers:)
