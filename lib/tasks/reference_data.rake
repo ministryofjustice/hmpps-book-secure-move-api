@@ -43,19 +43,6 @@ namespace :reference_data do
   task link_suppliers: :environment do
     supplier_locations = {
       geoamey: %w[
-        SRY016
-        SFCUSU
-        STCUSU
-        SUS4
-        SUS1
-        SUS5
-        SUS3
-        SUS2
-        WWM7
-        WWM1
-        WWM3
-        WWM2
-        WWM4
         CHE1
         CHE2
         CHE3
@@ -63,16 +50,31 @@ namespace :reference_data do
         DRB2
         DRB3
         DRB5
+        NRU1
+        NRU4
         NWA1
         NWA4
         NWA5
         NYK1
         NYK2
         NYK3
+        SFCUSU
+        SRY016
+        STCUSU
         STF2
         STF4
+        SUS1
+        SUS2
+        SUS3
+        SUS4
+        SUS5
         WLT1
         WLT4
+        WWM1
+        WWM2
+        WWM3
+        WWM4
+        WWM7
       ],
       serco: %w[
         BTP1
