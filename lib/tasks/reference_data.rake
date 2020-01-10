@@ -50,6 +50,8 @@ namespace :reference_data do
         DRB2
         DRB3
         DRB5
+        NRU1
+        NRU4
         NWA1
         NWA4
         NWA5
