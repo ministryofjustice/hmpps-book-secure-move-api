@@ -82,6 +82,7 @@ GEM
       safe_yaml (~> 1.0.0)
     crass (1.0.5)
     diff-lcs (1.3)
+    docile (1.3.2)
     doorkeeper (5.1.0)
       railties (>= 5)
     dotenv (2.7.5)
@@ -106,6 +107,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.3)
     jmespath (1.4.0)
+    json (2.3.0)
     json-schema (2.8.1)
       addressable (>= 2.4)
     jsonapi-renderer (0.2.2)
@@ -256,6 +258,11 @@ GEM
       faraday (>= 0.7.6, < 1.0)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
+    simplecov (0.17.1)
+      docile (~> 1.1)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -321,6 +328,7 @@ DEPENDENCIES
   rubocop-rspec
   sentry-raven
   shoulda-matchers
+  simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop

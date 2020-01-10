@@ -3,6 +3,24 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start :rails do
+    add_filter 'app/channels'
+    # No background jobs (yet)
+    add_filter 'app/jobs/application_job.rb'
+    # app doesn't send emails (yet)
+    add_filter 'app/mailers/application_mailer.rb'
+    # Ignore Prometheus metrics
+    add_filter 'lib/prometheus/move_collector.rb'
+
+    minimum_coverage 97.82
+    # cope with a small drop due to branch differences
+    maximum_coverage_drop 0.1
+  end
+end
+
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
