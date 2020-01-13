@@ -5,9 +5,9 @@ require 'swagger_helper'
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:move) { create :move }
-  let(:moveId) { move.id }
+  let(:move_id) { move.id }
 
-  path '/moves/{moveId}' do
+  path '/moves/{move_id}' do
     get 'Returns the details of a move' do
       tags 'Moves'
       produces 'application/vnd.api+json'
@@ -33,7 +33,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 },
                 required: true
 
-      parameter name: :moveId,
+      parameter name: :move_id,
                 in: :path,
                 description: 'The ID of the move',
                 schema: {
@@ -70,8 +70,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
 
       response '404', 'not found' do
-        let(:moveId) { SecureRandom.uuid }
-        let(:detail_404) { "Couldn't find Move with 'id'=#{moveId}" }
+        let(:move_id) { SecureRandom.uuid }
+        let(:detail_404) { "Couldn't find Move with 'id'=#{move_id}" }
 
         it_behaves_like 'a swagger 404 error'
         it_behaves_like 'it does not trigger NomisSynchroniser'
