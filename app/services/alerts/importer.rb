@@ -2,22 +2,20 @@
 
 module Alerts
   class Importer
-    attr_accessor :profile, :alerts
-
     FALLBACK_QUESTION_KEY = :other_risks
     ASSESSMENT_ANSWER_CATEGORY = 'risk'
 
     def initialize(profile:, alerts:)
-      self.profile = profile
-      self.alerts = alerts
+      @profile = profile
+      @alerts = alerts
     end
 
     def call
-      profile.merge_assessment_answers!(
-        alerts.map { |alert| build_alert(alert) },
+      @profile.merge_assessment_answers!(
+        @alerts.map { |alert| build_alert(alert) },
         ASSESSMENT_ANSWER_CATEGORY
       )
-      profile.save!
+      @profile.save!
     end
 
     private
@@ -34,8 +32,8 @@ module Alerts
         expires_at: alert[:expires_at],
         category: assessment_question.category,
         key: assessment_question.key,
-        nomis_alert_code: alert[:alert_code],
-        nomis_alert_type: alert[:alert_type],
+        nomis_alert_code: alert.fetch(:alert_code),
+        nomis_alert_type: alert.fetch(:alert_type),
         nomis_alert_description: alert[:alert_code_description],
         nomis_alert_type_description: alert[:alert_type_description],
         imported_from_nomis: true

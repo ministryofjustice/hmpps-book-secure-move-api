@@ -15,8 +15,8 @@ if ENV['COVERAGE']
     # Ignore Prometheus metrics
     add_filter 'lib/prometheus/move_collector.rb'
 
-    minimum_coverage 97.82
-    # cope with a small drop due to branch differences
+    minimum_coverage 98.09
+    # cope with a small drop from last time due to potential branch differences
     maximum_coverage_drop 0.1
   end
 end

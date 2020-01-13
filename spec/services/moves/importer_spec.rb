@@ -38,7 +38,11 @@ RSpec.describe Moves::Importer do
   let!(:profile_two) { create(:profile, person: prisoner_two) }
 
   let(:people_importer) { instance_double('People::Importer', call: true) }
-  let(:alerts_importer) { instance_double('Alerts::Importer', call: true) }
+  let(:alerts_response) do
+    [{ offender_no: 'G3239GV', alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: 'G7157AB', alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: 'G7157AB', alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
+  end
   let(:offender_numbers_response) { [{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }] }
   let(:personal_care_needs_response) do
     [{ offender_no: 'G3239GV', problem_type: 'MATSTAT', problem_code: 'ACCU9' },
@@ -47,26 +51,18 @@ RSpec.describe Moves::Importer do
   end
 
   before do
-    # People importer should do nothing, as both people already exist
     allow(NomisClient::People).to receive(:get).and_return(offender_numbers_response)
-    allow(NomisClient::Alerts).to receive(:get).and_return(offender_numbers_response)
+    allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
     allow(People::Importer).to receive(:new).and_return(people_importer)
-    allow(Alerts::Importer).to receive(:new).and_return(alerts_importer)
-    # create a fallback question so that the PersonalCareNeeds importer can use it.
-    create(:assessment_question, :fallback)
-    create(:nomis_alert, type_code: 'MATSTAT', code: 'ACCU9')
-    create(:nomis_alert, type_code: 'MATSTAT', code: 'ACCU4')
+    # create fallback questions for PersonalCareNeeds importer and Alerts importer
+    create(:assessment_question, :care_needs_fallback)
+    create(:assessment_question, :alerts_fallback)
   end
 
   it 'calls the People::Importer service twice' do
     importer.call
     expect(people_importer).to have_received(:call).twice
-  end
-
-  it 'calls the Alerts::Importer service twice' do
-    importer.call
-    expect(alerts_importer).to have_received(:call).twice
   end
 
   context 'with no existing records' do
@@ -128,10 +124,16 @@ RSpec.describe Moves::Importer do
       expect { importer.call }.not_to change(Profile, :count)
     end
 
-    it 'imports 3 personal care needs, 1 for first profile, 2 for second profile' do
+    it 'imports 3 health answers, 1 for first profile, 2 for second profile' do
       expect do
         importer.call
-      end.to change { Profile.all.map(&:assessment_answers).map(&:size).reduce(:+) }.by(3)
+      end.to change { Profile.all.map(&:assessment_answers).flatten.select(&:health?).size }.by(3)
+    end
+
+    it 'imports 3 alerts' do
+      expect do
+        importer.call
+      end.to change { Profile.all.map(&:assessment_answers).flatten.select(&:risk?).size }.by(3)
     end
   end
 
