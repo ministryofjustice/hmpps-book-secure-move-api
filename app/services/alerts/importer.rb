@@ -23,18 +23,17 @@ module Alerts
     private
 
     # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def build_alert(alert)
       assessment_question = find_assessment_question(alert)
 
       Profile::AssessmentAnswer.new(
         title: alert[:alert_type_description],
         comments: alert[:comment],
-        assessment_question_id: assessment_question&.id,
+        assessment_question_id: assessment_question.id,
         created_at: alert[:created_at],
         expires_at: alert[:expires_at],
-        category: assessment_question&.category || :risk,
-        key: assessment_question&.key || alert[:alert_code],
+        category: assessment_question.category,
+        key: assessment_question.key,
         nomis_alert_code: alert[:alert_code],
         nomis_alert_type: alert[:alert_type],
         nomis_alert_description: alert[:alert_code_description],
@@ -42,7 +41,6 @@ module Alerts
         imported_from_nomis: true
       ).tap(&:set_timestamps)
     end
-    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
     def find_assessment_question(alert)
@@ -54,7 +52,7 @@ module Alerts
     end
 
     def fallback_assessment_question
-      @fallback_assessment_question ||= AssessmentQuestion.find_by(key: FALLBACK_QUESTION_KEY)
+      @fallback_assessment_question ||= AssessmentQuestion.find_by!(key: FALLBACK_QUESTION_KEY)
     end
   end
 end

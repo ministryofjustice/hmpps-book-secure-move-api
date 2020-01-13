@@ -42,7 +42,8 @@ RSpec.describe Moves::Importer do
   let(:offender_numbers_response) { [{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }] }
   let(:personal_care_needs_response) do
     [{ offender_no: 'G3239GV', problem_type: 'MATSTAT', problem_code: 'ACCU9' },
-     { offender_no: 'G7157AB', problem_type: 'MATSTAT', problem_code: 'ACCU9' }]
+     { offender_no: 'G7157AB', problem_type: 'MATSTAT', problem_code: 'ACCU9' },
+     { offender_no: 'G7157AB', problem_type: 'MATSTAT', problem_code: 'ACCU4' }]
   end
 
   before do
@@ -55,6 +56,7 @@ RSpec.describe Moves::Importer do
     # create a fallback question so that the PersonalCareNeeds importer can use it.
     create(:assessment_question, :fallback)
     create(:nomis_alert, type_code: 'MATSTAT', code: 'ACCU9')
+    create(:nomis_alert, type_code: 'MATSTAT', code: 'ACCU4')
   end
 
   it 'calls the People::Importer service twice' do
@@ -126,10 +128,10 @@ RSpec.describe Moves::Importer do
       expect { importer.call }.not_to change(Profile, :count)
     end
 
-    it 'imports 2 assessment answers, 1 for for each profile' do
+    it 'imports 3 personal care needs, 1 for first profile, 2 for second profile' do
       expect do
         importer.call
-      end.to change { Profile.all.map(&:assessment_answers).map(&:size).reduce(:+) }.by(2)
+      end.to change { Profile.all.map(&:assessment_answers).map(&:size).reduce(:+) }.by(3)
     end
   end
 
