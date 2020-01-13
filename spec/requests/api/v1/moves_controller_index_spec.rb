@@ -135,7 +135,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         end
 
         it 'invokes the client library to fetch moves from NOMIS', skip_before: true do
-          expect(NomisClient::Moves).to have_received(:get).with([from_location.nomis_agency_id], date)
+          expect(NomisClient::Moves).to have_received(:get).with([from_location.nomis_agency_id], date, :courtEvents)
         end
 
         it 'invokes the service to create moves into the database', skip_before: true do
