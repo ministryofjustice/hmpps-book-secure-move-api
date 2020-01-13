@@ -6,6 +6,11 @@ FactoryBot.define do
     key { 'sight_impaired' }
     title { 'Sight Impaired' }
 
+    trait :fallback do
+      category { 'health' }
+      key { PersonalCareNeeds::Importer::FALLBACK_QUESTION_KEY }
+    end
+
     trait :risk do
       category { 'risk' }
     end

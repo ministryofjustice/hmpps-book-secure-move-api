@@ -38,10 +38,10 @@ module Moves
 
     def import_personal_care_needs
       NomisClient::PersonalCareNeeds.get(people_nomis_prison_numbers).each do |personal_care_needs_attributes|
-        person = Person.find_by(personal_care_needs_attributes['offender_no'])
+        person = Person.find_by!(nomis_prison_number: personal_care_needs_attributes.fetch(:offender_no))
         PersonalCareNeeds::Importer.new(
           profile: person.latest_profile,
-          personal_care_needs: personal_care_needs_attributes
+          personal_care_needs: [personal_care_needs_attributes]
         ).call
       end
     end
