@@ -92,6 +92,7 @@ RSpec.describe NomisClient::People do
       allow(NomisClient::Base).to(
         receive(:post)
         .with('/prisoners',
+              headers: { 'Page-Limit' => nomis_offender_numbers.size.to_s },
               body: { offenderNos: nomis_offender_numbers }.to_json)
         .and_return(nomis_response)
       )

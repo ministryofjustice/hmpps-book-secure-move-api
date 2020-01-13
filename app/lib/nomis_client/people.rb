@@ -10,8 +10,11 @@ module NomisClient
       end
 
       def get_response(nomis_offender_numbers:)
+        # The /prisoners endpoint is very quirky - even when passing in 12 offender numbers, it still
+        # defaults to paging at (by default) 10 items so set page limit to our offender count
         NomisClient::Base.post(
           '/prisoners',
+          headers: { 'Page-Limit' => nomis_offender_numbers.size.to_s },
           body: { 'offenderNos': nomis_offender_numbers }.to_json
         ).parsed
       end
