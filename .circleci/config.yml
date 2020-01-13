@@ -126,7 +126,7 @@ jobs:
 
       - run:
           name: run tests
-          command: bundle exec rake
+          command: COVERAGE=1 bundle exec rake
 
   build_staging:
     <<: *cloud_container
