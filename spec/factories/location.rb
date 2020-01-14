@@ -7,6 +7,12 @@ FactoryBot.define do
     location_type { Location::LOCATION_TYPE_PRISON }
     nomis_agency_id { 'PEI' }
 
+    trait :with_moves do
+      after(:create) do |location, _|
+        create_list :move, 10, from_location: location
+      end
+    end
+
     trait :court do
       key { 'guildford_crown_court' }
       title { 'Guildford Crown Court' }
