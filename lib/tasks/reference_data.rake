@@ -61,6 +61,8 @@ namespace :reference_data do
         DST2
         DST3
         GCS1
+        GWN1
+        GWN2
         LCS1
         LCS2
         LCS3
