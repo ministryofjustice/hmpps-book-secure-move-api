@@ -12,7 +12,7 @@ module Moves
     def call
       return unless nomis_agency_ids.present? && date && prison?
 
-      moves = NomisClient::Moves.get(nomis_agency_ids, date)
+      moves = NomisClient::Moves.get(nomis_agency_ids, date, :courtEvents)
       Moves::Importer.new(moves).call
       Moves::Sweeper.new(locations, date, moves).call
     end

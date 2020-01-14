@@ -3,7 +3,7 @@
 module NomisClient
   class Moves
     class << self
-      def get(nomis_agency_ids, date, event_type = :courtEvents)
+      def get(nomis_agency_ids, date, event_type)
         attributes_for(
           get_response(nomis_agency_ids: nomis_agency_ids, date: date, event_type: event_type),
           event_type

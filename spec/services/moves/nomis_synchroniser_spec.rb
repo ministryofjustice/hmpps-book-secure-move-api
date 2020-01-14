@@ -70,7 +70,8 @@ RSpec.describe Moves::NomisSynchroniser do
       it 'calls the NOMIS API' do
         expect(NomisClient::Moves).to have_received(:get).with(
           locations.map(&:nomis_agency_id),
-          Date.today
+          Date.today,
+          :courtEvents
         )
       end
     end

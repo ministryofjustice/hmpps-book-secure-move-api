@@ -30,15 +30,19 @@ module Moves
     end
 
     def import_alerts
-      NomisClient::Alerts.get(people_nomis_prison_numbers).each do |alert_attributes|
-        person = Person.find_by(nomis_prison_number: alert_attributes[:offender_no])
-        Alerts::Importer.new(profile: person.latest_profile, alerts: [alert_attributes]).call
+      NomisClient::Alerts.get(people_nomis_prison_numbers)
+                         .group_by { |alert| alert.fetch(:offender_no) }
+                         .each do |offender_no, alert_attributes|
+        person = Person.find_by!(nomis_prison_number: offender_no)
+        Alerts::Importer.new(profile: person.latest_profile, alerts: alert_attributes).call
       end
     end
 
     def import_personal_care_needs
-      NomisClient::PersonalCareNeeds.get(people_nomis_prison_numbers).each do |personal_care_needs_attributes|
-        person = Person.find_by(personal_care_needs_attributes['offender_no'])
+      NomisClient::PersonalCareNeeds.get(people_nomis_prison_numbers)
+                                    .group_by { |pcn| pcn.fetch(:offender_no) }
+                                    .each do |offender_no, personal_care_needs_attributes|
+        person = Person.find_by!(nomis_prison_number: offender_no)
         PersonalCareNeeds::Importer.new(
           profile: person.latest_profile,
           personal_care_needs: personal_care_needs_attributes
