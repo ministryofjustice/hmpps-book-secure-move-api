@@ -18,7 +18,7 @@ gem 'oauth2'
 gem 'pager_api'
 gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12.2'
 gem 'rails', '~> 5.2.3'
 gem 'sentry-raven'
 

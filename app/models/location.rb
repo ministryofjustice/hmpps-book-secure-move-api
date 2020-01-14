@@ -19,6 +19,8 @@ class Location < ApplicationRecord
   validates :title, presence: true
   validates :location_type, presence: true
 
+  scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
+
   def prison?
     location_type.to_s == LOCATION_TYPE_PRISON
   end

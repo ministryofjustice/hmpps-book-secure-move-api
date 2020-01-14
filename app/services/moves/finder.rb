@@ -21,6 +21,7 @@ module Moves
       scope = apply_location_type_filters(scope)
       scope = apply_location_from_filters(scope)
       scope = apply_location_to_filters(scope)
+      scope = apply_supplier_filters(scope)
       scope
     end
 
@@ -50,6 +51,12 @@ module Moves
 
       to_location = filter_params[:to_location_id].split(',')
       scope.where(to_location_id: to_location)
+    end
+
+    def apply_supplier_filters(scope)
+      return scope unless filter_params.key?(:supplier_id)
+
+      scope.served_by(filter_params[:supplier_id])
     end
   end
 end

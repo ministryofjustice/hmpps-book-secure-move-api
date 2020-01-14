@@ -27,6 +27,16 @@ RSpec.describe Moves::Finder do
       end
     end
 
+    context 'with supplier filter' do
+      let(:supplier) { create :supplier }
+      let!(:location) { create :location, :with_moves, suppliers: [supplier] }
+      let(:filter_params) { { supplier_id: supplier.id } }
+
+      it 'returns moves matching the supplier' do
+        expect(move_finder.call.pluck(:id).sort).to eql location.moves_from.pluck(:id).sort
+      end
+    end
+
     context 'with mis-matching location filter' do
       let(:filter_params) { { from_location_id: Random.uuid } }
 

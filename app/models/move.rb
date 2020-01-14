@@ -50,6 +50,8 @@ class Move < ApplicationRecord
   before_validation :set_move_type
   before_validation :ensure_event_nomis_ids_uniqueness
 
+  scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
+
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
   end
