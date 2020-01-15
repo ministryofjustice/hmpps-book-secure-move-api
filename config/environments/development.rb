@@ -53,7 +53,4 @@ Rails.application.configure do
 
   # Default host for url generation
   routes.default_url_options[:host] = "localhost:#{ENV['PORT'] || 3000}"
-
-  # Enable curl for testing oauth flow
-  config.action_controller.allow_forgery_protection = false
 end

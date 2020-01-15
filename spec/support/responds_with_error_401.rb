@@ -5,8 +5,8 @@ RSpec.shared_examples 'an endpoint that responds with error 401' do
     [
       {
         'title' => 'Not authorized',
-        'detail' => 'Token expired or invalid',
-      },
+        'detail' => detail_401
+      }
     ]
   end
 
