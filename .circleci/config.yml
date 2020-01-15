@@ -105,9 +105,12 @@ jobs:
           - v2-dependencies-
 
       - run:
-          name: install dependencies
+          name: install bundler
           command:
             gem install bundler:2.0.2
+      - run:
+          name: install dependencies
+          command:
             bundle install --path vendor/bundle
 
       - save_cache:
