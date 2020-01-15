@@ -105,7 +105,7 @@ GEM
     hashdiff (1.0.0)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
-    jaro_winkler (1.5.3)
+    jaro_winkler (1.5.4)
     jmespath (1.4.0)
     json (2.3.0)
     json-schema (2.8.1)
@@ -164,8 +164,8 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     pager_api (0.3.2)
-    parallel (1.17.0)
-    parser (2.6.4.0)
+    parallel (1.19.1)
+    parser (2.7.0.2)
       ast (~> 2.4.0)
     pg (1.0.0)
     prometheus_exporter (0.4.13)
@@ -242,13 +242,20 @@ GEM
     rswag-ui (2.2.0)
       actionpack (>= 3.1, < 6.1)
       railties (>= 3.1, < 6.1)
-    rubocop (0.74.0)
+    rubocop (0.77.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-govuk (2.0.0)
+      rubocop (= 0.77)
+      rubocop-rails (~> 2)
+      rubocop-rspec (~> 1.28)
+    rubocop-rails (2.4.1)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
     rubocop-rspec (1.35.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.1)
@@ -324,7 +331,7 @@ DEPENDENCIES
   rswag-api
   rswag-specs
   rswag-ui
-  rubocop
+  rubocop-govuk
   rubocop-rspec
   sentry-raven
   shoulda-matchers

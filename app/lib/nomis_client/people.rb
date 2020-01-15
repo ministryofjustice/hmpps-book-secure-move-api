@@ -19,7 +19,6 @@ module NomisClient
         ).parsed
       end
 
-      # rubocop:disable Metrics/MethodLength
       def attributes_for(person)
         {
           prison_number: person['offenderNo'],
@@ -36,7 +35,6 @@ module NomisClient
           nationalities: person['nationalities']
         }
       end
-      # rubocop:enable Metrics/MethodLength
     end
   end
 end

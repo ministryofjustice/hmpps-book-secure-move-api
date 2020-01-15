@@ -64,7 +64,7 @@ module Moves
     end
 
     def update_move_with_same_nomis_event_id(move)
-      same_nomis_event_id_move = Move.find_by_nomis_event_ids([move[:nomis_event_id]])
+      same_nomis_event_id_move = Move.find_by(nomis_event_ids: [move[:nomis_event_id]])
       same_nomis_event_id_move&.update(move_params(move))
     end
 

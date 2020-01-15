@@ -3,7 +3,6 @@
 require 'csv'
 
 module NomisAlerts
-  # rubocop:disable Metrics/ClassLength
   class Importer
     attr_accessor :alert_codes
 
@@ -155,5 +154,4 @@ module NomisAlerts
       alert_types[alert[:parent_code]]
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end

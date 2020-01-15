@@ -9,7 +9,7 @@ references:
     docker:
       - image: circleci/ruby:2.6.2
         environment:
-          BUNDLER_VERSION: 2.0.1
+          BUNDLER_VERSION: 2.0.2
           RAILS_ENV: test
           RACK_ENV: test
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
@@ -100,9 +100,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: install dependencies

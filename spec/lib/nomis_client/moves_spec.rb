@@ -63,7 +63,7 @@ RSpec.describe NomisClient::Moves do
     let(:response) { described_class.get_response(nomis_agency_ids: [nomis_agency_id], date: date) }
     let(:params) do
       {
-        agencyId: ['LEI'],
+        agencyId: %w[LEI],
         courtEvents: true,
         fromDateTime: '2019-07-08T00:00:00',
         toDateTime: '2019-07-09T00:00:00',

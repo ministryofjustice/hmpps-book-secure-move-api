@@ -66,8 +66,8 @@ RSpec.describe Moves::Importer do
   end
 
   context 'with no existing records' do
-    let(:move) { Move.find_by_nomis_event_ids([move_event_one]) }
-    let(:completed_move) { Move.find_by_nomis_event_ids([move_event_two]) }
+    let(:move) { Move.find_by(nomis_event_ids: [move_event_one]) }
+    let(:completed_move) { Move.find_by(nomis_event_ids: [move_event_two]) }
 
     it 'creates 2 moves' do
       expect { importer.call }.to change(Move, :count).by(2)
@@ -143,7 +143,7 @@ RSpec.describe Moves::Importer do
 
     it 'updates the field that is different' do
       importer.call
-      expect(Move.find_by_nomis_event_ids([move_event_one]).time_due).to eq Time.zone.parse('2019-08-19T17:00:00')
+      expect(Move.find_by(nomis_event_ids: [move_event_one]).time_due).to eq Time.zone.parse('2019-08-19T17:00:00')
     end
   end
 end

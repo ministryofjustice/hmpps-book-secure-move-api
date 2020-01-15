@@ -20,7 +20,6 @@ module Alerts
 
     private
 
-    # rubocop:disable Metrics/MethodLength
     def build_alert(alert)
       assessment_question = find_assessment_question(alert)
 
@@ -39,7 +38,6 @@ module Alerts
         imported_from_nomis: true
       ).tap(&:set_timestamps)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def find_assessment_question(alert)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(

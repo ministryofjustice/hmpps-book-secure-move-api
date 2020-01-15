@@ -7,7 +7,7 @@ module Api
 
       def create
         document = Document.create!(document_attributes)
-        render json: document, status: 201
+        render json: document, status: :created
       rescue ActiveSupport::MessageVerifier::InvalidSignature
         # A call to this action with an empty file raises an InvalidSignature exception and
         # and not a RecordInvalid one, this is the only way I found to have a behaviour that
@@ -19,7 +19,7 @@ module Api
       def destroy
         document = Document.find(params[:id])
         document.destroy!
-        render json: document, status: 200
+        render json: document, status: :ok
       end
 
       private

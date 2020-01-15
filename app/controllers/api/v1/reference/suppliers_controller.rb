@@ -13,7 +13,7 @@ module Api
           supplier = find_supplier
           raise ::ActiveRecord::RecordNotFound, "Couldn't find Supplier with #{params[:id]}" if supplier.nil?
 
-          render json: supplier, status: 200
+          render json: supplier, status: :ok
         end
 
         private
