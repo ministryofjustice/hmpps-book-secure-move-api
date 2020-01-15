@@ -10,7 +10,7 @@ RSpec.describe Moves::Importer do
   let(:input_data) do
     [
       {
-        person_nomis_prison_number: 'G3239GV',
+        person_nomis_prison_number: prisoner_one.nomis_prison_number,
         from_location_nomis_agency_id: 'BXI',
         to_location_nomis_agency_id: 'WDGRCC',
         date: '2019-08-19',
@@ -19,7 +19,7 @@ RSpec.describe Moves::Importer do
         nomis_event_id: move_event_one,
       },
       {
-        person_nomis_prison_number: 'G7157AB',
+        person_nomis_prison_number: prisoner_two.nomis_prison_number,
         from_location_nomis_agency_id: 'BXI',
         to_location_nomis_agency_id: 'BXI',
         date: '2019-08-19',
@@ -32,37 +32,34 @@ RSpec.describe Moves::Importer do
 
   let!(:brixton_prison) { create(:location, nomis_agency_id: 'BXI', location_type: 'prison') }
   let!(:wood_green_court) { create(:location, nomis_agency_id: 'WDGRCC', location_type: 'court') }
-  let!(:prisoner_one) { create(:person, nomis_prison_number: 'G3239GV') }
-  let!(:prisoner_two) { create(:person, nomis_prison_number: 'G7157AB') }
+  let!(:prisoner_one) { create(:person, :nomis_synced) }
+  let!(:prisoner_two) { create(:person, :nomis_synced) }
   let!(:profile_one) { create(:profile, person: prisoner_one) }
   let!(:profile_two) { create(:profile, person: prisoner_two) }
 
-  let(:people_importer) { instance_double('People::Importer', call: true) }
   let(:alerts_response) do
-    [{ offender_no: 'G3239GV', alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: 'G7157AB', alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: 'G7157AB', alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
+    [{ offender_no: prisoner_one.nomis_prison_number, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: prisoner_two.nomis_prison_number, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: prisoner_two.nomis_prison_number, alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
   end
   let(:offender_numbers_response) { [{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }] }
+  let(:prison_numbers_response) do
+    [{ prison_number: prisoner_one.nomis_prison_number, first_name: 'Bob' },
+     { prison_number: prisoner_two.nomis_prison_number, first_name: 'Bob' }]
+  end
   let(:personal_care_needs_response) do
-    [{ offender_no: 'G3239GV', problem_type: 'MATSTAT', problem_code: 'ACCU9' },
-     { offender_no: 'G7157AB', problem_type: 'MATSTAT', problem_code: 'ACCU9' },
-     { offender_no: 'G7157AB', problem_type: 'MATSTAT', problem_code: 'ACCU4' }]
+    [{ offender_no: prisoner_one.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU9' },
+     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU9' },
+     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU4' }]
   end
 
   before do
-    allow(NomisClient::People).to receive(:get).and_return(offender_numbers_response)
+    allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
     allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
-    allow(People::Importer).to receive(:new).and_return(people_importer)
     # create fallback questions for PersonalCareNeeds importer and Alerts importer
     create(:assessment_question, :care_needs_fallback)
     create(:assessment_question, :alerts_fallback)
-  end
-
-  it 'calls the People::Importer service twice' do
-    importer.call
-    expect(people_importer).to have_received(:call).twice
   end
 
   context 'with no existing records' do

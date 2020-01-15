@@ -9,11 +9,13 @@ FactoryBot.define do
     trait :care_needs_fallback do
       category { 'health' }
       key { PersonalCareNeeds::Importer::FALLBACK_QUESTION_KEY }
+      title { 'Pregnancy' }
     end
 
     trait :alerts_fallback do
       key { Alerts::Importer::FALLBACK_QUESTION_KEY }
       category { 'risk' }
+      title { 'Other Risks' }
     end
 
     trait :risk do

@@ -2,8 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe People::Importer do
-  subject(:importer) { described_class.new(input_data) }
+RSpec.describe Moves::Importer do
+  subject(:importer) do
+    described_class.new(moves)
+  end
 
   let(:gender_param) { 'F' }
   let(:ethnicity_param) { 'White: Eng./Welsh/Scot./N.Irish/British' }
@@ -23,9 +25,16 @@ RSpec.describe People::Importer do
       nationalities: 'British',
     }
   end
+  let(:moves) { [] }
 
   let!(:ethnicity) { create(:ethnicity, title: 'White: Eng./Welsh/Scot./N.Irish/British') }
   let!(:gender) { create(:gender, nomis_code: 'F') }
+
+  before do
+    allow(NomisClient::People).to receive(:get).and_return([input_data])
+    allow(NomisClient::Alerts).to receive(:get).and_return([])
+    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
+  end
 
   context 'with no existing records' do
     it 'creates a person' do
@@ -49,7 +58,7 @@ RSpec.describe People::Importer do
         'first_names' => 'AVEILKE EMMANDA',
         'date_of_birth' => Date.parse('1965-10-15'),
         'latest_nomis_booking_id' => 123,
-        )
+      )
     end
     # rubocop:enable RSpec/ExampleLength
 
