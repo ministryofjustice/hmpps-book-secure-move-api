@@ -123,8 +123,12 @@ jobs:
       #- run: bundle exec rake db:schema:load
 
       - run:
+          name: run rubocop
+          command: COVERAGE=1 bundle exec rubocop
+
+      - run:
           name: run tests
-          command: COVERAGE=1 bundle exec rake
+          command: COVERAGE=1 bundle exec rake spec
 
   build_staging:
     <<: *cloud_container
