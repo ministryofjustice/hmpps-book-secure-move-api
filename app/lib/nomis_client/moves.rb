@@ -26,7 +26,6 @@ module NomisClient
         nomis_agency_ids.map { |id| "agencyId=#{CGI.escape(id)}" }.join('&')
       end
 
-      # rubocop:disable Metrics/MethodLength
       def attributes_for(nomis_data, event_type)
         nomis_data[event_type.to_s].map do |item|
           {
@@ -40,7 +39,6 @@ module NomisClient
           }
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def date_params(date)
         { fromDateTime: date.to_s(:nomis), toDateTime: (date + 1).to_s(:nomis) }

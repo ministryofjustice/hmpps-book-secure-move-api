@@ -20,8 +20,6 @@ module People
         People::Anonymiser.encrypt_offender_number(offender_number: nomis_offender_number)
     end
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def call
       latest_location = prisons.sample
       {
@@ -49,8 +47,8 @@ module People
         maritalStatus: Nomis::Faker.marital_status
       }.with_indifferent_access
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
+
+
 
     private
 

@@ -18,7 +18,7 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
     context 'when successful' do
       let(:file) do
         Rack::Test::UploadedFile.new(
-          File.join(Rails.root, 'spec/fixtures', 'file-sample_100kB.doc'),
+          Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
           'application/msword'
         )
       end

@@ -1,3 +1,8 @@
+inherit_gem:
+  rubocop-govuk:
+    - config/default.yml
+    - config/rails.yml
+
 require: rubocop-rspec
 
 AllCops:
@@ -13,7 +18,7 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Metrics/LineLength:
@@ -30,4 +35,34 @@ RSpec/LetSetup:
   Enabled: false
 
 RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+# I think we disagree with GDS over this one
+Style/StringLiterals:
+  Enabled: false
+
+# I think we disagree with GDS on this one too
+Style/MethodCalledOnDoEndBlock:
+  Enabled: false
+
+#TODO: we have lots of these, and fixing them will create massive noise in the PR
+Rails/Date:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Layout/AccessModifierIndentation:
   Enabled: false

@@ -47,7 +47,7 @@ class ApiController < ApplicationController
         title: 'Bad request',
         detail: exception.to_s
       }] },
-      status: 400
+      status: :bad_request
     )
   end
 
@@ -57,7 +57,7 @@ class ApiController < ApplicationController
         title: 'Resource not found',
         detail: exception.to_s
       }] },
-      status: 404
+      status: :not_found
     )
   end
 
@@ -67,14 +67,14 @@ class ApiController < ApplicationController
         title: 'Invalid Media Type',
         detail: "Content-Type must be #{restricted_request_content_type}"
       }] },
-      status: 415
+      status: :unsupported_media_type
     )
   end
 
   def render_unprocessable_entity_error(exception)
     render(
       json: { errors: validation_errors(exception.record.errors) },
-      status: 422
+      status: :unprocessable_entity
     )
   end
 
@@ -84,7 +84,7 @@ class ApiController < ApplicationController
         title: 'Forbidden',
         detail: exception.to_s
       }] },
-      status: 403
+      status: :forbidden
     )
   end
 

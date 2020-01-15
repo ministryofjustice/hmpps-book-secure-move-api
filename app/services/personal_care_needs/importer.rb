@@ -22,7 +22,6 @@ module PersonalCareNeeds
 
     private
 
-    # rubocop:disable Metrics/MethodLength
     def build(personal_care_need)
       assessment_question = find_assessment_question(personal_care_need)
 
@@ -39,7 +38,6 @@ module PersonalCareNeeds
         imported_from_nomis: true
       ).tap(&:set_timestamps)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def find_assessment_question(personal_care_need)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(

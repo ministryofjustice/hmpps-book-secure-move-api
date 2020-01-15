@@ -32,7 +32,7 @@ module Alerts
     end
 
     def fake_date_expires
-      Faker::Date.between(from: 5.years.ago, to: 1.years.ago).iso8601
+      Faker::Date.between(from: 5.years.ago, to: 1.year.ago).iso8601
     end
   end
 end

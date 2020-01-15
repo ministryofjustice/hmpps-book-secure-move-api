@@ -53,7 +53,6 @@ class Profile
       assessment_question_id.blank?
     end
 
-    # rubocop:disable Metrics/MethodLength
     def as_json
       {
         title: title,
@@ -70,7 +69,6 @@ class Profile
         imported_from_nomis: imported_from_nomis
       }
     end
-    # rubocop:enable Metrics/MethodLength
 
     def risk?
       category == 'risk'
@@ -85,7 +83,7 @@ class Profile
     end
 
     def copy_question_attributes
-      return unless assessment_question_id.present?
+      return if assessment_question_id.blank?
 
       assessment_question = AssessmentQuestion.find(assessment_question_id)
       self.category = assessment_question.category
@@ -99,8 +97,6 @@ class Profile
 
     private
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def assign_attributes(attributes)
       self.title = attributes[:title]
       self.comments = attributes[:comments]
@@ -115,7 +111,5 @@ class Profile
       self.nomis_alert_type_description = attributes[:nomis_alert_type_description]
       self.imported_from_nomis = attributes[:imported_from_nomis]
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
   end
 end

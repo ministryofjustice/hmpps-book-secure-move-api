@@ -16,7 +16,6 @@ module NomisClient
         ).parsed
       end
 
-      # rubocop:disable Metrics/MethodLength
       def attributes_for(alert)
         {
           alert_id: alert['alertId'],
@@ -32,7 +31,6 @@ module NomisClient
           offender_no: alert['offenderNo']
         }
       end
-      # rubocop:enable Metrics/MethodLength
     end
   end
 end
