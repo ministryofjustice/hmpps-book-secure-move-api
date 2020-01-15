@@ -52,7 +52,7 @@ end
 group :development do
   gem 'climate_control'
   gem 'listen', '>= 3.0.5', '< 3.2'
-  gem 'rubocop', require: false
+  gem 'rubocop-govuk'
   gem 'rubocop-rspec'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
