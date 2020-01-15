@@ -46,8 +46,6 @@ namespace :reference_data do
         AVS1
         AVS2
         AVS3
-        BDS1
-        BDS2
         CHE1
         CHE2
         CHE3
@@ -63,6 +61,8 @@ namespace :reference_data do
         DST2
         DST3
         GCS1
+        GWN1
+        GWN2
         LCS1
         LCS2
         LCS3
@@ -105,6 +105,8 @@ namespace :reference_data do
         WWM7
       ],
       serco: %w[
+        BDS1
+        BDS2
         BTP1
         BTP2
         BTP4
