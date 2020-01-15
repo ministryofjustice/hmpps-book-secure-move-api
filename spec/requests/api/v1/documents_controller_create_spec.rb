@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
-  let!(:application) { Doorkeeper::Application.create(name: 'test') }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { 'multipart/form-data' }
   let(:response_json) { JSON.parse(response.body) }

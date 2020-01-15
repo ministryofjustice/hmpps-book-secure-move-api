@@ -3,6 +3,8 @@
 # Disable rubocop rule to improve test running performance
 # rubocop:disable RSpec/InstanceVariable
 RSpec.shared_context 'with client authentication', shared_context: :metadata do
+  let(:application) { Doorkeeper::Application.create(name: 'test') }
+
   before do
     credentials = "#{application.uid}:#{application.plaintext_secret}"
 

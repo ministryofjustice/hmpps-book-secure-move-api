@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+  let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
@@ -15,8 +16,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   end
 
   describe 'GET /moves' do
-    let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
-
     let(:schema) { load_json_schema('get_moves_responses.json') }
 
     let!(:pentonville_moves) { create_list :move, 10, from_location: pentonville }
@@ -44,8 +43,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   end
 
   describe 'GET /moves/{moveId}' do
-    let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
-
     let(:schema) { load_json_schema('get_move_responses.json') }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }
@@ -81,7 +78,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   end
 
   describe 'POST /moves' do
-    let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
     let(:schema) { load_json_schema('post_moves_responses.json') }
 
     let(:move_attributes) { attributes_for(:move) }
