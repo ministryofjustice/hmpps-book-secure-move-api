@@ -143,6 +143,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'

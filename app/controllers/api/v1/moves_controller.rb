@@ -20,7 +20,9 @@ module Api
       end
 
       def create
-        move = Move.create!(move_attributes)
+        move = Move.new(move_attributes)
+        authorize!(:create, move)
+        move.save!
         render_move(move, 201)
       end
 
