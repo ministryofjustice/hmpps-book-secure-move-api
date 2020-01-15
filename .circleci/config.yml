@@ -100,35 +100,33 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
-          name: install bundler
-          command:
-            gem install bundler:2.0.2
-      - run:
           name: install dependencies
-          command:
-            bundle install --path vendor/bundle
+          command: |
+            sudo gem update --system
+            sudo gem uninstall bundler
+            sudo rm /usr/local/bin/bundle
+            sudo rm /usr/local/bin/bundler
+            sudo gem install bundler
+            bundle install
+
 
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
       # Database setup
       - run: bundle exec rake db:create
       #- run: bundle exec rake db:schema:load
 
       - run:
-          name: run rubocop
-          command: COVERAGE=1 bundle exec rubocop
-
-      - run:
           name: run tests
-          command: COVERAGE=1 bundle exec rake spec
+          command: COVERAGE=1 bundle exec rake
 
   build_staging:
     <<: *cloud_container
