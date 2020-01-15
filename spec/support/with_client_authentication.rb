@@ -18,7 +18,11 @@ RSpec.shared_context 'with client authentication', shared_context: :metadata do
     @access_token = JSON.parse(session.response.body)['access_token']
   end
 
-  let(:auth_headers) { { 'Authorization': "Bearer #{@access_token}" } }
+  let(:valid_bearer_header_value) { "Bearer #{@access_token}" }
+  let(:auth_headers) { { 'Authorization': valid_bearer_header_value } }
+
+  # RSwag tests automagically add this into header where it's a defined parameter
+  let!(:Authorization) { valid_bearer_header_value }
 end
 
 RSpec.shared_context 'with invalid authentication request headers', shared_context: :metadata do

@@ -14,8 +14,8 @@ RSpec.shared_context 'with json schema', shared_context: :metadata do
     end
   end
 
-  before do
-    Dir.new('swagger/v1').each { |file_name| load_schema(file_name) }
+  before(:all) do
+    Dir.glob('**/*.json', base: 'swagger/v1').each { |file_name| load_schema(file_name) }
   end
 end
 

@@ -1,3 +1,4 @@
 --color
 --require spec_helper
 --format d
+--format Rswag::Specs::SwaggerFormatter

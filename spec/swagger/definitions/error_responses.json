@@ -1,15 +1,4 @@
 {
-  "200": {
-    "type": "object",
-    "required": [
-      "data"
-    ],
-    "properties": {
-      "data": {
-        "$ref": "move.json#/Move"
-      }
-    }
-  },
   "401": {
     "type": "object",
     "required": [
@@ -19,7 +8,7 @@
       "errors": {
         "type": "array",
         "items": {
-          "$ref": "errors.json#/NotAuthorisedError"
+          "$ref": "#/definitions/errors/NotAuthorisedError"
         }
       }
     }
@@ -33,7 +22,7 @@
       "errors": {
         "type": "array",
         "items": {
-          "$ref": "errors.json#/ResourceNotFound"
+          "$ref": "#/definitions/errors/ResourceNotFound"
         }
       }
     }
@@ -47,7 +36,7 @@
       "errors": {
         "type": "array",
         "items": {
-          "$ref": "errors.json#/UnsupportedMediaType"
+          "$ref": "#/definitions/errors/UnsupportedMediaType"
         }
       }
     }

@@ -1,0 +1,13 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "$ref": "#/definitions/move/Move"
+      }
+    }
+  }
+}
