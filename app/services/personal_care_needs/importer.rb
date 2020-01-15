@@ -17,7 +17,6 @@ module PersonalCareNeeds
         personal_care_needs.map { |personal_care_need| build(personal_care_need) },
         ASSESSMENT_ANSWER_CATEGORY,
       )
-      profile.save!
     end
 
   private

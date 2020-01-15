@@ -15,9 +15,11 @@ module People
     end
 
     def call
-      person = Person.find_or_create_by!(nomis_prison_number: nomis_attributes[:prison_number])
+      person = Person.find_or_initialize_by(nomis_prison_number: nomis_attributes[:prison_number])
       profile = person.latest_profile || person.profiles.build
-      profile.update(attributes)
+      profile.assign_attributes(attributes)
+      # return profile rather than person so that save does both profile and person if both are new
+      profile
     end
 
   private

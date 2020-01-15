@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe People::Importer do
+RSpec.describe Moves::Importer do
   subject(:importer) do
-    Moves::Importer.new(moves)
+    described_class.new(moves)
   end
 
   let(:gender_param) { 'F' }
@@ -58,7 +58,7 @@ RSpec.describe People::Importer do
         'first_names' => 'AVEILKE EMMANDA',
         'date_of_birth' => Date.parse('1965-10-15'),
         'latest_nomis_booking_id' => 123,
-        )
+      )
     end
     # rubocop:enable RSpec/ExampleLength
 

@@ -2,12 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe PersonalCareNeeds::Importer do
+RSpec.describe Moves::Importer do
   subject(:importer) do
-    described_class.new(
-      profile: profile,
-      personal_care_needs: personal_care_needs,
-    )
+    described_class.new(moves)
   end
 
   let(:person) { create :person, :nomis_synced }
@@ -50,12 +47,12 @@ RSpec.describe PersonalCareNeeds::Importer do
 
   context 'with no relevant nomis alert mappings' do
     it 'creates a new assessment answer' do
-      expect { importer.call }.to change { profile.assessment_answers.count }.by(1)
+      expect { importer.call }.to change { profile.reload.assessment_answers.count }.by(1)
     end
 
     it 'sets the nomis alert code' do
       importer.call
-      expect(profile.assessment_answers.map(&:nomis_alert_code)).to eq %w[ACCU9]
+      expect(profile.reload.assessment_answers.map(&:nomis_alert_code)).to eq %w[ACCU9]
     end
   end
 end
