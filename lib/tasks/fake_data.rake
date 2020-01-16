@@ -142,7 +142,7 @@ namespace :fake_data do
       Move.create!(
         date: date,
         time_due: time,
-        person: people.sample,
+        profile: people.sample.latest_profile,
         from_location: prisons.sample,
         to_location: courts.sample,
         status: 'requested'
@@ -152,16 +152,16 @@ namespace :fake_data do
 
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
-    if Rails.env.development?
+    if Rails.env.development? || Rails.env.test?
       [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType].each(&:destroy_all)
     else
-      puts 'you can only run this in the development environment'
+      puts 'you can only run this in the development or test environments'
     end
   end
 
   desc 'recreate all the fake data - CAUTION: this deletes all existing data'
   task recreate_all: :environment do
-    if Rails.env.development?
+    if Rails.env.development? || Rails.env.test?
       Rake::Task['fake_data:drop_all'].invoke
       Rake::Task['fake_data:create_identifier_types'].invoke
       Rake::Task['fake_data:create_ethnicities'].invoke
@@ -172,7 +172,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
     else
-      puts 'you can only run this in the development environment'
+      puts 'you can only run this in the development or test environments'
     end
   end
 
