@@ -1084,6 +1084,14 @@ paths:
         example: 00525ecb-7316-492a-aae2-f69334b2a155
         required: true
       responses:
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
         '401':
           description: unauthorised
           schema:
