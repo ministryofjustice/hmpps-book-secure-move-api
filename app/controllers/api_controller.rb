@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class ApiController < ApplicationController
   before_action :doorkeeper_authorize!
   before_action :restrict_request_content_type
@@ -100,7 +99,7 @@ class ApiController < ApplicationController
         title: 'Not authorized',
         detail: exception.to_s
       }] },
-      status: 401
+      status: :unauthorized
     )
   end
 
@@ -122,4 +121,3 @@ class ApiController < ApplicationController
     request.content_type.nil? && (request.get? || request.delete? || request.head?)
   end
 end
-# rubocop:enable Metrics/ClassLength

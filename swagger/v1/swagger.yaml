@@ -774,70 +774,6 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": delete_move_responses.json#/415
-    get:
-      summary: Returns the details of a move
-      tags:
-      - Moves
-      produces:
-      - application/vnd.api+json
-      parameters:
-      - name: Authorization
-        in: header
-        schema:
-          type: string
-          default: Bearer <your-client-token>
-        required: true
-        description: |
-          This is "Bearer ", followed by your OAuth 2 Client token.
-          If you're testing interactively in the web UI, you can ignore this field
-      - name: Content-Type
-        in: header
-        description: Accepted request content type
-        schema:
-          type: string
-          default: application/vnd.api+json
-        required: true
-      - name: moveId
-        in: path
-        description: The ID of the move
-        schema:
-          type: string
-        format: uuid
-        example: 00525ecb-7316-492a-aae2-f69334b2a155
-        required: true
-      responses:
-        '415':
-          description: invalid content type
-          schema:
-            "$ref": "#/definitions/error_responses/415"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/415"
-        '401':
-          description: unauthorised
-          schema:
-            "$ref": "#/definitions/error_responses/401"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/401"
-        '404':
-          description: not found
-          schema:
-            "$ref": "#/definitions/error_responses/404"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/404"
-        '200':
-          description: success
-          schema:
-            "$ref": "#/definitions/get_move_responses/200"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/get_move_responses/200"
   "/moves/{MoveId}/documents":
     post:
       summary: Creates a new document
@@ -1118,3 +1054,65 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": get_supplier_responses.json#/415
+  "/moves/{move_id}":
+    get:
+      summary: Returns the details of a move
+      tags:
+      - RBAC
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+          default: Bearer <your-client-token>
+        required: true
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: move_id
+        in: path
+        description: The ID of the move
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+        required: true
+      responses:
+        '401':
+          description: unauthorised
+          schema:
+            "$ref": "#/definitions/error_responses/401"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/401"
+        '415':
+          description: invalid content type
+          schema:
+            "$ref": "#/definitions/error_responses/415"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/415"
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
+        '200':
+          description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
