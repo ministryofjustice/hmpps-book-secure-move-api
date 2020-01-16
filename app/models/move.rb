@@ -31,7 +31,7 @@ class Move < ApplicationRecord
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :person
+  belongs_to :profile
   has_many :documents, dependent: :destroy
 
   validates :from_location, presence: true
@@ -42,7 +42,7 @@ class Move < ApplicationRecord
   )
   validates :date, presence: true
   validates :move_type, inclusion: { in: move_types }
-  validates :person, presence: true
+  validates :profile, presence: true
   validates :reference, presence: true
   validates :status, inclusion: { in: statuses }
 
@@ -61,7 +61,9 @@ class Move < ApplicationRecord
   end
 
   def existing
-    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    Move.joins(:profile)
+        .merge(Profile.where(person_id: profile.person_id))
+        .find_by(date: date, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
 private

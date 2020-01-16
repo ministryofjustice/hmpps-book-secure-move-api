@@ -65,8 +65,10 @@ module Api
       end
 
       def move_attributes
+        # latest_profile is fine here, as this is used by create/update which should only be allowed
+        # for moves which haven't been completed.
         move_params[:attributes].merge(
-          person: Person.find(move_params.dig(:relationships, :person, :data, :id)),
+          profile: Person.find(move_params.dig(:relationships, :person, :data, :id)).latest_profile,
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
         )
@@ -82,7 +84,7 @@ module Api
 
       def find_move
         Move
-          .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
+          .includes(:from_location, :to_location, profile: %i[gender ethnicity])
           .find(params[:id])
       end
 
