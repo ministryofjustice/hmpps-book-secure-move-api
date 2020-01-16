@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :auth do
   desc 'Create an OAuth2 authorised client application'
   task create_client_application: :environment do
@@ -36,4 +35,3 @@ namespace :auth do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

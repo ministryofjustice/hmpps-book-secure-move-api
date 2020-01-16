@@ -7,6 +7,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
+
   let(:pentonville_supplier) { create :supplier, name: 'pvi supplier' }
   let(:birmingham_supplier) { create :supplier, name: 'hmp supplier' }
   let(:pentonville) { create :location, suppliers: [pentonville_supplier] }
@@ -42,38 +43,61 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
   end
 
-  describe 'GET /moves/{moveId}' do
-    let(:schema) { load_json_schema('get_move_responses.json') }
-
+  path '/moves/{move_id}' do
     let!(:pentonville_move) { create :move, from_location: pentonville }
     let!(:birmingham_move) { create :move, from_location: birmingham }
 
-    let(:pentonville_resource_to_json) do
-      JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
-    end
+    get 'Returns the details of a move' do
+      tags 'RBAC'
+      produces 'application/vnd.api+json'
 
-    context 'when successful' do
-      before do
-        get "/api/v1/moves/#{pentonville_move.id}", headers: headers
+      parameter name: :Authorization,
+                in: :header,
+                schema: {
+                  type: 'string',
+                  default: 'Bearer <your-client-token>'
+                },
+                required: true
+
+      parameter name: 'Content-Type',
+                in: 'header',
+                description: 'Accepted request content type',
+                schema: {
+                  type: 'string',
+                  default: 'application/vnd.api+json'
+                },
+                required: true
+
+      parameter name: :move_id,
+                in: :path,
+                description: 'The ID of the move',
+                schema: {
+                  type: :string
+                },
+                format: 'uuid',
+                example: '00525ecb-7316-492a-aae2-f69334b2a155',
+                required: true
+
+      response '200', 'success' do
+        let(:move_id) { pentonville_move.id }
+        let(:resource_to_json) do
+          JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+        end
+
+        schema "$ref": '#/definitions/get_move_responses/200'
+
+        run_test! do |_example|
+          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
+
+          expect(JSON.parse(response.body)).to eq resource_to_json
+        end
       end
 
-      it_behaves_like 'an endpoint that responds with success 200'
+      response '401', 'unauthorised' do
+        let(:move_id) { birmingham_move.id }
 
-      it 'returns the correct data' do
-        expect(response_json).to eq(pentonville_resource_to_json)
+        it_behaves_like 'a swagger 401 error'
       end
-    end
-
-    context 'when supplier doesn\'t have rights to access the resource' do
-      let(:detail_404) do
-        "Couldn't find Move with 'id'=#{birmingham_move.id} [WHERE (from_location_id IN ('#{pentonville.id}'))]"
-      end
-
-      before do
-        get "/api/v1/moves/#{birmingham_move.id}", headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with error 404'
     end
   end
 
@@ -150,6 +174,102 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       let(:detail_401) { 'You are not authorized to access this page.' }
 
       it_behaves_like 'an endpoint that responds with error 401'
+    end
+  end
+
+  describe 'PATCH /moves' do
+    let(:schema) { load_json_schema('patch_move_responses.json') }
+
+    let!(:pentonville_move) { create :move, from_location: pentonville }
+    let!(:birmingham_move) { create :move, from_location: birmingham }
+
+    let(:move_params) do
+      {
+        type: 'moves',
+        attributes: {
+          status: 'cancelled',
+          additional_information: 'some more info',
+          cancellation_reason: 'other',
+          cancellation_reason_comment: 'some other reason'
+        }
+      }
+    end
+
+    before do
+      patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+    end
+
+    context 'when successful' do
+      let(:move_id) { pentonville_move.id }
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'updates the status of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(pentonville_move.reload.status).to eq 'cancelled'
+      end
+
+      it 'updates the additional_information of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(pentonville_move.reload.additional_information).to eq 'some more info'
+      end
+
+      it 'updates the cancellation_reason of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(pentonville_move.reload.cancellation_reason).to eq 'other'
+      end
+
+      it 'updates the cancellation_reason_comment of a move', skip_before: true do
+        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        expect(pentonville_move.reload.cancellation_reason_comment).to eq 'some other reason'
+      end
+    end
+
+    context 'when supplier doesn\'t have rights to write the resource' do
+      let(:move_id) { birmingham_move.id }
+
+      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id} [WHERE (from_location_id IN ('#{pentonville.id}'))]" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
+  end
+
+  describe 'DELETE /moves/{moveId}' do
+    let(:schema) { load_json_schema('delete_move_responses.json') }
+
+    let!(:pentonville_move) { create :move, from_location: pentonville }
+    let!(:birmingham_move) { create :move, from_location: birmingham }
+
+    before do
+      next if RSpec.current_example.metadata[:skip_before]
+
+      delete "/api/v1/moves/#{move_id}", headers: headers
+    end
+
+    context 'when successful' do
+      let(:resource_to_json) do
+        JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+      end
+      let(:move_id) { pentonville_move.id }
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'deletes the move', skip_before: true do
+        expect { delete "/api/v1/moves/#{move_id}", headers: headers }
+          .to change(Move, :count).by(-1)
+      end
+
+      it 'returns the correct data' do
+        expect(response_json).to eq resource_to_json
+      end
+    end
+
+    context 'when supplier doesn\'t have rights to write the resource' do
+      let(:move_id) { birmingham_move.id }
+
+      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id} [WHERE (from_location_id IN ('#{pentonville.id}'))]" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
   end
 end
