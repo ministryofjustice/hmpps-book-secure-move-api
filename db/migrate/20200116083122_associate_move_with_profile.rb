@@ -12,6 +12,7 @@ class AssociateMoveWithProfile < ActiveRecord::Migration[5.2]
     end
     change_column_null :moves, :profile_id, false
     remove_column :moves, :person_id
+    add_foreign_key :moves, :profiles
   end
   def down
     change_table :moves do |t|
@@ -24,5 +25,6 @@ class AssociateMoveWithProfile < ActiveRecord::Migration[5.2]
     end
     change_column_null :moves, :person_id, false
     remove_column :moves, :profile_id
+    add_foreign_key :moves, :people
   end
 end

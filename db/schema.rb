@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 2020_01_16_083122) do
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
+  add_foreign_key "moves", "profiles"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
