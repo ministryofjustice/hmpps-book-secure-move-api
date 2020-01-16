@@ -10,8 +10,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   let(:pentonville_supplier) { create :supplier, name: 'pvi supplier' }
   let(:birmingham_supplier) { create :supplier, name: 'hmp supplier' }
-  let(:pentonville) { create :location, suppliers: [pentonville_supplier] }
-  let(:birmingham) do
+  let!(:pentonville) { create :location, suppliers: [pentonville_supplier] }
+  let!(:birmingham) do
     create :location,
            key: 'hmp_birmingham', title: 'HMP Birmingham', nomis_agency_id: 'BMI', suppliers: [birmingham_supplier]
   end
@@ -19,8 +19,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   describe 'GET /moves' do
     let(:schema) { load_json_schema('get_moves_responses.json') }
 
-    let!(:pentonville_moves) { create_list :move, 10, from_location: pentonville }
-    let!(:birmingham_moves) { create_list :move, 10, from_location: birmingham }
+    let!(:pentonville) { create :location, :with_moves, suppliers: [pentonville_supplier] }
+    let!(:birmingham) do
+      create :location, :with_moves,
+             key: 'hmp_birmingham', title: 'HMP Birmingham', nomis_agency_id: 'BMI', suppliers: [birmingham_supplier]
+    end
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
@@ -33,7 +36,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
       it 'returns only moves belonging to suppliers' do
         response_ids = response_json['data'].map { |move| move['id'] }.sort
-        data_ids = pentonville_moves.pluck(:id).sort
+        data_ids = pentonville.moves_from.pluck(:id).sort
         expect(response_ids).to eq(data_ids)
       end
 
@@ -106,17 +109,6 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
     let(:move_attributes) { attributes_for(:move) }
     let!(:person) { create(:person) }
-    let(:data) do
-      {
-        type: 'moves',
-        attributes: move_attributes,
-        relationships: {
-          person: { data: { type: 'people', id: person.id } },
-          from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil
-        }
-      }
-    end
     let(:resource_to_json) do
       JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
     end
