@@ -44,8 +44,9 @@ module Moves
 
     def update_nomis_event_ids_when_duplicate(scope)
       items.map do |item|
-        move = scope.find_by(
-          person: Person.where(nomis_prison_number: item[:person_nomis_prison_number]),
+        person = Person.find_by!(nomis_prison_number: item[:person_nomis_prison_number])
+        move_scope = scope.where(profile_id: person.profiles.map(&:id))
+        move = move_scope.find_by(
           to_location: Location.where(nomis_agency_id: item[:to_location_nomis_agency_id])
         )
         move.update(nomis_event_ids: move.nomis_event_ids << item[:nomis_event_id])

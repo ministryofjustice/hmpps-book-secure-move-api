@@ -53,7 +53,8 @@ module Moves
     def import_move(move)
       return if update_move_with_same_nomis_event_id(move)
 
-      new_move = Move.new(move_params(move))
+      person = Person.find_by(nomis_prison_number: move[:person_nomis_prison_number])
+      new_move = person.latest_profile.moves.build(move_params(move))
       existing_move = new_move.existing
 
       if existing_move
@@ -70,7 +71,6 @@ module Moves
 
     def move_params(move)
       move.slice(:date, :time_due, :status, :nomis_event_id).merge(
-        person: Person.find_by(nomis_prison_number: move[:person_nomis_prison_number]),
         from_location: Location.find_by(nomis_agency_id: move[:from_location_nomis_agency_id]),
         to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id])
       )
