@@ -1058,7 +1058,7 @@ paths:
     get:
       summary: Returns the details of a move
       tags:
-      - RBAC
+      - Moves
       produces:
       - application/vnd.api+json
       parameters:
@@ -1068,6 +1068,9 @@ paths:
           type: string
           default: Bearer <your-client-token>
         required: true
+        description: |
+          This is "Bearer ", followed by your OAuth 2 Client token.
+          If you're testing interactively in the web UI, you can ignore this field
       - name: Content-Type
         in: header
         description: Accepted request content type
@@ -1084,14 +1087,14 @@ paths:
         example: 00525ecb-7316-492a-aae2-f69334b2a155
         required: true
       responses:
-        '404':
-          description: not found
+        '200':
+          description: success
           schema:
-            "$ref": "#/definitions/error_responses/404"
+            "$ref": "#/definitions/get_move_responses/200"
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/definitions/error_responses/404"
+                "$ref": "#/definitions/get_move_responses/200"
         '401':
           description: unauthorised
           schema:
@@ -1108,11 +1111,11 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/error_responses/415"
-        '200':
-          description: success
+        '404':
+          description: not found
           schema:
-            "$ref": "#/definitions/get_move_responses/200"
+            "$ref": "#/definitions/error_responses/404"
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/definitions/get_move_responses/200"
+                "$ref": "#/definitions/error_responses/404"
