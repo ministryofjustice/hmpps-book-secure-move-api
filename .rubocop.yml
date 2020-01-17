@@ -37,11 +37,12 @@ RSpec/LetSetup:
 RSpec/LeakyConstantDeclaration:
   Enabled: false
 
-# I think we disagree with GDS over this one
+# This seems very much personal choice, and would alter every string
+# if we switched to the GDS standard.
 Style/StringLiterals:
-  Enabled: false
+  EnforcedStyle: single_quotes
 
-# I think we disagree with GDS on this one too
+# I think we disagree with GDS on this one
 Style/MethodCalledOnDoEndBlock:
   Enabled: false
 

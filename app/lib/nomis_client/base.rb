@@ -2,7 +2,7 @@
 
 module NomisClient
   class Base
-    FIXTURE_DIRECTORY = Rails.root.join "db/fixtures/nomis"
+    FIXTURE_DIRECTORY = Rails.root.join 'db/fixtures/nomis'
     NOMIS_TEST_MODE = 'NOMIS_TEST_MODE'
     MAX_RETRIES = 2
 
