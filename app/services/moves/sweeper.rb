@@ -18,11 +18,13 @@ module Moves
 
     def cancel_outdated_moves!
       update_nomis_event_ids!
-      Move.where(
+      cancelled_moves = Move.where(
         date: date,
         from_location_id: locations.map(&:id),
         nomis_event_ids: [],
-      ).update(status: Move::MOVE_STATUS_CANCELLED)
+      )
+      Rails.logger.info("[Moves::Sweeper] Cancelled #{cancelled_moves.count} moves") if cancelled_moves.any?
+      cancelled_moves.update(status: Move::MOVE_STATUS_CANCELLED)
     end
 
     def current_nomis_event_ids

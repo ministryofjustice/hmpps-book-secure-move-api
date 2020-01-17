@@ -15,7 +15,6 @@ module Alerts
         @alerts.map { |alert| build_alert(alert) },
         ASSESSMENT_ANSWER_CATEGORY,
       )
-      @profile.save!
     end
 
   private
@@ -24,13 +23,16 @@ module Alerts
       assessment_question = find_assessment_question(alert)
 
       Profile::AssessmentAnswer.new(
-        title: alert[:alert_type_description],
+        #  the mapping of these 3 fields is irrelevant because profile.save
+        # calls AssessmentAnswer#copy_question_attributes which overwrites these fields
+        title: assessment_question.title,
+        category: assessment_question.category,
+        key: assessment_question.key,
+
         comments: alert[:comment],
         assessment_question_id: assessment_question.id,
         created_at: alert[:created_at],
         expires_at: alert[:expires_at],
-        category: assessment_question.category,
-        key: assessment_question.key,
         nomis_alert_code: alert.fetch(:alert_code),
         nomis_alert_type: alert.fetch(:alert_type),
         nomis_alert_description: alert[:alert_code_description],
