@@ -23,7 +23,7 @@ module Alerts
         expiredByLastName: Faker::Name.last_name.upcase,
         dateCreated: fake_date_created,
         dateExpires: fake_date_expires,
-        comment: nil
+        comment: nil,
       ).with_indifferent_access
     end
 

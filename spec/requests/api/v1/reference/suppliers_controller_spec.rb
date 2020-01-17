@@ -16,16 +16,16 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
           type: 'suppliers',
           attributes: {
             name: 'Test Supplier 1',
-            key: 'test_supplier_1'
-          }
+            key: 'test_supplier_1',
+          },
         },
         {
           type: 'suppliers',
           attributes: {
             name: 'Test Supplier 2',
-            key: 'test_supplier_2'
-          }
-        }
+            key: 'test_supplier_2',
+          },
+        },
       ]
     end
 
@@ -62,8 +62,8 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
         type: 'suppliers',
         attributes: {
           name: 'Test Supplier 1',
-          key: 'test_supplier_1'
-        }
+          key: 'test_supplier_1',
+        },
       }
     end
 

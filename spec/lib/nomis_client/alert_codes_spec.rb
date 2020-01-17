@@ -13,7 +13,7 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
           description: 'Adult At Risk (Home Office identified)',
           domain: 'ALERT_CODE',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         {
           active_flag: nil,
@@ -21,7 +21,7 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
           description: 'Social Care',
           domain: 'ALERT_CODE',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         {
           active_flag: nil,
@@ -29,7 +29,7 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
           description: 'L1 Restriction No contact with any child',
           domain: 'ALERT_CODE',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         {
           active_flag: nil,
@@ -37,7 +37,7 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
           description: 'L2 Written Contact with Children only',
           domain: 'ALERT_CODE',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         {
           active_flag: nil,
@@ -45,8 +45,8 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
           description: 'L3 Monitored Contact written or phone',
           domain: 'ALERT_CODE',
           parent_code: nil,
-          parent_domain: nil
-        }
+          parent_domain: nil,
+        },
       ]
     end
 

@@ -14,7 +14,7 @@ namespace :fake_data do
         ethnicity: ethnicities.sample,
         gender: genders.sample,
         assessment_answers: fake_assessment_answers,
-        profile_identifiers: fake_profile_identifiers
+        profile_identifiers: fake_profile_identifiers,
       )
     end
   end
@@ -47,7 +47,7 @@ namespace :fake_data do
     { category: :court, title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
     { category: :court, title: 'Any other information',
-      comments: ['Former prison officer'] }
+      comments: ['Former prison officer'] },
   ].freeze
 
   def fake_assessment_answers
@@ -59,14 +59,14 @@ namespace :fake_data do
   def fake_assessment_answer(assessment_answer)
     assessment_question = AssessmentQuestion.where(
       category: assessment_answer[:category],
-      title: assessment_answer[:title]
+      title: assessment_answer[:title],
     ).first
     return [] unless assessment_question
 
     {
       title: assessment_question.title,
       assessment_question_id: assessment_question.id,
-      comments: assessment_answer[:comments].sample
+      comments: assessment_answer[:comments].sample,
     }
   end
 
@@ -74,7 +74,7 @@ namespace :fake_data do
     IDENTIFIER_TYPES.sample(2).map do |identifier_type|
       {
         identifier_type: identifier_type[:id],
-        value: rand(1_000_000).to_s
+        value: rand(1_000_000).to_s,
       }
     end
   end
@@ -85,7 +85,7 @@ namespace :fake_data do
       Location.create!(
         key: title.parameterize(separator: '_'),
         title: title,
-        location_type: :prison
+        location_type: :prison,
       )
     end
   end
@@ -97,7 +97,7 @@ namespace :fake_data do
       Location.create!(
         key: title.parameterize(separator: '_'),
         title: title,
-        location_type: :court
+        location_type: :court,
       )
     end
   end
@@ -145,7 +145,7 @@ namespace :fake_data do
         person: people.sample,
         from_location: prisons.sample,
         to_location: courts.sample,
-        status: 'requested'
+        status: 'requested',
       )
     end
   end
@@ -191,7 +191,7 @@ namespace :fake_data do
     { key: :other_health, category: :health, title: 'Any other requirements' },
     { key: :solicitor, category: :court, title: 'Solicitor or other legal representation' },
     { key: :interpreter, category: :court, title: 'Sign or other language interpreter' },
-    { key: :other_court, category: :court, title: 'Any other information' }
+    { key: :other_court, category: :court, title: 'Any other information' },
   ].freeze
 
   GENDERS = %w[Female Male Trans].freeze
@@ -213,13 +213,13 @@ namespace :fake_data do
     { key: 'O9', title: 'Any other ethnic group', description: 'O9 - Any other ethnic group' },
     { key: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
     { key: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
-    { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' }
+    { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' },
   ].freeze
 
   IDENTIFIER_TYPES = [
     { id: 'police_national_computer', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
     { id: 'prison_number', title: 'Prisoner No', description: 'Prisoner ID used in NOMIS and other systems' },
-    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' }
+    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' },
   ].freeze
 
   TOWN_NAMES = [
@@ -276,7 +276,7 @@ namespace :fake_data do
     'Norwich',
     'Oxford',
     'Wantage',
-    'Guildford'
+    'Guildford',
   ].freeze
 
   PRISON_NAMES = [
@@ -430,6 +430,6 @@ namespace :fake_data do
     'HMP/YOI Hatfield',
     'HMP/YOI Hewell',
     'HMP/YOI Preston',
-    'HMP Hewell Grange'
+    'HMP Hewell Grange',
   ].freeze
 end

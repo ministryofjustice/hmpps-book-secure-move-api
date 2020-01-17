@@ -7,8 +7,8 @@ module NomisClient
         attributes_for(
           NomisClient::Base.get(
             '/agencies',
-            headers: { 'Page-Limit' => '5000' }
-          ).parsed
+            headers: { 'Page-Limit' => '5000' },
+          ).parsed,
         )
       end
 
@@ -18,7 +18,7 @@ module NomisClient
             key: item['agencyId'].parameterize(separator: '_'),
             nomis_agency_id: item['agencyId'],
             title: item['description'],
-            location_type: Location::NOMIS_AGENCY_TYPES[item['agencyType']]
+            location_type: Location::NOMIS_AGENCY_TYPES[item['agencyType']],
           }
         end
       end

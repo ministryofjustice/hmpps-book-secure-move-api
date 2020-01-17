@@ -12,7 +12,7 @@ module NomisClient
       def get_response(nomis_offender_numbers:)
         NomisClient::Base.post(
           '/bookings/offenderNo/alerts',
-          body: nomis_offender_numbers.to_json
+          body: nomis_offender_numbers.to_json,
         ).parsed
       end
 
@@ -28,7 +28,7 @@ module NomisClient
           expires_at: alert['dateExpires'],
           expired: alert['expired'],
           active: alert['active'],
-          offender_no: alert['offenderNo']
+          offender_no: alert['offenderNo'],
         }
       end
     end

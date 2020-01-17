@@ -11,14 +11,14 @@ RSpec.describe Locations::Importer do
         nomis_agency_id: 'ABDRCT',
         key: 'abdrct',
         title: 'Aberdare County Court',
-        location_type: :court
+        location_type: :court,
       },
       {
         nomis_agency_id: 'ACI',
         key: 'aci',
         title: 'ALTCOURSE (HMP)',
-        location_type: :prison
-      }
+        location_type: :prison,
+      },
     ]
   end
 

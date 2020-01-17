@@ -38,26 +38,26 @@ RSpec.describe ApiController, type: :request, with_client_authentication: true d
           title: 'Unprocessable entity',
           detail: "Name can't be blank",
           source: { pointer: '/data/attributes/name' },
-          code: :blank
+          code: :blank,
         },
         {
           title: 'Unprocessable entity',
           detail: 'Status is not included in the list',
           source: { pointer: '/data/attributes/status' },
-          code: :inclusion
+          code: :inclusion,
         },
         {
           title: 'Unprocessable entity',
           detail: "Email can't be blank",
           source: { pointer: '/data/attributes/email' },
-          code: :blank
+          code: :blank,
         },
         {
           title: 'Unprocessable entity',
           detail: 'Email is invalid',
           source: { pointer: '/data/attributes/email' },
-          code: :invalid
-        }
+          code: :invalid,
+        },
       ]
     end
 

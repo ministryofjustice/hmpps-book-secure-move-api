@@ -10,18 +10,18 @@ RSpec.describe Ethnicities::Importer do
       {
         key: 'a1',
         nomis_code: 'A1',
-        title: 'Asian/Asian British: Indian'
+        title: 'Asian/Asian British: Indian',
       },
       {
         key: 'w9',
         nomis_code: 'W9',
-        title: 'White: Any other background'
+        title: 'White: Any other background',
       },
       {
         key: 'merge',
         nomis_code: 'MERGE',
-        title: 'Needs to be confirmed following Merge'
-      }
+        title: 'Needs to be confirmed following Merge',
+      },
     ]
   end
 
@@ -43,7 +43,7 @@ RSpec.describe Ethnicities::Importer do
     it 'creates merge' do
       importer.call
       expect(
-        Ethnicity.find_by(key: 'merge', nomis_code: 'MERGE', title: 'Needs to be confirmed following Merge')
+        Ethnicity.find_by(key: 'merge', nomis_code: 'MERGE', title: 'Needs to be confirmed following Merge'),
       ).to be_present
     end
   end
@@ -53,7 +53,7 @@ RSpec.describe Ethnicities::Importer do
       Ethnicity.create!(
         key: 'w9',
         nomis_code: 'W9',
-        title: 'White: Any other background'
+        title: 'White: Any other background',
       )
     end
 
@@ -67,7 +67,7 @@ RSpec.describe Ethnicities::Importer do
       Ethnicity.create!(
         key: 'w9',
         nomis_code: 'W9',
-        title: 'Other white'
+        title: 'Other white',
       )
     end
 
@@ -83,7 +83,7 @@ RSpec.describe Ethnicities::Importer do
         key: 'merge',
         nomis_code: 'MERGE',
         title: 'Needs to be confirmed following Merge',
-        disabled_at: nil
+        disabled_at: nil,
       )
     end
 

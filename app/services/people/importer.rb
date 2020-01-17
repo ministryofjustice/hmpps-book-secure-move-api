@@ -5,7 +5,7 @@ module People
     PROFILE_IDENTIFIERS_MAPPING = {
       'police_national_computer' => :pnc_number,
       'prison_number' => :prison_number,
-      'criminal_records_office' => :cro_number
+      'criminal_records_office' => :cro_number,
     }.freeze
 
     attr_accessor :nomis_attributes
@@ -28,7 +28,7 @@ module People
         gender_id: find_gender,
         ethnicity_id: find_ethnicity,
         profile_identifiers: profile_identifiers,
-        latest_nomis_booking_id: latest_nomis_booking_id
+        latest_nomis_booking_id: latest_nomis_booking_id,
       )
     end
 

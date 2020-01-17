@@ -19,14 +19,14 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       let(:file) do
         Rack::Test::UploadedFile.new(
           Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
-          'application/msword'
+          'application/msword',
         )
       end
       let(:data) do
         {
           attributes: {
-            file: file
-          }
+            file: file,
+          },
         }
       end
 
@@ -49,8 +49,8 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       let(:data) do
         {
           attributes: {
-            file: nil
-          }
+            file: nil,
+          },
         }
       end
       let(:errors_422) do
@@ -59,8 +59,8 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
             'title' => 'Unprocessable entity',
             'detail' => "File can't be blank",
             'source' => { 'pointer' => '/data/attributes/file' },
-            'code' => "can't be blank"
-          }
+            'code' => "can't be blank",
+          },
         ]
       end
 

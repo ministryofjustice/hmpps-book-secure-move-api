@@ -42,7 +42,7 @@ RSpec.describe PersonSerializer do
       {
         title: risk_alert_type.title,
         comments: 'Former miner',
-        assessment_question_id: risk_alert_type.id
+        assessment_question_id: risk_alert_type.id,
       }
     end
 
@@ -50,7 +50,7 @@ RSpec.describe PersonSerializer do
       {
         title: health_alert_type.title,
         comments: 'Needs something for a headache',
-        assessment_question_id: health_alert_type.id
+        assessment_question_id: health_alert_type.id,
       }
     end
 
@@ -58,7 +58,7 @@ RSpec.describe PersonSerializer do
       {
         title: court_type.title,
         comments: 'Only speaks Spanish',
-        assessment_question_id: court_type.id
+        assessment_question_id: court_type.id,
       }
     end
 
@@ -67,7 +67,7 @@ RSpec.describe PersonSerializer do
       profile.assessment_answers = [
         risk_alert,
         health_alert,
-        court
+        court,
       ]
       profile.save!
     end
@@ -84,12 +84,12 @@ RSpec.describe PersonSerializer do
       [
         {
           value: 'ABC123456',
-          identifier_type: 'police_national_computer'
+          identifier_type: 'police_national_computer',
         },
         {
           value: 'XYZ123456',
-          identifier_type: 'prison_number'
-        }
+          identifier_type: 'prison_number',
+        },
       ]
     end
 
@@ -115,9 +115,9 @@ RSpec.describe PersonSerializer do
           attributes: {
             key: ethnicity&.key,
             title: ethnicity&.title,
-            description: ethnicity&.description
-          }
-        }
+            description: ethnicity&.description,
+          },
+        },
       ]
     end
 
@@ -141,9 +141,9 @@ RSpec.describe PersonSerializer do
           type: 'genders',
           attributes: {
             title: gender&.title,
-            description: gender&.description
-          }
-        }
+            description: gender&.description,
+          },
+        },
       ]
     end
 

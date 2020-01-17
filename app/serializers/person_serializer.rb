@@ -8,7 +8,7 @@ class PersonSerializer < ActiveModel::Serializer
     :date_of_birth,
     :assessment_answers,
     :identifiers,
-    :gender_additional_information
+    :gender_additional_information,
   )
 
   has_one :ethnicity, serializer: EthnicitySerializer

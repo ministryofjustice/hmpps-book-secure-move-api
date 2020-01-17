@@ -29,7 +29,7 @@ RSpec.describe Moves::Anonymiser do
       directionCode: 'IN',
       commentText: 'Comment about the move',
       bookingActiveFlag: true,
-      bookingInOutStatus: 'IN'
+      bookingInOutStatus: 'IN',
     }.with_indifferent_access
   end
 

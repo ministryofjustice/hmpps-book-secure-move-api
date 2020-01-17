@@ -21,8 +21,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               key: 'guildford_crown_court',
               title: 'Guildford Crown Court',
               location_type: 'court',
-              nomis_agency_id: 'GCC'
-            }
+              nomis_agency_id: 'GCC',
+            },
           },
           {
             type: 'locations',
@@ -30,9 +30,9 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               key: 'hmp_pentonville',
               title: 'HMP Pentonville',
               location_type: 'prison',
-              nomis_agency_id: 'PEI'
-            }
-          }
+              nomis_agency_id: 'PEI',
+            },
+          },
         ]
       end
 
@@ -74,8 +74,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
           links: {
             first: '/api/v1/reference/locations?page=1',
             last: '/api/v1/reference/locations?page=2',
-            next: '/api/v1/reference/locations?page=2'
-          }
+            next: '/api/v1/reference/locations?page=2',
+          },
         }
       end
 
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         expect(Locations::Finder).to have_received(:new).with(
           location_type: location.location_type,
           nomis_agency_id: location.nomis_agency_id,
-          supplier_id: supplier.id
+          supplier_id: supplier.id,
         )
       end
 
@@ -145,8 +145,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
           key: 'hmp_pentonville',
           title: 'HMP Pentonville',
           location_type: 'prison',
-          nomis_agency_id: 'PEI'
-        }
+          nomis_agency_id: 'PEI',
+        },
       }
     end
 

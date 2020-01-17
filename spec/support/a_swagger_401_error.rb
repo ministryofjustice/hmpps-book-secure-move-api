@@ -6,8 +6,8 @@ RSpec.shared_examples 'a swagger 401 error' do
     [
       {
         'title' => 'Not authorized',
-        'detail' => 'Token expired or invalid'
-      }
+        'detail' => 'Token expired or invalid',
+      },
     ]
   end
 

@@ -13,7 +13,7 @@ RSpec.describe 'Status', type: :request do
         ClimateControl.modify(
           'APP_BUILD_DATE' => build_date,
           'APP_BUILD_TAG' => build_tag,
-          'APP_GIT_COMMIT' => git_commit
+          'APP_GIT_COMMIT' => git_commit,
         ) do
           example.run
         end
@@ -24,7 +24,7 @@ RSpec.describe 'Status', type: :request do
       it 'returns json containing the applications version information' do
         expect(response.body).to eq(
           { build_date: build_date, commit_id: git_commit,
-            build_tag: build_tag }.to_json
+            build_tag: build_tag }.to_json,
         )
       end
 
@@ -40,7 +40,7 @@ RSpec.describe 'Status', type: :request do
         expect(response.body).to eq(
           { build_date: StatusController::NOT_AVAILABLE,
             commit_id: StatusController::NOT_AVAILABLE,
-            build_tag: StatusController::NOT_AVAILABLE }.to_json
+            build_tag: StatusController::NOT_AVAILABLE }.to_json,
         )
       end
 

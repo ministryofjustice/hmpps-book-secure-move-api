@@ -22,7 +22,7 @@ class Profile
     def as_json
       {
         identifier_type: identifier_type,
-        value: value
+        value: value,
       }
     end
   end

@@ -6,7 +6,7 @@ RSpec.describe Alerts::Importer do
   subject(:importer) do
     described_class.new(
       profile: profile,
-      alerts: alerts
+      alerts: alerts,
     )
   end
 
@@ -25,7 +25,7 @@ RSpec.describe Alerts::Importer do
         expires_at: nil,
         expired: false,
         active: true,
-        rnum: 1
+        rnum: 1,
       },
       {
         alert_id: 2,
@@ -38,8 +38,8 @@ RSpec.describe Alerts::Importer do
         expires_at: nil,
         expired: false,
         active: true,
-        rnum: 2
-      }
+        rnum: 2,
+      },
     ]
   end
   let!(:fallback_assessment_question) { create :assessment_question, key: :other_risks, title: 'Other risks' }
@@ -97,7 +97,7 @@ RSpec.describe Alerts::Importer do
         :nomis_alert,
         type_code: 'X',
         code: 'XVL',
-        assessment_question_id: assessment_question.id
+        assessment_question_id: assessment_question.id,
       )
     end
 

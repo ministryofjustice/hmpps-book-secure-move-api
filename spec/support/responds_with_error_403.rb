@@ -5,8 +5,8 @@ RSpec.shared_examples 'an endpoint that responds with error 403' do
     [
       {
         'title' => 'Forbidden',
-        'detail' => detail_403
-      }
+        'detail' => detail_403,
+      },
     ]
   end
 

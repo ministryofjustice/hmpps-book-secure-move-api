@@ -6,8 +6,8 @@ RSpec.shared_examples 'a swagger 415 error' do
     [
       {
         'title' => 'Invalid Media Type',
-        'detail' => "Content-Type must be #{example.metadata[:operation][:produces].first}"
-      }
+        'detail' => "Content-Type must be #{example.metadata[:operation][:produces].first}",
+      },
     ]
   end
 

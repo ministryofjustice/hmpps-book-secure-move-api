@@ -13,7 +13,7 @@ RSpec.describe NomisAlerts::Importer do
         description: 'Risk',
         domain: 'ALERT',
         parent_domain: nil,
-        active_flag: 'Y'
+        active_flag: 'Y',
       },
       {
         parent_code: nil,
@@ -21,8 +21,8 @@ RSpec.describe NomisAlerts::Importer do
         description: 'Security',
         domain: 'ALERT',
         parent_domain: nil,
-        active_flag: 'Y'
-      }
+        active_flag: 'Y',
+      },
     ]
   end
 
@@ -34,7 +34,7 @@ RSpec.describe NomisAlerts::Importer do
         description: 'Risk to people',
         domain: 'ALERT_CODE',
         parent_domain: 'ALERT',
-        active_flag: 'Y'
+        active_flag: 'Y',
       },
       {
         parent_code: 'R',
@@ -42,8 +42,8 @@ RSpec.describe NomisAlerts::Importer do
         description: 'Risk to animals',
         domain: 'ALERT_CODE',
         parent_domain: 'ALERT',
-        active_flag: 'Y'
-      }
+        active_flag: 'Y',
+      },
     ]
   end
 
@@ -73,7 +73,7 @@ RSpec.describe NomisAlerts::Importer do
         code: 'RDP',
         type_code: 'R',
         description: 'Risk to people',
-        type_description: 'Risk'
+        type_description: 'Risk',
       )
     end
 
@@ -88,7 +88,7 @@ RSpec.describe NomisAlerts::Importer do
         code: 'RDP',
         type_code: 'R',
         description: 'Risk to humans',
-        type_description: 'Risky'
+        type_description: 'Risky',
       )
     end
 

@@ -21,7 +21,7 @@ module People
             .merge(person: Person.new)
             .merge(relationships)
             .merge(assessment_answers)
-            .merge(profile_identifiers)
+            .merge(profile_identifiers),
         )
         profile.save!
       end

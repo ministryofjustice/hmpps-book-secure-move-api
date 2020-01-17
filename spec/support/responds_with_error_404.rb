@@ -5,8 +5,8 @@ RSpec.shared_examples 'an endpoint that responds with error 404' do
     [
       {
         'title' => 'Resource not found',
-        'detail' => detail_404
-      }
+        'detail' => detail_404,
+      },
     ]
   end
 

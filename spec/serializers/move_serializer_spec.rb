@@ -50,8 +50,8 @@ RSpec.describe MoveSerializer do
         {
           id: move.person_id,
           type: 'people',
-          attributes: { first_names: 'Bob', last_name: 'Roberts', date_of_birth: '1980-10-20' }
-        }
+          attributes: { first_names: 'Bob', last_name: 'Roberts', date_of_birth: '1980-10-20' },
+        },
       ]
     end
 
@@ -65,8 +65,8 @@ RSpec.describe MoveSerializer do
       {
         include: {
           from_location: %I[location_type title],
-          to_location: %I[location_type title]
-        }
+          to_location: %I[location_type title],
+        },
       }
     end
     let(:expected_json) do
@@ -74,13 +74,13 @@ RSpec.describe MoveSerializer do
         {
           id: move.from_location_id,
           type: 'locations',
-          attributes: { location_type: 'prison', title: 'HMP Pentonville' }
+          attributes: { location_type: 'prison', title: 'HMP Pentonville' },
         },
         {
           id: move.to_location_id,
           type: 'locations',
-          attributes: { location_type: 'court', title: 'Guildford Crown Court' }
-        }
+          attributes: { location_type: 'court', title: 'Guildford Crown Court' },
+        },
       ]
     end
 

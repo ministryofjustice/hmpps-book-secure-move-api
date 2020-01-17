@@ -14,13 +14,13 @@ RSpec.describe Move do
 
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
-      validate_presence_of(:to_location)
+      validate_presence_of(:to_location),
     )
   end
 
   it 'does NOT validate presence of `to_location` if `move_type` is prison_recall' do
     expect(build(:move, move_type: 'prison_recall')).not_to(
-      validate_presence_of(:to_location)
+      validate_presence_of(:to_location),
     )
   end
 

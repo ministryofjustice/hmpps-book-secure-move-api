@@ -9,7 +9,7 @@ module People
     class << self
       def encrypt_offender_number(offender_number:)
         cipher = ActiveSupport::MessageEncryptor.new(
-          Rails.application.secrets.secret_key_base[0..31]
+          Rails.application.secrets.secret_key_base[0..31],
         )
         cipher.encrypt_and_sign(offender_number)
       end
@@ -44,7 +44,7 @@ module People
         convictedStatus: Nomis::Faker.conviction_status,
         imprisonmentStatus: Nomis::Faker.imprisonment_status,
         receptionDate: nil,
-        maritalStatus: Nomis::Faker.marital_status
+        maritalStatus: Nomis::Faker.marital_status,
       }.with_indifferent_access
     end
 

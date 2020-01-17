@@ -17,7 +17,7 @@ module AssessmentQuestions
       { key: :other_health, category: :health, title: 'Any other requirements' },
       { key: :solicitor, category: :court, title: 'Solicitor or other legal representation' },
       { key: :interpreter, category: :court, title: 'Sign or other language interpreter' },
-      { key: :other_court, category: :court, title: 'Any other information' }
+      { key: :other_court, category: :court, title: 'Any other information' },
     ].freeze
 
     def call

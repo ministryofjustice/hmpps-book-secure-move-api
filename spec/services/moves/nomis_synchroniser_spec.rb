@@ -6,7 +6,7 @@ RSpec.describe Moves::NomisSynchroniser do
   subject(:synchroniser) do
     described_class.new(
       locations: locations,
-      date: date
+      date: date,
     )
   end
 
@@ -71,7 +71,7 @@ RSpec.describe Moves::NomisSynchroniser do
         expect(NomisClient::Moves).to have_received(:get).with(
           locations.map(&:nomis_agency_id),
           Date.today,
-          :courtEvents
+          :courtEvents,
         )
       end
     end

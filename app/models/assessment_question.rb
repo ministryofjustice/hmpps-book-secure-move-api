@@ -7,7 +7,7 @@ class AssessmentQuestion < ApplicationRecord
   enum category: {
     health: 'health',
     risk: 'risk',
-    court: 'court'
+    court: 'court',
   }
 
   validates :category, inclusion: { in: categories }

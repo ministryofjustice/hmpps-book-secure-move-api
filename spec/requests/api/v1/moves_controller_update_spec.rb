@@ -26,8 +26,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           status: 'cancelled',
           additional_information: 'some more info',
           cancellation_reason: 'other',
-          cancellation_reason_comment: 'some other reason'
-        }
+          cancellation_reason_comment: 'some other reason',
+        },
       }
     end
 
@@ -73,8 +73,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           type: 'moves',
           attributes: {
             status: 'cancelled',
-            reference: 'new reference'
-          }
+            reference: 'new reference',
+          },
         }
       end
 
@@ -87,7 +87,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
       it 'does NOT update the reference of a move', skip_before: true do
         expect { patch("/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json) }.not_to(
-          change { move.reload.reference }
+          change { move.reload.reference },
         )
       end
     end
@@ -112,8 +112,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           type: 'moves',
           attributes: {
             status: 'cancelled',
-            reference: 'new reference'
-          }
+            reference: 'new reference',
+          },
         }
       end
 
@@ -138,8 +138,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         {
           type: 'moves',
           attributes: {
-            status: 'invalid'
-          }
+            status: 'invalid',
+          },
         }
       end
 
@@ -149,8 +149,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
             'title' => 'Unprocessable entity',
             'detail' => 'Status is not included in the list',
             'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'inclusion'
-          }
+            'code' => 'inclusion',
+          },
         ]
       end
 

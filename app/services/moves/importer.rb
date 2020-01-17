@@ -45,7 +45,7 @@ module Moves
         person = Person.find_by!(nomis_prison_number: offender_no)
         PersonalCareNeeds::Importer.new(
           profile: person.latest_profile,
-          personal_care_needs: personal_care_needs_attributes
+          personal_care_needs: personal_care_needs_attributes,
         ).call
       end
     end
@@ -72,7 +72,7 @@ module Moves
       move.slice(:date, :time_due, :status, :nomis_event_id).merge(
         person: Person.find_by(nomis_prison_number: move[:person_nomis_prison_number]),
         from_location: Location.find_by(nomis_agency_id: move[:from_location_nomis_agency_id]),
-        to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id])
+        to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id]),
       )
     end
   end

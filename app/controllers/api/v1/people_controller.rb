@@ -27,7 +27,7 @@ module Api
         :date_of_birth,
         :gender_additional_information,
         assessment_answers: [%i[key date expiry_data category title comments assessment_question_id]],
-        identifiers: [%i[value identifier_type]]
+        identifiers: [%i[value identifier_type]],
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
 

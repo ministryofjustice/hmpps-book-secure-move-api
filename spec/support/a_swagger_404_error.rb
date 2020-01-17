@@ -5,8 +5,8 @@ RSpec.shared_examples 'a swagger 404 error' do
     [
       {
         'title' => 'Resource not found',
-        'detail' => detail_404
-      }
+        'detail' => detail_404,
+      },
     ]
   end
 

@@ -94,7 +94,7 @@ RSpec.describe NomisClient::People do
         .with('/prisoners',
               headers: { 'Page-Limit' => nomis_offender_numbers.size.to_s },
               body: { offenderNos: nomis_offender_numbers }.to_json)
-        .and_return(nomis_response)
+        .and_return(nomis_response),
       )
     end
 
@@ -124,7 +124,7 @@ RSpec.describe NomisClient::People do
           gender: 'M',
           ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
           nationalities: 'British',
-          latest_booking_id: 20_305
+          latest_booking_id: 20_305,
         },
         {
           prison_number: 'GV345VG',
@@ -138,7 +138,7 @@ RSpec.describe NomisClient::People do
           gender: 'M',
           ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
           nationalities: 'British',
-          latest_booking_id: 20_305
+          latest_booking_id: 20_305,
         },
         {
           prison_number: 'G3325XX',
@@ -152,8 +152,8 @@ RSpec.describe NomisClient::People do
           gender: 'M',
           ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
           nationalities: 'British',
-          latest_booking_id: 20_305
-        }
+          latest_booking_id: 20_305,
+        },
       ]
     end
 

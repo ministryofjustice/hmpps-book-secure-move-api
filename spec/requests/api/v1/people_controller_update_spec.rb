@@ -26,29 +26,29 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             date_of_birth: Date.civil(1980, 1, 1),
             assessment_answers: [
               { title: 'Escape risk', assessment_question_id: risk_type_1.id },
-              { title: 'Violent', assessment_question_id: risk_type_2.id }
+              { title: 'Violent', assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
               { identifier_type: 'police_national_computer', value: 'ABC123' },
-              { identifier_type: 'prison_number', value: 'XYZ987' }
+              { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
-            gender_additional_information: gender_additional_information
+            gender_additional_information: gender_additional_information,
           },
           relationships: {
             ethnicity: {
               data: {
                 id: ethnicity.id,
-                type: 'ethnicities'
-              }
+                type: 'ethnicities',
+              },
             },
             gender: {
               data: {
                 id: gender.id,
-                type: 'genders'
-              }
-            }
-          }
-        }
+                type: 'genders',
+              },
+            },
+          },
+        },
       }
     end
 
@@ -62,13 +62,13 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
             assessment_answers: [
               { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-              { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
+              { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
               { identifier_type: 'police_national_computer', value: 'ABC123' },
-              { identifier_type: 'prison_number', value: 'XYZ987' }
-            ]
-          }
+              { identifier_type: 'prison_number', value: 'XYZ987' },
+            ],
+          },
         }
       end
 
@@ -131,8 +131,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         {
           data: {
             type: 'people',
-            attributes: { last_name: '' }
-          }
+            attributes: { last_name: '' },
+          },
         }
       end
 
@@ -142,8 +142,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             'title' => 'Unprocessable entity',
             'detail' => "Last name can't be blank",
             'source' => { 'pointer' => '/data/attributes/last_name' },
-            'code' => 'blank'
-          }
+            'code' => 'blank',
+          },
         ]
       end
 
