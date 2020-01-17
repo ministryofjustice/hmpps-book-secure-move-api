@@ -8,7 +8,8 @@ RSpec.describe Moves::Finder do
   let!(:move) { create :move }
   let(:move_id) { move.id }
   let(:filter_params) { {} }
-  let(:ability) { Ability.new }
+  let(:application) { Doorkeeper::Application.new(name: 'test') }
+  let(:ability) { Ability.new(application) }
 
   describe 'filtering' do
     context 'with matching location filter' do

@@ -14,7 +14,7 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
 
   def current_user
-    doorkeeper_token&.application&.owner
+    doorkeeper_token&.application
   end
 
   private
