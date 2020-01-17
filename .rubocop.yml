@@ -56,8 +56,3 @@ Rails/TimeZone:
   Exclude:
     - "spec/**/**/*"
     - "app/services/moves/anonymiser.rb"
-
-# These 3 Style settings would cause a large number of changes. Do we bite the bullet now, or just agree
-# to disagree with the GDS style guidelines?
-Rails/HasManyOrHasOneDependent:
-  Enabled: false
