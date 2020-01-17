@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 namespace :auth do
+  NO_OWNER = 'No owner'
+
   desc 'Create an OAuth2 authorised client application'
   task create_client_application: :environment do
     require 'doorkeeper/orm/active_record/application'
@@ -15,11 +17,11 @@ namespace :auth do
 
     application = Doorkeeper::Application.new(name: name, scopes: scope)
 
-    suppliers = Supplier.all.each_with_object({}) do |s, hsh|
-      hsh[s.name] = s.id
-    end.merge('No owner' => nil)
+    suppliers = Supplier.all.each_with_object({}) do |supplier, accumulator|
+      accumulator[supplier.name] = supplier.id
+    end.merge(NO_OWNER => nil)
     owner_id = prompt.select('Is this application owned by a supplier?', suppliers)
-    if owner_id != 'No owner'
+    if owner_id != NO_OWNER
       owner = Supplier.find(owner_id)
       application.owner = owner
     end
