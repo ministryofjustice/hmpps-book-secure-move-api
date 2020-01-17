@@ -17,7 +17,7 @@ module Moves
       end
     end
 
-    private
+  private
 
     def people_nomis_prison_numbers
       items.map { |item| item[:person_nomis_prison_number] }

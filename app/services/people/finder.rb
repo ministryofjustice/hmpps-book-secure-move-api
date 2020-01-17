@@ -12,7 +12,7 @@ module People
       apply_filters(Person)
     end
 
-    private
+  private
 
     def apply_filters(scope)
       apply_police_national_computer_filters(scope)

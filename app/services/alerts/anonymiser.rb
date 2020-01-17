@@ -13,7 +13,7 @@ module Alerts
       alerts.map { |alert| anonymise_alert(alert) }
     end
 
-    private
+  private
 
     def anonymise_alert(alert)
       alert.merge(

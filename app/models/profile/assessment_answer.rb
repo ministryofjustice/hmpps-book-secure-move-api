@@ -95,7 +95,7 @@ class Profile
       self.created_at ||= Time.zone.now
     end
 
-    private
+  private
 
     def assign_attributes(attributes)
       self.title = attributes[:title]

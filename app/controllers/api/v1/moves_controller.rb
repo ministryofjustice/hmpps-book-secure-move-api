@@ -38,7 +38,7 @@ module Api
         render_move(move, 200)
       end
 
-      private
+    private
 
       PERMITTED_FILTER_PARAMS = %i[
         date_from date_to location_type status from_location_id to_location_id supplier_id

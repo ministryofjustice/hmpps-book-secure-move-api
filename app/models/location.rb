@@ -12,8 +12,9 @@ class Location < ApplicationRecord
   }.freeze
 
   has_and_belongs_to_many :suppliers
-  has_many :moves_from, class_name: 'Move', foreign_key: :from_location_id, inverse_of: :from_location
-  has_many :moves_to, class_name: 'Move', foreign_key: :to_location_id, inverse_of: :to_location
+  # Deleting locations isn't really a thing in practice - so dependent: :destroy is a pragmatic choice
+  has_many :moves_from, class_name: 'Move', foreign_key: :from_location_id, inverse_of: :from_location, dependent: :destroy
+  has_many :moves_to, class_name: 'Move', foreign_key: :to_location_id, inverse_of: :to_location, dependent: :destroy
 
   validates :key, presence: true
   validates :title, presence: true

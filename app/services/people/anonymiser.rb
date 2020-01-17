@@ -50,7 +50,7 @@ module People
 
 
 
-    private
+  private
 
     def prisons
       Location.where(location_type: Location::LOCATION_TYPE_PRISON).all

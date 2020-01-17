@@ -18,7 +18,7 @@ module Alerts
       @profile.save!
     end
 
-    private
+  private
 
     def build_alert(alert)
       assessment_question = find_assessment_question(alert)

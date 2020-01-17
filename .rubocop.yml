@@ -37,23 +37,23 @@ RSpec/LetSetup:
 RSpec/LeakyConstantDeclaration:
   Enabled: false
 
-# I think we disagree with GDS over this one
+# This seems very much personal choice, and would alter every string
+# if we switched to the GDS standard.
 Style/StringLiterals:
-  Enabled: false
+  EnforcedStyle: single_quotes
 
-# I think we disagree with GDS on this one too
+# I think we disagree with GDS on this one
 Style/MethodCalledOnDoEndBlock:
   Enabled: false
 
-#TODO: we have lots of these, and fixing them will create massive noise in the PR
+# don't worry about timezones in tests or during fake data creation
 Rails/Date:
-  Enabled: false
+  Exclude:
+    - "lib/tasks/fake_data.rake"
+    - "spec/**/**/*"
 
-Rails/HasManyOrHasOneDependent:
-  Enabled: false
-
+# The anonymiser isn't production code, and is going away soon
 Rails/TimeZone:
-  Enabled: false
-
-Layout/AccessModifierIndentation:
-  Enabled: false
+  Exclude:
+    - "spec/**/**/*"
+    - "app/services/moves/anonymiser.rb"

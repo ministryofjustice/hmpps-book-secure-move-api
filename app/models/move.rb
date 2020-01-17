@@ -32,7 +32,7 @@ class Move < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person
-  has_many :documents
+  has_many :documents, dependent: :destroy
 
   validates :from_location, presence: true
   validates(
@@ -64,7 +64,7 @@ class Move < ApplicationRecord
     Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
-  private
+private
 
   def set_reference
     self.reference ||= Moves::ReferenceGenerator.new.call

@@ -18,7 +18,7 @@ module Api
         render_person(updater.person, 200)
       end
 
-      private
+    private
 
       PERMITTED_FILTER_PARAMS = [:police_national_computer].freeze
       PERSON_ATTRIBUTES = [

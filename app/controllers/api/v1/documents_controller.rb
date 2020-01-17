@@ -22,7 +22,7 @@ module Api
         render json: document, status: :ok
       end
 
-      private
+    private
 
       PERMITTED_DOCUMENT_PARAMS = [
         attributes: %i[file],
@@ -38,7 +38,7 @@ module Api
         )
       end
 
-      protected
+    protected
 
       def set_restricted_request_content_type
         @restricted_request_content_type = 'multipart/form-data'

@@ -14,7 +14,7 @@ module Api
           render_location(location, 200)
         end
 
-        private
+      private
 
         def find_location
           Location.find(params[:id])

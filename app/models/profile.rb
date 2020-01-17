@@ -26,7 +26,7 @@ class Profile < ApplicationRecord
       new_assessment_answers
   end
 
-  private
+private
 
   def manually_created_assessment_answers
     assessment_answers.reject(&:imported_from_nomis)

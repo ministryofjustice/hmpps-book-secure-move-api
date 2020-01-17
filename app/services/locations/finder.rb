@@ -12,7 +12,7 @@ module Locations
       apply_filters(Location)
     end
 
-    private
+  private
 
     def apply_filters(scope)
       scope = scope.includes(:suppliers)

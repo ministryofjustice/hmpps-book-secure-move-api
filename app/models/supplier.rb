@@ -6,7 +6,7 @@ class Supplier < ApplicationRecord
   validates :name, :key, presence: true, uniqueness: true
   before_validation :ensure_key_has_value
 
-  private
+private
 
   def ensure_key_has_value
     self.key = name.downcase.gsub(' ', '_') if key.blank? && name.present?

@@ -16,7 +16,7 @@ module Api
           render json: supplier, status: :ok
         end
 
-        private
+      private
 
         def find_supplier
           Supplier.find_by(key: params[:id])
