@@ -16,7 +16,7 @@ RSpec.describe Moves::Importer do
         date: '2019-08-19',
         time_due: '2019-08-19T17:00:00',
         status: 'requested',
-        nomis_event_id: move_event_one
+        nomis_event_id: move_event_one,
       },
       {
         person_nomis_prison_number: 'G7157AB',
@@ -25,8 +25,8 @@ RSpec.describe Moves::Importer do
         date: '2019-08-19',
         time_due: '2019-08-19T09:00:00',
         status: 'completed',
-        nomis_event_id: move_event_two
-      }
+        nomis_event_id: move_event_two,
+      },
     ]
   end
 

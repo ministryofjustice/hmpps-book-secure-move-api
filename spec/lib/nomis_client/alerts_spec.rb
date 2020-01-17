@@ -19,7 +19,7 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
           expires_at: '2018-06-08',
           expired: true,
           active: false,
-          offender_no: 'A9127EK'
+          offender_no: 'A9127EK',
         },
         {
           alert_id: 11,
@@ -32,8 +32,8 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
           expires_at: '2019-01-07',
           expired: false,
           active: true,
-          offender_no: 'C9127XK'
-        }
+          offender_no: 'C9127XK',
+        },
       ]
     end
 

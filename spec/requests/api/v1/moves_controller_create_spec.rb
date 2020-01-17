@@ -27,8 +27,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         relationships: {
           person: { data: { type: 'people', id: person.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil
-        }
+          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+        },
       }
     end
 
@@ -64,8 +64,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
             attributes: move_attributes.merge(move_type: nil),
             relationships: {
               person: { data: { type: 'people', id: person.id } },
-              from_location: { data: { type: 'locations', id: from_location.id } }
-            }
+              from_location: { data: { type: 'locations', id: from_location.id } },
+            },
           }
         end
 
@@ -129,14 +129,14 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
             'title' => 'Unprocessable entity',
             'detail' => "Date can't be blank",
             'source' => { 'pointer' => '/data/attributes/date' },
-            'code' => 'blank'
+            'code' => 'blank',
           },
           {
             'title' => 'Unprocessable entity',
             'detail' => 'Status is not included in the list',
             'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'inclusion'
-          }
+            'code' => 'inclusion',
+          },
         ]
       end
 

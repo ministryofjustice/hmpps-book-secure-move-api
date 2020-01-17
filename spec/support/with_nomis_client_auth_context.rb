@@ -12,7 +12,7 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
       post: oauth2_response,
       expires?: true,
       refresh!: true,
-      expires_at: token_expires_at
+      expires_at: token_expires_at,
     )
   end
   let(:oauth2_response) do
@@ -20,7 +20,7 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
       'OAuth2::Response',
       body: response_body,
       parsed: response_json,
-      status: response_status
+      status: response_status,
     )
   end
 

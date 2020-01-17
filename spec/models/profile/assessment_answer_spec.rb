@@ -20,7 +20,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       nomis_alert_type: nil,
       nomis_alert_description: nil,
       nomis_alert_type_description: nil,
-      imported_from_nomis: false
+      imported_from_nomis: false,
     }
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       let(:attribute_values) do
         {
           title: title,
-          comments: 'just a test'
+          comments: 'just a test',
         }
       end
 
@@ -41,7 +41,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     context 'with an assessment_question_id' do
       let(:attribute_values) do
         {
-          assessment_question_id: 123
+          assessment_question_id: 123,
         }
       end
 
@@ -54,7 +54,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       let(:attribute_values) do
         {
           assessment_question_id: 123,
-          imported_from_nomis: true
+          imported_from_nomis: true,
         }
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       let(:attribute_values) do
         {
           nomis_alert_type: 'A',
-          nomis_alert_code: 'ABC'
+          nomis_alert_code: 'ABC',
         }
       end
 
@@ -137,7 +137,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         nomis_alert_type: nil,
         nomis_alert_description: nil,
         nomis_alert_type_description: nil,
-        imported_from_nomis: false
+        imported_from_nomis: false,
       }
     end
 
@@ -167,7 +167,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
         created_at: initial_date,
-        expires_at: initial_expiry_date
+        expires_at: initial_expiry_date,
       }
     end
 

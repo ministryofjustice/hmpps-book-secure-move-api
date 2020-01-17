@@ -6,7 +6,7 @@ RSpec.describe PersonalCareNeeds::Importer do
   subject(:importer) do
     described_class.new(
       profile: profile,
-      personal_care_needs: personal_care_needs
+      personal_care_needs: personal_care_needs,
     )
   end
 
@@ -20,8 +20,8 @@ RSpec.describe PersonalCareNeeds::Importer do
         problem_status: 'ON',
         problem_description: 'Preg, acc under 9mths',
         start_date: '2010-06-21',
-        end_date: '2010-06-21'
-      }
+        end_date: '2010-06-21',
+      },
     ]
   end
 

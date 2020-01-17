@@ -8,7 +8,7 @@ class Location < ApplicationRecord
   NOMIS_AGENCY_TYPES = {
     'INST' => LOCATION_TYPE_PRISON,
     'CRT' => LOCATION_TYPE_COURT,
-    'POLICE' => LOCATION_TYPE_POLICE
+    'POLICE' => LOCATION_TYPE_POLICE,
   }.freeze
 
   has_and_belongs_to_many :suppliers

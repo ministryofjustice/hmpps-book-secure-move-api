@@ -7,8 +7,8 @@ module NomisClient
         attributes_for(
           NomisClient::Base.get(
             '/reference-domains/domains/SEX',
-            headers: { 'Page-Limit' => '1000' }
-          ).parsed
+            headers: { 'Page-Limit' => '1000' },
+          ).parsed,
         )
       end
 

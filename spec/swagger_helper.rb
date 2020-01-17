@@ -33,33 +33,33 @@ RSpec.configure do |config|
       info: {
         title: 'PECS4 API V1 Docs',
         version: 'v1',
-        description: 'Book A Secure Move supplier and frontend API.'
+        description: 'Book A Secure Move supplier and frontend API.',
       },
       consumes: [
-        'application/vnd.api+json'
+        'application/vnd.api+json',
       ],
       servers: [
         {
           url: 'http://localhost:3000/api/v1',
-          description: 'Local development (localhost)'
+          description: 'Local development (localhost)',
         },
         {
           url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
-          description: 'Staging API'
+          description: 'Staging API',
         },
         {
           url: 'https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
-          description: 'PreProd API'
+          description: 'PreProd API',
         },
         {
           url: 'https://api.bookasecuremove.service.justice.gov.uk/api/v1',
-          description: 'Production API'
-        }
+          description: 'Production API',
+        },
       ],
       security: [
         {
-          oauth2: []
-        }
+          oauth2: [],
+        },
       ],
       components: {
         securitySchemes: {
@@ -69,11 +69,11 @@ RSpec.configure do |config|
               clientCredentials: {
                 authorizationUrl: '/oauth/authorize',
                 tokenUrl: '/oauth/token/',
-                scopes: {}
-              }
-            }
-          }
-        }
+                scopes: {},
+              },
+            },
+          },
+        },
       },
       definitions: {
         location_reference: load_swagger_json('location_reference.json'),
@@ -81,10 +81,10 @@ RSpec.configure do |config|
         move: load_swagger_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
         errors: load_swagger_json('errors.json'),
-        error_responses: load_swagger_json('error_responses.json')
+        error_responses: load_swagger_json('error_responses.json'),
       },
-      paths: load_swagger_json('hand_coded_paths.json')
-    }
+      paths: load_swagger_json('hand_coded_paths.json'),
+    },
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
@@ -102,8 +102,8 @@ RSpec.configure do |config|
       # See https://github.com/rswag/rswag/issues/268
       example.metadata[:response][:content] = {
         example.metadata[:operation][:produces].first => {
-          schema: example.metadata[:response][:schema]
-        }
+          schema: example.metadata[:response][:schema],
+        },
       }
 
       # Save actual responses as examples for Swagger UI

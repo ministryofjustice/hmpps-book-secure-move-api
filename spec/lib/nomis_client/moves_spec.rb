@@ -69,7 +69,7 @@ RSpec.describe NomisClient::Moves do
         toDateTime: '2019-07-09T00:00:00',
         movements: false,
         releaseEvents: false,
-        transferEvents: false
+        transferEvents: false,
       }
     end
 
@@ -79,9 +79,9 @@ RSpec.describe NomisClient::Moves do
         .with(
           '/movements/transfers?agencyId=LEI',
           params: params.except(:agencyId),
-          headers: { 'Page-Limit' => '500' }
+          headers: { 'Page-Limit' => '500' },
         )
-        .and_return(nomis_response)
+        .and_return(nomis_response),
       )
     end
 
@@ -103,7 +103,7 @@ RSpec.describe NomisClient::Moves do
           date: '2019-08-19',
           time_due: '2019-08-19T17:00:00',
           status: 'requested',
-          nomis_event_id: 468_536_961
+          nomis_event_id: 468_536_961,
         },
         {
           person_nomis_prison_number: 'G7157AB',
@@ -112,8 +112,8 @@ RSpec.describe NomisClient::Moves do
           date: '2019-08-19',
           time_due: '2019-08-19T09:00:00',
           status: 'completed',
-          nomis_event_id: 487_463_210
-        }
+          nomis_event_id: 487_463_210,
+        },
       ]
     end
 

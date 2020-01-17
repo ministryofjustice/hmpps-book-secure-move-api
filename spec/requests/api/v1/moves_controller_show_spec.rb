@@ -16,7 +16,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 in: :header,
                 schema: {
                   type: 'string',
-                  default: 'Bearer <your-client-token>'
+                  default: 'Bearer <your-client-token>',
                 },
                 required: true,
                 description: <<~DESCRIPTION
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 description: 'Accepted request content type',
                 schema: {
                   type: 'string',
-                  default: 'application/vnd.api+json'
+                  default: 'application/vnd.api+json',
                 },
                 required: true
 
@@ -37,7 +37,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 in: :path,
                 description: 'The ID of the move',
                 schema: {
-                  type: :string
+                  type: :string,
                 },
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',

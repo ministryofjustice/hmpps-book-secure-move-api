@@ -22,7 +22,7 @@ RSpec.describe Moves::Sweeper do
         date: '2019-09-15',
         time_due: '2019-08-19T17:00:00',
         status: 'requested',
-        nomis_event_id: 468_536_961
+        nomis_event_id: 468_536_961,
       },
       {
         person_nomis_prison_number: 'G7157AB',
@@ -31,8 +31,8 @@ RSpec.describe Moves::Sweeper do
         date: '2019-09-15',
         time_due: '2019-08-19T09:00:00',
         status: 'completed',
-        nomis_event_id: 487_463_210
-      }
+        nomis_event_id: 487_463_210,
+      },
     ]
   end
 
@@ -55,7 +55,7 @@ RSpec.describe Moves::Sweeper do
           nomis_event_ids: [attributes[:nomis_event_id]],
           person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
           from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
-          to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id])
+          to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id]),
         )
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe Moves::Sweeper do
             date: '2019-09-15',
             time_due: '2019-08-19T17:00:00',
             status: 'requested',
-            nomis_event_id: 468_536_961
+            nomis_event_id: 468_536_961,
           },
           {
             person_nomis_prison_number: 'G7157AB',
@@ -96,7 +96,7 @@ RSpec.describe Moves::Sweeper do
             date: '2019-09-15',
             time_due: '2019-08-19T09:00:00',
             status: 'completed',
-            nomis_event_id: 487_463_210
+            nomis_event_id: 487_463_210,
           },
           {
             person_nomis_prison_number: 'G3239GV',
@@ -105,8 +105,8 @@ RSpec.describe Moves::Sweeper do
             date: '2019-09-15',
             time_due: '2019-08-19T17:00:00',
             status: 'requested',
-            nomis_event_id: 468_536_962
-          }
+            nomis_event_id: 468_536_962,
+          },
         ]
       end
 
@@ -135,8 +135,8 @@ RSpec.describe Moves::Sweeper do
             date: '2019-09-15',
             time_due: '2019-08-19T17:00:00',
             status: 'requested',
-            nomis_event_id: 468_536_961
-          }
+            nomis_event_id: 468_536_961,
+          },
         ]
       end
       let(:outdated_move) do
@@ -151,7 +151,7 @@ RSpec.describe Moves::Sweeper do
           person: prisoner_two,
           status: 'requested',
           time_due: '2019-08-19 08:00:00',
-          nomis_event_ids: [487_463_210]
+          nomis_event_ids: [487_463_210],
         )
       end
 

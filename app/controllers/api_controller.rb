@@ -20,10 +20,10 @@ class ApiController < ApplicationController
         errors: [
           {
             title: 'Not authorized',
-            detail: 'Token expired or invalid'
-          }
-        ]
-      }
+            detail: 'Token expired or invalid',
+          },
+        ],
+      },
     }
   end
 
@@ -45,9 +45,9 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Bad request',
-        detail: exception.to_s
+        detail: exception.to_s,
       }] },
-      status: :bad_request
+      status: :bad_request,
     )
   end
 
@@ -55,9 +55,9 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: exception.to_s
+        detail: exception.to_s,
       }] },
-      status: :not_found
+      status: :not_found,
     )
   end
 
@@ -65,16 +65,16 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Invalid Media Type',
-        detail: "Content-Type must be #{restricted_request_content_type}"
+        detail: "Content-Type must be #{restricted_request_content_type}",
       }] },
-      status: :unsupported_media_type
+      status: :unsupported_media_type,
     )
   end
 
   def render_unprocessable_entity_error(exception)
     render(
       json: { errors: validation_errors(exception.record.errors) },
-      status: :unprocessable_entity
+      status: :unprocessable_entity,
     )
   end
 
@@ -82,9 +82,9 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Forbidden',
-        detail: exception.to_s
+        detail: exception.to_s,
       }] },
-      status: :forbidden
+      status: :forbidden,
     )
   end
 
@@ -95,7 +95,7 @@ class ApiController < ApplicationController
           title: 'Unprocessable entity',
           detail: "#{field} #{errors[field][index]}".humanize,
           source: { pointer: "/data/attributes/#{field}" },
-          code: errors.details[field][index][:error]
+          code: errors.details[field][index][:error],
         }
       end
     end

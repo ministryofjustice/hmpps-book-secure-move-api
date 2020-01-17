@@ -16,7 +16,7 @@ module NomisClient
       def get_response(nomis_offender_numbers:)
         NomisClient::Base.post(
           "/bookings/offenderNo/personal-care-needs?type=#{PERSONAL_CARE_TYPES}",
-          body: nomis_offender_numbers.to_json
+          body: nomis_offender_numbers.to_json,
         ).parsed
       end
 
@@ -28,7 +28,7 @@ module NomisClient
           problem_status: personal_care_need['problemStatus'],
           problem_description: personal_care_need['problemDescription'],
           start_date: personal_care_need['startDate'],
-          end_date: personal_care_need['endDate']
+          end_date: personal_care_need['endDate'],
         }
       end
     end

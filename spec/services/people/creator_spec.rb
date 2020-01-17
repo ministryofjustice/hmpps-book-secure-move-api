@@ -11,8 +11,8 @@ RSpec.describe People::Creator do
       attributes: {
         first_names: 'Bob',
         last_name: 'Roberts',
-        date_of_birth: Date.civil(1980, 1, 1)
-      }
+        date_of_birth: Date.civil(1980, 1, 1),
+      },
     }
   end
 
@@ -56,22 +56,22 @@ RSpec.describe People::Creator do
         attributes: {
           first_names: 'Bob',
           last_name: 'Roberts',
-          date_of_birth: Date.civil(1980, 1, 1)
+          date_of_birth: Date.civil(1980, 1, 1),
         },
         relationships: {
           ethnicity: {
             data: {
               id: ethnicity.id,
-              type: 'ethnicities'
-            }
+              type: 'ethnicities',
+            },
           },
           gender: {
             data: {
               id: gender.id,
-              type: 'genders'
-            }
-          }
-        }
+              type: 'genders',
+            },
+          },
+        },
       }
     end
 
@@ -98,7 +98,7 @@ RSpec.describe People::Creator do
     let(:params) do
       {
         type: 'people',
-        attributes: { first_names: 'Bob' }
+        attributes: { first_names: 'Bob' },
       }
     end
 

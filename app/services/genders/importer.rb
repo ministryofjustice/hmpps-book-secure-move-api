@@ -5,7 +5,7 @@ module Genders
     VISIBLE_GENDERS = [
       { key: 'female', nomis_code: 'F', title: 'Female', disabled_at: nil },
       { key: 'male', nomis_code: 'M', title: 'Male', disabled_at: nil },
-      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil }
+      { key: 'trans', nomis_code: nil, title: 'Trans', disabled_at: nil },
     ].freeze
 
     attr_accessor :additional_items

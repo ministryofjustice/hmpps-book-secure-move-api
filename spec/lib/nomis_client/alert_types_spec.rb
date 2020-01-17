@@ -13,7 +13,7 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
           description: 'Social Care',
           domain: 'ALERT',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         {
           active_flag: 'Y',
@@ -21,8 +21,8 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
           description: 'Child Communication Measures',
           domain: 'ALERT',
           parent_code: nil,
-          parent_domain: nil
-        }
+          parent_domain: nil,
+        },
       ]
     end
 
@@ -46,7 +46,7 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
           description: 'Social Care',
           domain: 'ALERT',
           parent_code: nil,
-          parent_domain: nil
+          parent_domain: nil,
         },
         C: {
           active_flag: 'Y',
@@ -54,8 +54,8 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
           description: 'Child Communication Measures',
           domain: 'ALERT',
           parent_code: nil,
-          parent_domain: nil
-        }
+          parent_domain: nil,
+        },
       }
     end
 

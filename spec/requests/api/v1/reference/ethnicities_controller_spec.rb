@@ -17,17 +17,17 @@ RSpec.describe Api::V1::Reference::EthnicitiesController, with_client_authentica
           attributes: {
             key: 'W1',
             title: 'White British',
-            description: 'W1 - White British'
-          }
+            description: 'W1 - White British',
+          },
         },
         {
           type: 'ethnicities',
           attributes: {
             key: 'A1',
             title: 'Asian or Asian British (Indian)',
-            description: 'A1 - Asian or Asian British (Indian)'
-          }
-        }
+            description: 'A1 - Asian or Asian British (Indian)',
+          },
+        },
       ]
     end
 

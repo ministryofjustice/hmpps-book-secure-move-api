@@ -8,25 +8,25 @@ class Move < ApplicationRecord
   NOMIS_STATUS_TYPES = {
     'SCH' => MOVE_STATUS_REQUESTED,
     'EXP' => MOVE_STATUS_REQUESTED,
-    'COMP' => MOVE_STATUS_COMPLETED
+    'COMP' => MOVE_STATUS_COMPLETED,
   }.freeze
 
   enum status: {
     requested: MOVE_STATUS_REQUESTED,
     completed: MOVE_STATUS_COMPLETED,
-    cancelled: MOVE_STATUS_CANCELLED
+    cancelled: MOVE_STATUS_CANCELLED,
   }
 
   enum move_type: {
     court_appearance: 'court_appearance',
     prison_recall: 'prison_recall',
-    prison_transfer: 'prison_transfer'
+    prison_transfer: 'prison_transfer',
   }
 
   enum cancellation_reason: {
     made_in_error: 'made_in_error',
     supplier_declined_to_move: 'supplier_declined_to_move',
-    other: 'other'
+    other: 'other',
   }
 
   belongs_to :from_location, class_name: 'Location'
@@ -38,7 +38,7 @@ class Move < ApplicationRecord
   validates(
     :to_location,
     presence: true,
-    unless: ->(move) { move.move_type == 'prison_recall' }
+    unless: ->(move) { move.move_type == 'prison_recall' },
   )
   validates :date, presence: true
   validates :move_type, inclusion: { in: move_types }

@@ -113,7 +113,7 @@ module NomisAlerts
       'XYA' => nil,
       'SE' => nil,
       'XSC' => nil,
-      'F1' => nil
+      'F1' => nil,
     }.freeze
 
     def initialize(alert_codes:)
@@ -141,7 +141,7 @@ module NomisAlerts
       record.update!(
         description: alert[:description],
         type_description: alert_type[:description],
-        assessment_question: assessment_question_mapping(alert[:code])
+        assessment_question: assessment_question_mapping(alert[:code]),
       )
     end
 

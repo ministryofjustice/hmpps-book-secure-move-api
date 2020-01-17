@@ -23,7 +23,7 @@ RSpec.describe AssessmentQuestions::Importer do
     it 'creates `Interpreter`' do
       importer.call
       expect(
-        AssessmentQuestion.find_by(key: 'interpreter', category: 'court', title: 'Sign or other language interpreter')
+        AssessmentQuestion.find_by(key: 'interpreter', category: 'court', title: 'Sign or other language interpreter'),
       ).to be_present
     end
   end

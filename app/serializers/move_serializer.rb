@@ -13,6 +13,6 @@ class MoveSerializer < ActiveModel::Serializer
     person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender],
     from_location: %i[location_type description],
     to_location: %i[location_type description],
-    documents: %i[url filename filesize content_type]
+    documents: %i[url filename filesize content_type],
   }.freeze
 end

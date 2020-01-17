@@ -18,14 +18,14 @@ RSpec.describe Profile, type: :model do
       {
         person: create(:person),
         first_names: 'Bob',
-        last_name: 'Roberts'
+        last_name: 'Roberts',
       }
     end
 
     context 'with a valid assessment answer' do
       before do
         profile.assessment_answers = [
-          { assessment_question_id: assessment_question.id }
+          { assessment_question_id: assessment_question.id },
         ]
       end
 
@@ -39,7 +39,7 @@ RSpec.describe Profile, type: :model do
     context 'with an invalid assessment answer' do
       before do
         profile.assessment_answers = [
-          { key: 'foo' }
+          { key: 'foo' },
         ]
       end
 
@@ -56,8 +56,8 @@ RSpec.describe Profile, type: :model do
       [
         {
           value: 'ABC123456',
-          identifier_type: 'police_national_computer'
-        }
+          identifier_type: 'police_national_computer',
+        },
       ]
     end
 
@@ -95,8 +95,8 @@ RSpec.describe Profile, type: :model do
           nomis_alert_type: nil,
           nomis_alert_description: nil,
           nomis_alert_type_description: nil,
-          imported_from_nomis: false
-        }
+          imported_from_nomis: false,
+        },
       ]
     end
     let(:expected_attributes) do
@@ -129,7 +129,7 @@ RSpec.describe Profile, type: :model do
         Profile::AssessmentAnswer.new(
           key: 'hold_separately',
           imported_from_nomis: false,
-          category: 'risk'
+          category: 'risk',
         ),
         Profile::AssessmentAnswer.new(
           key: 'ABC',
@@ -137,7 +137,7 @@ RSpec.describe Profile, type: :model do
           nomis_alert_type: 'A',
           nomis_alert_code: 'ABC',
           description: 'NOMIS imported item A',
-          category: 'risk'
+          category: 'risk',
         ),
         Profile::AssessmentAnswer.new(
           key: 'XYZ',
@@ -145,13 +145,13 @@ RSpec.describe Profile, type: :model do
           nomis_alert_type: 'X',
           nomis_alert_code: 'XYZ',
           description: 'NOMIS imported item X',
-          category: 'health'
+          category: 'health',
         ),
         Profile::AssessmentAnswer.new(
           key: 'not_for_release',
           imported_from_nomis: false,
-          category: 'health'
-        )
+          category: 'health',
+        ),
       ]
     end
 
@@ -163,7 +163,7 @@ RSpec.describe Profile, type: :model do
           nomis_alert_type: 'D',
           nomis_alert_code: 'DEF',
           description: 'NOMIS imported item #2',
-          category: 'health'
+          category: 'health',
         ),
         Profile::AssessmentAnswer.new(
           key: 'HIJ',
@@ -171,8 +171,8 @@ RSpec.describe Profile, type: :model do
           nomis_alert_type: 'H',
           nomis_alert_code: 'HIJ',
           description: 'NOMIS imported item #3',
-          category: 'health'
-        )
+          category: 'health',
+        ),
       ]
     end
     let(:category) { 'health' }
@@ -183,7 +183,7 @@ RSpec.describe Profile, type: :model do
 
     it 'overwrites previously imported answers and leaves other as they were' do
       expect(profile.assessment_answers.map(&:key)).to match_array(
-        %w[not_for_release hold_separately ABC DEF HIJ]
+        %w[not_for_release hold_separately ABC DEF HIJ],
       )
     end
   end

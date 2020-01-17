@@ -14,7 +14,7 @@ class Profile
       :nomis_alert_type,
       :nomis_alert_description,
       :nomis_alert_type_description,
-      :imported_from_nomis
+      :imported_from_nomis,
     )
 
     attr_accessor(
@@ -27,7 +27,7 @@ class Profile
       :nomis_alert_type,
       :nomis_alert_description,
       :nomis_alert_type_description,
-      :imported_from_nomis
+      :imported_from_nomis,
     )
     attr_reader :created_at, :expires_at
 
@@ -66,7 +66,7 @@ class Profile
         nomis_alert_code: nomis_alert_code,
         nomis_alert_type_description: nomis_alert_type_description,
         nomis_alert_description: nomis_alert_description,
-        imported_from_nomis: imported_from_nomis
+        imported_from_nomis: imported_from_nomis,
       }
     end
 

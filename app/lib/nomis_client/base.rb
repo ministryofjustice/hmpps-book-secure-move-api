@@ -37,7 +37,7 @@ module NomisClient
           site: ENV['NOMIS_SITE'],
           auth_scheme: ENV['NOMIS_AUTH_SCHEME'],
           token_url: "#{ENV['NOMIS_AUTH_PATH_PREFIX']}/oauth/token",
-          raise_errors: true
+          raise_errors: true,
         )
       end
 
@@ -68,8 +68,8 @@ module NomisClient
           headers:
           {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         }.deep_merge(params)
       end
     end

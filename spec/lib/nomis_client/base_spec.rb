@@ -138,7 +138,7 @@ RSpec.describe NomisClient::Base do
                            body: { offenderNos: %w[G3239GV] }.to_json,
                            headers: {
                              'Accept': 'application/json',
-                             'Content-Type': 'application/json'
+                             'Content-Type': 'application/json',
                            })
     end
     let(:api_endpoint) { '/prisoners' }

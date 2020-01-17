@@ -28,7 +28,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           {
             bar: 'bar',
             from_location_id: from_location_id,
-            foo: 'foo'
+            foo: 'foo',
           }
         end
         let(:params) { { filter: filters } }
@@ -57,7 +57,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
-            from_location_id: from_location_id
+            from_location_id: from_location_id,
           }
         end
         let(:params) { { filter: filters } }
@@ -70,10 +70,10 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 id: move.id,
                 attributes: {
                   cancellation_reason: move.cancellation_reason,
-                  cancellation_reason_comment: move.cancellation_reason_comment
-                }
-              }
-            ]
+                  cancellation_reason_comment: move.cancellation_reason_comment,
+                },
+              },
+            ],
           )
         end
         # rubocop:enable RSpec/ExampleLength
@@ -88,8 +88,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
             links: {
               first: '/api/v1/moves?page=1',
               last: '/api/v1/moves?page=2',
-              next: '/api/v1/moves?page=2'
-            }
+              next: '/api/v1/moves?page=2',
+            },
           }
         end
 
@@ -120,7 +120,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:filters) do
           {
             from_location_id: from_location.id,
-            date_from: date.to_s
+            date_from: date.to_s,
           }
         end
         let(:params) { { filter: filters } }
@@ -148,7 +148,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:filters) do
           {
             from_location_id: from_location.id,
-            date_from: 'yyyy-09-Tu'
+            date_from: 'yyyy-09-Tu',
           }
         end
         let(:params) { { filter: filters } }
@@ -170,7 +170,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:from_location) { moves.first.from_location }
         let(:filters) do
           {
-            from_location_id: from_location.id
+            from_location_id: from_location.id,
           }
         end
         let(:params) { { filter: filters } }
@@ -199,7 +199,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:filters) do
           {
             from_location_id: from_location.id,
-            date_from: date.to_s
+            date_from: date.to_s,
           }
         end
         let(:params) { { filter: filters } }

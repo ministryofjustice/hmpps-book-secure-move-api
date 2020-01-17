@@ -43,7 +43,7 @@ namespace :nomis_fixtures do
         NomisClient::Moves.get_response(
           nomis_agency_id: nomis_agency_id,
           date: date,
-          event_type: :courtEvents
+          event_type: :courtEvents,
         )
         break
       rescue Faraday::TimeoutError
@@ -53,7 +53,7 @@ namespace :nomis_fixtures do
         moves.map do |move|
           real_offender_number = move['offenderNo']
           person_response = NomisClient::People.get_response(
-            nomis_offender_number: real_offender_number
+            nomis_offender_number: real_offender_number,
           )
           if person_response.empty?
             puts "Can't find person #{real_offender_number}"
@@ -70,17 +70,17 @@ namespace :nomis_fixtures do
             puts "Anonymising #{nomis_offender_number}..."
 
             alerts_response = NomisClient::Alerts.get_response(
-              nomis_offender_number: real_offender_number
+              nomis_offender_number: real_offender_number,
             ).parsed
             anonymised_alerts_response = Alerts::Anonymiser.new(
               nomis_offender_number: nomis_offender_number,
-              alerts: alerts_response
+              alerts: alerts_response,
             ).call
             save_alerts_response(anonymised_alerts_response, nomis_offender_number)
 
             Moves::Anonymiser.new(
               nomis_offender_number: nomis_offender_number,
-              move: move
+              move: move,
             ).call
           end
         end.compact

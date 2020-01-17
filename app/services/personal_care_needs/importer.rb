@@ -15,7 +15,7 @@ module PersonalCareNeeds
     def call
       profile.merge_assessment_answers!(
         personal_care_needs.map { |personal_care_need| build(personal_care_need) },
-        ASSESSMENT_ANSWER_CATEGORY
+        ASSESSMENT_ANSWER_CATEGORY,
       )
       profile.save!
     end
@@ -35,14 +35,14 @@ module PersonalCareNeeds
         nomis_alert_code: personal_care_need.fetch(:problem_code),
         nomis_alert_type: personal_care_need.fetch(:problem_type),
         nomis_alert_description: personal_care_need[:problem_description],
-        imported_from_nomis: true
+        imported_from_nomis: true,
       ).tap(&:set_timestamps)
     end
 
     def find_assessment_question(personal_care_need)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(
         code: personal_care_need.fetch(:problem_code),
-        type_code: personal_care_need.fetch(:problem_type)
+        type_code: personal_care_need.fetch(:problem_type),
       )
       nomis_alert&.assessment_question || fallback_assessment_question
     end

@@ -18,9 +18,9 @@ RSpec.describe Api::V1::Reference::AssessmentQuestionsController, with_client_au
           type: 'assessment_questions',
           attributes: {
             category: 'health',
-            title: 'Sight Impaired'
-          }
-        }
+            title: 'Sight Impaired',
+          },
+        },
       ]
     end
 
@@ -54,8 +54,8 @@ RSpec.describe Api::V1::Reference::AssessmentQuestionsController, with_client_au
       let(:data) do
         [
           {
-            id: assessment_question.id
-          }
+            id: assessment_question.id,
+          },
         ]
       end
 

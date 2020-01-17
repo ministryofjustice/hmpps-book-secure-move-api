@@ -13,7 +13,7 @@ module Alerts
     def call
       @profile.merge_assessment_answers!(
         @alerts.map { |alert| build_alert(alert) },
-        ASSESSMENT_ANSWER_CATEGORY
+        ASSESSMENT_ANSWER_CATEGORY,
       )
       @profile.save!
     end
@@ -35,14 +35,14 @@ module Alerts
         nomis_alert_type: alert.fetch(:alert_type),
         nomis_alert_description: alert[:alert_code_description],
         nomis_alert_type_description: alert[:alert_type_description],
-        imported_from_nomis: true
+        imported_from_nomis: true,
       ).tap(&:set_timestamps)
     end
 
     def find_assessment_question(alert)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(
         code: alert[:alert_code],
-        type_code: alert[:alert_type]
+        type_code: alert[:alert_type],
       )
       nomis_alert&.assessment_question || fallback_assessment_question
     end

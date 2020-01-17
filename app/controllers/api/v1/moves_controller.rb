@@ -47,7 +47,7 @@ module Api
         :type,
         attributes: %i[date time_due status move_type additional_information
                        cancellation_reason cancellation_reason_comment],
-        relationships: {}
+        relationships: {},
       ].freeze
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
                                                     cancellation_reason cancellation_reason_comment]].freeze
@@ -68,7 +68,7 @@ module Api
         move_params[:attributes].merge(
           person: Person.find(move_params.dig(:relationships, :person, :data, :id)),
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
-          to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id))
+          to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
         )
       end
 

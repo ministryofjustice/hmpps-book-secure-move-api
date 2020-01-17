@@ -14,7 +14,7 @@ module Nomis
       'Asian/Asian British: Bangladeshi',
       'Black/Black British: Caribbean',
       'Asian/Asian British: Indian',
-      'Black/Black British: Any other Backgr\'nd'
+      'Black/Black British: Any other Backgr\'nd',
     ].freeze
     BIRTH_COUNTRIES = [
       'England',
@@ -30,7 +30,7 @@ module Nomis
       'Sweden',
       'Australia',
       'Italy',
-      'Romania'
+      'Romania',
     ].freeze
     RELIGIONS = [
       'Church of England (Anglican)',
@@ -41,14 +41,14 @@ module Nomis
       'Christian',
       'Atheist',
       'Buddhist',
-      'Pentecostal'
+      'Pentecostal',
     ].freeze
     CONVICTION_STATUSES = %w[Convicted Remand].freeze
     IMPRISONMENT_STATUSES = %w[SENT03 JR ADIMP_ORA TRL LASPO_DR ALP MLP LIFE LR SEC38 LR_ORA FTR_ORA UNKNOWN].freeze
     MARITAL_STATUSES = [
       'Single-not married/in civil partnership',
       'Married or in civil partnership',
-      'Prefer not to say'
+      'Prefer not to say',
     ].freeze
 
     def self.nomis_offender_number

@@ -6,7 +6,7 @@ module NomisClient
       def get(nomis_agency_ids, date, event_type)
         attributes_for(
           get_response(nomis_agency_ids: nomis_agency_ids, date: date, event_type: event_type),
-          event_type
+          event_type,
         ).map do |move|
           response(move)
         end
@@ -16,7 +16,7 @@ module NomisClient
         NomisClient::Base.get(
           "/movements/transfers?#{agency_id_params(nomis_agency_ids)}",
           params: { **date_params(date), **event_params(event_type) },
-          headers: { 'Page-Limit' => '500' }
+          headers: { 'Page-Limit' => '500' },
         ).parsed
       end
 
@@ -35,7 +35,7 @@ module NomisClient
             date: item['eventDate'],
             time_due: item['startTime'],
             status: Move::NOMIS_STATUS_TYPES[item['eventStatus']],
-            nomis_event_id: item['eventId']
+            nomis_event_id: item['eventId'],
           }
         end
       end

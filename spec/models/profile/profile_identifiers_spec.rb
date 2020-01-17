@@ -10,12 +10,12 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
     [
       {
         value: 'ABC123456',
-        identifier_type: :police_national_computer
+        identifier_type: :police_national_computer,
       },
       {
         value: 'XYZ123456',
-        identifier_type: :prison_number
-      }
+        identifier_type: :prison_number,
+      },
     ]
   end
 

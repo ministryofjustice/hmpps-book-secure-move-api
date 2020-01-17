@@ -160,7 +160,7 @@ namespace :reference_data do
         MPS19
         MPS22
         MPS28
-      ]
+      ],
     }
 
     supplier_locations.each do |supplier_name, codes|

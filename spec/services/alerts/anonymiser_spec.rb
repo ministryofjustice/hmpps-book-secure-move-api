@@ -6,7 +6,7 @@ RSpec.describe Alerts::Anonymiser do
   subject(:anonymiser) do
     described_class.new(
       nomis_offender_number: nomis_offender_number,
-      alerts: alerts
+      alerts: alerts,
     )
   end
 
@@ -27,7 +27,7 @@ RSpec.describe Alerts::Anonymiser do
         addedByLastName: 'SUMMERBURGER',
         expiredByFirstName: 'GLENNA',
         expiredByLastName: 'FLATLEY',
-        dateExpires: '2006-12-26'
+        dateExpires: '2006-12-26',
       },
       {
         alertId: 2,
@@ -43,8 +43,8 @@ RSpec.describe Alerts::Anonymiser do
         addedByLastName: 'GREYGARDINER',
         expiredByFirstName: 'TOMMY',
         expiredByLastName: 'POLLICH',
-        dateExpires: '2008-02-06'
-      }
+        dateExpires: '2008-02-06',
+      },
     ]
   end
 

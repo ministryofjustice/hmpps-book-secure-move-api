@@ -13,11 +13,11 @@ RSpec.describe People::Updater do
       last_name: 'Roberts',
       date_of_birth: Date.civil(1980, 6, 1),
       assessment_answers: [
-        { title: risk_type_1.title, assessment_question_id: risk_type_1.id }
+        { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
       ],
       profile_identifiers: [
-        { identifier_type: 'police_national_computer', value: 'ABC123' }
-      ]
+        { identifier_type: 'police_national_computer', value: 'ABC123' },
+      ],
     }
   end
   let(:person) { create :person }
@@ -26,8 +26,8 @@ RSpec.describe People::Updater do
       type: 'people',
       attributes: {
         first_names: 'Alice',
-        date_of_birth: Date.civil(1980, 1, 1)
-      }
+        date_of_birth: Date.civil(1980, 1, 1),
+      },
     }
   end
 
@@ -59,13 +59,13 @@ RSpec.describe People::Updater do
 
     it 'does not change original assessment_answers' do
       expect(updated_profile.assessment_answers.map(&:title)).to match_array(
-        original_attributes[:assessment_answers].pluck(:title)
+        original_attributes[:assessment_answers].pluck(:title),
       )
     end
 
     it 'does not change original identifiers' do
       expect(updated_profile.profile_identifiers.map(&:value)).to match_array(
-        original_attributes[:profile_identifiers].pluck(:value)
+        original_attributes[:profile_identifiers].pluck(:value),
       )
     end
   end
@@ -80,13 +80,13 @@ RSpec.describe People::Updater do
           date_of_birth: Date.civil(1980, 1, 1),
           assessment_answers: [
             { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-            { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
+            { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
           ],
           identifiers: [
             { identifier_type: 'police_national_computer', value: 'ABC123' },
-            { identifier_type: 'prison_number', value: 'XYZ987' }
-          ]
-        }
+            { identifier_type: 'prison_number', value: 'XYZ987' },
+          ],
+        },
       }
     end
 
@@ -114,22 +114,22 @@ RSpec.describe People::Updater do
         attributes: {
           first_names: 'Bob',
           last_name: 'Roberts',
-          date_of_birth: Date.civil(1980, 1, 1)
+          date_of_birth: Date.civil(1980, 1, 1),
         },
         relationships: {
           ethnicity: {
             data: {
               id: ethnicity.id,
-              type: 'ethnicities'
-            }
+              type: 'ethnicities',
+            },
           },
           gender: {
             data: {
               id: gender.id,
-              type: 'genders'
-            }
-          }
-        }
+              type: 'genders',
+            },
+          },
+        },
       }
     end
 

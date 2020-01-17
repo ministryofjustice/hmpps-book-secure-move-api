@@ -15,7 +15,7 @@ module NomisClient
         NomisClient::Base.post(
           '/prisoners',
           headers: { 'Page-Limit' => nomis_offender_numbers.size.to_s },
-          body: { 'offenderNos': nomis_offender_numbers }.to_json
+          body: { 'offenderNos': nomis_offender_numbers }.to_json,
         ).parsed
       end
 
@@ -32,7 +32,7 @@ module NomisClient
           cro_number: person['croNumber'],
           gender: person['sexCode'],
           ethnicity: person['ethnicity'],
-          nationalities: person['nationalities']
+          nationalities: person['nationalities'],
         }
       end
     end

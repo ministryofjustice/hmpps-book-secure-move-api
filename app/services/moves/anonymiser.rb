@@ -17,7 +17,7 @@ module Moves
       move.merge(
         person_nomis_prison_number: nomis_offender_number,
         date: "<%= date.toISOString().split('T')[0] %>",
-        time_due: "<%= date.toISOString().split('T')[0] + 'T' + '#{start_time}' %>"
+        time_due: "<%= date.toISOString().split('T')[0] + 'T' + '#{start_time}' %>",
       ).with_indifferent_access
     end
   end

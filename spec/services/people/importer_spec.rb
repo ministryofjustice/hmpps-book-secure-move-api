@@ -20,7 +20,7 @@ RSpec.describe People::Importer do
       cro_number: '018053/82G',
       gender: gender_param,
       ethnicity: ethnicity_param,
-      nationalities: 'British'
+      nationalities: 'British',
     }
   end
 
@@ -48,7 +48,7 @@ RSpec.describe People::Importer do
         'last_name' => 'ABBELLA',
         'first_names' => 'AVEILKE EMMANDA',
         'date_of_birth' => Date.parse('1965-10-15'),
-        'latest_nomis_booking_id' => 123
+        'latest_nomis_booking_id' => 123,
       )
     end
     # rubocop:enable RSpec/ExampleLength

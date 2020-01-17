@@ -21,7 +21,7 @@ module Moves
       Move.where(
         date: date,
         from_location_id: locations.map(&:id),
-        nomis_event_ids: []
+        nomis_event_ids: [],
       ).update(status: Move::MOVE_STATUS_CANCELLED)
     end
 
@@ -34,7 +34,7 @@ module Moves
 
       scope = Move.where(
         date: date,
-        from_location_id: locations.map(&:id)
+        from_location_id: locations.map(&:id),
       )
 
       update_nomis_event_ids_when_duplicate(scope)
@@ -46,7 +46,7 @@ module Moves
       items.map do |item|
         move = scope.find_by(
           person: Person.where(nomis_prison_number: item[:person_nomis_prison_number]),
-          to_location: Location.where(nomis_agency_id: item[:to_location_nomis_agency_id])
+          to_location: Location.where(nomis_agency_id: item[:to_location_nomis_agency_id]),
         )
         move.update(nomis_event_ids: move.nomis_event_ids << item[:nomis_event_id])
       end

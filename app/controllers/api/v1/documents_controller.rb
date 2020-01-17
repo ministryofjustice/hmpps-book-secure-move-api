@@ -25,7 +25,7 @@ module Api
       private
 
       PERMITTED_DOCUMENT_PARAMS = [
-        attributes: %i[file]
+        attributes: %i[file],
       ].freeze
 
       def document_params
@@ -34,7 +34,7 @@ module Api
 
       def document_attributes
         document_params[:attributes].merge(
-          move: Move.find(params.dig(:move_id))
+          move: Move.find(params.dig(:move_id)),
         )
       end
 

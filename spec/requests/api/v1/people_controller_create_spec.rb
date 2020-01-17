@@ -26,28 +26,28 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             gender_additional_information: gender_additional_information,
             assessment_answers: [
               { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-              { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
+              { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
               { identifier_type: 'police_national_computer', value: 'ABC123' },
-              { identifier_type: 'prison_number', value: 'XYZ987' }
-            ]
+              { identifier_type: 'prison_number', value: 'XYZ987' },
+            ],
           },
           relationships: {
             ethnicity: {
               data: {
                 id: ethnicity.id,
-                type: 'ethnicities'
-              }
+                type: 'ethnicities',
+              },
             },
             gender: {
               data: {
                 id: gender.id,
-                type: 'genders'
-              }
-            }
-          }
-        }
+                type: 'genders',
+              },
+            },
+          },
+        },
       }
     end
 
@@ -61,27 +61,27 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
             assessment_answers: [
               { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-              { title: risk_type_2.title, assessment_question_id: risk_type_2.id }
+              { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
               { identifier_type: 'police_national_computer', value: 'ABC123' },
-              { identifier_type: 'prison_number', value: 'XYZ987' }
-            ]
+              { identifier_type: 'prison_number', value: 'XYZ987' },
+            ],
           },
           relationships: {
             gender: {
               data: {
                 type: 'genders',
-                id: gender.id
-              }
+                id: gender.id,
+              },
             },
             ethnicity: {
               data: {
                 type: 'ethnicities',
-                id: ethnicity.id
-              }
-            }
-          }
+                id: ethnicity.id,
+              },
+            },
+          },
         }
       end
       let(:expected_included) do
@@ -90,16 +90,16 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             id: ethnicity.id,
             type: 'ethnicities',
             attributes: {
-              key: ethnicity.key
-            }
+              key: ethnicity.key,
+            },
           },
           {
             id: gender.id,
             type: 'genders',
             attributes: {
-              key: gender.key
-            }
-          }
+              key: gender.key,
+            },
+          },
         ]
       end
 
@@ -160,8 +160,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         {
           data: {
             type: 'people',
-            attributes: { first_names: 'Bob' }
-          }
+            attributes: { first_names: 'Bob' },
+          },
         }
       end
 
@@ -171,8 +171,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             'title' => 'Unprocessable entity',
             'detail' => "Last name can't be blank",
             'source' => { 'pointer' => '/data/attributes/last_name' },
-            'code' => 'blank'
-          }
+            'code' => 'blank',
+          },
         ]
       end
 
