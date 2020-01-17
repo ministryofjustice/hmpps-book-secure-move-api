@@ -9,7 +9,7 @@ module Api
           render json: types
         end
 
-        private
+      private
 
         PERMITTED_FILTER_PARAMS = %i[category].freeze
 

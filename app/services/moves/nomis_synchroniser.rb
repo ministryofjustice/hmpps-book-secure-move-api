@@ -17,7 +17,7 @@ module Moves
       Moves::Sweeper.new(locations, date, moves).call
     end
 
-    private
+  private
 
     def nomis_agency_ids
       locations.map(&:nomis_agency_id)

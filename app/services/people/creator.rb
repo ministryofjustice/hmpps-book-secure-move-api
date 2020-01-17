@@ -12,7 +12,7 @@ module People
       profile&.person
     end
 
-    private
+  private
 
     def create_profile
       Profile.transaction do

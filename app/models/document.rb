@@ -7,7 +7,7 @@ class Document < ApplicationRecord
 
   belongs_to :move
 
-  private
+private
 
   def validate_file_presence
     errors.add(:file, I18n.t('errors.messages.blank')) unless file.attached?

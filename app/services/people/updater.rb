@@ -14,7 +14,7 @@ module People
       update(person)
     end
 
-    private
+  private
 
     def update(person)
       Profile.transaction do

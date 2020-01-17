@@ -11,7 +11,7 @@ module People
     ATTRIBUTES = %i[first_names last_name date_of_birth gender_additional_information].freeze
     PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
 
-    private
+  private
 
     def relationships
       (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map do |attribute, value|

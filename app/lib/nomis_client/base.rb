@@ -20,7 +20,7 @@ module NomisClient
         ENV[NOMIS_TEST_MODE] == 'true'
       end
 
-      private
+    private
 
       REFRESH_TOKEN_TIMEFRAME_IN_SECONDS = 5
 

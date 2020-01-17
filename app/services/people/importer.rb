@@ -20,7 +20,7 @@ module People
       profile.update(attributes)
     end
 
-    private
+  private
 
     def attributes
       nomis_attributes.slice(:last_name, :date_of_birth, :aliases).merge(

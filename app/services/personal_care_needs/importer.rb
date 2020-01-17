@@ -20,7 +20,7 @@ module PersonalCareNeeds
       profile.save!
     end
 
-    private
+  private
 
     def build(personal_care_need)
       assessment_question = find_assessment_question(personal_care_need)

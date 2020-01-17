@@ -126,7 +126,7 @@ module NomisAlerts
       end
     end
 
-    private
+  private
 
     def alert_types
       @alert_types ||= NomisClient::AlertTypes.as_hash

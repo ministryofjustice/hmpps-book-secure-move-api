@@ -14,7 +14,7 @@ module Moves
       cancel_outdated_moves!
     end
 
-    private
+  private
 
     def cancel_outdated_moves!
       update_nomis_event_ids!

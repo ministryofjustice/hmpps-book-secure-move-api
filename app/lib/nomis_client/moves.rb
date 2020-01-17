@@ -20,7 +20,7 @@ module NomisClient
         ).parsed
       end
 
-      private
+    private
 
       def agency_id_params(nomis_agency_ids)
         nomis_agency_ids.map { |id| "agencyId=#{CGI.escape(id)}" }.join('&')

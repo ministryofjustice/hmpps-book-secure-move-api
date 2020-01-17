@@ -12,7 +12,7 @@ module Moves
       apply_filters(Move).order('moves.id')
     end
 
-    private
+  private
 
     def apply_filters(scope)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
