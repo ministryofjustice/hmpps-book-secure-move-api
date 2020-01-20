@@ -15,12 +15,13 @@ module NomisClient
       def get_response(nomis_agency_ids:, date:, event_type: :courtEvents)
         url = "/movements/transfers?#{agency_id_params(nomis_agency_ids)}"
         params = { **date_params(date), **event_params(event_type) }
-        Rails.logger.info("[NomisClient::Moves].get #{url} #{params}")
-        NomisClient::Base.get(
+        result = NomisClient::Base.get(
           url,
           params: params,
           headers: { 'Page-Limit' => '500' },
         ).parsed
+        Rails.logger.info("[NomisClient::Moves].get #{url} #{params} returned #{result.size} moves")
+        result
       end
 
     private
