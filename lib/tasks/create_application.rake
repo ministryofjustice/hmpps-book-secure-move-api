@@ -12,10 +12,7 @@ namespace :auth do
 
     name = prompt.ask("What's the application's name?")
 
-    scopes = %w[read write]
-    scope = prompt.multi_select("What's the scope of the #{name} application?", scopes)
-
-    application = Doorkeeper::Application.new(name: name, scopes: scope)
+    application = Doorkeeper::Application.new(name: name)
 
     suppliers = Supplier.all.each_with_object({}) do |supplier, accumulator|
       accumulator[supplier.name] = supplier.id
@@ -30,7 +27,6 @@ namespace :auth do
       puts "Created OAuth2 client with (name: #{application.name})"
       puts "client_id: #{application.uid}"
       puts "client_secret: #{application.plaintext_secret}"
-      puts "scopes: #{application.scopes}"
       puts "supplier: #{application.owner.name}" if application.owner
     else
       puts application.errors.full_messages
