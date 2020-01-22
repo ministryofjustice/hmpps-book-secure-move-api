@@ -17,7 +17,8 @@ module Api
       end
 
       def destroy
-        document = Document.find(params[:id])
+        document = Document.find_by!(id: params[:id],
+                                    move: Move.accessible_by(current_ability).find(params.dig(:move_id)))
         document.destroy!
         render json: document, status: :ok
       end
@@ -34,7 +35,7 @@ module Api
 
       def document_attributes
         document_params[:attributes].merge(
-          move: Move.find(params.dig(:move_id))
+          move: Move.accessible_by(current_ability).find(params.dig(:move_id))
         )
       end
 

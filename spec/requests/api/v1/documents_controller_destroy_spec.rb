@@ -40,7 +40,7 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
       end
 
-      it 'deletes the move', skip_before: true do
+      it 'deletes the document', skip_before: true do
         expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
           .to change(Document, :count).by(-1)
       end
@@ -62,6 +62,7 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
 
     context 'when resource is not found' do
       let(:document_id) { 'UUID-not-found' }
+      let(:detail_404) { "Couldn't find Document" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
