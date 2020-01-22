@@ -46,6 +46,8 @@ namespace :reference_data do
         AVS1
         AVS2
         AVS3
+        BDS1
+        BDS2
         CHE1
         CHE2
         CHE3
@@ -54,22 +56,69 @@ namespace :reference_data do
         CMB3
         CMB4
         CVL3
+        DC1
+        DC2
+        DC3
+        DC4
+        DC5
+        DC6
+        DHM2
+        DHM3
+        DHM5
+        DP1
+        DP2
+        DP3
+        DP4
+        DP5
+        DP6
+        DP7
         DRB2
         DRB3
         DRB5
         DST1
-        DST2
         DST3
-        GCS1
+        GMP1
+        GMP2
+        GMP3
+        GMP4
+        GMP5
+        GMP6
+        GMP7
+        GMP8
+        GMP9
         GWN1
         GWN2
+        HMB2
+        HNT2
+        HNT4
+        HNT6
+        KNT1
+        KNT2
+        KNT3
+        KNT4
+        KNT5
+        KNT6
+        KNT7
+        LAN1
+        LAN2
+        LAN3
+        LAN4
+        LAN5
+        LAN6
         LCS1
         LCS2
         LCS3
-        NRU1
+        LNC1
+        LNC2
+        LNC3
+        LNC4
+        MRS1
+        MRS2
+        MRS3
+        MRS4
+        MRS5
         NRU2
         NRU3
-        NRU4
         NTS1
         NTS2
         NTS3
@@ -83,19 +132,34 @@ namespace :reference_data do
         NYK3
         SFCUSU
         SRY016
+        SRY1
+        SRY2
+        SRY3
+        SRY4
         STCUSU
-        STF2
-        STF4
-        SUS1
-        SUS2
-        SUS3
-        SUS4
-        SUS5
+        SWL1
+        SWL2
+        SWL3
+        SWL4
         SYP1
         SYP2
         SYP3
+        TVP1
+        TVP2
+        TVP3
+        TVP4
+        TVP5
+        TVP6
+        TVP7
+        TVP8
         WLT1
         WLT4
+        WMP2
+        WMP3
+        WMP4
+        WMP5
+        WMP7
+        WMP8
         WWM1
         WWM2
         WWM3
@@ -103,6 +167,24 @@ namespace :reference_data do
         WWM5
         WWM6
         WWM7
+        WYP2
+        WYP3
+        WYP4
+        WYP5
+        WYP6
+        DHM1
+        DHM4
+        DHM6
+        DST2
+        GCS1
+        HMB3
+        HNT1
+        NWA2
+        STF1
+        STF2
+        STF4
+        WYP1
+        WYP7
       ],
       serco: %w[
         BDS1
