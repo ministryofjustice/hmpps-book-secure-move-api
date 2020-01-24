@@ -1087,22 +1087,6 @@ paths:
         example: 00525ecb-7316-492a-aae2-f69334b2a155
         required: true
       responses:
-        '200':
-          description: success
-          schema:
-            "$ref": "#/definitions/get_move_responses/200"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/get_move_responses/200"
-        '404':
-          description: not found
-          schema:
-            "$ref": "#/definitions/error_responses/404"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/404"
         '401':
           description: unauthorised
           schema:
@@ -1119,3 +1103,19 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/error_responses/415"
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
+        '200':
+          description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
