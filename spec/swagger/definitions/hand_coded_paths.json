@@ -46,8 +46,8 @@
           "schema": {
             "type": "string",
             "enum": [
-              "pending",
-              "accepted"
+              "requested",
+              "cancelled"
             ]
           }
         },
