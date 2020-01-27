@@ -62,6 +62,7 @@ namespace :reference_data do
         DC4
         DC5
         DC6
+        DC7
         DHM2
         DHM3
         DHM5
@@ -89,6 +90,8 @@ namespace :reference_data do
         GWN1
         GWN2
         HMB2
+        HMB4
+        HMB5
         HNT2
         HNT4
         HNT6
@@ -99,6 +102,7 @@ namespace :reference_data do
         KNT5
         KNT6
         KNT7
+        KNT8
         LAN1
         LAN2
         LAN3
@@ -172,6 +176,8 @@ namespace :reference_data do
         WYP4
         WYP5
         WYP6
+        WYP8
+        WYP9
         DHM1
         DHM4
         DHM6
@@ -233,6 +239,10 @@ namespace :reference_data do
         MPS7
         MPS8
         MPS9
+        MPS30
+        MPS31
+        MPS32
+        MPS33
         NFL1
         NFL2
         NFL3
