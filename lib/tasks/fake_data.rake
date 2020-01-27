@@ -144,14 +144,14 @@ namespace :fake_data do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
-      person = people.sample
+      profile = people.sample.latest_profile
       from_location = prisons.sample
       to_location = courts.sample
-      unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
+      unless Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
         Move.create!(
           date: date,
           time_due: time,
-          person: person,
+          profile: profile,
           from_location: from_location,
           to_location: to_location,
           status: %w[requested completed cancelled].sample,

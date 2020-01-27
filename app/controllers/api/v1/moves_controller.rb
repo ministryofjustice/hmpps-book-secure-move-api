@@ -72,9 +72,10 @@ module Api
       end
 
       def move_attributes
-        # moves are always created against the latest_profile for the person
+        # latest_profile is fine here, as this is used by create/update which should only be allowed
+        # for moves which haven't been completed.
         move_params[:attributes].merge(
-          person: Person.find(move_params.dig(:relationships, :person, :data, :id)),
+          profile: Person.find(move_params.dig(:relationships, :person, :data, :id)).latest_profile,
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
@@ -92,7 +93,7 @@ module Api
       def find_move
         Move
           .accessible_by(current_ability)
-          .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
+          .includes(:from_location, :to_location, profile: %i[gender ethnicity])
           .find(params[:id])
       end
 
