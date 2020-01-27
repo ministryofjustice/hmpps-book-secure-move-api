@@ -46,10 +46,11 @@ module Moves
       new_count = 0
       update_count = 0
       items.map { |m| move_params(m) }.each do |move|
-        new_move = Move.new(move)
+        person = Person.find_by!(nomis_prison_number: move.fetch(:person_nomis_prison_number))
+        new_move = person.latest_profile.moves.build(move.except(:person_nomis_prison_number))
         existing_move = Move.find_by(nomis_event_ids: [move[:nomis_event_id]]) || new_move.existing
         if existing_move
-          existing_move.assign_attributes(move)
+          existing_move.assign_attributes(move.except(:person_nomis_prison_number))
           if existing_move.changed?
             update_count += 1
             existing_move.save!
@@ -65,8 +66,7 @@ module Moves
     end
 
     def move_params(move)
-      move.slice(:date, :time_due, :status, :nomis_event_id).merge(
-        person: Person.find_by(nomis_prison_number: move[:person_nomis_prison_number]),
+      move.slice(:date, :time_due, :status, :nomis_event_id, :person_nomis_prison_number).merge(
         from_location: Location.find_by(nomis_agency_id: move[:from_location_nomis_agency_id]),
         to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id]),
       )
