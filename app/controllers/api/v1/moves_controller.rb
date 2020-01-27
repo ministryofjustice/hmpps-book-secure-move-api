@@ -7,7 +7,7 @@ module Api
         moves_params = Moves::ParamsValidator.new(params[:filter])
         if moves_params.valid?
           import_moves_from_nomis
-          moves = Moves::Finder.new(filter_params).call
+          moves = Moves::Finder.new(filter_params, current_ability).call
           paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
         else
           render json: { error: moves_params.errors }, status: :bad_request
@@ -20,7 +20,9 @@ module Api
       end
 
       def create
-        move = Move.create!(move_attributes)
+        move = Move.new(move_attributes)
+        authorize!(:create, move)
+        move.save!
         render_move(move, 201)
       end
 
@@ -82,6 +84,7 @@ module Api
 
       def find_move
         Move
+          .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
       end

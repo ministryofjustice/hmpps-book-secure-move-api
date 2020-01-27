@@ -50,6 +50,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       before { get '/api/v1/reference/locations', headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with error 401'
@@ -164,6 +166,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with error 401'

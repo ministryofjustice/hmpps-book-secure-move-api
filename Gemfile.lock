@@ -72,6 +72,7 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.0.1)
+    cancancan (3.0.1)
     case_transform (0.2)
       activesupport
     climate_control (0.2.0)
@@ -89,6 +90,7 @@ GEM
     dotenv-rails (2.7.5)
       dotenv (= 2.7.5)
       railties (>= 3.2, < 6.1)
+    equatable (0.6.1)
     erubi (1.9.0)
     factory_bot (5.0.2)
       activesupport (>= 4.2.0)
@@ -152,6 +154,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    necromancer (0.5.1)
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
     nio4r (2.5.1)
@@ -167,6 +170,9 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
+    pastel (0.7.3)
+      equatable (~> 0.6)
+      tty-color (~> 0.5)
     pg (1.0.0)
     prometheus_exporter (0.4.13)
     pry (0.12.2)
@@ -284,6 +290,17 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     timecop (0.9.1)
+    tty-color (0.5.0)
+    tty-cursor (0.7.0)
+    tty-prompt (0.20.0)
+      necromancer (~> 0.5.0)
+      pastel (~> 0.7.0)
+      tty-reader (~> 0.7.0)
+    tty-reader (0.7.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.7)
+      wisper (~> 2.0.0)
+    tty-screen (0.7.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
@@ -294,6 +311,7 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
+    wisper (2.0.1)
 
 PLATFORMS
   ruby
@@ -303,6 +321,7 @@ DEPENDENCIES
   aws-sdk-s3
   bcrypt
   bootsnap (>= 1.1.0)
+  cancancan
   climate_control
   doorkeeper
   dotenv (~> 2.7)
@@ -339,6 +358,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop
+  tty-prompt
   webmock
 
 RUBY VERSION

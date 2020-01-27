@@ -11,6 +11,11 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
+  rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
+
+  def current_user
+    doorkeeper_token&.application
+  end
 
 private
 
@@ -85,6 +90,16 @@ private
         detail: exception.to_s,
       }] },
       status: :forbidden,
+    )
+  end
+
+  def render_unauthorized_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Not authorized',
+        detail: exception.to_s,
+      }] },
+      status: :unauthorized,
     )
   end
 

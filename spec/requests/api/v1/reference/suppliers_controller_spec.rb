@@ -44,6 +44,8 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
@@ -81,6 +83,8 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       before { get "/api/v1/reference/suppliers/#{supplier_key}", headers: headers, params: params }
 
       it_behaves_like 'an endpoint that responds with error 401'

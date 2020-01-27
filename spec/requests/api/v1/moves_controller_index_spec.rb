@@ -32,6 +32,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           }
         end
         let(:params) { { filter: filters } }
+        let(:ability) { Ability.new }
+
+        before do
+          allow(Ability).to receive(:new).and_return(ability)
+        end
 
         it 'delegates the query execution to Moves::Finder with the correct filters', skip_before: true do
           moves_finder = instance_double('Moves::Finder', call: Move.all)
@@ -39,7 +44,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
           get '/api/v1/moves', headers: headers, params: params
 
-          expect(Moves::Finder).to have_received(:new).with(from_location_id: from_location_id)
+          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability)
         end
 
         it 'filters the results' do
@@ -225,6 +230,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       it_behaves_like 'an endpoint that responds with error 401'
     end
 

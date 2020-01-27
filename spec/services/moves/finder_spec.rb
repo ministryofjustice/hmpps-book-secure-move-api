@@ -3,11 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Moves::Finder do
-  subject(:move_finder) { described_class.new(filter_params) }
+  subject(:move_finder) { described_class.new(filter_params, ability) }
 
   let!(:move) { create :move }
   let(:move_id) { move.id }
   let(:filter_params) { {} }
+  let(:application) { Doorkeeper::Application.new(name: 'test') }
+  let(:ability) { Ability.new(application) }
 
   describe 'filtering' do
     context 'with matching location filter' do

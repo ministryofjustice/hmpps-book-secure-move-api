@@ -46,6 +46,8 @@ RSpec.describe Api::V1::Reference::EthnicitiesController, with_client_authentica
     end
 
     context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
+
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
