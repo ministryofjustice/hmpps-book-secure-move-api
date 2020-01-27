@@ -38,7 +38,7 @@ module Moves
         end
       end
       if new_person_count.positive? || changed_profile_count.positive?
-        Rails.logger.info("[Moves::Importer] created #{new_person_count} updated #{changed_profile_count}")
+        Rails.logger.info("[Moves::Importer] people new[#{new_person_count}] updated[#{changed_profile_count}]")
       end
     end
 
@@ -60,7 +60,7 @@ module Moves
         end
       end
       if new_count.positive? || update_count.positive?
-        Rails.logger.info("[Moves::Importer] #{new_count} new moves updated #{update_count} moves")
+        Rails.logger.info("[Moves::Importer] moves new[#{new_count}]  updated[#{update_count}]")
       end
     end
 
