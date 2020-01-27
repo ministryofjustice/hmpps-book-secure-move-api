@@ -1095,14 +1095,7 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/error_responses/401"
-        '200':
-          description: success
-          schema:
-            "$ref": "#/definitions/get_move_responses/200"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/get_move_responses/200"
+
         '415':
           description: invalid content type
           schema:
@@ -1119,3 +1112,11 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/error_responses/404"
+        '200':
+          description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
