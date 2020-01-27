@@ -3,7 +3,6 @@
 module NomisClient
   class Base
     FIXTURE_DIRECTORY = Rails.root.join 'db/fixtures/nomis'
-    NOMIS_TEST_MODE = 'NOMIS_TEST_MODE'
     MAX_RETRIES = 2
 
     class << self
@@ -14,10 +13,6 @@ module NomisClient
       def post(path, params = {})
         params = update_json_headers(params)
         benchmark_request(path) { token.post("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params) }
-      end
-
-      def test_mode?
-        ENV[NOMIS_TEST_MODE] == 'true'
       end
 
     private

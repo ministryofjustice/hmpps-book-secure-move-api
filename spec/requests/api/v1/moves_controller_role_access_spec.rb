@@ -51,14 +51,14 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     let!(:birmingham_move) { create :move, from_location: birmingham }
 
     get 'Returns the details of a move' do
-      tags 'RBAC'
+      tags 'Moves'
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,
                 in: :header,
                 schema: {
                   type: 'string',
-                  default: 'Bearer <your-client-token>'
+                  default: 'Bearer <your-client-token>',
                 },
                 required: true
 
@@ -67,7 +67,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 description: 'Accepted request content type',
                 schema: {
                   type: 'string',
-                  default: 'application/vnd.api+json'
+                  default: 'application/vnd.api+json',
                 },
                 required: true
 
@@ -75,7 +75,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 in: :path,
                 description: 'The ID of the move',
                 schema: {
-                  type: :string
+                  type: :string,
                 },
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
@@ -130,8 +130,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           relationships: {
             person: { data: { type: 'people', id: person.id } },
             from_location: { data: { type: 'locations', id: pentonville.id } },
-            to_location: { data: { type: 'locations', id: birmingham.id } }
-          }
+            to_location: { data: { type: 'locations', id: birmingham.id } },
+          },
         }
       end
 
@@ -159,8 +159,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           relationships: {
             person: { data: { type: 'people', id: person.id } },
             from_location: { data: { type: 'locations', id: birmingham.id } },
-            to_location: { data: { type: 'locations', id: pentonville.id } }
-          }
+            to_location: { data: { type: 'locations', id: pentonville.id } },
+          },
         }
       end
       let(:detail_401) { 'You are not authorized to access this page.' }
@@ -182,8 +182,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           status: 'cancelled',
           additional_information: 'some more info',
           cancellation_reason: 'other',
-          cancellation_reason_comment: 'some other reason'
-        }
+          cancellation_reason_comment: 'some other reason',
+        },
       }
     end
 

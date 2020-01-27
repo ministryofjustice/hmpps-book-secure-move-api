@@ -17,7 +17,7 @@ class ApiController < ApplicationController
     doorkeeper_token&.application
   end
 
-  private
+private
 
   def doorkeeper_unauthorized_render_options(*)
     {
@@ -97,9 +97,9 @@ class ApiController < ApplicationController
     render(
       json: { errors: [{
         title: 'Not authorized',
-        detail: exception.to_s
+        detail: exception.to_s,
       }] },
-      status: :unauthorized
+      status: :unauthorized,
     )
   end
 
