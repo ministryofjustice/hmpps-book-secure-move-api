@@ -121,8 +121,10 @@ namespace :reference_data do
         MRS3
         MRS4
         MRS5
+        NRU1
         NRU2
         NRU3
+        NRU4
         NTS1
         NTS2
         NTS3
@@ -141,6 +143,11 @@ namespace :reference_data do
         SRY3
         SRY4
         STCUSU
+        SUS1
+        SUS2
+        SUS3
+        SUS4
+        SUS5
         SWL1
         SWL2
         SWL3
