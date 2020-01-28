@@ -81,11 +81,16 @@ namespace :fake_data do
 
   desc 'create fake prisons'
   task create_prisons: :environment do
+    %w[serco geoamey].each do |supplier|
+      Supplier.create!(key: supplier, name: supplier.titleize)
+    end
+    suppliers = Supplier.all
     PRISON_NAMES.each do |title|
       Location.create!(
         key: title.parameterize(separator: '_'),
         title: title,
         location_type: :prison,
+        suppliers: [suppliers.sample],
       )
     end
   end
@@ -145,7 +150,7 @@ namespace :fake_data do
         person: people.sample,
         from_location: prisons.sample,
         to_location: courts.sample,
-        status: 'requested',
+        status: %w[requested completed cancelled].sample,
       )
     end
   end
@@ -153,7 +158,7 @@ namespace :fake_data do
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     if Rails.env.development? || Rails.env.test?
-      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType].each(&:destroy_all)
+      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end

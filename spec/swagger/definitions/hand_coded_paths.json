@@ -42,13 +42,18 @@
         {
           "name": "filter[status]",
           "in": "query",
-          "description": "Filters results to only include moves with the given status",
+          "explode": false,
+          "description": "Filters results to only include moves with the given statuses",
           "schema": {
-            "type": "string",
-            "enum": [
-              "requested",
-              "cancelled"
-            ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "requested",
+                "cancelled",
+                "completed"
+              ]
+            }
           }
         },
         {

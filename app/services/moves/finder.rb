@@ -18,13 +18,21 @@ module Moves
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
-      scope = scope.where(filter_params.slice(:status))
+      scope = apply_filter(scope, :status)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
-      scope = apply_location_from_filters(scope)
-      scope = apply_location_to_filters(scope)
+      scope = apply_filter(scope, :from_location_id)
+      scope = apply_filter(scope, :to_location_id)
       scope = apply_supplier_filters(scope)
       scope
+    end
+
+    def apply_filter(scope, param_name)
+      if filter_params.key?(param_name)
+        scope.where(param_name => filter_params[param_name].split(','))
+      else
+        scope
+      end
     end
 
     def apply_date_range_filters(scope)
@@ -39,20 +47,6 @@ module Moves
       scope
         .joins(:to_location)
         .where(locations: { location_type: filter_params[:location_type] })
-    end
-
-    def apply_location_from_filters(scope)
-      return scope unless filter_params.key?(:from_location_id)
-
-      from_location = filter_params[:from_location_id].split(',')
-      scope.where(from_location_id: from_location)
-    end
-
-    def apply_location_to_filters(scope)
-      return scope unless filter_params.key?(:to_location_id)
-
-      to_location = filter_params[:to_location_id].split(',')
-      scope.where(to_location_id: to_location)
     end
 
     def apply_supplier_filters(scope)

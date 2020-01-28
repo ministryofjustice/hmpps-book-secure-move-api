@@ -299,12 +299,16 @@ paths:
         format: date
       - name: filter[status]
         in: query
-        description: Filters results to only include moves with the given status
+        explode: false
+        description: Filters results to only include moves with the given statuses
         schema:
-          type: string
-          enum:
-          - requested
-          - cancelled
+          type: array
+          items:
+            type: string
+            enum:
+            - requested
+            - cancelled
+            - completed
       - name: filter[from_location_id]
         description: Filters results to only include moves from the given location
           UUIDs
@@ -1068,6 +1072,9 @@ paths:
           type: string
           default: Bearer <your-client-token>
         required: true
+        description: |
+          This is "Bearer ", followed by your OAuth 2 Client token.
+          If you're testing interactively in the web UI, you can ignore this field
       - name: Content-Type
         in: header
         description: Accepted request content type
@@ -1092,22 +1099,6 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/error_responses/401"
-        '415':
-          description: invalid content type
-          schema:
-            "$ref": "#/definitions/error_responses/415"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/415"
-        '404':
-          description: not found
-          schema:
-            "$ref": "#/definitions/error_responses/404"
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "#/definitions/error_responses/404"
         '200':
           description: success
           schema:
@@ -1116,3 +1107,19 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/definitions/get_move_responses/200"
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
+        '415':
+          description: invalid content type
+          schema:
+            "$ref": "#/definitions/error_responses/415"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/415"

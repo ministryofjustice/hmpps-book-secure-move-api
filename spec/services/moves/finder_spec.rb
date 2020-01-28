@@ -57,10 +57,13 @@ RSpec.describe Moves::Finder do
 
     context 'with no location type and no location' do
       let!(:move) { create :move, move_type: 'prison_recall', to_location: nil }
+      let!(:cancelled_move) { create :move, status: 'cancelled' }
+      let!(:completed_move) { create :move, status: 'completed' }
+
       let(:filter_params) { {} }
 
       it 'returns all moves' do
-        expect(move_finder.call.pluck(:id)).to eql [move.id]
+        expect(move_finder.call).to match_array [move, cancelled_move, completed_move]
       end
     end
 
@@ -101,6 +104,16 @@ RSpec.describe Moves::Finder do
 
       it 'returns moves matching status' do
         expect(move_finder.call.pluck(:id)).to eql [move.id]
+      end
+    end
+
+    context 'with multiple statuses' do
+      let!(:cancelled_move) { create :move, status: 'cancelled' }
+      let!(:completed_move) { create :move, status: 'completed' }
+      let(:filter_params) { { status: [move.status, cancelled_move.status].join(',') } }
+
+      it 'returns moves matching status' do
+        expect(move_finder.call).to match_array [move, cancelled_move]
       end
     end
 
