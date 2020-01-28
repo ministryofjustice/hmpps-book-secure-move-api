@@ -46,8 +46,6 @@ namespace :reference_data do
         AVS1
         AVS2
         AVS3
-        BDS1
-        BDS2
         CHE1
         CHE2
         CHE3
