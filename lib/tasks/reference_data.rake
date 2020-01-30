@@ -61,9 +61,12 @@ namespace :reference_data do
         DC5
         DC6
         DC7
+        DHM1
         DHM2
         DHM3
+        DHM4
         DHM5
+        DHM6
         DP1
         DP2
         DP3
@@ -75,7 +78,9 @@ namespace :reference_data do
         DRB3
         DRB5
         DST1
+        DST2
         DST3
+        GCS1
         GMP1
         GMP2
         GMP3
@@ -88,8 +93,10 @@ namespace :reference_data do
         GWN1
         GWN2
         HMB2
+        HMB3
         HMB4
         HMB5
+        HNT1
         HNT2
         HNT4
         HNT6
@@ -119,14 +126,17 @@ namespace :reference_data do
         MRS3
         MRS4
         MRS5
+        NRU1
         NRU2
         NRU3
+        NRU4
         NTS1
         NTS2
         NTS3
         NTT1
         NTT3
         NWA1
+        NWA2
         NWA4
         NWA5
         NYK1
@@ -139,6 +149,14 @@ namespace :reference_data do
         SRY3
         SRY4
         STCUSU
+        STF1
+        STF2
+        STF4
+        SUS1
+        SUS2
+        SUS3
+        SUS4
+        SUS5
         SWL1
         SWL2
         SWL3
@@ -169,26 +187,15 @@ namespace :reference_data do
         WWM5
         WWM6
         WWM7
+        WYP1
         WYP2
         WYP3
         WYP4
         WYP5
         WYP6
+        WYP7
         WYP8
         WYP9
-        DHM1
-        DHM4
-        DHM6
-        DST2
-        GCS1
-        HMB3
-        HNT1
-        NWA2
-        STF1
-        STF2
-        STF4
-        WYP1
-        WYP7
       ],
       serco: %w[
         BDS1
