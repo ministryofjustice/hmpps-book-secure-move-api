@@ -15,6 +15,7 @@ module AssessmentQuestions
       { key: :wheelchair, category: :health, title: 'Wheelchair user' },
       { key: :pregnant, category: :health, title: 'Pregnant' },
       { key: :other_health, category: :health, title: 'Any other requirements' },
+      { key: :special_vehicle, category: :health, title: 'Special vehicle' },
       { key: :solicitor, category: :court, title: 'Solicitor or other legal representation' },
       { key: :interpreter, category: :court, title: 'Sign or other language interpreter' },
       { key: :other_court, category: :court, title: 'Any other information' },
