@@ -36,6 +36,3 @@ coverage
 .idea
 *.iml
 
-# documentation generated on the fly in Dockerfile
-swagger/v1/swagger.yaml
-
