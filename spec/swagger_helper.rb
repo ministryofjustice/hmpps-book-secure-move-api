@@ -74,6 +74,53 @@ RSpec.configure do |config|
             },
           },
         },
+        schemas: {
+          Move: {
+            "$ref": 'move.json#/Move',
+          },
+          PersonReference: {
+            "$ref": 'person_reference.json#/PersonReference',
+          },
+          LocationReference: {
+            "$ref": 'location_reference.json#/LocationReference',
+          },
+          Location: {
+            "$ref": 'location.json#/Location',
+          },
+          Person: {
+            "$ref": 'person.json#/Person',
+          },
+          Ethnicity: {
+            "$ref": 'ethnicity.json#/Ethnicity',
+          },
+          Gender: {
+            "$ref": 'gender.json#/Gender',
+          },
+          Nationality: {
+            "$ref": 'nationality.json#/Nationality',
+          },
+          Supplier: {
+            "$ref": 'supplier.json#/Supplier',
+          },
+          Document: {
+            "$ref": 'document.json/Document',
+          },
+          AssessmentAnswer: {
+            "$ref": 'assessment_answer.json#/AssessmentAnswer',
+          },
+          AssessmentQuestion: {
+            "$ref": 'assessment_question.json#/AssessmentQuestion',
+          },
+          ProfileIdentifier: {
+            "$ref": 'profile_identifier.json#/ProfileIdentifier',
+          },
+          PaginationLinks: {
+            "$ref": 'pagination_links.json#/PaginationLinks',
+          },
+          Pagination: {
+            "$ref": 'pagination.json#/Pagination',
+          },
+        },
       },
       definitions: {
         location_reference: load_swagger_json('location_reference.json'),
