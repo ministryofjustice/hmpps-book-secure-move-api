@@ -1,0 +1,1118 @@
+---
+basePath: "/api/v1"
+openapi: 3.0.1
+info:
+  title: PECS4 API V1 Docs
+  version: v1
+  description: Book A Secure Move supplier and frontend API.
+consumes:
+- application/vnd.api+json
+servers:
+- url: http://localhost:3000/api/v1
+  description: Local development (localhost)
+- url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  description: Staging API
+- url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  description: PreProd API
+- url: https://api.bookasecuremove.service.justice.gov.uk/api/v1
+  description: Production API
+security:
+- oauth2: []
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          authorizationUrl: "/oauth/authorize"
+          tokenUrl: "/oauth/token/"
+          scopes: {}
+definitions:
+  location_reference:
+    LocationReference:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          oneOf:
+          - type: object
+            required:
+            - id
+            - type
+            properties:
+              type:
+                type: string
+                example: locations
+                description: The type of this object - always `locations`
+              id:
+                type: string
+                format: uuid
+                example: 3561f372-9f1c-4e13-997e-b11e1647cce1
+                description: The unique identifier (UUID) of object that this reference
+                  points to
+          - type: 'null'
+  get_move_responses:
+    '200':
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/definitions/move/Move"
+  move:
+    Move:
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+          description: The unique identifier (UUID) of this object
+        type:
+          type: string
+          example: moves
+          description: The type of this object - always `moves`
+        attributes:
+          type: object
+          required:
+          - status
+          - date
+          - reference
+          properties:
+            reference:
+              type: string
+              example: TM7B3A2S
+              description: Unique human-readable identifier for the Move
+            status:
+              type: string
+              enum:
+              - requested
+              - cancelled
+              description: Indicates the stage in it's lifecycle that this move is
+                at
+            move_type:
+              type: string
+              enum:
+              - court_appearance
+              - prison_recall
+              - prison_transfer
+              description: Indicates the type of move, e.g. prison transfer or court
+                appearance
+            time_due:
+              type: string
+              format: date-time
+              description: Time due at the destination, e.g. court appointment time
+            updated_at:
+              type: string
+              format: date-time
+              description: Timestamp of when the move was last created or updated
+            date:
+              type: string
+              format: date
+              example: '2019-05-24'
+              description: Date on which the move is scheduled
+            additional_information:
+              oneOf:
+              - type: string
+              - type: 'null'
+              description: Additional information about the move that the supplier
+                should be made aware of
+            cancellation_reason:
+              oneOf:
+              - type: string
+                enum:
+                - made_in_error
+                - supplier_declined_to_move
+                - other
+              - type: 'null'
+              description: Reason the move has been cancelled
+            cancellation_reason_comment:
+              oneOf:
+              - type: string
+              - type: 'null'
+              description: In case 'other' is chosen as cancellation_reason, further
+                details can be specified
+        relationships:
+          type: object
+          properties:
+            person:
+              "$ref": "#/definitions/person_reference/PersonReference"
+              description: The person being moved
+            from_location:
+              "$ref": "#/definitions/location_reference/LocationReference"
+              description: The location that the person is being moved from
+            to_location:
+              "$ref": "#/definitions/location_reference/LocationReference"
+              description: The location that the person is being moved to
+  person_reference:
+    PersonReference:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - type
+          - id
+          properties:
+            type:
+              type: string
+              example: people
+              description: The type of this object - always `people`
+            id:
+              type: string
+              format: uuid
+              example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+              description: The unique identifier (UUID) of the object that this reference
+                points to
+  errors:
+    BadRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Bad request
+        detail:
+          type: string
+          example: The server cannot or will not process the request due to an apparent
+            client error
+    Forbidden:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Forbidden
+        detail:
+          type: string
+          example: The resource is readonly
+    NotAuthorisedError:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Not authorized
+        detail:
+          type: string
+          example: Token expired or invalid
+    ResourceNotFound:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Resource not found
+        detail:
+          type: string
+          example: The requested resource was not found
+    UnsupportedMediaType:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Invalid Media Type
+        detail:
+          type: string
+          example: Content-Type must be application/vnd.api+json
+    UnprocessableEntity:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Unprocessable entity
+        code:
+          type: string
+          example: validation_error
+        detail:
+          type: string
+          example: The request was well-formed but was unable to be followed due to
+            semantic errors
+        source:
+          type: object
+          properties:
+            pointer:
+              type: string
+              example: "/data/attributes/property"
+  error_responses:
+    '401':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/NotAuthorisedError"
+    '404':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/ResourceNotFound"
+    '415':
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            "$ref": "#/definitions/errors/UnsupportedMediaType"
+paths:
+  "/moves":
+    get:
+      summary: Returns a list of moves
+      tags:
+      - Moves
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: filter[date_from]
+        in: query
+        description: Filters results to only include moves on and after the given
+          date, e.g. `2019-05-02`
+        schema:
+          type: string
+          example: '2019-05-09'
+        format: date
+      - name: filter[date_to]
+        in: query
+        description: Filters results to only include moves up to and including the
+          given date, e.g. `2019-05-09`
+        schema:
+          type: string
+          example: '2019-05-09'
+        format: date
+      - name: filter[status]
+        in: query
+        description: Filters results to only include moves with the given status
+        schema:
+          type: string
+          enum:
+          - requested
+          - cancelled
+      - name: filter[from_location_id]
+        description: Filters results to only include moves from the given location
+          UUIDs
+        in: query
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - name: filter[to_location_id]
+        description: Filters results to only include moves to the given location UUIDs
+        in: query
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - name: page
+        in: query
+        description: The page of records to return, defaults to 1 (the first page)
+        schema:
+          type: integer
+        example: 1
+      - name: per_page
+        in: query
+        description: Number of records to return in a single response, defaults to
+          20, maximum value is 100.
+        schema:
+          type: integer
+        example: 1
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_moves_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_moves_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_moves_responses.json#/415
+    post:
+      summary: Creates a new move
+      tags:
+      - Moves
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: body
+        in: body
+        required: true
+        description: The move object to be created
+        schema:
+          "$ref": move.json#/Move
+      responses:
+        '201':
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/201
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_moves_responses.json#/422
+  "/people":
+    get:
+      summary: Returns a list of people
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: filter[police_national_computer]
+        in: query
+        description: Filters results to only include people identified by that police_national_computer
+        schema:
+          type: string
+          example: 07/1435713R
+        format: string
+        required: true
+      - name: page
+        in: query
+        description: The page of records to return, defaults to 1 (the first page)
+        schema:
+          type: integer
+        example: 1
+      - name: per_page
+        in: query
+        description: Number of records to return in a single response, defaults to
+          20, maximum value is 100.
+        schema:
+          type: integer
+        example: 1
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.json#/415
+    post:
+      summary: Creates a new person and their associated profile
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: body
+        in: body
+        required: true
+        description: The person object to be created
+        schema:
+          "$ref": person.json#/Person
+      responses:
+        '201':
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/201
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.json#/422
+  "/people/{personId}":
+    patch:
+      summary: Updates an existing person and their associated profile. Aliased as
+        PUT /people/{personId}.
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: personId
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: body
+        in: body
+        required: true
+        description: The person object to be updated
+        schema:
+          "$ref": person.json#/Person
+      responses:
+        '200':
+          description: updated
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/201
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_people_responses.json#/422
+  "/reference/genders":
+    get:
+      summary: Returns a list of genders
+      tags:
+      - Genders
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_genders_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_genders_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_genders_responses.json#/415
+  "/reference/ethnicities":
+    get:
+      summary: Returns a list of ethnicities
+      tags:
+      - Ethnicities
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_ethnicities_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_ethnicities_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_ethnicities_responses.json#/415
+  "/reference/nationalities":
+    get:
+      summary: Returns a list of nationalities
+      tags:
+      - Nationalities
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_nationalities_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_nationalities_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_nationalities_responses.json#/415
+  "/moves/{moveId}":
+    patch:
+      summary: Updates a move. Aliased as PUT /moves/{moveId}.
+      tags:
+      - Moves
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: moveId
+        in: path
+        required: true
+        description: The ID of the move
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: body
+        in: body
+        required: true
+        description: The move object to be modified
+        schema:
+          "$ref": move.json#/Move
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/200
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": put_move_responses.json#/422
+    delete:
+      summary: Deletes a move
+      tags:
+      - Moves
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: moveId
+        in: path
+        required: true
+        description: The ID of the move
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": delete_move_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": delete_move_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": delete_move_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": delete_move_responses.json#/415
+  "/moves/{MoveId}/documents":
+    post:
+      summary: Creates a new document
+      tags:
+      - Document
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: body
+        in: body
+        required: true
+        description: The document object to be created
+        schema:
+          "$ref": document.json#/Document
+      responses:
+        '201':
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/201
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_documents_responses.json#/422
+  "/reference/assessment_questions":
+    get:
+      summary: Returns a list of assessment questions, optionally filtered by category
+      tags:
+      - Assessment Questions
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: filter[category]
+        in: query
+        description: Filters results to only include move detail types for the given
+          category
+        schema:
+          type: string
+          enum:
+          - risks
+          - health
+          - court
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_assessment_questions_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_assessment_questions_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_assessment_questions_responses.json#/415
+  "/reference/locations":
+    get:
+      summary: Returns a list of locations, optionally filtered by type or NOMIS agency
+        ID
+      tags:
+      - Locations
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: filter[location_type]
+        in: query
+        description: Filters results by location type, e.g. court or prison
+        schema:
+          type: string
+          enum:
+          - court
+          - police
+          - prison
+      - name: filter[nomis_agency_id]
+        in: query
+        description: Filters results by NOMIS agency ID
+        schema:
+          type: string
+      - name: filter[supplier_id]
+        in: query
+        description: Filters results to only include locations from the given supplier
+        schema:
+          type: string
+        format: uuid
+        example: 950ef512-a25f-46d7-8ced-7ad09510659b
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_locations_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_locations_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_locations_responses.json#/415
+  "/reference/locations/{locationId}":
+    get:
+      summary: Returns the details of a location
+      tags:
+      - Locations
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: locationId
+        in: path
+        required: true
+        description: The ID of the location
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_location_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_location_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_location_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_location_responses.json#/415
+  "/reference/suppliers":
+    get:
+      summary: Returns the list of suppliers
+      tags:
+      - Suppliers
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_suppliers_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_suppliers_responses.json#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_suppliers_responses.json#/415
+  "/reference/suppliers/{supplierKey}":
+    get:
+      summary: Returns the details of a supplier
+      tags:
+      - Suppliers
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: supplierKey
+        in: path
+        required: true
+        description: The key of the supplier
+        schema:
+          type: string
+        example: test_supplier
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_supplier_responses.json#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_supplier_responses.json#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_supplier_responses.json#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_supplier_responses.json#/415
+  "/moves/{move_id}":
+    get:
+      summary: Returns the details of a move
+      tags:
+      - Moves
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+          default: Bearer <your-client-token>
+        required: true
+      - name: Content-Type
+        in: header
+        description: Accepted request content type
+        schema:
+          type: string
+          default: application/vnd.api+json
+        required: true
+      - name: move_id
+        in: path
+        description: The ID of the move
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+        required: true
+      responses:
+        '401':
+          description: unauthorised
+          schema:
+            "$ref": "#/definitions/error_responses/401"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/401"
+        '415':
+          description: invalid content type
+          schema:
+            "$ref": "#/definitions/error_responses/415"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/415"
+        '404':
+          description: not found
+          schema:
+            "$ref": "#/definitions/error_responses/404"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/error_responses/404"
+        '200':
+          description: success
+          schema:
+            "$ref": "#/definitions/get_move_responses/200"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/definitions/get_move_responses/200"
