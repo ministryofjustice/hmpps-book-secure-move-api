@@ -22,8 +22,4 @@ EXPOSE $PUMA_PORT
 ENV APPUID 1000
 USER $APPUID
 
-WORKDIR /usr/src/app
-
-RUN bundle exec rake rswag:specs:swaggerize
-
 ENTRYPOINT ["./run.sh"]
