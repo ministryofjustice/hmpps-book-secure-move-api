@@ -23,6 +23,7 @@ gem 'puma', '~> 3.12.2'
 gem 'rails', '~> 5.2.3'
 gem 'sentry-raven'
 gem 'tty-prompt'
+gem 'validate_url', '~> 1.0.8'
 
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests
 # against the API without an Access-Control-Allow-Origin error.
