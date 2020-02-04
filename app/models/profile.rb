@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Profile < ApplicationRecord
+class Profile < VersionedModel
   before_validation :set_assessment_answers
 
   belongs_to :person
@@ -21,10 +21,39 @@ class Profile < ApplicationRecord
   ].freeze
 
   def merge_assessment_answers!(new_assessment_answers, category)
-    self.assessment_answers =
+    new_list =
       assessment_answers.reject { |a| a.category == category } +
       manually_created_assessment_answers.select { |a| a.category == category } +
       new_assessment_answers
+
+    deleted = assessment_answers.reject { |a| new_list.map(&:assessment_question_id).include?(a.assessment_question_id) }
+    inserted = new_list.reject { |a| assessment_answers.map(&:assessment_question_id).include?(a.assessment_question_id) }
+    changed = new_list.select do |a|
+      answer = assessment_answers.detect { |aa| aa.assessment_question_id == a.assessment_question_id }
+      answer && answer.attributes != a.attributes
+    end
+
+    unless deleted.empty? && inserted.empty? && changed.empty?
+      self.assessment_answers = new_list
+    end
+  end
+
+  def profile_identifiers=(new_identifiers)
+    inserted = new_identifiers.reject do |new|
+      profile_identifiers.map(&:identifier_type).include?(new[:identifier_type])
+    end
+    deleted = profile_identifiers.reject do |old|
+      new_identifiers.map { |pi| pi[:identifier_type] }.include?(old.identifier_type)
+    end
+    changed = profile_identifiers.select do |old|
+      new_id = new_identifiers.detect { |pi| pi[:identifier_type] == old.identifier_type }
+      new_id && new_id[:value] != old.value
+    end
+
+    unless deleted.empty? && inserted.empty? && changed.empty?
+      # self[:profile_identifiers] = new_identifiers
+      super
+    end
   end
 
 private

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Person < ApplicationRecord
+class Person < VersionedModel
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
 

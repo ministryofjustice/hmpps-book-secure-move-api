@@ -187,4 +187,12 @@ RSpec.describe Profile, type: :model do
       )
     end
   end
+
+  context 'with versioning' do
+    let(:profile) { create(:profile) }
+
+    it 'has a create event' do
+      expect(profile.versions.map(&:event)).to eq(%w[create])
+    end
+  end
 end
