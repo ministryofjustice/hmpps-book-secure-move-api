@@ -1,9 +1,10 @@
 FactoryBot.define do
   factory :subscription do
     association :supplier
-    webhook_url { "http://foo.bar/" }
-    username { "Username" }
-    password { "Password" }
-    secret { "Secret" }
+    callback_url { 'http://foo.bar/?bla=bla' }
+    topic { '*' }
+    username { 'Username' }
+    password { 'Password' }
+    secret { 'Secret' }
   end
 end

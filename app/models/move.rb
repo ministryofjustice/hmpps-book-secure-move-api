@@ -33,6 +33,7 @@ class Move < ApplicationRecord
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person
   has_many :documents, dependent: :destroy
+  has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
   validates(

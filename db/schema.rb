@@ -231,14 +231,14 @@ ActiveRecord::Schema.define(version: 2020_01_22_090758) do
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
     t.string "topic", default: "*", null: false
-    t.string "callback", null: false
+    t.string "callback_url", null: false
     t.string "username"
     t.string "password"
     t.string "secret"
     t.boolean "enabled", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["callback"], name: "index_subscriptions_on_callback"
+    t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
   end
 

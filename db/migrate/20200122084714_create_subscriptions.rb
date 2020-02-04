@@ -3,7 +3,7 @@ class CreateSubscriptions < ActiveRecord::Migration[5.2]
     create_table :subscriptions, id: :uuid do |t|
       t.references :supplier, foreign_key: true, null: false, type: :uuid
       t.string :topic, null: false, default: '*'
-      t.string :callback, null: false, index: true
+      t.string :callback_url, null: false, index: true
       t.string :username
       t.string :password
       t.string :secret
