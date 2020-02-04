@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_20_121356) do
+ActiveRecord::Schema.define(version: 2020_01_22_090758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -138,6 +138,27 @@ ActiveRecord::Schema.define(version: 2020_01_20_121356) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "subscription_id", null: false
+    t.datetime "time_stamp", null: false
+    t.string "event_type", null: false
+    t.uuid "object_id", null: false
+    t.string "object_type", null: false
+    t.integer "delivery_attempts", default: 0, null: false
+    t.datetime "delivery_attempted_at"
+    t.datetime "delivered_at"
+    t.jsonb "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
+    t.index ["event_type"], name: "index_notifications_on_event_type"
+    t.index ["object_id"], name: "index_notifications_on_object_id"
+    t.index ["object_type", "object_id"], name: "index_notifications_on_object_type_and_object_id"
+    t.index ["object_type"], name: "index_notifications_on_object_type"
+    t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
+    t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
+  end
+
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -207,6 +228,20 @@ ActiveRecord::Schema.define(version: 2020_01_20_121356) do
     t.integer "latest_nomis_booking_id"
   end
 
+  create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "supplier_id", null: false
+    t.string "topic", default: "*", null: false
+    t.string "callback", null: false
+    t.string "username"
+    t.string "password"
+    t.string "secret"
+    t.boolean "enabled", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["callback"], name: "index_subscriptions_on_callback"
+    t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
+  end
+
   create_table "suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "key", null: false
@@ -222,7 +257,9 @@ ActiveRecord::Schema.define(version: 2020_01_20_121356) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
+  add_foreign_key "subscriptions", "suppliers"
 end

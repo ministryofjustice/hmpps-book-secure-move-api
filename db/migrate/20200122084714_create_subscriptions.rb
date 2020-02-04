@@ -1,4 +1,4 @@
-class Createsubscriptions < ActiveRecord::Migration[5.2]
+class CreateSubscriptions < ActiveRecord::Migration[5.2]
   def change
     create_table :subscriptions, id: :uuid do |t|
       t.references :supplier, foreign_key: true, null: false, type: :uuid
