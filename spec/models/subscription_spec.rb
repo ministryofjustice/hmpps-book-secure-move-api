@@ -7,7 +7,7 @@ RSpec.describe Subscription do
 
   subject { build(:subscription) }
 
-  describe 'webhook_url' do
+  describe 'callback' do
     subject { build(:subscription, callback: callback) }
     context 'invalid url' do
       let(:callback) { 'foo bar' }

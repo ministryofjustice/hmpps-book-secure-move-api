@@ -2,6 +2,6 @@
 
 require 'rails_helper'
 
-RSpec.describe WebhookSerializer do
+RSpec.describe SubscriptionSerializer do
   pending "Add tests here"
 end
