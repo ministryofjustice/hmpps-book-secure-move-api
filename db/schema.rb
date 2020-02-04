@@ -142,8 +142,8 @@ ActiveRecord::Schema.define(version: 2020_01_22_090758) do
     t.uuid "subscription_id", null: false
     t.datetime "time_stamp", null: false
     t.string "event_type", null: false
-    t.uuid "object_id", null: false
-    t.string "object_type", null: false
+    t.uuid "topic_id", null: false
+    t.string "topic_type", null: false
     t.integer "delivery_attempts", default: 0, null: false
     t.datetime "delivery_attempted_at"
     t.datetime "delivered_at"
@@ -152,11 +152,11 @@ ActiveRecord::Schema.define(version: 2020_01_22_090758) do
     t.datetime "updated_at", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
-    t.index ["object_id"], name: "index_notifications_on_object_id"
-    t.index ["object_type", "object_id"], name: "index_notifications_on_object_type_and_object_id"
-    t.index ["object_type"], name: "index_notifications_on_object_type"
     t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
     t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
+    t.index ["topic_id"], name: "index_notifications_on_topic_id"
+    t.index ["topic_type", "topic_id"], name: "index_notifications_on_topic_type_and_topic_id"
+    t.index ["topic_type"], name: "index_notifications_on_topic_type"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
