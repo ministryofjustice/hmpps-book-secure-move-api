@@ -67,7 +67,7 @@ RSpec.describe NomisClient::Moves do
         courtEvents: true,
         fromDateTime: '2019-07-08T00:00:00',
         toDateTime: '2019-07-09T00:00:00',
-        movements: false,
+        movements: true,
         releaseEvents: false,
         transferEvents: false,
       }
@@ -76,13 +76,13 @@ RSpec.describe NomisClient::Moves do
     before do
       allow(NomisClient::Base).to(
         receive(:get)
-        .with(
-          '/movements/transfers?agencyId=LEI',
-          params: params.except(:agencyId),
-          headers: { 'Page-Limit' => '500' },
+          .with(
+            '/movements/transfers?agencyId=LEI',
+            params: params.except(:agencyId),
+            headers: { 'Page-Limit' => '500' },
+            )
+          .and_return(nomis_response),
         )
-        .and_return(nomis_response),
-      )
     end
 
     it 'has the correct number of results' do

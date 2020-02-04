@@ -17,20 +17,6 @@ class Profile
       :imported_from_nomis,
     )
 
-    attr_accessor(
-      :title,
-      :comments,
-      :assessment_question_id,
-      :category,
-      :key,
-      :nomis_alert_code,
-      :nomis_alert_type,
-      :nomis_alert_description,
-      :nomis_alert_type_description,
-      :imported_from_nomis,
-    )
-    attr_reader :created_at, :expires_at
-
     validates :assessment_question_id, presence: true
     validates :nomis_alert_type, presence: true, if: ->(assessment_answer) { assessment_answer.imported_from_nomis }
     validates :nomis_alert_code, presence: true, if: ->(assessment_answer) { assessment_answer.imported_from_nomis }
