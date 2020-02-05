@@ -4,4 +4,12 @@ class Subscription < ApplicationRecord
 
   validates :supplier, presence: true
   validates :callback_url, url: true, presence: true
+
+  def secret=(sekret)
+    write_attribute(:encrypted_secret, Encryptor.encrypt(sekret))
+  end
+
+  def secret
+    Encryptor.decrypt(encrypted_secret)
+  end
 end
