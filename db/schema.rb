@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_27_150100) do
+ActiveRecord::Schema.define(version: 2020_02_05_151906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -235,7 +235,7 @@ ActiveRecord::Schema.define(version: 2020_01_27_150100) do
     t.string "callback_url", null: false
     t.string "username"
     t.string "password"
-    t.string "secret"
+    t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
