@@ -4,4 +4,6 @@ class Subscription < ApplicationRecord
 
   validates :supplier, presence: true
   validates :callback_url, url: true, presence: true
+
+  scope :enabled, -> { where(enabled: true) }
 end

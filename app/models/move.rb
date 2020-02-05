@@ -65,6 +65,11 @@ class Move < ApplicationRecord
     Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
+  def suppliers
+    # TODO: the suppliers are currently inferred using the move's from_location. This model should be reviewed and probably replaced with an explicit supplier_id.
+    from_location.suppliers
+  end
+
 private
 
   def set_reference
