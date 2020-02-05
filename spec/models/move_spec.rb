@@ -6,6 +6,7 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
   it { is_expected.to belong_to(:person) }
+  it { is_expected.to have_many(:notifications) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:person) }
