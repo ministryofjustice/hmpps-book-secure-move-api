@@ -23,4 +23,20 @@ RSpec.describe Subscription do
       it { is_expected.to be_valid }
     end
   end
+
+  describe 'secret' do
+    subject(:subscription) { create(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.secret).to eq('Secret') }
+    end
+  end
+
+  describe 'encrypted_secret' do
+    subject(:subscription) { create(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.encrypted_secret).not_to eq('Secret') }
+    end
+  end
 end
