@@ -1,0 +1,13 @@
+{
+  "201": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "$ref": "#/definitions/document/Document"
+      }
+    }
+  }
+}
