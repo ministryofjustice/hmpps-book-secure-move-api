@@ -46,14 +46,12 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
-  gem 'rswag-specs'
   gem 'shoulda-matchers'
   gem 'timecop'
   gem 'webmock'
 end
 
 group :development do
-  gem 'climate_control'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rubocop-govuk'
   gem 'rubocop-rspec'
@@ -62,5 +60,7 @@ group :development do
 end
 
 group :test do
+  gem 'climate_control'
+  gem 'rswag-specs'
   gem 'simplecov', require: false
 end

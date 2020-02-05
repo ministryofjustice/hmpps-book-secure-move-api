@@ -33,6 +33,9 @@ commands:
     steps:
       - checkout
 
+      - attach_workspace:
+          at: swagger/v1
+
       - setup_remote_docker:
           docker_layer_caching: true
 
@@ -114,7 +117,6 @@ jobs:
             sudo gem install bundler
             bundle install
 
-
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -127,6 +129,10 @@ jobs:
       - run:
           name: run tests
           command: COVERAGE=1 bundle exec rake
+
+      - persist_to_workspace:
+          root: swagger/v1
+          paths: swagger.yaml
 
   build_staging:
     <<: *cloud_container
@@ -175,7 +181,9 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - remove-swagger-yaml
       - deploy_staging:
           requires:
             - build_staging

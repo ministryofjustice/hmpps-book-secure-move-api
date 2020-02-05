@@ -228,35 +228,35 @@ namespace :reference_data do
         MPS16
         MPS17
         MPS18
+        MPS19
         MPS2
         MPS20
         MPS21
+        MPS22
         MPS23
         MPS24
         MPS25
         MPS26
         MPS27
+        MPS28
         MPS29
         MPS3
+        MPS30
+        MPS31
+        MPS32
+        MPS33
         MPS4
         MPS5
         MPS6
         MPS7
         MPS8
         MPS9
-        MPS30
-        MPS31
-        MPS32
-        MPS33
         NFL1
         NFL2
         NFL3
         NFL4
         SFL1
         SFL2
-        MPS19
-        MPS22
-        MPS28
       ],
     }
 
