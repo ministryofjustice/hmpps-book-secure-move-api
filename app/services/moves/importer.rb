@@ -28,7 +28,6 @@ module Moves
       people.each do |offender_no, person_data|
         profile = People::Importer.new(person_data).call
         new_person_count += 1 if profile.new_record?
-        profile.save!
         Alerts::Importer.new(profile: profile, alerts: alerts.fetch(offender_no, [])).call
         PersonalCareNeeds::Importer.new(profile: profile,
                                         personal_care_needs: personal_care_needs.fetch(offender_no, [])).call
