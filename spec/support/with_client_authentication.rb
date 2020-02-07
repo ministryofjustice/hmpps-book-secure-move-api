@@ -14,7 +14,7 @@ RSpec.shared_context 'with client authentication', shared_context: :metadata do
       '/oauth/token',
       params: { grant_type: 'client_credentials' },
       headers: { 'Authorization': "Basic #{Base64.strict_encode64(credentials)}" },
-    )
+      )
 
     @access_token = JSON.parse(session.response.body)['access_token']
   end
@@ -35,3 +35,19 @@ RSpec.configure do |rspec|
   rspec.include_context 'with invalid authentication request headers', with_invalid_auth_headers: true
 end
 # rubocop:enable RSpec/InstanceVariable
+
+def headers_for_login_as(application)
+  credentials = "#{application.uid}:#{application.plaintext_secret}"
+
+  session = ActionDispatch::Integration::Session.new(Rails.application)
+  session.process(
+    :post,
+    '/oauth/token',
+    params: { grant_type: 'client_credentials' },
+    headers: { 'Authorization': "Basic #{Base64.strict_encode64(credentials)}" },
+    )
+
+  access_token = JSON.parse(session.response.body)['access_token']
+  valid_bearer_header_value = "Bearer #{access_token}"
+  { 'CONTENT_TYPE': ApiController::CONTENT_TYPE, 'Authorization': valid_bearer_header_value }
+end
