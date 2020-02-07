@@ -5,7 +5,7 @@ module Api
     class PeopleController < ApiController
       def index
         people = People::Finder.new(filter_params).call
-        paginate people, include: PersonSerializer::INCLUDED_DETAIL
+        paginate Kaminari.paginate_array(people.map(&:latest_profile)), include: ProfileSerializer::INCLUDED_DETAIL
       end
 
       def create
@@ -40,7 +40,7 @@ module Api
       end
 
       def render_person(person, status)
-        render json: person, status: status, include: PersonSerializer::INCLUDED_DETAIL
+        render json: person.latest_profile, status: status, include: ProfileSerializer::INCLUDED_DETAIL
       end
 
       def person_params

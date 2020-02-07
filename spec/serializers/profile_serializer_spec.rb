@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe PersonSerializer do
-  subject(:serializer) { described_class.new(person) }
+RSpec.describe ProfileSerializer do
+  subject(:serializer) { described_class.new(profile) }
 
-  let(:person) { create :person }
+  let(:profile) { create :profile }
   let(:adapter_options) { {} }
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
@@ -16,7 +16,7 @@ RSpec.describe PersonSerializer do
   end
 
   it 'contains an id property' do
-    expect(result[:data][:id]).to eql person.id
+    expect(result[:data][:id]).to eql profile.person.id
   end
 
   it 'contains a first_names attribute' do
@@ -63,7 +63,6 @@ RSpec.describe PersonSerializer do
     end
 
     before do
-      profile = person.latest_profile
       profile.assessment_answers = [
         risk_alert,
         health_alert,
@@ -94,7 +93,6 @@ RSpec.describe PersonSerializer do
     end
 
     before do
-      profile = person.latest_profile
       profile.profile_identifiers = profile_identifiers
       profile.save!
     end
@@ -106,7 +104,7 @@ RSpec.describe PersonSerializer do
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
-    let(:ethnicity) { person.latest_profile&.ethnicity }
+    let(:ethnicity) { profile.ethnicity }
     let(:expected_json) do
       [
         {
@@ -128,11 +126,11 @@ RSpec.describe PersonSerializer do
 
   describe 'gender' do
     before do
-      person.latest_profile.update(gender_additional_information: gender_additional_information)
+      profile.update(gender_additional_information: gender_additional_information)
     end
 
     let(:adapter_options) { { include: { gender: %I[title description] } } }
-    let(:gender) { person.latest_profile&.gender }
+    let(:gender) { profile.gender }
     let(:gender_additional_information) { 'more info about the person' }
     let(:expected_json) do
       [
