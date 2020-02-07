@@ -232,6 +232,13 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.integer "latest_nomis_booking_id"
   end
 
+  create_table "request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "application_id", null: false
+    t.string "request", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
     t.string "callback_url", null: false
@@ -243,6 +250,12 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
     t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
+  end
+
+  create_table "response_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "request_audit_id", null: false
+    t.jsonb "response", null: false
+    t.index ["response"], name: "index_response_audits_on_response", using: :gin
   end
 
   create_table "suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -274,5 +287,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
+  add_foreign_key "request_audits", "oauth_applications", column: "application_id"
   add_foreign_key "subscriptions", "suppliers"
 end

@@ -15,7 +15,7 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
 
   def current_user
-    doorkeeper_token&.application
+    current_application
   end
 
   def user_for_paper_trail
@@ -23,6 +23,22 @@ class ApiController < ApplicationController
   end
 
 private
+
+  def render *args
+    output = super
+    if current_application && args.first[:status].in?([200, 201, nil])
+      request_audit = RequestAudit.create!(application_id: current_application.id, request: request.path)
+      answer = JSON.parse(output)
+      answer['data'].each do |response|
+        request_audit.response_audits.create! response: response
+      end
+    end
+    output
+  end
+
+  def current_application
+    doorkeeper_token&.application
+  end
 
   def doorkeeper_unauthorized_render_options(*)
     {

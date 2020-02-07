@@ -31,6 +31,24 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
 
         expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
       end
+
+      context 'with audit' do
+        let!(:profile) { create(:profile, profile_identifiers: [{ identifier_type: 'police_national_computer', value: 'CD/7654321' }]) }
+        let(:person) { profile.person }
+        let(:params) { { filter: { police_national_computer: 'CD/7654321' } } }
+
+        before do
+          get '/api/v1/people', headers: headers, params: params
+        end
+
+        it 'creates an audit record' do
+          expect(ResponseAudit.last).not_to be_nil
+        end
+
+        it 'creates a searchable audit' do
+          expect(ResponseAudit.person_reads(person.id).count).to eq(1)
+        end
+      end
     end
 
     context 'when Nomis offender number no is provided' do

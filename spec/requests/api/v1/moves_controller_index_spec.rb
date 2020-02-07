@@ -18,11 +18,21 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      get '/api/v1/moves', headers: headers, params: params
+      get '/api/v1/moves?per_page=21', headers: headers, params: params
     end
 
     context 'when successful' do
+      let(:person) { Person.first }
+
       it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'returns all moves' do
+        expect(response_json['data'].size).to be 21
+      end
+
+      it 'creates person audits' do
+        expect(ResponseAudit.person_reads(person.id).size).to eq(1)
+      end
 
       describe 'filtering results' do
         let(:from_location_id) { moves.first.from_location_id }
@@ -100,7 +110,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           }
         end
 
-        it 'paginates 20 results per page' do
+        it 'paginates 20 results per page by default', :skip_before do
+          get '/api/v1/moves', headers: headers
+
           expect(response_json['data'].size).to eq 20
         end
 
@@ -116,7 +128,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           expect(response_json['data'].size).to eq 15
         end
 
-        it 'provides meta data with pagination' do
+        it 'provides meta data with pagination', skip_before: true do
+          get '/api/v1/moves', headers: headers
+
           expect(response_json['meta']['pagination']).to include_json(meta_pagination)
         end
       end
