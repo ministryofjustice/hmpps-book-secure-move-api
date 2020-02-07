@@ -15,7 +15,9 @@ if ENV['COVERAGE']
     # Ignore Prometheus metrics
     add_filter 'lib/prometheus/move_collector.rb'
 
-    minimum_coverage 98.39
+    # The intention of this value is that it should never go down after a PR
+    # It is a (very) naive attempt to prevent untested code entering the codebase
+    minimum_coverage 98.57
     # cope with a small drop from last time due to potential branch differences
     maximum_coverage_drop 0.12
   end
