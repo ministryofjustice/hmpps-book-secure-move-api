@@ -26,32 +26,32 @@ class PrepareNotificationsJob < ApplicationJob
     end
   end
 
-  private
+private
 
   def get_event_type(action, topic)
     event_type =
-        case action
-        when 'create'
-          'created'
-        when 'update'
-          'updated'
-        when 'destroy'
-          'deleted'
-        else
-          raise("Unhandled action type: #{topic.class}")
-        end
+      case action
+      when 'create'
+        'created'
+      when 'update'
+        'updated'
+      when 'destroy'
+        'deleted'
+      else
+        raise("Unhandled action type: #{topic.class}")
+      end
     event_type + '_' +
-        case topic.class
-        when Move
-          'move'
-        when Profile
-          'person'
-        else
-          raise("Unhandled topic type: #{topic.class}")
-        end
+      case topic.class
+      when Move
+        'move'
+      when Profile
+        'person'
+      else
+        raise("Unhandled topic type: #{topic.class}")
+      end
   end
 
-  def get_data(id, event_type, topic, time_stamp)
+  def get_data(id, event_type, _topic, time_stamp)
     # TODO: probably better to build a serializer that construct this here...
     {
       data: {
@@ -59,12 +59,12 @@ class PrepareNotificationsJob < ApplicationJob
         type: 'notifications',
         attributes: {
           event_type: event_type,
-          timestamp: time_stamp
+          timestamp: time_stamp,
         },
         relationships: {
-          foo: 'bar'
-        }
-      }
+          foo: 'bar',
+        },
+      },
     }
 
 
@@ -90,6 +90,5 @@ class PrepareNotificationsJob < ApplicationJob
     #         }
     #     }
     # }
-
   end
 end

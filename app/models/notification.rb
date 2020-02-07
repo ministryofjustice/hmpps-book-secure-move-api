@@ -13,6 +13,6 @@ class Notification < ApplicationRecord
     move_deleted: 'move_deleted',
     person_created: 'person_created',
     person_updated: 'person_updated',
-    person_deleted: 'person_deleted'
+    person_deleted: 'person_deleted',
   }
 end

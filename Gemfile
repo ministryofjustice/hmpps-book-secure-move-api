@@ -11,6 +11,7 @@ gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
 gem 'doorkeeper'
+gem 'faraday'
 gem 'json-schema'
 gem 'kaminari'
 gem 'net-http-persistent'
