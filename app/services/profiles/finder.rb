@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module People
+module Profiles
   class Finder
     attr_accessor :filter_params
 
@@ -9,7 +9,7 @@ module People
     end
 
     def call
-      apply_filters(Person)
+      apply_filters(Profile.includes(:person, :ethnicity, :gender))
     end
 
   private
@@ -21,8 +21,7 @@ module People
     def apply_police_national_computer_filters(scope)
       return unless filter_params.key?(:police_national_computer)
 
-      scope = scope.joins(:profiles)
-      scope.where('profiles.profile_identifiers @> ?', police_national_computer)
+      scope.where('profile_identifiers @> ?', police_national_computer)
     end
 
     def police_national_computer

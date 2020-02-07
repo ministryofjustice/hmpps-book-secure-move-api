@@ -4,8 +4,8 @@ module Api
   module V1
     class PeopleController < ApiController
       def index
-        people = People::Finder.new(filter_params).call
-        paginate Kaminari.paginate_array(people.map(&:latest_profile)), include: ProfileSerializer::INCLUDED_DETAIL
+        profiles = Profiles::Finder.new(filter_params).call
+        paginate profiles, include: ProfileSerializer::INCLUDED_DETAIL
       end
 
       def create

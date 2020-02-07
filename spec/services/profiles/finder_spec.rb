@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe People::Finder do
+RSpec.describe Profiles::Finder do
   subject(:people_finder) { described_class.new(filter_params) }
 
-  let!(:person) { create(:person) }
+  let!(:profile) { create(:profile) }
   let(:filter_params) { {} }
 
   describe 'filtering' do
@@ -13,7 +13,7 @@ RSpec.describe People::Finder do
       let(:filter_params) { { police_national_computer: 'AB/1234567' } }
 
       it 'returns people matching the police_national_computer' do
-        expect(people_finder.call.pluck(:id)).to eq [person.id]
+        expect(people_finder.call.pluck(:id)).to eq [profile.id]
       end
     end
   end

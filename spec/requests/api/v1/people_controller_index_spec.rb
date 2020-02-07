@@ -23,13 +23,13 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         it_behaves_like 'an endpoint that responds with success 200'
       end
 
-      it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
-        people_finder = instance_double('People::Finder', call: Person.all)
-        allow(People::Finder).to receive(:new).and_return(people_finder)
+      it 'delegates the query execution to Profiles::Finder with correct filter', skip_before: true do
+        profile_finder = instance_double('Profiles::Finder', call: Profile.all)
+        allow(Profiles::Finder).to receive(:new).and_return(profile_finder)
 
         get '/api/v1/people', headers: headers, params: params
 
-        expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
+        expect(Profiles::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
       end
     end
   end
