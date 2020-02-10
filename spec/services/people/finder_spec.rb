@@ -34,7 +34,7 @@ RSpec.describe People::Finder do
     context 'when matching nomis_offender_no filter' do
       let(:filter_params) { { nomis_offender_no: 'ABCDEFG' } }
 
-      it 'returns people matching the police_national_computer' do
+      it 'returns people matching the Nomis offender number' do
         expect(people_finder.call.pluck(:id)).to eq [person.id]
       end
     end

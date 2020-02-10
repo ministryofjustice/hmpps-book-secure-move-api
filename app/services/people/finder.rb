@@ -12,7 +12,7 @@ module People
       apply_filters(Person)
     end
 
-    private
+  private
 
     def apply_filters(scope)
       scope = scope.joins(:profiles)
