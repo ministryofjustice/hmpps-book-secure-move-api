@@ -8,6 +8,8 @@ class AssessmentQuestion < ApplicationRecord
     health: 'health',
     risk: 'risk',
     court: 'court',
+    hearing: 'hearing',
+    release_status: 'release_status',
   }
 
   validates :category, inclusion: { in: categories }

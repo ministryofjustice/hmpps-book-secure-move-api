@@ -19,6 +19,8 @@ module AssessmentQuestions
       { key: :solicitor, category: :court, title: 'Solicitor or other legal representation' },
       { key: :interpreter, category: :court, title: 'Sign or other language interpreter' },
       { key: :other_court, category: :court, title: 'Any other information' },
+      { key: :hearing_time, category: :hearing, title: 'Hearing time' },
+      { key: :hold_in_custody, category: :release_status, title: 'Hold in custody' },
     ].freeze
 
     def call
