@@ -2,7 +2,7 @@
 
 class Encryptor
   KEY = ActiveSupport::KeyGenerator.new(
-    ENV.fetch('SECRET_KEY_BASE'),
+    Rails.application.secret_key_base,
   ).generate_key(
     ENV.fetch('ENCRYPTOR_SALT'),
     ActiveSupport::MessageEncryptor.key_len,

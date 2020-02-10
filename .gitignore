@@ -36,3 +36,4 @@ coverage
 .idea
 *.iml
 
+swagger/v1/swagger.yaml

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_05_151906) do
+ActiveRecord::Schema.define(version: 2020_01_27_150100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -148,7 +148,6 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
     t.integer "delivery_attempts", default: 0, null: false
     t.datetime "delivery_attempted_at"
     t.datetime "delivered_at"
-    t.jsonb "data", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
@@ -231,10 +230,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
 
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
-    t.string "topic", default: "*", null: false
     t.string "callback_url", null: false
-    t.string "username"
-    t.string "password"
     t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
     t.datetime "created_at", null: false

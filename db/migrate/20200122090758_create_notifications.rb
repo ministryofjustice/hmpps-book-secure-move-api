@@ -9,7 +9,7 @@ class CreateNotifications < ActiveRecord::Migration[5.2]
       t.integer :delivery_attempts, null: false, default: 0
       t.datetime :delivery_attempted_at
       t.datetime :delivered_at, index: true
-      t.jsonb :data, null: false
+      # NB: no requirement to store JSON payload for now
 
       t.timestamps
     end
