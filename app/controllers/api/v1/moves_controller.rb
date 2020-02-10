@@ -3,8 +3,6 @@
 module Api
   module V1
     class MovesController < ApiController
-      include PrepareNotifications
-
       def index
         moves_params = Moves::ParamsValidator.new(params[:filter])
         if moves_params.valid?
@@ -25,7 +23,7 @@ module Api
         move = Move.new(move_attributes)
         authorize!(:create, move)
         move.save!
-        prepare_notifications(move)
+        Notifier.prepare_notifications(topic: move, action_name: 'create')
         render_move(move, 201)
       end
 
@@ -34,14 +32,14 @@ module Api
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         move.update!(patch_move_attributes)
-        prepare_notifications(move)
+        Notifier.prepare_notifications(topic: move, action_name: 'update')
         render_move(move, 200)
       end
 
       def destroy
         move = find_move
         move.destroy! # TODO: we probably should not be destroying moves
-        prepare_notifications(move)
+        Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
       end
 

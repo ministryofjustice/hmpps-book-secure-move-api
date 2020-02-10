@@ -23,6 +23,7 @@ gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.2'
 gem 'rails', '~> 5.2.3'
 gem 'sentry-raven'
+gem 'sidekiq'
 gem 'tty-prompt'
 gem 'validate_url', '~> 1.0.8'
 
