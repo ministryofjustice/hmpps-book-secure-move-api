@@ -40,13 +40,19 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
         expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
       end
 
-      it 'deletes the move', skip_before: true do
+      it 'deletes the document from the move', skip_before: true do
         expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
-          .to change(Document, :count).by(-1)
+          .to change { move.documents.count }.by(-1)
+      end
+
+      it 'does not delete the document', skip_before: true do
+        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+          .not_to change(Document, :count)
       end
 
       it 'does not delete the move' do
-        expect(Move.count).to be 1
+        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+          .not_to change(Move, :count)
       end
 
       it 'returns the correct data' do
