@@ -150,9 +150,11 @@ ActiveRecord::Schema.define(version: 2020_02_10_091636) do
     t.integer "delivery_attempts", default: 0, null: false
     t.datetime "delivery_attempted_at"
     t.datetime "delivered_at"
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
+    t.index ["discarded_at"], name: "index_notifications_on_discarded_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
     t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
     t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
@@ -235,9 +237,11 @@ ActiveRecord::Schema.define(version: 2020_02_10_091636) do
     t.string "callback_url", null: false
     t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
+    t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
   end
 

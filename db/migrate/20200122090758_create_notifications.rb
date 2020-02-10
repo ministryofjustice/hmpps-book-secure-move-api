@@ -10,6 +10,7 @@ class CreateNotifications < ActiveRecord::Migration[5.2]
       t.datetime :delivery_attempted_at
       t.datetime :delivered_at, index: true
       # NB: no requirement to store JSON payload for now
+      t.datetime :discarded_at, null: true, index: true
 
       t.timestamps
     end
