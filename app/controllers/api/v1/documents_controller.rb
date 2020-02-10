@@ -18,7 +18,7 @@ module Api
 
       def destroy
         document = Document.find(params[:id])
-        document.destroy!
+        document.discard
         render json: document, status: :ok
       end
 
