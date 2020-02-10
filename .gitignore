@@ -37,4 +37,3 @@ coverage
 *.iml
 # ignore dynamically generated Swagger docs
 swagger/v1/swagger.yaml
-

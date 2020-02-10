@@ -306,6 +306,9 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
+    validate_url (1.0.8)
+      activemodel (>= 3.0.0)
+      public_suffix
     webmock (3.7.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -362,6 +365,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   timecop
   tty-prompt
+  validate_url (~> 1.0.8)
   webmock
 
 RUBY VERSION

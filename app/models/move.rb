@@ -32,9 +32,9 @@ class Move < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person
-  # using https://github.com/jhawthorn/discard for documents, so
-  # only include the non-soft-deleted documents here
+  # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
+  has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
   validates(
