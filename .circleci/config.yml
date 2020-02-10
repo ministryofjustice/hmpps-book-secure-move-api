@@ -43,7 +43,7 @@ commands:
       - checkout
 
       - attach_workspace:
-          at: swagger/v1
+          at: .
 
       - setup_remote_docker:
           docker_layer_caching: true
@@ -120,9 +120,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v2-dependencies-{{ checksum "Gemfile.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-
 
       - run:
           name: install dependencies
@@ -131,13 +131,20 @@ jobs:
             sudo gem uninstall bundler
             sudo rm /usr/local/bin/bundle
             sudo rm /usr/local/bin/bundler
-            sudo gem install bundler
-            bundle install
+            sudo gem install -v2.1.4 bundler
+            bundle check || bundle install
+            sudo apt-get install -y apt-transport-https
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get install yarn
+            yarn install
 
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
 
       # Database setup
       - run: bundle exec rake db:create
@@ -148,8 +155,10 @@ jobs:
           command: COVERAGE=1 bundle exec rake
 
       - persist_to_workspace:
-          root: swagger/v1
-          paths: swagger.yaml
+          root: .
+          paths:
+            - swagger/v1/swagger.yaml
+            - node_modules/*
 
       - *notify_slack
 
@@ -202,10 +211,13 @@ workflows:
             branches:
               only:
                 - master
-                - remove-swagger-yaml
       - deploy_staging:
           requires:
             - build_staging
+          filters:
+            branches:
+              only:
+                - master
       - build_preprod:
           requires:
             - test
