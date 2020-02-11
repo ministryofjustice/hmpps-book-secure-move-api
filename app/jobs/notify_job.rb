@@ -1,9 +1,14 @@
+# frozen_string_literal: true
+
 class NotifyJob < ApplicationJob
   queue_as :default
 
   def perform(notification_id:)
     notification = Notification.find(notification_id)
-    response = client.post(notification.subscription.callback_url)
+    data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
+    hmac = Encryptor.hmac(notification.subscription.secret, data)
+
+    response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
     notification.update(delivered_at: DateTime.now) if response.success?
 
@@ -14,6 +19,6 @@ class NotifyJob < ApplicationJob
 private
 
   def client
-    Faraday.new(headers: { 'Content-Type': 'application/json' })
+    Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
   end
 end
