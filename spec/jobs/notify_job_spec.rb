@@ -5,6 +5,9 @@ RSpec.describe NotifyJob, type: :job do
   let(:notification) { create(:notification, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
   let(:client) { class_double(Faraday, post: nil) }
   let(:response) { instance_double(Faraday::Response, success?: true) }
+  let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
+  let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
+  let(:headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
 
   before do
     allow(Faraday).to receive(:new).and_return(client)
@@ -14,7 +17,7 @@ RSpec.describe NotifyJob, type: :job do
 
   context 'when notification is a success' do
     it 'posts JSON to the callback_url' do
-      expect(client).to have_received(:post).with(notification.subscription.callback_url)
+      expect(client).to have_received(:post).with(notification.subscription.callback_url, data, headers)
     end
 
     it 'updates delivered_at' do
