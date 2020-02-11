@@ -2,75 +2,83 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+RSpec.describe Api::V1::DocumentsController do
   let(:content_type) { 'multipart/form-data' }
   let(:response_json) { JSON.parse(response.body) }
 
-  path '/documents' do
-    post 'Creates a document' do
-      tags 'Documents'
-      consumes 'multipart/form-data'
-      produces 'application/vnd.api+json'
+  # rubocop thinks this context is empty IMHO because it doesn't understand rswag
+  #rubocop:disable RSpec/EmptyExampleGroup
+  context 'with swagger generation', :with_client_authentication, :rswag do
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
-      parameter name: :Authorization,
-                in: :header,
-                schema: {
-                  type: 'string',
-                  default: 'Bearer <your-client-token>',
-                },
-                required: true,
-                description: <<~DESCRIPTION
-                  This is "Bearer ", followed by your OAuth 2 Client token.
-                  If you're testing interactively in the web UI, you can ignore this field
-                DESCRIPTION
+    path '/documents' do
+      post 'Creates a document' do
+        tags 'Documents'
+        consumes 'multipart/form-data'
+        produces 'application/vnd.api+json'
 
-      parameter name: 'Content-Type',
-                in: 'header',
-                description: 'Accepted request content type',
-                schema: {
-                  type: 'string',
-                  default: 'multipart/form-data',
-                },
-                required: true
-
-      parameter name: :'data[attributes][file]',
-                description: 'The file being uploaded',
-                in: :formData,
-                attributes: {
+        parameter name: :Authorization,
+                  in: :header,
                   schema: {
-                    type: :object,
-                    properties: {
-                      file: { type: :binary },
-                    },
+                    type: 'string',
+                    default: 'Bearer <your-client-token>',
                   },
-                }
+                  required: true,
+                  description: <<~DESCRIPTION
+                    This is "Bearer ", followed by your OAuth 2 Client token.
+                    If you're testing interactively in the web UI, you can ignore this field
+                  DESCRIPTION
 
-      response '201', 'created' do
-        let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: Document.last))
-        end
-        let(:'data[attributes][file]') do
-          Rack::Test::UploadedFile.new(
-            Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
-            'application/msword',
-          )
-        end
+        parameter name: 'Content-Type',
+                  in: 'header',
+                  description: 'Accepted request content type',
+                  schema: {
+                    type: 'string',
+                    default: 'multipart/form-data',
+                  },
+                  required: true
 
-        schema "$ref": '#/definitions/post_document_responses/201'
+        parameter name: :'data[attributes][file]',
+                  description: 'The file being uploaded',
+                  in: :formData,
+                  attributes: {
+                    schema: {
+                      type: :object,
+                      properties: {
+                        file: { type: :binary },
+                      },
+                    },
+                  }
 
-        run_test! do |_example|
-          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+        response '201', 'created' do
+          let(:resource_to_json) do
+            JSON.parse(ActionController::Base.render(json: Document.last))
+          end
+          let(:'data[attributes][file]') do
+            Rack::Test::UploadedFile.new(
+              Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
+              'application/msword',
+              )
+          end
 
-          expect(JSON.parse(response.body)).to eq resource_to_json
+          schema "$ref": '#/definitions/post_document_responses/201'
+
+          run_test! do |_example|
+            expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+
+            expect(JSON.parse(response.body)).to eq resource_to_json
+          end
         end
       end
     end
   end
+  #rubocop:enable RSpec/EmptyExampleGroup
 
   describe 'POST /moves/:move_id/documents' do
     let(:schema) { load_json_schema('post_documents_responses.json') }
     let(:move) { create(:move) }
+    let(:access_token) { create(:access_token).token }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
     before do
       post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers
@@ -128,9 +136,10 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with error 422'
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:data) { {} }
       let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end

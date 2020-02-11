@@ -2,8 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+RSpec.describe Api::V1::DocumentsController do
   let(:content_type) { described_class::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
@@ -14,6 +13,8 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
   let(:detail_404) { "Couldn't find Document with 'id'=UUID-not-found" }
 
   describe 'DELETE /moves/{move_id}/documents/{document_id}' do
+    let(:token) { create(:access_token) }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_json_schema('delete_document_responses.json') }
 
     let!(:move) { create :move }
@@ -60,7 +61,9 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized' do
+      let(:content_type) { ApiController::CONTENT_TYPE }
+      let(:headers) { { 'CONTENT_TYPE': content_type } }
       let(:detail_401) { 'Token expired or invalid' }
 
       it_behaves_like 'an endpoint that responds with error 401'
