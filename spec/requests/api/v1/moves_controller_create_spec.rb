@@ -2,16 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::MovesController do
   let(:response_json) { JSON.parse(response.body) }
 
   let(:resource_to_json) do
     JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
   end
-
-  let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
   describe 'POST /moves' do
     let(:schema) { load_json_schema('post_moves_responses.json') }
@@ -31,12 +27,38 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         },
       }
     end
+    let!(:application) { create(:application) }
+    let!(:token)       { create(:access_token, application: application) }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+      post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
     end
+
+    context 'when not authorized', :skip_before, :with_client_authentication, :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
+      let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+      end
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with an invalid CONTENT_TYPE header', with_client_authentication: true do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { 'application/xml' }
+
+      before do
+        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+      end
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
+
 
     context 'when successful' do
       let(:move) { Move.first }
@@ -44,7 +66,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'creates a move', skip_before: true do
-        expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+        expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
           .to change(Move, :count).by(1)
       end
 
@@ -72,7 +94,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         it_behaves_like 'an endpoint that responds with success 201'
 
         it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+          expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
             .to change(Move, :count).by(1)
         end
 
@@ -87,7 +109,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         it_behaves_like 'an endpoint that responds with success 201'
 
         it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+          expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
             .to change(Move, :count).by(1)
         end
 
@@ -103,23 +125,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'with a reference to a missing relationship' do
       let(:person) { Person.new }
       let(:detail_404) { "Couldn't find Person without an ID" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'with validation errors' do
