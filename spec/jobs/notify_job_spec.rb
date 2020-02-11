@@ -1,4 +1,4 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
 RSpec.describe NotifyJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
