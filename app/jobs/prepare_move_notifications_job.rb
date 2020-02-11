@@ -8,6 +8,8 @@ class PrepareMoveNotificationsJob < ApplicationJob
 
     move.suppliers.each do |supplier|
       supplier.subscriptions.each do |subscription|
+        next unless subscription.enabled?
+
         notification = subscription.notifications.create!(topic: move,
                                                           event_type: "#{action_name}_move")
         NotifyJob.perform_later(notification_id: notification.id)

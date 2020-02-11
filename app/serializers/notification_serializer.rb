@@ -4,17 +4,12 @@
 class NotificationSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :event_type, :timestamp
+  attributes :id, :event_type
 
   # this is a little ugly but it is the only way (?!) to get the serializer to behave exactly as required
   belongs_to :topic, polymorphic: true, key: 'move', if: :move? do |serializer|
     link :self, serializer.move_url
     object.topic
-  end
-
-  def timestamp
-    # NB: "timestamp" is a reserved word in Postgres, hence this is renamed in the json
-    object.time_stamp
   end
 
   def move?

@@ -4,7 +4,7 @@ class NotifyJob < ApplicationJob
   queue_as :webhooks
 
   def perform(notification_id:)
-    notification = Notification.find(notification_id)
+    notification = Notification.kept.find(notification_id)
     data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
     hmac = Encryptor.hmac(notification.subscription.secret, data)
 
