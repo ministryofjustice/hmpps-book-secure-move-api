@@ -10,6 +10,8 @@ gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
+# explicit soft-deletes
+gem 'discard'
 gem 'doorkeeper'
 gem 'faraday'
 gem 'json-schema'

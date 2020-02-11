@@ -39,4 +39,20 @@ RSpec.describe Subscription do
       it { expect(subscription.encrypted_secret).not_to eq('Secret') }
     end
   end
+
+  describe 'kept?' do
+    subject(:subscription) { build(:subscription, discarded_at: discarded_at) }
+
+    context 'when subscription is discarded' do
+      let(:discarded_at) { Time.now }
+
+      it { expect(subscription.kept?).to be false }
+    end
+
+    context 'when subscription is not discarded' do
+      let(:discarded_at) { nil }
+
+      it { expect(subscription.kept?).to be true }
+    end
+  end
 end

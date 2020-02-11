@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_05_151906) do
+ActiveRecord::Schema.define(version: 2020_02_10_150200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -46,9 +46,11 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
   end
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "move_id", null: false
+    t.uuid "move_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_documents_on_discarded_at"
     t.index ["move_id"], name: "index_documents_on_move_id"
   end
 
@@ -103,7 +105,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
     t.date "date", null: false
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id", null: false
+    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -115,8 +117,9 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
-    t.uuid "profile_id"
+    t.uuid "profile_id", null: false
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
+    t.index ["from_location_id", "to_location_id", "profile_id", "date"], name: "index_move_loc_profile_date", unique: true
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
@@ -148,10 +151,11 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
     t.integer "delivery_attempts", default: 0, null: false
     t.datetime "delivery_attempted_at"
     t.datetime "delivered_at"
-    t.jsonb "data", null: false
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
+    t.index ["discarded_at"], name: "index_notifications_on_discarded_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
     t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
     t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
@@ -231,15 +235,14 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
 
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
-    t.string "topic", default: "*", null: false
     t.string "callback_url", null: false
-    t.string "username"
-    t.string "password"
     t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
+    t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
   end
 
@@ -257,7 +260,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_151906) do
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "profiles"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

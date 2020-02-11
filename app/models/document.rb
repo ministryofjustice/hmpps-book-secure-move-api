@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Document < ApplicationRecord
+  include Discard::Model
+
   has_one_attached :file
 
   before_validation :validate_file_presence
 
-  belongs_to :move
+  belongs_to :move, optional: true
 
 private
 

@@ -44,11 +44,11 @@ RSpec.describe MoveSerializer do
   end
 
   describe 'person' do
-    let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
+    let(:adapter_options) { { include: { profile: %I[first_names last_name] } } }
     let(:expected_json) do
       [
         {
-          id: move.person_id,
+          id: move.profile.person.id,
           type: 'people',
           attributes: { first_names: 'Bob', last_name: 'Roberts', date_of_birth: '1980-10-20' },
         },

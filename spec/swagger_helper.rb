@@ -103,7 +103,7 @@ RSpec.configure do |config|
             "$ref": 'supplier.json#/Supplier',
           },
           Document: {
-            "$ref": 'document.json/Document',
+            "$ref": 'document.json#/Document',
           },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.json#/AssessmentAnswer',
@@ -123,10 +123,12 @@ RSpec.configure do |config|
         },
       },
       definitions: {
+        document: load_swagger_json('document.json'),
         location_reference: load_swagger_json('location_reference.json'),
         get_move_responses: load_swagger_json('get_move_responses.json'),
         move: load_swagger_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
+        post_document_responses: load_swagger_json('post_document_responses.json'),
         errors: load_swagger_json('errors.json'),
         error_responses: load_swagger_json('error_responses.json'),
       },
