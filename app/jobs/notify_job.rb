@@ -1,17 +1,18 @@
 class NotifyJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    notification = Notification.find(args[:notification_id])
-    request = client.post(url: notification.subscription.callback_url,
-                          body: notification.data)
+  def perform(notification_id:)
+    notification = Notification.find(notification_id)
+    response = client.post(notification.subscription.callback_url,
+                           notification.data)
 
-    if request.status == 202
-      notification.update_attribute(delivered_at: DataTime.now)
-    else
-      nortification.update_attribute(delivery_attempts: notification.delivery_attempts.succ,
-                                     delivery_attempted_at: DateTime.now)
+    if response.success?
+      notification.update(delivered_at: DateTime.now)
+      puts notification.reload.delivered_at
     end
+
+    notification.update(delivery_attempts: notification.delivery_attempts.succ,
+                        delivery_attempted_at: DateTime.now)
   end
 
 private

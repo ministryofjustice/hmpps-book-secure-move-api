@@ -4,8 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Notifier do
   include ActiveJob::TestHelper
-  ActiveJob::Base.queue_adapter = :test
-
   subject { described_class }
 
   let(:action_name) { 'create' }
