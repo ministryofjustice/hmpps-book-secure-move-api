@@ -3,13 +3,9 @@ class NotifyJob < ApplicationJob
 
   def perform(notification_id:)
     notification = Notification.find(notification_id)
-    response = client.post(notification.subscription.callback_url,
-                           notification.data)
+    response = client.post(notification.subscription.callback_url)
 
-    if response.success?
-      notification.update(delivered_at: DateTime.now)
-      puts notification.reload.delivered_at
-    end
+    notification.update(delivered_at: DateTime.now) if response.success?
 
     notification.update(delivery_attempts: notification.delivery_attempts.succ,
                         delivery_attempted_at: DateTime.now)

@@ -14,8 +14,7 @@ RSpec.describe NotifyJob, type: :job do
 
   context 'when notification is a success' do
     it 'posts JSON to the callback_url' do
-      expect(client).to have_received(:post).with(notification.subscription.callback_url,
-                                                  notification.data)
+      expect(client).to have_received(:post).with(notification.subscription.callback_url)
     end
 
     it 'updates delivered_at' do
