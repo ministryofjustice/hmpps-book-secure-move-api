@@ -1,5 +1,5 @@
 class NotifyJob < ApplicationJob
-  queue_as :default
+  queue_as :webhooks
 
   def perform(notification_id:)
     notification = Notification.find(notification_id)
