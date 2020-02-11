@@ -7,7 +7,7 @@ class PrepareMoveNotificationsJob < ApplicationJob
     move = Move.find(topic_id)
 
     move.suppliers.each do |supplier|
-      supplier.subscriptions.each do |subscription|
+      supplier.subscriptions.kept.each do |subscription|
         next unless subscription.enabled?
 
         notification = subscription.notifications.create!(topic: move,

@@ -29,6 +29,7 @@ RSpec.describe NotificationSerializer do
               "type": 'notifications',
               "attributes": {
                   "event_type": 'move_created',
+                  "timestamp": notification.created_at.as_json,
               },
               "relationships": {
                   "move": {
@@ -55,6 +56,10 @@ RSpec.describe NotificationSerializer do
 
     it 'contains a event_type attribute' do
       expect(result[:data][:attributes][:event_type]).to eql 'move_created'
+    end
+
+    it 'contains a timestamp attribute' do
+      expect(result[:data][:attributes][:timestamp]).to eql notification.created_at.as_json
     end
 
     it 'contains a move relationship data' do

@@ -5,6 +5,8 @@ class NotifyJob < ApplicationJob
 
   def perform(notification_id:)
     notification = Notification.kept.find(notification_id)
+    raise 'Subscription disabled' unless notification.subscription.enabled?
+
     data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
     hmac = Encryptor.hmac(notification.subscription.secret, data)
 
