@@ -2,7 +2,7 @@
 
 class AssociateMoveWithProfilePart2 < ActiveRecord::Migration[5.2]
   def up
-    Move.find_each do |move|
+    Move.find_each.reject { |m| m.profile_id.present? }.each do |move|
       move.profile_id = Person.find_by!(id: move.person_id).latest_profile.id
       move.save!
     end
