@@ -7,14 +7,13 @@ RSpec.describe NotificationSerializer do
 
   let(:notification) { create(:notification) }
 
-  describe 'move?' do
+  describe '#move?' do
     it { expect(serializer.move?).to be true }
   end
 
-  describe 'move_url' do
+  describe '#move_url' do
     it { expect(serializer.move_url).to eql "http://localhost:4000/api/v1/moves/#{notification.topic.id}" }
   end
-
 
   describe 'json rendering' do
     let(:adapter_options) { {} }

@@ -6,7 +6,6 @@ RSpec.describe NotifyJob, type: :job do
   let(:subscription) { create(:subscription) }
   let(:notification) { create(:notification, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
   let(:client) { class_double(Faraday, post: nil) }
-  let(:response) { instance_double(Faraday::Response, success?: true) }
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
   let(:headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
@@ -19,6 +18,8 @@ RSpec.describe NotifyJob, type: :job do
     end
 
     context 'when notification is a success' do
+      let(:response) { instance_double(Faraday::Response, success?: true) }
+
       it 'posts JSON to the callback_url' do
         expect(client).to have_received(:post).with(notification.subscription.callback_url, data, headers)
       end
@@ -29,6 +30,8 @@ RSpec.describe NotifyJob, type: :job do
     end
 
     context 'when notification is not a success' do
+      let(:response) { instance_double(Faraday::Response, success?: false) }
+
       it 'updates delivery_attempts' do
         expect(notification.reload.delivery_attempts).to eq(1)
       end
@@ -41,14 +44,6 @@ RSpec.describe NotifyJob, type: :job do
 
   context 'when notification is discarded' do
     before { notification.discard! }
-
-    it 'raises a Record Not Found error' do
-      expect { perform! }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-  end
-
-  context 'when subscription is discarded' do
-    before { subscription.discard! }
 
     it 'raises a Record Not Found error' do
       expect { perform! }.to raise_error(ActiveRecord::RecordNotFound)
