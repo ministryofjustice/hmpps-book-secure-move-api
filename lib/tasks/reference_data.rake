@@ -98,6 +98,7 @@ namespace :reference_data do
         HMB5
         HNT1
         HNT2
+        HNT3
         HNT4
         HNT6
         KNT1
