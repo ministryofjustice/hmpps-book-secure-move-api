@@ -6,45 +6,62 @@ RSpec.describe MoveSerializer do
   subject(:serializer) { described_class.new(move) }
 
   let(:move) { create :move }
-  let(:adapter_options) { {} }
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
   end
+  let(:result_data) { result[:data] }
+  let(:attributes) { result_data[:attributes] }
 
-  it 'contains a type property' do
-    expect(result[:data][:type]).to eql 'moves'
+  context 'with no options' do
+    let(:adapter_options) { {} }
+
+    it 'contains a type property' do
+      expect(result_data[:type]).to eql 'moves'
+    end
+
+    it 'contains an id property' do
+      expect(result_data[:id]).to eql move.id
+    end
+
+    it 'contains a status attribute' do
+      expect(attributes[:status]).to eql move.status
+    end
+
+    it 'contains a move_type attribute' do
+      expect(attributes[:move_type]).to eql move.move_type
+    end
+
+    it 'contains a date attribute' do
+      expect(attributes[:date]).to eql move.date.iso8601
+    end
+
+    it 'contains a time attribute' do
+      expect(attributes[:time_due]).to eql move.time_due.iso8601
+    end
+
+    it 'contains an updated_at attribute' do
+      expect(attributes[:updated_at]).to eql move.updated_at.iso8601
+    end
+
+    it 'contains an additional_information attribute' do
+      expect(attributes[:additional_information]).to eql move.additional_information
+    end
   end
 
-  it 'contains an id property' do
-    expect(result[:data][:id]).to eql move.id
-  end
+  context 'with main options' do
+    let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
 
-  it 'contains a status attribute' do
-    expect(result[:data][:attributes][:status]).to eql move.status
-  end
+    it 'contains a person' do
+      expect(result_data[:relationships][:person]).to eq(data: { id: move.profile.person.id, type: 'people' })
+    end
 
-  it 'contains a move_type attribute' do
-    expect(result[:data][:attributes][:move_type]).to eql move.move_type
-  end
-
-  it 'contains a date attribute' do
-    expect(result[:data][:attributes][:date]).to eql move.date.iso8601
-  end
-
-  it 'contains a time attribute' do
-    expect(result[:data][:attributes][:time_due]).to eql move.time_due.iso8601
-  end
-
-  it 'contains an updated_at attribute' do
-    expect(result[:data][:attributes][:updated_at]).to eql move.updated_at.iso8601
-  end
-
-  it 'contains an additional_information attribute' do
-    expect(result[:data][:attributes][:additional_information]).to eql move.additional_information
+    it 'contains an included person' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations])
+    end
   end
 
   describe 'person' do
-    let(:adapter_options) { { include: { profile: %I[first_names last_name] } } }
+    let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
     let(:expected_json) do
       [
         {
