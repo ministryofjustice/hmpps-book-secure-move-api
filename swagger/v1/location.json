@@ -45,6 +45,11 @@
             "format": "date-time",
             "example": "2017-07-21T17:32:28Z",
             "description": "The date-time at which a value was disabled, in ISO-8601 format, or null if it is enabled"
+          },
+          "can_upload_documents": {
+            "type": "Boolean",
+            "example": true,
+            "description": "A flag to indicate whether this location allows document uploads"
           }
         }
       }
