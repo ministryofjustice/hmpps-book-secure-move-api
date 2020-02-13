@@ -15,6 +15,7 @@ module Moves
     end
 
   private
+
     def import_moves
       new_count = 0
       update_count = 0
