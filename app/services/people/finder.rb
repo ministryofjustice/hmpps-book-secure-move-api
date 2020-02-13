@@ -15,18 +15,14 @@ module People
   private
 
     def apply_filters(scope)
-      apply_police_national_computer_filters(scope)
-    end
-
-    def apply_police_national_computer_filters(scope)
       scope = scope.joins(:profiles)
 
       if filter_params.key?(:police_national_computer)
-        scope.where('profiles.profile_identifiers @> ?', police_national_computer.to_json)
+        scope = scope.where('profiles.profile_identifiers @> ?', police_national_computer.to_json)
       end
 
       if filter_params.key?(:nomis_offender_no)
-        scope.where('profiles.nomis_offender_no @> ?', nomis_offender_no.to_json)
+        scope = scope.where('profiles.profile_identifiers @> ?', nomis_offender_no.to_json)
       end
 
       scope
