@@ -1,7 +1,7 @@
 default: &default
   adapter: postgresql
   username: <%= ENV["DB_USERNAME"] %>
-  
+
 development:
   <<: *default
   database: pecs_move_platform_backend_development
