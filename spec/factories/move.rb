@@ -13,6 +13,10 @@ FactoryBot.define do
     sequence(:created_at) { |n| Time.now - n.minutes }
     sequence(:date_from) { |n| Date.today - n.days }
 
+    trait :requested do
+      status { 'requested' }
+    end
+
     trait :cancelled do
       status { 'cancelled' }
       cancellation_reason { 'other' }

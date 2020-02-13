@@ -21,10 +21,13 @@ module Api
       def create
         move = Move.new(move_attributes)
         authorize!(:create, move)
-        move.save!
-        move.documents.each { |doc| doc.update(move: move) }
-        Notifier.prepare_notifications(topic: move, action_name: 'create')
-        render_move(move, 201)
+        if move.save
+          Notifier.prepare_notifications(topic: move, action_name: 'create')
+          render_move(move, 201)
+        else
+          render(json: { errors: move_validation_errors(move) },
+                 status: :unprocessable_entity)
+        end
       end
 
       def update
@@ -99,6 +102,18 @@ module Api
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
+      end
+
+      def move_validation_errors move
+        if move.errors.details[:date].map { |x| x[:error] }.include?(:taken)
+          errors = validation_errors(move.errors)
+          errors.select { |e| e[:code] == :taken }.each do |error|
+            error.merge!(meta: { move_id: move.existing.id })
+          end
+          errors
+        else
+          validation_errors(move.errors)
+        end
       end
     end
   end

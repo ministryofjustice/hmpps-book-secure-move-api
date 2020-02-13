@@ -53,6 +53,10 @@ class Move < VersionedModel
   validates :reference, presence: true
 
   validates :status, inclusion: { in: statuses }
+  # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
+  # except that we need to allow multiple cancelled moves
+  validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
+            unless: -> { status == MOVE_STATUS_CANCELLED }
 
   validate :date_to_after_date_from
 

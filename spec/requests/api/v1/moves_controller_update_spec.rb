@@ -17,17 +17,18 @@ RSpec.describe Api::V1::MovesController do
     let(:schema) { load_json_schema('patch_move_responses.json') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
-    let!(:move) { create :move, move_type: 'prison_recall', from_location: from_location }
+
     let(:move_id) { move.id }
     let(:person) { create(:person) }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
-    let(:move_status) { 'cancelled' }
+    let(:move) { Move.find_by(status: 'proposed') }
+
     let(:move_params) do
       {
         type: 'moves',
         attributes: {
-          status: move_status,
+          status: 'requested',
           additional_information: 'some more info',
           cancellation_reason: 'other',
           cancellation_reason_comment: 'some other reason',
@@ -41,12 +42,14 @@ RSpec.describe Api::V1::MovesController do
     end
 
     before do
+      create :move, :proposed, move_type: 'prison_recall', from_location: from_location
+
       next if RSpec.current_example.metadata[:skip_before]
 
       patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:detail_401) { 'Token expired or invalid' }
 
       it_behaves_like 'an endpoint that responds with error 401'
@@ -56,13 +59,37 @@ RSpec.describe Api::V1::MovesController do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
       let(:token) { create(:access_token) }
 
+      context 'with an existing requested move', :skip_before do
+        before do
+          create(:move, :requested,
+                 person: move.person,
+                 from_location: move.from_location,
+                 to_location: move.to_location,
+                 date: move.date)
+          patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+        end
+
+        let(:errors_422) do
+          [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => 'Date has already been taken',
+              'source' => { 'pointer' => '/data/attributes/date' },
+              'code' => 'taken',
+            },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422'
+      end
+
       context 'when successful' do
         let(:result) { move.reload }
 
         it_behaves_like 'an endpoint that responds with success 200'
 
         it 'updates the status of a move' do
-          expect(result.status).to eq 'cancelled'
+          expect(result.status).to eq 'requested'
         end
 
         it 'does not update the move type' do
@@ -151,8 +178,6 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when updating an existing requested move without a change of move_status' do
-          let(:move_status) { 'requested' }
-
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
@@ -162,6 +187,14 @@ RSpec.describe Api::V1::MovesController do
               class_double(Faraday, post:
                   instance_double(Faraday::Response, success?: true, status: 202))
             }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: move.status,
+                },
+              }
+            end
 
             before do
               allow(Faraday).to receive(:new).and_return(faraday_client)
@@ -188,6 +221,14 @@ RSpec.describe Api::V1::MovesController do
                       instance_double(Notifications::Client::ResponseNotification, id: response_id)))
             }
             let(:response_id) { SecureRandom.uuid }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: move.status,
+                },
+              }
+            end
 
             before do
               allow(MoveMailer).to receive(:notify).and_return(notify_response)
