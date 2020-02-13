@@ -62,7 +62,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'when successful' do
-      let(:move) { Move.first }
+      let(:move) { Move.find_by(from_location_id: from_location.id) }
 
       it_behaves_like 'an endpoint that responds with success 201'
 
