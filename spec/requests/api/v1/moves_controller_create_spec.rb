@@ -16,6 +16,7 @@ RSpec.describe Api::V1::MovesController do
     let!(:from_location) { create :location }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
+    let!(:document) { create(:document) }
     let(:data) do
       {
         type: 'moves',
@@ -24,6 +25,7 @@ RSpec.describe Api::V1::MovesController do
           person: { data: { type: 'people', id: person.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
           to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+          documents: { data: [{ type: 'documents', id: document.id }] },
         },
       }
     end
@@ -59,7 +61,6 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with error 415'
     end
 
-
     context 'when successful' do
       let(:move) { Move.first }
 
@@ -68,6 +69,10 @@ RSpec.describe Api::V1::MovesController do
       it 'creates a move', skip_before: true do
         expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
           .to change(Move, :count).by(1)
+      end
+
+      it 'associates the documents with the newly created move' do
+        expect(move.documents).to eq([document])
       end
 
       it 'returns the correct data' do
