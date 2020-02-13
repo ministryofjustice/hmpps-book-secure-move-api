@@ -104,8 +104,6 @@ module Api
         @from_locations ||=
           if filter_params[:from_location_id]
             Location.where(id: filter_params[:from_location_id])
-          elsif ENV['DEFAULT_NOMIS_AGENCY_IDS']
-            Location.where('nomis_agency_id IN (?)', ENV['DEFAULT_NOMIS_AGENCY_IDS'].split(',').map(&:strip))
           else
             []
           end

@@ -22,6 +22,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               title: 'Guildford Crown Court',
               location_type: 'court',
               nomis_agency_id: 'GCC',
+              can_upload_documents: false,
             },
           },
           {
@@ -31,6 +32,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
               title: 'HMP Pentonville',
               location_type: 'prison',
               nomis_agency_id: 'PEI',
+              can_upload_documents: true,
             },
           },
         ]

@@ -12,29 +12,43 @@ RSpec.describe Locations::Importer do
         key: 'abdrct',
         title: 'Aberdare County Court',
         location_type: :court,
+        can_upload_documents: false,
       },
       {
         nomis_agency_id: 'ACI',
         key: 'aci',
         title: 'ALTCOURSE (HMP)',
         location_type: :prison,
+        can_upload_documents: false,
+      },
+      {
+        nomis_agency_id: 'SCH1',
+        key: 'sch_one',
+        title: 'A Test SCH',
+        location_type: 'SCH',
+        can_upload_documents: true,
+      },
+      {
+        nomis_agency_id: 'STC1',
+        key: 'stc_one',
+        title: 'A Test STC',
+        location_type: 'STC',
+        can_upload_documents: true,
       },
     ]
   end
 
   context 'with no existing records' do
     it 'creates all the input items' do
-      expect { importer.call }.to change(Location, :count).by(2)
+      expect { importer.call }.to change(Location, :count).by(4)
     end
 
-    it 'creates Aberdare County Court' do
+    it 'creates call the locations' do
       importer.call
-      expect(Location.find_by(input_data[0])).to be_present
-    end
 
-    it 'creates ALTCOURSE (HMP)' do
-      importer.call
-      expect(Location.find_by(input_data[1])).to be_present
+      input_data.each do |data|
+        expect(Location.find_by(data)).to be_present
+      end
     end
   end
 
@@ -43,8 +57,8 @@ RSpec.describe Locations::Importer do
       Location.create!(input_data[0])
     end
 
-    it 'creates only the missing item' do
-      expect { importer.call }.to change(Location, :count).by(1)
+    it 'creates only the missing items' do
+      expect { importer.call }.to change(Location, :count).by(3)
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_11_151403) do
+ActiveRecord::Schema.define(version: 2020_02_12_132542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_02_11_151403) do
     t.string "nomis_agency_id"
     t.string "key", null: false
     t.datetime "disabled_at"
+    t.boolean "can_upload_documents", default: false, null: false
   end
 
   create_table "locations_suppliers", id: false, force: :cascade do |t|

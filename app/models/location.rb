@@ -4,12 +4,20 @@ class Location < ApplicationRecord
   LOCATION_TYPE_COURT = 'court'
   LOCATION_TYPE_POLICE = 'police'
   LOCATION_TYPE_PRISON = 'prison'
+  LOCATION_TYPE_SECURE_TRAINING_CENTER = 'secure_training_centre'
+  LOCATION_TYPE_SECURE_CHILDRENS_HOME = 'secure_childrens_home'
+  LOCATION_TYPE_YOUTH_OFFENDNG_INSTITUTE = 'youth_offending_institute'
 
   NOMIS_AGENCY_TYPES = {
     'INST' => LOCATION_TYPE_PRISON,
     'CRT' => LOCATION_TYPE_COURT,
     'POLICE' => LOCATION_TYPE_POLICE,
+    'STC' => LOCATION_TYPE_SECURE_TRAINING_CENTER,
+    'SCH' => LOCATION_TYPE_SECURE_CHILDRENS_HOME,
+    'YOI' => LOCATION_TYPE_YOUTH_OFFENDNG_INSTITUTE,
   }.freeze
+
+  NOMIS_TYPES_WITH_DOCUMENTS = %w[STC SCH].freeze
 
   has_and_belongs_to_many :suppliers
   # Deleting locations isn't really a thing in practice - so dependent: :destroy is a pragmatic choice

@@ -19,6 +19,7 @@ module NomisClient
             nomis_agency_id: item['agencyId'],
             title: item['description'],
             location_type: Location::NOMIS_AGENCY_TYPES[item['agencyType']],
+            can_upload_documents: item['agencyType'].in?(Location::NOMIS_TYPES_WITH_DOCUMENTS),
           }
         end
       end
