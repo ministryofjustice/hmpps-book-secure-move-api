@@ -20,6 +20,8 @@ class Profile < VersionedModel
     police_national_computer criminal_records_office prison_number niche_reference athena_reference
   ].freeze
 
+  # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
+  # full of update records where nothing actually changes - making the audit next to useless.
   def merge_assessment_answers!(new_assessment_answers, category)
     new_list =
       assessment_answers.reject { |a| a.category == category } +
@@ -38,6 +40,8 @@ class Profile < VersionedModel
     end
   end
 
+  # Have to override setting of profile identifiers as well
+  # to prevent a no-op being recorded as a change by PaperTrail
   def profile_identifiers=(new_identifiers)
     inserted = new_identifiers.reject do |new|
       profile_identifiers.map(&:identifier_type).include?(new[:identifier_type])
@@ -51,7 +55,6 @@ class Profile < VersionedModel
     end
 
     unless deleted.empty? && inserted.empty? && changed.empty?
-      # self[:profile_identifiers] = new_identifiers
       super
     end
   end
