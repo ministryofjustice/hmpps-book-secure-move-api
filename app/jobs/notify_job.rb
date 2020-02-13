@@ -4,14 +4,14 @@ class NotifyJob < ApplicationJob
   queue_as :webhooks
 
   def perform(notification_id:)
-    notification = Notification.kept.find(notification_id)
+    notification = Notification.kept.includes(:subscription).find(notification_id)
 
     data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
     hmac = Encryptor.hmac(notification.subscription.secret, data)
 
     response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
-    notification.update(delivered_at: DateTime.now) if response.success?
+    notification.delivered_at = DateTime.now if response.success?
 
     notification.update(delivery_attempts: notification.delivery_attempts.succ,
                         delivery_attempted_at: DateTime.now)
