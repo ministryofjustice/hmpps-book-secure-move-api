@@ -48,5 +48,10 @@
     "agencyId":"STC1",
     "description":"An example STC",
     "agencyType":"STC"
+  },
+  {
+    "agencyId":"SCH1",
+    "description":"An example SCH",
+    "agencyType":"SCH"
   }
 ]

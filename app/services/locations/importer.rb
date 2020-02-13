@@ -12,7 +12,7 @@ module Locations
       items.each do |location|
         Location
           .find_or_initialize_by(nomis_agency_id: location[:nomis_agency_id])
-          .update(location.slice(:title, :location_type, :key))
+          .update(location.slice(:title, :location_type, :key, :can_upload_documents))
       end
     end
   end

@@ -10,7 +10,7 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
     let(:response_body) { file_fixture('nomis_get_locations_200.json').read }
 
     it 'has the correct number of results' do
-      expect(response.count).to be 6
+      expect(response.count).to be 7
     end
 
     it 'returns POLICE agencies' do
@@ -29,6 +29,10 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
 
     it 'sets can_upload_documents for an STC' do
       expect(response.detect { |item| item[:nomis_agency_id] == 'STC1' }.fetch(:can_upload_documents)).to eq(true)
+    end
+
+    it 'sets can_upload_documents for an SCH' do
+      expect(response.detect { |item| item[:nomis_agency_id] == 'SCH1' }.fetch(:can_upload_documents)).to eq(true)
     end
   end
 end
