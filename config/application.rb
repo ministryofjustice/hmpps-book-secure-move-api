@@ -33,8 +33,6 @@ module PecsMovePlatformBackend
     config.api_only = true
     config.time_zone = 'London'
 
-    config.active_job.queue_adapter = :sidekiq
-
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
