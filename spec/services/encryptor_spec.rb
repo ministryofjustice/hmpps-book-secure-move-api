@@ -18,10 +18,4 @@ RSpec.describe Encryptor do
       expect(decrypted_message).to eq(message)
     end
   end
-
-  describe 'hmac' do
-    subject { described_class.hmac('foo', 'bar') }
-
-    it { is_expected.to eql('+TILrwJJFp5zhQzWFW3tAQbiu2rYyrAbe7vr5tEGUxc=') }
-  end
 end
