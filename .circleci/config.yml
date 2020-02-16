@@ -11,6 +11,22 @@ aliases:
   - &notify_slack
     slack/notify-on-failure:
       only_for_branches: master
+  - &all_tags
+    filters:
+      tags:
+        only: /.*/
+  - &only_master_and_tags
+    filters:
+      tags:
+        only: /.*/
+      branches:
+        only: master
+  - &only_deploy_tags
+    filters:
+      tags:
+        only: /^v.*/
+      branches:
+        ignore: /.*/
 
 references:
   app_containers: &app_containers
@@ -203,40 +219,35 @@ workflows:
 
   test-build-deploy:
     jobs:
-      - test
+      - test:
+          <<: *all_tags
       - build_staging:
+          <<: *only_master_and_tags
           requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+          - test
       - deploy_staging:
+          <<: *only_master_and_tags
           requires:
-            - build_staging
-          filters:
-            branches:
-              only:
-                - master
+          - build_staging
       - build_preprod:
+          <<: *only_master_and_tags
           requires:
-            - test
-          filters:
-            branches:
-              only: master
+          - test
       - deploy_preprod:
+          <<: *only_master_and_tags
           requires:
-            - build_preprod
+          - build_preprod
+      - build_production:
+          <<: *only_deploy_tags
+          requires:
+          - test
       - hold_production:
+          <<: *only_deploy_tags
           type: approval
           requires:
-            - test
-          filters:
-            branches:
-              only: master
-      - build_production:
-          requires:
-            - hold_production
+          - test
+          - build_production
       - deploy_production:
+          <<: *only_deploy_tags
           requires:
-            - build_production
+          - hold_production
