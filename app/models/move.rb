@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Move < ApplicationRecord
+class Move < VersionedModel
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'

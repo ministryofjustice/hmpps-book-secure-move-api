@@ -97,7 +97,10 @@ module Api
       end
 
       def import_moves_from_nomis
-        Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
+        # This prevents us from blaming the current user/application for the NOMIS sync
+        PaperTrail.request(whodunnit: nil) do
+          Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
+        end
       rescue StandardError => e
         Raven.capture_exception(e)
       end
