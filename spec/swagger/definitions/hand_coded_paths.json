@@ -251,6 +251,17 @@
           "required": true
         },
         {
+          "name": "filter[nomis_offender_no]",
+          "in": "query",
+          "description": "Filters results to only include people identified by that nomis_offender_no",
+          "schema": {
+            "type": "string",
+            "example": "G1234UT"
+          },
+          "format": "string",
+          "required": false
+        },
+        {
           "name": "page",
           "in": "query",
           "description": "The page of records to return, defaults to 1 (the first page)",
