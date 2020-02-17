@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'openssl'
+
 class Encryptor
   KEY = ActiveSupport::KeyGenerator.new(
     Rails.application.secret_key_base,
@@ -18,6 +21,10 @@ class Encryptor
 
   def self.decrypt(value)
     new.decrypt_and_verify(value)
+  end
+
+  def self.hmac(secret, data)
+    Base64.strict_encode64(OpenSSL::HMAC.digest('sha256', secret, data))
   end
 
 private
