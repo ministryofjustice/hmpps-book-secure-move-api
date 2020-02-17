@@ -226,7 +226,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
   end
 
-  describe 'DELETE /moves/{moveId}' do
+  describe 'DELETE /moves/{move_id}' do
     let(:schema) { load_json_schema('delete_move_responses.json') }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }

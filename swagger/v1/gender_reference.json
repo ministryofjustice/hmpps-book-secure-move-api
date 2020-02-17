@@ -15,6 +15,7 @@
           "type": {
             "type": "string",
             "example": "genders",
+            "enum": ["genders"],
             "description": "The type of this object - always `genders`"
           },
           "id": {
