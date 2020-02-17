@@ -29,7 +29,8 @@ RSpec.describe Api::V1::MovesController do
         },
       }
     end
-    let!(:application) { create(:application) }
+    let(:supplier) { create(:supplier) }
+    let!(:application) { create(:application, owner_id: supplier.id) }
     let!(:token)       { create(:access_token, application: application) }
 
     before do
@@ -69,6 +70,10 @@ RSpec.describe Api::V1::MovesController do
       it 'creates a move', skip_before: true do
         expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
           .to change(Move, :count).by(1)
+      end
+
+      it 'audits the supplier' do
+        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
       end
 
       it 'associates the documents with the newly created move' do

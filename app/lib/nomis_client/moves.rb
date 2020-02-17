@@ -35,7 +35,7 @@ module NomisClient
       end
 
       def attributes_for(nomis_data, event_type)
-        nomis_data[event_type.to_s].map do |item|
+        nomis_data.fetch(event_type.to_s).map do |item|
           {
             person_nomis_prison_number: item['offenderNo'],
             from_location_nomis_agency_id: item['fromAgency'],

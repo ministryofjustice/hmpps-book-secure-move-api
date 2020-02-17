@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Profile < ApplicationRecord
+class Profile < VersionedModel
   before_validation :set_assessment_answers
 
   belongs_to :person
@@ -20,11 +20,43 @@ class Profile < ApplicationRecord
     police_national_computer criminal_records_office prison_number niche_reference athena_reference
   ].freeze
 
+  # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
+  # full of update records where nothing actually changes - making the audit next to useless.
   def merge_assessment_answers!(new_assessment_answers, category)
-    self.assessment_answers =
+    new_list =
       assessment_answers.reject { |a| a.category == category } +
       manually_created_assessment_answers.select { |a| a.category == category } +
       new_assessment_answers
+
+    deleted = assessment_answers.reject { |a| new_list.map(&:assessment_question_id).include?(a.assessment_question_id) }
+    inserted = new_list.reject { |a| assessment_answers.map(&:assessment_question_id).include?(a.assessment_question_id) }
+    changed = new_list.select do |a|
+      answer = assessment_answers.detect { |aa| aa.assessment_question_id == a.assessment_question_id }
+      answer && answer.attributes != a.attributes
+    end
+
+    unless deleted.empty? && inserted.empty? && changed.empty?
+      self.assessment_answers = new_list
+    end
+  end
+
+  # Have to override setting of profile identifiers as well
+  # to prevent a no-op being recorded as a change by PaperTrail
+  def profile_identifiers=(new_identifiers)
+    inserted = new_identifiers.reject do |new|
+      profile_identifiers.map(&:identifier_type).include?(new[:identifier_type])
+    end
+    deleted = profile_identifiers.reject do |old|
+      new_identifiers.map { |pi| pi[:identifier_type] }.include?(old.identifier_type)
+    end
+    changed = profile_identifiers.select do |old|
+      new_id = new_identifiers.detect { |pi| pi[:identifier_type] == old.identifier_type }
+      new_id && new_id[:value] != old.value
+    end
+
+    unless deleted.empty? && inserted.empty? && changed.empty?
+      super
+    end
   end
 
 private

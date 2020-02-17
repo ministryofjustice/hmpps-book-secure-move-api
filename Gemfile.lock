@@ -166,6 +166,9 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     pager_api (0.3.2)
+    paper_trail (10.3.1)
+      activerecord (>= 4.2)
+      request_store (~> 1.1)
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
@@ -336,6 +339,7 @@ DEPENDENCIES
   nokogiri (>= 1.10.4)
   oauth2
   pager_api
+  paper_trail
   pg (~> 1.0.0)
   prometheus_exporter
   pry-byebug

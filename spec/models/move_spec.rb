@@ -161,4 +161,12 @@ RSpec.describe Move do
       end
     end
   end
+
+  context 'with versioning' do
+    let(:move) { create(:move) }
+
+    it 'has a version record for the create' do
+      expect(move.versions.map(&:event)).to eq(%w[create])
+    end
+  end
 end

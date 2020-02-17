@@ -4,6 +4,7 @@ class ApiController < ApplicationController
   before_action :doorkeeper_authorize!
   before_action :restrict_request_content_type
   before_action :set_content_type
+  before_action :set_paper_trail_whodunnit
 
   CONTENT_TYPE = 'application/vnd.api+json'
 
@@ -15,6 +16,10 @@ class ApiController < ApplicationController
 
   def current_user
     doorkeeper_token&.application
+  end
+
+  def user_for_paper_trail
+    current_user.owner_id
   end
 
 private

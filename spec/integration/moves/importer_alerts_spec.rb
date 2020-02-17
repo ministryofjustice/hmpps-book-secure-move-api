@@ -7,6 +7,7 @@ RSpec.describe Moves::Importer do
     described_class.new(moves)
   end
 
+  let(:from_location) { 'BXI' }
   let(:person) { create :person, :nomis_synced }
   let(:profile) { person.latest_profile }
   let(:alerts) do
@@ -46,7 +47,7 @@ RSpec.describe Moves::Importer do
   let(:moves) do
     [{
       person_nomis_prison_number: person.nomis_prison_number,
-      from_location_nomis_agency_id: 'BXI',
+      from_location_nomis_agency_id: from_location,
       to_location_nomis_agency_id: 'WDGRCC',
       date: '2019-08-19',
       time_due: '2019-08-19T17:00:00',
@@ -60,7 +61,25 @@ RSpec.describe Moves::Importer do
     allow(NomisClient::Alerts).to receive(:get).and_return(alerts)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
 
-    create(:location, nomis_agency_id: 'BXI')
+    create(:location, nomis_agency_id: from_location)
+
+    xvl = create(:assessment_question, :risk)
+    xel = create(:assessment_question, :risk)
+
+    create(:nomis_alert, code: 'XVL', type_code: 'X', assessment_question: xvl)
+    create(:nomis_alert, code: 'XEL', type_code: 'X', assessment_question: xel)
+  end
+
+  context 'with versioning' do
+    before do
+      2.times do
+        importer.call
+      end
+    end
+
+    it 'only has 1 version record' do
+      expect(profile.versions.map(&:event)).to eq(%w[create update])
+    end
   end
 
   context 'with no relevant nomis alert mappings' do
@@ -81,16 +100,12 @@ RSpec.describe Moves::Importer do
       expect(answers.map(&:nomis_alert_type)).to eq %w[X X]
     end
 
-    it 'sets the fallback assessment question id' do
-      expect(answers.first&.assessment_question_id).to eq fallback_assessment_question.id
-    end
-
     it 'sets imported_from_nomis' do
       expect(answers.map(&:imported_from_nomis)).to eq [true, true]
     end
 
     it 'sets the title to the value of the question title' do
-      expect(answers.map(&:title)).to eq ['Other Risks', 'Other Risks']
+      expect(answers.map(&:title)).to eq ['Sight Impaired', 'Sight Impaired']
     end
 
     it 'sets the nomis_alert_type_description' do
@@ -108,14 +123,8 @@ RSpec.describe Moves::Importer do
   end
 
   context 'with a relevant nomis alert mapping' do
-    let(:assessment_question) { create :assessment_question, :risk }
-    let!(:nomis_alert) do
-      create(
-        :nomis_alert,
-        type_code: 'X',
-        code: 'XVL',
-        assessment_question_id: assessment_question.id,
-      )
+    let(:assessment_question) do
+      NomisAlert.find_by!(type_code: 'X', code: 'XVL').assessment_question
     end
 
     it 'creates new assessment answers' do
