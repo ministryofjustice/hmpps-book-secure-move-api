@@ -14,6 +14,7 @@ def load_swagger_yaml(*relative_path)
   YAML.safe_load(swagger_file(*relative_path)).deep_symbolize_keys
 end
 
+# This loads a definition from the 'standard' place
 def load_swagger_json(*relative_path)
   JSON.parse(swagger_file(*relative_path))
 end
@@ -140,14 +141,14 @@ RSpec.configure do |config|
         location_reference: load_swagger_json('location_reference.json'),
         move: load_swagger_v1_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
-        get_move_responses: load_swagger_json('get_move_responses.json'),
+        get_move_responses: load_swagger_spec_json('get_move_responses.json'),
         get_reasons_responses: load_swagger_json('get_prison_transfer_reasons_responses.json'),
         delete_document_responses: load_swagger_json('delete_document_responses.json'),
         post_document_responses: load_swagger_json('post_document_responses.json'),
         errors: load_swagger_json('errors.json'),
-        error_responses: load_swagger_json('error_responses.json'),
+        error_responses: load_swagger_spec_json('error_responses.json'),
       },
-      paths: load_swagger_json('hand_coded_paths.json'),
+      paths: load_swagger_spec_json('hand_coded_paths.json'),
     },
   }
 

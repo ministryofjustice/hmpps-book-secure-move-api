@@ -1,87 +1,63 @@
 # frozen_string_literal: true
 
-require 'swagger_helper'
+require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
+RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:move) { create :move, prison_transfer_reason: build(:prison_transfer_reason) }
-  let(:move_id) { move.id }
+  let(:response_json) { JSON.parse(response.body) }
 
-  path '/moves/{move_id}' do
-    get 'Returns the details of a move' do
-      tags 'Moves'
-      produces 'application/vnd.api+json'
+  let(:resource_to_json) do
+    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+  end
 
-      parameter name: :Authorization,
-                in: :header,
-                schema: {
-                  type: 'string',
-                  default: 'Bearer <your-client-token>',
-                },
-                required: true,
-                description: <<~DESCRIPTION
-                  This is "Bearer ", followed by your OAuth 2 Client token.
-                  If you're testing interactively in the web UI, you can ignore this field
-                DESCRIPTION
+  describe 'GET /moves/{moveId}' do
+    let(:schema) { load_json_schema('get_move_responses.json') }
 
-      parameter name: 'Content-Type',
-                in: 'header',
-                description: 'Accepted request content type',
-                schema: {
-                  type: 'string',
-                  default: 'application/vnd.api+json',
-                },
-                required: true
+    let!(:move) { create :move }
+    let(:move_id) { move.id }
 
-      parameter name: :move_id,
-                in: :path,
-                description: 'The ID of the move',
-                schema: {
-                  type: :string,
-                },
-                format: 'uuid',
-                example: '00525ecb-7316-492a-aae2-f69334b2a155',
-                required: true
+    before do
+      allow(Moves::NomisSynchroniser).to receive(:new)
+      get "/api/v1/moves/#{move_id}", headers: headers
+    end
 
-      response '200', 'success' do
-        let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
-        end
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 200'
 
-        schema "$ref": '#/definitions/get_move_responses/200'
-
-        run_test! do |_example|
-          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-
-          expect(JSON.parse(response.body)).to eq resource_to_json
-
-          # TODO: this was commented out in the original test, and fails when included
-          # expect(Moves::NomisSynchroniser).to(
-          #     have_received(:new).with(locations: [move.from_location], date: move.date)
-          #   )
-        end
+      it 'returns the correct data' do
+        expect(response_json).to eq resource_to_json
       end
 
-      response '401', 'unauthorised' do
-        let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
-
-        it_behaves_like 'a swagger 401 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
+      it 'syncs data' do
+        # expect(Moves::NomisSynchroniser).to have_received(:new).with(locations: [move.from_location], date: move.date)
       end
+    end
 
-      response '404', 'not found' do
-        let(:move_id) { SecureRandom.uuid }
-        let(:detail_404) { "Couldn't find Move with 'id'=#{move_id}" }
+    context 'when not authorized', with_invalid_auth_headers: true do
+      let(:detail_401) { 'Token expired or invalid' }
 
-        it_behaves_like 'a swagger 404 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'when resource is not found' do
+      let(:move_id) { 'UUID-not-found' }
+      let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+
+      it 'doesn\'t sync data' do
+        expect(Moves::NomisSynchroniser).not_to have_received(:new)
       end
+    end
 
-      response '415', 'invalid content type' do
-        let(:"Content-Type") { 'application/xml' }
-        it_behaves_like 'a swagger 415 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+
+      it 'doesn\'t sync data' do
+        expect(Moves::NomisSynchroniser).not_to have_received(:new)
       end
     end
   end

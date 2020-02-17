@@ -1,0 +1,82 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "data": {
+          "$ref": "move.json#/Move"
+        }
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            { "$ref": "location.json#/Location" },
+            { "$ref": "person.json#/Person" },
+            { "$ref": "gender.json#/Gender" },
+            { "$ref": "ethnicity.json#/Ethnicity" }
+          ]
+        }
+      }
+    }
+  },
+  "415": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
+  "400": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/BadRequest"
+        }
+      }
+    }
+  },
+  "404": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/ResourceNotFound"
+        }
+      }
+    }
+  },
+  "401": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/NotAuthorisedError"
+        }
+      }
+    }
+  }
+}
