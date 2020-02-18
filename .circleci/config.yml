@@ -103,6 +103,14 @@ commands:
                     deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
+            kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
+                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
+                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+
 jobs:
   test:
     <<: *app_containers
