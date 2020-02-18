@@ -143,6 +143,15 @@ namespace :reference_data do
         NYK1
         NYK2
         NYK3
+        SCH1
+        SCH2
+        SCH3
+        SCH4
+        SCH5
+        SCH6
+        SCH8
+        STC2
+        STC3
         SFCUSU
         SRY016
         SRY1
@@ -256,6 +265,7 @@ namespace :reference_data do
         NFL2
         NFL3
         NFL4
+        SCH9
         SFL1
         SFL2
       ],

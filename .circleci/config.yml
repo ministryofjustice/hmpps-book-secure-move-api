@@ -4,12 +4,20 @@
 #
 version: 2.1
 
+orbs:
+  slack: circleci/slack@3.4.2
+
+aliases:
+  - &notify_slack
+    slack/notify-on-failure:
+      only_for_branches: master
+
 references:
   app_containers: &app_containers
     docker:
       - image: circleci/ruby:2.6.2
         environment:
-          BUNDLER_VERSION: 2.0.2
+          BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
           RACK_ENV: test
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
@@ -134,6 +142,8 @@ jobs:
       - persist_to_workspace:
           root: swagger/v1
           paths: swagger.yaml
+
+      - *notify_slack
 
   build_staging:
     <<: *cloud_container

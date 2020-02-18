@@ -24,6 +24,7 @@ module Api
         authorize!(:create, move)
         move.save!
         move.documents.each { |doc| doc.update(move: move) }
+        Notifier.prepare_notifications(topic: move, action_name: 'create')
         render_move(move, 201)
       end
 
@@ -32,12 +33,14 @@ module Api
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         move.update!(patch_move_attributes)
+        Notifier.prepare_notifications(topic: move, action_name: 'update')
         render_move(move, 200)
       end
 
       def destroy
         move = find_move
-        move.destroy!
+        move.destroy! # TODO: we probably should not be destroying moves
+        Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
       end
 
@@ -106,8 +109,6 @@ module Api
         @from_locations ||=
           if filter_params[:from_location_id]
             Location.where(id: filter_params[:from_location_id])
-          elsif ENV['DEFAULT_NOMIS_AGENCY_IDS']
-            Location.where('nomis_agency_id IN (?)', ENV['DEFAULT_NOMIS_AGENCY_IDS'].split(',').map(&:strip))
           else
             []
           end

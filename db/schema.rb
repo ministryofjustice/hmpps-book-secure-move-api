@@ -145,7 +145,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
 
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subscription_id", null: false
-    t.datetime "time_stamp", null: false
     t.string "event_type", null: false
     t.uuid "topic_id", null: false
     t.string "topic_type", null: false
@@ -159,7 +158,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.index ["discarded_at"], name: "index_notifications_on_discarded_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
     t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
-    t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
     t.index ["topic_id"], name: "index_notifications_on_topic_id"
     t.index ["topic_type", "topic_id"], name: "index_notifications_on_topic_type_and_topic_id"
     t.index ["topic_type"], name: "index_notifications_on_topic_type"
