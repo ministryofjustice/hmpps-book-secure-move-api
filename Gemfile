@@ -52,6 +52,8 @@ group :development, :test do
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
+  # This needs to be in dev/test to expose the rake task
+  gem 'rswag-specs'
   gem 'timecop'
 end
 
@@ -65,6 +67,5 @@ end
 
 group :test do
   gem 'climate_control'
-  gem 'rswag-specs'
   gem 'simplecov', require: false
 end
