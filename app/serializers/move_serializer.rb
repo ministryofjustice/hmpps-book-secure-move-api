@@ -10,7 +10,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :documents, serializer: DocumentSerializer
 
   INCLUDED_ATTRIBUTES = {
-    person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender],
+    person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender reason reason_comment agreed agreed_by],
     from_location: %i[location_type description],
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
