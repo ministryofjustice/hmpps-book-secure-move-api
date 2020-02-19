@@ -16,8 +16,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   describe 'PATCH /moves' do
     let(:schema) { load_json_schema('patch_move_responses.json') }
 
-    let!(:move) { create :move }
+    let!(:move) { create :move, move_type: 'prison_recall' }
     let(:move_id) { move.id }
+    let(:person) { create(:person) }
 
     let(:move_params) do
       {
@@ -27,6 +28,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           additional_information: 'some more info',
           cancellation_reason: 'other',
           cancellation_reason_comment: 'some other reason',
+          move_type: 'court_appearance',
         },
       }
     end
@@ -43,6 +45,10 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       it 'updates the status of a move', skip_before: true do
         patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
         expect(move.reload.status).to eq 'cancelled'
+      end
+
+      it 'does not update the move type' do
+        expect(move.reload.move_type).to eq('prison_recall')
       end
 
       it 'updates the additional_information of a move', skip_before: true do

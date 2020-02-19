@@ -71,8 +71,7 @@ module Api
       end
 
       def move_attributes
-        # latest_profile is fine here, as this is used by create/update which should only be allowed
-        # for moves which haven't been completed.
+        # moves are always created against the latest_profile for the person
         move_params[:attributes].merge(
           profile: Person.find(move_params.dig(:relationships, :person, :data, :id)).latest_profile,
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
@@ -82,7 +81,7 @@ module Api
       end
 
       def patch_move_attributes
-        move_params[:attributes]
+        patch_move_params[:attributes]
       end
 
       def render_move(move, status)
