@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html class="govuk-template js flexbox">
+  <head>
+    <title>Book A Secure Move</title>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body class="govuk-template__body js-enabled">
+    <%= render '/layouts/header' %>
+
+    <div class='govuk-width-container'>
+      <main class='govuk-main-wrapper' id='main-content' role='main'>
+
+        <%= yield %>
+      </main>
+    </div>
+
+    <%= render '/layouts/footer' %>
+    <script>window.GOVUKFrontend.initAll()</script>
+  </body>
+</html>
