@@ -46,61 +46,31 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
   end
 
-  path '/moves/{move_id}' do
+  describe 'GET /moves/{move_id}' do
+    let(:schema) { load_json_schema('get_move_responses.json') }
     let!(:pentonville_move) { create :move, from_location: pentonville }
     let!(:birmingham_move) { create :move, from_location: birmingham }
 
-    get 'Returns the details of a move' do
-      tags 'Moves'
-      produces 'application/vnd.api+json'
+    before do
+      get "/api/v1/moves/#{move_id}", headers: headers
+    end
 
-      parameter name: :Authorization,
-                in: :header,
-                schema: {
-                  type: 'string',
-                  default: 'Bearer <your-client-token>',
-                },
-                required: true
-
-      parameter name: 'Content-Type',
-                in: 'header',
-                description: 'Accepted request content type',
-                schema: {
-                  type: 'string',
-                  default: 'application/vnd.api+json',
-                },
-                required: true
-
-      parameter name: :move_id,
-                in: :path,
-                description: 'The ID of the move',
-                schema: {
-                  type: :string,
-                },
-                format: 'uuid',
-                example: '00525ecb-7316-492a-aae2-f69334b2a155',
-                required: true
-
-      response '200', 'success' do
-        let(:move_id) { pentonville_move.id }
-        let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
-        end
-
-        schema "$ref": '#/definitions/get_move_responses/200'
-
-        run_test! do |_example|
-          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-
-          expect(JSON.parse(response.body)).to eq resource_to_json
-        end
+    context 'when the correct supplier' do
+      let(:move_id) { pentonville_move.id }
+      let(:resource_to_json) do
+        JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
       end
 
-      response '401', 'unauthorised' do
-        let(:move_id) { birmingham_move.id }
-
-        it_behaves_like 'a swagger 401 error'
+      it 'Returns the details of a move' do
+        expect(JSON.parse(response.body)).to eq resource_to_json
       end
+    end
+
+    context 'when the wrong supplier' do
+      let(:move_id) { birmingham_move.id }
+      let(:detail_404) { "Couldn't find Move with 'id'=#{move_id} [WHERE (from_location_id IN ('#{pentonville.id}'))]" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
   end
 
