@@ -1,0 +1,10 @@
+[ai]
+
+[[middleware]]
+  name = 'ApplicationInsights::Rack::TrackRequest'
+  enabled = true
+
+  [middleware.initialize]
+    instrumentation_key = 'APPINSIGHTS_INSTRUMENTATION_KEY'
+    buffer_size = 250
+    send_interval = 30
