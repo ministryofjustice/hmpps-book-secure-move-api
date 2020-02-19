@@ -8,8 +8,6 @@ if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start :rails do
     add_filter 'app/channels'
-    # No background jobs (yet)
-    add_filter 'app/jobs/application_job.rb'
     # app doesn't send emails (yet)
     add_filter 'app/mailers/application_mailer.rb'
     # Ignore Prometheus metrics
@@ -17,9 +15,9 @@ if ENV['COVERAGE']
 
     # The intention of this value is that it should never go down after a PR
     # It is a (very) naive attempt to prevent untested code entering the codebase
-    minimum_coverage 98.57
+    minimum_coverage 98.82
     # cope with a small drop from last time due to potential branch differences
-    maximum_coverage_drop 0.12
+    maximum_coverage_drop 0.25
   end
 end
 
