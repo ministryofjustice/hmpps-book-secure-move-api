@@ -15,8 +15,4 @@ class MoveSerializer < ActiveModel::Serializer
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
   }.freeze
-
-  def person
-    object.profile
-  end
 end
