@@ -53,12 +53,12 @@ module Api
         :type,
         attributes: %i[date time_due status move_type additional_information
                        cancellation_reason cancellation_reason_comment
-                       reason reason_comment move_agreed move_agreed_by],
+                       reason_comment move_agreed move_agreed_by],
         relationships: {},
       ].freeze
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
                                                     cancellation_reason cancellation_reason_comment
-                                                    reason reason_comment agreed agreed_by]].freeze
+                                                    reason_comment agreed agreed_by]].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
@@ -79,6 +79,7 @@ module Api
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
+          reason: Reason.find_by(id: move_params.dig(:relationships, :reasons, :data, :id)),
         )
       end
 

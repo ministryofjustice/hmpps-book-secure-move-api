@@ -43,6 +43,7 @@ RSpec.describe Api::V1::DocumentsController, :rswag, :with_client_authentication
                   type: :string,
                 },
                 format: 'uuid',
+
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
                 required: true
 

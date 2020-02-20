@@ -1,0 +1,42 @@
+{
+  "Reason": {
+    "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": {
+        "type": "string",
+        "example": "reasons",
+        "description": "The type of this object - always `reasons`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "key",
+          "title"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "reason_other",
+            "description": "Unique identifier for the reason"
+          },
+          "title": {
+            "type": "string",
+            "example": "Others",
+            "description": "The label of the reason"
+          }
+        }
+      }
+    }
+  }
+}
