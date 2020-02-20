@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "reason.json#/Reason"
+          "$ref": "#/definitions/reason/Reason"
         }
       }
     }
