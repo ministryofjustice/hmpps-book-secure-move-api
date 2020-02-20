@@ -22,4 +22,6 @@ EXPOSE $PUMA_PORT
 ENV APPUID 1000
 USER $APPUID
 
+RUN rails assets:precompile
+
 ENTRYPOINT ["./run.sh"]

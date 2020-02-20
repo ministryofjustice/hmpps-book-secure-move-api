@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.production?
+if ENV['PROMETHEUS_METRICS'].present?
   require 'prometheus_exporter/middleware'
   require 'prometheus_exporter/instrumentation'
 
