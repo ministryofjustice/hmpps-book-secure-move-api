@@ -8,6 +8,10 @@ Fixes P4-<TODO>
 
 - TODO
 
+## Things to check & link
+- [ ] API docs has been updated if necessary
+- [ ] New environment variables have been added to staging configuration
+
 ## Manual steps to deploy/dependencies
 
 - TODO (or remove)
