@@ -143,7 +143,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
 
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subscription_id", null: false
-    t.datetime "time_stamp", null: false
     t.string "event_type", null: false
     t.uuid "topic_id", null: false
     t.string "topic_type", null: false
@@ -157,7 +156,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.index ["discarded_at"], name: "index_notifications_on_discarded_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
     t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
-    t.index ["time_stamp"], name: "index_notifications_on_time_stamp"
     t.index ["topic_id"], name: "index_notifications_on_topic_id"
     t.index ["topic_type", "topic_id"], name: "index_notifications_on_topic_type_and_topic_id"
     t.index ["topic_type"], name: "index_notifications_on_topic_type"
@@ -232,19 +230,6 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.integer "latest_nomis_booking_id"
   end
 
-  create_table "request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "application_id", null: false
-    t.string "request", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "response_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "request_audit_id", null: false
-    t.jsonb "response", null: false
-    t.index ["response"], name: "index_response_audits_on_response", using: :gin
-  end
-
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
     t.string "callback_url", null: false
@@ -266,6 +251,16 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.index ["key"], name: "index_suppliers_on_key"
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.uuid "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "moves"
   add_foreign_key "locations_suppliers", "locations"
@@ -277,6 +272,5 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
-  add_foreign_key "request_audits", "oauth_applications", column: "application_id"
   add_foreign_key "subscriptions", "suppliers"
 end

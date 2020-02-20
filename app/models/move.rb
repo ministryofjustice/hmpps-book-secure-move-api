@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Move < ApplicationRecord
+class Move < VersionedModel
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'
@@ -51,6 +51,8 @@ class Move < ApplicationRecord
   before_validation :set_reference
   before_validation :set_move_type
   before_validation :ensure_event_nomis_ids_uniqueness
+
+  delegate :suppliers, to: :from_location
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
 

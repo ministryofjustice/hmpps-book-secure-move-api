@@ -46,4 +46,6 @@ Rails.application.configure do
 
   # Default host for url generation
   routes.default_url_options[:host] = 'localhost:4000'
+
+  config.active_job.queue_adapter   = :test
 end

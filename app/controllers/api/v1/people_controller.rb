@@ -4,7 +4,12 @@ module Api
   module V1
     class PeopleController < ApiController
       def index
+        person_nomis_prison_number = filter_params[:nomis_offender_no]
+
+        Moves::ImportPeople.new([person_nomis_prison_number: person_nomis_prison_number]).call if person_nomis_prison_number
+
         people = People::Finder.new(filter_params).call
+
         paginate people, include: PersonSerializer::INCLUDED_DETAIL
       end
 
@@ -20,7 +25,7 @@ module Api
 
     private
 
-      PERMITTED_FILTER_PARAMS = [:police_national_computer].freeze
+      PERMITTED_FILTER_PARAMS = %i[police_national_computer nomis_offender_no].freeze
       PERSON_ATTRIBUTES = [
         :first_names,
         :last_name,

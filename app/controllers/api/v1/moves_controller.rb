@@ -23,6 +23,8 @@ module Api
         move = Move.new(move_attributes)
         authorize!(:create, move)
         move.save!
+        move.documents.each { |doc| doc.update(move: move) }
+        Notifier.prepare_notifications(topic: move, action_name: 'create')
         render_move(move, 201)
       end
 
@@ -31,12 +33,14 @@ module Api
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         move.update!(patch_move_attributes)
+        Notifier.prepare_notifications(topic: move, action_name: 'update')
         render_move(move, 200)
       end
 
       def destroy
         move = find_move
-        move.destroy!
+        move.destroy! # TODO: we probably should not be destroying moves
+        Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
       end
 
@@ -67,17 +71,17 @@ module Api
       end
 
       def move_attributes
-        # latest_profile is fine here, as this is used by create/update which should only be allowed
-        # for moves which haven't been completed.
+        # moves are always created against the latest_profile for the person
         move_params[:attributes].merge(
           profile: Person.find(move_params.dig(:relationships, :person, :data, :id)).latest_profile,
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
+          documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
         )
       end
 
       def patch_move_attributes
-        move_params[:attributes]
+        patch_move_params[:attributes]
       end
 
       def render_move(move, status)
@@ -92,7 +96,10 @@ module Api
       end
 
       def import_moves_from_nomis
-        Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
+        # This prevents us from blaming the current user/application for the NOMIS sync
+        PaperTrail.request(whodunnit: nil) do
+          Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
+        end
       rescue StandardError => e
         Raven.capture_exception(e)
       end
@@ -101,8 +108,6 @@ module Api
         @from_locations ||=
           if filter_params[:from_location_id]
             Location.where(id: filter_params[:from_location_id])
-          elsif ENV['DEFAULT_NOMIS_AGENCY_IDS']
-            Location.where('nomis_agency_id IN (?)', ENV['DEFAULT_NOMIS_AGENCY_IDS'].split(',').map(&:strip))
           else
             []
           end

@@ -13,17 +13,24 @@ gem 'cancancan'
 # explicit soft-deletes
 gem 'discard'
 gem 'doorkeeper'
+gem 'faraday'
+# static page serving for extra API documentation
+gem 'high_voltage'
 gem 'json-schema'
 gem 'kaminari'
+gem 'markdown-rails'
 gem 'net-http-persistent'
 gem 'nokogiri', '>= 1.10.4'
 gem 'oauth2'
 gem 'pager_api'
+gem 'paper_trail'
 gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.2'
 gem 'rails', '~> 5.2.3'
+gem 'sassc-rails'
 gem 'sentry-raven'
+gem 'sidekiq'
 gem 'tty-prompt'
 gem 'validate_url', '~> 1.0.8'
 
@@ -49,6 +56,8 @@ group :development, :test do
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
+  # This needs to be in dev/test to expose the rake task
+  gem 'rswag-specs'
   gem 'timecop'
 end
 
@@ -62,6 +71,5 @@ end
 
 group :test do
   gem 'climate_control'
-  gem 'rswag-specs'
   gem 'simplecov', require: false
 end

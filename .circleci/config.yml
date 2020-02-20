@@ -4,12 +4,20 @@
 #
 version: 2.1
 
+orbs:
+  slack: circleci/slack@3.4.2
+
+aliases:
+  - &notify_slack
+    slack/notify-on-failure:
+      only_for_branches: master
+
 references:
   app_containers: &app_containers
     docker:
       - image: circleci/ruby:2.6.2
         environment:
-          BUNDLER_VERSION: 2.0.2
+          BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
           RACK_ENV: test
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
@@ -35,7 +43,7 @@ commands:
       - checkout
 
       - attach_workspace:
-          at: swagger/v1
+          at: .
 
       - setup_remote_docker:
           docker_layer_caching: true
@@ -95,6 +103,14 @@ commands:
                     deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
+            kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
+                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
+            kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+                    deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
+                    kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+
 jobs:
   test:
     <<: *app_containers
@@ -104,9 +120,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v2-dependencies-{{ checksum "Gemfile.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-
 
       - run:
           name: install dependencies
@@ -115,13 +131,20 @@ jobs:
             sudo gem uninstall bundler
             sudo rm /usr/local/bin/bundle
             sudo rm /usr/local/bin/bundler
-            sudo gem install bundler
+            sudo gem install -v2.1.4 bundler
             bundle install
+            sudo apt-get install -y apt-transport-https
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get install yarn
+            yarn install
 
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
 
       # Database setup
       - run: bundle exec rake db:create
@@ -132,8 +155,12 @@ jobs:
           command: COVERAGE=1 bundle exec rake
 
       - persist_to_workspace:
-          root: swagger/v1
-          paths: swagger.yaml
+          root: .
+          paths:
+            - swagger/v1/swagger.yaml
+            - node_modules/
+
+      - *notify_slack
 
   build_staging:
     <<: *cloud_container
@@ -184,10 +211,12 @@ workflows:
             branches:
               only:
                 - master
-                - remove-swagger-yaml
       - deploy_staging:
           requires:
             - build_staging
+          filters:
+            branches:
+              only: master
       - build_preprod:
           requires:
             - test

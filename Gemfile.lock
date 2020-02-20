@@ -104,6 +104,7 @@ GEM
     ffi (1.11.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    high_voltage (3.1.2)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
@@ -144,6 +145,9 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
+    markdown-rails (0.2.1)
+      rails
+      rdiscount (>= 1.6.8, < 2.0)
     method_source (0.9.2)
     mimemagic (0.3.3)
     mini_mime (1.0.2)
@@ -166,6 +170,9 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     pager_api (0.3.2)
+    paper_trail (10.3.1)
+      activerecord (>= 4.2)
+      request_store (~> 1.1)
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
@@ -187,6 +194,8 @@ GEM
     rack (2.1.1)
     rack-cors (1.1.0)
       rack (>= 2.0.0)
+    rack-protection (2.0.8.1)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.3)
@@ -218,6 +227,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rdiscount (1.6.8)
+    redis (4.1.3)
     request_store (1.4.1)
       rack (>= 1.4)
     rspec-core (3.8.2)
@@ -265,10 +276,23 @@ GEM
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
+    sassc (2.2.1)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     sentry-raven (2.11.0)
       faraday (>= 0.7.6, < 1.0)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
+    sidekiq (6.0.4)
+      connection_pool (>= 2.2.2)
+      rack (>= 2.0.0)
+      rack-protection (>= 2.0.0)
+      redis (>= 4.1.0)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -287,6 +311,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.0.1)
     thread_safe (0.3.6)
+    tilt (2.0.10)
     timecop (0.9.1)
     tty-color (0.5.0)
     tty-cursor (0.7.0)
@@ -326,16 +351,20 @@ DEPENDENCIES
   dotenv-rails (~> 2.7)
   factory_bot_rails
   faker
+  faraday
+  high_voltage
   json-schema
   kaminari
   listen (>= 3.0.5, < 3.2)
   lograge (~> 0.11.2)
   logstash-event (~> 1.2)
   logstash-logger (~> 0.26.1)
+  markdown-rails
   net-http-persistent
   nokogiri (>= 1.10.4)
   oauth2
   pager_api
+  paper_trail
   pg (~> 1.0.0)
   prometheus_exporter
   pry-byebug
@@ -350,8 +379,10 @@ DEPENDENCIES
   rswag-ui
   rubocop-govuk
   rubocop-rspec
+  sassc-rails
   sentry-raven
   shoulda-matchers
+  sidekiq
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
@@ -363,4 +394,4 @@ RUBY VERSION
    ruby 2.6.2p47
 
 BUNDLED WITH
-   2.0.2
+   2.1.4

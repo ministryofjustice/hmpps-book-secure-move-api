@@ -129,6 +129,7 @@ RSpec.configure do |config|
         move: load_swagger_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
         post_document_responses: load_swagger_json('post_document_responses.json'),
+        delete_document_responses: load_swagger_json('delete_document_responses.json'),
         errors: load_swagger_json('errors.json'),
         error_responses: load_swagger_json('error_responses.json'),
       },
