@@ -147,7 +147,7 @@ namespace :fake_data do
       Move.create!(
         date: date,
         time_due: time,
-        profile: people.sample.latest_profile,
+        person: people.sample,
         from_location: prisons.sample,
         to_location: courts.sample,
         status: %w[requested completed cancelled].sample,

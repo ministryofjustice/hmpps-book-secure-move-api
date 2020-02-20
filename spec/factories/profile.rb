@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  # Use a special factory when creating a person for a 'naked' profile to prevent infinite recursion
-  factory :person_without_profiles, class: Person
-
   factory :profile do
-    association :person, factory: :person_without_profiles
     first_names { 'Bob' }
     last_name { 'Roberts' }
     date_of_birth { Date.new(1980, 10, 20) }

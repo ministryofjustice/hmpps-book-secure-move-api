@@ -65,7 +65,7 @@ RSpec.describe MoveSerializer do
     let(:expected_json) do
       [
         {
-          id: move.profile.person.id,
+          id: move.person_id,
           type: 'people',
           attributes: { first_names: 'Bob', last_name: 'Roberts', date_of_birth: '1980-10-20' },
         },
