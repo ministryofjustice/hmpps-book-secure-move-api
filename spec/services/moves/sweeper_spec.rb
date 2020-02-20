@@ -53,7 +53,7 @@ RSpec.describe Moves::Sweeper do
           date: attributes[:date],
           time_due: attributes[:time_due],
           nomis_event_ids: [attributes[:nomis_event_id]],
-          profile: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]).latest_profile,
+          person: Person.find_by(nomis_prison_number: attributes[:person_nomis_prison_number]),
           from_location: Location.find_by(nomis_agency_id: attributes[:from_location_nomis_agency_id]),
           to_location: Location.find_by(nomis_agency_id: attributes[:to_location_nomis_agency_id]),
         )
@@ -140,7 +140,7 @@ RSpec.describe Moves::Sweeper do
         ]
       end
       let(:outdated_move) do
-        Move.find_by(from_location: brixton_prison, to_location: brixton_prison, profile: prisoner_two.latest_profile)
+        Move.find_by(from_location: brixton_prison, to_location: brixton_prison, person: prisoner_two)
       end
 
       before do
@@ -148,7 +148,7 @@ RSpec.describe Moves::Sweeper do
           date: '2019-09-15',
           from_location: brixton_prison,
           to_location: brixton_prison,
-          profile: prisoner_two.latest_profile,
+          person: prisoner_two,
           status: 'requested',
           time_due: '2019-08-19 08:00:00',
           nomis_event_ids: [487_463_210],

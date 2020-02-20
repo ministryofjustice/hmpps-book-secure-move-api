@@ -2,7 +2,7 @@
 
 class Person < VersionedModel
   has_many :profiles, dependent: :destroy
-  has_many :moves, through: :profiles
+  has_many :moves, dependent: :destroy
 
   def latest_profile
     profiles.last

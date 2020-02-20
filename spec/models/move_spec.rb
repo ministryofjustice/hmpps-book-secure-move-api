@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
-  it { is_expected.to belong_to(:profile) }
+  it { is_expected.to belong_to(:person) }
   it { is_expected.to have_many(:notifications) }
 
   it { is_expected.to validate_presence_of(:from_location) }
-  it { is_expected.to validate_presence_of(:profile) }
+  it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
@@ -132,11 +132,7 @@ RSpec.describe Move do
 
   describe '#existing' do
     let!(:move) { create :move }
-    let(:duplicate) {
-      move.profile.moves.build(date: move.date,
-                               from_location: move.from_location,
-                               to_location: move.to_location)
-    }
+    let(:duplicate) { described_class.new(move.attributes) }
 
     context 'when querying for existing moves' do
       it 'finds the right move' do

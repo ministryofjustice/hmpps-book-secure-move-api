@@ -102,7 +102,7 @@ RSpec.describe Moves::Importer do
 
     it 'sets the person of the move' do
       importer.call
-      expect(move.profile.person).to eq prisoner_one
+      expect(move.person).to eq prisoner_one
     end
   end
 

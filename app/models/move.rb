@@ -31,7 +31,7 @@ class Move < VersionedModel
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :profile
+  belongs_to :person
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
@@ -44,7 +44,7 @@ class Move < VersionedModel
   )
   validates :date, presence: true
   validates :move_type, inclusion: { in: move_types }
-  validates :profile, presence: true
+  validates :person, presence: true
   validates :reference, presence: true
   validates :status, inclusion: { in: statuses }
 
@@ -65,9 +65,7 @@ class Move < VersionedModel
   end
 
   def existing
-    Move.joins(:profile)
-        .merge(Profile.where(person_id: profile.person_id))
-        .find_by(date: date, from_location_id: from_location_id, to_location_id: to_location_id)
+    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
 private
