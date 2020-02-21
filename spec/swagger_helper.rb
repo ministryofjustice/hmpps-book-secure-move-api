@@ -135,10 +135,9 @@ RSpec.configure do |config|
       },
       definitions: {
         document: load_swagger_json('document.json'),
-        move: load_swagger_json('move.json'),
-        reason: load_swagger_json('reason.json'),
+        reason: load_swagger_v1_json('reason.json'),
+        reason_reference: load_swagger_json('reason_reference.json'),
         location_reference: load_swagger_json('location_reference.json'),
-        get_move_responses: load_swagger_json('get_move_responses.json'),
         move: load_swagger_v1_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
         get_move_responses: load_swagger_json('get_move_responses.json'),

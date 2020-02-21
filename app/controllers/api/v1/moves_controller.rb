@@ -79,7 +79,7 @@ module Api
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
-          reason: Reason.find_by(id: move_params.dig(:relationships, :reasons, :data, :id)),
+          reason: Reason.find_by(id: move_params.dig(:relationships, :reason, :data, :id)),
         )
       end
 

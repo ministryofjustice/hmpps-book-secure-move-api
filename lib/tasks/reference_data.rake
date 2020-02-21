@@ -39,6 +39,13 @@ namespace :reference_data do
     ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'suppliers')
   end
 
+  desc 'create reasons'
+  task create_reasons: :environment do
+    require 'active_record/fixtures'
+
+    ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'reasons')
+  end
+
   desc 'create locations/suppliers relationship'
   task link_suppliers: :environment do
     supplier_locations = {

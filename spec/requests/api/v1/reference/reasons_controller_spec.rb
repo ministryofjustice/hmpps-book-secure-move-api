@@ -44,9 +44,9 @@ RSpec.describe Api::V1::Reference::ReasonsController, :rswag, :with_client_authe
         schema "$ref": '#/definitions/get_reasons_responses/200'
 
         run_test! do |_example|
-          # expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
+          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
 
-          # expect(JSON.parse(response.body)).to eq resource_to_json
+          expect(JSON.parse(response.body)).to eq resource_to_json
         end
       end
 

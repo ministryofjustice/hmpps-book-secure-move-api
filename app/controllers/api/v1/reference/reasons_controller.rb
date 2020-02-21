@@ -6,7 +6,6 @@ module Api
       class ReasonsController < ApiController
         def index
           reasons = Reason.all
-          puts reasons.inspect
           render json: reasons
         end
       end

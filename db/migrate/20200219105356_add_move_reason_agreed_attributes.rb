@@ -8,8 +8,6 @@ class AddMoveReasonAgreedAttributes < ActiveRecord::Migration[5.2]
     change_table :moves do |t|
       t.references :reason, type: :uuid, null: true
       t.text :reason_comment, null: true
-      t.boolean :agreed, default: false, null: true
-      t.string :agreed_by, null: true
     end
   end
 end
