@@ -150,6 +150,7 @@ namespace :reference_data do
         SCH5
         SCH6
         SCH8
+        SCH9
         STC2
         STC3
         SFCUSU
@@ -265,7 +266,6 @@ namespace :reference_data do
         NFL2
         NFL3
         NFL4
-        SCH9
         SFL1
         SFL2
       ],
