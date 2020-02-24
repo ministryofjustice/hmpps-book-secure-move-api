@@ -175,7 +175,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
           let(:event_id) { 542_598_345 }
           let(:from_location) { create(:location) }
-          let(:to_location) { create(:location) }
+          let(:to_location) { create(:location, :court) }
           let(:nomis_move) { Move.where(nomis_event_ids: [event_id]).first }
 
           it 'does not attribute any changes to the user' do

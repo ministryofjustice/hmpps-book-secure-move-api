@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_12_132542) do
+ActiveRecord::Schema.define(version: 2020_02_21_120126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 2020_02_12_132542) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
+    t.boolean "move_agreed"
+    t.string "move_agreed_by"
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
