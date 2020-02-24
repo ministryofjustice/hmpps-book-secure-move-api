@@ -9,25 +9,24 @@ class NotifyJob < ApplicationJob
 
     data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
     hmac = Encryptor.hmac(notification.subscription.secret, data)
-    success = false # assume failure
+    response = nil
 
     begin
       response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
       if response.success?
         notification.delivered_at = DateTime.now
-        success = true
       else
-        puts "Error: non-success status received from #{notification.subscription.callback_url} (#{response.status})"
+        Rails.logger.error("[NotifyJob] non-success status received from #{notification.subscription.callback_url} (#{response.status})")
       end
     rescue Faraday::ClientError => e
-      puts "Error notifying #{notification.subscription.callback_url}: #{e.inspect}"
+      Rails.logger.error("[NotifyJob] failed to notify #{notification.subscription.callback_url}: #{e.inspect}")
     end
 
     notification.update(delivery_attempts: notification.delivery_attempts.succ,
                         delivery_attempted_at: DateTime.now)
 
     # It is necessary to raise an error in order for Sidekiq to retry the notification
-    raise 'Notification failed' unless success
+    raise 'Notification failed' unless response.present? && response.success?
   end
 
 private
