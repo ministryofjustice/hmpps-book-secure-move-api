@@ -21,7 +21,7 @@ RSpec.describe DocumentSerializer do
   end
 
   it 'contains a `filesize` attribute' do
-    expect(result[:data][:attributes][:filesize]).to eql '98 KB'
+    expect(result[:data][:attributes][:filesize]).to be 100352
   end
 
   it 'contains a `content_type` attribute' do

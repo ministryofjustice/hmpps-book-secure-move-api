@@ -16,7 +16,8 @@
       "type": {
         "type": "string",
         "example": "suppliers",
-        "description": "The type of this object - always `supplier`"
+        "enum": ["suppliers"],
+        "description": "The type of this object - always `suppliers`"
       },
       "attributes": {
         "type": "object",

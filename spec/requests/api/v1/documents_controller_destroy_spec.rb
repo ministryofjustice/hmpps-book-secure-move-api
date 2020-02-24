@@ -13,7 +13,7 @@ RSpec.describe Api::V1::DocumentsController, with_client_authentication: true do
 
   let(:detail_404) { "Couldn't find Document with 'id'=UUID-not-found" }
 
-  describe 'DELETE /moves/{moveId}/documents/{documentId}' do
+  describe 'DELETE /moves/{move_id}/documents/{document_id}' do
     let(:schema) { load_json_schema('delete_document_responses.json') }
 
     let!(:move) { create :move }

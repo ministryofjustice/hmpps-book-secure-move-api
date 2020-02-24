@@ -16,6 +16,7 @@
       "type": {
         "type": "string",
         "example": "moves",
+        "enum": ["moves"],
         "description": "The type of this object - always `moves`"
       },
       "attributes": {
@@ -23,17 +24,18 @@
         "required": [
           "status",
           "date",
-          "reference"
+          "move_type"
         ],
         "properties": {
           "reference": {
             "type": "string",
             "example": "TM7B3A2S",
-            "description": "Unique human-readable identifier for the Move"
+            "description": "Unique human-readable identifier for the Move",
+            "readOnly": true
           },
           "status": {
             "type": "string",
-            "enum": ["requested", "cancelled"],
+            "enum": ["requested", "cancelled", "completed"],
             "description": "Indicates the stage in it's lifecycle that this move is at"
           },
           "move_type": {
@@ -44,17 +46,19 @@
           "time_due": {
             "type": "string",
             "format": "date-time",
+            "example": "2020-05-17T15:04:07.632Z",
             "description": "Time due at the destination, e.g. court appointment time"
           },
           "updated_at": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp of when the move was last created or updated"
+            "description": "Timestamp of when the move was last created or updated",
+            "readOnly": true
           },
           "date": {
             "type": "string",
             "format": "date",
-            "example": "2019-05-24",
+            "example": "2020-05-17",
             "description": "Date on which the move is scheduled"
           },
           "additional_information": {
@@ -85,6 +89,10 @@
       },
       "relationships": {
         "type": "object",
+        "required": [
+          "person",
+          "from_location"
+        ],
         "properties": {
           "person": {
             "$ref": "person_reference.json#/PersonReference",

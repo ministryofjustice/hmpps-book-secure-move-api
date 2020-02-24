@@ -4,29 +4,36 @@
     "properties": {
       "self": {
         "type": "string",
-        "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+        "format": "uri",
+        "example": "http://localhost:3000/api/v1/moves?page=3&per_page=20"
       },
       "first": {
         "type": "string",
-        "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+        "format": "uri",
+        "example": "http://localhost:3000/api/v1/moves?page=3&per_page=20"
       },
       "prev": {
         "oneOf": [
-          { "type": "string" },
+          { "type": "string",
+            "format": "uri"
+          },
           { "type": "null" }
         ],
-        "example": "http://localhost:3000/api/v1/moves?page_number=2&page_size=20"
+        "example": "http://localhost:3000/api/v1/moves?page=2&per_page=20"
       },
       "next": {
         "oneOf": [
-          { "type": "string" },
+          { "type": "string",
+            "format": "uri"
+          },
           { "type": "null" }
         ],
-        "example": "http://localhost:3000/api/v1/moves?page_number=4&page_size=20"
+        "example": "http://localhost:3000/api/v1/moves?page=4&per_page=20"
       },
       "last": {
         "type": "string",
-        "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
+        "format": "uri",
+        "example": "http://localhost:3000/api/v1/moves?page=99&per_page=20"
       }
     }
   }

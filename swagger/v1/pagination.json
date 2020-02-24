@@ -19,11 +19,13 @@
         "properties": {
           "first": {
             "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=3&page_size=20"
+            "format": "uri",
+            "example": "http://localhost:3000/api/v1/moves?page=3&per_page=20"
           },
           "last": {
             "type": "string",
-            "example": "http://localhost:3000/api/v1/moves?page_number=99&page_size=20"
+            "format": "uri",
+            "example": "http://localhost:3000/api/v1/moves?page=99&per_page=20"
           }
         }
       }
