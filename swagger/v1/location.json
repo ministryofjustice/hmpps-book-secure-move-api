@@ -11,13 +11,16 @@
       "type": {
         "type": "string",
         "example": "locations",
+        "enum": ["locations"],
         "description": "The type of this object - always `locations`"
       },
       "attributes": {
         "type": "object",
         "required": [
+          "key",
           "title",
-          "location_type"
+          "location_type",
+          "can_upload_documents"
         ],
         "properties": {
           "key": {

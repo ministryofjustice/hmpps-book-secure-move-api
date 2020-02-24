@@ -15,7 +15,7 @@ class DocumentSerializer < ActiveModel::Serializer
   end
 
   def filesize
-    number_to_human_size(object.file.byte_size, precision: 2)
+    object.file.byte_size
   end
 
   def content_type

@@ -12,6 +12,7 @@
           "type": {
             "type": "string",
             "example": "people",
+            "enum": ["people"],
             "description": "The type of this object - always `people`"
           },
           "id": {

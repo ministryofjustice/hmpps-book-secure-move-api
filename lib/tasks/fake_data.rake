@@ -140,18 +140,23 @@ namespace :fake_data do
     people = Person.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
-    500.times do
+    20000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
-      Move.create!(
-        date: date,
-        time_due: time,
-        person: people.sample,
-        from_location: prisons.sample,
-        to_location: courts.sample,
-        status: %w[requested completed cancelled].sample,
-      )
+      person = people.sample
+      from_location = prisons.sample
+      to_location = courts.sample
+      unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
+        Move.create!(
+          date: date,
+          time_due: time,
+          person: person,
+          from_location: from_location,
+          to_location: to_location,
+          status: %w[requested completed cancelled].sample,
+        )
+      end
     end
   end
 

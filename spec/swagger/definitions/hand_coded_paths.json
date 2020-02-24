@@ -396,9 +396,9 @@
       }
     }
   },
-  "/people/{personId}": {
+  "/people/{person_id}": {
     "patch": {
-      "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{personId}.",
+      "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{person_id}.",
       "tags": [
         "People"
       ],
@@ -407,7 +407,7 @@
       ],
       "parameters": [
         {
-          "name": "personId",
+          "name": "person_id",
           "in": "path",
           "required": true,
           "description": "The ID of the person",
@@ -656,9 +656,9 @@
       }
     }
   },
-  "/moves/{moveId}": {
+  "/moves/{move_id}": {
     "patch": {
-      "summary": "Updates a move. Aliased as PUT /moves/{moveId}.",
+      "summary": "Updates a move. Aliased as PUT /moves/{move_id}.",
       "tags": [
         "Moves"
       ],
@@ -667,7 +667,7 @@
       ],
       "parameters": [
         {
-          "name": "moveId",
+          "name": "move_id",
           "in": "path",
           "required": true,
           "description": "The ID of the move",
@@ -760,7 +760,7 @@
       ],
       "parameters": [
         {
-          "name": "moveId",
+          "name": "move_id",
           "in": "path",
           "required": true,
           "description": "The ID of the move",
@@ -815,7 +815,7 @@
       }
     }
   },
-  "/moves/{MoveId}/documents": {
+  "/moves/{move_id}/documents": {
     "post": {
       "summary": "Creates a new document",
       "tags": [
@@ -926,7 +926,7 @@
           "schema": {
             "type": "string",
             "enum": [
-              "risks",
+              "risk",
               "health",
               "court"
             ]
@@ -1053,7 +1053,7 @@
       }
     }
   },
-  "/reference/locations/{locationId}": {
+  "/reference/locations/{location_id}": {
     "get": {
       "summary": "Returns the details of a location",
       "tags": [
@@ -1074,7 +1074,7 @@
           "required": true
         },
         {
-          "name": "locationId",
+          "name": "location_id",
           "in": "path",
           "required": true,
           "description": "The ID of the location",
@@ -1184,7 +1184,7 @@
       }
     }
   },
-  "/reference/suppliers/{supplierKey}": {
+  "/reference/suppliers/{supplier_key}": {
     "get": {
       "summary": "Returns the details of a supplier",
       "tags": [
@@ -1205,7 +1205,7 @@
           "required": true
         },
         {
-          "name": "supplierKey",
+          "name": "supplier_key",
           "in": "path",
           "required": true,
           "description": "The key of the supplier",
