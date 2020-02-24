@@ -1,0 +1,1 @@
+//= require '@ministryofjustice/frontend/moj/all'

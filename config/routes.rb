@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     mount Rswag::Api::Engine => '/api-docs'
   end
 
+  get "/docs/*id" => 'pages#show', as: :page, format: false
+  get 'docs/', to: 'pages#show', id: 'overview'
+
   get '/ping', to: 'status#ping', format: :json
   get '/health', to: 'status#health', format: :json
 
