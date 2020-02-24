@@ -6,29 +6,22 @@
     ],
     "properties": {
       "data": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "id",
-              "type"
-            ],
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "locations",
-                "description": "The type of this object - always `locations`"
-              },
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "example": "3561f372-9f1c-4e13-997e-b11e1647cce1",
-                "description": "The unique identifier (UUID) of object that this reference points to"
-              }
-            }
+        "type": "object",
+        "required": ["type", "id"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "locations",
+            "enum": ["locations"],
+            "description": "The type of this object - always `locations`"
           },
-          { "type": "null" }
-        ]
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154",
+            "description": "The unique identifier (UUID) of the object that this reference points to"
+          }
+        }
       }
     }
   }

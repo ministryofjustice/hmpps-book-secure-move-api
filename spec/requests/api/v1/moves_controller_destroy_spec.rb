@@ -13,7 +13,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
-  describe 'DELETE /moves/{moveId}' do
+  describe 'DELETE /moves/{move_id}' do
     let(:schema) { load_json_schema('delete_move_responses.json') }
 
     let!(:move) { create :move }

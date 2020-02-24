@@ -15,6 +15,7 @@
       "type": {
         "type": "string",
         "example": "identifier_types",
+        "enum": ["identifier_types"],
         "description": "The type of this object - always `identifier_types`"
       },
       "attributes": {
@@ -25,12 +26,13 @@
         "properties": {
           "key": {
             "type": "string",
-            "example": "male",
+            "example": "police_national_computer",
+            "enum": ["police_national_computer", "criminal_records_office", "prison_number", "niche_reference", "athena_reference"],
             "description": "The unique string key (alias of `id`)"
           },
           "title": {
             "type": "string",
-            "example": "Male",
+            "example": "PNC Number",
             "description": "The human readable label for this identifier type"
           },
           "description": {

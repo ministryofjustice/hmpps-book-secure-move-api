@@ -7,20 +7,21 @@
     ],
     "properties": {
       "created_at": {
-        "oneOf": [
-          { "type": "string" },
-          { "type": "null" }
-        ],
+        "type": "string",
+        "format": "date",
         "example": "2019-05-06",
-        "description": "The date on which this attribute was added to the profile"
+        "description": "The date on which this attribute was added to the profile",
+        "readOnly": true
       },
       "expires_at": {
         "oneOf": [
-          { "type": "string" },
+          { "type": "string",
+            "format": "date"
+          },
           { "type": "null" }
         ],
         "example": "2019-06-06",
-        "description": "The date on which this attribute expires (optional)"
+        "description": "The date on which this attribute expires (null if it doesn't expire)"
       },
       "title": {
         "type": "string",
@@ -43,8 +44,13 @@
       },
       "category": {
         "type": "string",
+        "enum": [
+          "risk",
+          "health",
+          "court"
+        ],
         "example": "risk",
-        "description": "The category in which the associated assessment question belongs, e.g. risk, health or court"
+        "description": "The category in which the associated assessment question belongs"
       },
       "key": {
         "type": "string",

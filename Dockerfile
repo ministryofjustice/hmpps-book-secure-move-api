@@ -19,7 +19,20 @@ EXPOSE $PUMA_PORT
 #
 # RUN chown $APPUSER:$APPUSER ./db/schema.rb
 
+RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
+   && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+   && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+   && apt-get update \
+   && apt-get install -y nodejs yarn \
+   && apt-get clean
+
+RUN yarn install
+# Have to set SECRET_KEY_BASE here to arbitrary string, otherwise task doesn't run
+RUN SECRET_KEY_BASE=valuenotactuallyused rails assets:precompile
+
 ENV APPUID 1000
+# Need to do this as the app writes to tmp/cache and everything is setup as root
+RUN chown -R $APPUID:$APPUID /usr/src/app/tmp/cache
 USER $APPUID
 
 ENTRYPOINT ["./run.sh"]

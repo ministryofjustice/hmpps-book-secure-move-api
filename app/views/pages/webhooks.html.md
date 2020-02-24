@@ -5,24 +5,16 @@ Webhook notifications allow suppliers to subscribe to the PECS API system and re
 
 
 ## 2. Subscribing to notifications
-The subscription process is currently manual - please contact the Book a Secure Move via your Slack channel with the following details:
+The subscription process is currently manual - please contact the Book a Secure Move team via your Slack channel with the following details:
 
-* Supplier name
-* Callback URL: this should be an `https://` endpoint which is publicly accessible and should not require authentication
-* Secret: this is a shared secret which is used to generate a SHA-256 HMAC signature to guarantee the authenticity of the notification
-
-Technical note for the Book a Secure Move team to manually create the subscription record:
-
-* connect to the Staging kubernetes pod and in a rails console, run:
-
-        supplier = Supplier.find_by(key: "<SUPPLIER-KEY>")
-        supplier.subscriptions << Subscription.new(callback_url: "<CALLBACK-URL>", secret: "<SECRET>")
+* **Callback URL**: this must be an `https://` endpoint which is publicly accessible and should not require authentication
+* **Secret**: this is a shared secret which is used to generate a SHA-256 HMAC signature to guarantee the authenticity of the notification
 
 Once the Book a Secure Move team have actioned the request, notifications of moves events will be immediately sent to the specified `callback_url`.
 
 
 ## 3. Receiving notifications
-The supplier should ensure that the designated endpoint is available to receive notifications at all times. If for any reason the endpoint is offline when a notification is attempted, the PECS system will retry the notification later with an increasing random exponential delay. The system will continue to retry the notification up to 25 times. On the first day the notification will be attempted approximately 14 times (see [this table](https://github.com/mperham/sidekiq/wiki/Error-Handling#automatic-job-retry) for the approximate schedule).
+The supplier should ensure that the designated endpoint is available to receive notifications at all times. If for any reason the endpoint is offline when a notification is attempted, the PECS system will retry the notification later with an increasing random exponential delay. The system will continue to retry the notification up to 25 times. On the first day the notification will be attempted approximately 14 times (see [this table](https://github.com/mperham/sidekiq/wiki/Error-Handling#automatic-job-retry) for the approximate schedule). Once 25 failed delivery attempts are reached the notification record will be failed and will not be attempted again.
 
 When a notification is received at the supplier's endpoint, it must:
 
@@ -48,7 +40,27 @@ An example notification message is given below:
     Pecs-Notification-Id: 2cb108dd-8d47-4a5f-8d36-29324a770f05
     Pecs-Signature: 5cWQEe9emC7Myvj8jxVDIWI0jxoshOhitXfsCQBtTS4=
     User-Agent: pecs-webhooks/v1
-    {"data":{"id":"2cb108dd-8d47-4a5f-8d36-29324a770f05","type":"notifications","attributes":{"event_type":"create_move","timestamp":"2020-02-18T11:05:00+00:00"},"relationships":{"move":{"data":{"id":"149f1c27-1b7d-4c60-a4d4-ae8afbe92501","type":"moves"},"links":{"self":"http://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1/moves/149f1c27-1b7d-4c60-a4d4-ae8afbe92501"}}}}}
+    {
+      "data": {
+        "id": "2cb108dd-8d47-4a5f-8d36-29324a770f05",
+        "type": "notifications",
+        "attributes": {
+          "event_type": "create_move",
+          "timestamp": "2020-02-18T11:05:00+00:00"
+        },
+        "relationships": {
+          "move": {
+            "data": {
+              "id": "149f1c27-1b7d-4c60-a4d4-ae8afbe92501",
+              "type": "moves"
+            },
+            "links": {
+              "self": "http://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1/moves/149f1c27-1b7d-4c60-a4d4-ae8afbe92501"
+            }
+          }
+        }
+      }
+    }
 
 
 ## 4. Verification of the PECS-SIGNATURE header
@@ -56,7 +68,7 @@ It is necessary to verify the signature of the notification with the following a
 
 1. Calculate the SHA-256 HMAC of the message body using the pre-agreed <SECRET> when the subscription was created
 2. Base64 encode the calculated HMAC
-3. Check that the encoded value matches the PECS-SIGNATURE header. If it does match, return an HTTP success status (e.g. 202 - Accepted). If it does not match, return an error code (e.g. 403 - Forbidden).
+3. Check that the encoded value matches the PECS-SIGNATURE header. If it does match, return an HTTP success status (e.g. `202 - Accepted`). If it does not match, return an error code (e.g. 403 - Forbidden).
 
 Ruby code for calculating the signature is given below:
 
@@ -68,6 +80,8 @@ Ruby code for calculating the signature is given below:
 ## 5. Idempotent nature of notifications
 The supplier should store the `id` (also in the `PECS-NOTIFICATION-ID` header) of every successful notification received. If a subsequent notification with the same `id` is received, it should be ignored.
 
+In the event that the notification is ultimately ignored it is still necessary to return a `success` status (e.g. `202 - Accepted`).
+
 
 ## 6. Random order of notifications
 The supplier should be mindful that because notifications may need to be retried several times before they are successfully delivered, the order in which they are received will not necessarily match the order in which the events occurred. For example, it is possible for the `update_move` notification to be received before the `create_move` notification, if the `create_move` notification was not successfully delivered on the first try.
@@ -77,7 +91,6 @@ To allow for this, the **supplier must always fetch the latest move record from 
 
 ## 7. Processing notifications
 The notification typically contains minimal data: an `id`, a `timestamp`, an `event_type`, a `move:id` and a link to the move record:
-
 
     {
       "data": {

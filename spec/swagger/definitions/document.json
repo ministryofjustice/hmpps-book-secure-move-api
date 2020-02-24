@@ -16,6 +16,7 @@
       "type": {
         "type": "string",
         "example": "documents",
+        "enum": ["documents"],
         "description": "The type of this object - always `documents`"
       },
       "attributes": {
@@ -23,6 +24,7 @@
         "required": [
           "url",
           "filename",
+          "filesize",
           "content_type"
         ],
         "properties": {
@@ -35,6 +37,11 @@
             "type": "string",
             "example": "file.doc",
             "description": "The name of the uploaded file"
+          },
+          "filesize": {
+            "type": "number",
+            "example": "12345678",
+            "description": "The size of the uploaded file in bytes"
           },
           "content_type": {
             "type": "string",
