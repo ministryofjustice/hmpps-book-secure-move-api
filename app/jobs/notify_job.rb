@@ -26,7 +26,7 @@ class NotifyJob < ApplicationJob
                         delivery_attempted_at: DateTime.now)
 
     # It is necessary to raise an error in order for Sidekiq to retry the notification
-    raise 'Notification failed' unless response.present? && response.success?
+    raise 'Notification failed' unless response&.success?
   end
 
 private
