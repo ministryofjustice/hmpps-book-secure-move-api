@@ -43,6 +43,7 @@ module Moves
         person: Person.find_by(nomis_prison_number: move[:person_nomis_prison_number]),
         from_location: Location.find_by(nomis_agency_id: move[:from_location_nomis_agency_id]),
         to_location: Location.find_by(nomis_agency_id: move[:to_location_nomis_agency_id]),
+        move_agreed: false,
       )
     end
   end
