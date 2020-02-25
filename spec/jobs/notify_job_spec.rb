@@ -9,35 +9,60 @@ RSpec.describe NotifyJob, type: :job do
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
   let(:headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
+  let(:perform_ignore_errors!) { perform! rescue nil }
 
   context 'when notification and subscription are active' do
-    before do
-      allow(Faraday).to receive(:new).and_return(client)
-      allow(client).to receive(:post).and_return(response)
-      perform!
-    end
+    before { allow(Faraday).to receive(:new).and_return(client) }
 
-    context 'when notification is a success' do
-      let(:response) { instance_double(Faraday::Response, success?: true) }
+    context 'when a response is received from the callback_url' do
+      before { allow(client).to receive(:post).and_return(response) }
 
-      it 'posts JSON to the callback_url' do
-        expect(client).to have_received(:post).with(notification.subscription.callback_url, data, headers)
+      context 'when the callback response is a success' do
+        let(:response) { instance_double(Faraday::Response, success?: true, status: 202) }
+
+        before { perform! }
+
+        it 'posts JSON to the callback_url' do
+          expect(client).to have_received(:post).with(notification.subscription.callback_url, data, headers)
+        end
+
+        it 'updates delivered_at' do
+          expect(notification.reload.delivered_at).not_to be_nil
+        end
       end
 
-      it 'updates delivered_at' do
-        expect(notification.reload.delivered_at).not_to be_nil
+      context 'when the callback response is a failure' do
+        let(:response) { instance_double(Faraday::Response, success?: false, status: 503) }
+
+        it 'raises Notification failed error' do
+          expect { perform! }.to raise_error('Notification failed')
+        end
+
+        it 'updates delivery_attempts' do
+          expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
+        end
+
+        it 'updates delivery_attempted_at' do
+          expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
+        end
       end
     end
 
-    context 'when notification is not a success' do
-      let(:response) { instance_double(Faraday::Response, success?: false) }
+    context 'when an error is raised by Faraday' do
+      before do
+        allow(client).to receive(:post).and_raise(Faraday::ClientError.new('Internet is unplugged'))
+      end
+
+      it 'raises Notification failed error' do
+        expect { perform! }.to raise_error('Notification failed')
+      end
 
       it 'updates delivery_attempts' do
-        expect(notification.reload.delivery_attempts).to eq(1)
+        expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
       end
 
       it 'updates delivery_attempted_at' do
-        expect(notification.reload.delivery_attempted_at).not_to be_nil
+        expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
       end
     end
   end
