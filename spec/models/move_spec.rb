@@ -19,30 +19,6 @@ RSpec.describe Move do
     )
   end
 
-  it 'validates presence of `move_agreed` in case of prison transfer ' do
-    move = build(:move, move_type: 'prison_transfer')
-
-    expect(move).to(validate_inclusion_of(:move_agreed).in_array([true, false]))
-  end
-
-  it 'does NOT validates presence of `move_agreed` in case of prison recall ' do
-    move = build(:move, move_type: 'prison_recall')
-
-    expect(move.valid?).to be true
-  end
-
-  it 'validates presence of `move_agreed_by` in case of prison transfer and moved is agreed' do
-    move = build(:move, move_type: 'prison_transfer', move_agreed: true)
-
-    expect(move).to(validate_presence_of(:move_agreed_by))
-  end
-
-  it 'does NOT validates presence of `move_agreed_by` in case of prison transfer and moved is NOT agreed' do
-    move = build(:move, move_type: 'prison_transfer', move_agreed: false)
-
-    expect(move).not_to(validate_presence_of(:move_agreed_by))
-  end
-
   it 'does NOT validate presence of `to_location` if `move_type` is prison_recall' do
     expect(build(:move, move_type: 'prison_recall')).not_to(
       validate_presence_of(:to_location),

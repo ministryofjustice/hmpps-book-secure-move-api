@@ -46,17 +46,6 @@ class Move < VersionedModel
   validates :move_type, inclusion: { in: move_types }
   validates :person, presence: true
   validates :reference, presence: true
-  validates(
-    :move_agreed,
-    inclusion: { in: [true, false] },
-    if: ->(move) { move.move_type == 'prison_transfer' },
-  )
-
-  validates(
-    :move_agreed_by,
-    presence: true,
-    if: ->(move) { move.move_type == 'prison_transfer' && move.move_agreed? },
-  )
 
   validates :status, inclusion: { in: statuses }
 
