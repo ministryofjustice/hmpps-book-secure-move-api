@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Move < VersionedModel
+  MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'
@@ -12,6 +13,7 @@ class Move < VersionedModel
   }.freeze
 
   enum status: {
+    proposed: MOVE_STATUS_PROPOSED,
     requested: MOVE_STATUS_REQUESTED,
     completed: MOVE_STATUS_COMPLETED,
     cancelled: MOVE_STATUS_CANCELLED,

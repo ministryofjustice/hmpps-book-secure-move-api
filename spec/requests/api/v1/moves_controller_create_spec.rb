@@ -120,6 +120,12 @@ RSpec.describe Api::V1::MovesController do
         end
       end
 
+      context 'with a proposed move' do
+        let(:move_attributes) { attributes_for(:move, status: 'proposed') }
+
+        it_behaves_like 'an endpoint that responds with success 201'
+      end
+
       context 'with explicit move_agreed and move_agreed_by' do
         let(:move_attributes) {
           {
