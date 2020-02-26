@@ -6,12 +6,20 @@ def swagger_file(*relative_path)
   File.read(Rails.root.join('spec', 'swagger', 'definitions', *relative_path))
 end
 
+def swagger_v1_file(*relative_path)
+  File.read(Rails.root.join('swagger', 'v1', *relative_path))
+end
+
 def load_swagger_yaml(*relative_path)
   YAML.safe_load(swagger_file(*relative_path)).deep_symbolize_keys
 end
 
 def load_swagger_json(*relative_path)
   JSON.parse(swagger_file(*relative_path))
+end
+
+def load_swagger_v1_json(*relative_path)
+  JSON.parse(swagger_v1_file(*relative_path))
 end
 
 RSpec.configure do |config|
@@ -126,7 +134,7 @@ RSpec.configure do |config|
         document: load_swagger_json('document.json'),
         location_reference: load_swagger_json('location_reference.json'),
         get_move_responses: load_swagger_json('get_move_responses.json'),
-        move: load_swagger_json('move.json'),
+        move: load_swagger_v1_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
         post_document_responses: load_swagger_json('post_document_responses.json'),
         delete_document_responses: load_swagger_json('delete_document_responses.json'),
