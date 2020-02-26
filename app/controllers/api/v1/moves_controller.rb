@@ -52,7 +52,8 @@ module Api
       PERMITTED_MOVE_PARAMS = [
         :type,
         attributes: %i[date time_due status move_type additional_information
-                       cancellation_reason cancellation_reason_comment],
+                       cancellation_reason cancellation_reason_comment
+                       move_agreed move_agreed_by],
         relationships: {},
       ].freeze
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
