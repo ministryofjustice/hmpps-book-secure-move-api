@@ -12,7 +12,14 @@ RSpec.describe Api::V1::MovesController do
   describe 'POST /moves' do
     let(:schema) { load_json_schema('post_moves_responses.json') }
 
-    let(:move_attributes) { attributes_for(:move) }
+    let(:move_attributes) {
+      { date: Date.today,
+        time_due: Time.now,
+        status: 'requested',
+        additional_information: 'some more info',
+        move_type: 'court_appearance' }
+    }
+
     let!(:from_location) { create :location }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
@@ -110,6 +117,24 @@ RSpec.describe Api::V1::MovesController do
 
         it 'sets the move_type to `prison_recall`' do
           expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        end
+      end
+
+      context 'with explicit move_agreed and move_agreed_by' do
+        let(:move_attributes) {
+          {
+            date: Date.today,
+            move_agreed: 'true',
+            move_agreed_by: 'John Doe',
+          }
+        }
+
+        it 'sets move_agreed' do
+          expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq true
+        end
+
+        it 'sets move_agreed_by' do
+          expect(response_json.dig('data', 'attributes', 'move_agreed_by')).to eq 'John Doe'
         end
       end
 

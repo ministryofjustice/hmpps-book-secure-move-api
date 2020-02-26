@@ -43,6 +43,19 @@
             "enum": ["court_appearance", "prison_recall", "prison_transfer"],
             "description": "Indicates the type of move, e.g. prison transfer or court appearance"
           },
+          "move_agreed": {
+            "type": "boolean",
+            "example":  "true",
+            "description": "Indicates if the moved has been agreed"
+          },
+          "move_agreed_by": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "example":  "John Does",
+            "description": "Indicates the name of the person who agreed the move"
+          },
           "time_due": {
             "type": "string",
             "format": "date-time",
