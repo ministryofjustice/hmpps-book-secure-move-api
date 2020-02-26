@@ -40,6 +40,26 @@
           "format": "date"
         },
         {
+          "name": "filter[created_at_from]",
+          "in": "query",
+          "description": "Filters results to only include moves created on or after the given date, e.g. `2019-05-02`",
+          "schema": {
+            "type": "string",
+            "example": "2019-05-09"
+          },
+          "format": "date"
+        },
+        {
+          "name": "filter[created_at_to]",
+          "in": "query",
+          "description": "Filters results to only include moves created on or before the given date, e.g. `2019-05-09`",
+          "schema": {
+            "type": "string",
+            "example": "2019-05-09"
+          },
+          "format": "date"
+        },
+        {
           "name": "filter[status]",
           "in": "query",
           "explode": false,

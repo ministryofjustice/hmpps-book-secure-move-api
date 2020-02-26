@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_25_142710) do
+ActiveRecord::Schema.define(version: 2020_02_26_113423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -121,6 +121,8 @@ ActiveRecord::Schema.define(version: 2020_02_25_142710) do
     t.uuid "profile_id"
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
+    t.index ["created_at"], name: "index_moves_on_created_at"
+    t.index ["date"], name: "index_moves_on_date"
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
@@ -270,7 +272,7 @@ ActiveRecord::Schema.define(version: 2020_02_25_142710) do
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "people"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

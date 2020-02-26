@@ -68,6 +68,12 @@
             "description": "Timestamp of when the move was last created or updated",
             "readOnly": true
           },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the move was created",
+            "readOnly": true
+          },
           "date": {
             "type": "string",
             "format": "date",
