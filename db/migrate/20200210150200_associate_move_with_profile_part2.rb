@@ -10,13 +10,11 @@ class AssociateMoveWithProfilePart2 < ActiveRecord::Migration[5.2]
     change_column_null :moves, :profile_id, false
     add_foreign_key :moves, :profiles
 
-    change_table :moves do |t|
-      t.index [:from_location_id, :to_location_id, :profile_id, :date], name: "index_move_loc_profile_date", unique: true
-    end
-
     # person_id is unused after this migration, so it has to be nullable
     change_column_null(:moves, :person_id, true)
     remove_foreign_key :moves, :people
+    # old unique index has to be removed now person_id is unused
+    remove_index :moves, name: "index_on_move_uniqueness"
   end
 
   def down
@@ -27,8 +25,6 @@ class AssociateMoveWithProfilePart2 < ActiveRecord::Migration[5.2]
       move.person_id = move.profile.person.id
       move.save!
     end
-
-    remove_index :moves, name: "index_move_loc_profile_date"
 
     change_column_null(:moves, :person_id, false)
     add_foreign_key :moves, :people

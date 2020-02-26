@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2020_02_25_142710) do
     t.date "date", null: false
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id", null: false
+    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -118,10 +118,11 @@ ActiveRecord::Schema.define(version: 2020_02_25_142710) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
-    t.uuid "profile_id"
+    t.uuid "profile_id", null: false
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
+    t.index ["from_location_id", "to_location_id", "profile_id", "date"], name: "index_move_loc_profile_date", unique: true
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
@@ -270,7 +271,7 @@ ActiveRecord::Schema.define(version: 2020_02_25_142710) do
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "profiles"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
