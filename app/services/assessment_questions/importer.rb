@@ -8,6 +8,7 @@ module AssessmentQuestions
       { key: :hold_separately, category: :risk, title: 'Must be held separately' },
       { key: :self_harm, category: :risk, title: 'Self harm' },
       { key: :concealed_items, category: :risk, title: 'Concealed items' },
+      { key: :not_for_release, category: :risk, title: 'Not for release' },
       { key: :other_risks, category: :risk, title: 'Any other risks' },
       { key: :special_diet_or_allergy, category: :health, title: 'Special diet or allergy' },
       { key: :health_issue, category: :health, title: 'Health issue' },
