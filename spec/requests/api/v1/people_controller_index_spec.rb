@@ -23,6 +23,16 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
         it_behaves_like 'an endpoint that responds with success 200'
       end
 
+      context 'with no ethnicity' do
+        let!(:person) { create(:profile, ethnicity: nil).person }
+
+        before do
+          get '/api/v1/people', headers: headers, params: params
+        end
+
+        it_behaves_like 'an endpoint that responds with success 200'
+      end
+
       it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
         people_finder = instance_double('People::Finder', call: Person.all)
         allow(People::Finder).to receive(:new).and_return(people_finder)
