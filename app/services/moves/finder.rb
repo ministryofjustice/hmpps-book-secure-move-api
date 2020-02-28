@@ -38,6 +38,8 @@ module Moves
     def apply_date_range_filters(scope)
       scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
       scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+      scope = scope.where('created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
+      scope = scope.where('created_at <= ?', filter_params[:created_at_to]) if filter_params.key?(:created_at_to)
       scope
     end
 

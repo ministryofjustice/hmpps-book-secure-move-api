@@ -43,6 +43,10 @@ RSpec.describe MoveSerializer do
       expect(attributes[:updated_at]).to eql move.updated_at.iso8601
     end
 
+    it 'contains an created_at attribute' do
+      expect(attributes[:created_at]).to eql move.created_at.iso8601
+    end
+
     it 'contains an additional_information attribute' do
       expect(attributes[:additional_information]).to eql move.additional_information
     end
