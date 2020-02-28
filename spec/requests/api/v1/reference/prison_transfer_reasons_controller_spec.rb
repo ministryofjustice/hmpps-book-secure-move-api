@@ -2,14 +2,14 @@
 
 require 'swagger_helper'
 
-RSpec.describe Api::V1::Reference::ReasonsController, :rswag, :with_client_authentication do
+RSpec.describe Api::V1::Reference::PrisonTransferReasonsController, :rswag, :with_client_authentication do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
-  let!(:reason) { create :reason }
+  let!(:reason) { create :prison_transfer_reason }
   let!(:reasons) { [reason] }
 
-  path '/reference/reasons' do
+  path '/reference/prison_transfer_reasons' do
     let(:"Content-Type") { content_type }
     get 'Returns all reasons' do
       tags 'Reasons'

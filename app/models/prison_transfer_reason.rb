@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Reason < ApplicationRecord
+class PrisonTransferReason < ApplicationRecord
   has_many :moves, dependent: :nullify
 
   validates :key, presence: true, uniqueness: true

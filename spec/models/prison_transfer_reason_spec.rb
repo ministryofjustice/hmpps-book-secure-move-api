@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe Reason do
-  subject(:reason) { create(:reason) }
+require 'rails_helper'
+
+RSpec.describe PrisonTransferReason do
+  subject(:reason) { build(:prison_transfer_reason) }
 
   it { is_expected.to validate_presence_of(:key) }
   it { is_expected.to validate_presence_of(:title) }

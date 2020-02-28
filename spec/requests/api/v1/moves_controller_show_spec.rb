@@ -5,7 +5,7 @@ require 'swagger_helper'
 RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:move) { create :move, reason: build(:reason) }
+  let(:move) { create :move, prison_transfer_reason: build(:prison_transfer_reason) }
   let(:move_id) { move.id }
 
   path '/moves/{move_id}' do

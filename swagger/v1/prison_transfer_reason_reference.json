@@ -1,5 +1,5 @@
 {
-  "ReasonReference": {
+  "PrisonTransferReasonReference": {
     "type": "object",
     "required": [
       "data"
@@ -11,9 +11,9 @@
         "properties": {
           "type": {
             "type": "string",
-            "example": "reasons",
-            "enum": ["reasons"],
-            "description": "The type of this object - always `reasons`"
+            "example": "prison_transfer_reasons",
+            "enum": ["prison_transfer_reasons"],
+            "description": "The type of this object - always `prison_transfer_reasons`"
           },
           "id": {
             "type": "string",

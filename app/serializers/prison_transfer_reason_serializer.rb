@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class ReasonSerializer < ActiveModel::Serializer
+class PrisonTransferReasonSerializer < ActiveModel::Serializer
   attributes :id, :title, :key
 end

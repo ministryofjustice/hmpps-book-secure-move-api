@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/reason/Reason"
+          "$ref": "#/definitions/prison_transfer_reason/PrisonTransferReason"
         }
       }
     }

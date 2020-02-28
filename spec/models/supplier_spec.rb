@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe Supplier, type: :model do
   subject(:supplier) { create(:supplier) }
 

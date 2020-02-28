@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe GenderSerializer do
   subject(:serializer) { described_class.new(gender) }
 

@@ -3,9 +3,9 @@
 module Api
   module V1
     module Reference
-      class ReasonsController < ApiController
+      class PrisonTransferReasonsController < ApiController
         def index
-          reasons = Reason.all
+          reasons = PrisonTransferReason.all
           render json: reasons
         end
       end

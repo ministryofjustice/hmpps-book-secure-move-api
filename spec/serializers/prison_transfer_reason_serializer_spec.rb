@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-RSpec.describe ReasonSerializer do
+require 'rails_helper'
+
+RSpec.describe PrisonTransferReasonSerializer do
   subject(:serializer) { described_class.new(reason) }
 
-  let(:reason) { create :reason }
+  let(:reason) { create :prison_transfer_reason }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
-    expect(result[:data][:type]).to eql 'reasons'
+    expect(result[:data][:type]).to eql 'prison_transfer_reasons'
   end
 
   it 'contains an `id` property' do

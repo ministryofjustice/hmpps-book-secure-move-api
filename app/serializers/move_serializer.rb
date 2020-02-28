@@ -7,7 +7,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :person, serializer: PersonSerializer
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }
-  has_one :reason, serializer: ReasonSerializer
+  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
   has_many :documents, serializer: DocumentSerializer
 
   INCLUDED_ATTRIBUTES = {
@@ -15,6 +15,6 @@ class MoveSerializer < ActiveModel::Serializer
     from_location: %i[location_type description],
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
-    reason: %i[key title],
+    prison_transfer_reason: %i[key title],
   }.freeze
 end

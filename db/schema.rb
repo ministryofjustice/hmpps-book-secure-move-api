@@ -121,12 +121,12 @@ ActiveRecord::Schema.define(version: 2020_02_26_113423) do
     t.uuid "profile_id"
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
-    t.uuid "reason_id"
+    t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
-    t.index ["reason_id"], name: "index_moves_on_reason_id"
+    t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end
 
@@ -221,6 +221,12 @@ ActiveRecord::Schema.define(version: 2020_02_26_113423) do
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
   end
 
+  create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "title", null: false
+    t.index ["key"], name: "index_prison_transfer_reasons_on_key"
+  end
+
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
     t.string "last_name", null: false
@@ -236,12 +242,6 @@ ActiveRecord::Schema.define(version: 2020_02_26_113423) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
-  end
-
-  create_table "reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "key", null: false
-    t.string "title", null: false
-    t.index ["key"], name: "index_reasons_on_key"
   end
 
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -39,11 +39,11 @@ namespace :reference_data do
     ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'suppliers')
   end
 
-  desc 'create reasons'
-  task create_reasons: :environment do
+  desc 'create prison transfer reasons'
+  task create_prison_transfer_reasons: :environment do
     require 'active_record/fixtures'
 
-    ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'reasons')
+    ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'prison_transfer_reasons')
   end
 
   desc 'create locations/suppliers relationship'
