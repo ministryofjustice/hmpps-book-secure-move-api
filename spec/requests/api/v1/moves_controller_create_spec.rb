@@ -24,6 +24,7 @@ RSpec.describe Api::V1::MovesController do
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
+    let!(:reason) { create(:prison_transfer_reason) }
     let(:data) do
       {
         type: 'moves',
@@ -33,6 +34,7 @@ RSpec.describe Api::V1::MovesController do
           from_location: { data: { type: 'locations', id: from_location.id } },
           to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
           documents: { data: [{ type: 'documents', id: document.id }] },
+          prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
         },
       }
     end
@@ -85,6 +87,10 @@ RSpec.describe Api::V1::MovesController do
 
       it 'associates the documents with the newly created move' do
         expect(move.documents).to eq([document])
+      end
+
+      it 'associates a reason with the newly created move' do
+        expect(move.prison_transfer_reason).to eq(reason)
       end
 
       it 'returns the correct data' do

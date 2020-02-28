@@ -124,6 +124,10 @@
           "to_location": {
             "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the person is being moved to"
+          },
+          "prison_transfer_reason": {
+            "$ref": "prison_transfer_reason_reference.json#/PrisonTransferReasonReference",
+            "description": "The reason for this prison transfer"
           }
         }
       }

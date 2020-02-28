@@ -29,6 +29,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           cancellation_reason: 'other',
           cancellation_reason_comment: 'some other reason',
           move_type: 'court_appearance',
+          move_agreed: true,
+          move_agreed_by: 'Fred Bloggs',
         },
       }
     end
@@ -40,30 +42,36 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
 
     context 'when successful' do
+      let(:result) { move.reload }
+
       it_behaves_like 'an endpoint that responds with success 200'
 
-      it 'updates the status of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
-        expect(move.reload.status).to eq 'cancelled'
+      it 'updates the status of a move' do
+        expect(result.status).to eq 'cancelled'
       end
 
       it 'does not update the move type' do
-        expect(move.reload.move_type).to eq('prison_recall')
+        expect(result.move_type).to eq('prison_recall')
       end
 
-      it 'updates the additional_information of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
-        expect(move.reload.additional_information).to eq 'some more info'
+      it 'updates move_agreed' do
+        expect(result.move_agreed).to be true
       end
 
-      it 'updates the cancellation_reason of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
-        expect(move.reload.cancellation_reason).to eq 'other'
+      it 'updates move_agreed_by' do
+        expect(result.move_agreed_by).to eq 'Fred Bloggs'
       end
 
-      it 'updates the cancellation_reason_comment of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
-        expect(move.reload.cancellation_reason_comment).to eq 'some other reason'
+      it 'updates the additional_information of a move' do
+        expect(result.additional_information).to eq 'some more info'
+      end
+
+      it 'updates the cancellation_reason of a move' do
+        expect(result.cancellation_reason).to eq 'other'
+      end
+
+      it 'updates the cancellation_reason_comment of a move' do
+        expect(result.cancellation_reason_comment).to eq 'some other reason'
       end
 
       it 'returns the correct data' do

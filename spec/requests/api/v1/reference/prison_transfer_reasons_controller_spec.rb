@@ -2,15 +2,17 @@
 
 require 'swagger_helper'
 
-RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
+RSpec.describe Api::V1::Reference::PrisonTransferReasonsController, :rswag, :with_client_authentication do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:move) { create :move, prison_transfer_reason: build(:prison_transfer_reason) }
-  let(:move_id) { move.id }
+  let(:response_json) { JSON.parse(response.body) }
+  let!(:reason) { create :prison_transfer_reason }
+  let!(:reasons) { [reason] }
 
-  path '/moves/{move_id}' do
-    get 'Returns the details of a move' do
-      tags 'Moves'
+  path '/reference/prison_transfer_reasons' do
+    let(:"Content-Type") { content_type }
+    get 'Returns all reasons' do
+      tags 'Reasons'
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,
@@ -25,8 +27,8 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
                   If you're testing interactively in the web UI, you can ignore this field
                 DESCRIPTION
 
-      parameter name: 'Content-Type',
-                in: 'header',
+      parameter name: :'Content-Type',
+                in: :header,
                 description: 'Accepted request content type',
                 schema: {
                   type: 'string',
@@ -34,32 +36,17 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
                 },
                 required: true
 
-      parameter name: :move_id,
-                in: :path,
-                description: 'The ID of the move',
-                schema: {
-                  type: :string,
-                },
-                format: 'uuid',
-                example: '00525ecb-7316-492a-aae2-f69334b2a155',
-                required: true
-
       response '200', 'success' do
         let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+          JSON.parse(ActionController::Base.render(json: reasons))
         end
 
-        schema "$ref": '#/definitions/get_move_responses/200'
+        schema "$ref": '#/definitions/get_reasons_responses/200'
 
         run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
 
           expect(JSON.parse(response.body)).to eq resource_to_json
-
-          # TODO: this was commented out in the original test, and fails when included
-          # expect(Moves::NomisSynchroniser).to(
-          #     have_received(:new).with(locations: [move.from_location], date: move.date)
-          #   )
         end
       end
 
@@ -67,21 +54,12 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
         let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
 
         it_behaves_like 'a swagger 401 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
-      end
-
-      response '404', 'not found' do
-        let(:move_id) { SecureRandom.uuid }
-        let(:detail_404) { "Couldn't find Move with 'id'=#{move_id}" }
-
-        it_behaves_like 'a swagger 404 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
 
       response '415', 'invalid content type' do
         let(:"Content-Type") { 'application/xml' }
+
         it_behaves_like 'a swagger 415 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
     end
   end

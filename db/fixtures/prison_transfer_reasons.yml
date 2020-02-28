@@ -1,0 +1,63 @@
+accum:
+  key: accumulated_visits
+  title: Accumulated Visits
+
+comp:
+  key: compassionate
+  title: Compassionate
+
+court:
+  key: court
+  title: Court move
+
+cpa:
+  key: cpa
+  title: CPA
+
+isp:
+  key: isp_to_open
+  title: ISP to open
+
+mappa:
+  key: mappa
+  title: MAPPA
+
+medical:
+  key: medical
+  title: Medical
+
+off:
+  key: offending_behaviour_course
+  title: Offending behaviour course
+
+parole:
+  key: parole
+  title: Parole
+
+prog:
+  key: progressive
+  title: Progressive
+
+repat:
+  key: repatriation
+  title: Repatriation
+
+resett:
+  key: resettlement
+  title: Resettlement
+
+return:
+  key: return_after_court_appearance
+  title: Return after court appearance
+
+sec:
+  key: security
+  title: Security
+
+yjb:
+  key: yjb
+  title: YJB
+
+other:
+  key: another_reason
+  title: Another reason
