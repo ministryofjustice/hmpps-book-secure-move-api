@@ -11,7 +11,7 @@ class PersonSerializer < ActiveModel::Serializer
     :gender_additional_information,
   )
 
-  has_one :ethnicity, serializer: EthnicitySerializer
+  has_one :ethnicity, serializer: EthnicitySerializer, if: -> { ethnicity.present? }
   has_one :gender, serializer: GenderSerializer
 
   INCLUDED_DETAIL = %i[ethnicity gender].freeze
