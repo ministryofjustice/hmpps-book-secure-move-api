@@ -13,5 +13,9 @@ FactoryBot.define do
     }
     association(:ethnicity)
     association(:gender)
+
+    trait :nomis_synced do
+      latest_nomis_booking_id { 123_456_789 }
+    end
   end
 end

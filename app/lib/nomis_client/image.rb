@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module NomisClient
+  # Sadly can't get VCR to work (yet) so can't auto-test this
+  # :nocov:
   class Image < NomisClient::Base
     class << self
       def get booking_id
@@ -16,7 +18,6 @@ module NomisClient
             raise
           end
         end
-        # NomisClient::Base.get(image_route).body
       end
     end
   end

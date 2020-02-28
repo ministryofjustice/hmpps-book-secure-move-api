@@ -46,7 +46,7 @@
             "type": "string",
             "format": "uri",
             "example": "http://localhost:3000/api/v1/people/88089bbd-8719-4192-b309-f9db9105d3e1/image.jpg",
-            "description": "URL where image of person can be retrieved",
+            "description": "URI pointing to the image of the person",
             "readOnly": true
           },
           "assessment_answers": {

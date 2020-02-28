@@ -7,7 +7,11 @@ RSpec.describe Api::V1::PeopleController do
     let(:token) { create(:access_token) }
 
     context 'when there is no image' do
-      let!(:person) { create(:profile, latest_nomis_booking_id: 123_456_789).person }
+      let!(:person) { create(:profile, :nomis_synced).person }
+
+      before do
+        allow(NomisClient::Image).to receive(:get).and_return(nil)
+      end
 
       it 'returns 404' do
         get "/api/v1/people/#{person.id}/image", params: { access_token: token.token }
@@ -16,21 +20,21 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'with an image' do
-      let!(:person) { create(:profile, latest_nomis_booking_id: 1_153_753).person }
+      let!(:person) { create(:profile, :nomis_synced).person }
+      let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
+
+      before do
+        allow(NomisClient::Image).to receive(:get).and_return(image_data)
+
+        get "/api/v1/people/#{person.id}/image", params: { access_token: token.token }
+      end
 
       it 'returns success' do
-        get "/api/v1/people/#{person.id}/image", params: { access_token: token.token }
         expect(response).to be_successful
-        # JPEG files start with FF D8 FF as the first three bytes ...
-        # .. and end with FF D9 as the last two bytes. This should be
-        # an adequate test to see if we receive a valid JPG from the
-        # API call.
-        jpeg_start_sentinel = [0xFF, 0xD8, 0xFF]
-        jpeg_end_sentinel = [0xFF, 0xD9]
+      end
 
-        bytes = response.body.bytes.to_a
-        expect(bytes[0, 3]).to eq(jpeg_start_sentinel)
-        expect(bytes[-2, 2]).to eq(jpeg_end_sentinel)
+      it 'returns the image' do
+        expect(response.body).to eq(image_data)
       end
     end
   end
