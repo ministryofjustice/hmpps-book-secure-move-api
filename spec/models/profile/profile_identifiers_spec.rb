@@ -14,7 +14,7 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
       },
       {
         value: 'XYZ123456',
-        identifier_type: :prison_number,
+        identifier_type: :criminal_records_office,
       },
     ]
   end
@@ -45,6 +45,25 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
 
       it 'parses JSON and converts the items to Profile::ProfileIdentifier objects' do
         expect(profile_identifiers.to_a).to all(be_a Profile::ProfileIdentifier)
+      end
+    end
+
+    context 'when an identifier is prison_number' do
+      let(:data) do
+        [
+            {
+                value: 'ABC123456',
+                identifier_type: :prison_number,
+            },
+        ]
+      end
+
+      it 'contains nomis_offender_no as alias of prison_number' do
+        types_and_values = profile_identifiers.map(&:as_json)
+
+        profile_identifiers.as_json
+
+        expect(types_and_values).to include(identifier_type: :nomis_offender_no, value: 'ABC123456')
       end
     end
   end
