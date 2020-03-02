@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_113423) do
+ActiveRecord::Schema.define(version: 2020_03_02_115111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -123,6 +123,8 @@ ActiveRecord::Schema.define(version: 2020_02_26_113423) do
     t.string "move_agreed_by"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
+    t.date "date_from"
+    t.date "date_to"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
     t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
@@ -224,6 +226,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_113423) do
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
+    t.datetime "disabled_at"
     t.index ["key"], name: "index_prison_transfer_reasons_on_key"
   end
 

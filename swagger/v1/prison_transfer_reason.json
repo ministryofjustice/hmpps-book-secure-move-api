@@ -35,6 +35,19 @@
             "type": "string",
             "example": "Others",
             "description": "The label of the reason"
+          },
+          "disabled_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "2017-07-21T17:32:28Z",
+            "description": "The date-time at which a value was disabled, in ISO-8601 format, or null if it is enabled"
           }
         }
       }
