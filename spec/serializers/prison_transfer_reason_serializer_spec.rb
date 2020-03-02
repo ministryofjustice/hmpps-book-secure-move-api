@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe PrisonTransferReasonSerializer do
   subject(:serializer) { described_class.new(reason) }
 
-  let(:reason) { create :prison_transfer_reason }
+  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:reason) { create :prison_transfer_reason, disabled_at: disabled_at }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
@@ -22,5 +23,9 @@ RSpec.describe PrisonTransferReasonSerializer do
 
   it 'contains a `title` attribute' do
     expect(result[:data][:attributes][:title]).to eql 'Other'
+  end
+
+  it 'contains a `disabled_at` attribute' do
+    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
   end
 end
