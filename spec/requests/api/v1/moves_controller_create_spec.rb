@@ -133,13 +133,27 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'with explicit move_agreed and move_agreed_by' do
+        let(:date_from) { Date.yesterday }
+        let(:date_to) { Date.tomorrow }
         let(:move_attributes) {
           {
             date: Date.today,
             move_agreed: 'true',
             move_agreed_by: 'John Doe',
+            date_from: date_from,
+            date_to: date_to,
           }
         }
+
+        it 'sets date_from' do
+          expect(response_json.dig('data', 'attributes', 'date_from')).to eq date_from.to_s
+          expect(move.date_from).to eq date_from
+        end
+
+        it 'sets date_to' do
+          expect(response_json.dig('data', 'attributes', 'date_to')).to eq date_to.to_s
+          expect(move.date_to).to eq date_to
+        end
 
         it 'sets move_agreed' do
           expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq true

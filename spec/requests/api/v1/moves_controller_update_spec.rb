@@ -19,6 +19,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     let!(:move) { create :move, move_type: 'prison_recall' }
     let(:move_id) { move.id }
     let(:person) { create(:person) }
+    let(:date_from) { Date.yesterday }
+    let(:date_to) { Date.tomorrow }
 
     let(:move_params) do
       {
@@ -31,6 +33,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
+          date_from: date_from,
+          date_to: date_to,
         },
       }
     end
@@ -60,6 +64,14 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
       it 'updates move_agreed_by' do
         expect(result.move_agreed_by).to eq 'Fred Bloggs'
+      end
+
+      it 'updates date_from' do
+        expect(result.date_from).to eq date_from
+      end
+
+      it 'updates date_to' do
+        expect(result.date_to).to eq date_to
       end
 
       it 'updates the additional_information of a move' do
