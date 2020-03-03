@@ -4,9 +4,11 @@
 
 [[middleware]]
   name = 'AppInsights::ExceptionHandling'
+  enabled = true
 
 [[middleware]]
   name = 'ApplicationInsights::Rack::TrackRequest'
+  enabled = true
 
   [middleware.initialize]
     buffer_size = 250
