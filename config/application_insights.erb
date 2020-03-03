@@ -1,0 +1,13 @@
+[ai]
+  instrumentation_key = '<%= ENV.fetch('APPINSIGHTS_INSTRUMENTATION_KEY') %>'
+  enabled = true
+
+[[middleware]]
+  name = 'AppInsights::ExceptionHandling'
+
+[[middleware]]
+  name = 'ApplicationInsights::Rack::TrackRequest'
+
+  [middleware.initialize]
+    buffer_size = 250
+    send_interval = 30

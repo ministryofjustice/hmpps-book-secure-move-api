@@ -33,6 +33,8 @@ RUN SECRET_KEY_BASE=valuenotactuallyused rails assets:precompile
 ENV APPUID 1000
 # Need to do this as the app writes to tmp/cache and everything is setup as root
 RUN chown -R $APPUID:$APPUID /usr/src/app/tmp/cache
+# TOML file gets overwritten in run.sh
+RUN chown $APPUID:$APPUID config/application_insights.toml
 USER $APPUID
 
 ENTRYPOINT ["./run.sh"]
