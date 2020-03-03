@@ -14,6 +14,8 @@ class Profile
 
       add_alias_nomis_offender_no(collection)
 
+      # binding.pry
+
       @collection = collection.reject(&:empty?)
     end
 
@@ -24,8 +26,12 @@ class Profile
   private
 
     def add_alias_nomis_offender_no(collection)
-      identifier = collection.find { |e| e.identifier_type == :prison_number }
-      collection << Profile::ProfileIdentifier.new(value: identifier.value, identifier_type: :nomis_offender_no) if identifier
+      prison_number_identifier = collection.find { |e| e.identifier_type == 'prison_number' }
+      nomis_offender_no_identifier = collection.find { |e| e.identifier_type == 'nomis_offender_no' }
+
+      if prison_number_identifier && nomis_offender_no_identifier.nil?
+        collection << Profile::ProfileIdentifier.new(value: prison_number_identifier.value, identifier_type: 'nomis_offender_no')
+      end
     end
   end
 end

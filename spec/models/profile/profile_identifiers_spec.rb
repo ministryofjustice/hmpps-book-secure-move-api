@@ -10,11 +10,11 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
     [
       {
         value: 'ABC123456',
-        identifier_type: :police_national_computer,
+        identifier_type: 'police_national_computer',
       },
       {
         value: 'XYZ123456',
-        identifier_type: :criminal_records_office,
+        identifier_type: 'criminal_records_office',
       },
     ]
   end
@@ -53,7 +53,7 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
         [
             {
                 value: 'ABC123456',
-                identifier_type: :prison_number,
+                identifier_type: 'prison_number',
             },
         ]
       end
@@ -61,9 +61,26 @@ RSpec.describe Profile::ProfileIdentifiers, type: :model do
       it 'contains nomis_offender_no as alias of prison_number' do
         types_and_values = profile_identifiers.map(&:as_json)
 
-        profile_identifiers.as_json
+        expect(types_and_values).to include(identifier_type: 'prison_number', value: 'ABC123456')
+        expect(types_and_values).to include(identifier_type: 'nomis_offender_no', value: 'ABC123456')
+      end
+    end
 
-        expect(types_and_values).to include(identifier_type: :nomis_offender_no, value: 'ABC123456')
+    context 'when an identifier is not prison_number' do
+      let(:data) do
+        [
+            {
+                value: 'ABC123456',
+                identifier_type: 'nomis_offender_no',
+            },
+        ]
+      end
+
+      it 'does not add a alias' do
+        types_and_values = profile_identifiers.map(&:as_json)
+
+        expect(types_and_values).not_to include(identifier_type: 'prison_number', value: 'ABC123456')
+        expect(types_and_values).to include(identifier_type: 'nomis_offender_no', value: 'ABC123456')
       end
     end
   end
