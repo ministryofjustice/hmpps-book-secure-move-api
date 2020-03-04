@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_02_115111) do
+ActiveRecord::Schema.define(version: 2020_03_04_121217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -151,6 +151,10 @@ ActiveRecord::Schema.define(version: 2020_03_02_115111) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notification_types", id: :string, force: :cascade do |t|
+    t.string "title", null: false
+  end
+
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subscription_id", null: false
     t.string "event_type", null: false
@@ -162,6 +166,8 @@ ActiveRecord::Schema.define(version: 2020_03_02_115111) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "response_id"
+    t.string "notification_type_id", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
     t.index ["discarded_at"], name: "index_notifications_on_discarded_at"
     t.index ["event_type"], name: "index_notifications_on_event_type"
@@ -249,12 +255,13 @@ ActiveRecord::Schema.define(version: 2020_03_02_115111) do
 
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
-    t.string "callback_url", null: false
+    t.string "callback_url"
     t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_addresses"
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
     t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
@@ -285,6 +292,7 @@ ActiveRecord::Schema.define(version: 2020_03_02_115111) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "people"
+  add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

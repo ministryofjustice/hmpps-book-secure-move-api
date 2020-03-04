@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class NotifyJob < ApplicationJob
-  queue_as :webhooks
+class NotifyWebhookJob < ApplicationJob
+  queue_as :notifications
 
   def perform(notification_id:)
     notification = Notification.kept.includes(:subscription).find(notification_id)

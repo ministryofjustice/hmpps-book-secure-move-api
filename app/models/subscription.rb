@@ -8,7 +8,7 @@ class Subscription < ApplicationRecord
   belongs_to :supplier
 
   validates :supplier, presence: true
-  validates :callback_url, url: true, presence: true
+  validates :callback_url, url: { allow_nil: true }
 
   def kept?
     !discarded?

@@ -9,7 +9,7 @@ RSpec.describe Notification, type: :model do
   it { is_expected.to validate_presence_of(:topic) }
 
   describe 'kept?' do
-    subject(:notification) { create(:notification, subscription: subscription, discarded_at: discarded_at) }
+    subject(:notification) { create(:notification, :webhook, subscription: subscription, discarded_at: discarded_at) }
 
     context 'when parent subscription is discarded' do
       let(:subscription) { build(:subscription, discarded_at: Time.now) }

@@ -4,6 +4,7 @@ class Notification < ApplicationRecord
   include Discard::Model
 
   belongs_to :subscription
+  belongs_to :notification_type
   belongs_to :topic, polymorphic: true # NB: polymorphic association because it could be associated with a Move or a Profile
 
   validates :event_type, presence: true
