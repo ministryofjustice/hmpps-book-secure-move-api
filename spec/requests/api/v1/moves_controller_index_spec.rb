@@ -25,6 +25,40 @@ RSpec.describe Api::V1::MovesController do
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
+      describe 'filtering results' do
+        let(:from_location_id) { moves.first.from_location_id }
+        let(:filters) do
+          {
+            bar: 'bar',
+            from_location_id: from_location_id,
+            foo: 'foo',
+          }
+        end
+        let(:params) { { filter: filters } }
+        let(:ability) { Ability.new }
+
+        before do
+          allow(Ability).to receive(:new).and_return(ability)
+        end
+
+        it 'delegates the query execution to Moves::Finder with the correct filters', skip_before: true do
+          moves_finder = instance_double('Moves::Finder', call: Move.all)
+          allow(Moves::Finder).to receive(:new).and_return(moves_finder)
+
+          get '/api/v1/moves', headers: headers, params: params
+
+          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {})
+        end
+
+        it 'filters the results' do
+          expect(response_json['data'].size).to be 1
+        end
+
+        it 'returns the move that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: moves.first.id }])
+        end
+      end
+
       context 'with a cancelled move' do
         let(:move) { create(:move, :cancelled) }
         let!(:moves) { [move] }

@@ -5,4 +5,6 @@ class PrisonTransferReason < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
   validates :title, presence: true
+
+  scope :ordered_by_title, ->(direction) { order('prison_transfer_reasons.title' => direction) }
 end

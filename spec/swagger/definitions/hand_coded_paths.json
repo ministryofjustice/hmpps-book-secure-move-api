@@ -105,6 +105,39 @@
           }
         },
         {
+          "name": "sort[by]",
+          "description": "field to sort results by",
+          "in": "query",
+          "style": "form",
+          "explode": false,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "name",
+              "from_location",
+              "to_location",
+              "prison_transfer_reason",
+              "created_at",
+              "date",
+              "date_from"
+            ]
+          }
+        },
+        {
+          "name": "sort[direction]",
+          "description": "direction to sort by",
+          "in": "query",
+          "style": "form",
+          "explode": false,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+        {
           "name": "page",
           "in": "query",
           "description": "The page of records to return, defaults to 1 (the first page)",

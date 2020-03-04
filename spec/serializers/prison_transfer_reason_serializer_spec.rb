@@ -18,11 +18,11 @@ RSpec.describe PrisonTransferReasonSerializer do
   end
 
   it 'contains a `key` attribute' do
-    expect(result[:data][:attributes][:key]).to eql 'reason_other'
+    expect(result[:data][:attributes][:key]).to eql reason.key
   end
 
   it 'contains a `title` attribute' do
-    expect(result[:data][:attributes][:title]).to eql 'Other'
+    expect(result[:data][:attributes][:title]).to eql reason.title
   end
 
   it 'contains a `disabled_at` attribute' do

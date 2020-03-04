@@ -15,6 +15,8 @@ class Profile < VersionedModel
   attribute :assessment_answers, Profile::AssessmentAnswers::Type.new
   attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
 
+  scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
+
   IDENTIFIER_TYPES = %w[
     police_national_computer criminal_records_office prison_number niche_reference athena_reference
   ].freeze

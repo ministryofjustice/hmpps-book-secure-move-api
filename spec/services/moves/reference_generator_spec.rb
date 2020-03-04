@@ -13,7 +13,7 @@ RSpec.describe Moves::ReferenceGenerator do
   # Faker uses random numbers, so this test will need to be changed if
   # more Faker data is introduced to move (or any of its associations)
   it 'generates a new reference' do
-    expect(generator.call).to eql 'KRE5873T'
+    expect(generator.call).to eql 'RVX3624A'
   end
 
   it 'generates a different reference on each call' do
@@ -22,10 +22,10 @@ RSpec.describe Moves::ReferenceGenerator do
   end
 
   context 'when there is a clash with an existing reference' do
-    let(:existing_reference) { 'KRE5873T' }
+    let(:existing_reference) { 'RVX3624A' }
 
     it 'generates a different reference' do
-      expect(generator.call).not_to eql 'KRE5873T'
+      expect(generator.call).not_to eql 'RVX3624A'
     end
   end
 end
