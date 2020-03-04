@@ -29,11 +29,11 @@ RSpec.describe LocationSerializer do
   end
 
   it 'contains a key attribute' do
-    expect(attributes[:key]).to eql 'hmp_pentonville'
+    expect(attributes[:key]).to eql location.key
   end
 
   it 'contains a title attribute' do
-    expect(attributes[:title]).to eql 'HMP Pentonville'
+    expect(attributes[:title]).to eql location.title
   end
 
   it 'contains a nomis_agency_id attribute' do

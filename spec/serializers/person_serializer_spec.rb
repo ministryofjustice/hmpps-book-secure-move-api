@@ -20,11 +20,11 @@ RSpec.describe PersonSerializer do
   end
 
   it 'contains a first_names attribute' do
-    expect(result[:data][:attributes][:first_names]).to eql 'Bob'
+    expect(result[:data][:attributes][:first_names]).to eql person.latest_profile.first_names
   end
 
   it 'contains a last_name attribute' do
-    expect(result[:data][:attributes][:last_name]).to eql 'Roberts'
+    expect(result[:data][:attributes][:last_name]).to eql person.latest_profile.last_name
   end
 
   describe '#assessment_answers' do
