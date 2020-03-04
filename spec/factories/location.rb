@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :location do
-    key { 'hmp_pentonville' }
-    title { 'HMP Pentonville' }
+    sequence(:key) { |x| "key_#{x}" }
+    title { "HMP #{Faker::Address.city}" }
     location_type { Location::LOCATION_TYPE_PRISON }
     nomis_agency_id { 'PEI' }
 

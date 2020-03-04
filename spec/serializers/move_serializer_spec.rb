@@ -71,7 +71,8 @@ RSpec.describe MoveSerializer do
         {
           id: move.person_id,
           type: 'people',
-          attributes: { first_names: 'Bob', last_name: 'Roberts', date_of_birth: '1980-10-20' },
+          attributes: { first_names: move.person.latest_profile.first_names,
+                        last_name: move.person.latest_profile.last_name, date_of_birth: '1980-10-20' },
         },
       ]
     end
@@ -95,7 +96,7 @@ RSpec.describe MoveSerializer do
         {
           id: move.from_location_id,
           type: 'locations',
-          attributes: { location_type: 'prison', title: 'HMP Pentonville' },
+          attributes: { location_type: 'prison', title: move.from_location.title },
         },
         {
           id: move.to_location_id,
