@@ -4,7 +4,7 @@ module Api
   module V1
     class PeopleController < ApiController
       def index
-        person_nomis_prison_number = filter_params[:nomis_offender_no]
+        person_nomis_prison_number = filter_params[:prison_number]
 
         Moves::ImportPeople.new([person_nomis_prison_number: person_nomis_prison_number]).call if person_nomis_prison_number
 
@@ -36,7 +36,7 @@ module Api
 
     private
 
-      PERMITTED_FILTER_PARAMS = %i[police_national_computer nomis_offender_no].freeze
+      PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
       PERSON_ATTRIBUTES = [
         :first_names,
         :last_name,
