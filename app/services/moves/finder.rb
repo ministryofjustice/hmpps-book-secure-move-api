@@ -19,12 +19,21 @@ module Moves
       scope = scope.accessible_by(ability)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
       scope = apply_filter(scope, :status)
+      scope = apply_active_filter(scope)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
       scope = apply_supplier_filters(scope)
       scope
+    end
+
+    def apply_active_filter(scope)
+      if filter_params.key?(:active)
+        scope.merge(Move.active)
+      else
+        scope
+      end
     end
 
     def apply_filter(scope, param_name)

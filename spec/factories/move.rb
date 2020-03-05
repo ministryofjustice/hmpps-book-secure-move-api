@@ -5,7 +5,7 @@ FactoryBot.define do
     association(:person)
     association(:from_location, factory: :location)
     association(:to_location, :court, factory: :location)
-    date { Date.today }
+    sequence(:date) { |n| Date.today + n.days }
     time_due { Time.now }
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
@@ -15,6 +15,10 @@ FactoryBot.define do
       status { 'cancelled' }
       cancellation_reason { 'other' }
       cancellation_reason_comment { 'some other reason' }
+    end
+
+    trait :proposed do
+      status { 'proposed' }
     end
   end
 

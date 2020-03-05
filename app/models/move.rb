@@ -62,6 +62,8 @@ class Move < VersionedModel
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
 
+  scope :active, -> { where.not('status in (?)', %w[cancelled proposed]) }
+
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
   end

@@ -9,12 +9,30 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   describe 'GET /moves' do
     context 'when filtering' do
-      let!(:supplier) { create :supplier }
-      let!(:location) { create :location, :with_moves, suppliers: [supplier] }
-      let!(:filtered_out_moves) { create_list :move, 10 }
-      let(:filter_params) { { filter: { supplier_id: supplier.id } } }
+      let(:move_ids) { response_json['data'].map { |move| move['id'] } }
+
+      describe 'by active' do
+        let(:filter_params) { { filter: { active: true } } }
+        let!(:move) { create(:move) }
+
+        before do
+          create(:move, :cancelled)
+          create(:move, :proposed)
+        end
+
+        it 'filters out inactive moves' do
+          get '/api/v1/moves', headers: headers, params: filter_params
+
+          expect(move_ids).to eq([move.id])
+        end
+      end
 
       describe 'by supplier_id' do
+        let!(:supplier) { create :supplier }
+        let!(:location) { create :location, :with_moves, suppliers: [supplier] }
+        let!(:filtered_out_moves) { create_list :move, 10 }
+        let(:filter_params) { { filter: { supplier_id: supplier.id } } }
+
         before do
           get '/api/v1/moves', headers: headers, params: filter_params
         end
