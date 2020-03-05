@@ -1,6 +1,7 @@
 default: &default
   adapter: postgresql
   username: <%= ENV["DB_USERNAME"] %>
+  host: localhost
 
 development:
   <<: *default
