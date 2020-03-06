@@ -11,7 +11,7 @@
         "format": "date",
         "example": "2019-05-06",
         "description": "The date on which this attribute was added to the profile",
-        "readOnly": true
+        "readOnly": false
       },
       "expires_at": {
         "oneOf": [
@@ -21,7 +21,8 @@
           { "type": "null" }
         ],
         "example": "2019-06-06",
-        "description": "The date on which this attribute expires (null if it doesn't expire)"
+        "description": "The date on which this attribute expires (null if it doesn't expire)",
+        "readOnly": false
       },
       "title": {
         "type": "string",
@@ -63,7 +64,8 @@
           { "type": "null" }
         ],
         "example": "R",
-        "description": "NOMIS alert type code"
+        "description": "NOMIS alert type code",
+        "readOnly": false
       },
       "nomis_alert_type_description": {
         "oneOf": [
@@ -71,7 +73,8 @@
           { "type": "null" }
         ],
         "example": "Risk",
-        "description": "Description of the alert type from NOMIS"
+        "description": "Description of the alert type from NOMIS",
+        "readOnly": false
       },
       "nomis_alert_code": {
         "oneOf": [
@@ -79,7 +82,8 @@
           { "type": "null" }
         ],
         "example": "RPB",
-        "description": "NOMIS alert code"
+        "description": "NOMIS alert code",
+        "readOnly": false
       },
       "nomis_alert_description": {
         "oneOf": [
@@ -87,7 +91,8 @@
           { "type": "null" }
         ],
         "example": "Risk to Public - Community",
-        "description": "Description of the alert code from NOMIS"
+        "description": "Description of the alert code from NOMIS",
+        "readOnly": false
       }
     }
   }
