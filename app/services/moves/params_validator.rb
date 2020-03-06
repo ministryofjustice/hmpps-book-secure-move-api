@@ -4,9 +4,9 @@ module Moves
   class ParamsValidator
     include ActiveModel::Validations
 
-    attr_reader :date_from, :date_to, :sort_by, :sort_direction
+    attr_reader :date_from, :date_to, :created_at_from, :created_at_to, :sort_by, :sort_direction
 
-    validates_each :date_from, :date_to, allow_nil: true do |record, attr, value|
+    validates_each :date_from, :date_to, :created_at_from, :created_at_to, allow_nil: true do |record, attr, value|
       Date.strptime(value, '%Y-%m-%d')
     rescue ArgumentError
       record.errors.add attr, 'is not a valid date.'
@@ -21,6 +21,8 @@ module Moves
     def initialize(filter_params, sort_params)
       @date_from = filter_params[:date_from]
       @date_to = filter_params[:date_to]
+      @created_at_from = filter_params[:created_at_from]
+      @created_at_to = filter_params[:created_at_to]
 
       @sort_by = sort_params[:by]
       @sort_direction = sort_params[:direction]
