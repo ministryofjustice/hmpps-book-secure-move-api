@@ -25,6 +25,14 @@ RSpec.describe Move do
     )
   end
 
+  it 'prevents date_from > date_to' do
+    expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-03')).not_to be_valid
+  end
+
+  it 'allows date_from == date_to' do
+    expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
+  end
+
   it 'does NOT permit duplicate nomis_event_ids' do
     move = create(:move, nomis_event_ids: [123_456])
     move.nomis_event_ids << 123_456
