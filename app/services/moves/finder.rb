@@ -18,6 +18,12 @@ module Moves
 
     def call
       scope = apply_filters(Move)
+      apply_ordering(scope)
+    end
+
+  private
+
+    def apply_ordering(scope)
       case @order_by
       when :name
         scope.joins(person: :profiles).merge(Profile.ordered_by_name(@order_direction))
@@ -27,18 +33,12 @@ module Moves
         scope.joins(:to_location).merge(Location.ordered_by_title(@order_direction))
       when :prison_transfer_reason
         scope.left_outer_joins(:prison_transfer_reason).merge(PrisonTransferReason.ordered_by_title(@order_direction))
-      when :created_at
-        scope.order(created_at: @order_direction)
-      when :date_from
-        scope.order(date_from: @order_direction)
-      when :date
-        scope.order(date: @order_direction)
+      when :created_at, :date_from, :date
+        scope.order(@order_by => @order_direction)
       else
         scope
       end
     end
-
-  private
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
