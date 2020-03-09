@@ -31,6 +31,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
                 nomis_alert_type_description: 'alert type description',
                 nomis_alert_code: 'alert code',
                 nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
                 created_at: '2020-01-30',
                 expires_at: '2020-12-30' },
 
@@ -75,6 +76,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
                 nomis_alert_type_description: 'alert type description',
                 nomis_alert_code: 'alert code',
                 nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
                 created_at: '2020-01-30',
                 expires_at: '2020-12-30' },
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
