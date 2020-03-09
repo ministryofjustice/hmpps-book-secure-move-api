@@ -7,7 +7,8 @@ ruby '2.6.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 
-group :development, :production do
+# don't enable this in dev/test - the insights envs are staging/preprod/prod
+group :production do
 # usage docs for application_insights get at
 # https://github.com/microsoft/ApplicationInsights-Ruby
 # Gem to add insights automatically to a Rack application
