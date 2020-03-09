@@ -2,9 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::PeopleController do
+  let!(:token) { create(:access_token) }
   let(:response_json) { JSON.parse(response.body) }
   let(:image_urls) { response_json['data'].map { |x| x['attributes']['image_url'] } }
 
@@ -14,7 +13,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
     let(:prison_number) { 'G5033UT' }
 
     describe 'filtering the results' do
-      let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
+      let(:params) { { filter: { police_national_computer: 'AB/1234567' }, access_token: token.token } }
 
       context 'when called with police_national_computer filter' do
         let!(:people) { create_list :person, 5, :nomis_synced }
@@ -58,7 +57,7 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
     context 'when the filter prison_number is used' do
       let!(:people) { create_list :person, 5 }
 
-      let(:params) { { filter: { prison_number: prison_number } } }
+      let(:params) { { filter: { prison_number: prison_number }, access_token: token.token } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
 
       before do

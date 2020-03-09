@@ -2,10 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::Reference::LocationsController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::Reference::LocationsController do
   let(:response_json) { JSON.parse(response.body) }
+  let(:access_token) { create(:access_token).token }
+  let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/locations' do
     let(:schema) { load_json_schema('get_locations_responses.json') }
@@ -39,9 +40,9 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
 
       before do
-        data.each { |location| Location.create!(location[:attributes]) }
+        data.each { |location| create(:location, location[:attributes]) }
 
-        get '/api/v1/reference/locations', headers: headers, params: params
+        get '/api/v1/reference/locations', params: params, headers: headers
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -51,8 +52,10 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
 
       before { get '/api/v1/reference/locations', headers: headers, params: params }
 
@@ -83,9 +86,9 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         }
       end
 
-      before { get '/api/v1/reference/locations', headers: headers, params: params }
-
       context 'with no pagination parameters' do
+        before { get '/api/v1/reference/locations', headers: headers }
+
         it 'paginates 20 results per page' do
           expect(response_json['data'].size).to eq 20
         end
@@ -98,6 +101,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       context 'with page parameter' do
         let(:params) { { page: 2 } }
 
+        before { get '/api/v1/reference/locations', params: params, headers: headers }
+
         it 'returns 1 result on the second page' do
           expect(response_json['data'].size).to eq 1
         end
@@ -105,6 +110,8 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
 
       context 'with per_page parameter' do
         let(:params) { { per_page: 15 } }
+
+        before { get '/api/v1/reference/locations', params: params, headers: headers }
 
         it 'allows setting a different page size' do
           expect(response_json['data'].size).to eq 15
@@ -122,7 +129,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
         locations_finder = instance_double('Locations::Finder', call: Location.all)
         allow(Locations::Finder).to receive(:new).and_return(locations_finder)
 
-        get '/api/v1/reference/locations', headers: headers, params: params
+        get '/api/v1/reference/locations', params: params, headers: headers
       end
 
       it 'delegates the query execution to Locations::Finder with the correct filters' do
@@ -158,7 +165,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
     let(:location_id) { location.id }
 
     context 'when successful' do
-      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+      before { get "/api/v1/reference/locations/#{location_id}", params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -167,7 +174,9 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
 
       before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
@@ -187,7 +196,7 @@ RSpec.describe Api::V1::Reference::LocationsController, with_client_authenticati
       let(:location_id) { 'UUID-not-found' }
       let(:detail_404) { "Couldn't find Location with 'id'=UUID-not-found" }
 
-      before { get "/api/v1/reference/locations/#{location_id}", headers: headers, params: params }
+      before { get "/api/v1/reference/locations/#{location_id}", params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
