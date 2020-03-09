@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require 'swagger_helper'
 
-RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+RSpec.describe Api::V1::MovesController do
   let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  let(:token) { create(:access_token, application: application) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
@@ -17,6 +17,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   end
 
   describe 'GET /moves' do
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_json_schema('get_moves_responses.json') }
 
     let!(:pentonville) { create :location, :with_moves, suppliers: [pentonville_supplier] }
@@ -46,66 +47,71 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     end
   end
 
-  path '/moves/{move_id}' do
-    let!(:pentonville_move) { create :move, from_location: pentonville }
-    let!(:birmingham_move) { create :move, from_location: birmingham }
+  context 'with swagger generation', :rswag, :with_client_authentication do
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
-    get 'Returns the details of a move' do
-      tags 'Moves'
-      produces 'application/vnd.api+json'
+    path '/moves/{move_id}' do
+      let!(:pentonville_move) { create :move, from_location: pentonville }
+      let!(:birmingham_move) { create :move, from_location: birmingham }
 
-      parameter name: :Authorization,
-                in: :header,
-                schema: {
-                  type: 'string',
-                  default: 'Bearer <your-client-token>',
-                },
-                required: true
+      get 'Returns the details of a move' do
+        tags 'Moves'
+        produces 'application/vnd.api+json'
 
-      parameter name: 'Content-Type',
-                in: 'header',
-                description: 'Accepted request content type',
-                schema: {
-                  type: 'string',
-                  default: 'application/vnd.api+json',
-                },
-                required: true
+        parameter name: :Authorization,
+                  in: :header,
+                  schema: {
+                    type: 'string',
+                    default: 'Bearer <your-client-token>',
+                  },
+                  required: true
 
-      parameter name: :move_id,
-                in: :path,
-                description: 'The ID of the move',
-                schema: {
-                  type: :string,
-                },
-                format: 'uuid',
-                example: '00525ecb-7316-492a-aae2-f69334b2a155',
-                required: true
+        parameter name: 'Content-Type',
+                  in: 'header',
+                  description: 'Accepted request content type',
+                  schema: {
+                    type: 'string',
+                    default: 'application/vnd.api+json',
+                  },
+                  required: true
 
-      response '200', 'success' do
-        let(:move_id) { pentonville_move.id }
-        let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+        parameter name: :move_id,
+                  in: :path,
+                  description: 'The ID of the move',
+                  schema: {
+                    type: :string,
+                  },
+                  format: 'uuid',
+                  example: '00525ecb-7316-492a-aae2-f69334b2a155',
+                  required: true
+
+        response '200', 'success' do
+          let(:move_id) { pentonville_move.id }
+          let(:resource_to_json) do
+            JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+          end
+
+          schema "$ref": '#/definitions/get_move_responses/200'
+
+          run_test! do |_example|
+            expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
+
+            expect(JSON.parse(response.body)).to eq resource_to_json
+          end
         end
 
-        schema "$ref": '#/definitions/get_move_responses/200'
+        response '401', 'unauthorised' do
+          let(:move_id) { birmingham_move.id }
 
-        run_test! do |_example|
-          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-
-          expect(JSON.parse(response.body)).to eq resource_to_json
+          it_behaves_like 'a swagger 401 error'
         end
-      end
-
-      response '401', 'unauthorised' do
-        let(:move_id) { birmingham_move.id }
-
-        it_behaves_like 'a swagger 401 error'
       end
     end
   end
 
   describe 'POST /moves' do
     let(:schema) { load_json_schema('post_moves_responses.json') }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
 
     let(:move_attributes) { attributes_for(:move) }
     let!(:person) { create(:person) }
@@ -170,6 +176,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
   end
 
   describe 'PATCH /moves' do
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_json_schema('patch_move_responses.json') }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }
@@ -228,6 +235,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   describe 'DELETE /moves/{move_id}' do
     let(:schema) { load_json_schema('delete_move_responses.json') }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }
     let!(:birmingham_move) { create :move, from_location: birmingham }

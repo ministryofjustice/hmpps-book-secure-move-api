@@ -2,10 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
+  let(:access_token) { create(:access_token).token }
+  let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'POST /people' do
     let(:schema) { load_json_schema('post_people_responses.json') }
@@ -136,13 +137,15 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
     end
 
     context 'with a bad request' do
-      before { post '/api/v1/people', params: nil, headers: headers, as: :json }
+      before { post '/api/v1/people', params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
 
       before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
 

@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+RSpec.describe Api::V1::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
+  let(:access_token) { create(:access_token).token }
 
   let(:resource_to_json) do
     JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
@@ -15,6 +15,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
 
   describe 'DELETE /moves/{move_id}' do
     let(:schema) { load_json_schema('delete_move_responses.json') }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
     let!(:move) { create :move }
     let(:move_id) { move.id }
@@ -42,8 +43,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end

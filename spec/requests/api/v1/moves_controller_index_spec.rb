@@ -2,12 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController, with_client_authentication: true do
+RSpec.describe Api::V1::MovesController do
   let(:supplier) { create(:supplier) }
   let!(:application) { create(:application, owner_id: supplier.id) }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+  let!(:access_token) { create(:access_token, application: application).token }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:response_json) { JSON.parse(response.body) }
+  let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /moves' do
     let(:schema) { load_json_schema('get_moves_responses.json') }
@@ -18,45 +19,11 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      get '/api/v1/moves', headers: headers, params: params
+      get '/api/v1/moves', params: params, headers: headers
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
-
-      describe 'filtering results' do
-        let(:from_location_id) { moves.first.from_location_id }
-        let(:filters) do
-          {
-            bar: 'bar',
-            from_location_id: from_location_id,
-            foo: 'foo',
-          }
-        end
-        let(:params) { { filter: filters } }
-        let(:ability) { Ability.new }
-
-        before do
-          allow(Ability).to receive(:new).and_return(ability)
-        end
-
-        it 'delegates the query execution to Moves::Finder with the correct filters', skip_before: true do
-          moves_finder = instance_double('Moves::Finder', call: Move.all)
-          allow(Moves::Finder).to receive(:new).and_return(moves_finder)
-
-          get '/api/v1/moves', headers: headers, params: params
-
-          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability)
-        end
-
-        it 'filters the results' do
-          expect(response_json['data'].size).to be 1
-        end
-
-        it 'returns the move that matches the filter' do
-          expect(response_json).to include_json(data: [{ id: moves.first.id }])
-        end
-      end
 
       context 'with a cancelled move' do
         let(:move) { create(:move, :cancelled) }
@@ -81,7 +48,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                 },
               },
             ],
-          )
+            )
         end
         # rubocop:enable RSpec/ExampleLength
       end
@@ -116,7 +83,9 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           expect(response_json['data'].size).to eq 15
         end
 
-        it 'provides meta data with pagination' do
+        it 'provides meta data with pagination', skip_before: true do
+          get '/api/v1/moves', headers: headers
+
           expect(response_json['meta']['pagination']).to include_json(meta_pagination)
         end
       end
@@ -139,7 +108,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
             moves_importer = instance_double('Moves::Importer', call: [])
             allow(Moves::Importer).to receive(:new).and_return(moves_importer)
 
-            get '/api/v1/moves', headers: headers, params: params
+            get '/api/v1/moves', params: params, headers: headers
           end
 
           it 'invokes the client library to fetch moves from NOMIS', skip_before: true do
@@ -161,8 +130,8 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
                   eventDate: date.to_s(:nomis),
                   startTime: '2019-12-01T14:00:00.000Z',
                   eventId: event_id,
-                  eventStatus: 'SCH' }.stringify_keys,
-              ] }.stringify_keys)
+                  eventStatus: 'SCH' },
+              ] }.deep_stringify_keys)
 
             allow(NomisClient::People).to receive(:get_response).
               and_return([{ offenderNo: 'G9876GF', lastName: 'Bloggs', firstName: 'Fred' }.stringify_keys])
@@ -179,7 +148,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           let(:nomis_move) { Move.where(nomis_event_ids: [event_id]).first }
 
           it 'does not attribute any changes to the user' do
-            get '/api/v1/moves', headers: headers, params: params
+            get '/api/v1/moves', params: params, headers: headers
 
             expect(nomis_move.versions.map(&:whodunnit).compact).to eq([])
           end
@@ -197,7 +166,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
         let(:params) { { filter: filters } }
 
         before do
-          get '/api/v1/moves', headers: headers, params: params
+          get '/api/v1/moves', params: params, headers: headers
         end
 
         it 'is a bad request' do
@@ -224,7 +193,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           moves_importer = instance_double('Moves::Importer', call: [])
           allow(Moves::Importer).to receive(:new).and_return(moves_importer)
 
-          get '/api/v1/moves', headers: headers, params: params
+          get '/api/v1/moves', params: params, headers: headers
         end
 
         it 'does not invoke the client library to fetch moves from NOMIS', skip_before: true do
@@ -254,7 +223,7 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
           moves_finder = instance_double('Moves::Finder', call: Move.all)
           allow(Moves::Finder).to receive(:new).and_return(moves_finder)
 
-          get '/api/v1/moves', headers: headers, params: params
+          get '/api/v1/moves', params: params, headers: headers
         end
 
         it 'invokes the Moves::Finder service', skip_before: true do
@@ -267,8 +236,13 @@ RSpec.describe Api::V1::MovesController, with_client_authentication: true do
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        get '/api/v1/moves', headers: headers
+      end
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
