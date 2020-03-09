@@ -1,7 +1,7 @@
 class AddEmailsToSubscription < ActiveRecord::Migration[5.2]
   def up
     change_column :subscriptions, :callback_url, :string, null: true
-    add_column :subscriptions, :email_addresses, :string, null: true
+    add_column :subscriptions, :email_address, :string, null: true
   end
 
   def down
@@ -10,6 +10,6 @@ class AddEmailsToSubscription < ActiveRecord::Migration[5.2]
     end
 
     change_column :subscriptions, :callback_url, :string, null: false
-    remove_column :subscriptions, :email_addresses, :string, null: true
+    remove_column :subscriptions, :email_address, :string, null: true
   end
 end

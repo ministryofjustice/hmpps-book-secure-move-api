@@ -1,28 +1,25 @@
 # frozen_string_literal: true
 
 class MoveMailer < GovukNotifyRails::Mailer
+  TIME_FORMAT = '%d/%m/%Y %T'
 
-  def move_requested(move)
-    set_template('8f2e5473-15f2-4db8-a2de-153f26a0524c')
-
-    set_personalisation(
+  def notify(notification)
+    set_template(ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID'))
+    set_reference(notification.id)
+    notification.topic.tap do |move|
+      set_personalisation(
         'move-reference': move.reference,
         'from-location': move.from_location.title,
         'to-location': move.to_location.title,
-        'move-created-at': move.created_at,
-        'move-updated-at': move.updated_at,
+        'move-created-at': move.created_at.strftime(TIME_FORMAT),
+        'move-updated-at': move.updated_at.strftime(TIME_FORMAT),
+        'notification-created-at': Time.current.strftime(TIME_FORMAT),
+        'move-action': move.status == Move::MOVE_STATUS_CANCELLED ? Move::MOVE_STATUS_CANCELLED : Move::MOVE_STATUS_REQUESTED,
         'move-status': move.status,
-        'notification-created-at': Time.now,
-        'move-action': 'FOOBAR1',
-        'environment': 'FOOBAR2',
-        'supplier': 'FOOBAR3'
-    )
-
-    mail(to: 'martyn.whitwell@digital.justice.gov.uk')
+        'environment': ENV.fetch('SERVER_FQDN', Rails.env),
+        'supplier': notification.subscription.supplier.name,
+      )
+    end
+    mail(to: notification.subscription.email_address)
   end
-
-  def move_cancelled(move)
-
-  end
-
 end

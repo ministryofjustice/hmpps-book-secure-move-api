@@ -5,6 +5,3 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-
-NotificationType.where(id: 'webhook').first_or_create!(title: 'Webhook')
-NotificationType.where(id: 'email').first_or_create!(title: 'Email')

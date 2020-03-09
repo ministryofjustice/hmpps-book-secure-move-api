@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-RSpec.describe NotifyJob, type: :job do
+RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
+  let(:perform_ignore_errors!) { perform! rescue nil }
   let(:subscription) { create(:subscription) }
   let(:notification) { create(:notification, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
   let(:client) { class_double(Faraday, post: nil) }
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
   let(:headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
-  let(:perform_ignore_errors!) { perform! rescue nil }
 
   context 'when notification and subscription are active' do
     before { allow(Faraday).to receive(:new).and_return(client) }
@@ -35,7 +35,7 @@ RSpec.describe NotifyJob, type: :job do
         let(:response) { instance_double(Faraday::Response, success?: false, status: 503) }
 
         it 'raises Notification failed error' do
-          expect { perform! }.to raise_error('Notification failed')
+          expect { perform! }.to raise_error('Webhook notification failed')
         end
 
         it 'updates delivery_attempts' do
@@ -54,7 +54,7 @@ RSpec.describe NotifyJob, type: :job do
       end
 
       it 'raises Notification failed error' do
-        expect { perform! }.to raise_error('Notification failed')
+        expect { perform! }.to raise_error('Webhook notification failed')
       end
 
       it 'updates delivery_attempts' do

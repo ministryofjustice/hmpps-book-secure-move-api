@@ -2,13 +2,15 @@ FactoryBot.define do
   factory :subscription do
     association :supplier
     secret { 'Secret' }
-  end
-
-  trait :callback_url do
     callback_url { 'http://foo.bar/?bla=bla' }
+    email_address { 'user1@example.com' }
   end
 
-  trait :email_addresses do
-    email_addresses { 'user1@example.com, user2@example.com' }
+  trait :no_callback_url do
+    callback_url { nil }
+  end
+
+  trait :no_email_address do
+    email_address { nil }
   end
 end

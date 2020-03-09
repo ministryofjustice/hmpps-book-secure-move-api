@@ -2,11 +2,11 @@ FactoryBot.define do
   factory :notification_type do
     trait :webhook do
       id { NotificationType::WEBHOOK }
-      title { "Webhook" }
+      title { 'Webhook' }
     end
     trait :email do
       id { NotificationType::EMAIL }
-      title { "Email" }
+      title { 'Email' }
     end
   end
 end

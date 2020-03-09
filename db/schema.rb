@@ -261,7 +261,7 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "email_addresses"
+    t.string "email_address"
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
     t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
