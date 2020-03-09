@@ -2,10 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::PeopleController do
+  let!(:access_token) { create(:access_token).token }
   let(:response_json) { JSON.parse(response.body) }
+  let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'PUT /api/v1/people' do
     let!(:person) { create :person }
@@ -25,7 +26,16 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
             assessment_answers: [
-              { title: 'Escape risk', assessment_question_id: risk_type_1.id },
+              { title: 'Escape risk', assessment_question_id: risk_type_1.id,
+                comments: 'Needs an inhaler',
+                nomis_alert_type: 'alert type',
+                nomis_alert_type_description: 'alert type description',
+                nomis_alert_code: 'alert code',
+                nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
+                created_at: '2020-01-30',
+                expires_at: '2020-12-30' },
+
               { title: 'Violent', assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
@@ -61,7 +71,15 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
             assessment_answers: [
-              { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
+              { title: risk_type_1.title, assessment_question_id: risk_type_1.id,
+                comments: 'Needs an inhaler',
+                nomis_alert_type: 'alert type',
+                nomis_alert_type_description: 'alert type description',
+                nomis_alert_code: 'alert code',
+                nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
+                created_at: '2020-01-30',
+                expires_at: '2020-12-30' },
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
@@ -110,7 +128,8 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:content_type) { ApiController::CONTENT_TYPE }
       let(:headers) { { 'CONTENT_TYPE': content_type } }
       let(:detail_401) { 'Token expired or invalid' }
 

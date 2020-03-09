@@ -2,10 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::Reference::SuppliersController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::Reference::SuppliersController do
   let(:response_json) { JSON.parse(response.body) }
+  let(:access_token) { create(:access_token).token }
+  let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/suppliers' do
     let(:schema) { load_json_schema('get_suppliers_responses.json') }
@@ -30,12 +31,14 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
     end
 
     before do
-      data.each { |supplier| Supplier.create!(supplier[:attributes]) }
-
-      get '/api/v1/reference/suppliers', headers: headers
+      data.each { |supplier| create(:supplier, supplier[:attributes]) }
     end
 
     context 'when successful' do
+      before do
+        get '/api/v1/reference/suppliers', headers: headers
+      end
+
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
@@ -43,14 +46,24 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        get '/api/v1/reference/suppliers', headers: headers
+      end
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
+
+      before do
+        get '/api/v1/reference/suppliers', headers: headers
+      end
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -69,11 +82,11 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
       }
     end
 
-    let!(:supplier) { Supplier.create!(data[:attributes]) }
+    let!(:supplier) { create(:supplier, data[:attributes]) }
     let(:supplier_key) { supplier.key }
 
     context 'when successful' do
-      before { get "/api/v1/reference/suppliers/#{supplier_key}", headers: headers, params: params }
+      before { get "/api/v1/reference/suppliers/#{supplier_key}", params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -82,7 +95,9 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
       end
     end
 
-    context 'when not authorized', with_invalid_auth_headers: true do
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
 
       before { get "/api/v1/reference/suppliers/#{supplier_key}", headers: headers, params: params }
@@ -102,7 +117,7 @@ RSpec.describe Api::V1::Reference::SuppliersController, with_client_authenticati
       let(:supplier_key) { 'UUID-not-found' }
       let(:detail_404) { "Couldn't find Supplier with UUID-not-found" }
 
-      before { get "/api/v1/reference/suppliers/#{supplier_key}", headers: headers, params: params }
+      before { get "/api/v1/reference/suppliers/#{supplier_key}", params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

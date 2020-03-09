@@ -48,7 +48,7 @@ RSpec.describe Api::V1::MovesController do
       post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
     end
 
-    context 'when not authorized', :skip_before, :with_client_authentication, :with_invalid_auth_headers do
+    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
@@ -60,7 +60,7 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
-    context 'with an invalid CONTENT_TYPE header', with_client_authentication: true do
+    context 'with an invalid CONTENT_TYPE header', :with_client_authentication, :slow do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { 'application/xml' }
 
@@ -133,13 +133,27 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'with explicit move_agreed and move_agreed_by' do
+        let(:date_from) { Date.yesterday }
+        let(:date_to) { Date.tomorrow }
         let(:move_attributes) {
           {
             date: Date.today,
             move_agreed: 'true',
             move_agreed_by: 'John Doe',
+            date_from: date_from,
+            date_to: date_to,
           }
         }
+
+        it 'sets date_from' do
+          expect(response_json.dig('data', 'attributes', 'date_from')).to eq date_from.to_s
+          expect(move.date_from).to eq date_from
+        end
+
+        it 'sets date_to' do
+          expect(response_json.dig('data', 'attributes', 'date_to')).to eq date_to.to_s
+          expect(move.date_to).to eq date_to
+        end
 
         it 'sets move_agreed' do
           expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq true

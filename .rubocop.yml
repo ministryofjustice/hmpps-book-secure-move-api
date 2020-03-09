@@ -37,6 +37,11 @@ RSpec/LetSetup:
 RSpec/LeakyConstantDeclaration:
   Enabled: false
 
+# It's not unreasonable to have 2 expectations, especially when there are similar
+# rather than being forced to create another 'it' block for the second one
+RSpec/MultipleExpectations:
+  Max: 2
+
 # This seems very much personal choice, and would alter every string
 # if we switched to the GDS standard.
 Style/StringLiterals:

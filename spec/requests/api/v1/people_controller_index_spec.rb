@@ -2,19 +2,18 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::V1::PeopleController do
+  let!(:token) { create(:access_token) }
   let(:response_json) { JSON.parse(response.body) }
   let(:image_urls) { response_json['data'].map { |x| x['attributes']['image_url'] } }
 
   let(:schema) { load_json_schema('get_people_responses.json') }
 
   describe 'GET /people' do
-    let(:nomis_offender_no) { 'G5033UT' }
+    let(:prison_number) { 'G5033UT' }
 
     describe 'filtering the results' do
-      let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
+      let(:params) { { filter: { police_national_computer: 'AB/1234567' }, access_token: token.token } }
 
       context 'when called with police_national_computer filter' do
         let!(:people) { create_list :person, 5, :nomis_synced }
@@ -55,15 +54,15 @@ RSpec.describe Api::V1::PeopleController, with_client_authentication: true do
       end
     end
 
-    context 'when Nomis offender number no is provided' do
+    context 'when the filter prison_number is used' do
       let!(:people) { create_list :person, 5 }
 
-      let(:params) { { filter: { nomis_offender_no: nomis_offender_no } } }
+      let(:params) { { filter: { prison_number: prison_number }, access_token: token.token } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
 
       before do
         allow(People::Finder).to receive(:new).and_return(people_finder)
-        allow(Moves::ImportPeople).to receive(:new).with([person_nomis_prison_number: nomis_offender_no])
+        allow(Moves::ImportPeople).to receive(:new).with([person_nomis_prison_number: prison_number])
                                                    .and_return(instance_double('Moves::ImportPeople', call: nil))
         get '/api/v1/people', headers: headers, params: params
       end

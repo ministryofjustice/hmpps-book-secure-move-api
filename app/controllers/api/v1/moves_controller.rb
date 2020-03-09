@@ -53,12 +53,12 @@ module Api
         :type,
         attributes: %i[date time_due status move_type additional_information
                        cancellation_reason cancellation_reason_comment
-                       reason_comment move_agreed move_agreed_by],
+                       reason_comment move_agreed move_agreed_by date_from date_to],
         relationships: {},
       ].freeze
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
                                                     cancellation_reason cancellation_reason_comment
-                                                    reason_comment move_agreed move_agreed_by]].freeze
+                                                    reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h

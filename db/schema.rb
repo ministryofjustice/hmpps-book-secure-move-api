@@ -127,7 +127,6 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
     t.date "date_to"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
-    t.index ["from_location_id", "to_location_id", "person_id", "date"], name: "index_on_move_uniqueness", unique: true
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
   end

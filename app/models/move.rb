@@ -52,6 +52,8 @@ class Move < VersionedModel
 
   validates :status, inclusion: { in: statuses }
 
+  validate :date_to_after_date_from
+
   before_validation :set_reference
   before_validation :set_move_type
   before_validation :ensure_event_nomis_ids_uniqueness
@@ -73,6 +75,14 @@ class Move < VersionedModel
   end
 
 private
+
+  def date_to_after_date_from
+    if date_from.present? && date_to.present?
+      if date_to < date_from
+        errors.add(:date_to, 'must be after date from')
+      end
+    end
+  end
 
   def set_reference
     self.reference ||= Moves::ReferenceGenerator.new.call

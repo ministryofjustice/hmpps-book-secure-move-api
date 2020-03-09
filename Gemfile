@@ -7,6 +7,7 @@ ruby '2.6.2'
 
 gem 'active_model_serializers', '~> 0.10.0'
 
+# don't enable this in dev/test - the insights envs are staging/preprod/prod
 group :production do
 # usage docs for application_insights get at
 # https://github.com/microsoft/ApplicationInsights-Ruby
@@ -35,7 +36,7 @@ gem 'pager_api'
 gem 'paper_trail'
 gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
-gem 'puma', '~> 3.12.3'
+gem 'puma', '~> 3.12.3', '> 3.12.3'
 gem 'rails', '~> 5.2.3'
 gem 'sassc-rails'
 gem 'sentry-raven'

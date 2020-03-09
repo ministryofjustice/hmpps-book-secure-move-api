@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe ApiController, type: :request, with_client_authentication: true do
+RSpec.describe ApiController, type: :request do
   subject(:api_controller) { described_class.new }
 
-  let!(:application) { Doorkeeper::Application.create(name: 'test') }
+  let!(:token) { create(:access_token) }
 
   context 'when with empty body accepts requests with no Content-Type' do
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
     let(:api_endpoint) { '/api/v1/reference/genders' }
     let(:response_json) { JSON.parse(response.body) }

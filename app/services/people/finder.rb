@@ -21,8 +21,8 @@ module People
         scope = scope.where('profiles.profile_identifiers @> ?', police_national_computer.to_json)
       end
 
-      if filter_params.key?(:nomis_offender_no)
-        scope = scope.where('profiles.profile_identifiers @> ?', nomis_offender_no.to_json)
+      if filter_params.key?(:prison_number)
+        scope = scope.where('profiles.profile_identifiers @> ?', prison_number.to_json)
       end
 
       scope
@@ -32,8 +32,8 @@ module People
       [{ identifier_type: 'police_national_computer', value: filter_params[:police_national_computer] }]
     end
 
-    def nomis_offender_no
-      [{ identifier_type: 'prison_number', value: filter_params[:nomis_offender_no] }]
+    def prison_number
+      [{ identifier_type: 'prison_number', value: filter_params[:prison_number] }]
     end
   end
 end

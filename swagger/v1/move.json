@@ -80,6 +80,28 @@
             "example": "2020-05-17",
             "description": "Date on which the move is scheduled"
           },
+          "date_from": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              { "type": "null" }
+            ],
+            "example": "2020-05-17",
+            "description": "Start date for potential move"
+          },
+          "date_to": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              { "type": "null" }
+            ],
+            "example": "2020-05-17",
+            "description": "End date for potential move"
+          },
           "additional_information": {
             "oneOf": [
               { "type": "string" },
