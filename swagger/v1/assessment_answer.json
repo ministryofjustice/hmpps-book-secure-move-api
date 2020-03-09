@@ -93,6 +93,11 @@
         "example": "Risk to Public - Community",
         "description": "Description of the alert code from NOMIS",
         "readOnly": false
+      },
+      "imported_from_nomis": {
+        "type": "Boolean",
+        "example": true,
+        "description": "A flag to indicate whether the data to update has been imported from NOMIS"
       }
     }
   }
