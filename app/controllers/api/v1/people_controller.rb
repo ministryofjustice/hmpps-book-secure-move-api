@@ -42,7 +42,9 @@ module Api
         :last_name,
         :date_of_birth,
         :gender_additional_information,
-        assessment_answers: [%i[key date expiry_data category title comments assessment_question_id]],
+        assessment_answers: [%i[key date expiry_data category title comments assessment_question_id
+                                nomis_alert_type nomis_alert_type_description nomis_alert_code nomis_alert_description
+                                created_at expires_at imported_from_nomis]],
         identifiers: [%i[value identifier_type]],
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze

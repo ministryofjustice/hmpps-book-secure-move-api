@@ -26,7 +26,16 @@ RSpec.describe Api::V1::PeopleController do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
             assessment_answers: [
-              { title: 'Escape risk', assessment_question_id: risk_type_1.id },
+              { title: 'Escape risk', assessment_question_id: risk_type_1.id,
+                comments: 'Needs an inhaler',
+                nomis_alert_type: 'alert type',
+                nomis_alert_type_description: 'alert type description',
+                nomis_alert_code: 'alert code',
+                nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
+                created_at: '2020-01-30',
+                expires_at: '2020-12-30' },
+
               { title: 'Violent', assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
@@ -62,7 +71,15 @@ RSpec.describe Api::V1::PeopleController do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
             assessment_answers: [
-              { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
+              { title: risk_type_1.title, assessment_question_id: risk_type_1.id,
+                comments: 'Needs an inhaler',
+                nomis_alert_type: 'alert type',
+                nomis_alert_type_description: 'alert type description',
+                nomis_alert_code: 'alert code',
+                nomis_alert_description: 'alert description',
+                imported_from_nomis: 'true',
+                created_at: '2020-01-30',
+                expires_at: '2020-12-30' },
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
