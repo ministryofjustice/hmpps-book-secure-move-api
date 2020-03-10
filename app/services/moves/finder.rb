@@ -2,18 +2,43 @@
 
 module Moves
   class Finder
-    attr_accessor :filter_params, :ability
+    attr_reader :filter_params, :ability
 
-    def initialize(filter_params, ability = nil)
-      self.filter_params = filter_params
-      self.ability = ability
+    def initialize(filter_params, ability, order_params)
+      @filter_params = filter_params
+      @ability = ability
+      @order_by = (order_params[:by] || 'date').to_sym
+      @order_direction = if order_params[:by]
+                           (order_params[:direction] || 'asc').to_sym
+                         else
+        # default if no 'by' parameter is date descending
+                           :desc
+                         end
     end
 
     def call
-      apply_filters(Move).order('moves.id')
+      scope = apply_filters(Move)
+      apply_ordering(scope)
     end
 
   private
+
+    def apply_ordering(scope)
+      case @order_by
+      when :name
+        scope.joins(person: :profiles).merge(Profile.ordered_by_name(@order_direction))
+      when :from_location
+        scope.joins(:from_location).merge(Location.ordered_by_title(@order_direction))
+      when :to_location
+        scope.joins(:to_location).merge(Location.ordered_by_title(@order_direction))
+      when :prison_transfer_reason
+        scope.left_outer_joins(:prison_transfer_reason).merge(PrisonTransferReason.ordered_by_title(@order_direction))
+      when :created_at, :date_from, :date
+        scope.order(@order_by => @order_direction)
+      else
+        scope
+      end
+    end
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
@@ -38,8 +63,8 @@ module Moves
     def apply_date_range_filters(scope)
       scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
       scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
-      scope = scope.where('created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
-      scope = scope.where('created_at <= ?', filter_params[:created_at_to]) if filter_params.key?(:created_at_to)
+      scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
+      scope = scope.where('moves.created_at <= ?', filter_params[:created_at_to]) if filter_params.key?(:created_at_to)
       scope
     end
 

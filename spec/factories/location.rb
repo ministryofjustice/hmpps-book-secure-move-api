@@ -14,15 +14,15 @@ FactoryBot.define do
     end
 
     trait :court do
-      key { 'guildford_crown_court' }
-      title { 'Guildford Crown Court' }
+      sequence(:key) { |x| "court_#{x}" }
+      title { "#{Faker::Address.city} Crown Court" }
       location_type { Location::LOCATION_TYPE_COURT }
       nomis_agency_id { 'GUICCT' }
     end
 
     trait :police do
-      key { 'guildford_police_station' }
-      title { 'Guildford Police Station' }
+      sequence(:key) { |x| "police_station_#{x}" }
+      title { "#{Faker::Address.city} Police Station" }
       location_type { Location::LOCATION_TYPE_POLICE }
       nomis_agency_id { 'GUIPS' }
     end

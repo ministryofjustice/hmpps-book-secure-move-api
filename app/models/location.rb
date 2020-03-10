@@ -30,6 +30,8 @@ class Location < ApplicationRecord
 
   scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
 
+  scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
+
   def prison?
     location_type.to_s == LOCATION_TYPE_PRISON
   end

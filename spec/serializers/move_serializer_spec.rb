@@ -101,7 +101,7 @@ RSpec.describe MoveSerializer do
         {
           id: move.to_location_id,
           type: 'locations',
-          attributes: { location_type: 'court', title: 'Guildford Crown Court' },
+          attributes: { location_type: 'court', title: move.to_location.title },
         },
       ]
     end
