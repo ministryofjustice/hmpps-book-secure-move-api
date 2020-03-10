@@ -4,8 +4,8 @@ RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
   let(:perform_ignore_errors!) { perform! rescue nil }
-  let(:subscription) { create(:subscription) }
-  let(:notification) { create(:notification, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
+  let(:subscription) { create(:subscription, :no_email_address) }
+  let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
   let(:client) { class_double(Faraday, post: nil) }
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }

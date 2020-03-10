@@ -9,12 +9,12 @@ class NotifyEmailJob < ApplicationJob
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
     return unless notification.subscription.enabled?
 
-    if ENV['GOVUK_NOTIFY_API_KEY'].blank?
+    if ENV.fetch('GOVUK_NOTIFY_API_KEY', nil).blank?
       Rails.logger.error('[NotifyEmailJob] please set the GOVUK_NOTIFY_API_KEY env variable')
       return # no point retrying later
     end
 
-    if ENV['GOVUK_NOTIFY_TEMPLATE_ID'].blank?
+    if ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID', nil).blank?
       Rails.logger.error('[NotifyEmailJob] please set the GOVUK_NOTIFY_TEMPLATE_ID env variable')
       return # no point retrying later
     end
@@ -37,6 +37,6 @@ class NotifyEmailJob < ApplicationJob
                         delivery_attempted_at: DateTime.now)
 
     # It is necessary to raise an error in order for Sidekiq to retry the notification
-    raise 'Notification failed' unless response&.govuk_notify_response&.present?
+    raise 'Email notification failed' unless response&.govuk_notify_response&.present?
   end
 end
