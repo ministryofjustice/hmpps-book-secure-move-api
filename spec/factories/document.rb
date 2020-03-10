@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :document do
-    association(:move)
     file do
       Rack::Test::UploadedFile.new(
         Rails.root.join('spec/fixtures/file-sample_100kB.doc'),

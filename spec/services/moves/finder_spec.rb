@@ -71,31 +71,37 @@ RSpec.describe Moves::Finder do
       let(:filter_params) { { location_type: 'hospital' } }
 
       it 'returns empty result set' do
-        expect(move_finder.call.to_a).to eql []
+        expect(move_finder.call).to be_empty
       end
     end
 
     context 'with matching date range' do
-      let(:filter_params) { { date_from: Date.today.to_s, date_to: 5.days.from_now.to_date.to_s } }
+      before do
+        create(:move, date: move.date + 6.days)
+        create(:move, date: move.date - 1.day)
+      end
+
+      let!(:move_5_days_future) { create(:move, date: move.date + 5.days) }
+      let(:filter_params) { { date_from: move.date.to_s, date_to: (move.date + 5.days).to_s } }
 
       it 'returns moves matching date range' do
-        expect(move_finder.call.pluck(:id)).to eql [move.id]
+        expect(move_finder.call).to match_array [move, move_5_days_future]
       end
     end
 
     context 'with mis-matching mismatched date range in past' do
-      let(:filter_params) { { date_from: 5.days.ago.to_date.to_s, date_to: 2.days.ago.to_date.to_s } }
+      let(:filter_params) { { date_from: (move.date - 5.days).to_s, date_to: (move.date - 2.days).to_s } }
 
       it 'returns empty result set' do
-        expect(move_finder.call.to_a).to eql []
+        expect(move_finder.call).to be_empty
       end
     end
 
     context 'with mis-matching mismatched date range in future' do
-      let(:filter_params) { { date_from: 2.days.from_now.to_date.to_s, date_to: 5.days.from_now.to_date.to_s } }
+      let(:filter_params) { { date_from: (move.date + 2.days).to_s, date_to: (move.date + 5.days).to_s } }
 
       it 'returns empty result set' do
-        expect(move_finder.call.to_a).to eql []
+        expect(move_finder.call).to be_empty
       end
     end
 
