@@ -5,7 +5,9 @@ module NomisClient
   # :nocov:
   class Image < NomisClient::Base
     class << self
-      def get booking_id
+      def get(person)
+        booking_id = person.latest_profile.latest_nomis_booking_id
+
         image_route = "/bookings/#{booking_id}/image/data"
         begin
           NomisClient::Base.get(image_route).body

@@ -25,13 +25,13 @@ module Api
 
       def image
         person = Person.find(params[:person_id])
-        image_data = NomisClient::Image::get(person.latest_profile.latest_nomis_booking_id)
 
-        if image_data
-          send_data image_data, type: 'image/jpg', disposition: 'inline'
-        else
-          render status: :not_found
+        if !person.picture.attached?
+          image_blob = NomisClient::Image::get(person)
+          person.attach_picture(image_blob)
         end
+
+        render json: { url: url_for(person.picture) }
       end
 
     private
