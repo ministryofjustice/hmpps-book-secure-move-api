@@ -4,9 +4,9 @@ module Api
   module V1
     class PeopleController < ApiController
       def index
-        person_nomis_prison_number = filter_params[:prison_number]
+        prison_number = filter_params[:prison_number]
 
-        Moves::ImportPeople.new([person_nomis_prison_number: person_nomis_prison_number]).call if person_nomis_prison_number
+        import_person_from_nomis(prison_number) if prison_number
 
         people = People::Finder.new(filter_params).call
 
@@ -36,6 +36,15 @@ module Api
       end
 
     private
+
+      def import_person_from_nomis prison_number
+        # This prevents us from blaming the current user/application for the NOMIS sync
+        PaperTrail.request(whodunnit: nil) do
+          Moves::ImportPeople.new([person_nomis_prison_number: prison_number]).call
+        end
+      rescue StandardError => e
+        Raven.capture_exception(e)
+      end
 
       PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
       PERSON_ATTRIBUTES = [

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'nomis_client'
-require 'nomis_client/moves'
 
 RSpec.describe NomisClient::People do
   describe '.get_response' do
