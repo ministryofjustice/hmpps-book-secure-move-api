@@ -12,10 +12,10 @@ RSpec.describe Person do
     expect(person.versions.map(&:event)).to eq(%w[create])
   end
 
-  it 'gets a picture attached' do
+  it 'gets an image attached' do
     person.attach_image('image_data')
 
-    expect(person.picture.attached?).to be true
-    expect(person.picture.filename).to eq "#{person.id}.jpg"
+    expect(person.image.attached?).to be true
+    expect(person.image.filename).to eq "#{person.id}.jpg"
   end
 end

@@ -42,6 +42,7 @@ RSpec.describe Api::V1::PeopleController do
       it 'contains the url of the image' do
         get_image
 
+
         expect(JSON.parse(response.body)['data']['attributes']['url']).to include person.id + '.jpg'
       end
 
