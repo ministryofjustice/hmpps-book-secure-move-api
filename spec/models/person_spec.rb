@@ -13,7 +13,7 @@ RSpec.describe Person do
   end
 
   it 'gets a picture attached' do
-    person.attach_picture('image_data')
+    person.attach_image('image_data')
 
     expect(person.picture.attached?).to be true
     expect(person.picture.filename).to eq "#{person.id}.jpg"

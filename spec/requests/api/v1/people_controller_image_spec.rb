@@ -42,12 +42,12 @@ RSpec.describe Api::V1::PeopleController do
       it 'contains the url of the image' do
         get_image
 
-        expect(JSON.parse(response.body)['url']).to include person.id + '.jpg'
+        expect(JSON.parse(response.body)['data']['attributes']['url']).to include person.id + '.jpg'
       end
 
       context 'when an image is already attached to the person' do
         it 'returns the image already attached' do
-          person.attach_picture('image_data')
+          person.attach_image('image_data')
 
           get_image
 
