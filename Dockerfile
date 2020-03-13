@@ -1,4 +1,4 @@
-FROM ministryofjustice/ruby:2.6.2-webapp-onbuild
+FROM ruby:2.6.2-stretch
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE ${APP_BUILD_DATE}
@@ -13,11 +13,14 @@ ENV RAILS_ENV production
 ENV PUMA_PORT 3000
 EXPOSE $PUMA_PORT
 
-# Run the application as user `moj` (created in the base image)
-# uid=1000(moj) gid=1000(moj) groups=1000(moj)
-# Some directories/files need to be chowned otherwise we get Errno::EACCES
-#
-# RUN chown $APPUSER:$APPUSER ./db/schema.rb
+WORKDIR /app
+
+# ugrade bundler to 2.1.4
+RUN gem update bundler --no-document
+
+COPY . /app
+
+RUN bundle install --verbose --without="development test" --jobs 4 --retry 3
 
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
@@ -27,12 +30,20 @@ RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
    && apt-get clean
 
 RUN yarn install
+
 # Have to set SECRET_KEY_BASE here to arbitrary string, otherwise task doesn't run
-RUN SECRET_KEY_BASE=valuenotactuallyused rails assets:precompile
+RUN SECRET_KEY_BASE=valuenotactuallyused bundle exec rails assets:precompile
+
+# Run the application as user 1000
+# directories/files need to be chowned otherwise we get Errno::EACCES
 
 ENV APPUID 1000
-# Need to do this as the app writes to tmp/cache and everything is setup as root
-RUN chown -R $APPUID:$APPUID /usr/src/app/tmp/cache
+
+RUN mkdir -p /home/appuser && \
+  useradd appuser -u $APPUID --user-group --home /home/appuser && \
+  chown -R appuser:appuser /app && \
+  chown -R appuser:appuser /home/appuser
+
 USER $APPUID
 
 ENTRYPOINT ["./run.sh"]

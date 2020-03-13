@@ -21,6 +21,14 @@ aliases:
         only: /.*/
       branches:
         only: master
+  - &only_master_tags_and_p4_1090
+    filters:
+      tags:
+        only: /.*/
+      branches:
+        only:
+        - master
+        - p4-1090-send-azure-events
   - &only_deploy_tags
     filters:
       tags:
@@ -31,7 +39,7 @@ aliases:
 references:
   app_containers: &app_containers
     docker:
-      - image: circleci/ruby:2.6.2
+      - image: circleci/ruby:2.6.2-node-browsers
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -133,6 +141,16 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: Force Bundler
+          command: |
+            sudo gem update --system
+            gem install bundler:2.1.4
+
+      - run:
+          name: Which bundler?
+          command: bundle -v
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -143,18 +161,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            sudo gem update --system
-            sudo gem uninstall bundler
-            sudo rm /usr/local/bin/bundle
-            sudo rm /usr/local/bin/bundler
-            sudo gem install -v2.1.4 bundler
             bundle check || bundle install
-            sudo apt-get install -y apt-transport-https
-            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-            sudo apt-get update && sudo apt-get install yarn
             yarn install
 
       - save_cache:
@@ -222,12 +229,11 @@ workflows:
       - test:
           <<: *all_tags
       - build_staging:
-          <<: *only_master_and_tags
+          <<: *only_master_tags_and_p4_1090
+      - deploy_staging:
+          <<: *only_master_tags_and_p4_1090
           requires:
           - test
-      - deploy_staging:
-          <<: *only_master_and_tags
-          requires:
           - build_staging
       - build_preprod:
           <<: *only_master_and_tags
