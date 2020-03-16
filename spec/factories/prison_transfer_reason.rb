@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :prison_transfer_reason do
-    key { 'reason_other' }
-    title { 'Other' }
+    sequence(:key) { |n| "key#{n}" }
+    title { Faker::Alphanumeric.alpha }
   end
 end

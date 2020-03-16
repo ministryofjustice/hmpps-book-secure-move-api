@@ -29,7 +29,7 @@ Metrics/BlockLength:
     - "spec/**/*"
 
 RSpec/NestedGroups:
-  Max: 5
+  Max: 6
 
 RSpec/LetSetup:
   Enabled: false

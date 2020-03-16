@@ -10,6 +10,8 @@ FactoryBot.define do
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
     move_type { 'court_appearance' }
+    sequence(:created_at) { |n| Time.now - n.minutes }
+    sequence(:date_from) { |n| Date.today - n.days }
 
     trait :cancelled do
       status { 'cancelled' }
@@ -19,6 +21,10 @@ FactoryBot.define do
 
     trait :proposed do
       status { 'proposed' }
+    end
+
+    trait :with_transfer_reason do
+      association :prison_transfer_reason
     end
   end
 

@@ -41,30 +41,47 @@ RSpec.describe Api::V1::MovesController do
       end
 
       describe 'by created_at' do
-        let(:first_date) { Date.new(2019, 12, 25) }
-        let(:last_date) { Date.new(2019, 12, 27) }
-        let(:middle_date) { Date.new(2019, 12, 26) }
+        let(:first_date) { DateTime.new(2019, 12, 25, 12) }
+        let(:last_date) { DateTime.new(2019, 12, 27) }
+        let(:middle_date) { DateTime.new(2019, 12, 26, 12) }
 
         let(:target_move) { Move.find_by(created_at: first_date) }
         let(:target_move2) { Move.find_by(created_at:  middle_date) }
         let(:target_move3) { Move.find_by(created_at:  last_date) }
-        let(:filter_params) {
-          { filter: { created_at_from: first_date.to_s,
-                                          created_at_to: last_date.to_s } }
-        }
         let(:all_dates) { [first_date, middle_date, last_date] }
 
         before do
           create(:move, created_at: first_date)
           create(:move, created_at: middle_date)
           create(:move, created_at: last_date)
+
+          get '/api/v1/moves', headers: headers, params: filter_params
         end
 
-        it 'returns the right amount of moves' do
-          get '/api/v1/moves', headers: headers, params: filter_params
+        context 'with a valid range' do
+          let(:filter_params) { { filter: { created_at_from: first_date.to_date.to_s, created_at_to: middle_date.to_date.to_s } } }
 
-          expect(response_json['data'].map { |x| x['attributes']['created_at'] }).
-            to match_array(all_dates.map(&:to_datetime).map(&:iso8601))
+          it 'returns the right amount of moves' do
+            created_at_list = response_json['data'].map { |x| x['attributes']['created_at'] }
+            expected_dates = [first_date, middle_date].map(&:to_datetime).map(&:iso8601)
+            expect(created_at_list).to match_array expected_dates
+          end
+        end
+
+        context 'when given bad start date' do
+          let(:filter_params) { { filter: { created_at_from: 'rabbit' } } }
+
+          it 'errors' do
+            expect(response).to have_http_status(:bad_request)
+          end
+        end
+
+        context 'when given bad end date' do
+          let(:filter_params) { { filter: { created_at_to: 'rabbit' } } }
+
+          it 'errors' do
+            expect(response).to have_http_status(:bad_request)
+          end
         end
       end
     end

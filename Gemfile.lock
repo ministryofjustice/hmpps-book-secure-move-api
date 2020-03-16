@@ -49,10 +49,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    appinsights (0.0.6)
-      application_insights (~> 0.5.0)
-      toml-rb (~> 0.3.0)
-    application_insights (0.5.6)
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
@@ -79,7 +75,6 @@ GEM
     cancancan (3.0.1)
     case_transform (0.2)
       activesupport
-    citrus (3.0.2)
     climate_control (0.2.0)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
@@ -323,8 +318,6 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.1)
-    toml-rb (0.3.15)
-      citrus (~> 3.0, > 3.0)
     tty-color (0.5.0)
     tty-cursor (0.7.0)
     tty-prompt (0.20.0)
@@ -352,7 +345,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
-  appinsights
   aws-sdk-s3
   bcrypt
   bootsnap (>= 1.1.0)

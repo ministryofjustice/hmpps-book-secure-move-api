@@ -28,9 +28,6 @@ coverage
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# Ignore local AppInsights config file
-config/application_insights.toml
-
 # Ignore user's individual .env files
 .env
 .env.*
