@@ -67,7 +67,7 @@ RSpec.describe NotifyEmailJob, type: :job do
 
     context 'when the email is successfully delivered to Gov.uk Notify' do
       let(:notify_response) {
-        instance_double(Mail::Message, deliver!:
+        instance_double(ActionMailer::MessageDelivery, deliver_now!:
             instance_double(Mail::Message, govuk_notify_response:
                 instance_double(Notifications::Client::ResponseNotification, id: response_id)))
       }
@@ -99,7 +99,7 @@ RSpec.describe NotifyEmailJob, type: :job do
 
     context 'when Gov.uk Notify does not respond as expected' do
       let(:notify_response) {
-        instance_double(Mail::Message, deliver!:
+        instance_double(ActionMailer::MessageDelivery, deliver_now!:
             instance_double(Mail::Message, govuk_notify_response: nil))
       }
 
