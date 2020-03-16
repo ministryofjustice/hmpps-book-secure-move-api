@@ -19,6 +19,18 @@ namespace :data_maintenance do
     end
   end
 
+  desc 'cancel all NOMIS synched moves from prisons'
+  task cancel_synched_prison_moves: :environment do
+    Location.prisons.each do |prison|
+      from_moves = prison.moves_from.requested.select(&:from_nomis?).each do |move|
+        move.update!(status: Move::MOVE_STATUS_CANCELLED,
+                     cancellation_reason: Move::MOVE_CANCELLATION_REASON_MADE_IN_ERROR)
+      end
+
+      puts "Prison #{prison.title} cancelled #{from_moves.size} moves" if from_moves.any?
+    end
+  end
+
   desc 'move old nomis_event_id to nomis_event_ids'
   task move_event_id_to_event_ids: :environment do
     Move.where.not(nomis_event_id: nil).each do |move|

@@ -147,6 +147,8 @@ namespace :fake_data do
       person = people.sample
       from_location = prisons.sample
       to_location = courts.sample
+      nomis_event_ids = []
+      nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
       unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
         Move.create!(
           date: date,
@@ -155,6 +157,7 @@ namespace :fake_data do
           from_location: from_location,
           to_location: to_location,
           status: %w[requested completed cancelled].sample,
+          nomis_event_ids: nomis_event_ids,
         )
       end
     end
@@ -313,7 +316,7 @@ namespace :fake_data do
     'HMP Ashfield',
     'HMP Ashwell',
     'HMP Rye Hill',
-    'HMYOI Aylesbury',
+    'HMP Aylesbury',
     'HMP Ranby',
     'HMP/YOI Belmarsh',
     'HMP Risley',
@@ -376,7 +379,7 @@ namespace :fake_data do
     'HMP/YOI Lewes',
     'HMP Leyhill',
     'HMP Dorchester',
-    'HMYOI Deerbolt',
+    'HMP/YOI Deerbolt',
     'HMIRC Dover',
     'HMP/YOI Downview',
     'HMP Usk and HMP/YOI Prescoed',
@@ -404,7 +407,7 @@ namespace :fake_data do
     'HMP/YOI Foston Hall',
     'HMP North Sea Camp',
     'HMP Frankland',
-    'HMYOI Feltham',
+    'HMP/YOI Feltham',
     'HMP Full Sutton',
     'HMP/YOI Norwich',
     'HMP The Weare',
@@ -417,7 +420,7 @@ namespace :fake_data do
     'HMP/YOI Warren Hill',
     'HMP Wayland',
     'HMP/YOI Wymott',
-    'HMYOI Werrington',
+    'HMP/YOI Werrington',
     'HMP Wolds',
     'HMP Whitemoor',
     'HMP/YOI Wormwood Scrubs',
@@ -425,7 +428,7 @@ namespace :fake_data do
     'HMP Onley',
     'HMP/YOI Wandsworth',
     'HMP Garth',
-    'HMYOI Wetherby',
+    'HMP/YOI Wetherby',
     'HMP Gloucester',
     'HMP Guys Marsh',
     'HMP Grendon/Spring Hill',

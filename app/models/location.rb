@@ -32,6 +32,8 @@ class Location < ApplicationRecord
 
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
 
+  scope :prisons, -> { where(location_type: LOCATION_TYPE_PRISON) }
+
   def prison?
     location_type.to_s == LOCATION_TYPE_PRISON
   end
