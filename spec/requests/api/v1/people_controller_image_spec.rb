@@ -3,38 +3,59 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::PeopleController do
-  describe 'GET /people/:id/image' do
-    let(:token) { create(:access_token) }
+  let(:token) { create(:access_token) }
 
-    context 'when there is no image' do
-      let!(:person) { create(:profile, :nomis_synced).person }
+  context 'when person ID is NOT valid' do
+    it 'not found 404' do
+      id = 'non-existent-id'
 
-      before do
-        allow(NomisClient::Image).to receive(:get).and_return(nil)
-      end
+      get "/api/v1/people/#{id}/images", params: { access_token: token.token }
 
-      it 'returns 404' do
-        get "/api/v1/people/#{person.id}/image", params: { access_token: token.token }
-        expect(response).to have_http_status(:not_found)
-      end
+      expect(response).to have_http_status(:not_found)
     end
+  end
 
-    context 'with an image' do
-      let!(:person) { create(:profile, :nomis_synced).person }
-      let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
+  context 'when person ID is valid' do
+    subject(:get_image) { get "/api/v1/people/#{person.id}/images", params: { access_token: token.token } }
 
+    let!(:person) { create(:profile, :nomis_synced).person }
+    let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
+
+    context 'when there is an image associated with the person in NOMIS' do
       before do
         allow(NomisClient::Image).to receive(:get).and_return(image_data)
-
-        get "/api/v1/people/#{person.id}/image", params: { access_token: token.token }
       end
 
       it 'returns success' do
+        get_image
+
         expect(response).to be_successful
       end
 
-      it 'returns the image' do
-        expect(response.body).to eq(image_data)
+      it 'contains the url of the image' do
+        get_image
+
+        expect(JSON.parse(response.body)['data']['id']).to eq(person.id)
+        expect(JSON.parse(response.body)['data']['attributes']['url']).to include person.id + '.jpg'
+      end
+
+      it 'returns the image if image was already attached' do
+        person.attach_image('image_data')
+
+        get_image
+
+        expect(NomisClient::Image).not_to have_received(:get)
+        expect(JSON.parse(response.body)['data']['id']).to eq(person.id)
+      end
+    end
+
+    context 'when there is NOT an image associated with the person in NOMIS' do
+      it 'return not found 404' do
+        allow(NomisClient::Image).to receive(:get).and_return(nil)
+
+        get "/api/v1/people/#{person.id}/images", params: { access_token: token.token }
+
+        expect(response).to have_http_status(:not_found)
       end
     end
   end

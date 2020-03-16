@@ -13,8 +13,6 @@ class PersonSerializer < ActiveModel::Serializer
     :gender_additional_information,
   )
 
-  attribute :image_url, if: ->(serializer) { serializer.object.nomis_prison_number.present? }
-
   has_one :ethnicity, serializer: EthnicitySerializer, if: -> { ethnicity.present? }
   has_one :gender, serializer: GenderSerializer
 
@@ -50,9 +48,5 @@ class PersonSerializer < ActiveModel::Serializer
 
   def identifiers
     object.latest_profile&.profile_identifiers || []
-  end
-
-  def image_url
-    api_v1_person_image_url(object.id)
   end
 end

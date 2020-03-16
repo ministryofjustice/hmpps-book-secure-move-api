@@ -42,6 +42,10 @@ RSpec/LeakyConstantDeclaration:
 RSpec/MultipleExpectations:
   Max: 2
 
+# Rubocop think to have empty context whenever RSwagger is used
+RSpec/EmptyExampleGroup:
+  Enabled: false
+
 # This seems very much personal choice, and would alter every string
 # if we switched to the GDS standard.
 Style/StringLiterals:

@@ -7,7 +7,6 @@ RSpec.describe Api::V1::DocumentsController do
   let(:response_json) { JSON.parse(response.body) }
 
   # rubocop thinks this context is empty IMHO because it doesn't understand rswag
-  #rubocop:disable RSpec/EmptyExampleGroup
   context 'with swagger generation', :with_client_authentication, :rswag do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
@@ -72,7 +71,7 @@ RSpec.describe Api::V1::DocumentsController do
       end
     end
   end
-  #rubocop:enable RSpec/EmptyExampleGroup
+
 
   describe 'POST /moves/:move_id/documents' do
     let(:schema) { load_json_schema('post_documents_responses.json') }

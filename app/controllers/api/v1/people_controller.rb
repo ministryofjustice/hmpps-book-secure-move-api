@@ -25,12 +25,13 @@ module Api
 
       def image
         person = Person.find(params[:person_id])
-        image_data = NomisClient::Image::get(person.latest_profile.latest_nomis_booking_id)
 
-        if image_data
-          send_data image_data, type: 'image/jpg', disposition: 'inline'
+        success = People::RetrieveImage.call(person)
+
+        if success
+          render json: Image.new(person.id, url_for(person.image))
         else
-          render status: :not_found
+          render_resource_not_found_error(Exception.new('Image not found'))
         end
       end
 

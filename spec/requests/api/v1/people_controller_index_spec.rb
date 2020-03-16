@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Api::V1::PeopleController do
   let!(:token) { create(:access_token) }
   let(:response_json) { JSON.parse(response.body) }
-  let(:image_urls) { response_json['data'].map { |x| x['attributes']['image_url'] } }
 
   let(:schema) { load_json_schema('get_people_responses.json') }
 
@@ -26,11 +25,6 @@ RSpec.describe Api::V1::PeopleController do
 
         it 'returns the correct data' do
           expect(response_json['data'].size).to eq(5)
-        end
-
-        it 'returns an image URL' do
-          expect(image_urls).
-            to match_array(people.map { |p| "http://localhost:4000/api/v1/people/#{p.id}/image" })
         end
       end
 
@@ -65,10 +59,6 @@ RSpec.describe Api::V1::PeopleController do
         allow(Moves::ImportPeople).to receive(:new).with([person_nomis_prison_number: prison_number])
                                                    .and_return(instance_double('Moves::ImportPeople', call: nil))
         get '/api/v1/people', headers: headers, params: params
-      end
-
-      it 'doesnt returns any image URLs' do
-        expect(image_urls).to eq([nil] * 5)
       end
 
       it 'requests data from NOMIS', with_json_schema: true do
