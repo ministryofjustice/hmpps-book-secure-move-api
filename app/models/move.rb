@@ -25,8 +25,10 @@ class Move < VersionedModel
     prison_transfer: 'prison_transfer',
   }
 
+  MOVE_CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error'
+
   enum cancellation_reason: {
-    made_in_error: 'made_in_error',
+    made_in_error: MOVE_CANCELLATION_REASON_MADE_IN_ERROR,
     supplier_declined_to_move: 'supplier_declined_to_move',
     other: 'other',
   }
