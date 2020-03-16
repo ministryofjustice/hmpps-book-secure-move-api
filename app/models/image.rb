@@ -1,7 +1,7 @@
 class Image
   include ActiveModel::Serialization
 
-  attr_accessor :id, :url
+  attr_reader :id, :url
 
   def initialize(person_id, image_url)
     @id = person_id

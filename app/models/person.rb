@@ -10,6 +10,10 @@ class Person < VersionedModel
     profiles.last
   end
 
+  def latest_nomis_booking_id
+    latest_profile.latest_nomis_booking_id
+  end
+
   def attach_image(image_blob)
     filename = id + '.jpg'
 

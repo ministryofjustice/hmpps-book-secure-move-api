@@ -46,10 +46,6 @@ RSpec/MultipleExpectations:
 RSpec/EmptyExampleGroup:
   Enabled: false
 
-RSpec/FilePath:
-  Exclude:
-    - "spec/requests/api/v1/swagger_generators/*"
-
 # This seems very much personal choice, and would alter every string
 # if we switched to the GDS standard.
 Style/StringLiterals:
@@ -70,4 +66,3 @@ Rails/TimeZone:
   Exclude:
     - "spec/**/**/*"
     - "app/services/moves/anonymiser.rb"
-

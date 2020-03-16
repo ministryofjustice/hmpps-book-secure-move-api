@@ -26,14 +26,13 @@ module Api
       def image
         person = Person.find(params[:person_id])
 
-        if !person.image.attached?
-          image_blob = NomisClient::Image::get(person)
-          person.attach_image(image_blob)
+        success = People::RetrieveImage.call(person)
+
+        if success
+          render json: Image.new(person.id, url_for(person.image))
+        else
+          render_resource_not_found_error(Exception.new('Image not found'))
         end
-
-        image = Image.new(person.id, url_for(person.image))
-
-        render json: image
       end
 
     private
