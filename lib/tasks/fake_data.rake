@@ -148,7 +148,7 @@ namespace :fake_data do
       from_location = prisons.sample
       to_location = courts.sample
       nomis_event_ids = []
-      nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2) == 0
+      nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
       unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
         Move.create!(
           date: date,
@@ -157,7 +157,7 @@ namespace :fake_data do
           from_location: from_location,
           to_location: to_location,
           status: %w[requested completed cancelled].sample,
-          nomis_event_ids: nomis_event_ids
+          nomis_event_ids: nomis_event_ids,
         )
       end
     end
