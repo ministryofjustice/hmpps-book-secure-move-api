@@ -10,7 +10,7 @@ RSpec.describe MoveMailer, type: :mailer do
 
   before do
     allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_TEMPLATE_ID').and_return('some-template-id')
+    allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_TEMPLATE_ID', nil).and_return('some-template-id')
     allow(ENV).to receive(:fetch).with('SERVER_FQDN', Rails.env).and_return('www.example.org')
   end
 

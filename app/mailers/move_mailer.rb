@@ -4,7 +4,7 @@ class MoveMailer < GovukNotifyRails::Mailer
   TIME_FORMAT = '%d/%m/%Y %T'
 
   def notify(notification)
-    set_template(ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID'))
+    set_template(ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID', nil))
     set_reference(notification.id)
     notification.topic.tap do |move|
       set_personalisation(

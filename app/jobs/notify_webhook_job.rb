@@ -8,27 +8,26 @@ class NotifyWebhookJob < ApplicationJob
     notification = Notification.webhooks.kept.includes(:subscription).find(notification_id)
     return unless notification.subscription.enabled?
 
-    data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
-    hmac = Encryptor.hmac(notification.subscription.secret, data)
-    response = nil
+    # just return if the notification has been already delivered
+    return if notification.delivered_at.present?
 
     begin
+      data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
+      hmac = Encryptor.hmac(notification.subscription.secret, data)
       response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
-      if response.success?
-        notification.delivered_at = DateTime.now
-        # TODO: in the future, consider suggesting that the webhook endpoint could return a UUID in the response, which we could store in notification.response_id ?
-      else
-        Rails.logger.error("[NotifyWebhookJob] non-success status received from #{notification.subscription.callback_url} (#{response.status})")
-      end
-    rescue Faraday::ClientError => e
-      Rails.logger.error("[NotifyWebhookJob] failed to notify #{notification.subscription.callback_url}: #{e.inspect}")
+
+      raise "non-success status received from #{notification.subscription.callback_url} (#{response.status})" unless response.success?
+
+      notification.update(delivered_at: DateTime.now,
+                          delivery_attempts: notification.delivery_attempts.succ,
+                          delivery_attempted_at: DateTime.now)
+      # TODO: in the future, consider suggesting that the webhook endpoint could return a UUID in the response, which we could store in notification.response_id ?
+    rescue StandardError => e
+      notification.update(delivery_attempts: notification.delivery_attempts.succ,
+                          delivery_attempted_at: DateTime.now)
+      Raven.capture_exception(e)
+      raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
-
-    notification.update(delivery_attempts: notification.delivery_attempts.succ,
-                        delivery_attempted_at: DateTime.now)
-
-    # It is necessary to raise an error in order for Sidekiq to retry the notification
-    raise 'Webhook notification failed' unless response&.success?
   end
 
 private

@@ -9,34 +9,23 @@ class NotifyEmailJob < ApplicationJob
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
     return unless notification.subscription.enabled?
 
-    if ENV.fetch('GOVUK_NOTIFY_API_KEY', nil).blank?
-      Rails.logger.error('[NotifyEmailJob] please set the GOVUK_NOTIFY_API_KEY env variable')
-      return # no point retrying later
-    end
+    # just return if the notification has been already delivered
+    return if notification.delivered_at.present?
 
-    if ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID', nil).blank?
-      Rails.logger.error('[NotifyEmailJob] please set the GOVUK_NOTIFY_TEMPLATE_ID env variable')
-      return # no point retrying later
-    end
-
-    response = nil
     begin
+      # NB: deliver! will raise an exception unless the email is delivered to gov.uk Notify
       response = MoveMailer.notify(notification).deliver!
+      raise('govuk_notify_response is missing') if response.govuk_notify_response.blank?
 
-      if response.govuk_notify_response.present?
-        notification.delivered_at = DateTime.now
-        notification.response_id = response.govuk_notify_response.id
-      else
-        Rails.logger.error('[NotifyEmailJob] no response received from service')
-      end
+      notification.update(delivered_at: DateTime.now,
+                          response_id: response.govuk_notify_response.id,
+                          delivery_attempts: notification.delivery_attempts.succ,
+                          delivery_attempted_at: DateTime.now)
     rescue StandardError => e
-      Rails.logger.error("[NotifyEmailJob] failed to deliver to service: (#{e.message})")
+      notification.update(delivery_attempts: notification.delivery_attempts.succ,
+                          delivery_attempted_at: DateTime.now)
+      Raven.capture_exception(e)
+      raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
-
-    notification.update(delivery_attempts: notification.delivery_attempts.succ,
-                        delivery_attempted_at: DateTime.now)
-
-    # It is necessary to raise an error in order for Sidekiq to retry the notification
-    raise 'Email notification failed' unless response&.govuk_notify_response&.present?
   end
 end

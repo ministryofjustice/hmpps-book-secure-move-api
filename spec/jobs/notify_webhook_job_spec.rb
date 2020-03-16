@@ -5,7 +5,8 @@ RSpec.describe NotifyWebhookJob, type: :job do
 
   let(:perform_ignore_errors!) { perform! rescue nil }
   let(:subscription) { create(:subscription, :no_email_address) }
-  let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
+  let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
+  let(:delivered_at) { nil }
   let(:client) { class_double(Faraday, post: nil) }
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
@@ -13,6 +14,37 @@ RSpec.describe NotifyWebhookJob, type: :job do
 
   context 'when notification and subscription are active' do
     before { allow(Faraday).to receive(:new).and_return(client) }
+
+    context 'when the notification has already been delivered' do
+      let(:delivered_at) { DateTime.now }
+
+      before { allow(client).to receive(:post) }
+
+      it 'does not notify the webhook' do
+        perform!
+        expect(client).not_to have_received(:post)
+      end
+
+      it 'returns nil' do
+        expect(perform!).to be nil
+      end
+
+      it 'does not set delivered_at' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivered_at }.from(delivered_at)
+      end
+
+      it 'does not update delivery_attempted_at' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempted_at }.from(nil)
+      end
+
+      it 'does not update delivery_attempts' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempts }.from(0)
+      end
+
+      it 'does not update response_id' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
+      end
+    end
 
     context 'when a response is received from the callback_url' do
       before { allow(client).to receive(:post).and_return(response) }
@@ -35,7 +67,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
         let(:response) { instance_double(Faraday::Response, success?: false, status: 503) }
 
         it 'raises Notification failed error' do
-          expect { perform! }.to raise_error('Webhook notification failed')
+          expect { perform! }.to raise_error(RuntimeError, /non-success status received/)
         end
 
         it 'updates delivery_attempts' do
@@ -54,7 +86,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       it 'raises Notification failed error' do
-        expect { perform! }.to raise_error('Webhook notification failed')
+        expect { perform! }.to raise_error(Faraday::ClientError, 'Internet is unplugged')
       end
 
       it 'updates delivery_attempts' do

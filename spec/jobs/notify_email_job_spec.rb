@@ -5,33 +5,66 @@ RSpec.describe NotifyEmailJob, type: :job do
 
   let(:perform_ignore_errors!) { perform! rescue nil }
   let(:subscription) { create(:subscription, :no_callback_url) }
-  let(:notification) { create(:notification, :email, subscription: subscription, delivered_at: nil, delivery_attempted_at: nil) }
+  let(:notification) { create(:notification, :email, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
+  let(:delivered_at) { nil }
   let(:govuk_notify_api_key) { 'GOVUK_NOTIFY_API_KEY' }
-  let(:govuk_notify_template_id) { 'GOVUK_NOTIFY_API_KEY' }
+  let(:govuk_notify_template_id) { 'GOVUK_NOTIFY_TEMPLATE_ID' }
 
   before do
     allow(ENV).to receive(:fetch).and_call_original
     allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_API_KEY', nil).and_return(govuk_notify_api_key)
     allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_TEMPLATE_ID', nil).and_return(govuk_notify_template_id)
+    ActionMailer::Base.add_delivery_method :govuk_notify, GovukNotifyRails::Delivery, api_key: govuk_notify_api_key
   end
 
   context 'when GOVUK_NOTIFY_API_KEY env var is not set' do
     let(:govuk_notify_api_key) { nil }
 
-    it 'returns nil' do
-      expect(perform!).to be_nil
+    it 'raises an NoMethodError' do
+      expect { perform! }.to raise_error(NoMethodError, /undefined method `length' for nil/)
     end
   end
 
   context 'when GOVUK_NOTIFY_TEMPLATE_ID env var is not set' do
     let(:govuk_notify_template_id) { nil }
 
-    it 'returns nil' do
-      expect(perform!).to be_nil
+    it 'raises an ArgumentError' do
+      expect { perform! }.to raise_error(ArgumentError, /Missing template ID/)
     end
   end
 
   context 'when notification and subscription are active' do
+    context 'when the notification has already been delivered' do
+      let(:delivered_at) { DateTime.now }
+
+      before { allow(MoveMailer).to receive(:notify) }
+
+      it 'does not notify the mailer' do
+        perform!
+        expect(MoveMailer).not_to have_received(:notify)
+      end
+
+      it 'returns nil' do
+        expect(perform!).to be nil
+      end
+
+      it 'does not set delivered_at' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivered_at }.from(delivered_at)
+      end
+
+      it 'does not update delivery_attempted_at' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempted_at }.from(nil)
+      end
+
+      it 'does not update delivery_attempts' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempts }.from(0)
+      end
+
+      it 'does not update response_id' do
+        expect { perform_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
+      end
+    end
+
     context 'when the email is successfully delivered to Gov.uk Notify' do
       let(:notify_response) {
         instance_double(Mail::Message, deliver!:
@@ -64,7 +97,7 @@ RSpec.describe NotifyEmailJob, type: :job do
       end
     end
 
-    context 'when Gov.uk Notify does not respond' do
+    context 'when Gov.uk Notify does not respond as expected' do
       let(:notify_response) {
         instance_double(Mail::Message, deliver!:
             instance_double(Mail::Message, govuk_notify_response: nil))
@@ -93,13 +126,13 @@ RSpec.describe NotifyEmailJob, type: :job do
         expect { perform_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
       end
 
-      it 'raises Notification failed error' do
-        expect { perform! }.to raise_error('Email notification failed')
+      it 'raises an error' do
+        expect { perform! }.to raise_error(RuntimeError, 'govuk_notify_response is missing')
       end
     end
 
     context 'when there is an unexpected error' do
-      before { allow(MoveMailer).to receive(:notify).and_raise('Some unexpected error') }
+      before { allow(MoveMailer).to receive(:notify).and_raise(RuntimeError, 'Some unexpected error') }
 
       it 'notifies the mailer' do
         perform_ignore_errors!
@@ -122,8 +155,8 @@ RSpec.describe NotifyEmailJob, type: :job do
         expect { perform_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
       end
 
-      it 'raises Notification failed error' do
-        expect { perform! }.to raise_error('Email notification failed')
+      it 'raises an error' do
+        expect { perform! }.to raise_error('Some unexpected error')
       end
     end
   end
