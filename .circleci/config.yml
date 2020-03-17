@@ -21,14 +21,6 @@ aliases:
         only: /.*/
       branches:
         only: master
-  - &only_master_tags_and_p4_1090
-    filters:
-      tags:
-        only: /.*/
-      branches:
-        only:
-        - master
-        - p4-1090-send-azure-events
   - &only_deploy_tags
     filters:
       tags:
@@ -147,10 +139,6 @@ jobs:
             sudo gem update --system
             gem install bundler:2.1.4
 
-      - run:
-          name: Which bundler?
-          command: bundle -v
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -229,9 +217,9 @@ workflows:
       - test:
           <<: *all_tags
       - build_staging:
-          <<: *only_master_tags_and_p4_1090
+          <<: *only_master_and_tags
       - deploy_staging:
-          <<: *only_master_tags_and_p4_1090
+          <<: *only_master_and_tags
           requires:
           - test
           - build_staging
