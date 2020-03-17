@@ -38,3 +38,4 @@ coverage
 # ignore dynamically generated Swagger docs
 swagger/v1/swagger.yaml
 node_modules
+config/application_insights.toml
