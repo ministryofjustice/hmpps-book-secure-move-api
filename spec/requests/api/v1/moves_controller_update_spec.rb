@@ -120,7 +120,7 @@ RSpec.describe Api::V1::MovesController do
             it { expect(notification.delivered_at).not_to be_nil }
             it { expect(notification.topic).to eql(move) }
             it { expect(notification.notification_type).to eql(notification_type_webhook) }
-            it { expect(notification.event_type).to eql('update_move') }
+            it { expect(notification.event_type).to eql('update_move_status') }
             it { expect(notification.response_id).to be_nil }
           end
 
@@ -145,12 +145,12 @@ RSpec.describe Api::V1::MovesController do
             it { expect(notification.delivered_at).not_to be_nil }
             it { expect(notification.topic).to eql(move) }
             it { expect(notification.notification_type).to eql(notification_type_email) }
-            it { expect(notification.event_type).to eql('update_move') }
+            it { expect(notification.event_type).to eql('update_move_status') }
             it { expect(notification.response_id).to eql(response_id) }
           end
         end
 
-        context 'when updating (but not cancelling) a move' do
+        context 'when updating an existing requested move without a change of move_status' do
           let(:move_status) { 'requested' }
 
           context 'when the supplier has a webhook subscription', :skip_before do
@@ -196,8 +196,8 @@ RSpec.describe Api::V1::MovesController do
               end
             end
 
-            it 'does not create an email notification' do
-              expect(notification).to be_nil
+            it 'does NOT create an email notification' do
+              expect(subscription.notifications.count).to be 0
             end
           end
         end

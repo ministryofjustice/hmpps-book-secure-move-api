@@ -14,7 +14,7 @@ class MoveMailer < GovukNotifyRails::Mailer
         'move-created-at': move.created_at.strftime(TIME_FORMAT),
         'move-updated-at': move.updated_at.strftime(TIME_FORMAT),
         'notification-created-at': Time.current.strftime(TIME_FORMAT),
-        'move-action': move.status == Move::MOVE_STATUS_CANCELLED ? Move::MOVE_STATUS_CANCELLED : Move::MOVE_STATUS_REQUESTED,
+        'move-action': move.status, # this is the same as the move status and will only be "requested" or "cancelled"
         'move-status': move.status,
         'environment': ENV.fetch('SERVER_FQDN', Rails.env),
         'supplier': notification.subscription.supplier.name,

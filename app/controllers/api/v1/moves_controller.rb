@@ -31,8 +31,12 @@ module Api
         move = find_move
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
-        move.update!(patch_move_attributes)
-        Notifier.prepare_notifications(topic: move, action_name: 'update')
+        # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
+        move.assign_attributes(patch_move_attributes)
+        status_changed = move.status_changed?
+        move.save!
+
+        Notifier.prepare_notifications(topic: move, action_name: status_changed ? 'update_status' : 'update')
         render_move(move, 200)
       end
 

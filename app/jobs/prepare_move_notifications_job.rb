@@ -18,9 +18,7 @@ class PrepareMoveNotificationsJob < ApplicationJob
           )
         end
 
-        # only notify by email on creation and cancellation
-        # TODO: do we need to check if move.status == Move::MOVE_STATUS_REQUESTED ?
-        if subscription.email_address.present? && (action_name == 'create' || (action_name == 'update' && move.status == Move::MOVE_STATUS_CANCELLED))
+        if subscription.email_address.present? && should_email?(move, action_name)
           NotifyEmailJob.perform_later(
             build_notification_id(subscription, NotificationType::EMAIL, move, action_name),
           )
@@ -36,7 +34,17 @@ private
           subscription.notifications.create!(
             notification_type_id: type_id,
             topic: topic,
-            event_type: "#{action_name}_#{topic.class.to_s.downcase}",
+            event_type: event_type(action_name, topic),
           ).id }
+  end
+
+  def should_email?(move, action_name)
+    # NB: only notify by email on move requested and move cancellation
+    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && %w(create update_status).include?(action_name)
+  end
+
+  def event_type(action_name, topic)
+    # NB: this transforms "update" --> "update_move" and "update_status" --> "update_move_status"
+    action_name.split('_').insert(1, topic.class.to_s.downcase).join('_')
   end
 end
