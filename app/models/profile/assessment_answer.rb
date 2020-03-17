@@ -56,18 +56,6 @@ class Profile
       }
     end
 
-    def risk?
-      category == 'risk'
-    end
-
-    def health?
-      category == 'health'
-    end
-
-    def court?
-      category == 'court'
-    end
-
     def copy_question_attributes
       return if assessment_question_id.blank?
 

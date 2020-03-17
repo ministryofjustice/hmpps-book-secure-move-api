@@ -124,71 +124,6 @@ RSpec.describe Api::V1::MovesController do
         end
       end
 
-      context 'when invoking NOMIS sync' do
-        let(:from_location) { moves.first.from_location }
-        let(:date) { Date.today }
-        let(:filters) do
-          {
-            from_location_id: from_location.id,
-            date_from: date.to_s,
-          }
-        end
-        let(:params) { { filter: filters } }
-
-        describe 'importing moves from NOMIS passing all required filters (NOMIS agency_id and date)' do
-          before do
-            allow(NomisClient::Moves).to receive(:get).and_return([])
-
-            moves_importer = instance_double('Moves::Importer', call: [])
-            allow(Moves::Importer).to receive(:new).and_return(moves_importer)
-
-            get '/api/v1/moves', params: params, headers: headers
-          end
-
-          it 'invokes the client library to fetch moves from NOMIS', skip_before: true do
-            expect(NomisClient::Moves).to have_received(:get).with([from_location.nomis_agency_id], date, :courtEvents)
-          end
-
-          it 'invokes the service to create moves into the database', skip_before: true do
-            expect(Moves::Importer).to have_received(:new).with([])
-          end
-        end
-
-        context 'when importing a move', skip_before: true do
-          before do
-            allow(NomisClient::Moves).to receive(:get_response).
-              and_return({ courtEvents: [
-                { offenderNo: 'G9876GF',
-                  fromAgency: from_location.nomis_agency_id,
-                  toAgency: to_location.nomis_agency_id,
-                  eventDate: date.to_s(:nomis),
-                  startTime: '2019-12-01T14:00:00.000Z',
-                  eventId: event_id,
-                  eventStatus: 'SCH' },
-              ] }.deep_stringify_keys)
-
-            allow(NomisClient::People).to receive(:get_response).
-              and_return([{ offenderNo: 'G9876GF', lastName: 'Bloggs', firstName: 'Fred' }.stringify_keys])
-
-            allow(NomisClient::Alerts).to receive(:get_response).
-              and_return([])
-            allow(NomisClient::PersonalCareNeeds).to receive(:get_response).
-              and_return([])
-          end
-
-          let(:event_id) { 542_598_345 }
-          let(:from_location) { create(:location) }
-          let(:to_location) { create(:location, :court) }
-          let(:nomis_move) { Move.where(nomis_event_ids: [event_id]).first }
-
-          it 'does not attribute any changes to the user' do
-            get '/api/v1/moves', params: params, headers: headers
-
-            expect(nomis_move.versions.map(&:whodunnit).compact).to eq([])
-          end
-        end
-      end
-
       describe 'validating dates before running queries' do
         let(:from_location) { moves.first.from_location }
         let(:filters) do
@@ -209,63 +144,6 @@ RSpec.describe Api::V1::MovesController do
 
         it 'returns errors' do
           expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
-        end
-      end
-
-      describe 'not importing moves from NOMIS when missing filters' do
-        let(:from_location) { moves.first.from_location }
-        let(:filters) do
-          {
-            from_location_id: from_location.id,
-          }
-        end
-        let(:params) { { filter: filters } }
-
-        before do
-          allow(NomisClient::Moves).to receive(:get).and_return([])
-
-          moves_importer = instance_double('Moves::Importer', call: [])
-          allow(Moves::Importer).to receive(:new).and_return(moves_importer)
-
-          get '/api/v1/moves', params: params, headers: headers
-        end
-
-        it 'does not invoke the client library to fetch moves from NOMIS', skip_before: true do
-          expect(NomisClient::Moves).not_to have_received(:get)
-        end
-
-        it 'does not invoke the service to create moves into the database', skip_before: true do
-          expect(Moves::Importer).not_to have_received(:new)
-        end
-      end
-
-      describe 'not importing moves from NOMIS when an error occurs in NOMIS' do
-        let(:from_location) { moves.first.from_location }
-        let(:date) { Date.today }
-        let(:filters) do
-          {
-            from_location_id: from_location.id,
-            date_from: date.to_s,
-          }
-        end
-        let(:params) { { filter: filters } }
-
-        before do
-          allow(NomisClient::Moves).to receive(:get).and_raise(StandardError)
-          allow(Raven).to receive(:capture_exception)
-
-          moves_finder = instance_double('Moves::Finder', call: Move.all)
-          allow(Moves::Finder).to receive(:new).and_return(moves_finder)
-
-          get '/api/v1/moves', params: params, headers: headers
-        end
-
-        it 'invokes the Moves::Finder service', skip_before: true do
-          expect(Moves::Finder).to have_received(:new)
-        end
-
-        it 'calls Raven to log the exception', skip_before: true do
-          expect(Raven).to have_received(:capture_exception)
         end
       end
     end
