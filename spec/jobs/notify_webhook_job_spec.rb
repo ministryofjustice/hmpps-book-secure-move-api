@@ -16,7 +16,8 @@ RSpec.describe NotifyWebhookJob, type: :job do
     before { allow(Faraday).to receive(:new).and_return(client) }
 
     context 'when the notification has already been delivered' do
-      let(:delivered_at) { DateTime.now }
+      # NB: need to be explicit about the time in the test otherwise there can be a few nanoseconds difference in CircleCI tests
+      let(:delivered_at) { DateTime.parse('2020-02-02 02:02:02.00') }
 
       before { allow(client).to receive(:post) }
 
