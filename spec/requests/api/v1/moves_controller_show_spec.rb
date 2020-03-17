@@ -55,11 +55,6 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
 
           expect(JSON.parse(response.body)).to eq resource_to_json
-
-          # TODO: this was commented out in the original test, and fails when included
-          # expect(Moves::NomisSynchroniser).to(
-          #     have_received(:new).with(locations: [move.from_location], date: move.date)
-          #   )
         end
       end
 
@@ -67,7 +62,6 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
         let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
 
         it_behaves_like 'a swagger 401 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
 
       response '404', 'not found' do
@@ -75,13 +69,11 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag do
         let(:detail_404) { "Couldn't find Move with 'id'=#{move_id}" }
 
         it_behaves_like 'a swagger 404 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
 
       response '415', 'invalid content type' do
         let(:"Content-Type") { 'application/xml' }
         it_behaves_like 'a swagger 415 error'
-        it_behaves_like 'it does not trigger NomisSynchroniser'
       end
     end
   end

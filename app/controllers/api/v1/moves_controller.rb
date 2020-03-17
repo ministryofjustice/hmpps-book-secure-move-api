@@ -6,7 +6,6 @@ module Api
       def index
         moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
         if moves_params.valid?
-          import_moves_from_nomis
           moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
           paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
         else
@@ -96,30 +95,6 @@ module Api
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
-      end
-
-      def import_moves_from_nomis
-        # This prevents us from blaming the current user/application for the NOMIS sync
-        PaperTrail.request(whodunnit: nil) do
-          Moves::NomisSynchroniser.new(locations: from_locations, date: date).call
-        end
-      rescue StandardError => e
-        Raven.capture_exception(e)
-      end
-
-      def from_locations
-        @from_locations ||=
-          if filter_params[:from_location_id]
-            Location.where(id: filter_params[:from_location_id])
-          else
-            []
-          end
-      end
-
-      def date
-        return unless filter_params[:date_from]
-
-        Date.parse(filter_params[:date_from])
       end
     end
   end
