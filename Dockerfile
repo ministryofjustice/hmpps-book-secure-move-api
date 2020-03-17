@@ -18,16 +18,20 @@ WORKDIR /app
 # ugrade bundler to 2.1.4
 RUN gem update bundler --no-document
 
-COPY . /app
-
-RUN bundle install --verbose --without="development test" --jobs 4 --retry 3
-
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
    && apt-get update \
    && apt-get install -y nodejs yarn \
    && apt-get clean
+
+# Temp - testing only!!! remove before final merge
+# put psql into dev image for local testing of rake task
+RUN apt-get install -y postgresql-client
+
+COPY . /app
+
+RUN bundle install --verbose --without="development test" --jobs 4 --retry 3
 
 RUN yarn install
 
@@ -43,7 +47,3 @@ RUN mkdir -p /home/appuser && \
   useradd appuser -u $APPUID --user-group --home /home/appuser && \
   chown -R appuser:appuser /app && \
   chown -R appuser:appuser /home/appuser
-
-USER $APPUID
-
-ENTRYPOINT ["./run.sh"]

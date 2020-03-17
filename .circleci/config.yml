@@ -21,14 +21,14 @@ aliases:
         only: /.*/
       branches:
         only: master
-  - &only_master_and_create_dev
+  - &only_master_and_copy_prod
     filters:
       tags:
         only: /.*/
       branches:
         only:
         - master
-        - dev-auth-from-docs
+        - p4-1130-copy-prod-db-to-preprod
   - &only_deploy_tags
     filters:
       tags:
@@ -73,7 +73,7 @@ commands:
           docker_layer_caching: true
 
       - run:
-          name: build docker image
+          name: build app image
           command: |
             export BUILD_DATE=$(date -Is) >> $BASH_ENV
             source $BASH_ENV
@@ -85,7 +85,13 @@ commands:
               --build-arg APP_BUILD_DATE=${BUILD_DATE} \
               --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
               --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
+              -t base .
+
+            docker tag base "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}-base"
+
+            docker build \
+              --build-arg BASE_IMAGE="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}-base" \
+              -t app docker/app
 
       - run:
           name: push app image
@@ -98,6 +104,28 @@ commands:
 
             docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
+
+  build_psql_image:
+    description: "Builds a docker image for dev/preprod with psql added to allow rails db -p to work"
+    parameters:
+      env:
+        type: string
+    steps:
+      - run:
+          name: build and push psql image
+          command: |
+            docker build \
+              --build-arg BASE_IMAGE=base \
+              -t psql docker/psql
+
+            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${login}
+
+            docker tag psql "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}.psql"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}.psql"
+
+            docker tag psql "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.psql.latest"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.psql.latest"
 
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
@@ -145,6 +173,12 @@ jobs:
       - checkout
 
       - run:
+          name: Unset bundle path
+          command: |
+            echo "unset BUNDLE_PATH"  >> $BASH_ENV
+            source $BASH_ENV
+
+      - run:
           name: Force Bundler
           command: |
             sudo gem update --system
@@ -153,9 +187,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "Gemfile.lock" }}
+            - v12-dependencies-{{ checksum "Gemfile.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v12-dependencies-
 
       - run:
           name: install dependencies
@@ -165,8 +199,8 @@ jobs:
 
       - save_cache:
           paths:
-            - ./vendor/bundle
-          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+            - vendor/bundle
+          key: v12-dependencies-{{ checksum "Gemfile.lock" }}
 
       # Database setup
       - run: bundle exec rake db:create
@@ -188,6 +222,8 @@ jobs:
     <<: *cloud_container
     steps:
       - build_for_k8s:
+         env: "dev"
+      - build_psql_image:
          env: "dev"
 
   deploy_dev:
@@ -240,11 +276,11 @@ workflows:
       - test:
           <<: *all_tags
       - build_dev:
-          <<: *only_master_and_create_dev
+          <<: *only_master_and_copy_prod
           requires:
             - test
       - deploy_dev:
-          <<: *only_master_and_create_dev
+          <<: *only_master_and_copy_prod
           requires:
             - build_dev
       - build_staging:
@@ -255,13 +291,17 @@ workflows:
           - test
           - build_staging
       - build_preprod:
-          <<: *only_master_and_tags
+          <<: *only_deploy_tags
+      - hold_preprod:
+          <<: *only_deploy_tags
+          type: approval
           requires:
-          - test
+            - test
+            - build_preprod
       - deploy_preprod:
-          <<: *only_master_and_tags
+          <<: *only_deploy_tags
           requires:
-          - build_preprod
+          - hold_preprod
       - build_production:
           <<: *only_deploy_tags
           requires:
