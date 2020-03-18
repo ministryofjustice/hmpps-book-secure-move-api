@@ -34,7 +34,7 @@ private
           subscription.notifications.create!(
             notification_type_id: type_id,
             topic: topic,
-            event_type: event_type(action_name, topic),
+            event_type: event_type(action_name),
           ).id }
   end
 
@@ -43,8 +43,12 @@ private
     [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && %w(create update_status).include?(action_name)
   end
 
-  def event_type(action_name, topic)
-    # NB: this transforms "update" --> "update_move" and "update_status" --> "update_move_status"
-    action_name.split('_').insert(1, topic.class.to_s.downcase).join('_')
+  def event_type(action_name)
+    {
+        'create' => 'create_move',
+        'update' => 'update_move',
+        'update_status' => 'update_move_status',
+        'destroy' => 'destroy_move',
+    }[action_name]
   end
 end

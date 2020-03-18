@@ -3,7 +3,7 @@
 RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
-  let(:perform_ignore_errors!) { perform! rescue nil }
+  let(:perform_and_ignore_errors!) { perform! rescue nil }
   let(:subscription) { create(:subscription, :no_email_address) }
   let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
@@ -31,19 +31,19 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       it 'does not set delivered_at' do
-        expect { perform_ignore_errors! }.not_to change { notification.reload.delivered_at }.from(delivered_at)
+        expect { perform_and_ignore_errors! }.not_to change { notification.reload.delivered_at }.from(delivered_at)
       end
 
       it 'does not update delivery_attempted_at' do
-        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempted_at }.from(nil)
+        expect { perform_and_ignore_errors! }.not_to change { notification.reload.delivery_attempted_at }.from(nil)
       end
 
       it 'does not update delivery_attempts' do
-        expect { perform_ignore_errors! }.not_to change { notification.reload.delivery_attempts }.from(0)
+        expect { perform_and_ignore_errors! }.not_to change { notification.reload.delivery_attempts }.from(0)
       end
 
       it 'does not update response_id' do
-        expect { perform_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
+        expect { perform_and_ignore_errors! }.not_to change { notification.reload.response_id }.from(nil)
       end
     end
 
@@ -72,11 +72,11 @@ RSpec.describe NotifyWebhookJob, type: :job do
         end
 
         it 'updates delivery_attempts' do
-          expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
+          expect { perform_and_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
         end
 
         it 'updates delivery_attempted_at' do
-          expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
+          expect { perform_and_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
         end
       end
     end
@@ -91,11 +91,11 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       it 'updates delivery_attempts' do
-        expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
+        expect { perform_and_ignore_errors! }.to change { notification.reload.delivery_attempts }.from(0).to(1)
       end
 
       it 'updates delivery_attempted_at' do
-        expect { perform_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
+        expect { perform_and_ignore_errors! }.to change { notification.reload.delivery_attempted_at }.from(nil)
       end
     end
   end
