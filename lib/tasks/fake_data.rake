@@ -3,6 +3,7 @@
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
+    puts 'create_people...'
     ethnicities = Ethnicity.all.to_a
     genders = Gender.all.to_a
     50.times do
@@ -81,6 +82,7 @@ namespace :fake_data do
 
   desc 'create fake prisons'
   task create_prisons: :environment do
+    puts 'create_prisons...'
     %w[serco geoamey].each do |supplier|
       Supplier.create!(key: supplier, name: supplier.titleize)
     end
@@ -97,6 +99,7 @@ namespace :fake_data do
 
   desc 'create fake courts'
   task create_courts: :environment do
+    puts 'create_courts...'
     TOWN_NAMES.each do |town|
       title = "#{town} #{%w[County Crown Magistrates].sample} Court"
       Location.create!(
@@ -109,6 +112,7 @@ namespace :fake_data do
 
   desc 'create assessment questions'
   task create_assessment_questions: :environment do
+    puts 'create_assessment_questions...'
     ASSESSMENT_QUESTIONS.each do |attribute_values|
       AssessmentQuestion.create!(attribute_values)
     end
@@ -116,6 +120,7 @@ namespace :fake_data do
 
   desc 'create genders'
   task create_genders: :environment do
+    puts 'create_genders...'
     GENDERS.each do |gender|
       Gender.create!(key: gender.parameterize(separator: '_'), title: gender)
     end
@@ -123,6 +128,7 @@ namespace :fake_data do
 
   desc 'create ethnicities'
   task create_ethnicities: :environment do
+    puts 'create_ethnicities...'
     ETHNICITIES.each do |attributes|
       Ethnicity.create!(attributes)
     end
@@ -130,6 +136,7 @@ namespace :fake_data do
 
   desc 'create identifier types'
   task create_identifier_types: :environment do
+    puts 'create_identifier_types...'
     IDENTIFIER_TYPES.each do |attributes|
       IdentifierType.create!(attributes)
     end
@@ -137,10 +144,11 @@ namespace :fake_data do
 
   desc 'create fake moves'
   task create_moves: :environment do
+    puts 'create_moves...'
     people = Person.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
-    20000.times do
+    1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
@@ -165,6 +173,7 @@ namespace :fake_data do
 
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
+    puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
       [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
