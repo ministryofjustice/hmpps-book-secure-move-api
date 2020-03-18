@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe HealthChecks::GovUkNotify do
-  # NB: use force: true to bypass the cache
   subject(:healthy?) { described_class.new.healthy? }
 
   let(:client) { class_double(Faraday, post: nil) }
