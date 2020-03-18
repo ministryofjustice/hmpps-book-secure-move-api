@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController do
+  include ActiveJob::TestHelper
+
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
-
   let(:resource_to_json) do
     JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::INCLUDED_ATTRIBUTES))
   end
@@ -14,18 +15,19 @@ RSpec.describe Api::V1::MovesController do
 
   describe 'PATCH /moves' do
     let(:schema) { load_json_schema('patch_move_responses.json') }
-
-    let!(:move) { create :move, move_type: 'prison_recall' }
+    let(:supplier) { create(:supplier) }
+    let!(:from_location) { create :location, suppliers: [supplier] }
+    let!(:move) { create :move, move_type: 'prison_recall', from_location: from_location }
     let(:move_id) { move.id }
     let(:person) { create(:person) }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
-
+    let(:move_status) { 'cancelled' }
     let(:move_params) do
       {
         type: 'moves',
         attributes: {
-          status: 'cancelled',
+          status: move_status,
           additional_information: 'some more info',
           cancellation_reason: 'other',
           cancellation_reason_comment: 'some other reason',
@@ -96,6 +98,108 @@ RSpec.describe Api::V1::MovesController do
 
         it 'returns the correct data' do
           expect(response_json).to eq resource_to_json
+        end
+
+        context 'when cancelling a move' do
+          context 'when the supplier has a webhook subscription', :skip_before do
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+            let(:notification) { subscription.notifications.last }
+            let(:faraday_client) {
+              class_double(Faraday, post:
+                  instance_double(Faraday::Response, success?: true, status: 202))
+            }
+
+            before do
+              allow(Faraday).to receive(:new).and_return(faraday_client)
+              perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+              end
+            end
+
+            it { expect(notification.delivered_at).not_to be_nil }
+            it { expect(notification.topic).to eql(move) }
+            it { expect(notification.notification_type).to eql(notification_type_webhook) }
+            it { expect(notification.event_type).to eql('update_move_status') }
+            it { expect(notification.response_id).to be_nil }
+          end
+
+          context 'when the supplier has an email subscription', :skip_before do
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:notification_type_email) { create(:notification_type, :email) }
+            let(:notification) { subscription.notifications.last }
+            let(:notify_response) {
+              instance_double(ActionMailer::MessageDelivery, deliver_now!:
+                  instance_double(Mail::Message, govuk_notify_response:
+                      instance_double(Notifications::Client::ResponseNotification, id: response_id)))
+            }
+            let(:response_id) { SecureRandom.uuid }
+
+            before do
+              allow(MoveMailer).to receive(:notify).and_return(notify_response)
+              perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
+                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+              end
+            end
+
+            it { expect(notification.delivered_at).not_to be_nil }
+            it { expect(notification.topic).to eql(move) }
+            it { expect(notification.notification_type).to eql(notification_type_email) }
+            it { expect(notification.event_type).to eql('update_move_status') }
+            it { expect(notification.response_id).to eql(response_id) }
+          end
+        end
+
+        context 'when updating an existing requested move without a change of move_status' do
+          let(:move_status) { 'requested' }
+
+          context 'when the supplier has a webhook subscription', :skip_before do
+            # NB: updates to existing moves should trigger a webhook notification
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+            let(:notification) { subscription.notifications.last }
+            let(:faraday_client) {
+              class_double(Faraday, post:
+                  instance_double(Faraday::Response, success?: true, status: 202))
+            }
+
+            before do
+              allow(Faraday).to receive(:new).and_return(faraday_client)
+              perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+              end
+            end
+
+            it { expect(notification.delivered_at).not_to be_nil }
+            it { expect(notification.topic).to eql(move) }
+            it { expect(notification.notification_type).to eql(notification_type_webhook) }
+            it { expect(notification.event_type).to eql('update_move') }
+            it { expect(notification.response_id).to be_nil }
+          end
+
+          context 'when the supplier has an email subscription', :skip_before do
+            # NB: updates to existing moves should not trigger an email notification unless the move is cancelled
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:notification_type_email) { create(:notification_type, :email) }
+            let(:notification) { subscription.notifications.last }
+            let(:notify_response) {
+              instance_double(ActionMailer::MessageDelivery, deliver_now!:
+                  instance_double(Mail::Message, govuk_notify_response:
+                      instance_double(Notifications::Client::ResponseNotification, id: response_id)))
+            }
+            let(:response_id) { SecureRandom.uuid }
+
+            before do
+              allow(MoveMailer).to receive(:notify).and_return(notify_response)
+              perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
+                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+              end
+            end
+
+            it 'does NOT create an email notification' do
+              expect(subscription.notifications.count).to be 0
+            end
+          end
         end
       end
 

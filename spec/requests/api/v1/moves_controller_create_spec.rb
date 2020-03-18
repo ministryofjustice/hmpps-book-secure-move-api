@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController do
-  let(:response_json) { JSON.parse(response.body) }
+  include ActiveJob::TestHelper
 
+  let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
     JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
   end
@@ -20,7 +21,7 @@ RSpec.describe Api::V1::MovesController do
         move_type: 'court_appearance' }
     }
 
-    let!(:from_location) { create :location }
+    let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
@@ -99,6 +100,58 @@ RSpec.describe Api::V1::MovesController do
 
       it 'sets the additional_information' do
         expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
+      end
+
+      context 'when the supplier has a webhook subscription', :skip_before do
+        let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+        let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+        let(:notification) { subscription.notifications.last }
+        let(:faraday_client) {
+          class_double(Faraday, post:
+            instance_double(Faraday::Response, success?: true, status: 202))
+        }
+
+        before do
+          allow(Faraday).to receive(:new).and_return(faraday_client)
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+            post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
+          end
+        end
+
+        describe 'notification record' do
+          it { expect(notification.delivered_at).not_to be_nil }
+          it { expect(notification.topic).to eql(move) }
+          it { expect(notification.notification_type).to eql(notification_type_webhook) }
+          it { expect(notification.event_type).to eql('create_move') }
+          it { expect(notification.response_id).to be_nil }
+        end
+      end
+
+      context 'when the supplier has an email subscription', :skip_before do
+        let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+        let!(:notification_type_email) { create(:notification_type, :email) }
+        let(:notification) { subscription.notifications.last }
+        let(:notify_response) {
+          instance_double(ActionMailer::MessageDelivery, deliver_now!:
+              instance_double(Mail::Message, govuk_notify_response:
+                  instance_double(Notifications::Client::ResponseNotification, id: response_id)))
+        }
+        let(:response_id) { SecureRandom.uuid }
+
+        before do
+          allow(MoveMailer).to receive(:notify).and_return(notify_response)
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
+            post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
+          end
+        end
+
+        describe 'notification record' do
+          it { expect(notification.delivered_at).not_to be_nil }
+          it { expect(notification.topic).to eql(move) }
+          it { expect(notification.notification_type).to eql(notification_type_email) }
+          it { expect(notification.event_type).to eql('create_move') }
+          it { expect(notification.response_id).to eql(response_id) }
+        end
       end
 
       context 'without a `to_location`' do

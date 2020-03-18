@@ -6,7 +6,32 @@ RSpec.describe Subscription do
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to belong_to(:supplier) }
   it { is_expected.to validate_presence_of :supplier }
-  it { is_expected.to validate_presence_of :callback_url }
+
+  describe 'email_address or callback_url (or both) are required' do
+    context 'when no callback_url' do
+      subject { build(:subscription, :no_callback_url) }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when no email_address' do
+      subject { build(:subscription, :no_email_address) }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when no email_address and no callback_url' do
+      subject { build(:subscription, :no_email_address, :no_callback_url) }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when email_address and callback_url provided' do
+      subject { build(:subscription, email_address: 'foo@example.org', callback_url: 'https://foo.bar/') }
+
+      it { is_expected.to be_valid }
+    end
+  end
 
   describe 'callback_url' do
     subject { build(:subscription, callback_url: url) }
@@ -24,8 +49,24 @@ RSpec.describe Subscription do
     end
   end
 
+  describe 'email_address' do
+    subject { build(:subscription, email_address: email_address) }
+
+    context 'when invalid email_address' do
+      let(:email_address) { 'foo bar' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when valid email_address' do
+      let(:email_address) { 'foo@example.org' }
+
+      it { is_expected.to be_valid }
+    end
+  end
+
   describe 'secret' do
-    subject(:subscription) { create(:subscription) }
+    subject(:subscription) { build(:subscription) }
 
     context 'when writing' do
       it { expect(subscription.secret).to eq('Secret') }
@@ -33,7 +74,7 @@ RSpec.describe Subscription do
   end
 
   describe 'encrypted_secret' do
-    subject(:subscription) { create(:subscription) }
+    subject(:subscription) { build(:subscription) }
 
     context 'when writing' do
       it { expect(subscription.encrypted_secret).not_to eq('Secret') }

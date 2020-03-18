@@ -8,5 +8,5 @@
 :timeout: 25
 
 :queues:
-  - webhooks
+  - notifications
   - default
