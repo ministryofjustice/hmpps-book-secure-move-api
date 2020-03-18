@@ -16,6 +16,7 @@ class StatusController < ApplicationController
   def health
     checks = {
       database: database_connected?,
+      govuk_notify: HealthChecks::GovUkNotify.new.healthy?,
     }
 
     status = checks.values.all? ? :ok : :bad_gateway

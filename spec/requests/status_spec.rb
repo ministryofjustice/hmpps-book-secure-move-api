@@ -53,11 +53,18 @@ RSpec.describe 'Status', type: :request do
   describe 'GET /health' do
     let(:response_hash) { JSON.parse(response.body) }
     let(:database_status) { response_hash['checks']['database'] }
+    let(:govuk_notify_status) { response_hash['checks']['govuk_notify'] }
     let(:health_status) { response_hash['healthy'] }
 
     shared_examples 'database' do |expected|
       it "indicates database #{expected}" do
         expect(database_status).to eq(expected == 'OK')
+      end
+    end
+
+    shared_examples 'govuk_notify' do |expected|
+      it "indicates govuk_notify #{expected}" do
+        expect(govuk_notify_status).to eq(expected == 'OK')
       end
     end
 
@@ -67,20 +74,36 @@ RSpec.describe 'Status', type: :request do
       end
     end
 
-    context 'with working database connection' do
-      before { get '/health' }
+    before do
+      allow(ActiveRecord::Base.connection).to receive(:active?).and_return(database_healthy)
+      allow(HealthChecks::GovUkNotify).to receive(:new).and_return(instance_double(HealthChecks::GovUkNotify, healthy?: govuk_notify_healthy))
+      get '/health'
+    end
+
+    context 'when everything is healthy' do
+      let(:database_healthy) { true }
+      let(:govuk_notify_healthy) { true }
 
       it_behaves_like 'database', 'OK'
+      it_behaves_like 'govuk_notify', 'OK'
       it_behaves_like 'overall health', 'OK'
     end
 
-    context 'with no working database connection' do
-      before do
-        allow(ActiveRecord::Base.connection).to receive(:active?).and_return(false)
-        get '/health'
-      end
+    context 'when the database is unhealthy' do
+      let(:database_healthy) { false }
+      let(:govuk_notify_healthy) { true }
 
       it_behaves_like 'database', 'not OK'
+      it_behaves_like 'govuk_notify', 'OK'
+      it_behaves_like 'overall health', 'not OK'
+    end
+
+    context 'when govuk_notify is unhealthy' do
+      let(:database_healthy) { true }
+      let(:govuk_notify_healthy) { false }
+
+      it_behaves_like 'database', 'OK'
+      it_behaves_like 'govuk_notify', 'not OK'
       it_behaves_like 'overall health', 'not OK'
     end
   end
