@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe MoveMailer, type: :mailer do
   subject(:mail) { described_class.notify(notification) }
 
@@ -38,5 +40,22 @@ RSpec.describe MoveMailer, type: :mailer do
     it { is_expected.to include('move-status': 'requested') }
     it { is_expected.to include('environment': 'www.example.org') }
     it { is_expected.to include('supplier': 'Test Supplier') }
+  end
+
+  context 'when move is a prison recall' do
+    let(:move) { create(:move, :prison_recall, :requested) }
+
+    describe 'govuk_notify_personalisation' do
+      subject(:govuk_notify_personalisation) { mail.govuk_notify_personalisation }
+
+      it { is_expected.to include('move-reference': move.reference) }
+      it { is_expected.to include('from-location': move.from_location.title) }
+      it { is_expected.to include('move-created-at': move.created_at.strftime('%d/%m/%Y %T')) }
+      it { is_expected.to include('move-updated-at': move.updated_at.strftime('%d/%m/%Y %T')) }
+      it { is_expected.to include('move-action': 'requested') }
+      it { is_expected.to include('move-status': 'requested') }
+      it { is_expected.to include('environment': 'www.example.org') }
+      it { is_expected.to include('supplier': 'Test Supplier') }
+    end
   end
 end
