@@ -16,6 +16,7 @@ class StatusController < ApplicationController
   def health
     checks = {
       database: database_connected?,
+      redis: redis_alive?,
     }
 
     status = checks.values.all? ? :ok : :bad_gateway
@@ -26,6 +27,13 @@ class StatusController < ApplicationController
   end
 
 private
+
+  def redis_alive?
+    Sidekiq.redis_info
+    true
+  rescue StandardError
+    false
+  end
 
   def database_connected?
     ActiveRecord::Base.connection.active?
