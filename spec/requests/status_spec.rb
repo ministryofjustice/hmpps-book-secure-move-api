@@ -53,11 +53,18 @@ RSpec.describe 'Status', type: :request do
   describe 'GET /health' do
     let(:response_hash) { JSON.parse(response.body) }
     let(:database_status) { response_hash['checks']['database'] }
+    let(:redis_status) { response_hash['checks']['redis'] }
     let(:health_status) { response_hash['healthy'] }
 
     shared_examples 'database' do |expected|
       it "indicates database #{expected}" do
         expect(database_status).to eq(expected == 'OK')
+      end
+    end
+
+    shared_examples 'redis' do |expected|
+      it "indicates redis #{expected}" do
+        expect(redis_status).to eq(expected == 'OK')
       end
     end
 
@@ -71,6 +78,7 @@ RSpec.describe 'Status', type: :request do
       before { get '/health' }
 
       it_behaves_like 'database', 'OK'
+      it_behaves_like 'redis', 'OK'
       it_behaves_like 'overall health', 'OK'
     end
 
@@ -81,6 +89,18 @@ RSpec.describe 'Status', type: :request do
       end
 
       it_behaves_like 'database', 'not OK'
+      it_behaves_like 'redis', 'OK'
+      it_behaves_like 'overall health', 'not OK'
+    end
+
+    context 'with no working redis connection' do
+      before do
+        allow(Sidekiq).to receive(:redis_info).and_raise('Redis is broken')
+        get '/health'
+      end
+
+      it_behaves_like 'database', 'OK'
+      it_behaves_like 'redis', 'not OK'
       it_behaves_like 'overall health', 'not OK'
     end
   end
