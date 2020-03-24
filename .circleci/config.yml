@@ -138,7 +138,6 @@ jobs:
           command: |
             sudo gem update --system
             gem install bundler:2.1.4
-            bundle config set path vendor/bundle
 
       # Download and cache dependencies
       - restore_cache:
