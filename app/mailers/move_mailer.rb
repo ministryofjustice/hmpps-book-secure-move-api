@@ -10,7 +10,8 @@ class MoveMailer < GovukNotifyRails::Mailer
       set_personalisation(
         'move-reference': move.reference,
         'from-location': move.from_location.title,
-        'to-location': move.to_location.title,
+        # to_location isn't set for prison_recall moves
+        'to-location': move.to_location&.title,
         'move-created-at': move.created_at.strftime(TIME_FORMAT),
         'move-updated-at': move.updated_at.strftime(TIME_FORMAT),
         'notification-created-at': Time.current.strftime(TIME_FORMAT),

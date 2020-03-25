@@ -19,6 +19,16 @@ FactoryBot.define do
       cancellation_reason_comment { 'some other reason' }
     end
 
+    trait :prison_recall do
+      move_type { 'prison_recall' }
+      to_location { nil }
+    end
+
+    trait :requested do
+      move_type { 'requested' }
+      to_location { nil }
+    end
+
     trait :proposed do
       status { 'proposed' }
     end
