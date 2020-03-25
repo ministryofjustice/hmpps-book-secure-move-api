@@ -2,6 +2,8 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
+#
+#
 version: 2.1
 
 orbs:
@@ -249,30 +251,31 @@ workflows:
             - build_dev
       - build_staging:
           <<: *only_master_and_tags
+          requires:
+            - test
       - deploy_staging:
           <<: *only_master_and_tags
           requires:
-          - test
-          - build_staging
+            - build_staging
       - build_preprod:
           <<: *only_master_and_tags
           requires:
-          - test
+            - test
       - deploy_preprod:
           <<: *only_master_and_tags
           requires:
-          - build_preprod
+            - build_preprod
       - build_production:
           <<: *only_deploy_tags
           requires:
-          - test
+            - test
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-          - test
-          - build_production
+            - test
+            - build_production
       - deploy_production:
           <<: *only_deploy_tags
           requires:
-          - hold_production
+            - hold_production
