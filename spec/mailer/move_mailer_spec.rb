@@ -52,6 +52,7 @@ RSpec.describe MoveMailer, type: :mailer do
 
       it { is_expected.to include('move-reference': move.reference) }
       it { is_expected.to include('from-location': move.from_location.title) }
+      it { is_expected.to include('to-location': 'N/A') }
       it { is_expected.to include('move-created-at': move.created_at.strftime('%d/%m/%Y %T')) }
       it { is_expected.to include('move-updated-at': move.updated_at.strftime('%d/%m/%Y %T')) }
       it { is_expected.to include('move-action': 'requested') }
