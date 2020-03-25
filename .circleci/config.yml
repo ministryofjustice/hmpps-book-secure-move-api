@@ -21,6 +21,14 @@ aliases:
         only: /.*/
       branches:
         only: master
+  - &only_master_and_create_dev
+    filters:
+      tags:
+        only: /.*/
+      branches:
+        only:
+        - master
+        - p4-1200-create-dev-env
   - &only_deploy_tags
     filters:
       tags:
@@ -80,7 +88,7 @@ commands:
               -t app .
 
       - run:
-          name: push docker image
+          name: push app image
           command: |
             login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
             ${login}
@@ -92,13 +100,16 @@ commands:
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
 
   deploy_to_k8s:
-    description: "Deploys a previously built Docker image to staging/production k8s environment"
+    description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
     parameters:
       env:
         type: string
     steps:
       - checkout
 
+      # This step leverages cloud platform. There needs to be 4 env variables in Circle CI named KUBE_ENV_<env>_* to
+      # support this. Details at:
+      # https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/use-circleci-to-upgrade-app.html#creating-a-service-account-for-circleci
       - run:
           name: kubectl use context
           command: |
@@ -173,6 +184,18 @@ jobs:
 
       - *notify_slack
 
+  build_dev:
+    <<: *cloud_container
+    steps:
+      - build_for_k8s:
+         env: "dev"
+
+  deploy_dev:
+    <<: *cloud_container
+    steps:
+      - deploy_to_k8s:
+         env: "dev"
+
   build_staging:
     <<: *cloud_container
     steps:
@@ -216,6 +239,14 @@ workflows:
     jobs:
       - test:
           <<: *all_tags
+      - build_dev:
+          <<: *only_master_and_create_dev
+          requires:
+            - test
+      - deploy_dev:
+          <<: *only_master_and_create_dev
+          requires:
+            - build_dev
       - build_staging:
           <<: *only_master_and_tags
       - deploy_staging:
