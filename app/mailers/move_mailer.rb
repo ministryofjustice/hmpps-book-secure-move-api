@@ -2,6 +2,7 @@
 
 class MoveMailer < GovukNotifyRails::Mailer
   TIME_FORMAT = '%d/%m/%Y %T'
+  DATE_FORMAT = '%d/%m/%Y'
 
   def notify(notification)
     set_template(ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID', nil))
@@ -12,6 +13,7 @@ class MoveMailer < GovukNotifyRails::Mailer
         'from-location': move.from_location.title,
         # to_location isn't set for prison_recall moves
         'to-location': move.to_location&.title,
+        'move-date': move.date.strftime(DATE_FORMAT),
         'move-created-at': move.created_at.strftime(TIME_FORMAT),
         'move-updated-at': move.updated_at.strftime(TIME_FORMAT),
         'notification-created-at': Time.current.strftime(TIME_FORMAT),
