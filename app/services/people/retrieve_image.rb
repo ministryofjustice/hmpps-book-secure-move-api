@@ -4,6 +4,7 @@ module People
   class RetrieveImage
     def self.call(person)
       return true if person.image.attached?
+      return false unless person.latest_nomis_booking_id
 
       image_blob = NomisClient::Image::get(person.latest_nomis_booking_id)
 
