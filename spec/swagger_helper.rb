@@ -52,6 +52,10 @@ RSpec.configure do |config|
           description: 'Local development (localhost)',
         },
         {
+          url: 'https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
+          description: 'Dev API',
+        },
+        {
           url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1',
           description: 'Staging API',
         },

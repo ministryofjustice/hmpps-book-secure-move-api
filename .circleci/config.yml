@@ -28,7 +28,7 @@ aliases:
       branches:
         only:
         - master
-        - p4-1200-create-dev-env
+        - dev-auth-from-docs
   - &only_deploy_tags
     filters:
       tags:
