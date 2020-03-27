@@ -58,6 +58,38 @@ references:
           GITHUB_TEAM_NAME_SLUG: book-a-secure-move
 
 commands:
+  prepare_tests:
+    description: "Checkout app code and fetch dependencies for running tests"
+    steps:
+      - checkout
+
+      - run:
+          name: Force Bundler
+          command: |
+            sudo gem update --system
+            gem install bundler:2.1.4
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle check || bundle install
+            yarn install
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Database setup
+      - run: bundle exec rake db:create
+
   build_for_k8s:
     description: "Builds a Docker image for staging/production and pushes to ECR"
     parameters:
@@ -142,47 +174,28 @@ jobs:
   test:
     <<: *app_containers
     steps:
-      - checkout
-
-      - run:
-          name: Force Bundler
-          command: |
-            sudo gem update --system
-            gem install bundler:2.1.4
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "Gemfile.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            bundle check || bundle install
-            yarn install
-
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
-
-      # Database setup
-      - run: bundle exec rake db:create
-      #- run: bundle exec rake db:schema:load
+      - prepare_tests
 
       - run:
           name: run tests
           command: COVERAGE=1 bundle exec rake
+
+      - *notify_slack
+
+  api_docs:
+    <<: *app_containers
+    steps:
+      - prepare_tests
+
+      - run:
+          name: generate swagger documentation
+          command: bundle exec rake rswag:specs:swaggerize
 
       - persist_to_workspace:
           root: .
           paths:
             - swagger/v1/swagger.yaml
             - node_modules/*
-
-      - *notify_slack
 
   build_dev:
     <<: *cloud_container
@@ -239,40 +252,46 @@ workflows:
     jobs:
       - test:
           <<: *all_tags
+      - api_docs:
+          <<: *only_master_and_create_dev
       - build_dev:
           <<: *only_master_and_create_dev
           requires:
-            - test
+            - api_docs
       - deploy_dev:
           <<: *only_master_and_create_dev
           requires:
+            - test
             - build_dev
       - build_staging:
           <<: *only_master_and_tags
+          requires:
+            - api_docs
       - deploy_staging:
           <<: *only_master_and_tags
           requires:
-          - test
-          - build_staging
+            - test
+            - build_staging
       - build_preprod:
           <<: *only_master_and_tags
           requires:
-          - test
+            - api_docs
       - deploy_preprod:
           <<: *only_master_and_tags
           requires:
-          - build_preprod
+            - test
+            - build_preprod
       - build_production:
           <<: *only_deploy_tags
           requires:
-          - test
+            - api_docs
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-          - test
-          - build_production
+            - test
+            - build_production
       - deploy_production:
           <<: *only_deploy_tags
           requires:
-          - hold_production
+            - hold_production
