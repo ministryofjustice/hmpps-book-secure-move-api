@@ -35,6 +35,10 @@ module Api
         end
       end
 
+      def court_cases
+
+      end
+
     private
 
       def import_person_from_nomis prison_number
