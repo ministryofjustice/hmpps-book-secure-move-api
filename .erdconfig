@@ -1,0 +1,8 @@
+title: PECS domain model
+attributes:
+ - content
+ - foreign_key
+ - inheritance
+inheritance: false
+polymorphism: false
+warn: false
