@@ -74,6 +74,7 @@ end
 
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'rails-erd', '~> 1.6'
   gem 'rubocop-govuk'
   gem 'rubocop-rspec'
   gem 'spring'
