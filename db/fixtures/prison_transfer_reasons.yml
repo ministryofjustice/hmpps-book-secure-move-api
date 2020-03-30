@@ -12,15 +12,15 @@ court:
 
 cpa:
   key: cpa
-  title: CPA
+  title: Contract Package Area (CPA)
 
 isp:
   key: isp_to_open
-  title: ISP to open
+  title: Indeterminate Sentence Prisoner (ISP) to open
 
 mappa:
   key: mappa
-  title: MAPPA
+  title: Multi Agency Public Protection Arrangements (MAPPA)
 
 medical:
   key: medical
@@ -56,7 +56,7 @@ sec:
 
 yjb:
   key: yjb
-  title: YJB
+  title: Youth Justice Board (YJB)
 
 other:
   key: another_reason
