@@ -15,15 +15,13 @@ class Person < VersionedModel
   end
 
   def attach_image(image_blob)
-    filename = id + '.jpg'
-
-    tempfile = Tempfile.new('temp.jpg').binmode
-    tempfile.write image_blob
-    tempfile.rewind
-
-    image.attach(io: tempfile, filename: filename, content_type: 'image/jpg')
-    tempfile.close
-
-    filename
+    "#{id}.jpg".tap do |filename|
+      image_io = StringIO.new(image_blob).binmode
+      begin
+        image.attach(io: image_io, filename: filename, content_type: 'image/jpg')
+      ensure
+        image_io.close
+      end
+    end
   end
 end
