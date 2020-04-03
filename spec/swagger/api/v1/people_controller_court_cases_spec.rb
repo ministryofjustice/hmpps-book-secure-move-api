@@ -51,10 +51,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
           allow(People::RetrieveCourtCases).to receive(:call).with(person).and_return(court_cases_from_nomis)
         end
 
-        run_test! do |_example|
-
-          binding.pry
-        end
+        schema "$ref": '#/definitions/get_court_cases_responses/200'
+        run_test!
       end
 
       # response '404', 'not found' do

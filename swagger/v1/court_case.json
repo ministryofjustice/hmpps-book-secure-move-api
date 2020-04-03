@@ -1,0 +1,76 @@
+{
+  "CourtCase": {
+    "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "3fa9c528-3301-4d69-f200-69e482ce1ed8",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": {
+        "type": "string",
+        "example": "court_cases",
+        "enum": ["court_cases"],
+        "description": "The type of this object - always `court_cases`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "nomis_case_id",
+          "nomis_case_status",
+          "nomis_case_start_date",
+          "nomis_case_type",
+          "nomis_case_number"
+        ],
+        "properties": {
+          "nomis_case_id": {
+            "type": "string",
+            "example": "T20167984",
+            "description": "The case id that uniquely identifies the court case"
+          },
+          "nomis_case_status": {
+            "type": "string",
+            "oneOf": ["foo", "bar"],
+            "example": "",
+            "description": "The state of the nomis court case"
+          },
+          "nomis_case_start_date": {
+            "type": "string",
+            "example": "2020-01-01",
+            "description": "ISO8601-compatible date"
+          },
+          "nomis_case_type": {
+            "type": "string",
+            "oneOf": ["foo", "bar"],
+            "example": "",
+            "description": "The type of the nomis court case"
+          },
+          "nomis_case_number": {
+            "type": "string",
+            "example": "T20167984",
+            "description": "The case number that uniquely identifies the court case"
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "attributes": {
+          "location": {
+            "type": "object",
+            "attributes": {
+              "data": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
