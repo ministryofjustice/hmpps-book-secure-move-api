@@ -4,6 +4,7 @@ class CourtCase
   attr_reader :id, :case_seq, :begin_date, :case_type, :case_info_number, :case_status, :agency_id
 
   def build_from_nomis(court_case)
+
     @case_info_number = court_case['caseInfoNumber']
     @id = @case_info_number
 

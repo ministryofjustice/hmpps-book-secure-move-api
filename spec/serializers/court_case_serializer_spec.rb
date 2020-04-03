@@ -12,7 +12,8 @@ RSpec.describe CourtCaseSerializer do
                                    'beginDate' => '2016-11-14',
                                    'caseType' => 'Adult',
                                    'caseInfoNumber' => 'T20167984',
-                                   'caseStatus' => 'ACTIVE')
+                                   'caseStatus' => 'ACTIVE',
+                                   'agency' => { 'agencyId': 'SNARCC' })
   }
 
   it 'return a serialized court cases' do

@@ -40,8 +40,6 @@ module Api
 
         court_cases = People::RetrieveCourtCases.call(person)
 
-        LocationSerializer.type('location')
-
         render json: court_cases, each_serializer: CourtCaseSerializer, include: :location
       end
 
