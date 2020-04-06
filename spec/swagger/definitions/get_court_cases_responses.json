@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "court_case.json#/CourtCase"
+          "$ref": "#/definitions/court_case/CourtCase"
         }
       }
     }
