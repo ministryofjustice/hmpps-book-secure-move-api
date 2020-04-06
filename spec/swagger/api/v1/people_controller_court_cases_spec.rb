@@ -63,7 +63,6 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         schema "$ref": '#/definitions/get_court_cases_responses/200'
 
         run_test!
-
       end
 
        response '404', 'not found' do
