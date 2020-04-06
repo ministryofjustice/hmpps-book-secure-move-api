@@ -50,7 +50,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
             'agency' => { 'agencyId' => 'SNARCC' },
             'caseType' => 'Adult',
             'caseInfoNumber' => 'T20167984',
-            'caseStatus' => 'ACTIVE'
+            'caseStatus' => 'ACTIVE',
           )
 
           [court_case]
@@ -65,11 +65,11 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         run_test!
       end
 
-       response '404', 'not found' do
-         let(:id) { 'invalid-id' }
+      response '404', 'not found' do
+        let(:id) { 'invalid-id' }
 
-         run_test!
-       end
+        run_test!
+      end
     end
   end
 end
