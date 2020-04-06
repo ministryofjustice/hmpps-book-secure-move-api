@@ -8,11 +8,8 @@ module NomisClient
       def get(booking_id)
         court_cases_route = "/bookings/#{booking_id}/court-cases?#{ACTIVE_CASES_FILTER}"
 
-        begin
-          NomisClient::Base.get(court_cases_route).body
-        rescue StandardError => e
-          raise e
-        end
+        NomisClient::Base.get(court_cases_route).body
+
       end
     end
   end
