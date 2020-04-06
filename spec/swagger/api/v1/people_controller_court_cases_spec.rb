@@ -43,8 +43,17 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         let(:id) { person.id }
         let(:person) { create(:profile, :nomis_synced).person }
         let(:court_cases_from_nomis) {
-          [CourtCase.new.build_from_nomis('caseInfoNumber' => 'T20167984', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
-           CourtCase.new.build_from_nomis('caseInfoNumber' => 'T22222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })]
+          court_case = CourtCase.new.build_from_nomis(
+            'id' => '1495077',
+            'caseSeq' => 1,
+            'beginDate' => '2020-01-01',
+            'agency' => { 'agencyId' => 'SNARCC' },
+            'caseType' => 'Adult',
+            'caseInfoNumber' => 'T20167984',
+            'caseStatus' => 'ACTIVE'
+          )
+
+          [court_case]
         }
 
         before do
