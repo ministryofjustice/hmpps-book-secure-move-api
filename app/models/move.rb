@@ -67,6 +67,7 @@ class Move < VersionedModel
   delegate :suppliers, to: :from_location
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
+  scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
@@ -77,7 +78,11 @@ class Move < VersionedModel
   end
 
   def existing
-    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    self.class.not_cancelled.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+  end
+
+  def existing_id
+    existing&.id
   end
 
 private

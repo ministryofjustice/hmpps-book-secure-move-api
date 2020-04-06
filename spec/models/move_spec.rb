@@ -146,6 +146,21 @@ RSpec.describe Move do
       it 'finds the right move' do
         expect(duplicate.existing).to eq(move)
       end
+
+      it 'ignores cancelled moves' do
+        move.update(status: :cancelled)
+        expect(duplicate.existing).to be_nil
+      end
+    end
+  end
+
+  describe '#existing_id' do
+    let!(:move) { build :move }
+
+    context 'when there is no existing move' do
+      it 'returns nil' do
+        expect(move.existing_id).to be_nil
+      end
     end
   end
 

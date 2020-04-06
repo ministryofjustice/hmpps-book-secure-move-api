@@ -75,7 +75,7 @@
       "meta": {
         "type": "object",
         "properties": {
-          "move_id": {
+          "existing_id": {
             "type": "string",
             "format": "uuid",
             "example": "88089bbd-8719-4192-b309-f9db9105d3e1",

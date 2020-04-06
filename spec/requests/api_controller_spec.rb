@@ -30,6 +30,16 @@ RSpec.describe ApiController, type: :request do
     validates :status, inclusion: { in: %w[requested accepted] }
     validates :email, presence: true
     validates :email, format: { with: /\A\S+@.+\.\S+\z/ }
+
+    validate :name_is_unique
+
+    def existing_id
+      1
+    end
+
+    def name_is_unique
+      errors.add(:name, :taken)
+    end
   end
 
   describe '#validation_errors' do
@@ -42,6 +52,13 @@ RSpec.describe ApiController, type: :request do
           detail: "Name can't be blank",
           source: { pointer: '/data/attributes/name' },
           code: :blank,
+        },
+        {
+          title: 'Unprocessable entity',
+          detail: 'Name has already been taken',
+          source: { pointer: '/data/attributes/name' },
+          code: :taken,
+          meta: { existing_id: model.existing_id },
         },
         {
           title: 'Unprocessable entity',
@@ -67,7 +84,7 @@ RSpec.describe ApiController, type: :request do
     before { model.valid? }
 
     it 'returns the correct errors' do
-      expect(api_controller.send(:validation_errors, model.errors)).to eq errors
+      expect(api_controller.send(:validation_errors, model)).to match errors
     end
   end
 end

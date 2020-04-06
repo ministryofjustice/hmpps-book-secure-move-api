@@ -300,7 +300,7 @@ RSpec.describe Api::V1::MovesController do
               detail: 'Date has already been taken',
               source: { 'pointer' => '/data/attributes/date' },
               code: 'taken',
-              meta: { 'move_id' => old_move.id },
+              meta: { 'existing_id' => old_move.id },
             }.stringify_keys,
           ]
         end
