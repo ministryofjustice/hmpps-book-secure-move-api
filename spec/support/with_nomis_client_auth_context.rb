@@ -24,6 +24,9 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
     )
   end
 
+  let(:response_status) { 200 }
+  let(:response_body) { '{}' }
+
   before { allow(OAuth2::Client).to receive(:new).and_return(oauth2_client) }
 
   after do

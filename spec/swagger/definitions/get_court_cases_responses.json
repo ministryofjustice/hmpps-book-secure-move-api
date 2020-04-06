@@ -1,0 +1,16 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/court_case/CourtCase"
+        }
+      }
+    }
+  }
+}

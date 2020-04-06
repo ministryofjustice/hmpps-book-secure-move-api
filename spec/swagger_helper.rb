@@ -87,6 +87,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          CourtCase: {
+            "$ref": 'court_case.json#/CourtCase',
+          },
           Move: {
             "$ref": 'move.json#/Move',
           },
@@ -138,12 +141,14 @@ RSpec.configure do |config|
         },
       },
       definitions: {
+        court_case: load_swagger_json('court_case.json'),
         document: load_swagger_json('document.json'),
         prison_transfer_reason: load_swagger_v1_json('prison_transfer_reason.json'),
         prison_transfer_reason_reference: load_swagger_v1_json('prison_transfer_reason_reference.json'),
         location_reference: load_swagger_json('location_reference.json'),
         move: load_swagger_v1_json('move.json'),
         person_reference: load_swagger_json('person_reference.json'),
+        get_court_cases_responses: load_swagger_json('get_court_cases_responses.json'),
         get_move_responses: load_swagger_json('get_move_responses.json'),
         get_reasons_responses: load_swagger_json('get_prison_transfer_reasons_responses.json'),
         delete_document_responses: load_swagger_json('delete_document_responses.json'),
