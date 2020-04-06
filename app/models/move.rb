@@ -53,6 +53,10 @@ class Move < VersionedModel
   validates :reference, presence: true
 
   validates :status, inclusion: { in: statuses }
+  # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
+  # except that we need to allow multiple cancelled moves
+  validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
+            unless: -> { status == MOVE_STATUS_CANCELLED }
 
   validate :date_to_after_date_from
 
@@ -63,6 +67,7 @@ class Move < VersionedModel
   delegate :suppliers, to: :from_location
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
+  scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
@@ -73,7 +78,11 @@ class Move < VersionedModel
   end
 
   def existing
-    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    self.class.not_cancelled.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+  end
+
+  def existing_id
+    existing&.id
   end
 
 private

@@ -83,7 +83,7 @@ private
 
   def render_unprocessable_entity_error(exception)
     render(
-      json: { errors: validation_errors(exception.record.errors) },
+      json: { errors: validation_errors(exception.record) },
       status: :unprocessable_entity,
     )
   end
@@ -108,7 +108,8 @@ private
     )
   end
 
-  def validation_errors(errors)
+  def validation_errors(record)
+    errors = record.errors
     errors.keys.flat_map do |field|
       Array.new(errors[field].size) do |index|
         {
@@ -116,7 +117,11 @@ private
           detail: "#{field} #{errors[field][index]}".humanize,
           source: { pointer: "/data/attributes/#{field}" },
           code: errors.details[field][index][:error],
-        }
+        }.tap do |error|
+          if error[:code] == :taken && record.respond_to?(:existing_id)
+            error[:meta] = { existing_id: record.existing_id }
+          end
+        end
       end
     end
   end

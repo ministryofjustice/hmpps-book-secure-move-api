@@ -41,12 +41,14 @@ RSpec.describe Api::V1::MovesController do
     end
     let(:supplier) { create(:supplier) }
     let!(:application) { create(:application, owner_id: supplier.id) }
-    let!(:token)       { create(:access_token, application: application) }
+    let(:access_token) { create(:access_token, application: application).token }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+    let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
 
-      post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
+      post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do
@@ -61,8 +63,7 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
-    context 'with an invalid CONTENT_TYPE header', :with_client_authentication, :slow do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+    context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
       before do
@@ -78,7 +79,7 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'creates a move', skip_before: true do
-        expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
+        expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
           .to change(Move, :count).by(1)
       end
 
@@ -114,7 +115,7 @@ RSpec.describe Api::V1::MovesController do
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-            post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
+            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
           end
         end
 
@@ -141,7 +142,7 @@ RSpec.describe Api::V1::MovesController do
         before do
           allow(MoveMailer).to receive(:notify).and_return(notify_response)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-            post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json
+            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
           end
         end
 
@@ -170,7 +171,7 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with success 201'
 
         it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
+          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
             .to change(Move, :count).by(1)
         end
 
@@ -223,7 +224,7 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with success 201'
 
         it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data, access_token: token.token }, as: :json }
+          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
             .to change(Move, :count).by(1)
         end
 
@@ -267,6 +268,45 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it_behaves_like 'an endpoint that responds with error 422'
+    end
+
+    context 'with a duplicate move', :skip_before do
+      let(:profile) { create(:profile) }
+      let(:person) { profile.person }
+      let(:move_attributes) do
+        attributes_for(:move).merge(date: old_move.date,
+                                    person: person,
+                                    from_location: from_location,
+                                    to_location: to_location)
+      end
+
+      before do
+        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+      end
+
+      context 'when there are multiple cancelled duplicates' do
+        let!(:old_move) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location) }
+        let!(:old_move2) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location, date: old_move.date) }
+
+        it_behaves_like 'an endpoint that responds with success 201'
+      end
+
+      context 'when duplicate is active' do
+        let!(:old_move) { create(:move, person: person, from_location: from_location, to_location: to_location) }
+        let(:errors_422) do
+          [
+            {
+              title: 'Unprocessable entity',
+              detail: 'Date has already been taken',
+              source: { 'pointer' => '/data/attributes/date' },
+              code: 'taken',
+              meta: { 'existing_id' => old_move.id },
+            }.stringify_keys,
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422'
+      end
     end
   end
 end

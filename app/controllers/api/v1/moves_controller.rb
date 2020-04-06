@@ -22,7 +22,6 @@ module Api
         move = Move.new(move_attributes)
         authorize!(:create, move)
         move.save!
-        move.documents.each { |doc| doc.update(move: move) }
         Notifier.prepare_notifications(topic: move, action_name: 'create')
         render_move(move, 201)
       end
