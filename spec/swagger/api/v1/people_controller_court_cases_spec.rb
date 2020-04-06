@@ -66,11 +66,11 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
       end
 
-      # response '404', 'not found' do
-      #   let(:id) { 'invalid-id' }
-      #
-      #   run_test!
-      # end
+       response '404', 'not found' do
+         let(:id) { 'invalid-id' }
+
+         run_test!
+       end
     end
   end
 end
