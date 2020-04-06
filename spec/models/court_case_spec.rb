@@ -9,7 +9,7 @@ RSpec.describe CourtCase do
     it 'builds a CourtCase from Nomis response' do
       court_case = described_class.new.build_from_nomis(nomis_court_case)
 
-      expect(court_case.id).to eq(nomis_court_case['caseInfoNumber'])
+      expect(court_case.id).to eq(nomis_court_case['id'])
       expect(court_case.begin_date).to eq(nomis_court_case['beginDate'])
     end
   end

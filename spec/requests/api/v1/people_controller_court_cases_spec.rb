@@ -10,8 +10,8 @@ RSpec.describe Api::V1::PeopleController do
   context 'when person is present ' do
     let(:person) { create(:profile, :nomis_synced).person }
     let(:court_cases_from_nomis) {
-      [CourtCase.new.build_from_nomis('caseInfoNumber' => 'T20167984', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => "SNARCC" }),
-       CourtCase.new.build_from_nomis('caseInfoNumber' => 'T22222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => "SNARCC" })]
+      [CourtCase.new.build_from_nomis('id' => '1495077', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
+       CourtCase.new.build_from_nomis('id' => '2222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })]
     }
 
     before do
@@ -24,7 +24,7 @@ RSpec.describe Api::V1::PeopleController do
     it 'returns success' do
       get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
 
-      expect(response_json['data'][0]['id']).to eq('T20167984')
+      expect(response_json['data'][0]['id']).to eq('1495077')
       expect(response_json['included']).not_to be_nil
     end
   end

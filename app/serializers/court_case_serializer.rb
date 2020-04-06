@@ -5,7 +5,7 @@ class CourtCaseSerializer < ActiveModel::Serializer
   belongs_to :location, serializer: LocationSerializer
 
   def nomis_case_id
-    object.id
+    object.case_id
   end
 
   def nomis_case_status
@@ -23,19 +23,4 @@ class CourtCaseSerializer < ActiveModel::Serializer
   def nomis_case_number
     object.case_info_number
   end
-
-  # def location_id
-  #   location = Location.find_by nomis_agency_id: object.agency_id
-  #   if location
-  #     location.id
-  #   end
-  # end
-
-  # def location
-  #   location = Location.find_by nomis_agency_id: object.agency_id
-  #
-  #   if location
-  #     LocationSerializer.new(location)
-  #   end
-  # end
 end

@@ -43,8 +43,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         let(:id) { person.id }
         let(:person) { create(:profile, :nomis_synced).person }
         let(:court_cases_from_nomis) {
-          [CourtCase.new.build_from_nomis('caseInfoNumber' => 'T20167984', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => "SNARCC" }),
-           CourtCase.new.build_from_nomis('caseInfoNumber' => 'T22222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => "SNARCC" })]
+          [CourtCase.new.build_from_nomis('caseInfoNumber' => 'T20167984', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
+           CourtCase.new.build_from_nomis('caseInfoNumber' => 'T22222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })]
         }
 
         before do
@@ -52,7 +52,9 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         end
 
         schema "$ref": '#/definitions/get_court_cases_responses/200'
+
         run_test!
+
       end
 
       # response '404', 'not found' do
