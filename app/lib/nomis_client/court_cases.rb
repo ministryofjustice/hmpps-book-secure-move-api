@@ -9,7 +9,6 @@ module NomisClient
         court_cases_route = "/bookings/#{booking_id}/court-cases?#{ACTIVE_CASES_FILTER}"
 
         NomisClient::Base.get(court_cases_route).body
-
       end
     end
   end
