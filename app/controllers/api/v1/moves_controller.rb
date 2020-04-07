@@ -24,9 +24,12 @@ module Api
         move = Move.new(move_attributes)
         authorize!(:create, move)
         move.save!
+
+        CourtHearing.create(move: move, start_time: "2018-01-01T18:57Z")
+
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
-        render json: move, status: status, include: [MoveSerializer::INCLUDED_ATTRIBUTES, :CourtHearingSerializer]
+        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
       def update
@@ -84,7 +87,7 @@ module Api
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
-          prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
+          prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id))
         )
       end
 

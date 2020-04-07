@@ -11,11 +11,16 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :documents, serializer: DocumentSerializer
   has_many :court_hearings, serializer: CourtHearingSerializer
 
+  def court_hearings
+    object.court_hearing.map { |court_hearing| CourtHearingSerializer.new(court_hearing) }
+  end
+
   INCLUDED_ATTRIBUTES = {
     person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender reason_comment],
     from_location: %i[location_type description],
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
     prison_transfer_reason: %i[key title],
+    court_hearings: %i[start_time],
   }.freeze
 end
