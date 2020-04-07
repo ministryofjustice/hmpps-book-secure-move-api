@@ -189,7 +189,7 @@ jobs:
 
       - run:
           name: generate swagger documentation
-          command: bundle exec rake rswag:specs:swaggerize
+          command: bundle exec rspec spec/swagger && bundle exec rake rswag:specs:swaggerize
 
       - persist_to_workspace:
           root: .
