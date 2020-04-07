@@ -15,6 +15,8 @@ module Api
 
       def show
         move = find_move
+        AddCourtHearingToMove(move)
+
         render_move(move.reload, 200)
       end
 
@@ -23,7 +25,8 @@ module Api
         authorize!(:create, move)
         move.save!
         Notifier.prepare_notifications(topic: move, action_name: 'create')
-        render_move(move, 201)
+
+        render json: move, status: status, include: [MoveSerializer::INCLUDED_ATTRIBUTES, :CourtHearingSerializer]
       end
 
       def update

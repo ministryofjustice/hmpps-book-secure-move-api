@@ -186,6 +186,39 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with success 201'
       end
 
+      context 'when a court hearing is passed' do
+        # let(:move) { Move.find_by(from_location_id: from_location.id) }
+        let(:move_attributes) {
+          { date: Date.today,
+            time_due: Time.now,
+            status: 'requested',
+            additional_information: 'some more info',
+            move_type: 'court_appearance' }
+        }
+
+        let(:data) do {
+            type: 'moves',
+            attributes: move_attributes.merge(move_type: nil),
+            relationships: {
+              person: { data: { type: 'people', id: person.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } },
+              court_hearings: [],
+            },
+          }
+        end
+
+        let(:court_hearing) {}
+
+        it 'creates a move with a court hearing relationship', skip_before: true do
+          post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+
+          expect(response).to have_http_status(:success)
+          binding.pry
+
+          expect(response_json['data']['relationships']['court_hearings']).to be_present
+        end
+      end
+
       context 'with explicit move_agreed and move_agreed_by' do
         let(:date_from) { Date.yesterday }
         let(:date_to) { Date.tomorrow }
