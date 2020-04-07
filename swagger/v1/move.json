@@ -23,7 +23,6 @@
         "type": "object",
         "required": [
           "status",
-          "date",
           "move_type"
         ],
         "properties": {
@@ -78,7 +77,7 @@
             "type": "string",
             "format": "date",
             "example": "2020-05-17",
-            "description": "Date on which the move is scheduled"
+            "description": "Date on which the move is scheduled (mandatory unless status is proposed)"
           },
           "date_from": {
             "oneOf": [
@@ -89,7 +88,7 @@
               { "type": "null" }
             ],
             "example": "2020-05-17",
-            "description": "Start date for potential move"
+            "description": "Start date for potential move (mandatory if status is proposed)"
           },
           "date_to": {
             "oneOf": [
@@ -100,7 +99,7 @@
               { "type": "null" }
             ],
             "example": "2020-05-17",
-            "description": "End date for potential move"
+            "description": "End date for potential move. Must be after date_from"
           },
           "additional_information": {
             "oneOf": [
