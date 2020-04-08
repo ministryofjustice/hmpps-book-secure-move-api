@@ -25,7 +25,13 @@ module Api
         authorize!(:create, move)
         move.save!
 
-        CourtHearing.create(move: move, start_time: "2018-01-01T18:57Z")
+        court_hearings_params = params.require(:data).require(:relationships).require(:court_hearings).require(:data)
+
+        court_hearings_params.each do |court_hearing_par|
+          court_hearing = court_hearing_par.require(:attributes).permit(:start_time, :case_start_date, :nomis_case_number, :nomis_case_id, :court_type, :comments)
+
+          move.court_hearings.create(court_hearing)
+        end
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
@@ -87,7 +93,7 @@ module Api
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
-          prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id))
+          prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
       end
 
