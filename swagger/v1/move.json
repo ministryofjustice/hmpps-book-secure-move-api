@@ -150,6 +150,10 @@
           "prison_transfer_reason": {
             "$ref": "prison_transfer_reason_reference.json#/PrisonTransferReasonReference",
             "description": "The reason for this prison transfer"
+          },
+          "court_hearing": {
+            "$ref": "court_hearing.json#/CourtHearing",
+            "description": "A court hearing generated when creating a move. May have corresponding hearing in Nomis backend (see nomis fields)."
           }
         }
       }
