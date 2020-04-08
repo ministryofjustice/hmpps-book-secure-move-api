@@ -25,11 +25,7 @@ module Api
         authorize!(:create, move)
         move.save!
 
-        court_hearings_params = params.require(:data).require(:relationships).require(:court_hearings).require(:data)
-
-        court_hearings_params.each do |court_hearing_par|
-          court_hearing = court_hearing_par.require(:attributes).permit(:start_time, :case_start_date, :nomis_case_number, :nomis_case_id, :court_type, :comments)
-
+        court_hearings_params.map do |court_hearing_par|
           move.court_hearings.create(court_hearing)
         end
 
@@ -73,6 +69,19 @@ module Api
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
                                                     cancellation_reason cancellation_reason_comment
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
+
+      def court_hearings_params
+        params.require(:data).require(:relationships).require(:court_hearings).require(:data).map do |court_hearing_params|
+          court_hearing_params.require(:attributes).permit(
+            :start_time,
+            :case_start_date,
+            :nomis_case_number,
+            :nomis_case_id,
+            :court_type,
+            :comments,
+          )
+        end
+      end
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
