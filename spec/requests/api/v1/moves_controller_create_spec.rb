@@ -190,6 +190,7 @@ RSpec.describe Api::V1::MovesController do
         before do
           allow(Moves::CreateCourtHearings).to receive(:new).and_call_original
         end
+
         let(:move_attributes) {
           { date: Date.today,
             time_due: Time.now,
@@ -252,10 +253,6 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when creating a hearing in nomis fails', skip_before: true do
-          before do
-            # allow(Move::CourtHearting)
-          end
-
           it 'returns the hearing in the json body' do
             expected_court_hearings = {
               "start_time": '2018-01-01T18:57Z',
