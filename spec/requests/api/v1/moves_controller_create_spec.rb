@@ -46,8 +46,6 @@ RSpec.describe Api::V1::MovesController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
-      allow(Move).to receive(:transaction).and_call_original
-
       next if RSpec.current_example.metadata[:skip_before]
 
       post '/api/v1/moves', params: { data: data }, headers: headers, as: :json

@@ -23,9 +23,11 @@ module Api
       def create
         move = Move.new(move_attributes)
         authorize!(:create, move)
-        move.save!
 
-        Moves::CreateCourtHearings.new(move, court_hearings_params).call if court_hearings_params.present?
+        ActiveRecord::Base.transaction do
+          move.save!
+          Moves::CreateCourtHearings.new(move, court_hearings_params).call if court_hearings_params.present?
+        end
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
