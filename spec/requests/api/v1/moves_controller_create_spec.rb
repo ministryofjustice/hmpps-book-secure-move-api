@@ -46,6 +46,8 @@ RSpec.describe Api::V1::MovesController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
+      allow(Move).to receive(:transaction).and_call_original
+
       next if RSpec.current_example.metadata[:skip_before]
 
       post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
@@ -191,18 +193,16 @@ RSpec.describe Api::V1::MovesController do
           allow(Moves::CreateCourtHearings).to receive(:new).and_call_original
         end
 
-        let(:move_attributes) {
-          { date: Date.today,
-            time_due: Time.now,
-            status: 'requested',
-            additional_information: 'some more info',
-            move_type: 'court_appearance' }
-        }
-
         let(:data) do
           {
             type: 'moves',
-            attributes: move_attributes.merge(move_type: nil),
+            attributes: {
+              date: Date.today,
+              time_due: Time.now,
+              status: 'requested',
+              additional_information: 'some more info',
+              move_type: nil
+            },
             relationships: {
               person: { data: { type: 'people', id: person.id } },
               from_location: { data: { type: 'locations', id: from_location.id } },
@@ -228,17 +228,6 @@ RSpec.describe Api::V1::MovesController do
 
         context 'when creating a court_hearing in nomis succeeds' do
           it 'returns the hearing in the json body' do
-            # expected_court_hearings = {
-            #   "start_time": '2018-01-01T18:57Z',
-            #   "case_start_date": '2018-01-01',
-            #   "case_number": 'T32423423423',
-            #   "nomis_case_id": '4232423',
-            #   "nomis_hearing_id": '4232424',
-            #   "saved_to_nomis": false,
-            #   "court_type": 'Adult',
-            #   "comments": 'Witness for Foo Bar',
-            # }
-
             post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
 
             court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
@@ -250,31 +239,48 @@ RSpec.describe Api::V1::MovesController do
               to change { CourtHearing.count }.
               by(1)
           end
-        end
 
-        context 'when creating a hearing in nomis fails', skip_before: true do
-          it 'returns the hearing in the json body' do
-            expected_court_hearings = {
-              "start_time": '2018-01-01T18:57Z',
-              "case_start_date": '2018-01-01',
-              "case_number": 'T32423423423',
-              "nomis_case_id": '4232423',
-              "nomis_hearing_id": nil,
-              "saved_to_nomis": false,
-              "court_type": 'Adult',
-              "comments": 'Witness for Foo Bar',
-            }
-
+          it 'calls the Moves::CreateCourtHearings service' do
             post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-            expect(response_json).to include(expected_court_hearings)
+
+            expect(Moves::CreateCourtHearings).to have_received(:new)
           end
 
-          it 'creates a move with a court hearing relationship', skip_before: true do
+          it 'marks the new court hearings as saved_to_nomis' do
             post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
 
-            expect(response).to have_http_status(:success)
+            court_hearing = CourtHearing.last
+            expect(court_hearing.saved_to_nomis).to eq(false)
+            expect(court_hearing.nomis_hearing_id).to eq(nil)
+          end
+        end
 
-            expect(response_json['data']['relationships']['court_hearings']).to be_present
+        context 'when creating a hearing in nomis fails' do
+          it 'returns the hearing in the json body' do
+            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+
+            court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
+            expect(court_hearings_response.count).to be 1
+          end
+
+          it 'creates the court hearings' do
+            expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
+              to change { CourtHearing.count }.
+              by(1)
+          end
+
+          it 'calls the Moves::CreateCourtHearings service' do
+            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+
+            expect(Moves::CreateCourtHearings).to have_received(:new)
+          end
+
+          it 'marks the new court hearings as saved_to_nomis' do
+            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+
+            court_hearing = CourtHearing.last
+            expect(court_hearing.saved_to_nomis).to eq(false)
+            expect(court_hearing.nomis_hearing_id).to eq(nil)
           end
         end
       end
