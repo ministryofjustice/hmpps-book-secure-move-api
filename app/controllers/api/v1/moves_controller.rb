@@ -29,7 +29,7 @@ module Api
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
-        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
+        render json: move, status: :created, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
       def update
