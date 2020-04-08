@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_130150) do
+ActiveRecord::Schema.define(version: 2020_04_07_155640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -64,6 +64,17 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
     t.datetime "disabled_at"
   end
 
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.string "event_type", null: false
+    t.jsonb "details"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
+    t.index ["move_id"], name: "index_events_on_move_id"
+  end
+
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
@@ -78,6 +89,25 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
     t.string "title", null: false
     t.string "description"
     t.datetime "disabled_at"
+  end
+
+  create_table "journeys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.uuid "supplier_id", null: false
+    t.uuid "from_location_id", null: false
+    t.uuid "to_location_id", null: false
+    t.boolean "billable", default: false, null: false
+    t.boolean "completed", default: false, null: false
+    t.boolean "cancelled", default: false, null: false
+    t.jsonb "details"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_timestamp"], name: "index_journeys_on_client_timestamp"
+    t.index ["from_location_id"], name: "index_journeys_on_from_location_id"
+    t.index ["move_id"], name: "index_journeys_on_move_id"
+    t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
+    t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -119,10 +149,10 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.uuid "prison_transfer_reason_id"
-    t.text "reason_comment"
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
+    t.uuid "prison_transfer_reason_id"
+    t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
     t.index ["created_at"], name: "index_moves_on_created_at"
@@ -286,11 +316,16 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "moves"
+  add_foreign_key "events", "moves"
+  add_foreign_key "journeys", "locations", column: "from_location_id"
+  add_foreign_key "journeys", "locations", column: "to_location_id"
+  add_foreign_key "journeys", "moves"
+  add_foreign_key "journeys", "suppliers"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "people"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
