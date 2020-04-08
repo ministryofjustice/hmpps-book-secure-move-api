@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :court_hearing do
-    move { nil }
+    move
+
     nomis_case_number { 'MyString' }
     court_type { 'MyString' }
     comments { 'MyText' }
