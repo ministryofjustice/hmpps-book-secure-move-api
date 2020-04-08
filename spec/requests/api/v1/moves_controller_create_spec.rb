@@ -21,7 +21,7 @@ RSpec.describe Api::V1::MovesController do
         move_type: 'court_appearance' }
     }
 
-    let!(:from_location) { create :location, suppliers: [supplier] }
+    let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
