@@ -25,7 +25,7 @@ module Api
         authorize!(:create, move)
         move.save!
 
-        Moves::CreateCourtHearings.new(move, court_hearings_params).call
+        Moves::CreateCourtHearings.new(move, court_hearings_params).call if court_hearings_params.present?
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
@@ -69,6 +69,8 @@ module Api
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
       def court_hearings_params
+        return {} unless params.require(:data).require(:relationships).fetch("court_hearings", {}).present?
+
         params.require(:data).require(:relationships).require(:court_hearings).require(:data).map do |court_hearing_params|
           court_hearing_params.require(:attributes).permit(
             :start_time,
