@@ -15,7 +15,6 @@ module Api
 
       def show
         move = find_move
-        AddCourtHearingToMove(move)
 
         render_move(move.reload, 200)
       end
