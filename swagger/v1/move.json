@@ -74,8 +74,13 @@
             "readOnly": true
           },
           "date": {
-            "type": "string",
-            "format": "date",
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              { "type": "null" }
+            ],
             "example": "2020-05-17",
             "description": "Date on which the move is scheduled (mandatory unless status is proposed)"
           },
