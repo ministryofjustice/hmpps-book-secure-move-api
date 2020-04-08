@@ -214,6 +214,22 @@ RSpec.describe Api::V1::MovesController do
               person: { data: { type: 'people', id: person.id } },
               from_location: { data: { type: 'locations', id: from_location.id } },
               court_hearings: { data: [{ type: 'court_hearing', attributes: court_hearing }] },
+              to_location: { data: { type: 'locations', id: to_location.id } },
+              court_hearings: {
+                data: [
+                  {
+                    type: 'court_hearing',
+                    attributes: {
+                      "start_time": '2018-01-01T18:57Z',
+                      "case_start_date": '2018-01-01',
+                      "case_number": 'T32423423423',
+                      "nomis_case_id": '4232423',
+                      "court_type": 'Adult',
+                      "comments": 'Witness for Foo Bar',
+                    }
+                  }
+                ]
+              },
             },
           }
         end
