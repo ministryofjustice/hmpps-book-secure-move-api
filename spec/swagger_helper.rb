@@ -87,6 +87,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          CourtHearing: {
+            "$ref": 'court_hearing.json#/CourtHearing',
+          },
           CourtCase: {
             "$ref": 'court_case.json#/CourtCase',
           },
@@ -142,6 +145,7 @@ RSpec.configure do |config|
       },
       definitions: {
         court_case: load_swagger_json('court_case.json'),
+        court_hearing: load_swagger_json('court_hearing.json'),
         document: load_swagger_json('document.json'),
         prison_transfer_reason: load_swagger_v1_json('prison_transfer_reason.json'),
         prison_transfer_reason_reference: load_swagger_v1_json('prison_transfer_reason_reference.json'),
