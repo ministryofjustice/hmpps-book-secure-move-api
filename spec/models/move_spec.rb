@@ -25,6 +25,30 @@ RSpec.describe Move do
     )
   end
 
+  it 'validates presence of `date` if `status` is NOT proposed' do
+    expect(build(:move)).to(
+      validate_presence_of(:date),
+    )
+  end
+
+  it 'does NOT validate presence of `date` if `status` is proposed' do
+    expect(build(:move, status: :proposed)).not_to(
+      validate_presence_of(:date),
+    )
+  end
+
+  it 'validates presence of `date_from` if `status` is proposed' do
+    expect(build(:move, status: :proposed)).to(
+      validate_presence_of(:date_from),
+    )
+  end
+
+  it 'does NOT validate presence of `date_from` if `status` is NOT proposed' do
+    expect(build(:move)).not_to(
+      validate_presence_of(:date_from),
+    )
+  end
+
   it 'prevents date_from > date_to' do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-03')).not_to be_valid
   end

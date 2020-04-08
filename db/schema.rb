@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_141146) do
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.date "date", null: false
+    t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
     t.uuid "person_id", null: false
