@@ -25,8 +25,8 @@ module Api
         authorize!(:create, move)
         move.save!
 
-        court_hearings_params.map do |court_hearing_par|
-          move.court_hearings.create(court_hearing)
+        court_hearings_params.map do |court_hearing_attributes|
+          move.court_hearings.create(court_hearing_attribute)
         end
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
