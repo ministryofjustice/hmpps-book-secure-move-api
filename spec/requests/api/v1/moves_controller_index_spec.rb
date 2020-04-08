@@ -146,6 +146,21 @@ RSpec.describe Api::V1::MovesController do
           expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
         end
       end
+
+      describe 'relationships' do
+        let!(:moves) { [create(:move)] }
+        let!(:court_hearing) { create(:court_hearing, move: moves.first) }
+
+        it 'does not return serialized court_hearings includes', skip_before: true do
+          get '/api/v1/moves', params: params, headers: headers
+
+          has_court_hearings = response_json["included"].any? do |entity|
+            entity["type"] == "court_hearings"
+          end
+
+          expect(has_court_hearings).to eq(false)
+        end
+      end
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do

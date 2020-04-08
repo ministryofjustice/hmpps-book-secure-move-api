@@ -7,7 +7,7 @@ module Api
         moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
         if moves_params.valid?
           moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
+          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings)
         else
           render json: { error: moves_params.errors }, status: :bad_request
         end
