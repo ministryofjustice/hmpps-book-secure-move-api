@@ -9,7 +9,7 @@ class CreateCourtHearings < ActiveRecord::Migration[5.2]
       t.string :nomis_case_number
       t.integer :nomis_case_id
       t.integer :nomis_hearing_id
-      t.boolean :saved_to_nomis
+      t.boolean :saved_to_nomis, default: false
 
       t.timestamps
     end
