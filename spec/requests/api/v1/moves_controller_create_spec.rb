@@ -187,6 +187,9 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'when a court hearing is passed', skip_before: true do
+        before do
+          allow(Moves::CreateCourtHearings).to receive(:new).and_call_original
+        end
         let(:move_attributes) {
           { date: Date.today,
             time_due: Time.now,
@@ -195,17 +198,6 @@ RSpec.describe Api::V1::MovesController do
             move_type: 'court_appearance' }
         }
 
-        let(:court_hearing) do
-          {
-            "start_time": '2018-01-01T18:57Z',
-            "case_start_date": '2018-01-01',
-            "case_number": 'T32423423423',
-            "nomis_case_id": '4232423',
-            "court_type": 'Adult',
-            "comments": 'Witness for Foo Bar',
-          }
-        end
-
         let(:data) do
           {
             type: 'moves',
@@ -213,7 +205,6 @@ RSpec.describe Api::V1::MovesController do
             relationships: {
               person: { data: { type: 'people', id: person.id } },
               from_location: { data: { type: 'locations', id: from_location.id } },
-              court_hearings: { data: [{ type: 'court_hearing', attributes: court_hearing }] },
               to_location: { data: { type: 'locations', id: to_location.id } },
               court_hearings: {
                 data: [
@@ -253,7 +244,10 @@ RSpec.describe Api::V1::MovesController do
             expect(court_hearings_response.count).to be 1
           end
 
-          it 'creates a move with a court hearing relationship', skip_before: true do
+          it 'creates the court hearings', skip_before: true do
+            expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
+              to change { CourtHearing.count }.
+              by(1)
           end
         end
 
