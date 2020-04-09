@@ -14,7 +14,7 @@
           "nomis_case_id",
           "nomis_hearing_id",
           "saved_to_nomis",
-          "court_type",
+          "case_type",
           "comments"
         ],
         "properties": {
@@ -50,7 +50,7 @@
             "example": false,
             "description": "Indicates whether we successfully created a corresponding court hearing in Nomis' backend."
           },
-          "court_type": {
+          "case_type": {
             "type": "string",
             "example": "Adult",
             "enum": ["Adult"],
