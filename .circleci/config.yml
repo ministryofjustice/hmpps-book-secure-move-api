@@ -189,7 +189,7 @@ jobs:
 
       - run:
           name: generate swagger documentation
-          command: bundle exec rake rswag:specs:swaggerize
+          command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
 
       - persist_to_workspace:
           root: .
