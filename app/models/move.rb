@@ -40,6 +40,7 @@ class Move < VersionedModel
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
+  has_many :court_hearings, dependent: :restrict_with_exception
 
   validates :from_location, presence: true
   validates(
@@ -87,6 +88,10 @@ class Move < VersionedModel
 
   def existing_id
     existing&.id
+  end
+
+  def from_prison_to_court?
+    from_location&.prison? && to_location&.court?
   end
 
 private

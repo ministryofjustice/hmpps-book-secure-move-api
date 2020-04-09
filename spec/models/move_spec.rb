@@ -230,4 +230,26 @@ RSpec.describe Move do
       expect(move.versions.map(&:event)).to eq(%w[create])
     end
   end
+
+  describe '#move_to_court_from_prison?' do
+    subject(:move) { create(:move, from_location: from_location, to_location: to_location) }
+
+    context 'when the move is from a prison to a court' do
+      let(:from_location) { create(:location, location_type: Location::LOCATION_TYPE_PRISON) }
+      let(:to_location) { create(:location, location_type: Location::LOCATION_TYPE_COURT) }
+
+      it 'returns true' do
+        expect(move.from_prison_to_court?).to be(true)
+      end
+    end
+
+    context 'when the move is from a prison to a court' do
+      let(:from_location) { create(:location, location_type: Location::LOCATION_TYPE_COURT) }
+      let(:to_location) { create(:location, location_type: Location::LOCATION_TYPE_PRISON) }
+
+      it 'returns false' do
+        expect(move.from_prison_to_court?).to be(false)
+      end
+    end
+  end
 end
