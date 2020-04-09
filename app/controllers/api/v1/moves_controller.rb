@@ -71,9 +71,9 @@ module Api
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
       def court_hearings_params
-        return {} if params.require(:data).require(:relationships).fetch('court_hearings', {}).blank?
+        return {} if relationship_params.fetch('court_hearings', {}).blank?
 
-        params.require(:data).require(:relationships).require(:court_hearings).require(:data).map do |court_hearing_params|
+        relationship_params.require(:court_hearings).require(:data).map do |court_hearing_params|
           court_hearing_params.require(:attributes).permit(
             :start_time,
             :case_start_date,
@@ -83,6 +83,10 @@ module Api
             :comments,
           )
         end
+      end
+
+      def relationship_params
+        @relationship_params ||= params.require(:data).require(:relationships)
       end
 
       def filter_params
