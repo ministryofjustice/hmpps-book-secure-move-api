@@ -17,6 +17,6 @@ class MoveSerializer < ActiveModel::Serializer
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
     prison_transfer_reason: %i[key title],
-    court_hearings: %i[],
+    court_hearings: [],
   }.freeze
 end
