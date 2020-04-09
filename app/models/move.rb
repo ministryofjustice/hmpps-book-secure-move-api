@@ -54,7 +54,7 @@ class Move < VersionedModel
   # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
   validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
-            unless: -> { status == MOVE_STATUS_CANCELLED }
+            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) }
   validates :date, presence: true,
             unless: -> { status == MOVE_STATUS_PROPOSED }
   validates :date_from, presence: true,
