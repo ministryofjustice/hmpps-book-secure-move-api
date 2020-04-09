@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :court_hearing do
-    move
-
     start_time { '2018-01-01T18:57Z' }
     nomis_case_number { 'MyString' }
     court_type { 'MyString' }
