@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, type: :request do
-  path '/people/{id}/court_cases' do
+  path '/people/{person_id}/court_cases' do
     get 'Retrieves the active court cases related to a person. It filters out the non-active court cases.' do
       tags 'People'
       produces 'application/vnd.api+json'
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 },
                 required: true
 
-      parameter name: :id,
+      parameter name: :person_id,
                 in: :path,
                 description: 'The ID of the person',
                 schema: {
@@ -40,7 +40,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 required: true
 
       response '200', 'success' do
-        let(:id) { person.id }
+        let(:person_id) { person.id }
         let(:person) { create(:profile, :nomis_synced).person }
         let(:court_cases_from_nomis) {
           court_case = CourtCase.new.build_from_nomis(
@@ -66,7 +66,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       end
 
       response '404', 'not found' do
-        let(:id) { 'invalid-id' }
+        let(:person_id) { 'invalid-id' }
 
         run_test!
       end
