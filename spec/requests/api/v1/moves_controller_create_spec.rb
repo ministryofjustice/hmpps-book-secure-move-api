@@ -181,7 +181,7 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'with a proposed move' do
-        let(:move_attributes) { attributes_for(:move, status: 'proposed') }
+        let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'proposed') }
 
         it_behaves_like 'an endpoint that responds with success 201'
       end
