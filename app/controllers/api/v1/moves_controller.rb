@@ -79,7 +79,7 @@ module Api
             :case_start_date,
             :nomis_case_number,
             :nomis_case_id,
-            :court_type,
+            :case_type,
             :comments,
           )
         end
