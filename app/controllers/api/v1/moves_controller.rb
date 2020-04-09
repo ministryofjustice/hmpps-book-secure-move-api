@@ -17,7 +17,7 @@ module Api
       def show
         move = find_move
 
-        render_move(move.reload, 200)
+        render_move(move, 200)
       end
 
       def create
