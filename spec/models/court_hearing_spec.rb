@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CourtHearing, type: :model do
   subject(:court_hearing) do
-    build(:court_hearing, start_time: start_time)
+    build(:court_hearing, start_time: start_time, move: create(:move))
   end
 
   context 'when the start_time is missing' do
