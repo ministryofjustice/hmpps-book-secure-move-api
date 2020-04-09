@@ -214,7 +214,7 @@ RSpec.describe Api::V1::MovesController do
                       "case_start_date": '2018-01-01',
                       "case_number": 'T32423423423',
                       "nomis_case_id": '4232423',
-                      "court_type": 'Adult',
+                      "case_type": 'Adult',
                       "comments": 'Witness for Foo Bar',
                     },
                   },

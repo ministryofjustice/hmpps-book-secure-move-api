@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_141146) do
     t.uuid "move_id", null: false
     t.datetime "start_time", null: false
     t.date "case_start_date"
-    t.string "court_type"
+    t.string "case_type"
     t.text "comments"
     t.string "nomis_case_number"
     t.integer "nomis_case_id"
