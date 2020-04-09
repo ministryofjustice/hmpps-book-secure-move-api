@@ -20,4 +20,3 @@ class MoveSerializer < ActiveModel::Serializer
     court_hearings: %i[],
   }.freeze
 end
-

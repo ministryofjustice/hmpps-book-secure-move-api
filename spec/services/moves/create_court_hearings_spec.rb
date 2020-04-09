@@ -11,21 +11,21 @@ RSpec.describe Moves::CreateCourtHearings do
   let(:court_hearings_params) do
     [
       {
-        "start_time": "2018-01-01T18:57Z",
-        "case_start_date": "2018-01-01",
-        "nomis_case_id": "4232423",
-        "court_type": "Adult",
-        "comments": "Witness for Foo Bar"
-      }
+        "start_time": '2018-01-01T18:57Z',
+        "case_start_date": '2018-01-01',
+        "nomis_case_id": '4232423',
+        "court_type": 'Adult',
+        "comments": 'Witness for Foo Bar',
+      },
     ]
   end
 
-  it "creates court hearings" do
+  it 'creates court hearings' do
     expect { create_court_hearings.call }.
       to change(CourtHearing, :count).by(1)
   end
 
-  it "returns court hearings" do
+  it 'returns court hearings' do
     expect(create_court_hearings.call).
       to include(an_instance_of(CourtHearing))
   end

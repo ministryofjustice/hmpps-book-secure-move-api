@@ -199,7 +199,7 @@ RSpec.describe Api::V1::MovesController do
               time_due: Time.now,
               status: 'requested',
               additional_information: 'some more info',
-              move_type: nil
+              move_type: nil,
             },
             relationships: {
               person: { data: { type: 'people', id: person.id } },
@@ -216,9 +216,9 @@ RSpec.describe Api::V1::MovesController do
                       "nomis_case_id": '4232423',
                       "court_type": 'Adult',
                       "comments": 'Witness for Foo Bar',
-                    }
-                  }
-                ]
+                    },
+                  },
+                ],
               },
             },
           }
@@ -234,7 +234,7 @@ RSpec.describe Api::V1::MovesController do
 
           it 'creates the court hearings', skip_before: true do
             expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
-              to change { CourtHearing.count }.
+              to change(CourtHearing, :count).
               by(1)
           end
 
@@ -263,7 +263,7 @@ RSpec.describe Api::V1::MovesController do
 
           it 'creates the court hearings' do
             expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
-              to change { CourtHearing.count }.
+              to change(CourtHearing, :count).
               by(1)
           end
 

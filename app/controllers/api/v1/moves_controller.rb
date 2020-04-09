@@ -71,7 +71,7 @@ module Api
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
       def court_hearings_params
-        return {} unless params.require(:data).require(:relationships).fetch("court_hearings", {}).present?
+        return {} if params.require(:data).require(:relationships).fetch('court_hearings', {}).blank?
 
         params.require(:data).require(:relationships).require(:court_hearings).require(:data).map do |court_hearing_params|
           court_hearing_params.require(:attributes).permit(

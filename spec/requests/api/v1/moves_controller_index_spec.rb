@@ -154,8 +154,8 @@ RSpec.describe Api::V1::MovesController do
         it 'does not return serialized court_hearings includes', skip_before: true do
           get '/api/v1/moves', params: params, headers: headers
 
-          has_court_hearings = response_json["included"].any? do |entity|
-            entity["type"] == "court_hearings"
+          has_court_hearings = response_json['included'].any? do |entity|
+            entity['type'] == 'court_hearings'
           end
 
           expect(has_court_hearings).to eq(false)
