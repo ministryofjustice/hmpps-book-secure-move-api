@@ -8,7 +8,7 @@ Fixes P4-<TODO>
 
 - TODO
 
-## Things to check & link
+## Things to check and link
 - [ ] API docs has been updated if necessary
 - [ ] New environment variables have been added to staging configuration
 
