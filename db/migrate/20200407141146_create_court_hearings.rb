@@ -1,7 +1,8 @@
 class CreateCourtHearings < ActiveRecord::Migration[5.2]
   def change
     create_table :court_hearings, id: :uuid do |t|
-      t.uuid :move_id, null: false
+      t.references :move, type: :uuid, null: false, index: true, foreign_key: true
+
       t.datetime :start_time
       t.date :case_start_date
       t.string :court_type
