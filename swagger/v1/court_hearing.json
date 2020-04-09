@@ -15,7 +15,8 @@
           "nomis_hearing_id",
           "saved_to_nomis",
           "court_type",
-          "comments"
+          "comments",
+          "case_start_date"
         ],
         "properties": {
           "id": {
@@ -60,6 +61,11 @@
             "type": "string",
             "example": "Witness for Joe Bloggs in Foo Bar court hearing.",
             "description": "Arbitrary comments that are useful for humans but not touched by computers."
+          },
+          "case_start_date": {
+            "type": "string",
+            "example": "2020-01-01",
+            "description": "ISO8601-compatible date indicating when the case started."
           }
         }
       }
