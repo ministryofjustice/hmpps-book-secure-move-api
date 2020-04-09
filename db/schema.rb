@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_130150) do
+ActiveRecord::Schema.define(version: 2020_04_07_141146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -43,6 +43,21 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.datetime "disabled_at"
+  end
+
+  create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.datetime "start_time", null: false
+    t.date "case_start_date"
+    t.string "court_type"
+    t.text "comments"
+    t.string "nomis_case_number"
+    t.integer "nomis_case_id"
+    t.integer "nomis_hearing_id"
+    t.boolean "saved_to_nomis", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["move_id"], name: "index_court_hearings_on_move_id"
   end
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -119,10 +134,10 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.uuid "prison_transfer_reason_id"
-    t.text "reason_comment"
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
+    t.uuid "prison_transfer_reason_id"
+    t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
     t.index ["created_at"], name: "index_moves_on_created_at"
@@ -285,12 +300,13 @@ ActiveRecord::Schema.define(version: 2020_04_07_130150) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "people"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

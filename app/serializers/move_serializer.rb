@@ -9,6 +9,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }
   has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
   has_many :documents, serializer: DocumentSerializer
+  has_many :court_hearings, serializer: CourtHearingSerializer
 
   INCLUDED_ATTRIBUTES = {
     person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender reason_comment],
@@ -16,5 +17,6 @@ class MoveSerializer < ActiveModel::Serializer
     to_location: %i[location_type description],
     documents: %i[url filename filesize content_type],
     prison_transfer_reason: %i[key title],
+    court_hearings: [],
   }.freeze
 end
