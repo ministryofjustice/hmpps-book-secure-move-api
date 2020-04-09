@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_141146) do
 
   create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id", null: false
-    t.datetime "start_time"
+    t.datetime "start_time", null: false
     t.date "case_start_date"
     t.string "court_type"
     t.text "comments"
