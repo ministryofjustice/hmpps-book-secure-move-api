@@ -40,6 +40,7 @@ class Move < VersionedModel
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
+  has_many :journeys, -> { default_order }, dependent: :destroy
 
   validates :from_location, presence: true
   validates(

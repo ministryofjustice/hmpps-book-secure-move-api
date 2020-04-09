@@ -1,0 +1,3 @@
+class JourneyStateMachine < FiniteMachine
+
+end
