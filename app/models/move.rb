@@ -91,7 +91,7 @@ class Move < VersionedModel
   end
 
   def from_prison_to_court?
-    from_location.try(:prison?) && to_location.try(:court?)
+    from_location&.prison? && to_location&.court?
   end
 
 private
