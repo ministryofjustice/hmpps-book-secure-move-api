@@ -3,7 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, type: :request do
-  path '/people/{id}/images' do
+  path '/people/{person_id}/images' do
     get 'retrieves an image' do
       tags 'People'
       produces 'application/vnd.api+json'
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 },
                 required: true
 
-      parameter name: :id,
+      parameter name: :person_id,
                 in: :path,
                 description: 'The ID of the person',
                 schema: {
@@ -40,7 +40,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 required: true
 
       response '200', 'success' do
-        let(:id) { create(:profile, :nomis_synced).person.id }
+        let(:person_id) { create(:profile, :nomis_synced).person.id }
         let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
 
         before do
@@ -51,7 +51,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       end
 
       response '404', 'not found' do
-        let(:id) { 'invalid-id' }
+        let(:person_id) { 'invalid-id' }
 
         run_test!
       end
