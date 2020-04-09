@@ -1,17 +1,27 @@
-Fixes P4-<TODO>
+### What?
 
-## Proposed Changes
+I have added/removed/altered:
 
-- TODO
+- [ ] Added foo in bar
+- [ ] Removed baz
 
-## To test/demo change
+### Why?
 
-- TODO
+I am doing this because:
 
-## Things to check and link
-- [ ] API docs has been updated if necessary
-- [ ] New environment variables have been added to staging configuration
+-
+-
+-
 
-## Manual steps to deploy/dependencies
+### Acceptance Criteria
 
-- TODO (or remove)
+I can call this done when:
+
+- [ ]
+- [ ]
+- [ ]
+
+### Deployment risks (optional)
+
+- Includes destructive/migratory actions which may effect critical offender data
+- Changes the semantics of an api that live suppliers the fronted use
