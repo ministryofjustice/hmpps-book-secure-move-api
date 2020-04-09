@@ -1,0 +1,74 @@
+{
+  "CourtHearing": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "object",
+        "required": [
+          "id",
+          "start_time",
+          "case_number",
+          "nomis_case_id",
+          "nomis_hearing_id",
+          "saved_to_nomis",
+          "court_type",
+          "comments",
+          "case_start_date"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "22036201-4301-4021-8ee6-80bc415b8534",
+            "description": "The universally unique and sequential primary identifier for this entity"
+          },
+          "start_time": {
+            "type": "string",
+            "example": "2018-01-01T18:57Z",
+            "description": "ISO8601 compatible timestamp"
+          },
+          "case_number": {
+            "type": "string",
+            "example": "T32423423423",
+            "description": "The third party reference for the case of the current hearing"
+          },
+          "nomis_case_id": {
+            "type": "string",
+            "example": "4232423",
+            "description": "The nomis reference for the case of the current hearing."
+          },
+          "nomis_hearing_id": {
+            "type": "string",
+            "example": "4232424",
+            "nullable": true,
+            "description": "After a new hearing is created in Nomis backend it receives a unique id. This can be null and means we failed to create a corresponding hearing in Nomis or did not need too."
+          },
+          "saved_to_nomis": {
+            "type": "string",
+            "example": false,
+            "description": "Indicates whether we successfully created a corresponding court hearing in Nomis' backend."
+          },
+          "court_type": {
+            "type": "string",
+            "example": "Adult",
+            "enum": ["Adult"],
+            "description": "The type of the court that the court hearing is being held in."
+          },
+          "comments": {
+            "type": "string",
+            "example": "Witness for Joe Bloggs in Foo Bar court hearing.",
+            "description": "Arbitrary comments that are useful for humans but not touched by computers."
+          },
+          "case_start_date": {
+            "type": "string",
+            "example": "2020-01-01",
+            "description": "ISO8601-compatible date indicating when the case started."
+          }
+        }
+      }
+    }
+  }
+}

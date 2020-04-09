@@ -7,7 +7,8 @@ module Api
         moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
         if moves_params.valid?
           moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES
+          # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
+          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings)
         else
           render json: { error: moves_params.errors }, status: :bad_request
         end
@@ -15,14 +16,21 @@ module Api
 
       def show
         move = find_move
-        render_move(move.reload, 200)
+
+        render_move(move, 200)
       end
 
       def create
         move = Move.new(move_attributes)
         authorize!(:create, move)
-        move.save!
+
+        ActiveRecord::Base.transaction do
+          move.save!
+          Moves::CreateCourtHearings.new(move, court_hearings_params).call if court_hearings_params.present?
+        end
+
         Notifier.prepare_notifications(topic: move, action_name: 'create')
+
         render_move(move, 201)
       end
 
@@ -61,6 +69,25 @@ module Api
       PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
                                                     cancellation_reason cancellation_reason_comment
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
+
+      def court_hearings_params
+        return {} if relationship_params.fetch('court_hearings', {}).blank?
+
+        relationship_params.require(:court_hearings).require(:data).map do |court_hearing_params|
+          court_hearing_params.require(:attributes).permit(
+            :start_time,
+            :case_start_date,
+            :nomis_case_number,
+            :nomis_case_id,
+            :court_type,
+            :comments,
+          )
+        end
+      end
+
+      def relationship_params
+        @relationship_params ||= params.require(:data).require(:relationships)
+      end
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h

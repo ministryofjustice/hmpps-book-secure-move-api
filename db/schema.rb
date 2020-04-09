@@ -45,6 +45,21 @@ ActiveRecord::Schema.define(version: 2020_04_07_155640) do
     t.datetime "disabled_at"
   end
 
+  create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.datetime "start_time", null: false
+    t.date "case_start_date"
+    t.string "court_type"
+    t.text "comments"
+    t.string "nomis_case_number"
+    t.integer "nomis_case_id"
+    t.integer "nomis_hearing_id"
+    t.boolean "saved_to_nomis", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["move_id"], name: "index_court_hearings_on_move_id"
+  end
+
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id"
     t.datetime "created_at", null: false
@@ -315,6 +330,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_155640) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
   add_foreign_key "events", "moves"
   add_foreign_key "journeys", "locations", column: "from_location_id"
