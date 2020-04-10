@@ -156,6 +156,7 @@ RSpec.configure do |config|
         get_move_responses: load_swagger_json('get_move_responses.json'),
         get_reasons_responses: load_swagger_json('get_prison_transfer_reasons_responses.json'),
         delete_document_responses: load_swagger_json('delete_document_responses.json'),
+        post_court_hearing_responses: load_swagger_json('post_court_hearing_responses.json'),
         post_document_responses: load_swagger_json('post_document_responses.json'),
         errors: load_swagger_json('errors.json'),
         error_responses: load_swagger_json('error_responses.json'),
