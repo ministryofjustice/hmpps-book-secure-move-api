@@ -25,11 +25,9 @@ module Api
       end
 
       def move
-        return if params.require(:data)[:relationships].blank?
+        id = params.require(:data).dig(:relationships, :moves, :data, :id)
 
-        relationship_params = params.require(:data).require(:relationships)
-
-        id = relationship_params.require(:moves).require(:data).permit(:id, :type)[:id]
+        return if id.blank?
 
         Move.find(id)
       end
