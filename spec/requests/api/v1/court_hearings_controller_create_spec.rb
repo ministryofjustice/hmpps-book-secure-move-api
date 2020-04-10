@@ -28,7 +28,7 @@ RSpec.describe Api::V1::CourtHearingsController do
                   description: 'The court hearing to create',
                   in: :body,
                   attributes: {
-                    schema: '#/definitions/court_hearing/CourtHearing'
+                    schema: '#/definitions/court_hearing/CourtHearing',
                   }
 
         let(:court_hearing) do
@@ -43,7 +43,7 @@ RSpec.describe Api::V1::CourtHearingsController do
                 'case_type': 'Adult',
                 'comments': 'Witness for Foo Bar',
               },
-            }
+            },
           }
         end
 
