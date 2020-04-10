@@ -11,17 +11,7 @@
           "type": { "type": "string", "enum": "court_hearings" },
           "attributes": {
             "type": "object",
-            "required": [
-              "id",
-              "start_time",
-              "case_number",
-              "nomis_case_id",
-              "nomis_hearing_id",
-              "saved_to_nomis",
-              "case_type",
-              "comments",
-              "case_start_date"
-            ],
+            "required": ["start_time"],
             "properties": {
               "id": {
                 "type": "string",
