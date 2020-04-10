@@ -7,7 +7,7 @@ module Api
         render json: court_hearing, status: :created
       end
 
-      private
+    private
 
       def court_hearings_params
         params.require(:data).require(:attributes).permit(
@@ -16,7 +16,7 @@ module Api
           :nomis_case_number,
           :nomis_case_id,
           :case_type,
-          :comments
+          :comments,
         )
       end
     end
