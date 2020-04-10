@@ -25,7 +25,7 @@ module Api
       end
 
       def move
-        return {} if params.require(:data)[:relationships].blank?
+        return if params.require(:data)[:relationships].blank?
 
         relationship_params = params.require(:data).require(:relationships)
 
