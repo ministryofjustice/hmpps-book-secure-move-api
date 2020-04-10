@@ -1,0 +1,8 @@
+{
+  "201": {
+    "type": "object",
+    "properties": {
+      "$ref": "#/definitions/court_hearing/CourtHearing"
+    }
+  }
+}
