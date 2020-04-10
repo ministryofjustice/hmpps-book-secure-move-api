@@ -27,28 +27,28 @@ RSpec.describe Api::V1::MovesController do
     let(:supplier) { create(:supplier) }
     let(:application) { create(:application, owner_id: supplier.id) }
     let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type,  }.merge('Authorization' => "Bearer #{access_token}") }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
-    it "returns 201" do
+    it 'returns 201' do
       post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
 
       expect(response).to have_http_status(:created)
     end
 
-    it "creates a court_hearing" do
+    it 'creates a court_hearing' do
       expect { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }.
         to change(CourtHearing, :count).by(1)
     end
 
-    context "when a move relationship is passed" do
+    context 'when a move relationship is passed' do
       let(:move) { create(:move) }
 
       let(:data) do
         {
           type: 'court_hearings',
           attributes: court_hearing_attributes,
-          relationships: { moves: { data: { type: 'moves', id: move.id } }, }
+          relationships: { moves: { data: { type: 'moves', id: move.id } } },
         }
       end
 

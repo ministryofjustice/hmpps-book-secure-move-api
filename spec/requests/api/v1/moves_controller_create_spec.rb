@@ -203,7 +203,7 @@ RSpec.describe Api::V1::MovesController do
               person: { data: { type: 'people', id: person.id } },
               from_location: { data: { type: 'locations', id: from_location.id } },
               to_location: { data: { type: 'locations', id: to_location.id } },
-              court_hearings: { data: [{type: 'court_hearings', id: court_hearing.id}]},
+              court_hearings: { data: [{ type: 'court_hearings', id: court_hearing.id }] },
             },
           }
         end
