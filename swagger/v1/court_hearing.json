@@ -31,6 +31,7 @@
               },
               "start_time": {
                 "type": "string",
+                "format": date-time,
                 "example": "2018-01-01T18:57Z",
                 "description": "ISO8601 compatible timestamp"
               },
@@ -51,7 +52,7 @@
                 "description": "After a new hearing is created in Nomis backend it receives a unique id. This can be null and means we failed to create a corresponding hearing in Nomis or did not need too."
               },
               "saved_to_nomis": {
-                "type": "string",
+                "type": "boolean",
                 "example": false,
                 "description": "Indicates whether we successfully created a corresponding court hearing in Nomis' backend."
               },
@@ -68,6 +69,7 @@
               },
               "case_start_date": {
                 "type": "string",
+                "format": "date",
                 "example": "2020-01-01",
                 "description": "ISO8601-compatible date indicating when the case started."
               }

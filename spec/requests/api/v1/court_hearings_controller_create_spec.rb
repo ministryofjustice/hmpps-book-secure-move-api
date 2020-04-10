@@ -34,7 +34,7 @@ RSpec.describe Api::V1::CourtHearingsController do
         let(:court_hearing) do
           {
             data: {
-              type: 'court_hearing',
+              type: 'court_hearings',
               attributes: {
                 'start_time': '2018-01-01T18:57Z',
                 'case_start_date': '2018-01-01',
