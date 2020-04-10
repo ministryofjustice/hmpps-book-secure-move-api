@@ -66,10 +66,6 @@ module Api
                                                     cancellation_reason cancellation_reason_comment
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
-      def relationship_params
-        @relationship_params ||= params.require(:data).require(:relationships)
-      end
-
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
