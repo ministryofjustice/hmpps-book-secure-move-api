@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CourtHearings::CreateInNomis do
   context 'when court hearing are valid' do
-    subject(:create_hearing_in_nomis) { described_class.new.call(move, court_hearings) }
+    subject(:create_hearing_in_nomis) { described_class.call(move, court_hearings) }
 
     let(:move) {
       create(:move,

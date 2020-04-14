@@ -42,6 +42,10 @@ RSpec.describe Api::V1::CourtHearingsController do
     end
 
     context 'when a move relationship is passed' do
+      before do
+        allow(CourtHearings::CreateInNomis).to receive(:call)
+      end
+
       let(:move) { create(:move) }
 
       let(:data) do
@@ -58,6 +62,12 @@ RSpec.describe Api::V1::CourtHearingsController do
         court_hearing = CourtHearing.find(response_json['data']['id'])
 
         expect(move.court_hearings).to include(court_hearing)
+      end
+
+      it 'creates the court hearings in Nomis' do
+        post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
+
+        expect(CourtHearings::CreateInNomis).to have_received(:call).with(move, move.court_hearings)
       end
     end
   end
