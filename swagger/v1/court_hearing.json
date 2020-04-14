@@ -1,23 +1,18 @@
 {
   "CourtHearing": {
     "type": "object",
-    "required": [
-      "data"
-    ],
+    "required": ["id", "type", "attributes"],
     "properties": {
-      "data": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": { "type": "string", "enum": "court_hearings" },
+      "attributes": {
         "type": "object",
-        "required": [
-          "id",
-          "start_time",
-          "case_number",
-          "nomis_case_id",
-          "nomis_hearing_id",
-          "saved_to_nomis",
-          "court_type",
-          "comments",
-          "case_start_date"
-        ],
+        "required": ["start_time"],
         "properties": {
           "id": {
             "type": "string",
@@ -27,6 +22,7 @@
           },
           "start_time": {
             "type": "string",
+            "format": "date-time",
             "example": "2018-01-01T18:57Z",
             "description": "ISO8601 compatible timestamp"
           },
@@ -36,22 +32,25 @@
             "description": "The third party reference for the case of the current hearing"
           },
           "nomis_case_id": {
-            "type": "string",
-            "example": "4232423",
+            "type": "integer",
+            "example": 4232423,
             "description": "The nomis reference for the case of the current hearing."
           },
           "nomis_hearing_id": {
-            "type": "string",
-            "example": "4232424",
+            "oneOf": [
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "example": 4232424,
             "nullable": true,
             "description": "After a new hearing is created in Nomis backend it receives a unique id. This can be null and means we failed to create a corresponding hearing in Nomis or did not need too."
           },
           "saved_to_nomis": {
-            "type": "string",
+            "type": "boolean",
             "example": false,
             "description": "Indicates whether we successfully created a corresponding court hearing in Nomis' backend."
           },
-          "court_type": {
+          "case_type": {
             "type": "string",
             "example": "Adult",
             "enum": ["Adult"],
@@ -64,8 +63,18 @@
           },
           "case_start_date": {
             "type": "string",
+            "format": "date",
             "example": "2020-01-01",
             "description": "ISO8601-compatible date indicating when the case started."
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "move": {
+            "$ref": "#/definitions/move_reference/MoveReference",
+            "description": "Reference to the move entity that is associated with this court hearing."
           }
         }
       }
