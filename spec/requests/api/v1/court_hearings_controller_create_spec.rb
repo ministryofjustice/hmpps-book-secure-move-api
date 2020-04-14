@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::MovesController do
+RSpec.describe Api::V1::CourtHearingsController do
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /court_hearings' do
