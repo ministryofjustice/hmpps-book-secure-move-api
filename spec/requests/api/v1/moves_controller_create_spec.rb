@@ -186,10 +186,8 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with success 201'
       end
 
-      context 'when a court hearing is passed', skip_before: true do
-        before do
-          allow(Moves::CreateCourtHearings).to receive(:new).and_call_original
-        end
+      context 'when a court hearing relationship is passed', skip_before: true do
+        let(:court_hearing) { create(:court_hearing) }
 
         let(:data) do
           {
@@ -205,81 +203,16 @@ RSpec.describe Api::V1::MovesController do
               person: { data: { type: 'people', id: person.id } },
               from_location: { data: { type: 'locations', id: from_location.id } },
               to_location: { data: { type: 'locations', id: to_location.id } },
-              court_hearings: {
-                data: [
-                  {
-                    type: 'court_hearing',
-                    attributes: {
-                      "start_time": '2018-01-01T18:57Z',
-                      "case_start_date": '2018-01-01',
-                      "case_number": 'T32423423423',
-                      "nomis_case_id": '4232423',
-                      "case_type": 'Adult',
-                      "comments": 'Witness for Foo Bar',
-                    },
-                  },
-                ],
-              },
+              court_hearings: { data: [{ type: 'court_hearings', id: court_hearing.id }] },
             },
           }
         end
 
-        context 'when creating a court_hearing in nomis succeeds' do
-          it 'returns the hearing in the json body' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+        it 'returns the hearing in the json body' do
+          post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
 
-            court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
-            expect(court_hearings_response.count).to be 1
-          end
-
-          it 'creates the court hearings', skip_before: true do
-            expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
-              to change(CourtHearing, :count).
-              by(1)
-          end
-
-          it 'calls the Moves::CreateCourtHearings service' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-
-            expect(Moves::CreateCourtHearings).to have_received(:new)
-          end
-
-          it 'marks the new court hearings as saved_to_nomis' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-
-            court_hearing = CourtHearing.last
-            expect(court_hearing.saved_to_nomis).to eq(false)
-            expect(court_hearing.nomis_hearing_id).to eq(nil)
-          end
-        end
-
-        context 'when creating a hearing in nomis fails' do
-          it 'returns the hearing in the json body' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-
-            court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
-            expect(court_hearings_response.count).to be 1
-          end
-
-          it 'creates the court hearings' do
-            expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }.
-              to change(CourtHearing, :count).
-              by(1)
-          end
-
-          it 'calls the Moves::CreateCourtHearings service' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-
-            expect(Moves::CreateCourtHearings).to have_received(:new)
-          end
-
-          it 'marks the new court hearings as saved_to_nomis' do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-
-            court_hearing = CourtHearing.last
-            expect(court_hearing.saved_to_nomis).to eq(false)
-            expect(court_hearing.nomis_hearing_id).to eq(nil)
-          end
+          court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
+          expect(court_hearings_response.count).to be 1
         end
       end
 

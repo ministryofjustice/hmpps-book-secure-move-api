@@ -90,10 +90,6 @@ class Move < VersionedModel
     existing&.id
   end
 
-  def from_prison_to_court?
-    from_location&.prison? && to_location&.court?
-  end
-
 private
 
   def date_to_after_date_from
