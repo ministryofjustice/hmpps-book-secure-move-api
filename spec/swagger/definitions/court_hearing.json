@@ -32,13 +32,16 @@
             "description": "The third party reference for the case of the current hearing"
           },
           "nomis_case_id": {
-            "type": "string",
-            "example": "4232423",
+            "type": "integer",
+            "example": 4232423,
             "description": "The nomis reference for the case of the current hearing."
           },
           "nomis_hearing_id": {
-            "type": "string",
-            "example": "4232424",
+            "oneOf": [
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "example": 4232424,
             "nullable": true,
             "description": "After a new hearing is created in Nomis backend it receives a unique id. This can be null and means we failed to create a corresponding hearing in Nomis or did not need too."
           },
@@ -70,7 +73,7 @@
         "type": "object",
         "properties": {
           "move": {
-            "$ref": "move_reference.json#/MoveReference",
+            "$ref": "#/definitions/move_reference/MoveReference",
             "description": "Reference to the move entity that is associated with this court hearing."
           }
         }
