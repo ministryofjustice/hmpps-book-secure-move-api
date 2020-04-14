@@ -21,8 +21,8 @@ RSpec.describe CourtCaseSerializer do
 
   it 'return a serialized court cases' do
     expect(court_case_deserialized[:data][:attributes]).to eq(nomis_case_id: '111', nomis_case_status: 'ACTIVE',
-                                                              nomis_case_start_date: '2016-11-14', nomis_case_type: 'Adult',
-                                                              nomis_case_number: 'T20167984')
+                                                              case_start_date: '2016-11-14', case_type: 'Adult',
+                                                              case_number: 'T20167984')
     expect(court_case_deserialized[:data][:relationships][:location][:data]).not_to be_nil
   end
 end

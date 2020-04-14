@@ -23,11 +23,7 @@ module Api
       def create
         move = Move.new(move_attributes)
         authorize!(:create, move)
-
-        ActiveRecord::Base.transaction do
-          move.save!
-          Moves::CreateCourtHearings.new(move, court_hearings_params).call if court_hearings_params.present?
-        end
+        move.save!
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
@@ -70,25 +66,6 @@ module Api
                                                     cancellation_reason cancellation_reason_comment
                                                     reason_comment move_agreed move_agreed_by date_from date_to]].freeze
 
-      def court_hearings_params
-        return {} if relationship_params.fetch('court_hearings', {}).blank?
-
-        relationship_params.require(:court_hearings).require(:data).map do |court_hearing_params|
-          court_hearing_params.require(:attributes).permit(
-            :start_time,
-            :case_start_date,
-            :nomis_case_number,
-            :nomis_case_id,
-            :case_type,
-            :comments,
-          )
-        end
-      end
-
-      def relationship_params
-        @relationship_params ||= params.require(:data).require(:relationships)
-      end
-
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
@@ -108,6 +85,7 @@ module Api
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
+          court_hearings: CourtHearing.where(id: (move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
       end

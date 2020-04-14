@@ -23,9 +23,9 @@
         "required": [
           "nomis_case_id",
           "nomis_case_status",
-          "nomis_case_start_date",
-          "nomis_case_type",
-          "nomis_case_number"
+          "case_start_date",
+          "case_type",
+          "case_number"
         ],
         "properties": {
           "nomis_case_id": {
@@ -38,20 +38,20 @@
             "example": "ACTIVE",
             "description": "The state of the nomis court case"
           },
-          "nomis_case_start_date": {
+          "case_start_date": {
             "type": "string",
             "example": "2020-01-01",
             "description": "ISO8601-compatible date"
           },
-          "nomis_case_type": {
+          "case_type": {
             "type": "string",
             "example": "Adult",
             "description": "The type of the nomis court case"
           },
-          "nomis_case_number": {
+          "case_number": {
             "type": "string",
             "example": "T20167984",
-            "description": "The case number that uniquely identifies the court case"
+            "description": "The case number that uniquely identifies the court case. This is a number that is part of the court system not nomis specific."
           }
         }
       },
