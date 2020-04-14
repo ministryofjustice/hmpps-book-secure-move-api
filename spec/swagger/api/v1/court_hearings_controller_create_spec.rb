@@ -19,38 +19,38 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
         },
         required: true,
         description: <<~DESCRIPTION
-                    This is "Bearer ", followed by your OAuth 2 Client token.
-                    If you're testing interactively in the web UI, you can ignore this field
+          This is "Bearer ", followed by your OAuth 2 Client token.
+          If you're testing interactively in the web UI, you can ignore this field
         DESCRIPTION
 
-        parameter name: :court_hearing,
-          description: 'The court hearing to create',
-          in: :body,
-          attributes: {
-            schema: '#/definitions/court_hearing/CourtHearing',
-          }
+      parameter name: :court_hearing,
+        description: 'The court hearing to create',
+        in: :body,
+        attributes: {
+          schema: '#/definitions/court_hearing/CourtHearing',
+        }
 
-          let(:court_hearing) do
-            {
-              data: {
-                type: 'court_hearings',
-                attributes: {
-                  'start_time': '2018-01-01T18:57Z',
-                  'case_start_date': '2018-01-01',
-                  'case_number': 'T32423423423',
-                  'nomis_case_id': '4232423',
-                  'case_type': 'Adult',
-                  'comments': 'Witness for Foo Bar',
-                },
-              },
-            }
-          end
+      let(:court_hearing) do
+        {
+          data: {
+            type: 'court_hearings',
+            attributes: {
+              'start_time': '2018-01-01T18:57Z',
+              'case_start_date': '2018-01-01',
+              'case_number': 'T32423423423',
+              'nomis_case_id': '4232423',
+              'case_type': 'Adult',
+              'comments': 'Witness for Foo Bar',
+            },
+          },
+        }
+      end
 
-          response '201', 'created' do
-            schema '$ref': '#/definitions/post_court_hearing_responses/201'
+      response '201', 'created' do
+        schema '$ref': '#/definitions/post_court_hearing_responses/201'
 
-            run_test!
-          end
+        run_test!
+      end
     end
   end
 end
