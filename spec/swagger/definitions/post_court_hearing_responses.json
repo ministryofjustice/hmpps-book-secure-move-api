@@ -6,7 +6,7 @@
     ],
     "properties": {
       "data": {
-        "$ref": "court_hearing.json/CourtHearing"
+        "$ref": "#/definitions/court_hearing/CourtHearing"
       }
     }
   }
