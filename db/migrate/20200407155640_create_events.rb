@@ -8,6 +8,8 @@ class CreateEvents < ActiveRecord::Migration[5.2]
       t.jsonb :details
       t.datetime :client_timestamp, null: false, index: true # this is provided by the client or supplier
       t.timestamps # these are maintained by the system and are distinct from client_timestamp
+      t.index [:move_id, :event_type]
+      t.index [:move_id, :client_timestamp]
     end
   end
 end

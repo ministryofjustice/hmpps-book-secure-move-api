@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(version: 2020_04_07_155640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
+    t.index ["move_id", "client_timestamp"], name: "index_events_on_move_id_and_client_timestamp"
+    t.index ["move_id", "event_type"], name: "index_events_on_move_id_and_event_type"
     t.index ["move_id"], name: "index_events_on_move_id"
   end
 
@@ -112,15 +114,19 @@ ActiveRecord::Schema.define(version: 2020_04_07_155640) do
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id", null: false
     t.boolean "billable", default: false, null: false
-    t.boolean "completed", default: false, null: false
-    t.boolean "cancelled", default: false, null: false
+    t.string "state", null: false
     t.jsonb "details"
     t.datetime "client_timestamp", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_timestamp"], name: "index_journeys_on_client_timestamp"
     t.index ["from_location_id"], name: "index_journeys_on_from_location_id"
+    t.index ["move_id", "client_timestamp"], name: "index_journeys_on_move_id_and_client_timestamp"
+    t.index ["move_id", "state"], name: "index_journeys_on_move_id_and_state"
     t.index ["move_id"], name: "index_journeys_on_move_id"
+    t.index ["state"], name: "index_journeys_on_state"
+    t.index ["supplier_id", "billable"], name: "index_journeys_on_supplier_id_and_billable"
+    t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
     t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
     t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
   end
