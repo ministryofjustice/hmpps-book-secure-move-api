@@ -17,15 +17,13 @@ I am doing this because:
 -
 -
 
-### Acceptance Criteria
+### Have you? (optional)
 
-I can call this done when:
-
-- [ ]
-- [ ]
-- [ ]
+- [ ] Updated API docs if necessary	
+- [ ] Added environment variables to [deployment repository](https://github.com/ministryofjustice/hmpps-book-secure-move-api-deploy)
 
 ### Deployment risks (optional)
 
 - Includes destructive/migratory actions which may effect critical offender data
-- Changes the semantics of an api that live suppliers the fronted use
+- Changes an api that is used in production
+
