@@ -17,7 +17,7 @@ module Api
         params.require(:data).require(:attributes).permit(
           :start_time,
           :case_start_date,
-          :nomis_case_number,
+          :case_number,
           :nomis_case_id,
           :case_type,
           :comments,
