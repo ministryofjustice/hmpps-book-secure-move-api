@@ -23,14 +23,70 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
           If you're testing interactively in the web UI, you can ignore this field
         DESCRIPTION
 
-      parameter name: :court_hearing,
+      parameter name: :body,
         description: 'The court hearing to create',
         in: :body,
-        attributes: {
-          schema: '#/definitions/court_hearing/CourtHearing',
+        schema: {
+          type: 'object',
+          properties: {
+            data:  {
+              type: 'object',
+              properties: {
+                type: {
+                  type: 'string',
+                  enum: ['court_hearings']
+                },
+                attributes: {
+                  type: 'object',
+                  required: ['start_time'],
+                  properties: {
+                    start_time: {
+                      type: 'string',
+                      format: 'date-time',
+                      example: '2018-01-01T18:57Z',
+                      description: 'ISO8601 compatible timestamp'
+                    },
+                    case_number: {
+                      type: 'string',
+                      example: 'T32423423423',
+                      description: 'The third party reference for the case of the current hearing'
+                    },
+                    nomis_case_id: {
+                      type: 'integer',
+                      example: 4232423,
+                      description: 'The nomis reference for the case of the current hearing.'
+                    },
+                    case_type: {
+                      type: 'string',
+                      example: 'Adult',
+                      enum: ['Adult'],
+                      description: 'The type of the court that the court hearing is being held in.'
+                    },
+                    comments: {
+                      type: 'string',
+                      example: 'Witness for Joe Bloggs in Foo Bar court hearing.',
+                      description: 'Arbitrary comments that are useful for humans but not touched by computers.'
+                    },
+                    case_start_date: {
+                      type: 'string',
+                      format: 'date',
+                      example: '2020-01-01',
+                      description: 'ISO8601-compatible date indicating when the case started.'
+                    },
+                  }
+                },
+                relationships: {
+                  type: 'object',
+                  properties: {
+                    move: { '$ref' => '#/definitions/move_reference/MoveReference' }
+                  }
+                }
+              }
+            }
+          }
         }
 
-      let(:court_hearing) do
+      let(:body) do
         {
           data: {
             type: 'court_hearings',
