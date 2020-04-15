@@ -15,12 +15,6 @@
         "type": "object",
         "required": ["start_time"],
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "22036201-4301-4021-8ee6-80bc415b8534",
-            "description": "The universally unique and sequential primary identifier for this entity"
-          },
           "start_time": {
             "type": "string",
             "format": "date-time",
