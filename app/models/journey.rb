@@ -14,11 +14,9 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :desc) }
 
-  before_validation :set_state_from_state_machine, on: :create
-  after_find :restore_state_machine
-  after_initialize :restore_state_machine # NB there is an equivalent after(:build) callback for FactoryBot in the journeys factory
-
   delegate :complete, :un_complete, :cancel, :un_cancel, to: :state_machine
+
+  after_initialize :synchronise_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
 
 private
 
@@ -26,13 +24,13 @@ private
     @state_machine ||= JourneyStateMachine.new(self)
   end
 
-  # syncs record to state_machine
-  def set_state_from_state_machine(new_state = state_machine.current)
-    self.state = new_state
-  end
-
-  # syncs state_machine to record
-  def restore_state_machine
-    state_machine.restore!(state.to_sym) if state.present?
+  def synchronise_state
+    if state.present?
+      # set the internal state_machine to the state, if specified
+      state_machine.restore!(state.to_sym)
+    else
+      # set the state to the state_machine's initial state
+      self.state = state_machine.current
+    end
   end
 end
