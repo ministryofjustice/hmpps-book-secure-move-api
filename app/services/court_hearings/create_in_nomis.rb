@@ -1,6 +1,6 @@
 module CourtHearings
   class CreateInNomis
-    def call(move, court_hearings)
+    def self.call(move, court_hearings)
       booking_id = move.person.latest_nomis_booking_id
 
       body_locations = {

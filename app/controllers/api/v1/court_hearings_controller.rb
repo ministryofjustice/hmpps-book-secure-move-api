@@ -4,6 +4,10 @@ module Api
       def create
         court_hearing = CourtHearing.create!(court_hearings_attributes)
 
+        if move
+          CourtHearings::CreateInNomis.call(move, move.court_hearings)
+        end
+
         render json: court_hearing, status: :created
       end
 
