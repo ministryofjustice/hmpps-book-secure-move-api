@@ -7,7 +7,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
 
   path '/court_hearings' do
     post 'Creates a court hearing' do
-      tags 'CourtHearings'
+      tags 'Court Hearings'
       consumes 'application/vnd.api+json'
       produces 'application/vnd.api+json'
 
