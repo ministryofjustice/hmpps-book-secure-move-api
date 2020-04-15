@@ -19,7 +19,7 @@ RSpec.describe CourtHearings::CreateInNomis do
     let(:nomis_case_id) { 1111111 }
     let(:from_nomis_agency_id) { 'LEI' }
     let(:to_nomis_agency_id) { 'LEEDCC' }
-    let(:hearing_date_time) { Time.new(2020, 12, 1).utc.iso8601 }
+    let(:hearing_date_time) { Time.parse("2020-04-15T17:36:02+01:00") }
     let(:comments) { 'Restricted access to parking level.' }
     let(:booking_id) { 123 }
 
@@ -40,7 +40,7 @@ RSpec.describe CourtHearings::CreateInNomis do
           court_case_id: nomis_case_id,
           body_params: {
               'fromPrisonLocation': from_nomis_agency_id, 'toCourtLocation': to_nomis_agency_id,
-              'courtHearingDateTime': hearing_date_time, 'comments': comments
+              'courtHearingDateTime': hearing_date_time.utc.iso8601, 'comments': comments
           },
         )
       end
