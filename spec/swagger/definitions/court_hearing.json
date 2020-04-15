@@ -1,5 +1,6 @@
 {
   "CourtHearing": {
+    "description": "The schema of an individual court hearing. This is what gets bundled in an includes or GET /court_hearings/:id response",
     "type": "object",
     "required": ["id", "type", "attributes"],
     "properties": {
