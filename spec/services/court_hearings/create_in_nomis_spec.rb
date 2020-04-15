@@ -19,12 +19,13 @@ RSpec.describe CourtHearings::CreateInNomis do
     let(:nomis_case_id) { 1111111 }
     let(:from_nomis_agency_id) { 'LEI' }
     let(:to_nomis_agency_id) { 'LEEDCC' }
-    let(:hearing_date_time) { Time.new(2020, 12, 1).iso8601 }
+    let(:hearing_date_time) { Time.new(2020, 12, 1).utc.iso8601 }
     let(:comments) { 'Restricted access to parking level.' }
     let(:booking_id) { 123 }
 
     before do
       allow(NomisClient::CourtHearing).to receive(:post)
+                                      .and_return(instance_double('OAuth2::Response', status: 201, body: { 'id' => 123 }.to_json))
       move.person.latest_profile.update(latest_nomis_booking_id: booking_id)
     end
 
@@ -39,6 +40,14 @@ RSpec.describe CourtHearings::CreateInNomis do
             'courtHearingDateTime': hearing_date_time, 'comments': comments
         },
       )
+    end
+
+    it 'updates the nomis_hearing_id and saved_to_nomis' do
+      create_hearing_in_nomis
+
+      court_hearing = court_hearings.first
+      expect(court_hearing.saved_to_nomis).to eq true
+      expect(court_hearing.nomis_hearing_id).to eq 123
     end
   end
 end
