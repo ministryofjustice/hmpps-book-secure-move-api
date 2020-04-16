@@ -19,7 +19,7 @@ RSpec.describe JourneyStateMachine do
     end
   end
 
-  it { is_expected.to respond_to(:cancel, :un_cancel, :complete, :un_complete, :restore!, :current) }
+  it { is_expected.to respond_to(:cancel, :uncancel, :complete, :uncomplete, :restore!, :current) }
 
   context 'when in the in_progress state' do
     it_behaves_like 'state_machine target state', :in_progress
@@ -30,8 +30,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :completed
     end
 
-    context 'when the un-complete event is fired' do
-      before { machine.un_complete }
+    context 'when the uncomplete event is fired' do
+      before { machine.uncomplete }
 
       it_behaves_like 'state_machine target state', :in_progress
     end
@@ -42,8 +42,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :cancelled
     end
 
-    context 'when the un-cancel event is fired' do
-      before { machine.un_cancel }
+    context 'when the uncancel event is fired' do
+      before { machine.uncancel }
 
       it_behaves_like 'state_machine target state', :in_progress
     end
@@ -60,8 +60,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :completed
     end
 
-    context 'when the un-complete event is fired' do
-      before { machine.un_complete }
+    context 'when the uncomplete event is fired' do
+      before { machine.uncomplete }
 
       it_behaves_like 'state_machine target state', :in_progress
     end
@@ -72,8 +72,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :completed
     end
 
-    context 'when the un-cancel event is fired' do
-      before { machine.un_cancel }
+    context 'when the uncancel event is fired' do
+      before { machine.uncancel }
 
       it_behaves_like 'state_machine target state', :completed
     end
@@ -90,8 +90,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :cancelled
     end
 
-    context 'when the un-complete event is fired' do
-      before { machine.un_complete }
+    context 'when the uncomplete event is fired' do
+      before { machine.uncomplete }
 
       it_behaves_like 'state_machine target state', :cancelled
     end
@@ -102,8 +102,8 @@ RSpec.describe JourneyStateMachine do
       it_behaves_like 'state_machine target state', :cancelled
     end
 
-    context 'when the un-cancel event is fired' do
-      before { machine.un_cancel }
+    context 'when the uncancel event is fired' do
+      before { machine.uncancel }
 
       it_behaves_like 'state_machine target state', :in_progress
     end

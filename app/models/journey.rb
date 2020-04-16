@@ -4,17 +4,23 @@ class Journey < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
 
+  enum states: {
+    in_progress: 'in_progress',
+    completed: 'completed',
+    cancelled: 'cancelled',
+  }
+
   validates :move, presence: true
   validates :supplier, presence: true
   validates :from_location, presence: true
   validates :to_location, presence: true
   validates :client_timestamp, presence: true
   validates :billable, exclusion: { in: [nil] }
-  validates :state, presence: true, inclusion: { in: %w(in_progress completed cancelled) }
+  validates :state, presence: true, inclusion: { in: states }
 
-  scope :default_order, -> { order(client_timestamp: :desc) }
+  scope :default_order, -> { order(client_timestamp: :asc) }
 
-  delegate :complete, :un_complete, :cancel, :un_cancel, to: :state_machine
+  delegate :complete, :uncomplete, :cancel, :uncancel, to: :state_machine
 
   after_initialize :synchronise_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
 

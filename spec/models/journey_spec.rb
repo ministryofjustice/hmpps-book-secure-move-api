@@ -7,7 +7,6 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to belong_to(:supplier) }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location) }
-
   it { is_expected.to validate_presence_of(:move) }
   it { is_expected.to validate_presence_of(:supplier) }
   it { is_expected.to validate_presence_of(:from_location) }
@@ -16,7 +15,7 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to validate_presence_of(:state) }
   it { is_expected.to validate_exclusion_of(:billable).in_array([nil]) }
   it { is_expected.to validate_inclusion_of(:state).in_array(%w(in_progress completed cancelled)) }
-  it { is_expected.to respond_to(:cancel, :un_cancel, :complete, :un_complete) }
+  it { is_expected.to respond_to(:cancel, :uncancel, :complete, :uncomplete) }
   it { expect(described_class).to respond_to(:default_order) }
 
   shared_examples 'synchronised state' do |expected_state|
