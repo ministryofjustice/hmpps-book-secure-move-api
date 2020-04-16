@@ -22,7 +22,7 @@ class Journey < ApplicationRecord
 
   delegate :complete, :uncomplete, :cancel, :uncancel, to: :state_machine
 
-  after_initialize :synchronise_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
+  after_initialize :initialize_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
 
 private
 
@@ -30,7 +30,7 @@ private
     @state_machine ||= JourneyStateMachine.new(self)
   end
 
-  def synchronise_state
+  def initialize_state
     if state.present?
       # set the internal state_machine to the state, if specified
       state_machine.restore!(state.to_sym)
