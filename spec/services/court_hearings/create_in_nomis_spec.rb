@@ -57,14 +57,6 @@ RSpec.describe CourtHearings::CreateInNomis do
     context 'when Nomis returns an error' do
       let(:nomis_response_status) { 400 }
 
-      it 'pushes error the warning to Sentry' do
-        allow(Raven).to receive(:capture_message)
-
-        create_hearing_in_nomis
-
-        expect(Raven).to have_received(:capture_message)
-      end
-
       it 'does NOT set nomis_hearing_id and saved_to_nomis' do
         create_hearing_in_nomis
 
