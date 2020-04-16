@@ -36,6 +36,21 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "allocations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "from_location_id", null: false
+    t.uuid "to_location_id", null: false
+    t.date "date", null: false
+    t.string "prisoner_category"
+    t.string "sentence_length"
+    t.jsonb "complex_cases"
+    t.integer "moves_count", null: false
+    t.boolean "complete_in_full", default: false, null: false
+    t.text "other_criteria"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_allocations_on_date"
+  end
+
   create_table "assessment_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "category", null: false
@@ -300,6 +315,8 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "allocations", "locations", column: "from_location_id", name: "fk_rails_allocations_from_location_id"
+  add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
   add_foreign_key "locations_suppliers", "locations"
