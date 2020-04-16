@@ -9,12 +9,20 @@ module CourtHearings
       }
 
       court_hearings.each do |hearing|
-        NomisClient::CourtHearing.post(booking_id: booking_id,
+        response = NomisClient::CourtHearing.post(booking_id: booking_id,
                                        court_case_id: hearing.nomis_case_id,
                                        body_params: {
-                                           'courtHearingDateTime': hearing.start_time.iso8601,
+                                           'courtHearingDateTime': hearing.start_time.utc.iso8601,
                                            'comments': hearing.comments,
                                        }.merge(body_locations))
+        if response.status == 201
+          new_hearing_id = JSON.parse(response.body)['id']
+
+          hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
+        else
+          message = { move_id: move.id, court_hearing_id: hearing.id, nomis_response: response.inspect }
+          Raven.capture_message("CourtHearings:CreateInNomis: #{message}", level: 'warning')
+        end
       end
     end
   end
