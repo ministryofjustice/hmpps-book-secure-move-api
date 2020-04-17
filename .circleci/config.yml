@@ -79,7 +79,7 @@ commands:
       - run:
           name: install dependencies
           command: |
-            bundle check || bundle install
+            bundle check || bundle install --path vendor/bundle
             yarn install
 
       - save_cache:
