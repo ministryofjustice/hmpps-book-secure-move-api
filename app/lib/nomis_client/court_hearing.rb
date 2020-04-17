@@ -8,7 +8,7 @@ module NomisClient
 
         nomis_response = NomisClient::Base.post(court_cases_route, body: body_params.to_json)
 
-        #TODO: remove this once court to hearing feature is deployed
+        # TODO: remove this once court to hearing feature is deployed
         Raven.capture_message('CourtHearings:CreateInNomis success!',
                               extra: {
                                   court_cases_route: court_cases_route,
