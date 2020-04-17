@@ -113,6 +113,8 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
+    finite_machine (0.12.1)
+      concurrent-ruby (~> 1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     govuk_notify_rails (2.1.2)
@@ -379,6 +381,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   faraday
+  finite_machine
   govuk_notify_rails (~> 2.1.2)
   high_voltage
   json-schema

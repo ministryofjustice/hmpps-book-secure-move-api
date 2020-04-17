@@ -94,6 +94,19 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "disabled_at"
   end
 
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.string "event_name", null: false
+    t.jsonb "details"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
+    t.index ["move_id", "client_timestamp"], name: "index_events_on_move_id_and_client_timestamp"
+    t.index ["move_id", "event_name"], name: "index_events_on_move_id_and_event_name"
+    t.index ["move_id"], name: "index_events_on_move_id"
+  end
+
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
@@ -108,6 +121,29 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.string "title", null: false
     t.string "description"
     t.datetime "disabled_at"
+  end
+
+  create_table "journeys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.uuid "supplier_id", null: false
+    t.uuid "from_location_id", null: false
+    t.uuid "to_location_id", null: false
+    t.boolean "billable", default: false, null: false
+    t.string "state", null: false
+    t.jsonb "details"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_timestamp"], name: "index_journeys_on_client_timestamp"
+    t.index ["from_location_id"], name: "index_journeys_on_from_location_id"
+    t.index ["move_id", "client_timestamp"], name: "index_journeys_on_move_id_and_client_timestamp"
+    t.index ["move_id", "state"], name: "index_journeys_on_move_id_and_state"
+    t.index ["move_id"], name: "index_journeys_on_move_id"
+    t.index ["state"], name: "index_journeys_on_state"
+    t.index ["supplier_id", "billable"], name: "index_journeys_on_supplier_id_and_billable"
+    t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
+    t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
+    t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -319,6 +355,11 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
+  add_foreign_key "events", "moves"
+  add_foreign_key "journeys", "locations", column: "from_location_id"
+  add_foreign_key "journeys", "locations", column: "to_location_id"
+  add_foreign_key "journeys", "moves"
+  add_foreign_key "journeys", "suppliers"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
