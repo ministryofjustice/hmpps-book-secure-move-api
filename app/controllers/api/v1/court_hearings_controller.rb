@@ -6,6 +6,8 @@ module Api
 
         if move
           CourtHearings::CreateInNomis.call(move, move.court_hearings)
+        else
+          Raven.capture_message("CourtHearingsController: Move has not been specified for the court_hearing.id: #{court_hearing.id}", level: 'warning')
         end
 
         render json: court_hearing, status: :created
