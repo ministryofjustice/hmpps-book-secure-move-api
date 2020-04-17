@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
   belongs_to :move
 
-  enum event_types: {
+  enum event_names: {
     move_created: 'move_created',
     move_updated: 'move_updated',
     move_completed: 'move_completed',
@@ -17,7 +17,7 @@ class Event < ApplicationRecord
   }
 
   validates :move, presence: true
-  validates :event_type, presence: true, inclusion: { in: event_types }
+  validates :event_name, presence: true, inclusion: { in: event_names }
   validates :client_timestamp, presence: true
 
   scope :default_order, -> { order(client_timestamp: :asc) }

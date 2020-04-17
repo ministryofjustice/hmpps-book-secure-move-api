@@ -96,14 +96,14 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id", null: false
-    t.string "event_type", null: false
+    t.string "event_name", null: false
     t.jsonb "details"
     t.datetime "client_timestamp", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["move_id", "client_timestamp"], name: "index_events_on_move_id_and_client_timestamp"
-    t.index ["move_id", "event_type"], name: "index_events_on_move_id_and_event_type"
+    t.index ["move_id", "event_name"], name: "index_events_on_move_id_and_event_name"
     t.index ["move_id"], name: "index_events_on_move_id"
   end
 
