@@ -1,5 +1,6 @@
 {
   "CourtHearing": {
+    "description": "The schema of an individual court hearing. This is what gets bundled in an includes or GET /court_hearings/:id response",
     "type": "object",
     "required": ["id", "type", "attributes"],
     "properties": {
@@ -14,12 +15,6 @@
         "type": "object",
         "required": ["start_time"],
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "22036201-4301-4021-8ee6-80bc415b8534",
-            "description": "The universally unique and sequential primary identifier for this entity"
-          },
           "start_time": {
             "type": "string",
             "format": "date-time",
@@ -74,7 +69,7 @@
         "properties": {
           "move": {
             "$ref": "#/definitions/move_reference/MoveReference",
-            "description": "Reference to the move entity that is associated with this court hearing."
+            "description": "Reference to the move entity that is associated with this court hearing. If it is present, Nomis will be updated with the new Court Hearing"
           }
         }
       }
