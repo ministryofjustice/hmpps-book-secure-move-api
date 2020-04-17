@@ -1,17 +1,29 @@
-Fixes P4-<TODO>
+### Jira link
 
-## Proposed Changes
+P4-<TODO>
 
-- TODO
+### What?
 
-## To test/demo change
+I have added/removed/altered:
 
-- TODO
+- [ ] Added foo in bar
+- [ ] Removed baz
 
-## Things to check & link
-- [ ] API docs has been updated if necessary
-- [ ] New environment variables have been added to staging configuration
+### Why?
 
-## Manual steps to deploy/dependencies
+I am doing this because:
 
-- TODO (or remove)
+-
+-
+-
+
+### Have you? (optional)
+
+- [ ] Updated API docs if necessary	
+- [ ] Added environment variables to [deployment repository](https://github.com/ministryofjustice/hmpps-book-secure-move-api-deploy)
+
+### Deployment risks (optional)
+
+- Includes destructive/migratory actions which may effect critical offender data
+- Changes an api that is used in production
+

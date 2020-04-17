@@ -35,6 +35,14 @@ module Api
         end
       end
 
+      def court_cases
+        person = Person.find(params[:person_id])
+
+        court_cases = People::RetrieveCourtCases.call(person)
+
+        render json: court_cases, each_serializer: CourtCaseSerializer, include: :location
+      end
+
     private
 
       def import_person_from_nomis prison_number

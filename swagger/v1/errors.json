@@ -66,10 +66,22 @@
   },
   "UnprocessableEntity": {
     "type": "object",
+    "required": ["code", "detail", "source", "title"],
     "properties": {
       "title": {
         "type": "string",
         "example": "Unprocessable entity"
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "existing_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "88089bbd-8719-4192-b309-f9db9105d3e1",
+            "description": "The unique identifier (UUID) of the move object that caused the error"
+          }
+        }
       },
       "code": {
         "type": "string",

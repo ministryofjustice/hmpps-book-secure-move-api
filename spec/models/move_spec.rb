@@ -25,6 +25,48 @@ RSpec.describe Move do
     )
   end
 
+  it 'validates uniqueness of `date` if `status` is NOT proposed or cancelled' do
+    expect(create(:move)).to(
+      validate_uniqueness_of(:date).scoped_to(:status, :person_id, :from_location_id, :to_location_id),
+    )
+  end
+
+  it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'does NOT validate uniqueness of `date` if `status` is proposed' do
+    expect(build(:move, status: :proposed)).not_to(
+      validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'validates presence of `date` if `status` is NOT proposed' do
+    expect(build(:move)).to(
+      validate_presence_of(:date),
+    )
+  end
+
+  it 'does NOT validate presence of `date` if `status` is proposed' do
+    expect(build(:move, status: :proposed)).not_to(
+      validate_presence_of(:date),
+    )
+  end
+
+  it 'validates presence of `date_from` if `status` is proposed' do
+    expect(build(:move, status: :proposed)).to(
+      validate_presence_of(:date_from),
+    )
+  end
+
+  it 'does NOT validate presence of `date_from` if `status` is NOT proposed' do
+    expect(build(:move)).not_to(
+      validate_presence_of(:date_from),
+    )
+  end
+
   it 'prevents date_from > date_to' do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-03')).not_to be_valid
   end
@@ -145,6 +187,21 @@ RSpec.describe Move do
     context 'when querying for existing moves' do
       it 'finds the right move' do
         expect(duplicate.existing).to eq(move)
+      end
+
+      it 'ignores cancelled moves' do
+        move.update(status: :cancelled)
+        expect(duplicate.existing).to be_nil
+      end
+    end
+  end
+
+  describe '#existing_id' do
+    let!(:move) { build :move }
+
+    context 'when there is no existing move' do
+      it 'returns nil' do
+        expect(move.existing_id).to be_nil
       end
     end
   end

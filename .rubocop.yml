@@ -28,6 +28,9 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
 
+RSpec/ExampleLength:
+  Max: 10
+
 RSpec/NestedGroups:
   Max: 6
 

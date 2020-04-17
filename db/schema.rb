@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_04_121217) do
+ActiveRecord::Schema.define(version: 2020_04_16_101454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -36,6 +36,21 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "allocations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "from_location_id", null: false
+    t.uuid "to_location_id", null: false
+    t.date "date", null: false
+    t.string "prisoner_category"
+    t.string "sentence_length"
+    t.jsonb "complex_cases"
+    t.integer "moves_count", null: false
+    t.boolean "complete_in_full", default: false, null: false
+    t.text "other_criteria"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_allocations_on_date"
+  end
+
   create_table "assessment_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "category", null: false
@@ -43,6 +58,21 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.datetime "disabled_at"
+  end
+
+  create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id"
+    t.datetime "start_time", null: false
+    t.date "case_start_date"
+    t.string "case_type"
+    t.text "comments"
+    t.string "case_number"
+    t.integer "nomis_case_id"
+    t.integer "nomis_hearing_id"
+    t.boolean "saved_to_nomis", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["move_id"], name: "index_court_hearings_on_move_id"
   end
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -103,7 +133,7 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.date "date", null: false
+    t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
     t.uuid "person_id", null: false
@@ -285,6 +315,9 @@ ActiveRecord::Schema.define(version: 2020_03_04_121217) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "allocations", "locations", column: "from_location_id", name: "fk_rails_allocations_from_location_id"
+  add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
+  add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"

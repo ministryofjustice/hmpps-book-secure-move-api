@@ -40,6 +40,7 @@ class Move < VersionedModel
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
+  has_many :court_hearings, dependent: :restrict_with_exception
 
   validates :from_location, presence: true
   validates(
@@ -47,14 +48,22 @@ class Move < VersionedModel
     presence: true,
     unless: ->(move) { move.move_type == 'prison_recall' },
   )
-  validates :date, presence: true
   validates :move_type, inclusion: { in: move_types }
   validates :person, presence: true
   validates :reference, presence: true
 
-  validates :status, inclusion: { in: statuses }
+  # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
+  # except that we need to allow multiple cancelled moves
+  validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
+            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) }
+  validates :date, presence: true,
+            unless: -> { status == MOVE_STATUS_PROPOSED }
+  validates :date_from, presence: true,
+            if: -> { status == MOVE_STATUS_PROPOSED }
 
   validate :date_to_after_date_from
+
+  validates :status, inclusion: { in: statuses }
 
   before_validation :set_reference
   before_validation :set_move_type
@@ -63,6 +72,7 @@ class Move < VersionedModel
   delegate :suppliers, to: :from_location
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
+  scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
@@ -73,7 +83,11 @@ class Move < VersionedModel
   end
 
   def existing
-    Move.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    self.class.not_cancelled.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+  end
+
+  def existing_id
+    existing&.id
   end
 
 private
