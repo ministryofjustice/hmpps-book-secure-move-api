@@ -15,7 +15,7 @@ module CourtHearings
                                            'courtHearingDateTime': hearing.start_time.utc.iso8601,
                                            'comments': hearing.comments,
                                        }.merge(body_locations))
-        if response.status == 201
+        if response&.status == 201
           new_hearing_id = JSON.parse(response.body)['id']
 
           hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
