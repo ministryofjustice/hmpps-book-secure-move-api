@@ -13,6 +13,18 @@ RSpec.describe NomisClient::CourtHearing, with_nomis_client_authentication: true
     let(:response_status) { 201 }
     let(:response_body) { '{}' }
 
+    let(:raven_args) do
+      [
+        'CourtHearings:CreateInNomis success!',
+        extra: {
+          body_params: {},
+          court_cases_route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
+          nomis_response: { body: '{}', status: 201 },
+        },
+        level: 'warning',
+      ]
+    end
+
     it 'creates prison-to-court-hearing in Nomis ' do
       court_hearing_post
 
@@ -26,17 +38,7 @@ RSpec.describe NomisClient::CourtHearing, with_nomis_client_authentication: true
 
       court_hearing_post
 
-      expect(Raven).
-        to have_received(:capture_message).
-        with(
-          "CourtHearings:CreateInNomis success!",
-          extra: {
-            body_params: {},
-            court_cases_route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
-            nomis_response: { body: '{}', status: 201 }
-          },
-          level: 'warning'
-      )
+      expect(Raven).to have_received(:capture_message).with(*raven_args)
     end
 
     context 'when Nomis returns an error' do
@@ -47,22 +49,24 @@ RSpec.describe NomisClient::CourtHearing, with_nomis_client_authentication: true
 
       let(:response_status) { 500 }
 
+      let(:raven_args) do
+        [
+          'CourtHearings:CreateInNomis Error!',
+          extra: {
+            body_params: {},
+            court_cases_route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
+            nomis_response: { body: '{}', status: 500 },
+          },
+          level: 'warning',
+        ]
+      end
+
       it 'pushes an error warning to Sentry' do
         allow(Raven).to receive(:capture_message)
 
         court_hearing_post
 
-        expect(Raven).
-          to have_received(:capture_message).
-          with(
-            "CourtHearings:CreateInNomis Error!",
-            extra: {
-              body_params: {},
-              court_cases_route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
-              nomis_response: { body: '{}', status: 500 }
-            },
-            level: 'warning'
-          )
+        expect(Raven).to have_received(:capture_message).with(*raven_args)
       end
     end
   end
