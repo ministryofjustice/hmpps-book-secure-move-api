@@ -52,7 +52,7 @@ RSpec.describe Api::V1::CourtHearingsController do
         {
           type: 'court_hearings',
           attributes: court_hearing_attributes,
-          relationships: { moves: { data: { type: 'moves', id: move.id } } },
+          relationships: { move: { data: { type: 'moves', id: move.id } } },
         }
       end
 

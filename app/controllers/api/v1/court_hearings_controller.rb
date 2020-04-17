@@ -31,7 +31,7 @@ module Api
       end
 
       def move
-        id = params.require(:data).dig(:relationships, :moves, :data, :id)
+        id = params.require(:data).dig(:relationships, :move, :data, :id)
 
         return if id.blank?
 
