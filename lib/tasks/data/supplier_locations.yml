@@ -84,6 +84,7 @@ geoamey:
   - MRS3
   - MRS4
   - MRS5
+  - NMI
   - NRU1
   - NRU2
   - NRU3
@@ -225,3 +226,4 @@ serco:
   - PVI
   - SFL1
   - SFL2
+  - TSI
