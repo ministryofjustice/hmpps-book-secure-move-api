@@ -69,7 +69,7 @@
         "properties": {
           "move": {
             "$ref": "#/definitions/move_reference/MoveReference",
-            "description": "This is required for us to create a Court Hearing in nomis. Reference to the move entity that is associated with this court hearing."
+            "description": "Reference to the move entity that is associated with this court hearing. If it is present, Nomis will be updated with the new Court Hearing"
           }
         }
       }
