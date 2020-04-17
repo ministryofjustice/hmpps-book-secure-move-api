@@ -11,7 +11,7 @@ RSpec.describe NomisClient::CourtHearing do
     let(:booking_id) { 1111 }
     let(:court_case_id) { 2222 }
 
-    it 'creates prison-to-court-hearing in Nomis ' do
+    xit 'creates prison-to-court-hearing in Nomis ' do
       allow(NomisClient::Base).to receive(:post).and_return(instance_double('OAuth2::Response', body: nil))
 
       court_hearing_post
@@ -21,7 +21,7 @@ RSpec.describe NomisClient::CourtHearing do
     end
 
     context 'when Nomis returns an error' do
-      it 'pushes error the warning to Sentry' do
+      xit 'pushes error the warning to Sentry' do
         allow(Raven).to receive(:capture_message)
 
         court_hearing_post
