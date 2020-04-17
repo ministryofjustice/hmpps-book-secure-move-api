@@ -19,5 +19,15 @@ RSpec.describe NomisClient::CourtHearing do
       expect(NomisClient::Base).to have_received(:post)
                                        .with("/bookings/#{booking_id}/court-cases/#{court_case_id}/prison-to-court-hearings", body: '{}')
     end
+
+    context 'when Nomis returns an error' do
+      it 'pushes error the warning to Sentry' do
+        allow(Raven).to receive(:capture_message)
+
+        court_hearing_post
+
+        expect(Raven).to have_received(:capture_message)
+      end
+    end
   end
 end

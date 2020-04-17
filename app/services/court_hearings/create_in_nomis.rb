@@ -19,9 +19,6 @@ module CourtHearings
           new_hearing_id = JSON.parse(response.body)['id']
 
           hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
-        else
-          message = { move_id: move.id, court_hearing_id: hearing.id, nomis_response: response.inspect }
-          Raven.capture_message("CourtHearings:CreateInNomis: #{message}", level: 'warning')
         end
       end
     end
