@@ -23,6 +23,7 @@ gem 'cancancan'
 gem 'discard'
 gem 'doorkeeper'
 gem 'faraday'
+gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
 # static page serving for extra API documentation
 gem 'high_voltage'
