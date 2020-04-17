@@ -19,7 +19,8 @@ module NomisClient
                                   },
                               },
                               level: 'warning')
-        nomis_response.body
+
+        nomis_response
       rescue OAuth2::Error => e
         Raven.capture_message('CourtHearings:CreateInNomis Error!',
                               extra: {
@@ -31,6 +32,8 @@ module NomisClient
                                   },
                               },
                               level: 'warning')
+
+        e.response
       end
     end
   end
