@@ -2,7 +2,11 @@
   "CourtHearing": {
     "description": "The schema of an individual court hearing. This is what gets bundled in an includes or GET /court_hearings/:id response",
     "type": "object",
-    "required": ["id", "type", "attributes"],
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
     "properties": {
       "id": {
         "type": "string",
@@ -10,10 +14,15 @@
         "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6",
         "description": "The unique identifier (UUID) of this object"
       },
-      "type": { "type": "string", "enum": "court_hearings" },
+      "type": {
+        "type": "string",
+        "enum": "court_hearings"
+      },
       "attributes": {
         "type": "object",
-        "required": ["start_time"],
+        "required": [
+          "start_time"
+        ],
         "properties": {
           "start_time": {
             "type": "string",
@@ -33,8 +42,12 @@
           },
           "nomis_hearing_id": {
             "oneOf": [
-              { "type": "integer" },
-              { "type": "null" }
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
             ],
             "example": 4232424,
             "nullable": true,
@@ -48,7 +61,6 @@
           "case_type": {
             "type": "string",
             "example": "Adult",
-            "enum": ["Adult"],
             "description": "The type of the court that the court hearing is being held in."
           },
           "comments": {
