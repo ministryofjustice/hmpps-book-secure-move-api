@@ -19,6 +19,8 @@ RSpec.shared_context 'with json schema', shared_context: :metadata do
   end
 end
 
-RSpec.configure do |rspec|
-  rspec.include_context 'with json schema', with_json_schema: true
+RSpec.configure do |config|
+  config.before(:suite) do
+    config.include_context 'with json schema'
+  end
 end

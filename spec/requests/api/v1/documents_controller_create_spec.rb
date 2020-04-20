@@ -60,7 +60,7 @@ RSpec.describe Api::V1::DocumentsController do
               )
           end
 
-          schema "$ref": '#/definitions/post_document_responses/201'
+          schema '$ref' => 'post_documents_responses.json#/201'
 
           run_test! do |_example|
             expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))

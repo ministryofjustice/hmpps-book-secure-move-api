@@ -61,7 +61,7 @@ RSpec.describe Api::V1::PeopleController do
         get '/api/v1/people', headers: headers, params: params
       end
 
-      it 'requests data from NOMIS', with_json_schema: true do
+      it 'requests data from NOMIS' do
         expect(response).to have_http_status(:ok)
       end
     end
