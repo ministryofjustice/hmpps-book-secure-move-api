@@ -1,14 +1,28 @@
 {
-  "200": {
+  "401": {
     "type": "object",
     "required": [
-      "data"
+      "errors"
     ],
     "properties": {
-      "data": {
+      "errors": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/prison_transfer_reason/PrisonTransferReason"
+          "$ref": "errors.json#/NotAuthorisedError"
+        }
+      }
+    }
+  },
+  "404": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/ResourceNotFound"
         }
       }
     }
@@ -23,20 +37,6 @@
         "type": "array",
         "items": {
           "$ref": "errors.json#/UnsupportedMediaType"
-        }
-      }
-    }
-  },
-  "401": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/NotAuthorisedError"
         }
       }
     }

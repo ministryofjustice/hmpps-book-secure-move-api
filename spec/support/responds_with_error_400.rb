@@ -18,7 +18,7 @@ RSpec.shared_examples 'an endpoint that responds with error 400' do
     expect(JSON.parse(response.body)).to include_json(errors: errors_400)
   end
 
-  it 'returns a valid 400 JSON response', with_json_schema: true do
+  it 'returns a valid 400 JSON response' do
     expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
   end
 

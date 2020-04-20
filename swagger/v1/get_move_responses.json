@@ -6,11 +6,13 @@
     ],
     "properties": {
       "data": {
-        "$ref": "#/definitions/document/Document"
+        "data": {
+          "$ref": "move.json#/Move"
+        }
       }
     }
   },
-  "401": {
+  "415": {
     "type": "object",
     "required": [
       "errors"
@@ -19,7 +21,21 @@
       "errors": {
         "type": "array",
         "items": {
-          "$ref": "errors.json#/NotAuthorisedError"
+          "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
+  "400": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/BadRequest"
         }
       }
     }
@@ -38,7 +54,7 @@
       }
     }
   },
-  "415": {
+  "401": {
     "type": "object",
     "required": [
       "errors"
@@ -47,7 +63,7 @@
       "errors": {
         "type": "array",
         "items": {
-          "$ref": "errors.json#/UnsupportedMediaType"
+          "$ref": "errors.json#/NotAuthorisedError"
         }
       }
     }

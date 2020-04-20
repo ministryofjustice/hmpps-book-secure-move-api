@@ -91,7 +91,7 @@ RSpec.describe Api::V1::MovesController do
             JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
           end
 
-          schema "$ref": '#/definitions/get_move_responses/200'
+          schema "$ref": 'get_move_responses.json#/200'
 
           run_test! do |_example|
             expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
