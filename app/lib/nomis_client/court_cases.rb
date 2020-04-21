@@ -11,7 +11,7 @@ module NomisClient
         NomisClient::Base.get(court_cases_route).body
       end
 
-      private
+    private
 
       def filter_query(filter_params)
         return if filter_params.blank?
