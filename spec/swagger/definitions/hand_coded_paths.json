@@ -272,6 +272,329 @@
       }
     }
   },
+  "/moves/{move_id}": {
+    "patch": {
+      "summary": "Updates a move. Aliased as PUT /moves/{move_id}.",
+      "tags": [
+        "Moves"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The move object to be modified",
+          "schema": {
+            "$ref": "move.json#/Move"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/200"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/404"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_move_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "description": "Moves should be cancelled instead of deleted",
+      "deprecated": true,
+      "summary": "Deletes a move",
+      "tags": [
+        "Moves"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "delete_move_responses.json#/200"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "delete_move_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "delete_move_responses.json#/404"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "delete_move_responses.json#/415"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/moves/{move_id}/documents": {
+    "post": {
+      "summary": "Creates a new document",
+      "tags": [
+        "Document"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The document object to be created",
+          "schema": {
+            "$ref": "document.json#/Document"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/404"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_documents_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/moves/{move_id}/redirects": {
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a new redirect",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a redirect event changes the underlying move's destination (`to_location`). It does _not_ alter the journeys associated with the move: additional API calls will be necessary to cancel existing journeys and create new journeys.",
+      "tags": [
+        "Moves"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The redirect event object to be created. It must specify `timestamp`, `reason` and `to_location`.",
+          "schema": {
+            "$ref": "redirect.json#/PostRedirect"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/people": {
     "get": {
       "summary": "Returns a list of people",
@@ -544,11 +867,11 @@
       }
     }
   },
-  "/reference/genders": {
+  "/reference/assessment_questions": {
     "get": {
-      "summary": "Returns a list of genders",
+      "summary": "Returns a list of assessment questions, optionally filtered by category",
       "tags": [
-        "Genders"
+        "Assessment Questions"
       ],
       "consumes": [
         "application/vnd.api+json"
@@ -563,6 +886,19 @@
             "default": "application/vnd.api+json"
           },
           "required": true
+        },
+        {
+          "name": "filter[category]",
+          "in": "query",
+          "description": "Filters results to only include move detail types for the given category",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "risk",
+              "health",
+              "court"
+            ]
+          }
         }
       ],
       "responses": {
@@ -571,7 +907,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/200"
+                "$ref": "get_assessment_questions_responses.json#/200"
               }
             }
           }
@@ -581,7 +917,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/401"
+                "$ref": "get_assessment_questions_responses.json#/401"
               }
             }
           }
@@ -591,7 +927,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/415"
+                "$ref": "get_assessment_questions_responses.json#/415"
               }
             }
           }
@@ -654,11 +990,11 @@
       }
     }
   },
-  "/reference/nationalities": {
+  "/reference/genders": {
     "get": {
-      "summary": "Returns a list of nationalities",
+      "summary": "Returns a list of genders",
       "tags": [
-        "Nationalities"
+        "Genders"
       ],
       "consumes": [
         "application/vnd.api+json"
@@ -681,7 +1017,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/200"
+                "$ref": "get_genders_responses.json#/200"
               }
             }
           }
@@ -691,7 +1027,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/401"
+                "$ref": "get_genders_responses.json#/401"
               }
             }
           }
@@ -701,318 +1037,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/415"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/moves/{move_id}": {
-    "patch": {
-      "summary": "Updates a move. Aliased as PUT /moves/{move_id}.",
-      "tags": [
-        "Moves"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        {
-          "name": "move_id",
-          "in": "path",
-          "required": true,
-          "description": "The ID of the move",
-          "schema": {
-            "type": "string"
-          },
-          "format": "uuid",
-          "example": "00525ecb-7316-492a-aae2-f69334b2a155"
-        },
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "description": "The move object to be modified",
-          "schema": {
-            "$ref": "move.json#/Move"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "success",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/200"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "bad request",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/400"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/404"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/415"
-              }
-            }
-          }
-        },
-        "422": {
-          "description": "unprocessable entity",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_move_responses.json#/422"
-              }
-            }
-          }
-        }
-      }
-    },
-    "delete": {
-      "summary": "Deletes a move",
-      "tags": [
-        "Moves"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        {
-          "name": "move_id",
-          "in": "path",
-          "required": true,
-          "description": "The ID of the move",
-          "schema": {
-            "type": "string"
-          },
-          "format": "uuid",
-          "example": "00525ecb-7316-492a-aae2-f69334b2a155"
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "success",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "delete_move_responses.json#/200"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "delete_move_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "delete_move_responses.json#/404"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "delete_move_responses.json#/415"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/moves/{move_id}/documents": {
-    "post": {
-      "summary": "Creates a new document",
-      "tags": [
-        "Document"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "description": "The document object to be created",
-          "schema": {
-            "$ref": "document.json#/Document"
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "created",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/201"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "bad request",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/400"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/404"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/415"
-              }
-            }
-          }
-        },
-        "422": {
-          "description": "unprocessable entity",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_documents_responses.json#/422"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/reference/assessment_questions": {
-    "get": {
-      "summary": "Returns a list of assessment questions, optionally filtered by category",
-      "tags": [
-        "Assessment Questions"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
-        {
-          "name": "filter[category]",
-          "in": "query",
-          "description": "Filters results to only include move detail types for the given category",
-          "schema": {
-            "type": "string",
-            "enum": [
-              "risk",
-              "health",
-              "court"
-            ]
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "success",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "get_assessment_questions_responses.json#/200"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "get_assessment_questions_responses.json#/401"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "get_assessment_questions_responses.json#/415"
+                "$ref": "get_genders_responses.json#/415"
               }
             }
           }
@@ -1175,6 +1200,61 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "get_location_responses.json#/415"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reference/nationalities": {
+    "get": {
+      "summary": "Returns a list of nationalities",
+      "tags": [
+        "Nationalities"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_nationalities_responses.json#/200"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_nationalities_responses.json#/401"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_nationalities_responses.json#/415"
               }
             }
           }

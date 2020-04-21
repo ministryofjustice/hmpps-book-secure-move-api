@@ -75,32 +75,23 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          AssessmentAnswer: {
+            "$ref": 'assessment_answer.json#/AssessmentAnswer',
+          },
+          AssessmentQuestion: {
+            "$ref": 'assessment_question.json#/AssessmentQuestion',
+          },
+          CourtCase: {
+            "$ref": 'court_case.json#/CourtCase',
+          },
           CourtHearing: {
             "$ref": 'court_hearing.json#/CourtHearing',
           },
           CourtHearingReference: {
             "$ref": 'court_hearing_reference.json#/CourtHearingReference',
           },
-          CourtCase: {
-            "$ref": 'court_case.json#/CourtCase',
-          },
-          Move: {
-            "$ref": 'move.json#/Move',
-          },
-          MoveReference: {
-            "$ref": 'move_reference.json#/MoveReference',
-          },
-          PersonReference: {
-            "$ref": 'person_reference.json#/PersonReference',
-          },
-          LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference',
-          },
-          Location: {
-            "$ref": 'location.json#/Location',
-          },
-          Person: {
-            "$ref": 'person.json#/Person',
+          Document: {
+            "$ref": 'document.json#/Document',
           },
           Ethnicity: {
             "$ref": 'ethnicity.json#/Ethnicity',
@@ -108,20 +99,32 @@ RSpec.configure do |config|
           Gender: {
             "$ref": 'gender.json#/Gender',
           },
+          Location: {
+            "$ref": 'location.json#/Location',
+          },
+          LocationReference: {
+            "$ref": 'location_reference.json#/LocationReference',
+          },
+          Move: {
+            "$ref": 'move.json#/Move',
+          },
+          MoveReference: {
+            "$ref": 'move_reference.json#/MoveReference',
+          },
           Nationality: {
             "$ref": 'nationality.json#/Nationality',
           },
-          Supplier: {
-            "$ref": 'supplier.json#/Supplier',
+          Pagination: {
+            "$ref": 'pagination.json#/Pagination',
           },
-          Document: {
-            "$ref": 'document.json#/Document',
+          PaginationLinks: {
+            "$ref": 'pagination_links.json#/PaginationLinks',
           },
-          AssessmentAnswer: {
-            "$ref": 'assessment_answer.json#/AssessmentAnswer',
+          Person: {
+            "$ref": 'person.json#/Person',
           },
-          AssessmentQuestion: {
-            "$ref": 'assessment_question.json#/AssessmentQuestion',
+          PersonReference: {
+            "$ref": 'person_reference.json#/PersonReference',
           },
           PrisonTransferReason: {
             "$ref": 'prison_transfer_reason.json#/PrisonTransferReason',
@@ -129,11 +132,11 @@ RSpec.configure do |config|
           ProfileIdentifier: {
             "$ref": 'profile_identifier.json#/ProfileIdentifier',
           },
-          PaginationLinks: {
-            "$ref": 'pagination_links.json#/PaginationLinks',
+          Redirect: {
+            "$ref": 'redirect.json#/GetRedirect',
           },
-          Pagination: {
-            "$ref": 'pagination.json#/Pagination',
+          Supplier: {
+            "$ref": 'supplier.json#/Supplier',
           },
         },
       },

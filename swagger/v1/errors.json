@@ -51,6 +51,19 @@
       }
     }
   },
+  "Conflict": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "example": "Conflict"
+      },
+      "detail": {
+        "type": "string",
+        "example": "Duplicate idempotency key"
+      }
+    }
+  },
   "UnsupportedMediaType": {
     "type": "object",
     "properties": {

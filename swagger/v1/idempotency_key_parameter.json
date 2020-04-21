@@ -1,0 +1,13 @@
+{
+  "IdempotencyKey": {
+    "name": "Idempotency-Key",
+    "description": "A randomly generated UUID which will be used by the server to prevent duplicate messages from being processed. Every request must have a new idempotency key.",
+    "in": "header",
+    "required": true,
+    "schema": {
+      "type": "string",
+      "format": "uuid",
+      "example": "5b61f755-0fd7-4a91-b7a3-a33d751f985f"
+    }
+  }
+}
