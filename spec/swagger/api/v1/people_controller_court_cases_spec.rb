@@ -38,6 +38,11 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
                 required: true
+      parameter name: :'filter[active]',
+                in: :query,
+                description: 'Filter only active court cases.',
+                schema: { type: :string, default: 'false', example: 'true', enum: ['true', 'false'] },
+                required: false
 
       response '200', 'success' do
         let(:person_id) { person.id }
