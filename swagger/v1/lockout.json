@@ -1,5 +1,5 @@
 {
-  "GetRedirect": {
+  "GetLockout": {
     "type": "object",
     "required": [
       "id",
@@ -15,9 +15,9 @@
       },
       "type": {
         "type": "string",
-        "example": "redirects",
-        "enum": ["redirects"],
-        "description": "The type of this object - always `redirects`"
+        "example": "lockouts",
+        "enum": ["lockouts"],
+        "description": "The type of this object - always `lockouts`"
       },
       "attributes": {
         "type": "object",
@@ -29,26 +29,26 @@
           "timestamp": { "$ref": "timestamp_attribute.json#/Timestamp" },
           "reason": {
             "type": "string",
-            "example": "redirecting because of a request from PMU",
-            "description": "reason or note to explain the redirection"
+            "example": "arrived late because of van breakdown",
+            "description": "reason or note to explain the lockout"
           }
         }
       },
       "relationships": {
         "type": "object",
         "required": [
-          "to_location"
+          "location"
         ],
         "properties": {
-          "to_location": {
+          "location": {
             "$ref": "location_reference.json#/LocationReference2",
-            "description": "The location that the move is being redirected to"
+            "description": "The location which has been locked out"
           }
         }
       }
     }
   },
-  "PostRedirect": {
+  "PostLockout": {
     "type": "object",
     "required": [
       "type",
@@ -57,9 +57,9 @@
     "properties": {
       "type": {
         "type": "string",
-        "example": "redirects",
-        "enum": ["redirects"],
-        "description": "The type of this object - always `redirects`"
+        "example": "lockouts",
+        "enum": ["lockouts"],
+        "description": "The type of this object - always `lockouts`"
       },
       "attributes": {
         "type": "object",
@@ -71,20 +71,20 @@
           "timestamp": { "$ref": "timestamp_attribute.json#/Timestamp" },
           "reason": {
             "type": "string",
-            "example": "redirecting because of a request from PMU",
-            "description": "reason or note to explain the redirection"
+            "example": "arrived late because of van breakdown",
+            "description": "reason or note to explain the lockout"
           }
         }
       },
       "relationships": {
         "type": "object",
         "required": [
-          "to_location"
+          "location"
         ],
         "properties": {
-          "to_location": {
+          "location": {
             "$ref": "location_reference.json#/LocationReference2",
-            "description": "The location that the move is being redirected to"
+            "description": "The location which has been locked out"
           }
         }
       }

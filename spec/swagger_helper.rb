@@ -105,6 +105,9 @@ RSpec.configure do |config|
           LocationReference: {
             "$ref": 'location_reference.json#/LocationReference1',
           },
+          Lockout: {
+            "$ref": 'lockout.json#/GetLockout',
+          },
           Move: {
             "$ref": 'move.json#/Move',
           },
