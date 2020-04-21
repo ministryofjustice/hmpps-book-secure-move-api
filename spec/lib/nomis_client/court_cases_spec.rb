@@ -17,7 +17,7 @@ RSpec.describe NomisClient::CourtCases, with_nomis_client_authentication: true d
       expect(nomis_client).to have_received(:get).with("/bookings/#{booking_id}/court-cases")
     end
 
-    context "when no filter_params are passed" do
+    context 'when no filter_params are passed' do
       it 'returns active court cases' do
         allow(nomis_client).to receive(:get).and_return(instance_double('OAuth2::Response', body: response_body))
 
