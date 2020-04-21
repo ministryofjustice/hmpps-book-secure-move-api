@@ -3,12 +3,20 @@
 module NomisClient
   class CourtCases < NomisClient::Base
     class << self
-      ACTIVE_CASES_FILTER = 'activeOnly=true'
+      def get(booking_id, filter_params)
+        query = filter_query(filter_params)
 
-      def get(booking_id)
-        court_cases_route = "/bookings/#{booking_id}/court-cases?#{ACTIVE_CASES_FILTER}"
+        court_cases_route = "/bookings/#{booking_id}/court-cases#{query}"
 
         NomisClient::Base.get(court_cases_route).body
+      end
+
+      private
+
+      def filter_query(filter_params)
+        return if filter_params.blank?
+
+        "?activeOnly=#{filter_params.fetch(:active, 'false')}"
       end
     end
   end
