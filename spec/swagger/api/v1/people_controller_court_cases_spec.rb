@@ -41,7 +41,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       parameter name: :'filter[active]',
                 in: :query,
                 description: 'Filter only active court cases.',
-                schema: { type: :string, default: 'true', example: 'false', enum: ['true', 'false'] },
+                schema: { type: :string, default: 'true', example: 'false', enum: %w[true false] },
                 required: false
 
       response '200', 'success' do
