@@ -38,7 +38,7 @@ module Api
       def court_cases
         person = Person.find(params[:person_id])
 
-        court_cases = People::RetrieveCourtCases.call(person)
+        court_cases = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
         render json: court_cases, each_serializer: CourtCaseSerializer, include: :location
       end
@@ -54,6 +54,7 @@ module Api
         Raven.capture_exception(e)
       end
 
+      PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
       PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
       PERSON_ATTRIBUTES = [
         :first_names,
@@ -85,6 +86,12 @@ module Api
 
       def filter_params
         params.require(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
+      end
+
+      def court_case_filter_params
+        return unless params[:filter]
+
+        params.require(:filter).permit(PERMITTED_COURT_CASE_FILTER_PARAMS).to_h
       end
     end
   end
