@@ -10,7 +10,7 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "be0b6203-8f21-455d-a1d4-664ddcfcbf8b",
+        "example": "c25ce99e-d09d-41f9-bfef-a63e2043510b",
         "description": "The unique identifier (UUID) of this object"
       },
       "type": {

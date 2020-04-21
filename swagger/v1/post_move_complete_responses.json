@@ -1,0 +1,13 @@
+{
+  "201": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "$ref": "complete.json#/GetComplete"
+      }
+    }
+  }
+}
