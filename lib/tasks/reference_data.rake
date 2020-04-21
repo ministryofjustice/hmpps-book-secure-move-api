@@ -26,6 +26,11 @@ namespace :reference_data do
     AssessmentQuestions::Importer.new.call
   end
 
+  desc 'create complex cases'
+  task create_complex_cases: :environment do
+    ComplexCases::Importer.new.call
+  end
+
   desc 'create NOMIS alert mappings'
   task create_nomis_alerts: :environment do
     NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call

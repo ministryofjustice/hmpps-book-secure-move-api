@@ -544,6 +544,61 @@
       }
     }
   },
+  "/reference/complex_cases": {
+    "get": {
+      "summary": "Returns a list of complex cases",
+      "tags": [
+        "ComplexCases"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_complex_cases_responses.json#/200"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_complex_cases_responses.json#/401"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_complex_cases_responses.json#/415"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/reference/genders": {
     "get": {
       "summary": "Returns a list of genders",

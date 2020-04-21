@@ -75,6 +75,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          ComplexCase: {
+            "$ref": 'complex_case.json#/ComplexCase',
+          },
           CourtHearing: {
             "$ref": 'court_hearing.json#/CourtHearing',
           },
