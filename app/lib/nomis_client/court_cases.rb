@@ -3,7 +3,11 @@
 module NomisClient
   class CourtCases < NomisClient::Base
     class << self
-      def get(booking_id, filter_params)
+      DEFAULT_FILTER_PARAMS = {
+        active: 'true'
+      }
+
+      def get(booking_id, filter_params = DEFAULT_FILTER_PARAMS)
         query = filter_query(filter_params)
 
         court_cases_route = "/bookings/#{booking_id}/court-cases#{query}"

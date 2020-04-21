@@ -17,10 +17,20 @@ RSpec.describe NomisClient::CourtCases, with_nomis_client_authentication: true d
       expect(nomis_client).to have_received(:get).with("/bookings/#{booking_id}/court-cases")
     end
 
+    context "when no filter_params are passed" do
+      it 'returns active court cases' do
+        allow(nomis_client).to receive(:get).and_return(instance_double('OAuth2::Response', body: response_body))
+
+        described_class.get(booking_id)
+
+        expect(nomis_client).to have_received(:get).with("/bookings/#{booking_id}/court-cases?activeOnly=true")
+      end
+    end
+
     context 'when filter_params are present' do
       let(:filter_params) { ActionController::Parameters.new(active: 'true') }
 
-      it 'calls the nomis client with the correct booking id' do
+      it 'returns active court cases' do
         allow(nomis_client).to receive(:get).and_return(instance_double('OAuth2::Response', body: response_body))
 
         described_class.get(booking_id, filter_params)
