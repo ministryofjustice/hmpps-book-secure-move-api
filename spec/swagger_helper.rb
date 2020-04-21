@@ -81,6 +81,9 @@ RSpec.configure do |config|
           AssessmentQuestion: {
             "$ref": 'assessment_question.json#/AssessmentQuestion',
           },
+          Complete: {
+            "$ref": 'complete.json#/GetComplete',
+          },
           CourtCase: {
             "$ref": 'court_case.json#/CourtCase',
           },

@@ -514,7 +514,7 @@
     "post": {
       "summary": "Creates a new document",
       "tags": [
-        "Document"
+        "Documents"
       ],
       "consumes": [
         "application/vnd.api+json"
