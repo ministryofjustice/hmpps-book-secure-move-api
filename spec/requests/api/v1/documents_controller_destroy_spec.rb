@@ -33,7 +33,7 @@ RSpec.describe Api::V1::DocumentsController do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'returns a valid 200 JSON response', with_json_schema: true do
+      it 'returns a valid 200 JSON response' do
         expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
       end
 

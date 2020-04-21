@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'with json schema', shared_context: :metadata do
+RSpec.configure do |config|
   def load_schema(file_name)
     return unless File.file?("#{Rails.root}/swagger/v1/#{file_name}")
 
@@ -14,11 +14,8 @@ RSpec.shared_context 'with json schema', shared_context: :metadata do
     end
   end
 
-  before(:all) do
+  config.before(:suite) do
+    # This runs *once* before the test suite starts to ensure that we can resolve all of the Swagger JSON definitions
     Dir.glob('**/*.json', base: 'swagger/v1').each { |file_name| load_schema(file_name) }
   end
-end
-
-RSpec.configure do |rspec|
-  rspec.include_context 'with json schema', with_json_schema: true
 end

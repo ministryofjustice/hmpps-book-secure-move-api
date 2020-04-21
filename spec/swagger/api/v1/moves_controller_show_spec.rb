@@ -49,7 +49,7 @@ RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag, ty
           JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
         end
 
-        schema "$ref": '#/definitions/get_move_responses/200'
+        schema '$ref' => 'get_move_responses.json#/200'
 
         run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))

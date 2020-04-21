@@ -6,20 +6,8 @@ def swagger_file(*relative_path)
   File.read(Rails.root.join('spec', 'swagger', 'definitions', *relative_path))
 end
 
-def swagger_v1_file(*relative_path)
-  File.read(Rails.root.join('swagger', 'v1', *relative_path))
-end
-
-def load_swagger_yaml(*relative_path)
-  YAML.safe_load(swagger_file(*relative_path)).deep_symbolize_keys
-end
-
 def load_swagger_json(*relative_path)
   JSON.parse(swagger_file(*relative_path))
-end
-
-def load_swagger_v1_json(*relative_path)
-  JSON.parse(swagger_v1_file(*relative_path))
 end
 
 RSpec.configure do |config|
@@ -148,26 +136,6 @@ RSpec.configure do |config|
             "$ref": 'pagination.json#/Pagination',
           },
         },
-      },
-      definitions: {
-        court_case: load_swagger_json('court_case.json'),
-        court_hearing: load_swagger_json('court_hearing.json'),
-        court_hearing_reference: load_swagger_json('court_hearing_reference.json'),
-        document: load_swagger_json('document.json'),
-        prison_transfer_reason: load_swagger_v1_json('prison_transfer_reason.json'),
-        prison_transfer_reason_reference: load_swagger_v1_json('prison_transfer_reason_reference.json'),
-        location_reference: load_swagger_json('location_reference.json'),
-        move: load_swagger_v1_json('move.json'),
-        move_reference: load_swagger_json('move_reference.json'),
-        person_reference: load_swagger_json('person_reference.json'),
-        get_court_cases_responses: load_swagger_json('get_court_cases_responses.json'),
-        get_move_responses: load_swagger_json('get_move_responses.json'),
-        get_reasons_responses: load_swagger_json('get_prison_transfer_reasons_responses.json'),
-        delete_document_responses: load_swagger_json('delete_document_responses.json'),
-        post_court_hearing_responses: load_swagger_json('post_court_hearing_responses.json'),
-        post_document_responses: load_swagger_json('post_document_responses.json'),
-        errors: load_swagger_json('errors.json'),
-        error_responses: load_swagger_json('error_responses.json'),
       },
       paths: load_swagger_json('hand_coded_paths.json'),
     },

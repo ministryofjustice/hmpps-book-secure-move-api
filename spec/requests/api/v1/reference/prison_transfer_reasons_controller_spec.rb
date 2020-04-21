@@ -41,7 +41,7 @@ RSpec.describe Api::V1::Reference::PrisonTransferReasonsController, :rswag, :wit
           JSON.parse(ActionController::Base.render(json: reasons))
         end
 
-        schema "$ref": '#/definitions/get_reasons_responses/200'
+        schema '$ref' => 'get_prison_transfer_reasons_responses.json#/200'
 
         run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))

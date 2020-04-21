@@ -16,7 +16,11 @@
       },
       "type": {
         "type": "string",
-        "enum": "court_hearings"
+        "example": "court_hearings",
+        "enum": [
+          "court_hearings"
+        ],
+        "description": "The type of this object - always `court_hearings`"
       },
       "attributes": {
         "type": "object",
@@ -50,7 +54,6 @@
               }
             ],
             "example": 4232424,
-            "nullable": true,
             "description": "After a new hearing is created in Nomis backend it receives a unique id. This can be null and means we failed to create a corresponding hearing in Nomis or did not need too."
           },
           "saved_to_nomis": {
@@ -80,8 +83,8 @@
         "type": "object",
         "properties": {
           "move": {
-            "$ref": "#/definitions/move_reference/MoveReference",
-            "description": "Reference to the move entity that is associated with this court hearing. If it is present, Nomis will be updated with the new Court Hearing"
+            "$ref": "move_reference.json#/MoveReference",
+            "description": "Reference to the move entity that is associated with this court hearing. If it is present, Nomis will be updated with the new Court Hearing."
           }
         }
       }
