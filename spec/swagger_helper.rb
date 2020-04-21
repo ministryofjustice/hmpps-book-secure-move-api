@@ -100,10 +100,10 @@ RSpec.configure do |config|
             "$ref": 'gender.json#/Gender',
           },
           Location: {
-            "$ref": 'location.json#/Location',
+            "$ref": 'location.json#/Location1',
           },
           LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference',
+            "$ref": 'location_reference.json#/LocationReference1',
           },
           Move: {
             "$ref": 'move.json#/Move',

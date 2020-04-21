@@ -15,7 +15,8 @@
         "type": "array",
         "items": {
           "anyOf": [
-            { "$ref": "location.json#/Location" },
+            { "$ref": "location.json#/Location1" },
+            { "$ref": "location.json#/Location2" },
             { "$ref": "person.json#/Person" },
             { "$ref": "gender.json#/Gender" },
             { "$ref": "ethnicity.json#/Ethnicity" }

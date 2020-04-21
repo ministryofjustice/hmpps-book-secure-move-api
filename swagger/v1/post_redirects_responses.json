@@ -7,6 +7,14 @@
     "properties": {
       "data": {
         "$ref": "redirect.json#/GetRedirect"
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            { "$ref": "location.json#/Location2" }
+          ]
+        }
       }
     }
   },

@@ -357,9 +357,9 @@
       }
     },
     "delete": {
-      "description": "Moves should be cancelled instead of deleted",
+      "description": "## [DO NOT USE]\n\nMoves should be cancelled instead of deleted",
       "deprecated": true,
-      "summary": "Deletes a move",
+      "summary": "[DO NOT USE] Deletes a move",
       "tags": [
         "Moves"
       ],

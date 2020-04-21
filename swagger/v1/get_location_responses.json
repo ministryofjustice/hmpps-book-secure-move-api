@@ -6,7 +6,7 @@
     ],
     "properties": {
       "data": {
-        "$ref": "location.json#/Location"
+        "$ref": "location.json#/Location1"
       }
     }
   },
