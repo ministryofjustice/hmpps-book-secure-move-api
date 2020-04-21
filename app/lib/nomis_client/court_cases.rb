@@ -16,7 +16,7 @@ module NomisClient
       def filter_query(filter_params)
         return if filter_params.blank?
 
-        "?activeOnly=#{filter_params.fetch(:active, 'false')}"
+        "?activeOnly=#{filter_params.fetch(:active, 'true')}"
       end
     end
   end
