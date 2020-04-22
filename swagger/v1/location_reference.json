@@ -18,7 +18,7 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154",
+            "example": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1",
             "description": "The unique identifier (UUID) of the object that this reference points to"
           }
         }

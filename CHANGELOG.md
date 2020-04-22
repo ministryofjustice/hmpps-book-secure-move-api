@@ -1,11 +1,16 @@
 # Changelog
 
-## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+## [v1.8.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.8.1) (2020-04-22)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.8.0...HEAD)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.8.0...v1.8.1)
 
 **Merged pull requests:**
 
+- Fixes Rakefile for production environment [\#393](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/393) ([willfish](https://github.com/willfish))
+- P4-1345 Remove last unneeded file [\#392](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/392) ([smoothcontract](https://github.com/smoothcontract))
+- CHANGELOG.md [\#391](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/391) ([willfish](https://github.com/willfish))
+- P4 1304 move api additions swagger [\#390](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/390) ([martyn-w](https://github.com/martyn-w))
+- P4-1283 Add new reference endpoint for allocation complex cases [\#389](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/389) ([smoothcontract](https://github.com/smoothcontract))
 - \[P4-1264\] Court case filters [\#388](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/388) ([willfish](https://github.com/willfish))
 - Fix case\_type enums [\#387](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/387) ([willfish](https://github.com/willfish))
 - P4-1435 Remove lots of duplicated swagger definitions and refactor specs [\#386](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/386) ([smoothcontract](https://github.com/smoothcontract))

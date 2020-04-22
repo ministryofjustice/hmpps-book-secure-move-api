@@ -1,4 +1,18 @@
 {
+  "400": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/BadRequest"
+        }
+      }
+    }
+  },
   "401": {
     "type": "object",
     "required": [
@@ -27,6 +41,20 @@
       }
     }
   },
+  "409": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/Conflict"
+        }
+      }
+    }
+  },
   "415": {
     "type": "object",
     "required": [
@@ -37,6 +65,20 @@
         "type": "array",
         "items": {
           "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
+  "422": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnprocessableEntity"
         }
       }
     }
