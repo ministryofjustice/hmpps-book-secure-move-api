@@ -1,0 +1,21 @@
+{
+  "201": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "$ref": "lockout.json#/GetLockout"
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            { "$ref": "location.json#/Location" }
+          ]
+        }
+      }
+    }
+  }
+}

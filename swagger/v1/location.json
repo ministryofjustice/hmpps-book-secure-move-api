@@ -5,7 +5,7 @@
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "bf19c538-3f01-4d69-8200-69748ace1ed1",
+        "example": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1",
         "description": "The unique identifier (UUID) of this object"
       },
       "type": {
@@ -36,6 +36,7 @@
           "location_type": {
             "type": "string",
             "enum": ["court", "police", "prison"],
+            "example": "court",
             "description": "Location type indicates whether this a prison, police station, court etc."
           },
           "nomis_agency_id": {
