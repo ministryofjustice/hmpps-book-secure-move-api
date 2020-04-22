@@ -63,6 +63,7 @@ group :development, :test do
   gem 'dotenv-rails', '~> 2.7'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'github_changelog_generator'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-json_expectations'
