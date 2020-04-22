@@ -595,6 +595,103 @@
       }
     }
   },
+  "/moves/{move_id}/journeys": {
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a new journey",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis creates a new journey record and appends it to the move. It _does not_ update the destination of the parent move record: an additional call to the redirects endpoint will be required in order to change the move destination.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The journey object to be created. It must specify `timestamp`, `billable`, `from_location` and `to_location`.",
+          "schema": {
+            "$ref": "journey.json#/PostJourney"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_journeys_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/moves/{move_id}/lockouts": {
     "post": {
       "summary": "[NOT YET IMPLEMENTED] Creates a lockout event",

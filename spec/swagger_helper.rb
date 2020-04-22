@@ -102,6 +102,9 @@ RSpec.configure do |config|
           Gender: {
             "$ref": 'gender.json#/Gender',
           },
+          Journey: {
+            "$ref": 'journey.json#/GetJourney',
+          },
           Location: {
             "$ref": 'location.json#/Location1',
           },
