@@ -62,6 +62,7 @@ group :development, :test do
   gem 'dotenv', '~> 2.7'
   gem 'dotenv-rails', '~> 2.7'
   gem 'factory_bot_rails'
+  gem 'github_changelog_generator'
   gem 'faker'
   gem 'pry-byebug'
   gem 'pry-rails'
