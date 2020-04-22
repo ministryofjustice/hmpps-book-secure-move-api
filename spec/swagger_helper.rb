@@ -75,6 +75,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          AllocationComplexCase: {
+            "$ref": 'allocation_complex_case.json#/AllocationComplexCase',
+          },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.json#/AssessmentAnswer',
           },
@@ -106,10 +109,10 @@ RSpec.configure do |config|
             "$ref": 'journey.json#/GetJourney',
           },
           Location: {
-            "$ref": 'location.json#/Location1',
+            "$ref": 'location.json#/Location',
           },
           LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference1',
+            "$ref": 'location_reference.json#/LocationReference',
           },
           Lockout: {
             "$ref": 'lockout.json#/GetLockout',

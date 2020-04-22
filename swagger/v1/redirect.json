@@ -41,7 +41,7 @@
         ],
         "properties": {
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the move is being redirected to"
           }
         }
@@ -83,7 +83,7 @@
         ],
         "properties": {
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the move is being redirected to"
           }
         }

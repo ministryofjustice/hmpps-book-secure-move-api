@@ -144,11 +144,11 @@
             "description": "The person being moved"
           },
           "from_location": {
-            "$ref": "location_reference.json#/LocationReference1",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the person is being moved from"
           },
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the person is being moved to"
           },
           "prison_transfer_reason": {
