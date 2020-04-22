@@ -14,18 +14,32 @@ RSpec.describe Api::V1::PeopleController do
        CourtCase.new.build_from_nomis('id' => '2222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })]
     }
 
-    before do
-      allow(People::RetrieveCourtCases).to receive(:call).with(person).and_return(court_cases_from_nomis)
+    let(:query) { '' }
 
+    before do
       person.latest_profile.update(latest_nomis_booking_id: booking_id)
       create :location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT'
     end
 
     it 'returns success' do
-      get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+      allow(People::RetrieveCourtCases).to receive(:call).with(person, nil).and_return(court_cases_from_nomis)
+
+      get "/api/v1/people/#{person.id}/court_cases#{query}", params: { access_token: token.token }
 
       expect(response_json['data'][0]['id']).to eq('1495077')
       expect(response_json['included']).not_to be_nil
+    end
+
+    context 'when we pass a filter in the query params' do
+      let(:query) { '?filter[active]=true' }
+
+      it 'passes the filter to the RetrieveCourtCases service' do
+        allow(People::RetrieveCourtCases).to receive(:call).and_return(court_cases_from_nomis)
+
+        get "/api/v1/people/#{person.id}/court_cases#{query}", params: { access_token: token.token }
+
+        expect(People::RetrieveCourtCases).to have_received(:call).with(person, 'active' => 'true')
+      end
     end
   end
 end

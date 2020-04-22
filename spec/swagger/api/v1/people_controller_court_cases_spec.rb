@@ -38,6 +38,11 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
                 required: true
+      parameter name: :'filter[active]',
+                in: :query,
+                description: 'Filter only active court cases.',
+                schema: { type: :string, default: 'true', example: 'false', enum: %w[true false] },
+                required: false
 
       response '200', 'success' do
         let(:person_id) { person.id }
@@ -57,7 +62,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         }
 
         before do
-          allow(People::RetrieveCourtCases).to receive(:call).with(person).and_return(court_cases_from_nomis)
+          allow(People::RetrieveCourtCases).to receive(:call).with(person, nil).and_return(court_cases_from_nomis)
         end
 
         schema '$ref' => 'get_court_cases_responses.json#/200'
