@@ -570,198 +570,21 @@
       }
     }
   },
+<<<<<<< HEAD
   "/moves/{move_id}/journeys": {
     "get": {
       "summary": "[NOT YET IMPLEMENTED] Gets a list of journeys",
       "description": "## [NOT YET IMPLEMENTED]\n\nThis gets an ordered and paged list of journeys associated with the specifed move. Journeys are ordered by `timestamp`.",
       "tags": [
         "Journeys"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
-        { "$ref": "content_type_parameter.json#/ContentType" },
-        { "$ref": "pagination_parameters.json#/Page" },
-        { "$ref": "pagination_parameters.json#/PerPage" }
-      ],
-      "responses": {
-        "200": {
-          "description": "success",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "get_journeys_responses.json#/200"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "bad request",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/400"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/404"
-              }
-            }
-          }
-        },
-        "409": {
-          "description": "conflict",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/409"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/415"
-              }
-            }
-          }
-        },
-        "422": {
-          "description": "unprocessable entity",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/422"
-              }
-            }
-          }
-        }
-      }
-    },
-    "post": {
-      "summary": "[NOT YET IMPLEMENTED] Creates a new journey",
-      "description": "## [NOT YET IMPLEMENTED]\n\nThis creates a new journey record and appends it to the move. It _does not_ update the destination of the parent move record: an additional call to the redirects endpoint will be required in order to change the move destination.",
-      "tags": [
-        "Journeys"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "description": "The journey object to be created. It must specify `timestamp`, `billable`, `from_location` and `to_location`.",
-          "schema": {
-            "$ref": "journey.json#/PostJourney"
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "created",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_journeys_responses.json#/201"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "bad request",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/400"
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/404"
-              }
-            }
-          }
-        },
-        "409": {
-          "description": "conflict",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/409"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/415"
-              }
-            }
-          }
-        },
-        "422": {
-          "description": "unprocessable entity",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/422"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
+=======
   "/moves/{move_id}/lockouts": {
     "post": {
       "summary": "[NOT YET IMPLEMENTED] Creates a lockout event",
       "description": "## [NOT YET IMPLEMENTED]\n\nCreating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the journeys associated with the move: additional API calls will be necessary to redirect the move, cancel existing journeys and create new journeys.",
       "tags": [
         "Move Events"
+>>>>>>> master
       ],
       "consumes": [
         "application/vnd.api+json"
@@ -769,7 +592,11 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+<<<<<<< HEAD
         { "$ref": "content_type_parameter.json#/ContentType" },
+        { "$ref": "pagination_parameters.json#/Page" },
+        { "$ref": "pagination_parameters.json#/PerPage" }
+=======
         {
           "name": "body",
           "in": "body",
@@ -779,6 +606,7 @@
             "$ref": "lockout.json#/PostLockout"
           }
         }
+>>>>>>> master
       ],
       "responses": {
         "201": {
@@ -786,6 +614,9 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
+                "$ref": "get_journeys_responses.json#/200"
+=======
                 "$ref": "post_lockouts_responses.json#/201"
               }
             }
@@ -797,15 +628,19 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "error_responses.json#/400"
+>>>>>>> master
               }
             }
           }
         },
-        "401": {
-          "description": "unauthorized",
+        "400": {
+          "description": "bad request",
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/400"
+=======
                 "$ref": "error_responses.json#/401"
               }
             }
@@ -827,15 +662,29 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "error_responses.json#/409"
+>>>>>>> master
               }
             }
           }
         },
-        "415": {
-          "description": "invalid media type",
+        "401": {
+          "description": "unauthorized",
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+=======
                 "$ref": "error_responses.json#/415"
               }
             }
@@ -867,7 +716,6 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
-        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "body",
           "in": "body",
@@ -895,15 +743,18 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "error_responses.json#/400"
+>>>>>>> master
               }
             }
           }
         },
-        "401": {
-          "description": "unauthorized",
+        "409": {
+          "description": "conflict",
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
+=======
                 "$ref": "error_responses.json#/401"
               }
             }
@@ -924,6 +775,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
+>>>>>>> master
                 "$ref": "error_responses.json#/409"
               }
             }
@@ -935,6 +787,29 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "error_responses.json#/415"
+<<<<<<< HEAD
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a new journey",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis creates a new journey record and appends it to the move. It _does not_ update the destination of the parent move record: an additional call to the redirects endpoint will be required in order to change the move destination.",
+      "tags": [
+        "Journeys"
+=======
               }
             }
           }
@@ -957,6 +832,476 @@
       "summary": "Returns a list of people",
       "tags": [
         "People"
+>>>>>>> master
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The journey object to be created. It must specify `timestamp`, `billable`, `from_location` and `to_location`.",
+          "schema": {
+<<<<<<< HEAD
+            "$ref": "journey.json#/PostJourney"
+          }
+=======
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        },
+        {
+          "name": "filter[police_national_computer]",
+          "in": "query",
+          "description": "Filters results to only include people identified by that police_national_computer. Either filter[police_national_computer] or filter[prison_number] or both filters are required.",
+          "schema": {
+            "type": "string",
+            "example": "07/1435713R"
+          },
+          "format": "string",
+          "required": false
+        },
+        {
+          "name": "filter[prison_number]",
+          "in": "query",
+          "description": "Filters results to only include people identified by that prison_number. Either filter[police_national_computer] or filter[prison_number] or both filters are required.",
+          "schema": {
+            "type": "string",
+            "example": "G1234UT"
+          },
+          "format": "string",
+          "required": false
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "The page of records to return, defaults to 1 (the first page)",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "per_page",
+          "in": "query",
+          "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+>>>>>>> master
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "post_journeys_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+=======
+                "$ref": "get_people_responses.json#/200"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+=======
+                "$ref": "get_people_responses.json#/401"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+=======
+                "$ref": "get_people_responses.json#/415"
+>>>>>>> master
+              }
+            }
+          }
+        }
+      }
+<<<<<<< HEAD
+    }
+  },
+  "/moves/{move_id}/lockouts": {
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a lockout event",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the journeys associated with the move: additional API calls will be necessary to redirect the move, cancel existing journeys and create new journeys.",
+      "tags": [
+        "Move Events"
+=======
+    },
+    "post": {
+      "summary": "Creates a new person and their associated profile",
+      "tags": [
+        "People"
+>>>>>>> master
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+<<<<<<< HEAD
+          "description": "The lockout event object to be created. It must specify `timestamp`, `reason` and `location`.",
+          "schema": {
+            "$ref": "lockout.json#/PostLockout"
+=======
+          "description": "The person object to be created",
+          "schema": {
+            "$ref": "person.json#/Person"
+>>>>>>> master
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+<<<<<<< HEAD
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_lockouts_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+=======
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_people_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_people_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_people_responses.json#/401"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+=======
+                "$ref": "post_people_responses.json#/404"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/415"
+=======
+                "$ref": "post_people_responses.json#/415"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/422"
+=======
+                "$ref": "post_people_responses.json#/422"
+>>>>>>> master
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+<<<<<<< HEAD
+  "/moves/{move_id}/redirects": {
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a redirect event",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a redirect event changes the underlying move's destination (`to_location`). It _does not_ alter the journeys associated with the move: additional API calls will be necessary to cancel existing journeys and create new journeys.",
+      "tags": [
+        "Move Events"
+=======
+  "/people/{person_id}": {
+    "patch": {
+      "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{person_id}.",
+      "tags": [
+        "People"
+>>>>>>> master
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+<<<<<<< HEAD
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+=======
+        {
+          "name": "person_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the person",
+          "schema": {
+            "type": "string"
+          },
+          "format": "uuid",
+          "example": "00525ecb-7316-492a-aae2-f69334b2a155"
+        },
+>>>>>>> master
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+<<<<<<< HEAD
+          "description": "The redirect event object to be created. It must specify `timestamp`, `reason` and `to_location`.",
+          "schema": {
+            "$ref": "redirect.json#/PostRedirect"
+=======
+          "description": "The person object to be updated",
+          "schema": {
+            "$ref": "person.json#/Person"
+>>>>>>> master
+          }
+        }
+      ],
+      "responses": {
+<<<<<<< HEAD
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_redirects_responses.json#/201"
+=======
+        "200": {
+          "description": "updated",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "put_people_responses.json#/201"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/400"
+=======
+                "$ref": "put_people_responses.json#/400"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/401"
+=======
+                "$ref": "put_people_responses.json#/401"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+=======
+                "$ref": "put_people_responses.json#/404"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/415"
+=======
+                "$ref": "put_people_responses.json#/415"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "error_responses.json#/422"
+=======
+                "$ref": "put_people_responses.json#/422"
+>>>>>>> master
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+<<<<<<< HEAD
+  "/people": {
+    "get": {
+      "summary": "Returns a list of people",
+      "tags": [
+        "People"
+=======
+  "/reference/allocation_complex_cases": {
+    "get": {
+      "summary": "Returns a list of allocation complex cases",
+      "tags": [
+        "AllocationComplexCases"
+>>>>>>> master
       ],
       "consumes": [
         "application/vnd.api+json"
@@ -964,6 +1309,7 @@
       "parameters": [
         { "$ref": "content_type_parameter.json#/ContentType" },
         {
+<<<<<<< HEAD
           "name": "filter[police_national_computer]",
           "in": "query",
           "description": "Filters results to only include people identified by that police_national_computer. Either filter[police_national_computer] or filter[prison_number] or both filters are required.",
@@ -987,6 +1333,17 @@
         },
         { "$ref": "pagination_parameters.json#/Page" },
         { "$ref": "pagination_parameters.json#/PerPage" }
+=======
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+>>>>>>> master
       ],
       "responses": {
         "200": {
@@ -994,7 +1351,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
                 "$ref": "get_people_responses.json#/200"
+=======
+                "$ref": "get_allocation_complex_cases_responses.json#/200"
+>>>>>>> master
               }
             }
           }
@@ -1004,6 +1365,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
                 "$ref": "get_people_responses.json#/401"
               }
             }
@@ -1077,6 +1439,9 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "post_people_responses.json#/404"
+=======
+                "$ref": "get_allocation_complex_cases_responses.json#/401"
+>>>>>>> master
               }
             }
           }
@@ -1086,6 +1451,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
                 "$ref": "post_people_responses.json#/415"
               }
             }
@@ -1097,6 +1463,9 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "post_people_responses.json#/422"
+=======
+                "$ref": "get_allocation_complex_cases_responses.json#/415"
+>>>>>>> master
               }
             }
           }
@@ -1104,17 +1473,26 @@
       }
     }
   },
+<<<<<<< HEAD
   "/people/{person_id}": {
     "patch": {
       "summary": "Updates an existing person and their associated profile. Aliased as PUT /people/{person_id}.",
       "tags": [
         "People"
+=======
+  "/reference/assessment_questions": {
+    "get": {
+      "summary": "Returns a list of assessment questions, optionally filtered by category",
+      "tags": [
+        "Assessment Questions"
+>>>>>>> master
       ],
       "consumes": [
         "application/vnd.api+json"
       ],
       "parameters": [
         {
+<<<<<<< HEAD
           "name": "person_id",
           "in": "path",
           "required": true,
@@ -1132,26 +1510,46 @@
           "description": "The person object to be updated",
           "schema": {
             "$ref": "person.json#/Person"
+=======
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        },
+        {
+          "name": "filter[category]",
+          "in": "query",
+          "description": "Filters results to only include move detail types for the given category",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "risk",
+              "health",
+              "court"
+            ]
+>>>>>>> master
           }
         }
       ],
       "responses": {
         "200": {
+<<<<<<< HEAD
           "description": "updated",
           "content": {
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "put_people_responses.json#/201"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "bad request",
+=======
+          "description": "success",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/400"
+                "$ref": "get_assessment_questions_responses.json#/200"
+>>>>>>> master
               }
             }
           }
@@ -1161,17 +1559,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/401"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "put_people_responses.json#/404"
+<<<<<<< HEAD
+                "$ref": "put_people_responses.json#/400"
+=======
+                "$ref": "get_assessment_questions_responses.json#/401"
+>>>>>>> master
               }
             }
           }
@@ -1181,16 +1573,74 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/415"
+<<<<<<< HEAD
+                "$ref": "put_people_responses.json#/401"
+=======
+                "$ref": "get_assessment_questions_responses.json#/415"
+>>>>>>> master
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reference/ethnicities": {
+    "get": {
+      "summary": "Returns a list of ethnicities",
+      "tags": [
+        "Ethnicities"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
+                "$ref": "put_people_responses.json#/404"
+=======
+                "$ref": "get_ethnicities_responses.json#/200"
+>>>>>>> master
               }
             }
           }
         },
-        "422": {
-          "description": "unprocessable entity",
+        "401": {
+          "description": "unauthorized",
           "content": {
             "application/vnd.api+json": {
               "schema": {
+<<<<<<< HEAD
+                "$ref": "put_people_responses.json#/415"
+=======
+                "$ref": "get_ethnicities_responses.json#/401"
+>>>>>>> master
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+<<<<<<< HEAD
                 "$ref": "put_people_responses.json#/422"
               }
             }
@@ -1238,6 +1688,9 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "get_allocation_complex_cases_responses.json#/415"
+=======
+                "$ref": "get_ethnicities_responses.json#/415"
+>>>>>>> master
               }
             }
           }
@@ -1245,16 +1698,17 @@
       }
     }
   },
-  "/reference/assessment_questions": {
+  "/reference/genders": {
     "get": {
-      "summary": "Returns a list of assessment questions, optionally filtered by category",
+      "summary": "Returns a list of genders",
       "tags": [
-        "Assessment Questions"
+        "Genders"
       ],
       "consumes": [
         "application/vnd.api+json"
       ],
       "parameters": [
+<<<<<<< HEAD
         { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "filter[category]",
@@ -1268,6 +1722,17 @@
               "court"
             ]
           }
+=======
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+>>>>>>> master
         }
       ],
       "responses": {
@@ -1276,7 +1741,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/200"
+                "$ref": "get_genders_responses.json#/200"
               }
             }
           }
@@ -1286,7 +1751,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/401"
+                "$ref": "get_genders_responses.json#/401"
               }
             }
           }
@@ -1296,7 +1761,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/415"
+                "$ref": "get_genders_responses.json#/415"
               }
             }
           }
@@ -1550,7 +2015,20 @@
         "application/vnd.api+json"
       ],
       "parameters": [
+<<<<<<< HEAD
         { "$ref": "content_type_parameter.json#/ContentType" }
+=======
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+>>>>>>> master
       ],
       "responses": {
         "200": {
