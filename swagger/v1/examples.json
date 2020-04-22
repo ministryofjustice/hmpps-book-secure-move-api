@@ -1,11 +1,11 @@
 {
-  "Location": {
+  "Location2": {
     "type": "object",
     "properties": {
       "id": {
         "type": "string",
         "format": "uuid",
-        "example": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1",
+        "example": "442d6ec1-8fe2-4578-8860-0897bd80628b",
         "description": "The unique identifier (UUID) of this object"
       },
       "type": {
@@ -25,23 +25,23 @@
         "properties": {
           "key": {
             "type": "string",
-            "example": "guildford_crown_court",
+            "example": "hmp_wormwood_scrubs",
             "description": "Machine readable unique key string attribute"
           },
           "title": {
             "type": "string",
-            "example": "Guildford Crown Court",
+            "example": "HMP Wormwood Scrubs",
             "description": "The human-readable label for the location"
           },
           "location_type": {
             "type": "string",
             "enum": ["court", "police", "prison"],
-            "example": "court",
+            "example": "prison",
             "description": "Location type indicates whether this a prison, police station, court etc."
           },
           "nomis_agency_id": {
             "type": "string",
-            "example": "BAI",
+            "example": "WWS",
             "description": "The NOMIS `agency_id`, for prisons this is a 3-letter code"
           },
           "disabled_at": {
@@ -54,6 +54,32 @@
             "type": "Boolean",
             "example": true,
             "description": "A flag to indicate whether this location allows document uploads"
+          }
+        }
+      }
+    }
+  },
+  "LocationReference2": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "object",
+        "required": ["type", "id"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "locations",
+            "enum": ["locations"],
+            "description": "The type of this object - always `locations`"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "442d6ec1-8fe2-4578-8860-0897bd80628b",
+            "description": "The unique identifier (UUID) of the object that this reference points to"
           }
         }
       }
