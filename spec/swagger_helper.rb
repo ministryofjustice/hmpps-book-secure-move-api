@@ -98,29 +98,16 @@ RSpec.configure do |config|
           },
           Document: {
             "$ref": 'document.json#/Document',
-<<<<<<< HEAD
           },
           Ethnicity: {
             "$ref": 'ethnicity.json#/Ethnicity',
           },
           Gender: {
             "$ref": 'gender.json#/Gender',
-=======
-          },
-          Ethnicity: {
-            "$ref": 'ethnicity.json#/Ethnicity',
-          },
-          Gender: {
-            "$ref": 'gender.json#/Gender',
-          },
-          Location: {
-            "$ref": 'location.json#/Location',
->>>>>>> master
           },
           Journey: {
             "$ref": 'journey.json#/GetJourney',
           },
-<<<<<<< HEAD
           Location: {
             "$ref": 'location.json#/Location',
           },
@@ -133,14 +120,6 @@ RSpec.configure do |config|
           Move: {
             "$ref": 'move.json#/Move',
           },
-=======
-          Lockout: {
-            "$ref": 'lockout.json#/GetLockout',
-          },
-          Move: {
-            "$ref": 'move.json#/Move',
-          },
->>>>>>> master
           MoveReference: {
             "$ref": 'move_reference.json#/MoveReference',
           },
