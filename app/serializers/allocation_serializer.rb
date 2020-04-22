@@ -6,5 +6,5 @@ class AllocationSerializer < ActiveModel::Serializer
   has_one :from_location
   has_one :to_location
 
-  INCLUDED_ATTRIBUTES = [:from_location, :to_location]
+  INCLUDED_ATTRIBUTES = %i[from_location to_location].freeze
 end

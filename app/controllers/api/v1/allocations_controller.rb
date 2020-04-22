@@ -13,7 +13,7 @@ module Api
         end
       end
 
-      private
+    private
 
       def filter_params
         params.fetch(:filter, {}).permit(:date_from, :date_to).to_h
