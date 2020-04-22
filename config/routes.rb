@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       end
       namespace :reference do
         resources :locations, only: %i[index show]
+        resources :allocation_complex_cases, only: :index
         resources :assessment_questions, only: :index
         resources :genders, only: :index
         resources :ethnicities, only: :index
