@@ -41,7 +41,7 @@
         ],
         "properties": {
           "location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location which has been locked out"
           }
         }
@@ -83,7 +83,7 @@
         ],
         "properties": {
           "location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location which has been locked out"
           }
         }
