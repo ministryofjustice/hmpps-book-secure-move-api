@@ -57,18 +57,18 @@
         ],
         "properties": {
           "from_location": {
-            "$ref": "location_reference.json#/LocationReference1",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the journey is coming from"
           },
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference2",
+            "$ref": "location_reference.json#/LocationReference",
             "description": "The location that the journey is going to"
           }
         }
       }
     }
   },
-  "PostRedirect": {
+  "PostJourney": {
     "type": "object",
     "required": [
       "type",
@@ -77,34 +77,54 @@
     "properties": {
       "type": {
         "type": "string",
-        "example": "redirects",
-        "enum": ["redirects"],
-        "description": "The type of this object - always `redirects`"
+        "example": "journeys",
+        "enum": ["journeys"],
+        "description": "The type of this object - always `journeys`"
       },
       "attributes": {
         "type": "object",
         "required": [
           "timestamp",
-          "reason"
+          "billable"
         ],
         "properties": {
           "timestamp": { "$ref": "timestamp_attribute.json#/Timestamp" },
-          "reason": {
-            "type": "string",
-            "example": "redirecting because of a request from PMU",
-            "description": "reason or note to explain the redirection"
+          "billable": {
+            "type": "boolean",
+            "example": true,
+            "description": "true indicates that the journey is billable, otherwise false"
+          },
+          "vehicle": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "12345678ABC",
+                "description": "Vehicle identification number"
+              },
+              "registration": {
+                "type": "string",
+                "example": "AB12 CDE",
+                "description": "Vehicle registration number"
+              }
+            }
           }
         }
       },
       "relationships": {
         "type": "object",
         "required": [
+          "from_location",
           "to_location"
         ],
         "properties": {
+          "from_location": {
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location that the journey is coming from"
+          },
           "to_location": {
-            "$ref": "location_reference.json#/LocationReference2",
-            "description": "The location that the move is being redirected to"
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location that the journey is going to"
           }
         }
       }

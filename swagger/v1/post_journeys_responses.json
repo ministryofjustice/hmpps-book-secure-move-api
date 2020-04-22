@@ -6,13 +6,13 @@
     ],
     "properties": {
       "data": {
-        "$ref": "redirect.json#/GetRedirect"
+        "$ref": "journey.json#/GetJourney"
       },
       "included": {
         "type": "array",
         "items": {
           "anyOf": [
-            { "$ref": "location.json#/Location2" }
+            { "$ref": "location.json#/Location" }
           ]
         }
       }

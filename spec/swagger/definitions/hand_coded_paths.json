@@ -9,16 +9,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "filter[date_from]",
           "in": "query",
@@ -137,24 +128,8 @@
             ]
           }
         },
-        {
-          "name": "page",
-          "in": "query",
-          "description": "The page of records to return, defaults to 1 (the first page)",
-          "schema": {
-            "type": "integer"
-          },
-          "example": 1
-        },
-        {
-          "name": "per_page",
-          "in": "query",
-          "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
-          "schema": {
-            "type": "integer"
-          },
-          "example": 1
-        }
+        { "$ref": "pagination_parameters.json#/Page" },
+        { "$ref": "pagination_parameters.json#/PerPage" }
       ],
       "responses": {
         "200": {
@@ -596,6 +571,95 @@
     }
   },
   "/moves/{move_id}/journeys": {
+    "get": {
+      "summary": "[NOT YET IMPLEMENTED] Gets a list of journeys",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis gets an ordered and paged list of journeys associated with the specifed move. Journeys are ordered by `timestamp`.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+        { "$ref": "pagination_parameters.json#/Page" },
+        { "$ref": "pagination_parameters.json#/PerPage" }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_journeys_responses.json#/200"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    },
     "post": {
       "summary": "[NOT YET IMPLEMENTED] Creates a new journey",
       "description": "## [NOT YET IMPLEMENTED]\n\nThis creates a new journey record and appends it to the move. It _does not_ update the destination of the parent move record: an additional call to the redirects endpoint will be required in order to change the move destination.",
@@ -705,6 +769,7 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "body",
           "in": "body",
@@ -802,6 +867,7 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "body",
           "in": "body",
@@ -896,16 +962,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "filter[police_national_computer]",
           "in": "query",
@@ -928,24 +985,8 @@
           "format": "string",
           "required": false
         },
-        {
-          "name": "page",
-          "in": "query",
-          "description": "The page of records to return, defaults to 1 (the first page)",
-          "schema": {
-            "type": "integer"
-          },
-          "example": 1
-        },
-        {
-          "name": "per_page",
-          "in": "query",
-          "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
-          "schema": {
-            "type": "integer"
-          },
-          "example": 1
-        }
+        { "$ref": "pagination_parameters.json#/Page" },
+        { "$ref": "pagination_parameters.json#/PerPage" }
       ],
       "responses": {
         "200": {
@@ -1168,16 +1209,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        }
+        { "$ref": "content_type_parameter.json#/ContentType" }
       ],
       "responses": {
         "200": {
@@ -1223,16 +1255,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "filter[category]",
           "in": "query",
@@ -1291,16 +1314,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        }
+        { "$ref": "content_type_parameter.json#/ContentType" }
       ],
       "responses": {
         "200": {
@@ -1346,16 +1360,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        }
+        { "$ref": "content_type_parameter.json#/ContentType" }
       ],
       "responses": {
         "200": {
@@ -1401,16 +1406,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "filter[location_type]",
           "in": "query",
@@ -1487,16 +1483,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "location_id",
           "in": "path",
@@ -1563,16 +1550,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        }
+        { "$ref": "content_type_parameter.json#/ContentType" }
       ],
       "responses": {
         "200": {
@@ -1618,16 +1596,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        }
+        { "$ref": "content_type_parameter.json#/ContentType" }
       ],
       "responses": {
         "200": {
@@ -1673,16 +1642,7 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        {
-          "name": "Content-Type",
-          "in": "header",
-          "description": "Accepted request content type",
-          "schema": {
-            "type": "string",
-            "default": "application/vnd.api+json"
-          },
-          "required": true
-        },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "supplier_key",
           "in": "path",
