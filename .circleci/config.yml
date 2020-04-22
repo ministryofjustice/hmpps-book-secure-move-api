@@ -21,14 +21,6 @@ aliases:
         only: /.*/
       branches:
         only: master
-  - &only_master_and_create_dev
-    filters:
-      tags:
-        only: /.*/
-      branches:
-        only:
-        - master
-        - dev-auth-from-docs
   - &only_deploy_tags
     filters:
       tags:
@@ -89,9 +81,6 @@ commands:
 
   build_for_k8s:
     description: "Builds a Docker image for staging/production and pushes to ECR"
-    parameters:
-      env:
-        type: string
     steps:
       - checkout
 
@@ -125,8 +114,8 @@ commands:
             docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
+            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
 
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
@@ -194,11 +183,10 @@ jobs:
             - swagger/v1/swagger.yaml
             - node_modules/*
 
-  build_dev:
+  build:
     <<: *cloud_container
     steps:
-      - build_for_k8s:
-         env: "dev"
+      - build_for_k8s
 
   deploy_dev:
     <<: *cloud_container
@@ -206,35 +194,17 @@ jobs:
       - deploy_to_k8s:
          env: "dev"
 
-  build_staging:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-         env: "staging"
-
   deploy_staging:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
          env: "staging"
 
-  build_preprod:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-         env: "preprod"
-
   deploy_preprod:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
          env: "preprod"
-
-  build_production:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-         env: "production"
 
   deploy_production:
     <<: *cloud_container
@@ -250,44 +220,31 @@ workflows:
       - test:
           <<: *all_tags
       - api_docs:
-          <<: *only_master_and_create_dev
-      - build_dev:
-          <<: *only_master_and_create_dev
-          requires:
-            - api_docs
-      - deploy_dev:
-          <<: *only_master_and_create_dev
-          requires:
-            - test
-            - build_dev
-      - build_staging:
+          <<: *only_master_and_tags
+      - build:
           <<: *only_master_and_tags
           requires:
             - api_docs
+            - test
+      - deploy_dev:
+          <<: *only_master_and_tags
+          requires:
+            - build
       - deploy_staging:
           <<: *only_master_and_tags
           requires:
-            - test
-            - build_staging
-      - build_preprod:
-          <<: *only_master_and_tags
-          requires:
-            - api_docs
+            - build
       - deploy_preprod:
           <<: *only_master_and_tags
           requires:
-            - test
-            - build_preprod
-      - build_production:
-          <<: *only_deploy_tags
-          requires:
-            - api_docs
+            - build
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - test
-            - build_production
+            - deploy_dev
+            - deploy_staging
+            - deploy_preprod
       - deploy_production:
           <<: *only_deploy_tags
           requires:
