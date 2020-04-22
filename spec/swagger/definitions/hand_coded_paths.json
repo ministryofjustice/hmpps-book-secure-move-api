@@ -1061,6 +1061,61 @@
       }
     }
   },
+  "/reference/allocation_complex_cases": {
+    "get": {
+      "summary": "Returns a list of allocation complex cases",
+      "tags": [
+        "AllocationComplexCases"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocation_complex_cases_responses.json#/200"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocation_complex_cases_responses.json#/401"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocation_complex_cases_responses.json#/415"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/reference/assessment_questions": {
     "get": {
       "summary": "Returns a list of assessment questions, optionally filtered by category",

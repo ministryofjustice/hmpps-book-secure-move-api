@@ -75,6 +75,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          AllocationComplexCase: {
+            "$ref": 'allocation_complex_case.json#/AllocationComplexCase',
+          },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.json#/AssessmentAnswer',
           },
