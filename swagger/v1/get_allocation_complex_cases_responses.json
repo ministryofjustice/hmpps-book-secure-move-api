@@ -8,7 +8,7 @@
       "data": {
         "type": "array",
         "items": {
-          "$ref": "complex_case.json#/ComplexCase"
+          "$ref": "allocation_complex_case.json#/AllocationComplexCase"
         }
       }
     }

@@ -26,9 +26,9 @@ namespace :reference_data do
     AssessmentQuestions::Importer.new.call
   end
 
-  desc 'create complex cases'
-  task create_complex_cases: :environment do
-    ComplexCases::Importer.new.call
+  desc 'create allocation complex cases'
+  task create_allocation_complex_cases: :environment do
+    AllocationComplexCases::Importer.new.call
   end
 
   desc 'create NOMIS alert mappings'

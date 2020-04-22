@@ -1,5 +1,5 @@
 {
-  "ComplexCase": {
+  "AllocationComplexCase": {
     "type": "object",
     "required": [
       "id",
@@ -15,9 +15,9 @@
       },
       "type": {
         "type": "string",
-        "example": "complex_cases",
-        "enum": ["complex_cases"],
-        "description": "The type of this object - always `complex_cases`"
+        "example": "allocation_complex_cases",
+        "enum": ["allocation_complex_cases"],
+        "description": "The type of this object - always `allocation_complex_cases`"
       },
       "attributes": {
         "type": "object",
@@ -25,7 +25,7 @@
           "key": {
             "type": "string",
             "example": "mental",
-            "description": "Complex case code"
+            "description": "Allocation complex case code"
           },
           "title": {
             "type": "string",

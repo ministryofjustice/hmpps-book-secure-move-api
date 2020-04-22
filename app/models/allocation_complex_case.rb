@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ComplexCase < ApplicationRecord
+class AllocationComplexCase < ApplicationRecord
   validates :key, presence: true
   validates :title, presence: true
 end

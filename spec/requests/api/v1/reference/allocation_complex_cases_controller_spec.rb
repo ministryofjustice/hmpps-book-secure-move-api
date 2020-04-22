@@ -2,26 +2,26 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::Reference::ComplexCasesController do
+RSpec.describe Api::V1::Reference::AllocationComplexCasesController do
   let!(:access_token) { create(:access_token).token }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
-  describe 'GET /api/v1/reference/complex_cases' do
-    let(:schema) { load_json_schema('get_complex_cases_responses.json') }
+  describe 'GET /api/v1/reference/allocation_complex_cases' do
+    let(:schema) { load_json_schema('get_allocation_complex_cases_responses.json') }
 
     let(:data) do
       [
         {
-          type: 'complex_cases',
+          type: 'allocation_complex_cases',
           attributes: {
             key: 'mental',
             title: 'Mental Health Issues',
           },
         },
         {
-          type: 'complex_cases',
+          type: 'allocation_complex_cases',
           attributes: {
             key: 'other',
             title: 'Other Complex Case',
@@ -31,12 +31,12 @@ RSpec.describe Api::V1::Reference::ComplexCasesController do
     end
 
     before do
-      data.each { |complex_case| ComplexCase.create!(complex_case[:attributes]) }
+      data.each { |complex_case| AllocationComplexCase.create!(complex_case[:attributes]) }
     end
 
     context 'when successful' do
       before do
-        get '/api/v1/reference/complex_cases', headers: headers
+        get '/api/v1/reference/allocation_complex_cases', headers: headers
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -52,7 +52,7 @@ RSpec.describe Api::V1::Reference::ComplexCasesController do
       let(:detail_401) { 'Token expired or invalid' }
 
       before do
-        get '/api/v1/reference/complex_cases', headers: headers
+        get '/api/v1/reference/allocation_complex_cases', headers: headers
       end
 
       it_behaves_like 'an endpoint that responds with error 401'
@@ -62,7 +62,7 @@ RSpec.describe Api::V1::Reference::ComplexCasesController do
       let(:content_type) { 'application/xml' }
 
       before do
-        get '/api/v1/reference/complex_cases', headers: headers
+        get '/api/v1/reference/allocation_complex_cases', headers: headers
       end
 
       it_behaves_like 'an endpoint that responds with error 415'

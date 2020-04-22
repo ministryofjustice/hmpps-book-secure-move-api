@@ -36,6 +36,13 @@ ActiveRecord::Schema.define(version: 2020_04_21_105454) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "allocation_complex_cases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "allocations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id", null: false
@@ -58,13 +65,6 @@ ActiveRecord::Schema.define(version: 2020_04_21_105454) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.datetime "disabled_at"
-  end
-
-  create_table "complex_cases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "key", null: false
-    t.string "title", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

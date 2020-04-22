@@ -3,9 +3,9 @@
 module Api
   module V1
     module Reference
-      class ComplexCasesController < ApiController
+      class AllocationComplexCasesController < ApiController
         def index
-          render json: ComplexCase.all
+          render json: AllocationComplexCase.all
         end
       end
     end
