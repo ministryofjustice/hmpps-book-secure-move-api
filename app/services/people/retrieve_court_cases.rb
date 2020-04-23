@@ -10,8 +10,8 @@ module People
       end
 
       OpenStruct.new(success?: true, court_cases: court_cases, errors: nil)
-    rescue OAuth2::Error => err
-      nomis_error = NomisClient::ApiError.new(status: err.response.status, error_body: err.response.body)
+    rescue OAuth2::Error => e
+      nomis_error = NomisClient::ApiError.new(status: e.response.status, error_body: e.response.body)
       OpenStruct.new(success?: false, court_cases: [], error: nomis_error)
     end
   end
