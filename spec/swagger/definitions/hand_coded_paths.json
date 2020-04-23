@@ -1,4 +1,97 @@
 {
+  "/allocations": {
+    "get": {
+      "summary": "Returns a list of allocations",
+      "tags": [
+        "Allocations"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "description": "Accepted request content type",
+          "schema": {
+            "type": "string",
+            "default": "application/vnd.api+json"
+          },
+          "required": true
+        },
+        {
+          "name": "filter[date_from]",
+          "in": "query",
+          "description": "Filters results to only include allocations on and after the given date, e.g. `2019-05-02`",
+          "schema": {
+            "type": "string",
+            "example": "2019-05-09"
+          },
+          "format": "date"
+        },
+        {
+          "name": "filter[date_to]",
+          "in": "query",
+          "description": "Filters results to only include allocations up to and including the given date, e.g. `2019-05-09`",
+          "schema": {
+            "type": "string",
+            "example": "2019-05-09"
+          },
+          "format": "date"
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "The page of records to return, defaults to 1 (the first page)",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        },
+        {
+          "name": "per_page",
+          "in": "query",
+          "description": "Number of records to return in a single response, defaults to 20, maximum value is 100.",
+          "schema": {
+            "type": "integer"
+          },
+          "example": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocations_responses.json#/200"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocations_responses.json#/401"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_allocations_responses.json#/415"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/moves": {
     "get": {
       "summary": "Returns a list of moves",
