@@ -1,4 +1,51 @@
 {
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "type": "array",
+        "items": {
+          "$ref": "allocation.json#/Allocation"
+        }
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            { "$ref": "location.json#/Location" }
+          ]
+        }
+      },
+      "links": {
+        "$ref": "pagination_links.json#/PaginationLinks"
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "pagination.json#/Pagination"
+          }
+        }
+      }
+    }
+  },
+  "415": {
+    "type": "object",
+    "required": [
+      "errors"
+    ],
+    "properties": {
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "errors.json#/UnsupportedMediaType"
+        }
+      }
+    }
+  },
   "400": {
     "type": "object",
     "required": [
@@ -23,62 +70,6 @@
         "type": "array",
         "items": {
           "$ref": "errors.json#/NotAuthorisedError"
-        }
-      }
-    }
-  },
-  "404": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/ResourceNotFound"
-        }
-      }
-    }
-  },
-  "409": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/Conflict"
-        }
-      }
-    }
-  },
-  "415": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/UnsupportedMediaType"
-        }
-      }
-    }
-  },
-  "422": {
-    "type": "object",
-    "required": [
-      "errors"
-    ],
-    "properties": {
-      "errors": {
-        "type": "array",
-        "items": {
-          "$ref": "errors.json#/UnprocessableEntity"
         }
       }
     }

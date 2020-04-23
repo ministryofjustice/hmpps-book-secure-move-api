@@ -1,0 +1,133 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Api::V1::AllocationsController do
+  let(:supplier) { create(:supplier) }
+  let!(:application) { create(:application, owner_id: supplier.id) }
+  let!(:access_token) { create(:access_token, application: application).token }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:response_json) { JSON.parse(response.body) }
+  let(:content_type) { ApiController::CONTENT_TYPE }
+
+  describe 'GET /allocations' do
+    let(:schema) { load_json_schema('get_allocations_responses.json') }
+
+    let!(:allocations) { create_list :allocation, 21 }
+    let(:params) { {} }
+
+    before do
+      next if RSpec.current_example.metadata[:skip_before]
+
+      get '/api/v1/allocations', params: params, headers: headers
+    end
+
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      describe 'filtering results' do
+        let(:date_from) { allocations.last.date }
+        let(:filters) do
+          {
+            bar: 'bar',
+            date_from: date_from.to_s,
+            foo: 'foo',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        it 'delegates the query execution to Allocations::Finder with the correct filters', skip_before: true do
+          allocations_finder = instance_double('Allocations::Finder', call: Allocation.all)
+          allow(Allocations::Finder).to receive(:new).and_return(allocations_finder)
+
+          get '/api/v1/allocations', headers: headers, params: params
+
+          expect(Allocations::Finder).to have_received(:new).with(date_from: date_from.to_s)
+        end
+
+        it 'filters the results' do
+          expect(response_json['data'].size).to be 1
+        end
+
+        it 'returns the allocation that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: allocations.last.id }])
+        end
+      end
+
+      describe 'paginating results' do
+        let(:meta_pagination) do
+          {
+            per_page: 20,
+            total_pages: 2,
+            total_objects: 21,
+            links: {
+              first: '/api/v1/allocations?page=1',
+              last: '/api/v1/allocations?page=2',
+              next: '/api/v1/allocations?page=2',
+            },
+          }
+        end
+
+        it 'paginates 20 results per page' do
+          expect(response_json['data'].size).to eq 20
+        end
+
+        it 'returns 1 result on the second page', skip_before: true do
+          get '/api/v1/allocations?page=2', headers: headers
+
+          expect(response_json['data'].size).to eq 1
+        end
+
+        it 'allows setting a different page size', skip_before: true do
+          get '/api/v1/allocations?per_page=15', headers: headers
+
+          expect(response_json['data'].size).to eq 15
+        end
+
+        it 'provides meta data with pagination', skip_before: true do
+          get '/api/v1/allocations', headers: headers
+
+          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
+        end
+      end
+
+      describe 'validating dates before running queries' do
+        let(:filters) do
+          {
+            date_from: 'yyyy-09-Tu',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          get '/api/v1/allocations', params: params, headers: headers
+        end
+
+        it 'is a bad request' do
+          expect(response.status).to eq(400)
+        end
+
+        it 'returns errors' do
+          expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
+        end
+      end
+    end
+
+    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        get '/api/v1/allocations', headers: headers
+      end
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
+  end
+end

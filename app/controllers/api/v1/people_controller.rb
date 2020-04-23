@@ -38,12 +38,20 @@ module Api
       def court_cases
         person = Person.find(params[:person_id])
 
-        court_cases = People::RetrieveCourtCases.call(person, court_case_filter_params)
+        response = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
-        render json: court_cases, each_serializer: CourtCaseSerializer, include: :location
+        if response.success?
+          render json: response.court_cases, each_serializer: CourtCaseSerializer, include: :location
+        else
+          render json: json_api_errors_for(response.error)
+        end
       end
 
     private
+
+      def json_api_errors_for(error)
+        { errors: [error.json_api_error] }
+      end
 
       def import_person_from_nomis prison_number
         # This prevents us from blaming the current user/application for the NOMIS sync

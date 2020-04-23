@@ -171,11 +171,29 @@ namespace :fake_data do
     end
   end
 
+  desc 'create fake allocations'
+  task create_allocations: :environment do
+    puts 'create_allocations...'
+    prisons = Location.where(location_type: 'prison').all
+    50.times do
+      date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
+      Allocation.create!(
+        date: date,
+        from_location: prisons.sample,
+        to_location: prisons.sample,
+        prisoner_category: Allocation.prisoner_categories.values.sample,
+        sentence_length: Allocation.sentence_lengths.values.sample,
+        moves_count: Faker::Number.digit,
+        complete_in_full: Faker::Boolean.boolean,
+      )
+    end
+  end
+
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -193,6 +211,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
+      Rake::Task['fake_data:create_allocations'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
