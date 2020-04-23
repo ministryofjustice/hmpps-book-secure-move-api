@@ -17,7 +17,7 @@ RSpec.configure do |config|
 
   def load_yaml_schema(file_name)
     File.open("#{Rails.root}/swagger/v1/#{file_name}") do |file|
-      YAML.load(file.read)
+      YAML.safe_load(file.read)
     end
   end
 
