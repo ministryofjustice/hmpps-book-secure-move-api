@@ -26,7 +26,7 @@ RSpec.describe Activity do
         'eventSourceDesc' => 'CAT C CONTRACTS 1',
         'paid' => false,
         'payRate' => 0.5,
-        'locationCode' => 'CNCTS'
+        'locationCode' => 'CNCTS',
       }
     end
     let(:expected_attributes) do
