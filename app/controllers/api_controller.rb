@@ -13,7 +13,7 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
-  rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :connection_error
+  rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
 
   def current_user
     doorkeeper_token&.application
@@ -109,11 +109,11 @@ private
     )
   end
 
-  def connection_error(exception)
+  def render_connection_error(exception)
     render(
       json: { errors: [{
         title: 'Connection Error',
-        detail: exception.to_s,
+        detail: "#{exception.exception.class}: #{exception.message}",
       }] },
       status: :service_unavailable,
     )

@@ -55,7 +55,7 @@ module NomisClient
         retries += 1
         retry if retries <= MAX_RETRIES
 
-        raise e
+        raise e, 'Nomis Connection Error'
       end
 
       def update_json_headers(params)
