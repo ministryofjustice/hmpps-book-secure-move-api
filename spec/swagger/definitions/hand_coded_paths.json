@@ -418,7 +418,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_move_complete_responses.json#/201"
+                "$ref": "post_complete_responses.json#/201"
               }
             }
           }
@@ -865,7 +865,7 @@
           "name": "body",
           "in": "body",
           "required": true,
-          "description": "The journey object to be updated. It must specify `timestamp`, `billable`; it must not specify locations.",
+          "description": "The journey object to be updated. It must specify `timestamp`, `billable`; it must not specify locations or `state`.",
           "schema": {
             "$ref": "journey.json#/PatchJourneyMetadata"
           }
@@ -878,6 +878,202 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "get_journey_responses.json#/200"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/moves/{move_id}/journeys/{journey_id}/complete": {
+    "post": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a completed journey event",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a completed journey event changes the journey's status to be `completed`. A journey which has been cancelled cannot be completed: it must be uncancelled first. Completing a journey _does not_ alter the parent move object: additional API calls will be necessary to complete (or cancel) the move.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "journey_id_parameter.json#/JourneyId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The completed journey event object to be created. It must specify `timestamp`.",
+          "schema": {
+            "$ref": "complete.json#/PostComplete"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_complete_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "[NOT YET IMPLEMENTED] Creates a completed journey event",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating an un-completed journey event changes the completed journey's status to be `in_progress`. A journey which has been cancelled cannot be completed: it must be uncancelled first. Completing a journey _does not_ alter the parent move object: additional API calls will be necessary to complete (or cancel) the move.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "journey_id_parameter.json#/JourneyId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The completed journey event object to be created. It must specify `timestamp`.",
+          "schema": {
+            "$ref": "complete.json#/PostComplete"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "created",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "post_complete_responses.json#/201"
               }
             }
           }

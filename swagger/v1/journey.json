@@ -23,7 +23,8 @@
         "type": "object",
         "required": [
           "timestamp",
-          "billable"
+          "billable",
+          "state"
         ],
         "properties": {
           "timestamp": { "$ref": "timestamp_attribute.json#/Timestamp" },
@@ -31,6 +32,12 @@
             "type": "boolean",
             "example": true,
             "description": "true indicates that the journey is billable, otherwise false"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["in_progress", "cancelled", "completed"],
+            "example": "in_progress",
+            "description": "the state of the journey (in_progress / cancelled / completed)"
           },
           "vehicle": {
             "type": "object",
