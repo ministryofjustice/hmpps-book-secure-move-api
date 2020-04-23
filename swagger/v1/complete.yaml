@@ -21,7 +21,7 @@ GetComplete:
       - timestamp
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp
 PostComplete:
   type: object
   required:
@@ -40,4 +40,4 @@ PostComplete:
       - timestamp
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp

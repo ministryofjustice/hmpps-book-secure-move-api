@@ -6,4 +6,4 @@
     data:
       type: array
       items:
-        $ref: court_case.json#/CourtCase
+        $ref: court_case.yaml#/CourtCase

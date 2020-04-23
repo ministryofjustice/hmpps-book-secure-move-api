@@ -44,13 +44,13 @@ Person:
         assessment_answers:
           type: array
           items:
-            $ref: assessment_answer.json#/AssessmentAnswer
+            $ref: assessment_answer.yaml#/AssessmentAnswer
           description: Collection of court information, risk and alerts that escorts
             need to be aware of for safety, security and other reasons
         identifiers:
           type: array
           items:
-            $ref: profile_identifier.json#/ProfileIdentifier
+            $ref: profile_identifier.yaml#/ProfileIdentifier
           description: Collection of identifiers used to identify the person. Different
             services have various id schemes such police criminal records number,
             prison number etc. We may need to record several of these.
@@ -64,8 +64,8 @@ Person:
       type: object
       properties:
         gender:
-          $ref: gender_reference.json#/GenderReference
+          $ref: gender_reference.yaml#/GenderReference
           description: Person's gender
         ethnicity:
-          $ref: ethnicity_reference.json#/EthnicityReference
+          $ref: ethnicity_reference.yaml#/EthnicityReference
           description: Person's ethnicity

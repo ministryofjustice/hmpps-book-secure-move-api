@@ -23,7 +23,7 @@ GetRedirect:
       - reason
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp
         reason:
           type: string
           example: redirecting because of a request from PMU
@@ -34,7 +34,7 @@ GetRedirect:
       - to_location
       properties:
         to_location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location that the move is being redirected to
 PostRedirect:
   type: object
@@ -55,7 +55,7 @@ PostRedirect:
       - reason
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp
         reason:
           type: string
           example: redirecting because of a request from PMU
@@ -66,5 +66,5 @@ PostRedirect:
       - to_location
       properties:
         to_location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location that the move is being redirected to

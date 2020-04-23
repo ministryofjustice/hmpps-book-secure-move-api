@@ -23,7 +23,7 @@ GetLockout:
       - reason
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp
         reason:
           type: string
           example: arrived late because of van breakdown
@@ -34,7 +34,7 @@ GetLockout:
       - location
       properties:
         location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location which has been locked out
 PostLockout:
   type: object
@@ -55,7 +55,7 @@ PostLockout:
       - reason
       properties:
         timestamp:
-          $ref: timestamp_attribute.json#/Timestamp
+          $ref: timestamp_attribute.yaml#/Timestamp
         reason:
           type: string
           example: arrived late because of van breakdown
@@ -66,5 +66,5 @@ PostLockout:
       - location
       properties:
         location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location which has been locked out

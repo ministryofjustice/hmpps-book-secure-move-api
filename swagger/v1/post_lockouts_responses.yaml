@@ -4,9 +4,9 @@
   - data
   properties:
     data:
-      $ref: lockout.json#/GetLockout
+      $ref: lockout.yaml#/GetLockout
     included:
       type: array
       items:
         anyOf:
-        - $ref: location.json#/Location
+        - $ref: location.yaml#/Location

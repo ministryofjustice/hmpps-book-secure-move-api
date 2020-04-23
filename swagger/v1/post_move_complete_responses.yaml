@@ -4,4 +4,4 @@
   - data
   properties:
     data:
-      $ref: complete.json#/GetComplete
+      $ref: complete.yaml#/GetComplete

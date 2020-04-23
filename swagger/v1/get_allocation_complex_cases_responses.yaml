@@ -6,7 +6,7 @@
     data:
       type: array
       items:
-        $ref: allocation_complex_case.json#/AllocationComplexCase
+        $ref: allocation_complex_case.yaml#/AllocationComplexCase
 '415':
   type: object
   required:
@@ -15,7 +15,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/UnsupportedMediaType
+        $ref: errors.yaml#/UnsupportedMediaType
 '401':
   type: object
   required:
@@ -24,4 +24,4 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/NotAuthorisedError
+        $ref: errors.yaml#/NotAuthorisedError

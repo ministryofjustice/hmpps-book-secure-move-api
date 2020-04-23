@@ -4,7 +4,7 @@
   - data
   properties:
     data:
-      $ref: supplier.json#/Supplier
+      $ref: supplier.yaml#/Supplier
 '401':
   type: object
   required:
@@ -13,7 +13,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/NotAuthorisedError
+        $ref: errors.yaml#/NotAuthorisedError
 '404':
   type: object
   required:
@@ -22,7 +22,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/ResourceNotFound
+        $ref: errors.yaml#/ResourceNotFound
 '415':
   type: object
   required:
@@ -31,4 +31,4 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/UnsupportedMediaType
+        $ref: errors.yaml#/UnsupportedMediaType

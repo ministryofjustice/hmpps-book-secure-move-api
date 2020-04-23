@@ -4,4 +4,4 @@
   - data
   properties:
     data:
-      $ref: court_hearing.json#/CourtHearing
+      $ref: court_hearing.yaml#/CourtHearing

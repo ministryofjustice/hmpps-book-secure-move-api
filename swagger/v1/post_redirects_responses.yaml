@@ -4,9 +4,9 @@
   - data
   properties:
     data:
-      $ref: redirect.json#/GetRedirect
+      $ref: redirect.yaml#/GetRedirect
     included:
       type: array
       items:
         anyOf:
-        - $ref: location.json#/Location
+        - $ref: location.yaml#/Location

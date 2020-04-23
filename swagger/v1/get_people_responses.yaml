@@ -6,20 +6,20 @@
     data:
       type: array
       items:
-        $ref: person.json#/Person
+        $ref: person.yaml#/Person
     included:
       type: array
       items:
         anyOf:
-        - $ref: gender.json#/Gender
-        - $ref: ethnicity.json#/Ethnicity
+        - $ref: gender.yaml#/Gender
+        - $ref: ethnicity.yaml#/Ethnicity
     links:
-      $ref: pagination_links.json#/PaginationLinks
+      $ref: pagination_links.yaml#/PaginationLinks
     meta:
       type: object
       properties:
         pagination:
-          $ref: pagination.json#/Pagination
+          $ref: pagination.yaml#/Pagination
 '415':
   type: object
   required:
@@ -28,7 +28,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/UnsupportedMediaType
+        $ref: errors.yaml#/UnsupportedMediaType
 '400':
   type: object
   required:
@@ -37,7 +37,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/BadRequest
+        $ref: errors.yaml#/BadRequest
 '401':
   type: object
   required:
@@ -46,4 +46,4 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/NotAuthorisedError
+        $ref: errors.yaml#/NotAuthorisedError

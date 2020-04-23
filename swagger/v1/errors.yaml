@@ -52,7 +52,7 @@ UnsupportedMediaType:
       example: Invalid Media Type
     detail:
       type: string
-      example: Content-Type must be application/vnd.api+json
+      example: Content-Type must be application/vnd.api.yaml
 UnprocessableEntity:
   type: object
   required:

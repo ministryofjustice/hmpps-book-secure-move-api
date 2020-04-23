@@ -117,18 +117,18 @@ Move:
       - from_location
       properties:
         person:
-          $ref: person_reference.json#/PersonReference
+          $ref: person_reference.yaml#/PersonReference
           description: The person being moved
         from_location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location that the person is being moved from
         to_location:
-          $ref: location_reference.json#/LocationReference
+          $ref: location_reference.yaml#/LocationReference
           description: The location that the person is being moved to
         prison_transfer_reason:
-          $ref: prison_transfer_reason_reference.json#/PrisonTransferReasonReference
+          $ref: prison_transfer_reason_reference.yaml#/PrisonTransferReasonReference
           description: The reason for this prison transfer
         court_hearing:
-          $ref: court_hearing_reference.json#/CourtHearingReference
+          $ref: court_hearing_reference.yaml#/CourtHearingReference
           description: A court hearing generated when creating a move. May have corresponding
             hearing in Nomis backend (see nomis fields).

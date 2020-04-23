@@ -68,6 +68,6 @@ CourtHearing:
       type: object
       properties:
         move:
-          $ref: move_reference.json#/MoveReference
+          $ref: move_reference.yaml#/MoveReference
           description: Reference to the move entity that is associated with this court
             hearing. If it is present, Nomis will be updated with the new Court Hearing.

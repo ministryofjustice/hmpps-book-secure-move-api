@@ -4,7 +4,7 @@
   - data
   properties:
     data:
-      $ref: move.json#/Move
+      $ref: move.yaml#/Move
 '400':
   type: object
   required:
@@ -13,7 +13,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/BadRequest
+        $ref: errors.yaml#/BadRequest
 '401':
   type: object
   required:
@@ -22,7 +22,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/NotAuthorisedError
+        $ref: errors.yaml#/NotAuthorisedError
 '403':
   type: object
   required:
@@ -31,7 +31,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/Forbidden
+        $ref: errors.yaml#/Forbidden
 '404':
   type: object
   required:
@@ -40,7 +40,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/ResourceNotFound
+        $ref: errors.yaml#/ResourceNotFound
 '415':
   type: object
   required:
@@ -49,7 +49,7 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/UnsupportedMediaType
+        $ref: errors.yaml#/UnsupportedMediaType
 '422':
   type: object
   required:
@@ -58,4 +58,4 @@
     errors:
       type: array
       items:
-        $ref: errors.json#/UnprocessableEntity
+        $ref: errors.yaml#/UnprocessableEntity
