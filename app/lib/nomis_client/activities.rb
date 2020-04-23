@@ -6,8 +6,14 @@ module NomisClient
 
         activities = []
 
-        paginate_through(activities_path) do |activity|
-          activities << activity
+        paginate_through(activities_path) do |activities_response|
+          activities_json = activities_response
+
+          activities_json .each do |activity_json|
+            activities << activity_json
+          end
+
+          activities_json
         end
 
         activities

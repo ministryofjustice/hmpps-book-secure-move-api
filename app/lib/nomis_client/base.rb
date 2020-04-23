@@ -90,9 +90,9 @@ module NomisClient
         return [] if total_records < 1
 
         if response.status == 200
-          response_body = JSON.parse(response.body)
-          response_body.each { |item| yield item } if block_given?
-          found_records += response_body.count
+          collection_items = yield response.parsed
+
+          found_records += collection_items.count
         end
 
         while found_records < total_records
@@ -104,9 +104,9 @@ module NomisClient
           total_records = response.headers['total-records'].to_i
 
           if response.status == 200
-            response_body = JSON.parse(response.body)
-            response_body.each { |item| yield item } if block_given?
-            found_records += response_body.count
+            collection_items = yield response.parsed
+
+            found_records += collection_items.count
           end
         end
 

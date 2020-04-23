@@ -1,0 +1,24 @@
+{
+  "hearings": [
+    {
+      "id": 324922936,
+      "dateTime": "2016-12-13T10:00:00",
+      "location": {
+        "agencyId": "SNARCC",
+        "description": "Snaresbrook Crown Court",
+        "agencyType": "CRT",
+        "active": true
+      }
+    },
+    {
+      "id": 330618932,
+      "dateTime": "2017-01-27T10:00:00",
+      "location": {
+        "agencyId": "SNARCC",
+        "description": "Snaresbrook Crown Court",
+        "agencyType": "CRT",
+        "active": true
+      }
+    }
+  ]
+}
