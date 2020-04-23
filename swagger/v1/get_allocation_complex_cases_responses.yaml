@@ -1,0 +1,27 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: allocation_complex_case.json#/AllocationComplexCase
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.json#/UnsupportedMediaType
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.json#/NotAuthorisedError

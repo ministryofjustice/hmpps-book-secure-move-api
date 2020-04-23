@@ -1,0 +1,70 @@
+GetRedirect:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: be0b6203-8f21-455d-a1d4-664ddcfcbf8b
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: redirects
+      enum:
+      - redirects
+      description: The type of this object - always `redirects`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      - reason
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.json#/Timestamp
+        reason:
+          type: string
+          example: redirecting because of a request from PMU
+          description: reason or note to explain the redirection
+    relationships:
+      type: object
+      required:
+      - to_location
+      properties:
+        to_location:
+          $ref: location_reference.json#/LocationReference
+          description: The location that the move is being redirected to
+PostRedirect:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: redirects
+      enum:
+      - redirects
+      description: The type of this object - always `redirects`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      - reason
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.json#/Timestamp
+        reason:
+          type: string
+          example: redirecting because of a request from PMU
+          description: reason or note to explain the redirection
+    relationships:
+      type: object
+      required:
+      - to_location
+      properties:
+        to_location:
+          $ref: location_reference.json#/LocationReference
+          description: The location that the move is being redirected to

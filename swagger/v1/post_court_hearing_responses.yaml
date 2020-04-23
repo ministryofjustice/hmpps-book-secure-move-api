@@ -1,0 +1,7 @@
+'201':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: court_hearing.json#/CourtHearing
