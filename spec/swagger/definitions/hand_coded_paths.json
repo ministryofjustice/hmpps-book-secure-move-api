@@ -401,6 +401,7 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "body",
           "in": "body",
@@ -573,7 +574,7 @@
   "/moves/{move_id}/journeys": {
     "get": {
       "summary": "[NOT YET IMPLEMENTED] Gets a list of journeys",
-      "description": "## [NOT YET IMPLEMENTED]\n\nThis gets an ordered and paged list of journeys associated with the specifed move. Journeys are ordered by `timestamp`.",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis method gets an ordered and paged list of journeys associated with the specified move. Journeys are ordered by `timestamp`.",
       "tags": [
         "Journeys"
       ],
@@ -672,6 +673,7 @@
       "parameters": [
         { "$ref": "move_id_parameter.json#/MoveId" },
         { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
         {
           "name": "body",
           "in": "body",
@@ -689,6 +691,193 @@
             "application/vnd.api+json": {
               "schema": {
                 "$ref": "post_journeys_responses.json#/201"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/moves/{move_id}/journeys/{journey_id}": {
+    "get": {
+      "summary": "[NOT YET IMPLEMENTED] Gets a journey",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis method gets the specified journey associated with the move.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "journey_id_parameter.json#/JourneyId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_journey_responses.json#/200"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad request",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/400"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "unauthorized",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/401"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "resource not found",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/404"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/409"
+              }
+            }
+          }
+        },
+        "415": {
+          "description": "invalid media type",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/415"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "unprocessable entity",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "error_responses.json#/422"
+              }
+            }
+          }
+        }
+      }
+    },
+    "patch": {
+      "summary": "[NOT YET IMPLEMENTED] Updates a journey's metadata",
+      "description": "## [NOT YET IMPLEMENTED]\n\nThis method updates the specified journey's metadata (e.g. `billable` or vehicle details). It _does not_ update the `from_location` or `to_location` of a journey: to change the locations cancel the journey and create a new one.",
+      "tags": [
+        "Journeys"
+      ],
+      "consumes": [
+        "application/vnd.api+json"
+      ],
+      "parameters": [
+        { "$ref": "move_id_parameter.json#/MoveId" },
+        { "$ref": "journey_id_parameter.json#/JourneyId" },
+        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        { "$ref": "content_type_parameter.json#/ContentType" },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "description": "The journey object to be updated. It must specify `timestamp`, `billable`; it must not specify locations.",
+          "schema": {
+            "$ref": "journey.json#/PatchJourneyMetadata"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "success",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "get_journey_responses.json#/200"
               }
             }
           }

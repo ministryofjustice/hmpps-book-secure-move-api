@@ -1,0 +1,21 @@
+{
+  "200": {
+    "type": "object",
+    "required": [
+      "data"
+    ],
+    "properties": {
+      "data": {
+        "$ref": "journey.json#/GetJourney"
+      },
+      "included": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            { "$ref": "location.json#/Location" }
+          ]
+        }
+      }
+    }
+  }
+}

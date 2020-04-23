@@ -1,0 +1,13 @@
+{
+  "JourneyId": {
+    "name": "journey_id",
+    "in": "path",
+    "required": true,
+    "description": "The ID of the journey",
+    "schema": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "example": "25fd5865-3f5a-451b-b65a-bbb4f6170a9a"
+  }
+}

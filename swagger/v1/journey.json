@@ -129,5 +129,50 @@
         }
       }
     }
+  },
+  "PatchJourneyMetadata": {
+    "type": "object",
+    "required": [
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "type": {
+        "type": "string",
+        "example": "journeys",
+        "enum": ["journeys"],
+        "description": "The type of this object - always `journeys`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "billable"
+        ],
+        "properties": {
+          "timestamp": { "$ref": "timestamp_attribute.json#/Timestamp" },
+          "billable": {
+            "type": "boolean",
+            "example": true,
+            "description": "true indicates that the journey is billable, otherwise false"
+          },
+          "vehicle": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "12345678ABC",
+                "description": "Vehicle identification number"
+              },
+              "registration": {
+                "type": "string",
+                "example": "AB12 CDE",
+                "description": "Vehicle registration number"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
