@@ -29,7 +29,7 @@ RSpec.describe NomisClient::Activities, with_nomis_client_authentication: true d
 
     let(:page_one_headers) do
       {
-        'total-records' => '4',
+        'total-records' => total_records,
         'page-offset' => '0',
         'page-limit' => '2',
       }
@@ -46,25 +46,54 @@ RSpec.describe NomisClient::Activities, with_nomis_client_authentication: true d
     let(:page_one_response_body) { file_fixture('nomis_get_activities_page_1_200.json').read }
     let(:page_two_response_body) { file_fixture('nomis_get_activities_page_2_200.json').read }
 
+    let(:total_records) { 2 }
+
+    let(:start_date) { Date.today }
+    let(:end_date) { Date.tomorrow }
+
     before do
       allow(token).to receive(:get).and_return(*responses)
+      stub_const('NomisClient::Base::PAGE_LIMIT', 2)
     end
 
     it 'calls the NomisClient::Base.get with the correct path and params' do
-      activities.get(booking_id)
+      activities.get(booking_id, start_date, end_date)
 
-      expected_path = "/bookings/#{booking_id}/activities?start_date=#{start_date.iso8601}&end_date=#{end_date.iso8601}"
-
-      expect(token).to have received(:get).with(expected_path)
+      expect(token).to have_received(:get).with(
+        "/elite2api/api/bookings/1495077/activities?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
+        headers: { 'Page-Limit' => '20', 'Page-Offset' => '0' },
+      )
     end
 
     context 'when there are more than one page of activities to retrieve' do
+      let(:total_records) { 4 }
+
+      it 'calls the NomisClient::Base.get with the correct path and params' do
+        activities.get(booking_id)
+
+        expect(token).to have_received(:get).twice
+      end
+
       it 'paginates through activities' do
+        result = activities.get(booking_id)
+
+        expect(result.length).to eq(4)
       end
     end
 
     context 'when there is only one page of activities to retrieve' do
+      let(:total_records) { 2 }
+
+      it 'calls the NomisClient::Base.get with the correct path and params' do
+        activities.get(booking_id, start_date, end_date)
+
+        expect(token).to have_received(:get).once
+      end
+
       it 'does not paginate through activities' do
+        result = activities.get(booking_id)
+
+        expect(result.length).to eq(2)
       end
     end
   end

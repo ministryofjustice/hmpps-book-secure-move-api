@@ -103,7 +103,7 @@ module NomisClient
           responses << response
           total_records = response.headers['total-records'].to_i
 
-          if response.status == '200'
+          if response.status == 200
             response_body = JSON.parse(response.body)
             response_body.each { |item| yield item } if block_given?
             found_records += response_body.count
