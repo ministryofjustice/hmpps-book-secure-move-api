@@ -9,7 +9,7 @@ module NomisClient
         court_hearings = []
 
         paginate_through(court_hearings_path) do |court_hearings_response|
-          hearings_json = court_hearings_response["hearings"]
+          hearings_json = court_hearings_response['hearings']
 
           hearings_json.each do |hearing_json|
             court_hearings << hearing_json

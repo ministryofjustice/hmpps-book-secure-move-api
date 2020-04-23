@@ -33,7 +33,7 @@ RSpec.describe Activity do
       {
         id:         nomis_scheduled_event['eventId'],
         start_time: Time.parse(nomis_scheduled_event['startTime']),
-        end_time:   Time.parse(nomis_scheduled_event['endTime']),
+        type:       'Prison Activities',
         reason:     nomis_scheduled_event['eventTypeDesc'],
         agency_id:  nomis_scheduled_event['locationCode'],
       }
