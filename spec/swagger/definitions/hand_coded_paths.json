@@ -162,7 +162,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_moves_responses.json#/200"
+                "$ref": "get_moves_responses.yaml#/200"
               }
             }
           }
@@ -172,7 +172,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_moves_responses.json#/401"
+                "$ref": "get_moves_responses.yaml#/401"
               }
             }
           }
@@ -182,7 +182,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_moves_responses.json#/415"
+                "$ref": "get_moves_responses.yaml#/415"
               }
             }
           }
@@ -204,7 +204,7 @@
           "required": true,
           "description": "The move object to be created",
           "schema": {
-            "$ref": "move.json#/Move"
+            "$ref": "move.yaml#/Move"
           }
         }
       ],
@@ -214,7 +214,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/201"
+                "$ref": "post_moves_responses.yaml#/201"
               }
             }
           }
@@ -224,7 +224,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/400"
+                "$ref": "post_moves_responses.yaml#/400"
               }
             }
           }
@@ -234,7 +234,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/401"
+                "$ref": "post_moves_responses.yaml#/401"
               }
             }
           }
@@ -244,7 +244,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/404"
+                "$ref": "post_moves_responses.yaml#/404"
               }
             }
           }
@@ -254,7 +254,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/415"
+                "$ref": "post_moves_responses.yaml#/415"
               }
             }
           }
@@ -264,7 +264,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_moves_responses.json#/422"
+                "$ref": "post_moves_responses.yaml#/422"
               }
             }
           }
@@ -282,14 +282,16 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        },
         {
           "name": "body",
           "in": "body",
           "required": true,
           "description": "The move object to be modified",
           "schema": {
-            "$ref": "move.json#/Move"
+            "$ref": "move.yaml#/Move"
           }
         }
       ],
@@ -299,7 +301,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/200"
+                "$ref": "put_move_responses.yaml#/200"
               }
             }
           }
@@ -309,7 +311,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/400"
+                "$ref": "put_move_responses.yaml#/400"
               }
             }
           }
@@ -319,7 +321,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/401"
+                "$ref": "put_move_responses.yaml#/401"
               }
             }
           }
@@ -329,7 +331,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/404"
+                "$ref": "put_move_responses.yaml#/404"
               }
             }
           }
@@ -339,7 +341,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/415"
+                "$ref": "put_move_responses.yaml#/415"
               }
             }
           }
@@ -349,7 +351,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_move_responses.json#/422"
+                "$ref": "put_move_responses.yaml#/422"
               }
             }
           }
@@ -367,7 +369,9 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" }
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        }
       ],
       "responses": {
         "200": {
@@ -375,7 +379,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "delete_move_responses.json#/200"
+                "$ref": "delete_move_responses.yaml#/200"
               }
             }
           }
@@ -385,7 +389,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "delete_move_responses.json#/401"
+                "$ref": "delete_move_responses.yaml#/401"
               }
             }
           }
@@ -395,7 +399,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "delete_move_responses.json#/404"
+                "$ref": "delete_move_responses.yaml#/404"
               }
             }
           }
@@ -405,7 +409,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "delete_move_responses.json#/415"
+                "$ref": "delete_move_responses.yaml#/415"
               }
             }
           }
@@ -424,15 +428,19 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        },
+        {
+          "$ref": "idempotency_key_parameter.yaml#/IdempotencyKey"
+        },
         {
           "name": "body",
           "in": "body",
           "required": true,
           "description": "The completed move event object to be created. It must specify `timestamp`.",
           "schema": {
-            "$ref": "complete.json#/PostComplete"
+            "$ref": "complete.yaml#/PostComplete"
           }
         }
       ],
@@ -442,7 +450,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_move_complete_responses.json#/201"
+                "$ref": "post_move_complete_responses.yaml#/201"
               }
             }
           }
@@ -452,7 +460,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/400"
+                "$ref": "error_responses.yaml#/400"
               }
             }
           }
@@ -462,7 +470,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/401"
+                "$ref": "error_responses.yaml#/401"
               }
             }
           }
@@ -472,7 +480,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/404"
+                "$ref": "error_responses.yaml#/404"
               }
             }
           }
@@ -482,7 +490,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/409"
+                "$ref": "error_responses.yaml#/409"
               }
             }
           }
@@ -492,7 +500,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/415"
+                "$ref": "error_responses.yaml#/415"
               }
             }
           }
@@ -502,7 +510,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/422"
+                "$ref": "error_responses.yaml#/422"
               }
             }
           }
@@ -520,14 +528,16 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        },
         {
           "name": "body",
           "in": "body",
           "required": true,
           "description": "The document object to be created",
           "schema": {
-            "$ref": "document.json#/Document"
+            "$ref": "document.yaml#/Document"
           }
         }
       ],
@@ -537,7 +547,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/201"
+                "$ref": "post_documents_responses.yaml#/201"
               }
             }
           }
@@ -547,7 +557,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/400"
+                "$ref": "post_documents_responses.yaml#/400"
               }
             }
           }
@@ -557,7 +567,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/401"
+                "$ref": "post_documents_responses.yaml#/401"
               }
             }
           }
@@ -567,7 +577,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/404"
+                "$ref": "post_documents_responses.yaml#/404"
               }
             }
           }
@@ -577,7 +587,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/415"
+                "$ref": "post_documents_responses.yaml#/415"
               }
             }
           }
@@ -587,7 +597,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_documents_responses.json#/422"
+                "$ref": "post_documents_responses.yaml#/422"
               }
             }
           }
@@ -606,15 +616,19 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        },
+        {
+          "$ref": "idempotency_key_parameter.yaml#/IdempotencyKey"
+        },
         {
           "name": "body",
           "in": "body",
           "required": true,
           "description": "The lockout event object to be created. It must specify `timestamp`, `reason` and `location`.",
           "schema": {
-            "$ref": "lockout.json#/PostLockout"
+            "$ref": "lockout.yaml#/PostLockout"
           }
         }
       ],
@@ -624,7 +638,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_lockouts_responses.json#/201"
+                "$ref": "post_lockouts_responses.yaml#/201"
               }
             }
           }
@@ -634,7 +648,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/400"
+                "$ref": "error_responses.yaml#/400"
               }
             }
           }
@@ -644,7 +658,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/401"
+                "$ref": "error_responses.yaml#/401"
               }
             }
           }
@@ -654,7 +668,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/404"
+                "$ref": "error_responses.yaml#/404"
               }
             }
           }
@@ -664,7 +678,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/409"
+                "$ref": "error_responses.yaml#/409"
               }
             }
           }
@@ -674,7 +688,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/415"
+                "$ref": "error_responses.yaml#/415"
               }
             }
           }
@@ -684,7 +698,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/422"
+                "$ref": "error_responses.yaml#/422"
               }
             }
           }
@@ -703,15 +717,19 @@
         "application/vnd.api+json"
       ],
       "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
+        {
+          "$ref": "move_id_parameter.yaml#/MoveId"
+        },
+        {
+          "$ref": "idempotency_key_parameter.yaml#/IdempotencyKey"
+        },
         {
           "name": "body",
           "in": "body",
           "required": true,
           "description": "The redirect event object to be created. It must specify `timestamp`, `reason` and `to_location`.",
           "schema": {
-            "$ref": "redirect.json#/PostRedirect"
+            "$ref": "redirect.yaml#/PostRedirect"
           }
         }
       ],
@@ -721,7 +739,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_redirects_responses.json#/201"
+                "$ref": "post_redirects_responses.yaml#/201"
               }
             }
           }
@@ -731,7 +749,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/400"
+                "$ref": "error_responses.yaml#/400"
               }
             }
           }
@@ -741,7 +759,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/401"
+                "$ref": "error_responses.yaml#/401"
               }
             }
           }
@@ -751,7 +769,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/404"
+                "$ref": "error_responses.yaml#/404"
               }
             }
           }
@@ -761,7 +779,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/409"
+                "$ref": "error_responses.yaml#/409"
               }
             }
           }
@@ -771,7 +789,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/415"
+                "$ref": "error_responses.yaml#/415"
               }
             }
           }
@@ -781,7 +799,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "error_responses.json#/422"
+                "$ref": "error_responses.yaml#/422"
               }
             }
           }
@@ -856,7 +874,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_people_responses.json#/200"
+                "$ref": "get_people_responses.yaml#/200"
               }
             }
           }
@@ -866,7 +884,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_people_responses.json#/401"
+                "$ref": "get_people_responses.yaml#/401"
               }
             }
           }
@@ -876,7 +894,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_people_responses.json#/415"
+                "$ref": "get_people_responses.yaml#/415"
               }
             }
           }
@@ -898,7 +916,7 @@
           "required": true,
           "description": "The person object to be created",
           "schema": {
-            "$ref": "person.json#/Person"
+            "$ref": "person.yaml#/Person"
           }
         }
       ],
@@ -908,7 +926,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/201"
+                "$ref": "post_people_responses.yaml#/201"
               }
             }
           }
@@ -918,7 +936,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/400"
+                "$ref": "post_people_responses.yaml#/400"
               }
             }
           }
@@ -928,7 +946,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/401"
+                "$ref": "post_people_responses.yaml#/401"
               }
             }
           }
@@ -938,7 +956,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/404"
+                "$ref": "post_people_responses.yaml#/404"
               }
             }
           }
@@ -948,7 +966,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/415"
+                "$ref": "post_people_responses.yaml#/415"
               }
             }
           }
@@ -958,7 +976,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_people_responses.json#/422"
+                "$ref": "post_people_responses.yaml#/422"
               }
             }
           }
@@ -993,7 +1011,7 @@
           "required": true,
           "description": "The person object to be updated",
           "schema": {
-            "$ref": "person.json#/Person"
+            "$ref": "person.yaml#/Person"
           }
         }
       ],
@@ -1003,7 +1021,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/201"
+                "$ref": "put_people_responses.yaml#/201"
               }
             }
           }
@@ -1013,7 +1031,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/400"
+                "$ref": "put_people_responses.yaml#/400"
               }
             }
           }
@@ -1023,7 +1041,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/401"
+                "$ref": "put_people_responses.yaml#/401"
               }
             }
           }
@@ -1033,7 +1051,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/404"
+                "$ref": "put_people_responses.yaml#/404"
               }
             }
           }
@@ -1043,7 +1061,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/415"
+                "$ref": "put_people_responses.yaml#/415"
               }
             }
           }
@@ -1053,7 +1071,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "put_people_responses.json#/422"
+                "$ref": "put_people_responses.yaml#/422"
               }
             }
           }
@@ -1088,7 +1106,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_allocation_complex_cases_responses.json#/200"
+                "$ref": "get_allocation_complex_cases_responses.yaml#/200"
               }
             }
           }
@@ -1098,7 +1116,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_allocation_complex_cases_responses.json#/401"
+                "$ref": "get_allocation_complex_cases_responses.yaml#/401"
               }
             }
           }
@@ -1108,7 +1126,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_allocation_complex_cases_responses.json#/415"
+                "$ref": "get_allocation_complex_cases_responses.yaml#/415"
               }
             }
           }
@@ -1156,7 +1174,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/200"
+                "$ref": "get_assessment_questions_responses.yaml#/200"
               }
             }
           }
@@ -1166,7 +1184,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/401"
+                "$ref": "get_assessment_questions_responses.yaml#/401"
               }
             }
           }
@@ -1176,7 +1194,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_assessment_questions_responses.json#/415"
+                "$ref": "get_assessment_questions_responses.yaml#/415"
               }
             }
           }
@@ -1211,7 +1229,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_ethnicities_responses.json#/200"
+                "$ref": "get_ethnicities_responses.yaml#/200"
               }
             }
           }
@@ -1221,7 +1239,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_ethnicities_responses.json#/401"
+                "$ref": "get_ethnicities_responses.yaml#/401"
               }
             }
           }
@@ -1231,7 +1249,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_ethnicities_responses.json#/415"
+                "$ref": "get_ethnicities_responses.yaml#/415"
               }
             }
           }
@@ -1266,7 +1284,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/200"
+                "$ref": "get_genders_responses.yaml#/200"
               }
             }
           }
@@ -1276,7 +1294,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/401"
+                "$ref": "get_genders_responses.yaml#/401"
               }
             }
           }
@@ -1286,7 +1304,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_genders_responses.json#/415"
+                "$ref": "get_genders_responses.yaml#/415"
               }
             }
           }
@@ -1352,7 +1370,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_locations_responses.json#/200"
+                "$ref": "get_locations_responses.yaml#/200"
               }
             }
           }
@@ -1362,7 +1380,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_locations_responses.json#/401"
+                "$ref": "get_locations_responses.yaml#/401"
               }
             }
           }
@@ -1372,7 +1390,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_locations_responses.json#/415"
+                "$ref": "get_locations_responses.yaml#/415"
               }
             }
           }
@@ -1418,7 +1436,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_location_responses.json#/200"
+                "$ref": "get_location_responses.yaml#/200"
               }
             }
           }
@@ -1428,7 +1446,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_location_responses.json#/401"
+                "$ref": "get_location_responses.yaml#/401"
               }
             }
           }
@@ -1438,7 +1456,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_location_responses.json#/404"
+                "$ref": "get_location_responses.yaml#/404"
               }
             }
           }
@@ -1448,7 +1466,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_location_responses.json#/415"
+                "$ref": "get_location_responses.yaml#/415"
               }
             }
           }
@@ -1483,7 +1501,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/200"
+                "$ref": "get_nationalities_responses.yaml#/200"
               }
             }
           }
@@ -1493,7 +1511,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/401"
+                "$ref": "get_nationalities_responses.yaml#/401"
               }
             }
           }
@@ -1503,7 +1521,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_nationalities_responses.json#/415"
+                "$ref": "get_nationalities_responses.yaml#/415"
               }
             }
           }
@@ -1538,7 +1556,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_suppliers_responses.json#/200"
+                "$ref": "get_suppliers_responses.yaml#/200"
               }
             }
           }
@@ -1548,7 +1566,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_suppliers_responses.json#/401"
+                "$ref": "get_suppliers_responses.yaml#/401"
               }
             }
           }
@@ -1558,7 +1576,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_suppliers_responses.json#/415"
+                "$ref": "get_suppliers_responses.yaml#/415"
               }
             }
           }
@@ -1603,7 +1621,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_supplier_responses.json#/200"
+                "$ref": "get_supplier_responses.yaml#/200"
               }
             }
           }
@@ -1613,7 +1631,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_supplier_responses.json#/401"
+                "$ref": "get_supplier_responses.yaml#/401"
               }
             }
           }
@@ -1623,7 +1641,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_supplier_responses.json#/404"
+                "$ref": "get_supplier_responses.yaml#/404"
               }
             }
           }
@@ -1633,7 +1651,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "get_supplier_responses.json#/415"
+                "$ref": "get_supplier_responses.yaml#/415"
               }
             }
           }

@@ -76,76 +76,76 @@ RSpec.configure do |config|
         },
         schemas: {
           AllocationComplexCase: {
-            "$ref": 'allocation_complex_case.json#/AllocationComplexCase',
+            "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
           },
           AssessmentAnswer: {
-            "$ref": 'assessment_answer.json#/AssessmentAnswer',
+            "$ref": 'assessment_answer.yaml#/AssessmentAnswer',
           },
           AssessmentQuestion: {
-            "$ref": 'assessment_question.json#/AssessmentQuestion',
+            "$ref": 'assessment_question.yaml#/AssessmentQuestion',
           },
           Complete: {
-            "$ref": 'complete.json#/GetComplete',
+            "$ref": 'complete.yaml#/GetComplete',
           },
           CourtCase: {
-            "$ref": 'court_case.json#/CourtCase',
+            "$ref": 'court_case.yaml#/CourtCase',
           },
           CourtHearing: {
-            "$ref": 'court_hearing.json#/CourtHearing',
+            "$ref": 'court_hearing.yaml#/CourtHearing',
           },
           CourtHearingReference: {
-            "$ref": 'court_hearing_reference.json#/CourtHearingReference',
+            "$ref": 'court_hearing_reference.yaml#/CourtHearingReference',
           },
           Document: {
-            "$ref": 'document.json#/Document',
+            "$ref": 'document.yaml#/Document',
           },
           Ethnicity: {
-            "$ref": 'ethnicity.json#/Ethnicity',
+            "$ref": 'ethnicity.yaml#/Ethnicity',
           },
           Gender: {
-            "$ref": 'gender.json#/Gender',
+            "$ref": 'gender.yaml#/Gender',
           },
           Location: {
-            "$ref": 'location.json#/Location',
+            "$ref": 'location.yaml#/Location',
           },
           LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference',
+            "$ref": 'location_reference.yaml#/LocationReference',
           },
           Lockout: {
-            "$ref": 'lockout.json#/GetLockout',
+            "$ref": 'lockout.yaml#/GetLockout',
           },
           Move: {
-            "$ref": 'move.json#/Move',
+            "$ref": 'move.yaml#/Move',
           },
           MoveReference: {
-            "$ref": 'move_reference.json#/MoveReference',
+            "$ref": 'move_reference.yaml#/MoveReference',
           },
           Nationality: {
-            "$ref": 'nationality.json#/Nationality',
+            "$ref": 'nationality.yaml#/Nationality',
           },
           Pagination: {
-            "$ref": 'pagination.json#/Pagination',
+            "$ref": 'pagination.yaml#/Pagination',
           },
           PaginationLinks: {
-            "$ref": 'pagination_links.json#/PaginationLinks',
+            "$ref": 'pagination_links.yaml#/PaginationLinks',
           },
           Person: {
-            "$ref": 'person.json#/Person',
+            "$ref": 'person.yaml#/Person',
           },
           PersonReference: {
-            "$ref": 'person_reference.json#/PersonReference',
+            "$ref": 'person_reference.yaml#/PersonReference',
           },
           PrisonTransferReason: {
-            "$ref": 'prison_transfer_reason.json#/PrisonTransferReason',
+            "$ref": 'prison_transfer_reason.yaml#/PrisonTransferReason',
           },
           ProfileIdentifier: {
-            "$ref": 'profile_identifier.json#/ProfileIdentifier',
+            "$ref": 'profile_identifier.yaml#/ProfileIdentifier',
           },
           Redirect: {
-            "$ref": 'redirect.json#/GetRedirect',
+            "$ref": 'redirect.yaml#/GetRedirect',
           },
           Supplier: {
-            "$ref": 'supplier.json#/Supplier',
+            "$ref": 'supplier.yaml#/Supplier',
           },
         },
       },
