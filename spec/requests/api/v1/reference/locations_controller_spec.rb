@@ -9,7 +9,7 @@ RSpec.describe Api::V1::Reference::LocationsController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/locations' do
-    let(:schema) { load_json_schema('get_locations_responses.json') }
+    let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
 
     let(:params) { {} }
 
@@ -147,7 +147,7 @@ RSpec.describe Api::V1::Reference::LocationsController do
   end
 
   describe 'GET /api/v1/reference/locations/:id' do
-    let(:schema) { load_json_schema('get_location_responses.json') }
+    let(:schema) { load_yaml_schema('get_location_responses.yaml') }
     let(:params) { {} }
     let(:data) do
       {
