@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :allocations, only: :index
       resources :documents, only: %i[create]
       resources :court_hearings, only: %i[create]
       resources :people, only: %i[index create update] do
@@ -25,6 +26,7 @@ Rails.application.routes.draw do
       end
       namespace :reference do
         resources :locations, only: %i[index show]
+        resources :allocation_complex_cases, only: :index
         resources :assessment_questions, only: :index
         resources :genders, only: :index
         resources :ethnicities, only: :index

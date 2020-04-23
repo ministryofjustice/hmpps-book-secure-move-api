@@ -75,47 +75,11 @@ RSpec.configure do |config|
           },
         },
         schemas: {
-          CourtHearing: {
-            "$ref": 'court_hearing.json#/CourtHearing',
+          Allocation: {
+            "$ref": 'allocation.json#/Allocation',
           },
-          CourtHearingReference: {
-            "$ref": 'court_hearing_reference.json#/CourtHearingReference',
-          },
-          CourtCase: {
-            "$ref": 'court_case.json#/CourtCase',
-          },
-          Move: {
-            "$ref": 'move.json#/Move',
-          },
-          MoveReference: {
-            "$ref": 'move_reference.json#/MoveReference',
-          },
-          PersonReference: {
-            "$ref": 'person_reference.json#/PersonReference',
-          },
-          LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference',
-          },
-          Location: {
-            "$ref": 'location.json#/Location',
-          },
-          Person: {
-            "$ref": 'person.json#/Person',
-          },
-          Ethnicity: {
-            "$ref": 'ethnicity.json#/Ethnicity',
-          },
-          Gender: {
-            "$ref": 'gender.json#/Gender',
-          },
-          Nationality: {
-            "$ref": 'nationality.json#/Nationality',
-          },
-          Supplier: {
-            "$ref": 'supplier.json#/Supplier',
-          },
-          Document: {
-            "$ref": 'document.json#/Document',
+          AllocationComplexCase: {
+            "$ref": 'allocation_complex_case.json#/AllocationComplexCase',
           },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.json#/AssessmentAnswer',
@@ -123,17 +87,68 @@ RSpec.configure do |config|
           AssessmentQuestion: {
             "$ref": 'assessment_question.json#/AssessmentQuestion',
           },
+          Complete: {
+            "$ref": 'complete.json#/GetComplete',
+          },
+          CourtCase: {
+            "$ref": 'court_case.json#/CourtCase',
+          },
+          CourtHearing: {
+            "$ref": 'court_hearing.json#/CourtHearing',
+          },
+          CourtHearingReference: {
+            "$ref": 'court_hearing_reference.json#/CourtHearingReference',
+          },
+          Document: {
+            "$ref": 'document.json#/Document',
+          },
+          Ethnicity: {
+            "$ref": 'ethnicity.json#/Ethnicity',
+          },
+          Gender: {
+            "$ref": 'gender.json#/Gender',
+          },
+          Location: {
+            "$ref": 'location.json#/Location',
+          },
+          LocationReference: {
+            "$ref": 'location_reference.json#/LocationReference',
+          },
+          Lockout: {
+            "$ref": 'lockout.json#/GetLockout',
+          },
+          Move: {
+            "$ref": 'move.json#/Move',
+          },
+          MoveReference: {
+            "$ref": 'move_reference.json#/MoveReference',
+          },
+          Nationality: {
+            "$ref": 'nationality.json#/Nationality',
+          },
+          Pagination: {
+            "$ref": 'pagination.json#/Pagination',
+          },
+          PaginationLinks: {
+            "$ref": 'pagination_links.json#/PaginationLinks',
+          },
+          Person: {
+            "$ref": 'person.json#/Person',
+          },
+          PersonReference: {
+            "$ref": 'person_reference.json#/PersonReference',
+          },
           PrisonTransferReason: {
             "$ref": 'prison_transfer_reason.json#/PrisonTransferReason',
           },
           ProfileIdentifier: {
             "$ref": 'profile_identifier.json#/ProfileIdentifier',
           },
-          PaginationLinks: {
-            "$ref": 'pagination_links.json#/PaginationLinks',
+          Redirect: {
+            "$ref": 'redirect.json#/GetRedirect',
           },
-          Pagination: {
-            "$ref": 'pagination.json#/Pagination',
+          Supplier: {
+            "$ref": 'supplier.json#/Supplier',
           },
         },
       },
