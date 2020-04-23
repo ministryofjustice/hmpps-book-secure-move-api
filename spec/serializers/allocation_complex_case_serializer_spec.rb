@@ -16,7 +16,7 @@ RSpec.describe AllocationComplexCaseSerializer do
     expect(result[:data][:id]).to eql allocation_complex_case.id
   end
 
-  it 'contains a key property' do
+  it 'contains a key attribute' do
     expect(result[:data][:attributes][:key]).to eql allocation_complex_case.key
   end
 

@@ -75,6 +75,9 @@ RSpec.configure do |config|
           },
         },
         schemas: {
+          Allocation: {
+            "$ref": 'allocation.json#/Allocation',
+          },
           AllocationComplexCase: {
             "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
           },
