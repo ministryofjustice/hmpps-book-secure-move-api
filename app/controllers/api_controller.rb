@@ -113,9 +113,9 @@ private
     render(
       json: { errors: [{
         title: 'Connection Error',
-        detail: exception.to_s
+        detail: exception.to_s,
       }] },
-      status: service_unavailable,
+      status: :service_unavailable,
     )
   end
 

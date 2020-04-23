@@ -50,6 +50,16 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
+    context 'when person does not exist' do
+      it 'returns success' do
+        person_id = 'non-existent-person'
+
+        get "/api/v1/people/#{person_id}/court_cases", params: { access_token: token.token }
+
+        expect(response_json['errors'][0]['title']).to eq('Resource not found')
+      end
+    end
+
     context 'when the court cases are NOT present in Nomis' do
       let(:booking_id) { '123456789' }
 
