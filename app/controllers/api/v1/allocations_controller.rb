@@ -13,6 +13,12 @@ module Api
         end
       end
 
+      def show
+        allocation = Allocation.find(params[:id])
+
+        render json: allocation, status: 200, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+      end
+
     private
 
       def filter_params
