@@ -12,17 +12,15 @@ RSpec.describe People::RetrieveDiaryEntries do
 
   let(:court_hearing) do
     NomisCourtHearing.new.build_from_nomis(
-      {
-        'dateTime' => '2017-01-27T10:00:00',
-        'location' => {
-          'agencyId' => 'SNARCC',
-        }
-      }
+      'dateTime' => '2017-01-27T10:00:00',
+      'location' => {
+        'agencyId' => 'SNARCC',
+      },
     )
   end
   let(:activity) do
     Activity.new.build_from_nomis(
-      'startTime' => '2020-04-22T08:30:00'
+      'startTime' => '2020-04-22T08:30:00',
     )
   end
 

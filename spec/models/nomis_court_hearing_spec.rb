@@ -14,8 +14,8 @@ RSpec.describe NomisCourtHearing do
           'agencyId' => 'SNARCC',
           'description' => 'Snaresbrook Crown Court',
           'agencyType' => 'CRT',
-          'active' => true
-        }
+          'active' => true,
+        },
       }
     end
     let(:expected_attributes) do

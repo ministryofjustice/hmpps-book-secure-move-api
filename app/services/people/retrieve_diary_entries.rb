@@ -8,7 +8,7 @@ module People
 
       diary_entries = court_hearings + activities
 
-      diary_entries.sort { |entry| entry.start_time }
+      diary_entries.sort(&:start_time)
     end
   end
 end
