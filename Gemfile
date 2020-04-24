@@ -59,8 +59,8 @@ gem 'logstash-event', '~> 1.2'
 gem 'logstash-logger', '~> 0.26.1'
 
 group :development, :test do
-  gem 'dotenv', '~> 2.7'
-  gem 'dotenv-rails', '~> 2.7'
+  gem 'dotenv'
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'github_changelog_generator'
