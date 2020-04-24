@@ -7,7 +7,8 @@ class Activity
 
   def build_from_nomis(activity)
     @id = activity['eventId']
-    @start_time = Time.zone.parse(activity['startTime'])
+    # Nomis startTime does not include a zone so we shouldn't use our local zone with Time.zone.parse
+    @start_time = Time.parse(activity['startTime'])
     @type = TYPE
     @reason = activity['eventTypeDesc']
     @agency_id = activity['locationCode']
