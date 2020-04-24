@@ -86,7 +86,7 @@ module NomisClient
         params = DEFAULT_PAGINATE_PARAMS.dup.deep_merge(params)
         response = NomisClient::Base.send(verb, path, params)
         responses << response
-        total_records = response.headers['total-records'].to_i
+        total_records = response.headers['Total-Records'].to_i
         found_records = 0
 
         return [] if total_records < 1
@@ -98,12 +98,12 @@ module NomisClient
         end
 
         while found_records < total_records
-          offset = params[:headers]['page-offset'].to_i
-          params[:headers]['page-offset'] = (offset + 1).to_s
+          offset = params[:headers]['Page-Offset'].to_i
+          params[:headers]['Page-Offset'] = (offset + 1).to_s
 
           response = NomisClient::Base.send(verb, path, params)
           responses << response
-          total_records = response.headers['total-records'].to_i
+          total_records = response.headers['Total-Records'].to_i
 
           if response.status == 200
             collection_items = yield response.parsed

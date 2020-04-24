@@ -29,17 +29,17 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
 
     let(:page_one_headers) do
       {
-        'total-records' => total_records,
-        'page-offset' => '0',
-        'page-limit' => '2',
+        'Total-Records' => total_records,
+        'Page-Offset' => '0',
+        'Page-Limit' => '2',
       }
     end
 
     let(:page_two_headers) do
       {
-        'total-records' => '4',
-        'page-offset' => '1',
-        'page-limit' => '2',
+        'Total-Records' => '4',
+        'Page-Offset' => '1',
+        'Page-Limit' => '2',
       }
     end
 
