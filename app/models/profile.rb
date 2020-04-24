@@ -12,8 +12,8 @@ class Profile < VersionedModel
   validates :first_names, presence: true
   validate :validate_assessment_answers
 
-  attribute :assessment_answers, Profile::AssessmentAnswers::Type.new
-  attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
+  attribute :assessment_answers, Types::JSONB.new(Profile::AssessmentAnswers)
+  attribute :profile_identifiers, Types::JSONB.new(Profile::ProfileIdentifiers)
 
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
 
