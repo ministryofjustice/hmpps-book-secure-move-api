@@ -418,7 +418,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_complete_responses.json#/201"
+                "$ref": "FIXMEpost_complete_responses.json#/201"
               }
             }
           }
@@ -945,10 +945,10 @@
       }
     }
   },
-  "/moves/{move_id}/journeys/{journey_id}/complete": {
-    "post": {
-      "summary": "[NOT YET IMPLEMENTED] Creates a completed journey event",
-      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a completed journey event changes the journey's status to be `completed`. A journey which has been cancelled cannot be completed: it must be uncancelled first. Completing a journey _does not_ alter the parent move object: additional API calls will be necessary to complete (or cancel) the move.",
+  "/moves/{move_id}/journeys/{journey_id}/events": {
+    "post":{
+      "summary": "[NOT YET IMPLEMENTED] Creates a journey event",
+      "description": "### [NOT YET IMPLEMENTED]\n\nCreating a journey event will change a journey's state.\n\nCompleting or cancelling a journey _does not_ alter the state of parent move object: additional API calls on the `\/moves\/{move_id}\/events` endpoint will be necessary to complete or cancel the move.\n\nUse the `event_name` attribute to specify the type of event:\n* `complete` - completes a journey\n* `uncomplete` - uncompletes a journey and reverts the state to `in_progress`\n* `cancel` - cancels a journey\n* `uncancel` - uncancels a journey and reverts the state to `in_progress`\n",
       "tags": [
         "Journeys"
       ],
@@ -964,116 +964,70 @@
           "name": "body",
           "in": "body",
           "required": true,
-          "description": "The completed journey event object to be created. It must specify `timestamp`.",
+          "description": "### Completing a journey\nA journey is completed by POSTing a `complete` event. Completing a journey will change the journey state from `in_progress` to `completed`. Only a journey which is `in_progress` may be completed.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"complete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncompleting a journey\nA journey is uncompleted by POSTing an `uncomplete` an event. Uncompleting a journey will change the journey state from `completed` to `in_progress`. Only a journey which is `completed` may be uncompleted.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncomplete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Cancelling a journey\nA journey is cancelled by POSTing a `cancel` event. Cancelling a journey will change the journey state from `in_progress` to `cancelled`. Only a journey which is `in_progress` may be cancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"cancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncancelling a journey\nA journey is uncancelled by POSTing an `uncancel` event. Uncancelling a journey will change the journey state from `cancelled` to `in_progress`. Only a journey which is `cancelled` may be uncancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n",
           "schema": {
-            "$ref": "complete.json#/PostComplete"
+            "$ref": "journey_event.json#/PostJourneyEvent"
           }
         }
       ],
       "responses": {
         "201": {
+          "$ref": "post_journey_events_responses.json#/201",
           "description": "created",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "post_complete_responses.json#/201"
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "$ref": "journey_event.json#/GetJourneyEvent"
+                  }
+                }
               }
             }
-          }
-        },
-        "400": {
-          "description": "bad request",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/400"
+          },
+          "examples": {
+            "Completed": {
+              "data": {
+                "id": "d0911846-eb20-49dd-b4e1-9f65bcee4b7b",
+                "type": "events",
+                "attributes": {
+                  "event_name": "complete",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                }
               }
-            }
-          }
-        },
-        "401": {
-          "description": "unauthorized",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/401"
+            },
+            "Uncompleted": {
+              "data": {
+                "id": "d0911846-eb20-49dd-b4e1-9f65bcee4b7b",
+                "type": "events",
+                "attributes": {
+                  "event_name": "uncomplete",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                }
               }
-            }
-          }
-        },
-        "404": {
-          "description": "resource not found",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/404"
+            },
+            "Cancelled": {
+              "data": {
+                "id": "d0911846-eb20-49dd-b4e1-9f65bcee4b7b",
+                "type": "events",
+                "attributes": {
+                  "event_name": "cancel",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                }
               }
-            }
-          }
-        },
-        "409": {
-          "description": "conflict",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/409"
-              }
-            }
-          }
-        },
-        "415": {
-          "description": "invalid media type",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/415"
-              }
-            }
-          }
-        },
-        "422": {
-          "description": "unprocessable entity",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "error_responses.json#/422"
-              }
-            }
-          }
-        }
-      }
-    },
-    "delete": {
-      "summary": "[NOT YET IMPLEMENTED] Creates a completed journey event",
-      "description": "## [NOT YET IMPLEMENTED]\n\nCreating an un-completed journey event changes the completed journey's status to be `in_progress`. A journey which has been cancelled cannot be completed: it must be uncancelled first. Completing a journey _does not_ alter the parent move object: additional API calls will be necessary to complete (or cancel) the move.",
-      "tags": [
-        "Journeys"
-      ],
-      "consumes": [
-        "application/vnd.api+json"
-      ],
-      "parameters": [
-        { "$ref": "move_id_parameter.json#/MoveId" },
-        { "$ref": "journey_id_parameter.json#/JourneyId" },
-        { "$ref": "idempotency_key_parameter.json#/IdempotencyKey" },
-        { "$ref": "content_type_parameter.json#/ContentType" },
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "description": "The completed journey event object to be created. It must specify `timestamp`.",
-          "schema": {
-            "$ref": "complete.json#/PostComplete"
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "created",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "post_complete_responses.json#/201"
+            },
+            "Uncancelled": {
+              "data": {
+                "id": "d0911846-eb20-49dd-b4e1-9f65bcee4b7b",
+                "type": "events",
+                "attributes": {
+                  "event_name": "uncancel",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                }
               }
             }
           }

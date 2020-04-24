@@ -1,0 +1,13 @@
+{
+  "JourneyEventName": {
+    "type": "string",
+    "example": "complete",
+    "enum": [
+      "complete",
+      "uncomplete",
+      "cancel",
+      "uncancel"
+    ],
+    "description": "The type of this journey event - either `complete`, `uncomplete`, `cancel` or `uncancel`"
+  }
+}
