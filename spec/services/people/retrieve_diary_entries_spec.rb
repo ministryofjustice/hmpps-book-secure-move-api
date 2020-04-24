@@ -34,7 +34,7 @@ RSpec.describe People::RetrieveDiaryEntries do
     expect(People::RetrieveCourtHearings).to have_received(:call).with(person)
   end
 
-  it 'sorts diary entries in descending order by start time' do
-    expect(described_class.call(person)).to eq([activity, court_hearing])
+  it 'sorts diary entries in ascending order by start time' do
+    expect(described_class.call(person)).to eq([court_hearing, activity])
   end
 end
