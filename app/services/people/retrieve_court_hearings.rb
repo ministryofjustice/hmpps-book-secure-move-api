@@ -5,8 +5,8 @@ module People
     def self.call(person)
       court_hearings = NomisClient::CourtHearings.get(person.latest_nomis_booking_id)['hearings']
 
-      court_hearings.map do |court_hearing_json|
-        NomisCourtHearing.new.build_from_nomis(court_hearing_json)
+      court_hearings.map do |nomis_court_hearing|
+        NomisCourtHearing.new.build_from_nomis(nomis_court_hearing)
       end
     end
   end
