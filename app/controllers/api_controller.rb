@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  before_action :doorkeeper_authorize!
+  before_action :doorkeeper_authorize! unless Rails.env.development?
   before_action :restrict_request_content_type
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
@@ -20,6 +20,8 @@ class ApiController < ApplicationController
   end
 
   def user_for_paper_trail
+    return 0 if Rails.env.development?
+
     current_user.owner_id
   end
 
