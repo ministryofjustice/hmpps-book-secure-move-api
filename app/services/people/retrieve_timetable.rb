@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module People
-  class RetrieveDiaryEntries
+  class RetrieveTimetable
     def self.call(person)
       activities = People::RetrieveActivities.call(person)
       court_hearings = People::RetrieveCourtHearings.call(person)

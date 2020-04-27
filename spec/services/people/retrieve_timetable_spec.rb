@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe People::RetrieveDiaryEntries do
+RSpec.describe People::RetrieveTimetable do
   let(:person) { instance_double('Person') }
 
   before do
