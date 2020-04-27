@@ -5,16 +5,6 @@ module NomisClient
     FIXTURE_DIRECTORY = Rails.root.join 'db/fixtures/nomis'
     MAX_RETRIES = 2
 
-    PAGE_OFFSET = '0'
-    PAGE_LIMIT = '20'
-
-    DEFAULT_PAGINATE_PARAMS = {
-      headers: {
-        'Page-Offset' => PAGE_OFFSET,
-        'Page-Limit' => PAGE_LIMIT,
-      },
-    }.freeze
-
     class << self
       def get(path, params = {})
         benchmark_request(path) { token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params) }
@@ -78,41 +68,6 @@ module NomisClient
             'Content-Type': 'application/json',
           },
         }.deep_merge(params)
-      end
-
-      def paginate_through(path, params = {}, verb = :get)
-        responses = []
-
-        params = DEFAULT_PAGINATE_PARAMS.dup.deep_merge(params)
-        response = NomisClient::Base.send(verb, path, params)
-        responses << response
-        total_records = response.headers['Total-Records'].to_i
-        found_records = 0
-
-        return [] if total_records < 1
-
-        if response.status == 200
-          collection_items = yield response.parsed
-
-          found_records += collection_items.count
-        end
-
-        while found_records < total_records
-          offset = params[:headers]['Page-Offset'].to_i
-          params[:headers]['Page-Offset'] = (offset + 1).to_s
-
-          response = NomisClient::Base.send(verb, path, params)
-          responses << response
-          total_records = response.headers['Total-Records'].to_i
-
-          if response.status == 200
-            collection_items = yield response.parsed
-
-            found_records += collection_items.count
-          end
-        end
-
-        responses
       end
     end
   end

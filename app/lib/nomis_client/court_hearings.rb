@@ -6,19 +6,10 @@ module NomisClient
       def get(booking_id, start_date = Date.today, end_date = Date.today)
         court_hearings_path = "/bookings/#{booking_id}/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}"
 
-        court_hearings = []
-
-        paginate_through(court_hearings_path) do |court_hearings_response|
-          hearings_json = court_hearings_response['hearings']
-
-          hearings_json.each do |hearing_json|
-            court_hearings << hearing_json
-          end
-
-          hearings_json
-        end
-
-        court_hearings
+        NomisClient::Base.get(
+          court_hearings_path,
+          headers: { 'Page-Limit' => '1000' }
+        )
       end
 
       def post(booking_id:, court_case_id:, body_params: {})
