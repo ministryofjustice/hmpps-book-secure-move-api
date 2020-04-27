@@ -16,7 +16,7 @@ module Api
       def show
         allocation = Allocation.find(params[:id])
 
-        render json: allocation, status: 200, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+        render json: allocation, status: :ok, include: AllocationSerializer::INCLUDED_ATTRIBUTES
       end
 
     private

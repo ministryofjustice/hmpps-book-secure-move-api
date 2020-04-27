@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag, type: :request do
+RSpec.describe Api::V1::AllocationsController, :with_client_authentication, :rswag, type: :request do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:allocation) { create :allocation }
