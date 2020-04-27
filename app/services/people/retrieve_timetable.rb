@@ -6,9 +6,9 @@ module People
       activities = People::RetrieveActivities.call(person)
       court_hearings = People::RetrieveCourtHearings.call(person)
 
-      diary_entries = court_hearings + activities
+      timetable = court_hearings + activities
 
-      diary_entries.sort { |entry| entry.start_time }.reverse
+      timetable.sort { |timetable_entry| timetable_entry.start_time }.reverse
     end
   end
 end

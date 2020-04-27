@@ -8,7 +8,7 @@ module NomisClient
 
         NomisClient::Base.get(
           court_hearings_path,
-          headers: { 'Page-Limit' => '1000' }
+          headers: { 'Page-Limit' => '1000' },
         )
       end
 

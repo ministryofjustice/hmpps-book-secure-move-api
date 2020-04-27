@@ -6,7 +6,7 @@ module NomisClient
 
         response = NomisClient::Base.get(
           activities_path,
-          headers: { 'Page-Limit' => '1000' }
+          headers: { 'Page-Limit' => '1000' },
         )
 
         response.body
