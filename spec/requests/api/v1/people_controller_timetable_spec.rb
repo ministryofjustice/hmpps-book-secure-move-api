@@ -13,7 +13,6 @@ RSpec.describe Api::V1::PeopleController do
   before do
     allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities)
     allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings)
-
   end
 
   context 'when person is present ' do
@@ -31,7 +30,7 @@ RSpec.describe Api::V1::PeopleController do
             'startTime' => '2020-04-22T08:30:00',
             'eventTypeDesc' => 'Prison Activities',
             'locationCode' => 'PEI',
-          )
+          ),
         ]
       end
       let(:nomis_court_hearings) do
@@ -40,7 +39,7 @@ RSpec.describe Api::V1::PeopleController do
             'id' => 330253339,
             'dateTime' => '2017-01-27T10:00:00',
             'location' => { 'agencyId' => 'PEI' },
-          )
+          ),
         ]
       end
 
@@ -77,7 +76,7 @@ RSpec.describe Api::V1::PeopleController do
       it 'return 404 not found' do
         get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
 
-        expect(response_json).to eq('data'=>[])
+        expect(response_json).to eq('data' => [])
       end
     end
   end

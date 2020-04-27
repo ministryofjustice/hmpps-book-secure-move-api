@@ -3,13 +3,27 @@
 require 'rails_helper'
 
 RSpec.describe People::RetrieveTimetable do
-  let(:person) { instance_double('Person') }
-
   before do
-    allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings)
-    allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities)
+    allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings_struct)
+    allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities_struct)
   end
 
+  let(:person) { instance_double('Person') }
+
+  let(:nomis_court_hearings_struct) do
+    OpenStruct.new(
+      success?: nomis_success,
+      content: [court_hearing],
+      error: nil
+    )
+  end
+  let(:nomis_activities_struct) do
+    OpenStruct.new(
+      success?: nomis_success,
+      content: [activity],
+      error: nil
+    )
+  end
   let(:court_hearing) do
     NomisCourtHearing.new.build_from_nomis(
       'dateTime' => '2017-01-27T10:00:00',
@@ -24,17 +38,35 @@ RSpec.describe People::RetrieveTimetable do
     )
   end
 
-  let(:nomis_court_hearings) { [court_hearing] }
-  let(:nomis_activities) { [activity] }
+  context 'when retrieving from Nomis succeeds' do
+    let(:nomis_success) { true }
 
-  it 'calls the right services with the correct args' do
-    described_class.call(person)
+    it 'calls the right services with the correct args' do
+      described_class.call(person)
 
-    expect(People::RetrieveActivities).to have_received(:call).with(person)
-    expect(People::RetrieveCourtHearings).to have_received(:call).with(person)
+      expect(People::RetrieveActivities).to have_received(:call).with(person)
+      expect(People::RetrieveCourtHearings).to have_received(:call).with(person)
+    end
+
+    it 'sorts timetable entries in ascending order by start time' do
+      expect(described_class.call(person).content).to eq([court_hearing, activity])
+    end
   end
 
-  it 'sorts diary entries in ascending order by start time' do
-    expect(described_class.call(person)).to eq([court_hearing, activity])
+  context 'when retrieving from Nomis fails' do
+    let(:nomis_success) { false }
+
+    it 'returns a struct indicating calling to Nomis failed' do
+      struct = described_class.call(person)
+
+      expect(struct).not_to be_success
+    end
+
+    it 'returns early for the first error' do
+      described_class.call(person)
+
+      expect(People::RetrieveActivities).to have_received(:call).with(person)
+      expect(People::RetrieveCourtHearings).not_to have_received(:call).with(person)
+    end
   end
 end
