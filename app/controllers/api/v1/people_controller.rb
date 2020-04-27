@@ -44,9 +44,13 @@ module Api
       end
 
       def timetable
-        timetable = People::RetrieveTimetable.call(person)
+        response = People::RetrieveTimetable.call(person)
 
-        render json: timetable, each_serializer: TimetableSerializer, include: :location
+        if response.success?
+          render json: response.content, each_serializer: TimetableSerializer, include: :location
+        else
+          render json: json_api_errors_for(response.error)
+        end
       end
 
     private

@@ -56,7 +56,7 @@ RSpec.describe People::RetrieveTimetable do
   context 'when retrieving from Nomis fails' do
     let(:nomis_success) { false }
 
-    it 'returns a struct indicating calling to Nomis failed' do
+    it 'returns a struct indicating that calling to Nomis failed' do
       struct = described_class.call(person)
 
       expect(struct).not_to be_success

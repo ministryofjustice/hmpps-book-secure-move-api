@@ -11,8 +11,8 @@ RSpec.describe Api::V1::PeopleController do
   let(:nomis_court_hearings) { [] }
 
   before do
-    allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities)
-    allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings)
+    allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities_struct)
+    allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings_struct)
   end
 
   context 'when person is present ' do
@@ -21,8 +21,25 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     let(:person) { create(:profile, :nomis_synced).person }
+    let(:nomis_success) { true }
+
+    let(:nomis_court_hearings_struct) do
+      OpenStruct.new(
+        success?: nomis_success,
+        content: nomis_court_hearings,
+        error: nil
+      )
+    end
+    let(:nomis_activities_struct) do
+      OpenStruct.new(
+        success?: nomis_success,
+        content: nomis_activities,
+        error: nil
+      )
+    end
 
     context 'when timetable entries are present in Nomis' do
+      let(:nomis_success) { true }
       let(:nomis_activities) do
         [
           Activity.new.build_from_nomis(
@@ -43,7 +60,6 @@ RSpec.describe Api::V1::PeopleController do
         ]
       end
 
-
       it 'returns 200' do
         get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
 
@@ -60,12 +76,13 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when person does not exist' do
-      it 'returns success' do
+      it 'returns 404' do
         person_id = 'non-existent-person'
 
         get "/api/v1/people/#{person_id}/timetable", params: { access_token: token.token }
 
         expect(response_json['errors'][0]['title']).to eq('Resource not found')
+        expect(response).to have_http_status(:not_found)
       end
     end
 
@@ -73,10 +90,11 @@ RSpec.describe Api::V1::PeopleController do
       let(:nomis_activities) { [] }
       let(:nomis_court_hearings) { [] }
 
-      it 'return 404 not found' do
+      it 'return an empty data key' do
         get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
 
         expect(response_json).to eq('data' => [])
+        expect(response).to have_http_status(:success)
       end
     end
   end
