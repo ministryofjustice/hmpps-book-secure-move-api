@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       resources :documents, only: %i[create]
       resources :court_hearings, only: %i[create]
       resources :people, only: %i[index create update] do
-        get 'images'
+        get 'images', to: 'people#court_cases'
         get 'court_cases'
         get 'timetable'
       end
