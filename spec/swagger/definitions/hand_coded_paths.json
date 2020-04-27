@@ -388,10 +388,10 @@
       }
     }
   },
-  "/moves/{move_id}/complete": {
+  "/moves/{move_id}/events": {
     "post": {
-      "summary": "[NOT YET IMPLEMENTED] Creates a completed move event",
-      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a completed move event changes the underlying move's status to be `completed`. It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or cancel existing journeys.",
+      "summary": "[NOT YET IMPLEMENTED] Creates a move event",
+      "description": "## [NOT YET IMPLEMENTED]\n\nCreating a move event can change the underlying move's status or other attributes.\n\nMove events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to complete or cancel existing journeys.\n\nUse the `event_name` attribute to specify the type of event:\n* `complete` - completes a move\n* `redirect` - redirects a move to a new `to_location`\n* `lockout` - indicates the move has been locked out at `to_location`",
       "tags": [
         "Move Events"
       ],
@@ -406,9 +406,9 @@
           "name": "body",
           "in": "body",
           "required": true,
-          "description": "The completed move event object to be created. It must specify `timestamp`.",
+          "description": "### Completing a Move\nA move is completed by POSTing a `complete` event. Completing a move will change the move status to `completed`.  It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or cancel existing journeys. \n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"complete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Redirecting a Move\nCreating a redirect event changes the move's destination (`to_location`). It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or cancel existing journeys and create new journeys. The new destination should be specified via a `to_location` relationship.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"redirect\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  },\n  relationships\": {\n    \"to_location\": {\n      \"data\": {\n        \"type\": \"locations\",\n        \"id\": \"c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1\"\n      }\n    }\n  }\n}\n```\n\n### Recording a Lockout\nCreating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or cancel existing journeys and create new journeys. The lockout location should be specified via a `to_location` relationship.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"lockout\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  },\n  relationships\": {\n    \"to_location\": {\n      \"data\": {\n        \"type\": \"locations\",\n        \"id\": \"c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1\"\n      }\n    }\n  }\n}\n```\n\n---",
           "schema": {
-            "$ref": "complete.json#/PostComplete"
+            "$ref": "move_event.json#/PostMoveEvent"
           }
         }
       ],
@@ -418,7 +418,63 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "FIXMEpost_complete_responses.json#/201"
+                "type": "object",
+                "required": [
+                  "data"
+                ],
+                "properties": {
+                  "data": {
+                    "$ref": "move_event.json#/GetMoveEvent"
+                  }
+                }
+              }
+            }
+          },
+          "examples": {
+            "Completed": {
+              "data": {
+                "id": "355b78b6-57da-4c52-9c41-29a90376c0d7",
+                "type": "events",
+                "attributes": {
+                  "event_name": "complete",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                }
+              }
+            },
+            "Redirect": {
+              "data": {
+                "id": "355b78b6-57da-4c52-9c41-29a90376c0d7",
+                "type": "events",
+                "attributes": {
+                  "event_name": "redirect",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                },
+                "relationships": {
+                  "to_location": {
+                    "data": {
+                      "type": "locations",
+                      "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
+                    }
+                  }
+                }
+              }
+            },
+            "Lockout": {
+              "data": {
+                "id": "355b78b6-57da-4c52-9c41-29a90376c0d7",
+                "type": "events",
+                "attributes": {
+                  "event_name": "lockout",
+                  "timestamp": "2020-04-21T13:20:50.52Z"
+                },
+                "relationships": {
+                  "to_location": {
+                    "data": {
+                      "type": "locations",
+                      "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
+                    }
+                  }
+                }
               }
             }
           }
@@ -964,7 +1020,7 @@
           "name": "body",
           "in": "body",
           "required": true,
-          "description": "### Completing a journey\nA journey is completed by POSTing a `complete` event. Completing a journey will change the journey state from `in_progress` to `completed`. Only a journey which is `in_progress` may be completed.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"complete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncompleting a journey\nA journey is uncompleted by POSTing an `uncomplete` an event. Uncompleting a journey will change the journey state from `completed` to `in_progress`. Only a journey which is `completed` may be uncompleted.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncomplete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Cancelling a journey\nA journey is cancelled by POSTing a `cancel` event. Cancelling a journey will change the journey state from `in_progress` to `cancelled`. Only a journey which is `in_progress` may be cancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"cancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncancelling a journey\nA journey is uncancelled by POSTing an `uncancel` event. Uncancelling a journey will change the journey state from `cancelled` to `in_progress`. Only a journey which is `cancelled` may be uncancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n",
+          "description": "### Completing a journey\nA journey is completed by POSTing a `complete` event. Completing a journey will change the journey state from `in_progress` to `completed`. Only a journey which is `in_progress` may be completed.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"complete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncompleting a journey\nA journey is uncompleted by POSTing an `uncomplete` an event. Uncompleting a journey will change the journey state from `completed` to `in_progress`. Only a journey which is `completed` may be uncompleted.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncomplete\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Cancelling a journey\nA journey is cancelled by POSTing a `cancel` event. Cancelling a journey will change the journey state from `in_progress` to `cancelled`. Only a journey which is `in_progress` may be cancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"cancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n\n### Uncancelling a journey\nA journey is uncancelled by POSTing an `uncancel` event. Uncancelling a journey will change the journey state from `cancelled` to `in_progress`. Only a journey which is `cancelled` may be uncancelled.\n\n```\n{\n  \"type\": \"events\",\n  \"attributes\": {\n    \"event_name\": \"uncancel\",\n    \"timestamp\": \"2020-04-21T13:20:50.52Z\"\n  }\n}\n```\n---",
           "schema": {
             "$ref": "journey_event.json#/PostJourneyEvent"
           }
@@ -972,7 +1028,6 @@
       ],
       "responses": {
         "201": {
-          "$ref": "post_journey_events_responses.json#/201",
           "description": "created",
           "content": {
             "application/vnd.api+json": {

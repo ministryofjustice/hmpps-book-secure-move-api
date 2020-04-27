@@ -1,0 +1,12 @@
+{
+  "MoveEventName": {
+    "type": "string",
+    "example": "redirect",
+    "enum": [
+      "complete",
+      "redirect",
+      "lockout"
+    ],
+    "description": "The type of this move event - either `complete`, `redirect` or `lockout`"
+  }
+}
