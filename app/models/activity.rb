@@ -7,8 +7,11 @@ class Activity
 
   def build_from_nomis(activity)
     @id = activity['eventId']
-    # Nomis startTime does not include a zone so we shouldn't use our local zone with Time.zone.parse
+    # Nomis startTime does not include a zone so we shouldn't use our local zone with Time.zone.parse and
+    # arbitraily add a timezone
+    # rubocop:disable Rails/TimeZone
     @start_time = Time.parse(activity['startTime'])
+    # rubocop:enable Rails/TimeZone
     @type = TYPE
     @reason = activity['eventTypeDesc']
     @agency_id = activity['locationCode']

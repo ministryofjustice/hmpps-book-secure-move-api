@@ -27,14 +27,14 @@ RSpec.describe Api::V1::PeopleController do
       OpenStruct.new(
         success?: nomis_success,
         content: nomis_court_hearings,
-        error: nil
+        error: nil,
       )
     end
     let(:nomis_activities_struct) do
       OpenStruct.new(
         success?: nomis_success,
         content: nomis_activities,
-        error: nil
+        error: nil,
       )
     end
 

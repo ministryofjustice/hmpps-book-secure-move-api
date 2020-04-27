@@ -43,7 +43,6 @@ RSpec.describe People::RetrieveActivities do
       struct = described_class.call(person)
 
       expect(struct).not_to be_success
-      expect(struct.content).to be_empty
       expect(struct.error).to be_a(NomisClient::ApiError)
     end
   end

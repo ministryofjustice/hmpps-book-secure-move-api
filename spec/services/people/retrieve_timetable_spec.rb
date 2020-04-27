@@ -14,14 +14,14 @@ RSpec.describe People::RetrieveTimetable do
     OpenStruct.new(
       success?: nomis_success,
       content: [court_hearing],
-      error: nil
+      error: nil,
     )
   end
   let(:nomis_activities_struct) do
     OpenStruct.new(
       success?: nomis_success,
       content: [activity],
-      error: nil
+      error: nil,
     )
   end
   let(:court_hearing) do
