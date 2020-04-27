@@ -14,6 +14,6 @@ RSpec.describe People::RetrieveCourtCases do
   it 'returns an array of CourtCase' do
     court_cases_response = described_class.call(person, filter_params)
 
-    expect(court_cases_response).to all(be_a(CourtCase))
+    expect(court_cases_response.court_cases).to all(be_a(CourtCase))
   end
 end

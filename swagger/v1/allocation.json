@@ -1,0 +1,120 @@
+{
+  "Allocation": {
+    "type": "object",
+    "required": [
+      "id",
+      "type",
+      "attributes"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "f0a91e16-1b0e-4e1f-93fe-319dda9933e6",
+        "description": "The unique identifier (UUID) of this object"
+      },
+      "type": {
+        "type": "string",
+        "example": "allocations",
+        "enum": ["allocations"],
+        "description": "The type of this object - always `allocations`"
+      },
+      "attributes": {
+        "type": "object",
+        "required": [
+          "moves_count",
+          "date"
+        ],
+        "properties": {
+          "moves_count": {
+            "type": "integer",
+            "example": 5,
+            "description": "The number of prisoners to move in this allocation"
+          },
+          "prisoner_category": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["b", "c", "d"]
+              },
+              { "type": "null" }
+            ],
+            "example": "b",
+            "description": "Indicates the prisoner category"
+          },
+          "sentence_length": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["short", "long"]
+              },
+              { "type": "null" }
+            ],
+            "example": "short",
+            "description": "Indicates the sentence length - short is 16 months or less, long is over 16 months"
+          },
+          "complex_cases": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "allocation_complex_case.json#/AllocationComplexCase"
+                }
+              },
+              { "type": "null" }
+            ],
+            "example": "null",
+            "description": "Collection of indicators for complex cases"
+          },
+          "complete_in_full": {
+            "type": "boolean",
+            "example":  "true",
+            "description": "Indicates if allocation must be completed (i.e. populated with prisoners) in full"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the allocation was last created or updated",
+            "readOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the allocation was created",
+            "readOnly": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-05-17",
+            "description": "Date on which the allocation is scheduled"
+          },
+          "other_criteria": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "null" }
+            ],
+            "description": "Additional information about the allocation"
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "required": [
+          "from_location",
+          "to_location"
+        ],
+        "properties": {
+          "from_location": {
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location (prison) that the people are being moved from"
+          },
+          "to_location": {
+            "$ref": "location_reference.json#/LocationReference",
+            "description": "The location (prison) that the people are being moved to"
+          }
+        }
+      }
+    }
+  }
+}

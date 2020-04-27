@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :allocations, only: :index
       resources :documents, only: %i[create]
       resources :court_hearings, only: %i[create]
       resources :people, only: %i[index create update] do
