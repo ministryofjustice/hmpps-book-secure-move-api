@@ -50,7 +50,7 @@ Allocation:
           oneOf:
           - type: array
             items:
-              $ref: allocation_complex_case.json#/AllocationComplexCase
+              $ref: allocation_complex_case.yaml#/AllocationComplexCase
           - type: 'null'
           example: 'null'
           description: Collection of indicators for complex cases

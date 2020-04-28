@@ -76,7 +76,7 @@ RSpec.configure do |config|
         },
         schemas: {
           Allocation: {
-            "$ref": 'allocation.json#/Allocation',
+            "$ref": 'allocation.yaml#/Allocation',
           },
           AllocationComplexCase: {
             "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
@@ -109,7 +109,7 @@ RSpec.configure do |config|
             "$ref": 'gender.yaml#/Gender',
           },
           Journey: {
-            "$ref": 'journey.json#/GetJourney',
+            "$ref": 'journey.yaml#/GetJourney',
           },
           Location: {
             "$ref": 'location.yaml#/Location',
