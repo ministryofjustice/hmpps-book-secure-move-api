@@ -20,7 +20,7 @@ class Encryptor
   end
 
   def self.decrypt(value)
-    new.decrypt_and_verify(value)
+    new.decrypt_and_verify(value) if value.present?
   end
 
   def self.hmac(secret, data)

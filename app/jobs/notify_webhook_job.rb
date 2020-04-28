@@ -14,9 +14,13 @@ class NotifyWebhookJob < ApplicationJob
     begin
       data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
       hmac = Encryptor.hmac(notification.subscription.secret, data)
+      client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
+      if notification.subscription.username.present? && notification.subscription.password.present?
+        client.headers['Authorization'] = "Basic #{Base64.strict_encode64(notification.subscription.username + ':' + notification.subscription.password)}"
+      end
       response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
-      raise "non-success status received from #{notification.subscription.callback_url} (#{response.status})" unless response.success?
+      raise "non-success status received from #{notification.subscription.callback_url} (#{response.status} #{response.reason_phrase})" unless response.success?
 
       notification.update(delivered_at: DateTime.now,
                           delivery_attempts: notification.delivery_attempts.succ,
@@ -28,11 +32,5 @@ class NotifyWebhookJob < ApplicationJob
       Raven.capture_exception(e)
       raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
-  end
-
-private
-
-  def client
-    Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
   end
 end

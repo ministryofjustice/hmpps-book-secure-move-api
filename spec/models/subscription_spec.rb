@@ -81,6 +81,38 @@ RSpec.describe Subscription do
     end
   end
 
+  describe 'username' do
+    subject(:subscription) { build(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.username).to eq('username') }
+    end
+  end
+
+  describe 'encrypted_username' do
+    subject(:subscription) { build(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.encrypted_username).not_to eq('username') }
+    end
+  end
+
+  describe 'password' do
+    subject(:subscription) { build(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.password).to eq('password') }
+    end
+  end
+
+  describe 'encrypted_password' do
+    subject(:subscription) { build(:subscription) }
+
+    context 'when writing' do
+      it { expect(subscription.encrypted_password).not_to eq('password') }
+    end
+  end
+
   describe 'kept?' do
     subject(:subscription) { build(:subscription, discarded_at: discarded_at) }
 
