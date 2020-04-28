@@ -1,0 +1,24 @@
+{
+  "hearings": [
+    {
+      "id": 321688982,
+      "dateTime": "2016-11-14T10:00:00",
+      "location": {
+        "agencyId": "THMSMC",
+        "description": "Thames Mc",
+        "agencyType": "CRT",
+        "active": true
+      }
+    },
+    {
+      "id": 325241444,
+      "dateTime": "2016-12-13T10:00:00",
+      "location": {
+        "agencyId": "SNARCC",
+        "description": "Snaresbrook Crown Court",
+        "agencyType": "CRT",
+        "active": true
+      }
+    }
+  ]
+}

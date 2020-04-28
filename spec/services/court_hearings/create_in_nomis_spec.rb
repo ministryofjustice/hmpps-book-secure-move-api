@@ -24,7 +24,7 @@ RSpec.describe CourtHearings::CreateInNomis do
     let(:booking_id) { 123 }
 
     before do
-      allow(NomisClient::CourtHearing).to receive(:post)
+      allow(NomisClient::CourtHearings).to receive(:post)
                                               .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
       move.person.latest_profile.update(latest_nomis_booking_id: booking_id)
     end
@@ -35,7 +35,7 @@ RSpec.describe CourtHearings::CreateInNomis do
       it 'creates the court hearings in Nomis' do
         create_hearing_in_nomis
 
-        expect(NomisClient::CourtHearing).to have_received(:post).with(
+        expect(NomisClient::CourtHearings).to have_received(:post).with(
           booking_id: booking_id,
           court_case_id: nomis_case_id,
           body_params: {

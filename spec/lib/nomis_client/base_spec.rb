@@ -108,10 +108,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:get).and_raise(Faraday::ConnectionFailed, 'connection failed')
-        described_class.get(api_endpoint)
       end
 
-      it 'is called MAX_RETRIES times' do
+      it 'is called MAX_RETRIES + 1 times' do
+        expect {
+          described_class.get(api_endpoint)
+        }.to raise_exception(Faraday::ConnectionFailed)
+
         expect(token).to have_received(:get).exactly(3).times
       end
     end
@@ -123,10 +126,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:get).and_raise(Faraday::TimeoutError)
-        described_class.get(api_endpoint)
       end
 
-      it 'is called MAX_RETRIES times' do
+      it 'is called MAX_RETRIES + 1 times' do
+        expect {
+          described_class.get(api_endpoint)
+        }.to raise_exception(Faraday::TimeoutError)
+
         expect(token).to have_received(:get).exactly(3).times
       end
     end
@@ -226,10 +232,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:post).and_raise(Faraday::ConnectionFailed, 'connection failed')
-        described_class.post(api_endpoint)
       end
 
       it 'is called MAX_RETRIES times' do
+        expect {
+          described_class.post(api_endpoint)
+        }.to raise_exception(Faraday::ConnectionFailed)
+
         expect(token).to have_received(:post).exactly(3).times
       end
     end
@@ -241,10 +250,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:post).and_raise(Faraday::TimeoutError)
-        described_class.post('/example')
       end
 
       it 'is called MAX_RETRIES times' do
+        expect {
+          described_class.post('/example')
+        }.to raise_exception(Faraday::TimeoutError)
+
         expect(token).to have_received(:post).exactly(3).times
       end
     end
