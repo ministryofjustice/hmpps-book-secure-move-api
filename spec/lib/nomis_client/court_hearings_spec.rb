@@ -2,7 +2,26 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::CourtHearing, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: true do
+  describe '.get' do
+    subject(:court_hearings_get) { described_class.get(booking_id, start_date, end_date) }
+
+    let(:booking_id) { '1495077' }
+    let(:start_date) { Date.today }
+    let(:end_date) { Date.tomorrow }
+
+    let(:response_body) { file_fixture('nomis_get_court_hearings_200.json').read }
+
+    it 'calls the NomisClient::Base.get with the correct path and params' do
+      court_hearings_get
+
+      expect(token).to have_received(:get).with(
+        "/elite2api/api/bookings/1495077/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
+        headers: { 'Page-Limit' => '1000' },
+      )
+    end
+  end
+
   describe '.post' do
     subject(:court_hearing_post) {
       described_class.post(booking_id: booking_id, court_case_id: court_case_id, body_params: {})
