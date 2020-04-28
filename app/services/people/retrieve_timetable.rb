@@ -10,7 +10,7 @@ module People
       return court_hearings_response unless court_hearings_response.success?
 
       timetable = court_hearings_response.content + activities_response.content
-      timetable = timetable.sort_by(&:start_time).reverse
+      timetable = timetable.sort_by(&:start_time)
 
       OpenStruct.new(success?: true, content: timetable, errors: nil)
     end
