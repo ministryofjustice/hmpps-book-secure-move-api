@@ -10,6 +10,11 @@ The subscription process is currently manual - please contact the Book a Secure 
 * **Callback URL**: this must be an `https://` endpoint which is publicly accessible and should not require authentication
 * **Secret**: this is a shared secret which is used to generate a SHA-256 HMAC signature to guarantee the authenticity of the notification
 
+If your server supports [HTTP Basic Authorization](https://tools.ietf.org/html/rfc7617), you can also supply:
+
+* **Username**: optional, used for basic authorization
+* **Password**: optional, used for basic authorization
+
 Once the Book a Secure Move team have actioned the request, notifications of moves events will be immediately sent to the specified `callback_url`.
 
 

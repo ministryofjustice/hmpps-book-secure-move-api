@@ -6,17 +6,19 @@ class NotifyWebhookJob < ApplicationJob
 
   def perform(notification_id:)
     notification = Notification.webhooks.kept.includes(:subscription).find(notification_id)
-    return unless notification.subscription.enabled?
+    subscription = notification.subscription
+    return unless subscription.enabled?
 
     # just return if the notification has been already delivered
     return if notification.delivered_at.present?
 
     begin
       data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
-      hmac = Encryptor.hmac(notification.subscription.secret, data)
-      response = client.post(notification.subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
+      hmac = Encryptor.hmac(subscription.secret, data)
+      client = get_client(subscription)
+      response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
-      raise "non-success status received from #{notification.subscription.callback_url} (#{response.status})" unless response.success?
+      raise "non-success status received from #{subscription.callback_url} (#{response.status} #{response.reason_phrase})" unless response.success?
 
       notification.update(delivered_at: DateTime.now,
                           delivery_attempts: notification.delivery_attempts.succ,
@@ -32,7 +34,11 @@ class NotifyWebhookJob < ApplicationJob
 
 private
 
-  def client
-    Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
+  def get_client(subscription)
+    client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
+    if subscription.username.present? && subscription.password.present?
+      client.headers['Authorization'] = "Basic #{Base64.strict_encode64(subscription.username + ':' + subscription.password)}"
+    end
+    client
   end
 end
