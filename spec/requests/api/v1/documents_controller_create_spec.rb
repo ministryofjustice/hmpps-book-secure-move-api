@@ -60,7 +60,7 @@ RSpec.describe Api::V1::DocumentsController do
               )
           end
 
-          schema '$ref' => 'post_documents_responses.json#/201'
+          schema '$ref' => 'post_documents_responses.yaml#/201'
 
           run_test! do |_example|
             expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
@@ -74,7 +74,7 @@ RSpec.describe Api::V1::DocumentsController do
 
 
   describe 'POST /moves/:move_id/documents' do
-    let(:schema) { load_json_schema('post_documents_responses.json') }
+    let(:schema) { load_yaml_schema('post_documents_responses.yaml') }
     let(:move) { create(:move) }
     let(:access_token) { create(:access_token).token }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }

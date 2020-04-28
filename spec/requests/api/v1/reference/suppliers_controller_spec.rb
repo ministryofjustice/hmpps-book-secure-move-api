@@ -9,7 +9,7 @@ RSpec.describe Api::V1::Reference::SuppliersController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/suppliers' do
-    let(:schema) { load_json_schema('get_suppliers_responses.json') }
+    let(:schema) { load_yaml_schema('get_suppliers_responses.yaml') }
 
     let(:data) do
       [
@@ -70,7 +70,7 @@ RSpec.describe Api::V1::Reference::SuppliersController do
   end
 
   describe 'GET /api/v1/reference/suppliers/:id' do
-    let(:schema) { load_json_schema('get_supplier_responses.json') }
+    let(:schema) { load_yaml_schema('get_supplier_responses.yaml') }
     let(:params) { {} }
     let(:data) do
       {

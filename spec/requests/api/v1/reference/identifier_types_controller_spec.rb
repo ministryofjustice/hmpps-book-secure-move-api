@@ -9,7 +9,7 @@ RSpec.describe Api::V1::Reference::IdentifierTypesController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/identifier_types' do
-    let(:schema) { load_json_schema('get_identifier_types_responses.json') }
+    let(:schema) { load_yaml_schema('get_identifier_types_responses.yaml') }
 
     let!(:identifier_types) do
       [

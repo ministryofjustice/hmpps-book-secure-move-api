@@ -10,7 +10,7 @@ RSpec.describe Api::V1::PeopleController do
 
   describe 'PUT /api/v1/people' do
     let!(:person) { create :person }
-    let(:schema) { load_json_schema('put_people_responses.json') }
+    let(:schema) { load_yaml_schema('put_people_responses.yaml') }
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
     let(:risk_type_1) { create :assessment_question, :risk }

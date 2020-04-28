@@ -78,7 +78,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
                 relationships: {
                   type: 'object',
                   properties: {
-                    move: { '$ref' => 'move_reference.json#/MoveReference' },
+                    move: { '$ref' => 'move_reference.yaml#/MoveReference' },
                   },
                 },
               },
@@ -103,7 +103,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
       end
 
       response '201', 'created' do
-        schema '$ref' => 'post_court_hearing_responses.json#/201'
+        schema '$ref' => 'post_court_hearing_responses.yaml#/201'
 
         run_test!
       end

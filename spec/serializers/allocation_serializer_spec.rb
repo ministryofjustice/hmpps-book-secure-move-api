@@ -5,7 +5,18 @@ require 'rails_helper'
 RSpec.describe AllocationSerializer do
   subject(:serializer) { described_class.new(allocation) }
 
-  let(:allocation) { create :allocation }
+
+  let(:complex_case) { create(:allocation_complex_case) }
+  let(:complex_case_answer_attributes) {
+    {
+    key: complex_case.key,
+    title: complex_case.title,
+    answer: true,
+    allocation_complex_case_id: complex_case.id,
+  }
+  }
+  let(:complex_case_answer) { Allocation::ComplexCaseAnswer.new(complex_case_answer_attributes) }
+  let(:allocation) { create(:allocation, complex_cases: [complex_case_answer]) }
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
   end
@@ -40,7 +51,7 @@ RSpec.describe AllocationSerializer do
     end
 
     it 'contains a complex_cases attribute' do
-      expect(attributes[:complex_cases]).to eql allocation.complex_cases
+      expect(attributes[:complex_cases].first).to match complex_case_answer_attributes
     end
 
     it 'contains a complete_in_full attribute' do

@@ -9,7 +9,7 @@ RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'POST /people' do
-    let(:schema) { load_json_schema('post_people_responses.json') }
+    let(:schema) { load_yaml_schema('post_people_responses.yaml') }
 
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
