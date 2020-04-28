@@ -15,13 +15,13 @@ module Types
     end
 
     def deserialize(value)
-      if String == value
+      if String === value
         decoded = begin
                     ::ActiveSupport::JSON.decode(value)
                   rescue StandardError
                     nil
                   end
-        @concrete_class.new(decoded)
+        cast(decoded)
       else
         super
       end
