@@ -80,6 +80,17 @@ namespace :fake_data do
     end
   end
 
+  def fake_complex_case_answers
+    AllocationComplexCase.all.map do |complex_case|
+      {
+        allocation_complex_case_id: complex_case.id,
+        title: complex_case.title,
+        key: complex_case.key,
+        answer: [true, false].sample,
+      }
+    end
+  end
+
   desc 'create fake prisons'
   task create_prisons: :environment do
     puts 'create_prisons...'
@@ -185,6 +196,7 @@ namespace :fake_data do
         sentence_length: Allocation.sentence_lengths.values.sample,
         moves_count: Faker::Number.digit,
         complete_in_full: Faker::Boolean.boolean,
+        complex_cases: fake_complex_case_answers,
       )
     end
   end
