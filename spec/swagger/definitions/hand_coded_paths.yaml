@@ -414,7 +414,7 @@
 
         ---
       schema:
-        $ref: move_event.yaml#/PostMoveEvent
+        $ref: post_move_event.yaml#/PostMoveEvent
     responses:
       '201':
         description: created
@@ -426,7 +426,7 @@
               - data
               properties:
                 data:
-                  $ref: move_event.yaml#/GetMoveEvent
+                  $ref: get_move_event.yaml#/GetMoveEvent
         examples:
           Complete:
             data:
@@ -614,8 +614,8 @@
       ## [NOT YET IMPLEMENTED]
 
       This creates a new journey record and appends it to the move. It _does not_ update the destination of the parent
-      move record: an additional call to the redirects endpoint will be required in order to change the move
-      destination.
+      move record: additional API calls to the `/moves/{move_id}/events` endpoint will be required in order to change
+      the move's destination.
     tags:
     - Move Journeys
     consumes:
@@ -630,7 +630,7 @@
       description: The journey object to be created. It must specify `timestamp`,
         `billable`, `from_location` and `to_location`.
       schema:
-        $ref: journey.yaml#/PostJourney
+        $ref: post_journey.yaml#/PostJourney
     responses:
       '201':
         description: created
@@ -756,7 +756,7 @@
       description: The journey object to be updated. It must specify `timestamp`,
         `billable`; it must not specify locations or `state`.
       schema:
-        $ref: journey.yaml#/PatchJourneyMetadata
+        $ref: patch_journey.yaml#/PatchJourney
     responses:
       '200':
         description: success
@@ -892,7 +892,7 @@
 
         ---
       schema:
-        $ref: journey_event.yaml#/PostJourneyEvent
+        $ref: post_journey_event.yaml#/PostJourneyEvent
     responses:
       '201':
         description: created
@@ -904,7 +904,7 @@
               - data
               properties:
                 data:
-                  $ref: journey_event.yaml#/GetJourneyEvent
+                  $ref: get_journey_event.yaml#/GetJourneyEvent
         examples:
           Completed:
             data:
