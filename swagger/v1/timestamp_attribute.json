@@ -1,8 +1,0 @@
-{
-  "Timestamp": {
-    "type": "string",
-    "format": "date-time",
-    "example": "2020-04-21T13:20:50.52Z",
-    "description": "client timestamp of the event in RFC-3339 format which must be synchronised with UTC"
-  }
-}

@@ -9,7 +9,7 @@ RSpec.describe Api::V1::Reference::EthnicitiesController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/ethnicities' do
-    let(:schema) { load_json_schema('get_ethnicities_responses.json') }
+    let(:schema) { load_yaml_schema('get_ethnicities_responses.yaml') }
 
     let(:data) do
       [

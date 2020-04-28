@@ -24,8 +24,6 @@ module Api
       end
 
       def image
-        person = Person.find(params[:person_id])
-
         success = People::RetrieveImage.call(person)
 
         if success
@@ -36,12 +34,20 @@ module Api
       end
 
       def court_cases
-        person = Person.find(params[:person_id])
-
         response = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
         if response.success?
           render json: response.court_cases, each_serializer: CourtCaseSerializer, include: :location
+        else
+          render json: json_api_errors_for(response.error)
+        end
+      end
+
+      def timetable
+        response = People::RetrieveTimetable.call(person)
+
+        if response.success?
+          render json: response.content, each_serializer: TimetableSerializer, include: :location
         else
           render json: json_api_errors_for(response.error)
         end
@@ -82,6 +88,10 @@ module Api
 
       def updater
         @updater ||= People::Updater.new(params[:id], person_params)
+      end
+
+      def person
+        @person ||= Person.find(params[:person_id])
       end
 
       def render_person(person, status)

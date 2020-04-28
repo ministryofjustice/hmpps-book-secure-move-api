@@ -14,7 +14,7 @@ RSpec.describe Api::V1::MovesController do
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
   describe 'PATCH /moves' do
-    let(:schema) { load_json_schema('patch_move_responses.json') }
+    let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
 

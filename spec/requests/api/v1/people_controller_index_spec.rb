@@ -6,7 +6,7 @@ RSpec.describe Api::V1::PeopleController do
   let!(:token) { create(:access_token) }
   let(:response_json) { JSON.parse(response.body) }
 
-  let(:schema) { load_json_schema('get_people_responses.json') }
+  let(:schema) { load_yaml_schema('get_people_responses.yaml') }
 
   describe 'GET /people' do
     let(:prison_number) { 'G5033UT' }
