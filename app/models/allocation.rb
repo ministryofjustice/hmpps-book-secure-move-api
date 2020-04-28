@@ -23,4 +23,6 @@ class Allocation < VersionedModel
 
   validates :moves_count, presence: true
   validates :date, presence: true
+
+  attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
 end
