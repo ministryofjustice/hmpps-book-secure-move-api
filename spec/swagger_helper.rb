@@ -6,8 +6,8 @@ def swagger_file(*relative_path)
   File.read(Rails.root.join('spec', 'swagger', 'definitions', *relative_path))
 end
 
-def load_swagger_json(*relative_path)
-  JSON.parse(swagger_file(*relative_path))
+def load_swagger_yaml(*relative_path)
+  YAML.safe_load(swagger_file(*relative_path))
 end
 
 RSpec.configure do |config|
@@ -152,7 +152,7 @@ RSpec.configure do |config|
           },
         },
       },
-      paths: load_swagger_json('hand_coded_paths.json'),
+      paths: load_swagger_yaml('hand_coded_paths.yaml'),
     },
   }
 
