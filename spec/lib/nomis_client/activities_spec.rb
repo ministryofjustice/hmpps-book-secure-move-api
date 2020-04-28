@@ -20,5 +20,9 @@ RSpec.describe NomisClient::Activities, with_nomis_client_authentication: true d
         headers: { 'Page-Limit' => '1000' },
       )
     end
+
+    it 'returns a parsed response body' do
+      expect(activities_get).to be_a(Array)
+    end
   end
 end

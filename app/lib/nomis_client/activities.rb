@@ -9,7 +9,7 @@ module NomisClient
           headers: { 'Page-Limit' => '1000' },
         )
 
-        response.body
+        response.parsed
       end
     end
   end
