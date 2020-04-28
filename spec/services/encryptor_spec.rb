@@ -19,6 +19,12 @@ RSpec.describe Encryptor do
     end
   end
 
+  context 'when encrypted_message is nil' do
+    let(:decrypted_message) { subject.decrypt(nil) }
+
+    it { expect(decrypted_message).to be_nil }
+  end
+
   describe 'hmac' do
     subject { described_class.hmac('foo', 'bar') }
 
