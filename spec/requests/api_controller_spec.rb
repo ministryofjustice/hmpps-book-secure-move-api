@@ -12,7 +12,7 @@ RSpec.describe ApiController, type: :request do
     let(:content_type) { ApiController::CONTENT_TYPE }
     let(:api_endpoint) { '/api/v1/reference/genders' }
     let(:response_json) { JSON.parse(response.body) }
-    let(:schema) { load_json_schema('get_genders_responses.json') }
+    let(:schema) { load_yaml_schema('get_genders_responses.yaml') }
 
     before do
       get api_endpoint, headers: headers

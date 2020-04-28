@@ -1,0 +1,23 @@
+LocationReference:
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: object
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+          example: locations
+          enum:
+          - locations
+          description: The type of this object - always `locations`
+        id:
+          type: string
+          format: uuid
+          example: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
+          description: The unique identifier (UUID) of the object that this reference
+            points to

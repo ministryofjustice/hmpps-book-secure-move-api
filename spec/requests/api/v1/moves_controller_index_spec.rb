@@ -11,7 +11,7 @@ RSpec.describe Api::V1::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /moves' do
-    let(:schema) { load_json_schema('get_moves_responses.json') }
+    let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
     let!(:moves) { create_list :move, 21 }
     let(:params) { {} }

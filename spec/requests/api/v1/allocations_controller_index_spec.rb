@@ -11,7 +11,7 @@ RSpec.describe Api::V1::AllocationsController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /allocations' do
-    let(:schema) { load_json_schema('get_allocations_responses.json') }
+    let(:schema) { load_yaml_schema('get_allocations_responses.yaml') }
 
     let!(:allocations) { create_list :allocation, 21 }
     let(:params) { {} }
