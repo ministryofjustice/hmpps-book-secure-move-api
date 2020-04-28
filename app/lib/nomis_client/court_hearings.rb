@@ -6,10 +6,12 @@ module NomisClient
       def get(booking_id, start_date = Time.zone.today, end_date = Time.zone.today)
         court_hearings_path = "/bookings/#{booking_id}/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}"
 
-        NomisClient::Base.get(
+        response = NomisClient::Base.get(
           court_hearings_path,
           headers: { 'Page-Limit' => '1000' },
         )
+
+        response.parsed
       end
 
       def post(booking_id:, court_case_id:, body_params: {})
