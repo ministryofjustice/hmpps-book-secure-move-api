@@ -65,7 +65,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
           allow(People::RetrieveCourtCases).to receive(:call).with(person, nil).and_return(OpenStruct.new(success?: true, court_cases: court_cases_from_nomis))
         end
 
-        schema '$ref' => 'get_court_cases_responses.json#/200'
+        schema '$ref' => 'get_court_cases_responses.yaml#/200'
 
         run_test!
       end

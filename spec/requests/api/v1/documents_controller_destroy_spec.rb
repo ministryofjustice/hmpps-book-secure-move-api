@@ -15,7 +15,7 @@ RSpec.describe Api::V1::DocumentsController do
   describe 'DELETE /moves/{move_id}/documents/{document_id}' do
     let(:token) { create(:access_token) }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-    let(:schema) { load_json_schema('delete_document_responses.json') }
+    let(:schema) { load_yaml_schema('delete_document_responses.yaml') }
 
     let!(:move) { create :move }
     let!(:document) { create :document, move: move }

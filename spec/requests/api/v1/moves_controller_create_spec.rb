@@ -11,7 +11,7 @@ RSpec.describe Api::V1::MovesController do
   end
 
   describe 'POST /moves' do
-    let(:schema) { load_json_schema('post_moves_responses.json') }
+    let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
     let(:move_attributes) {
       { date: Date.today,

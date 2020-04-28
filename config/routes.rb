@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :people, only: %i[index create update] do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
+        get 'timetable', to: 'people#timetable'
       end
       resources :moves, only: %i[index show create destroy update] do
         resources :documents, only: %i[create destroy]

@@ -18,7 +18,7 @@ RSpec.describe Api::V1::MovesController do
 
   describe 'GET /moves' do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-    let(:schema) { load_json_schema('get_moves_responses.json') }
+    let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
     let!(:pentonville) { create :location, :with_moves, suppliers: [pentonville_supplier] }
     let!(:birmingham) do
@@ -91,7 +91,7 @@ RSpec.describe Api::V1::MovesController do
             JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
           end
 
-          schema "$ref": 'get_move_responses.json#/200'
+          schema "$ref": 'get_move_responses.yaml#/200'
 
           run_test! do |_example|
             expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::MovesController do
   end
 
   describe 'POST /moves' do
-    let(:schema) { load_json_schema('post_moves_responses.json') }
+    let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
 
     let(:move_attributes) { attributes_for(:move) }
@@ -154,7 +154,7 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'when supplier doesn\'t have rights to write the resource' do
-      let(:schema) { load_json_schema('post_moves_responses.json') }
+      let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
       let(:move) { Move.first }
       let!(:person) { create(:person) }
@@ -177,7 +177,7 @@ RSpec.describe Api::V1::MovesController do
 
   describe 'PATCH /moves' do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-    let(:schema) { load_json_schema('patch_move_responses.json') }
+    let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }
     let!(:birmingham_move) { create :move, from_location: birmingham }
@@ -234,7 +234,7 @@ RSpec.describe Api::V1::MovesController do
   end
 
   describe 'DELETE /moves/{move_id}' do
-    let(:schema) { load_json_schema('delete_move_responses.json') }
+    let(:schema) { load_yaml_schema('delete_move_responses.yaml') }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
 
     let!(:pentonville_move) { create :move, from_location: pentonville }

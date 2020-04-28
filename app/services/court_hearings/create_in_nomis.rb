@@ -9,7 +9,7 @@ module CourtHearings
       }
 
       court_hearings.each do |hearing|
-        response = NomisClient::CourtHearing.post(booking_id: booking_id,
+        response = NomisClient::CourtHearings.post(booking_id: booking_id,
                                        court_case_id: hearing.nomis_case_id,
                                        body_params: {
                                            'courtHearingDateTime': hearing.start_time.utc.iso8601,
