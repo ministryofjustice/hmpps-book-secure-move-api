@@ -20,6 +20,10 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
         headers: { 'Page-Limit' => '1000' },
       )
     end
+
+    it 'returns a parsed response body' do
+      expect(court_hearings_get).to be_a(Hash)
+    end
   end
 
   describe '.post' do
