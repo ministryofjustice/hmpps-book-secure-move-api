@@ -49,7 +49,7 @@ RSpec.describe Api::V1::AllocationsController, :with_client_authentication, :rsw
           JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::INCLUDED_ATTRIBUTES))
         end
 
-        schema '$ref' => 'get_allocation_responses.json#/200'
+        schema '$ref' => 'get_allocation_responses.yaml#/200'
 
         run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
