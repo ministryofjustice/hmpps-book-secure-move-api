@@ -58,10 +58,42 @@ namespace :reference_data do
     # suppliers have exactly the locations listed in supplier_locations.yml
     supplier_locations.each do |supplier_name, codes|
       supplier = Supplier.find_by(key: supplier_name.to_s)
-      locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
-      supplier.locations = locations
+      locations_in_yaml = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
+
+      existing_location_keys = supplier.locations.pluck(:key)
+      yaml_location_keys = locations_in_yaml.map(&:key)
+
+      if have_locations_changed?(existing_location_keys, yaml_location_keys)
+        supplier.locations = locations_in_yaml
+
+        removed_locations = existing_location_keys - yaml_location_keys
+        added_locations = yaml_location_keys - existing_location_keys
+
+        Raven.capture_message("Locations updated for the Supplier: #{supplier.name}. ",
+                              extra: {
+                                  added_locations: added_locations,
+                                  removed_locations: removed_locations,
+                              },
+                              level: 'warning')
+
+        puts '- - -'
+        puts "Locations removed from Supplier '#{supplier.name}': #{removed_locations}"
+        puts "Locations added to Supplier '#{supplier.name}': #{added_locations}"
+      else
+        puts "Locations for the Supplier '#{supplier.name}' have not changed."
+      end
     end
 
+    puts_summary_of_relationships
+  end
+
+private
+
+  def have_locations_changed?(locations1, locations2)
+    ((locations1 - locations2) + (locations2 - locations1)).any?
+  end
+
+  def puts_summary_of_relationships
     puts
     puts 'Summary of relationships'
     puts '========================'
