@@ -150,6 +150,9 @@ RSpec.configure do |config|
           Supplier: {
             "$ref": 'supplier.yaml#/Supplier',
           },
+          TimetableEntry: {
+            "$ref": 'timetable_entry.yaml#/TimetableEntry',
+          },
         },
       },
       paths: load_swagger_yaml('hand_coded_paths.yaml'),
