@@ -44,7 +44,10 @@ module Api
       end
 
       def timetable
-        response = People::RetrieveTimetable.call(person)
+        start_date = Date.parse(timetable_filter_params[:date_from])
+        end_date = Date.parse(timetable_filter_params[:date_to])
+
+        response = People::RetrieveTimetable.call(person, start_date, end_date)
 
         if response.success?
           render json: response.content, each_serializer: TimetableSerializer, include: :location
@@ -69,6 +72,7 @@ module Api
       end
 
       PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
+      PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
       PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
       PERSON_ATTRIBUTES = [
         :first_names,
@@ -110,6 +114,10 @@ module Api
         return unless params[:filter]
 
         params.require(:filter).permit(PERMITTED_COURT_CASE_FILTER_PARAMS).to_h
+      end
+
+      def timetable_filter_params
+        params.require(:filter).permit(PERMITTED_TIMETABLE_FILTER_PARAMS).to_h
       end
     end
   end

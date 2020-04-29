@@ -9,18 +9,27 @@ RSpec.describe Api::V1::PeopleController do
 
   let(:nomis_activities) { [] }
   let(:nomis_court_hearings) { [] }
+  let(:date_from) { Date.today }
+  let(:date_to) { Date.tomorrow }
+
+  let(:params) do
+    {
+      access_token: token.token,
+      filter: {
+        date_from: date_from.iso8601,
+        date_to: date_to.iso8601,
+      },
+    }
+  end
 
   before do
+    allow(People::RetrieveTimetable).to receive(:call).and_call_original
     allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities_struct)
     allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings_struct)
   end
 
-  context 'when person is present ' do
-    before do
-      person.latest_profile.update(latest_nomis_booking_id: booking_id)
-    end
-
-    let(:person) { create(:profile, :nomis_synced).person }
+  context 'when person is present' do
+    let(:person) { create(:profile, :nomis_synced, latest_nomis_booking_id: booking_id).person }
     let(:nomis_success) { true }
 
     let(:nomis_court_hearings_struct) do
@@ -61,7 +70,7 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'returns 200' do
-        get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/timetable", params: params
 
         expect(response).to have_http_status(:success)
       end
@@ -69,9 +78,16 @@ RSpec.describe Api::V1::PeopleController do
       it 'returns location relationships' do
         create :location
 
-        get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/timetable", params: params
+
         expect(response_json['included']).to be_a_kind_of Array
         expect(response_json['included'].first['type']).to eq 'locations'
+      end
+
+      it 'calls the People::RetrieveTimetable service with the correct filter params' do
+        get "/api/v1/people/#{person.id}/timetable", params: params
+
+        expect(People::RetrieveCourtHearings).to have_received(:call).with(an_instance_of(Person), date_from, date_to)
       end
     end
 
@@ -79,7 +95,7 @@ RSpec.describe Api::V1::PeopleController do
       it 'returns 404' do
         person_id = 'non-existent-person'
 
-        get "/api/v1/people/#{person_id}/timetable", params: { access_token: token.token }
+        get "/api/v1/people/#{person_id}/timetable", params: params
 
         expect(response_json['errors'][0]['title']).to eq('Resource not found')
         expect(response).to have_http_status(:not_found)
@@ -91,10 +107,24 @@ RSpec.describe Api::V1::PeopleController do
       let(:nomis_court_hearings) { [] }
 
       it 'return an empty data key' do
-        get "/api/v1/people/#{person.id}/timetable", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/timetable", params: params
 
         expect(response_json).to eq('data' => [])
         expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when filter params are missing' do
+      let(:nomis_activities) { [] }
+      let(:nomis_court_hearings) { [] }
+
+      let(:params) { { access_token: token.token } }
+
+      it 'return an empty data key' do
+        get "/api/v1/people/#{person.id}/timetable", params: params
+
+        expect(response_json['errors'][0]['detail']).to eq('param is missing or the value is empty: filter')
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end

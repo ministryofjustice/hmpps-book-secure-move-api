@@ -9,6 +9,8 @@ RSpec.describe People::RetrieveTimetable do
   end
 
   let(:person) { instance_double('Person') }
+  let(:date_from) { Date.today }
+  let(:date_to) { Date.tomorrow }
 
   let(:nomis_court_hearings_struct) do
     OpenStruct.new(
@@ -42,14 +44,14 @@ RSpec.describe People::RetrieveTimetable do
     let(:nomis_success) { true }
 
     it 'calls the right services with the correct args' do
-      described_class.call(person)
+      described_class.call(person, date_from, date_to)
 
-      expect(People::RetrieveActivities).to have_received(:call).with(person)
-      expect(People::RetrieveCourtHearings).to have_received(:call).with(person)
+      expect(People::RetrieveActivities).to have_received(:call).with(person, date_from, date_to)
+      expect(People::RetrieveCourtHearings).to have_received(:call).with(person, date_from, date_to)
     end
 
     it 'sorts timetable entries in ascending order by start time' do
-      expect(described_class.call(person).content).to eq([court_hearing, activity])
+      expect(described_class.call(person, date_from, date_to).content).to eq([court_hearing, activity])
     end
   end
 
@@ -57,16 +59,16 @@ RSpec.describe People::RetrieveTimetable do
     let(:nomis_success) { false }
 
     it 'returns a struct indicating that calling to Nomis failed' do
-      struct = described_class.call(person)
+      struct = described_class.call(person, date_from, date_to)
 
       expect(struct).not_to be_success
     end
 
     it 'returns early for the first error' do
-      described_class.call(person)
+      described_class.call(person, date_from, date_to)
 
-      expect(People::RetrieveActivities).to have_received(:call).with(person)
-      expect(People::RetrieveCourtHearings).not_to have_received(:call).with(person)
+      expect(People::RetrieveActivities).to have_received(:call).with(person, date_from, date_to)
+      expect(People::RetrieveCourtHearings).not_to have_received(:call).with(person, date_from, date_to)
     end
   end
 end
