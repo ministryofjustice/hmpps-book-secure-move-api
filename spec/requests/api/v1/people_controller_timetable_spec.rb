@@ -120,7 +120,7 @@ RSpec.describe Api::V1::PeopleController do
 
       let(:params) { { access_token: token.token } }
 
-      it 'return an empty data key' do
+      it 'returns an error' do
         get "/api/v1/people/#{person.id}/timetable", params: params
 
         expect(response_json['errors'][0]['detail']).to eq('param is missing or the value is empty: filter')
