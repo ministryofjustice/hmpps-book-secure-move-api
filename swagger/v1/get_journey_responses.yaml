@@ -1,10 +1,10 @@
-'201':
+'200':
   type: object
   required:
   - data
   properties:
     data:
-      $ref: lockout.yaml#/GetLockout
+      $ref: get_journey.yaml#/GetJourney
     included:
       type: array
       items:
