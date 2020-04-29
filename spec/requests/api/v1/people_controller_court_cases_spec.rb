@@ -51,12 +51,24 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when person does not exist' do
-      it 'returns success' do
-        person_id = 'non-existent-person'
+      let(:person_id) { 'non-existent-person' }
 
+      it 'returns success' do
         get "/api/v1/people/#{person_id}/court_cases", params: { access_token: token.token }
 
         expect(response_json['errors'][0]['title']).to eq('Resource not found')
+      end
+    end
+
+    context 'when booking is empty' do
+      let(:booking_id) { nil }
+
+      it 'returns success' do
+        person.latest_profile.update(latest_nomis_booking_id: booking_id)
+
+        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+
+        expect(response_json['errors'][0]['detail']).to eq("Latest nomis booking id can't be blank")
       end
     end
 
