@@ -17,12 +17,12 @@ module Api
         # will simply update the move's to_location. In the future (P4-1180) we will have a funky immutable event log.
 
         case event_name
-          when 'redirect'
+        when 'redirect'
           move.update(to_location: to_location)
           render json: fake_event_object, status: :created
         else
           render status: :bad_request, json: {
-            errors: [ { title: 'invalid event_name', detail: "#{event_name} is not supported" } ]
+            errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
           }
         end
       end
@@ -33,7 +33,7 @@ module Api
         MoveEvents::ParamsValidator.new(event_params).tap do |validator|
           if validator.invalid?
             render status: :bad_request, json: {
-              errors: validator.errors.map{|field, message| {title: field, detail: message}}
+              errors: validator.errors.map { |field, message| { title: field, detail: message } },
             }
           end
         end
@@ -72,17 +72,17 @@ module Api
             attributes: {
               event_name: event_name,
               timestamp: timestamp,
-              notes: notes
+              notes: notes,
             },
             relationships: {
               to_location: {
                 data: {
-                  type: "locations",
-                  id: to_location.id
-                }
-              }
-            }
-          }
+                  type: 'locations',
+                  id: to_location.id,
+                },
+              },
+            },
+          },
         }
       end
     end
