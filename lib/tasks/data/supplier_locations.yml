@@ -3,6 +3,7 @@ geoamey:
   - AVS1
   - AVS2
   - AVS3
+  - BZI
   - CHE1
   - CHE2
   - CHE3
@@ -173,7 +174,6 @@ serco:
   - BTP2
   - BTP4
   - BTP5
-  - BZI
   - CAM1
   - CAM3
   - CAM4

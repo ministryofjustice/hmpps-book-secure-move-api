@@ -133,7 +133,7 @@ RSpec.describe Api::V1::MovesController do
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) {
-              class_double(Faraday, post:
+              class_double(Faraday, headers: {}, post:
                   instance_double(Faraday::Response, success?: true, status: 202))
             }
 
@@ -184,7 +184,7 @@ RSpec.describe Api::V1::MovesController do
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) {
-              class_double(Faraday, post:
+              class_double(Faraday, headers: {}, post:
                   instance_double(Faraday::Response, success?: true, status: 202))
             }
             let(:move_params) do
