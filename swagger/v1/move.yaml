@@ -113,7 +113,6 @@ Move:
     relationships:
       type: object
       required:
-      - person
       - from_location
       properties:
         person:
