@@ -4,7 +4,7 @@ module Api
       def create
         court_hearing = CourtHearing.create!(court_hearings_attributes)
 
-        if move
+        if should_save_court_hearings?
           CourtHearings::CreateInNomis.call(move, move.court_hearings)
         else
           Raven.capture_message("CourtHearingsController: Move has not been specified for the court_hearing.id: #{court_hearing.id}", level: 'warning')
@@ -31,11 +31,17 @@ module Api
       end
 
       def move
-        id = params.require(:data).dig(:relationships, :move, :data, :id)
+        @move ||= begin
+                    id = params.require(:data).dig(:relationships, :move, :data, :id)
 
-        return if id.blank?
+                    if id.present?
+                      Move.find(id)
+                    end
+                  end
+      end
 
-        Move.find(id)
+      def should_save_court_hearings?
+        move && params['should_save_court_hearings_in_nomis'] == 'true'
       end
     end
   end
