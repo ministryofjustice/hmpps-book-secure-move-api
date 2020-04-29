@@ -1,0 +1,29 @@
+PostMoveEvent:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: events
+      enum:
+      - events
+      description: The type of this object - always `events`
+    attributes:
+      type: object
+      required:
+      - event_name
+      - timestamp
+      properties:
+        event_name:
+          $ref: move_event_name_attribute.yaml#/MoveEventName
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+    relationships:
+      type: object
+      properties:
+        to_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: For redirects, this is the location that the move is redirecting
+            to. For lockouts, this is the location which has been locked out.

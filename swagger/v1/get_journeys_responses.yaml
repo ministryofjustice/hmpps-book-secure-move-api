@@ -1,0 +1,21 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: get_journey.yaml#/GetJourney
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: location.yaml#/Location
+    links:
+      $ref: pagination_links.yaml#/PaginationLinks
+    meta:
+      type: object
+      properties:
+        pagination:
+          $ref: pagination.yaml#/Pagination

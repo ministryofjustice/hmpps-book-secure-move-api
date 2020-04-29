@@ -69,13 +69,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: filter[date_from]
       in: query
       description: Filters results to only include moves on and after the given date,
@@ -165,19 +159,8 @@
         enum:
         - asc
         - desc
-    - name: page
-      in: query
-      description: The page of records to return, defaults to 1 (the first page)
-      schema:
-        type: integer
-      example: 1
-    - name: per_page
-      in: query
-      description: Number of records to return in a single response, defaults to 20,
-        maximum value is 100.
-      schema:
-        type: integer
-      example: 1
+    - $ref: pagination_parameters.yaml#/Page
+    - $ref: pagination_parameters.yaml#/PerPage
     responses:
       '200':
         description: success
@@ -337,36 +320,145 @@
           application/vnd.api+json:
             schema:
               $ref: delete_move_responses.yaml#/415
-/moves/{move_id}/complete:
+/moves/{move_id}/events:
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates a completed move event'
-    description: '## [NOT YET IMPLEMENTED]
+    summary: '[NOT YET IMPLEMENTED] Creates a move event'
+    description: |
+      ## [NOT YET IMPLEMENTED]
 
+      Creating a move event can change the underlying move''s status or other attributes.
 
-      Creating a completed move event changes the underlying move''s status to be
-      `completed`. It _does not_ alter the journeys associated with the move: additional
-      API calls will be necessary to complete or cancel existing journeys.'
+      Move events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to
+      complete or cancel existing journeys.
+
+      Use the `event_name` attribute to specify the type of event:
+
+      * `complete` - completes a move
+      * `redirect` - redirects a move to a new `to_location`
+      * `lockout` - indicates the move has been locked out at `to_location`
     tags:
-    - Move Events
+    - Moves
     consumes:
     - application/vnd.api+json
     parameters:
     - $ref: move_id_parameter.yaml#/MoveId
     - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: body
       in: body
       required: true
-      description: The completed move event object to be created. It must specify
-        `timestamp`.
+      description: |
+        ### Completing a Move
+
+        A move is completed by POSTing a `complete` event. Completing a move will change the move status to `completed`.
+        It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or
+        cancel existing journeys.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "complete",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          }
+        }
+        ```
+
+        ### Redirecting a Move
+
+        Creating a redirect event changes the move's destination (`to_location`). It _does not_ alter the journeys
+        associated with the move: additional API calls will be necessary to complete or cancel existing journeys and
+        create new journeys. The new destination should be specified via a `to_location` relationship.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "redirect",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          },
+          relationships": {
+            "to_location": {
+              "data": {
+                "type": "locations",
+                "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
+              }
+            }
+          }
+        }
+        ```
+
+        ### Recording a Lockout
+
+        Creating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the
+        journeys associated with the move: additional API calls will be necessary to complete or cancel existing
+        journeys and create new journeys. The lockout location should be specified via a `to_location` relationship.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "lockout",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          },
+          relationships": {
+            "to_location": {
+              "data": {
+                "type": "locations",
+                "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
+              }
+            }
+          }
+        }
+        ```
+
+        ---
       schema:
-        $ref: complete.yaml#/PostComplete
+        $ref: post_move_event.yaml#/PostMoveEvent
     responses:
       '201':
         description: created
         content:
           application/vnd.api+json:
             schema:
-              $ref: post_move_complete_responses.yaml#/201
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  $ref: get_move_event.yaml#/GetMoveEvent
+        examples:
+          Complete:
+            data:
+              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
+              type: events
+              attributes:
+                event_name: complete
+                timestamp: '2020-04-21T13:20:50.52Z'
+          Redirect:
+            data:
+              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
+              type: events
+              attributes:
+                event_name: redirect
+                timestamp: '2020-04-21T13:20:50.52Z'
+              relationships:
+                to_location:
+                  data:
+                    type: locations
+                    id: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
+          Lockout:
+            data:
+              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
+              type: events
+              attributes:
+                event_name: lockout
+                timestamp: '2020-04-21T13:20:50.52Z'
+              relationships:
+                to_location:
+                  data:
+                    type: locations
+                    id: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
       '400':
         description: bad request
         content:
@@ -455,37 +547,31 @@
           application/vnd.api+json:
             schema:
               $ref: post_documents_responses.yaml#/422
-/moves/{move_id}/lockouts:
-  post:
-    summary: '[NOT YET IMPLEMENTED] Creates a lockout event'
-    description: '## [NOT YET IMPLEMENTED]
+/moves/{move_id}/journeys:
+  get:
+    summary: '[NOT YET IMPLEMENTED] Gets a list of journeys'
+    description: |
+      ## [NOT YET IMPLEMENTED]
 
-
-      Creating a lockout event _does not_ change the underlying move''s status or
-      destination. It _does not_ alter the journeys associated with the move: additional
-      API calls will be necessary to redirect the move, cancel existing journeys and
-      create new journeys.'
+      This method gets an ordered and paged list of journeys associated with the specified move. Journeys are ordered by
+      `timestamp`.
     tags:
-    - Move Events
+    - Move Journeys
     consumes:
     - application/vnd.api+json
     parameters:
     - $ref: move_id_parameter.yaml#/MoveId
     - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
-    - name: body
-      in: body
-      required: true
-      description: The lockout event object to be created. It must specify `timestamp`,
-        `reason` and `location`.
-      schema:
-        $ref: lockout.yaml#/PostLockout
+    - $ref: content_type_parameter.yaml#/ContentType
+    - $ref: pagination_parameters.yaml#/Page
+    - $ref: pagination_parameters.yaml#/PerPage
     responses:
-      '201':
-        description: created
+      '200':
+        description: success
         content:
           application/vnd.api+json:
             schema:
-              $ref: post_lockouts_responses.yaml#/201
+              $ref: get_journeys_responses.yaml#/200
       '400':
         description: bad request
         content:
@@ -522,36 +608,332 @@
           application/vnd.api+json:
             schema:
               $ref: error_responses.yaml#/422
-/moves/{move_id}/redirects:
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates a redirect event'
-    description: '## [NOT YET IMPLEMENTED]
+    summary: '[NOT YET IMPLEMENTED] Creates a new journey'
+    description: |
+      ## [NOT YET IMPLEMENTED]
 
-
-      Creating a redirect event changes the underlying move''s destination (`to_location`).
-      It _does not_ alter the journeys associated with the move: additional API calls
-      will be necessary to cancel existing journeys and create new journeys.'
+      This creates a new journey record and appends it to the move. It _does not_ update the destination of the parent
+      move record: additional API calls to the `/moves/{move_id}/events` endpoint will be required in order to change
+      the move's destination.
     tags:
-    - Move Events
+    - Move Journeys
     consumes:
     - application/vnd.api+json
     parameters:
     - $ref: move_id_parameter.yaml#/MoveId
     - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: body
       in: body
       required: true
-      description: The redirect event object to be created. It must specify `timestamp`,
-        `reason` and `to_location`.
+      description: The journey object to be created. It must specify `timestamp`,
+        `billable`, `from_location` and `to_location`.
       schema:
-        $ref: redirect.yaml#/PostRedirect
+        $ref: post_journey.yaml#/PostJourney
     responses:
       '201':
         description: created
         content:
           application/vnd.api+json:
             schema:
-              $ref: post_redirects_responses.yaml#/201
+              $ref: post_journeys_responses.yaml#/201
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}:
+  get:
+    summary: '[NOT YET IMPLEMENTED] Gets a journey'
+    description: |
+      ## [NOT YET IMPLEMENTED]
+
+      This method gets the specified journey associated with the move.
+    tags:
+    - Move Journeys
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: move_id_parameter.yaml#/MoveId
+    - $ref: journey_id_parameter.yaml#/JourneyId
+    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_journey_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+  patch:
+    summary: '[NOT YET IMPLEMENTED] Updates a journey''s metadata'
+    description: |
+      ## [NOT YET IMPLEMENTED]
+
+      This method updates the specified journey's metadata (e.g. `billable` or vehicle details). It _does not_ update
+      the `from_location` or `to_location` of a journey: to change the locations cancel the journey and create a new
+      one.
+    tags:
+    - Move Journeys
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: move_id_parameter.yaml#/MoveId
+    - $ref: journey_id_parameter.yaml#/JourneyId
+    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
+    - name: body
+      in: body
+      required: true
+      description: The journey object to be updated. It must specify `timestamp`,
+        `billable`; it must not specify locations or `state`.
+      schema:
+        $ref: patch_journey.yaml#/PatchJourney
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_journey_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/events:
+  post:
+    summary: '[NOT YET IMPLEMENTED] Creates a journey event'
+    description: |
+      ### [NOT YET IMPLEMENTED]
+
+      Creating a journey event will change a journey's state.
+
+      Completing or cancelling a journey _does not_ alter the state of parent move object: additional API calls on the
+      `/moves/{move_id}/events` endpoint will be necessary to complete or cancel the move.
+
+      Use the `event_name` attribute to specify the type of event:
+
+      * `complete` - completes a journey
+      * `uncomplete` - uncompletes a journey and reverts the state to `in_progress`
+      * `cancel` - cancels a journey
+      * `uncancel` - uncancels a journey and reverts the state to `in_progress`
+    tags:
+    - Move Journeys
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: move_id_parameter.yaml#/MoveId
+    - $ref: journey_id_parameter.yaml#/JourneyId
+    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
+    - name: body
+      in: body
+      required: true
+      description: |
+        ### Completing a journey
+
+        A journey is completed by POSTing a `complete` event. Completing a journey will change the journey state from
+        `in_progress` to `completed`. Only a journey which is `in_progress` may be completed.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "complete",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          }
+        }
+        ```
+
+        ### Uncompleting a journey
+
+        A journey is uncompleted by POSTing an `uncomplete` event. Uncompleting a journey will change the journey state
+        from `completed` to `in_progress`. Only a journey which is `completed` may be uncompleted.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "uncomplete",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          }
+        }
+        ```
+
+        ### Cancelling a journey
+
+        A journey is cancelled by POSTing a `cancel` event. Cancelling a journey will change the journey state from
+        `in_progress` to `cancelled`. Only a journey which is `in_progress` may be cancelled.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "cancel",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          }
+        }
+        ```
+
+        ### Uncancelling a journey
+
+        A journey is uncancelled by POSTing an `uncancel` event. Uncancelling a journey will change the journey state
+        from `cancelled` to `in_progress`. Only a journey which is `cancelled` may be uncancelled.
+
+        ```
+        {
+          "type": "events",
+          "attributes": {
+            "event_name": "uncancel",
+            "timestamp": "2020-04-21T13:20:50.52Z"
+          }
+        }
+        ```
+
+        ---
+      schema:
+        $ref: post_journey_event.yaml#/PostJourneyEvent
+    responses:
+      '201':
+        description: created
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  $ref: get_journey_event.yaml#/GetJourneyEvent
+        examples:
+          Completed:
+            data:
+              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
+              type: events
+              attributes:
+                event_name: complete
+                timestamp: '2020-04-21T13:20:50.52Z'
+          Uncompleted:
+            data:
+              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
+              type: events
+              attributes:
+                event_name: uncomplete
+                timestamp: '2020-04-21T13:20:50.52Z'
+          Cancelled:
+            data:
+              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
+              type: events
+              attributes:
+                event_name: cancel
+                timestamp: '2020-04-21T13:20:50.52Z'
+          Uncancelled:
+            data:
+              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
+              type: events
+              attributes:
+                event_name: uncancel
+                timestamp: '2020-04-21T13:20:50.52Z'
       '400':
         description: bad request
         content:
@@ -596,13 +978,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: filter[police_national_computer]
       in: query
       description: Filters results to only include people identified by that police_national_computer.
@@ -623,19 +999,8 @@
         example: G1234UT
       format: string
       required: false
-    - name: page
-      in: query
-      description: The page of records to return, defaults to 1 (the first page)
-      schema:
-        type: integer
-      example: 1
-    - name: per_page
-      in: query
-      description: Number of records to return in a single response, defaults to 20,
-        maximum value is 100.
-      schema:
-        type: integer
-      example: 1
+    - $ref: pagination_parameters.yaml#/Page
+    - $ref: pagination_parameters.yaml#/PerPage
     responses:
       '200':
         description: success
@@ -773,13 +1138,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     responses:
       '200':
         description: success
@@ -807,13 +1166,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: filter[category]
       in: query
       description: Filters results to only include move detail types for the given
@@ -851,13 +1204,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     responses:
       '200':
         description: success
@@ -885,13 +1232,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     responses:
       '200':
         description: success
@@ -920,13 +1261,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: filter[location_type]
       in: query
       description: Filters results by location type, e.g. court or prison
@@ -975,13 +1310,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: location_id
       in: path
       required: true
@@ -1023,13 +1352,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     responses:
       '200':
         description: success
@@ -1057,13 +1380,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     responses:
       '200':
         description: success
@@ -1091,13 +1408,7 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: supplier_key
       in: path
       required: true
