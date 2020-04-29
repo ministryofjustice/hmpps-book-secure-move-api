@@ -1,0 +1,13 @@
+{
+  "name": "Book a secure move API",
+  "description": "",
+  "repository": "https://github.com/ministryofjustice/hmpps-book-secure-move-api",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
