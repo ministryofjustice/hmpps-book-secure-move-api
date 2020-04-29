@@ -70,8 +70,6 @@ RSpec.describe Api::V1::AllocationsController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
-      next if RSpec.current_example.metadata[:skip_before]
-
       post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
     end
 
@@ -80,19 +78,11 @@ RSpec.describe Api::V1::AllocationsController do
       let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before do
-        post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
-      end
-
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
-
-      before do
-        post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
-      end
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
@@ -132,16 +122,7 @@ RSpec.describe Api::V1::AllocationsController do
       end
 
       context 'when omitting complex_cases attribute' do
-        let(:data) do
-          {
-            type: 'allocations',
-            attributes: allocation_attributes.except(:complex_cases),
-            relationships: {
-              from_location: { data: { type: 'locations', id: from_location.id } },
-              to_location: { data: { type: 'locations', id: to_location.id } },
-            },
-          }
-        end
+        let(:allocation_attributes) { attributes_for(:allocation).except(:complex_cases) }
 
         it 'creates an allocation without complex cases' do
           expect(allocation.complex_cases).to be_empty
