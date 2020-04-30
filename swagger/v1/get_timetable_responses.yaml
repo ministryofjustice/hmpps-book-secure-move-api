@@ -1,0 +1,36 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: timetable_entry.yaml#/TimetableEntry
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnsupportedMediaType
+'400':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/BadRequest
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotAuthorisedError
