@@ -90,9 +90,6 @@ RSpec.configure do |config|
           AssessmentQuestion: {
             "$ref": 'assessment_question.yaml#/AssessmentQuestion',
           },
-          Complete: {
-            "$ref": 'complete.yaml#/GetComplete',
-          },
           CourtCase: {
             "$ref": 'court_case.yaml#/CourtCase',
           },

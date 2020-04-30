@@ -418,14 +418,16 @@
 
         Creating a redirect event changes the move's destination (`to_location`). It _does not_ alter the journeys
         associated with the move: additional API calls will be necessary to complete or cancel existing journeys and
-        create new journeys. The new destination should be specified via a `to_location` relationship.
+        create new journeys. The new destination should be specified via a `to_location` relationship. Optionally,
+        `notes` may be provided to assist with auditing.
 
         ```
         {
           "type": "events",
           "attributes": {
             "event_name": "redirect",
-            "timestamp": "2020-04-21T13:20:50.52Z"
+            "timestamp": "2020-04-21T13:20:50.52Z",
+            "notes": "requested by PMU"
           },
           relationships": {
             "to_location": {
@@ -443,13 +445,15 @@
         Creating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the
         journeys associated with the move: additional API calls will be necessary to complete or cancel existing
         journeys and create new journeys. The lockout location should be specified via a `to_location` relationship.
+        Optionally, `notes` may be provided to assist with auditing.
 
         ```
         {
           "type": "events",
           "attributes": {
             "event_name": "lockout",
-            "timestamp": "2020-04-21T13:20:50.52Z"
+            "timestamp": "2020-04-21T13:20:50.52Z",
+            "reason": "late arrival due to van breakdown"
           },
           relationships": {
             "to_location": {
@@ -471,12 +475,7 @@
         content:
           application/vnd.api+json:
             schema:
-              type: object
-              required:
-              - data
-              properties:
-                data:
-                  $ref: get_move_event.yaml#/GetMoveEvent
+              $ref: post_move_events_responses.yaml#/201
         examples:
           Complete:
             data:
