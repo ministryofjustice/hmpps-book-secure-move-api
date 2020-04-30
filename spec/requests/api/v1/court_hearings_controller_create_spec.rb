@@ -64,7 +64,7 @@ RSpec.describe Api::V1::CourtHearingsController do
         expect(move.court_hearings).to include(court_hearing)
       end
 
-      context 'when should_save_court_hearings_in_nomis param is true' do
+      context 'when should_save_in_nomis param is true' do
         let(:query_params) { '?should_save_in_nomis=true' }
 
         it 'creates the court hearings in Nomis' do
@@ -74,7 +74,7 @@ RSpec.describe Api::V1::CourtHearingsController do
         end
       end
 
-      context 'when should_save_court_hearings_in_nomis param is not true' do
+      context 'when should_save_in_nomis param is not true' do
         let(:query_params) { '?should_save_in_nomis=foo' }
 
         it 'creates the court hearings in Nomis' do
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::CourtHearingsController do
         end
       end
 
-      context 'when should_save_court_hearings_in_nomis param is not present' do
+      context 'when should_save_in_nomis param is not present' do
         let(:query_params) { '' }
 
         it 'creates the court hearings in Nomis' do
