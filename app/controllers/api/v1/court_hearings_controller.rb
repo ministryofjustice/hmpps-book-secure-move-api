@@ -34,9 +34,9 @@ module Api
         @move ||= begin
                     id = params.require(:data).dig(:relationships, :move, :data, :id)
 
-                    if id.present?
-                      Move.find(id)
-                    end
+                    return if id.blank?
+
+                    Move.find(id)
                   end
       end
 
