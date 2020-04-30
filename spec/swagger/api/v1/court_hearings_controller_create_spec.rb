@@ -25,7 +25,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
 
       parameter name: :should_save_court_hearings_in_nomis,
           in: :query,
-          description: 'Create the court hearing in Nomis as well as Book As A Secure Move',
+          description: 'Create the court hearing in Nomis as well as Book A Secure Move',
           schema: { type: :string, default: 'false', example: 'true', enum: %w[true false] },
           required: false
 
