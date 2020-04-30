@@ -64,10 +64,34 @@ RSpec.describe Api::V1::CourtHearingsController do
         expect(move.court_hearings).to include(court_hearing)
       end
 
-      it 'creates the court hearings in Nomis' do
-        post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
+      context 'when should_save_in_nomis param is true' do
+        let(:query_params) { '?should_save_in_nomis=true' }
 
-        expect(CourtHearings::CreateInNomis).to have_received(:call).with(move, move.court_hearings)
+        it 'creates the court hearings in Nomis' do
+          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+
+          expect(CourtHearings::CreateInNomis).to have_received(:call).with(move, move.court_hearings)
+        end
+      end
+
+      context 'when should_save_in_nomis param is not true' do
+        let(:query_params) { '?should_save_in_nomis=foo' }
+
+        it 'creates the court hearings in Nomis' do
+          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+
+          expect(CourtHearings::CreateInNomis).not_to have_received(:call).with(move, move.court_hearings)
+        end
+      end
+
+      context 'when should_save_in_nomis param is not present' do
+        let(:query_params) { '' }
+
+        it 'creates the court hearings in Nomis' do
+          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+
+          expect(CourtHearings::CreateInNomis).not_to have_received(:call).with(move, move.court_hearings)
+        end
       end
     end
   end
