@@ -103,14 +103,12 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when filter[date_from] or filter[date_to] are invalid' do
-      let(:date_from) {}
-
       let(:params) do
         {
           access_token: token.token,
           filter: {
-            date_from: '10-10-2019' ,
-            date_to: '11-10-2019' ,
+            date_from: '10-10-2019',
+            date_to: '11-10-2019',
           },
         }
       end
