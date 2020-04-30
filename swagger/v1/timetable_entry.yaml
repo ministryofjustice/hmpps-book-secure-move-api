@@ -1,0 +1,43 @@
+TimetableEntry:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: timetable
+      enum:
+        - timetable
+      description: The type of this object - always `timetable`
+    attributes:
+      type: object
+      required:
+        - start_time
+        - nomis_type
+        - reason
+      properties:
+        start_time:
+          type: string
+          example: "2020-04-30T13:01:57+01:00"
+          description: Time when the scheduled event is set to start
+          format: date-time
+        nomis_type:
+          type: string
+          example: Prison Activities
+          description: Type of the scheduled event
+        reason:
+          type: string
+          description: Description of scheduled event type
+    relationships:
+      type: object
+      properties:
+        location:
+          $ref: location_reference.yaml#/LocationReference
+          description: The location (prison) that the timetable entry is meant to be happening.

@@ -1,7 +1,7 @@
 class Activity
   include ActiveModel::Serialization
 
-  TYPE = 'Prison Activities'.freeze
+  REASON = 'Prison Activities'.freeze
 
   attr_reader :id, :start_time, :reason, :type, :agency_id
 
@@ -12,8 +12,8 @@ class Activity
     # rubocop:disable Rails/TimeZone
     @start_time = Time.parse(activity['startTime'])
     # rubocop:enable Rails/TimeZone
-    @type = TYPE
-    @reason = activity['eventTypeDesc']
+    @type = activity['eventTypeDesc']
+    @reason = REASON
     @agency_id = activity['locationCode']
 
     self
