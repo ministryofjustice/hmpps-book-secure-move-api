@@ -18,6 +18,9 @@
     "S3_BUCKET_NAME": {
       "description": "Name of the storage bucket to use on AWS S3",
       "required": "true"
+    },
+    "SERVE_API_DOCS": {
+      "value": "true"
     }
   },
   "buildpacks": [
