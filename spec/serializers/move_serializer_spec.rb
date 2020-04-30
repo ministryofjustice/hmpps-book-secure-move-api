@@ -87,8 +87,8 @@ RSpec.describe MoveSerializer do
       let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
       let(:move) { create(:move, person: nil) }
 
-      it 'does not contain a person' do
-        expect(result_data[:relationships][:person]).to be_nil
+      it 'contains an empty person' do
+        expect(result_data[:relationships][:person]).to eq(data: nil)
       end
 
       it 'does not contain an included person' do
