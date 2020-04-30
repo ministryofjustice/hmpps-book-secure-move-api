@@ -4,7 +4,7 @@ module Api
       def create
         court_hearing = CourtHearing.create!(court_hearings_attributes)
 
-        if should_save_court_hearings_in_nomis?
+        if should_save_in_nomis?
           CourtHearings::CreateInNomis.call(move, move.court_hearings)
         else
           Raven.capture_message("CourtHearingsController: Move has not been specified for the court_hearing.id: #{court_hearing.id}", level: 'warning')
@@ -40,8 +40,8 @@ module Api
                   end
       end
 
-      def should_save_court_hearings_in_nomis?
-        move && params['should_save_court_hearings_in_nomis'] == 'true'
+      def should_save_in_nomis?
+        move && params['should_save_in_nomis'] == 'true'
       end
     end
   end
