@@ -60,7 +60,7 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
-    context 'when booking is empty' do
+    context 'when latest booking id is empty' do
       let(:booking_id) { nil }
 
       it 'returns success' do
@@ -68,7 +68,8 @@ RSpec.describe Api::V1::PeopleController do
 
         get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
 
-        expect(response_json['errors'][0]['detail']).to eq("Latest nomis booking id can't be blank")
+        expect(response_json['errors'][0]['detail']).to eq("Validation failed: Latest nomis booking can't be blank")
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 

@@ -14,6 +14,7 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
+  rescue_from ActiveModel::ValidationError, with: :render_validation_error
 
   def current_user
     doorkeeper_token&.application
@@ -140,5 +141,15 @@ private
   # Allow always-bodyless requests (GET, DELETE HEAD) to omit the Content-Type
   def valid_empty_request?
     request.content_type.nil? && (request.get? || request.delete? || request.head?)
+  end
+
+  def render_validation_error(exception)
+    render(
+      json: { errors: [{
+                         title: "Invalid #{exception.exception.model.errors.keys.join(', ')}",
+                         detail: exception.to_s,
+                     }] },
+      status: :unprocessable_entity,
+        )
   end
 end

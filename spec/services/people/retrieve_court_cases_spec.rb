@@ -8,7 +8,6 @@ RSpec.describe People::RetrieveCourtCases do
   let(:filter_params) { double }
 
   before do
-    person.profiles.first.update(latest_nomis_booking_id: '12345')
     class_double(NomisClient::CourtCases, get: response_body).as_stubbed_const
   end
 
