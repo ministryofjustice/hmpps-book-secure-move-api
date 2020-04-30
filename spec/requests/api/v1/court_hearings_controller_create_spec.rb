@@ -65,7 +65,7 @@ RSpec.describe Api::V1::CourtHearingsController do
       end
 
       context 'when should_save_court_hearings_in_nomis param is true' do
-        let(:query_params) { '?should_save_in_nomis =true' }
+        let(:query_params) { '?should_save_in_nomis=true' }
 
         it 'creates the court hearings in Nomis' do
           post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
