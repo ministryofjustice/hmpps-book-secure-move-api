@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MoveEventsController do
-  include ActiveJob::TestHelper
-
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /moves/:move_id/events' do
