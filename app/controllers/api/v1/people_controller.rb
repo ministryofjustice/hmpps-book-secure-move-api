@@ -3,6 +3,8 @@
 module Api
   module V1
     class PeopleController < ApiController
+      before_action :validate_timetable_filter_params, only: [:timetable]
+
       def index
         prison_number = filter_params[:prison_number]
 
@@ -44,12 +46,6 @@ module Api
       end
 
       def timetable
-        if validator.invalid?
-          render status: :bad_request, json: { errors: validator.errors.map { |field, message| { title: field, detail: message } } }
-
-          return
-        end
-
         start_date = Date.parse(timetable_filter_params[:date_from])
         end_date = Date.parse(timetable_filter_params[:date_to])
 
@@ -126,8 +122,14 @@ module Api
         params.require(:filter).permit(PERMITTED_TIMETABLE_FILTER_PARAMS).to_h
       end
 
-      def validator
-        @validator ||= People::ParamsValidator.new(timetable_filter_params)
+      def validate_timetable_filter_params
+        People::ParamsValidator.new(timetable_filter_params).tap do |validator|
+          if validator.invalid?
+            render status: :bad_request, json: {
+              errors: validator.errors.map { |field, message| { title: field, detail: message } },
+            }
+          end
+        end
       end
     end
   end
