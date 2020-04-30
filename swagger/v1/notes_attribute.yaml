@@ -1,0 +1,4 @@
+Notes:
+  type: string
+  example: redirect requested by PMU
+  description: Optional explanatory notes to assist with auditing

@@ -20,6 +20,8 @@ PostMoveEvent:
           $ref: move_event_name_attribute.yaml#/MoveEventName
         timestamp:
           $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes
     relationships:
       type: object
       properties:
