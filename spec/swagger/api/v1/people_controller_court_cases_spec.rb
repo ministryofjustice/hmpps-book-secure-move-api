@@ -75,6 +75,15 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
         run_test!
       end
+
+      response '400', 'bad request' do
+        let(:person_id) { person.id }
+        let(:person) { create(:profile).person } # since it is not nomis_synced latest_nomis_booking_id is nil
+
+        schema '$ref' => 'get_court_cases_responses.yaml#/400'
+
+        run_test!
+      end
     end
   end
 end

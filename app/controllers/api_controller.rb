@@ -149,7 +149,7 @@ private
                          title: "Invalid #{exception.exception.model.errors.keys.join(', ')}",
                          detail: exception.to_s,
                      }] },
-      status: :unprocessable_entity,
+      status: :bad_request,
         )
   end
 end
