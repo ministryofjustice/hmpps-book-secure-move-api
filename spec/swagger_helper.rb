@@ -81,6 +81,9 @@ RSpec.configure do |config|
           AllocationComplexCase: {
             "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
           },
+          AllocationComplexCaseAnswer: {
+            "$ref": 'allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer',
+          },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.yaml#/AssessmentAnswer',
           },
