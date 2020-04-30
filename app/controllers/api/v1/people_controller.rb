@@ -44,6 +44,8 @@ module Api
       end
 
       def timetable
+        return validate_timetable_filter_params
+
         start_date = Date.parse(timetable_filter_params[:date_from])
         end_date = Date.parse(timetable_filter_params[:date_to])
 
@@ -118,6 +120,19 @@ module Api
 
       def timetable_filter_params
         params.require(:filter).permit(PERMITTED_TIMETABLE_FILTER_PARAMS).to_h
+      end
+
+      def validate_timetable_filter_params
+        People::ParamsValidator.new(timetable_filter_params).tap do |validator|
+          if validator.invalid?
+            render status: :bad_request, json: {
+              errors: validator.errors.map { |field, message| { title: field, detail: message } },
+            }
+            false
+          else
+            true
+          end
+        end
       end
     end
   end

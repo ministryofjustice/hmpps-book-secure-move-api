@@ -102,6 +102,27 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
+    context 'when filter[date_from] or filter[date_to] are invalid' do
+      let(:date_from) {}
+
+      let(:params) do
+        {
+          access_token: token.token,
+          filter: {
+            date_from: '10-10-2019' ,
+            date_to: '11-10-2019' ,
+          },
+        }
+      end
+
+      it 'returns 400' do
+        get "/api/v1/people/#{person.id}/timetable", params: params
+
+        expect(response_json['errors'][0]['detail']).to eq('is not a valid iso8601 date.')
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
     context 'when the timetable entries are not present in Nomis' do
       let(:nomis_activities) { [] }
       let(:nomis_court_hearings) { [] }
