@@ -18,7 +18,13 @@ module Api
 
         case event_name
         when 'redirect'
-          move.update(to_location: to_location)
+          # NB: rather than update immediately, we need to detect whether the location has actually changed (or not) to
+          # prevent triggering duplicate webhook/email notifications
+          move.to_location = to_location
+          if move.to_location_id_changed?
+            move.save!
+            Notifier.prepare_notifications(topic: move, action_name: 'update')
+          end
           render json: fake_event_object, status: :created
         else
           render status: :bad_request, json: {
