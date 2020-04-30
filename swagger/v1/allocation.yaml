@@ -52,13 +52,38 @@ Allocation:
             items:
               $ref: allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer
           - type: 'null'
-          example: 'null'
+          example:
+            [
+              {
+                key: 'hold_separately',
+                title: 'Segregated prisoners',
+                answer: true,
+                allocation_complex_case_id: '0c6610b4-d995-4170-97f7-b505ea956e64'
+              },
+              {
+                key: 'self_harm',
+                title: 'Self harm / prisoners on ACCT',
+                answer: false,
+                allocation_complex_case_id: '53717e48-20d8-454c-880d-b9e57902ac7f'
+              },
+              {
+                key: 'mental_health_issue',
+                title: 'Mental health issues',
+                answer: false,
+                allocation_complex_case_id: '2714c3f4-28b1-458c-8457-750299bac39e'
+              },
+              {
+                key: 'under_drug_treatment',
+                title: 'Integrated Drug Treatment System',
+                answer: true,
+                allocation_complex_case_id: 'e9b76dc0-bc41-424d-9f60-b7204aaed9dd'
+              }
+            ]
           description: Collection of indicators for complex cases
         complete_in_full:
           type: boolean
           example: 'true'
-          description: Indicates if allocation must be completed (i.e. populated with
-            prisoners) in full
+          description: Indicates if allocation must be completed (i.e. populated with prisoners) in full
         updated_at:
           type: string
           format: date-time

@@ -76,10 +76,13 @@ RSpec.configure do |config|
         },
         schemas: {
           Allocation: {
-            "$ref": 'allocation.json#/Allocation',
+            "$ref": 'allocation.yaml#/Allocation',
           },
           AllocationComplexCase: {
             "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
+          },
+          AllocationComplexCaseAnswer: {
+            "$ref": 'allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer',
           },
           AssessmentAnswer: {
             "$ref": 'assessment_answer.yaml#/AssessmentAnswer',
@@ -108,17 +111,23 @@ RSpec.configure do |config|
           Gender: {
             "$ref": 'gender.yaml#/Gender',
           },
+          Journey: {
+            "$ref": 'get_journey.yaml#/GetJourney',
+          },
+          JourneyEvent: {
+            "$ref": 'get_journey_event.yaml#/GetJourneyEvent',
+          },
           Location: {
             "$ref": 'location.yaml#/Location',
           },
           LocationReference: {
             "$ref": 'location_reference.yaml#/LocationReference',
           },
-          Lockout: {
-            "$ref": 'lockout.yaml#/GetLockout',
-          },
           Move: {
             "$ref": 'move.yaml#/Move',
+          },
+          MoveEvent: {
+            "$ref": 'get_move_event.yaml#/GetMoveEvent',
           },
           MoveReference: {
             "$ref": 'move_reference.yaml#/MoveReference',
@@ -143,9 +152,6 @@ RSpec.configure do |config|
           },
           ProfileIdentifier: {
             "$ref": 'profile_identifier.yaml#/ProfileIdentifier',
-          },
-          Redirect: {
-            "$ref": 'redirect.yaml#/GetRedirect',
           },
           Supplier: {
             "$ref": 'supplier.yaml#/Supplier',

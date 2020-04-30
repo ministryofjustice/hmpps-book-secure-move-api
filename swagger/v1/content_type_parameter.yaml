@@ -1,0 +1,9 @@
+ContentType:
+  name: Content-Type
+  description: Accepted request content type
+  in: header
+  required: true
+  schema:
+    type: string
+    default: application/vnd.api+json
+    example: application/vnd.api+json
