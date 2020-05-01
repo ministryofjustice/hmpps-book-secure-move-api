@@ -12,10 +12,10 @@ TimetableEntry:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: timetable
+      example: timetable_entries
       enum:
-        - timetable
-      description: The type of this object - always `timetable`
+        - timetable_entries
+      description: The type of this object - always `timetable_entries`
     attributes:
       type: object
       required:
