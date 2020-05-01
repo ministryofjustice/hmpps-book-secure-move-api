@@ -125,6 +125,17 @@ RSpec.describe Api::V1::PeopleController do
           post '/api/v1/people', params: person_params, headers: headers, as: :json
         end.to change(Person, :count).by(1)
       end
+
+      describe 'webhook and email notifications' do
+        before do
+          allow(Notifier).to receive(:prepare_notifications)
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
+        end
+
+        it 'does NOT call the notifier when creating a person' do
+          expect(Notifier).not_to have_received(:prepare_notifications)
+        end
+      end
     end
 
     context 'with gender_additional_information' do

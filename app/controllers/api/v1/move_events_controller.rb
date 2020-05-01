@@ -66,7 +66,7 @@ module Api
       end
 
       def move
-        @move ||= Move.accessible_by(current_ability).find_by(id: params.require(:move_id))
+        @move ||= Move.accessible_by(current_ability).find(params.require(:move_id))
       end
 
       def fake_event_object

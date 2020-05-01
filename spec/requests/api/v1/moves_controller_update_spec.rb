@@ -17,12 +17,10 @@ RSpec.describe Api::V1::MovesController do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
-
+    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location }
     let(:move_id) { move.id }
-    let(:person) { create(:person) }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
-    let(:move) { Move.find_by(status: 'proposed') }
 
     let(:move_params) do
       {
@@ -42,8 +40,6 @@ RSpec.describe Api::V1::MovesController do
     end
 
     before do
-      create :move, :proposed, move_type: 'prison_recall', from_location: from_location
-
       next if RSpec.current_example.metadata[:skip_before]
 
       patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
@@ -178,6 +174,8 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when updating an existing requested move without a change of move_status' do
+          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location }
+
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
@@ -211,7 +209,7 @@ RSpec.describe Api::V1::MovesController do
           end
 
           context 'when the supplier has an email subscription', :skip_before do
-            # NB: updates to existing moves should not trigger an email notification unless the move is cancelled
+            # NB: updates to existing moves should trigger an email notification
             let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
@@ -237,8 +235,8 @@ RSpec.describe Api::V1::MovesController do
               end
             end
 
-            it 'does NOT create an email notification' do
-              expect(subscription.notifications.count).to be 0
+            it 'creates an email notification' do
+              expect(subscription.notifications.count).to be 1
             end
           end
         end

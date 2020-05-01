@@ -5,7 +5,7 @@ RSpec.describe PreparePersonNotificationsJob, type: :job do
 
   let(:person) { create :person }
   let!(:move1) { create :move, person: person }
-  let!(:move2) { create :move,  person: person }
+  let!(:move2) { create :move, person: person }
   let!(:other_move) { create :move }
 
   before do
@@ -16,21 +16,20 @@ RSpec.describe PreparePersonNotificationsJob, type: :job do
   context 'when updating a person' do
     let(:action_name) { 'update' }
 
-    it 'calls PrepareMoveNotificationsJob for the related moves but not for the unrelated moves' do
-      expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move1.id, action_name: action_name)
-      expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move2.id, action_name: action_name)
-      expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name)
+    describe 'it calls PrepareMoveNotificationsJob for the related moves' do
+      it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move1.id, action_name: action_name) }
+      it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move2.id, action_name: action_name) }
+      it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name) }
     end
-
   end
 
   context 'when creating a person' do
     let(:action_name) { 'create' }
 
-    it 'calls PrepareMoveNotificationsJob for the related moves but not for the unrelated moves' do
-      expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move1.id, action_name: action_name)
-      expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move2.id, action_name: action_name)
-      expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name)
+    describe 'it calls PrepareMoveNotificationsJob for the related moves' do
+      it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move1.id, action_name: action_name) }
+      it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move2.id, action_name: action_name) }
+      it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name) }
     end
   end
 end
