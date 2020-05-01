@@ -55,6 +55,13 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
         run_test!
       end
+
+      response '400', 'bad request' do
+        let(:person_id) { person.id }
+        let(:person) { create(:profile).person }
+
+        run_test!
+      end
     end
   end
 end
