@@ -69,3 +69,7 @@ Rails/TimeZone:
   Exclude:
     - "spec/**/**/*"
     - "app/services/moves/anonymiser.rb"
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"
