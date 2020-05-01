@@ -15,8 +15,6 @@ module Api
       end
 
       def show
-        move = find_move
-
         render_move(move, 200)
       end
 
@@ -31,7 +29,6 @@ module Api
       end
 
       def update
-        move = find_move
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
@@ -44,7 +41,6 @@ module Api
       end
 
       def destroy
-        move = find_move
         move.destroy! # TODO: we probably should not be destroying moves
         Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
@@ -98,8 +94,8 @@ module Api
         render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
-      def find_move
-        Move
+      def move
+        @move ||= Move
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
