@@ -65,20 +65,35 @@ RSpec.describe MoveSerializer do
   end
 
   describe 'person' do
-    let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
-    let(:expected_json) do
-      [
-        {
-          id: move.person_id,
-          type: 'people',
-          attributes: { first_names: move.person.latest_profile.first_names,
-                        last_name: move.person.latest_profile.last_name, date_of_birth: '1980-10-20' },
-        },
-      ]
+    context 'with a person' do
+      let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
+      let(:expected_json) do
+        [
+          {
+            id: move.person_id,
+            type: 'people',
+            attributes: { first_names: move.person.latest_profile.first_names,
+                          last_name: move.person.latest_profile.last_name, date_of_birth: '1980-10-20' },
+          },
+        ]
+      end
+
+      it 'contains an included person' do
+        expect(result[:included]).to(include_json(expected_json))
+      end
     end
 
-    it 'contains an included person' do
-      expect(result[:included]).to(include_json(expected_json))
+    context 'without a person' do
+      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+      let(:move) { create(:move, person: nil) }
+
+      it 'contains an empty person' do
+        expect(result_data[:relationships][:person]).to eq(data: nil)
+      end
+
+      it 'does not contain an included person' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
+      end
     end
   end
 

@@ -35,7 +35,7 @@ class Move < VersionedModel
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :person
+  belongs_to :person, optional: true
   belongs_to :prison_transfer_reason, optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
@@ -50,13 +50,13 @@ class Move < VersionedModel
     unless: ->(move) { move.move_type == 'prison_recall' },
   )
   validates :move_type, inclusion: { in: move_types }
-  validates :person, presence: true
+  validates :person, presence: true, unless: -> { [MOVE_STATUS_REQUESTED, MOVE_STATUS_CANCELLED].include?(status) }
   validates :reference, presence: true
 
   # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
   validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
-            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) }
+            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) || person_id.blank? }
   validates :date, presence: true,
             unless: -> { status == MOVE_STATUS_PROPOSED }
   validates :date_from, presence: true,
