@@ -1,0 +1,34 @@
+{
+  "name": "Book a secure move API",
+  "description": "",
+  "repository": "https://github.com/ministryofjustice/hmpps-book-secure-move-api",
+  "env": {
+    "ENCRYPTOR_SALT": {
+      "description": "Secret salt value for encryption/decryption",
+      "required": "true"
+    },
+    "S3_ACCESS_KEY_ID": {
+      "description": "Public access key for AWS S3 storage",
+      "required": "true"
+    },
+    "S3_SECRET_ACCESS_KEY": {
+      "description": "Private secrete access key for AWS S3 storage",
+      "required": "true"
+    },
+    "S3_BUCKET_NAME": {
+      "description": "Name of the storage bucket to use on AWS S3",
+      "required": "true"
+    },
+    "SERVE_API_DOCS": {
+      "value": "true"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}

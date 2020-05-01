@@ -12,7 +12,7 @@ module CourtHearings
         response = NomisClient::CourtHearings.post(booking_id: booking_id,
                                        court_case_id: hearing.nomis_case_id,
                                        body_params: {
-                                           'courtHearingDateTime': hearing.start_time.utc.iso8601,
+                                           'courtHearingDateTime': hearing.start_time.to_s(:nomis),
                                            'comments': hearing.comments,
                                        }.merge(body_locations))
         if response&.status == 201

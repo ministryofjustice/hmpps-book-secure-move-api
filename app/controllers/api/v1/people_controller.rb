@@ -3,6 +3,8 @@
 module Api
   module V1
     class PeopleController < ApiController
+      before_action :validate_timetable_filter_params, only: [:timetable]
+
       def index
         prison_number = filter_params[:prison_number]
 
@@ -50,7 +52,10 @@ module Api
       end
 
       def timetable
-        response = People::RetrieveTimetable.call(person)
+        start_date = Date.parse(timetable_filter_params[:date_from])
+        end_date = Date.parse(timetable_filter_params[:date_to])
+
+        response = People::RetrieveTimetable.call(person, start_date, end_date)
 
         if response.success?
           render json: response.content, each_serializer: TimetableSerializer, include: :location
@@ -75,6 +80,7 @@ module Api
       end
 
       PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
+      PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
       PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
       PERSON_ATTRIBUTES = [
         :first_names,
@@ -118,8 +124,18 @@ module Api
         params.require(:filter).permit(PERMITTED_COURT_CASE_FILTER_PARAMS).to_h
       end
 
-      def notify_relevant_moves
-        Notifier.prepare_notifications(topic: move, action_name: 'update')
+      def timetable_filter_params
+        params.require(:filter).permit(PERMITTED_TIMETABLE_FILTER_PARAMS).to_h
+      end
+
+      def validate_timetable_filter_params
+        People::ParamsValidator.new(timetable_filter_params).tap do |validator|
+          if validator.invalid?
+            render status: :bad_request, json: {
+              errors: validator.errors.map { |field, message| { title: field, detail: message } },
+            }
+          end
+        end
       end
     end
   end

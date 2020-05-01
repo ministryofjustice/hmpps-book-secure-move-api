@@ -2,8 +2,8 @@
 
 module People
   class RetrieveActivities
-    def self.call(person)
-      activities = NomisClient::Activities.get(person.latest_nomis_booking_id)
+    def self.call(person, start_date, end_date)
+      activities = NomisClient::Activities.get(person.latest_nomis_booking_id, start_date, end_date)
 
       activities = activities.map do |nomis_activity|
         Activity.new.build_from_nomis(nomis_activity)
