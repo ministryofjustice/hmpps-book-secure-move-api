@@ -15,8 +15,6 @@ module Api
       end
 
       def show
-        move = find_move
-
         render_move(move, 200)
       end
 
@@ -31,7 +29,6 @@ module Api
       end
 
       def update
-        move = find_move
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
@@ -44,7 +41,6 @@ module Api
       end
 
       def destroy
-        move = find_move
         move.destroy! # TODO: we probably should not be destroying moves
         Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
@@ -62,9 +58,13 @@ module Api
                        reason_comment move_agreed move_agreed_by date_from date_to],
         relationships: {},
       ].freeze
-      PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
-                                                    cancellation_reason cancellation_reason_comment
-                                                    reason_comment move_agreed move_agreed_by date_from date_to]].freeze
+      PERMITTED_PATCH_MOVE_PARAMS = [
+        :type,
+        attributes: %i[date time_due status additional_information
+                       cancellation_reason cancellation_reason_comment
+                       reason_comment move_agreed move_agreed_by date_from date_to],
+        relationships: {},
+      ].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
@@ -91,15 +91,21 @@ module Api
       end
 
       def patch_move_attributes
-        patch_move_params[:attributes]
+        document_ids = (patch_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
+
+        attributes = patch_move_params[:attributes]
+
+        return attributes if document_ids.blank?
+
+        attributes.merge(documents: Document.where(id: document_ids))
       end
 
       def render_move(move, status)
         render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
       end
 
-      def find_move
-        Move
+      def move
+        @move ||= Move
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])

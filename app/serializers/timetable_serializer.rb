@@ -1,5 +1,5 @@
 class TimetableSerializer < ActiveModel::Serializer
-  type 'timetable'
+  type 'timetable_entries'
 
   attributes :start_time, :reason, :nomis_type
 
