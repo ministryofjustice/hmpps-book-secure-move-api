@@ -41,7 +41,9 @@ module Api
       end
 
       def should_save_in_nomis?
-        move && params['should_save_in_nomis'] == 'true'
+        do_not_save_to_nomis = params['do_not_save_to_nomis'] == 'true'
+
+        move && !do_not_save_to_nomis
       end
     end
   end

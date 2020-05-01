@@ -23,9 +23,9 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
           If you're testing interactively in the web UI, you can ignore this field
         DESCRIPTION
 
-      parameter name: :should_save_in_nomis,
+      parameter name: :do_not_save_to_nomis,
           in: :query,
-          description: 'Create the court hearing in Nomis as well as Book A Secure Move',
+          description: 'Restrict creating the court hearing in Nomis as well as Book A Secure Move',
           schema: { type: :string, default: 'false', example: 'true', enum: %w[true false] },
           required: false
 
