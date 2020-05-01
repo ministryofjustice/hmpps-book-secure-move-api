@@ -271,8 +271,8 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with a reference to a missing relationship' do
-      let(:person) { Person.new }
-      let(:detail_404) { "Couldn't find Person without an ID" }
+      let(:from_location) { build(:location) }
+      let(:detail_404) { "Couldn't find Location without an ID" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

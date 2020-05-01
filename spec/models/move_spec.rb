@@ -5,12 +5,11 @@ require 'rails_helper'
 RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
-  it { is_expected.to belong_to(:person) }
+  it { is_expected.to belong_to(:person).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
 
   it { is_expected.to validate_presence_of(:from_location) }
-  it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
@@ -23,6 +22,24 @@ RSpec.describe Move do
   it 'does NOT validate presence of `to_location` if `move_type` is prison_recall' do
     expect(build(:move, move_type: 'prison_recall')).not_to(
       validate_presence_of(:to_location),
+    )
+  end
+
+  it 'validates presence of `person` if `status` is NOT requested or cancelled' do
+    expect(build(:move, status: :proposed)).to(
+      validate_presence_of(:person),
+    )
+  end
+
+  it 'does NOT validates presence of `person` if `status` is requested' do
+    expect(build(:move, status: :requested)).not_to(
+      validate_presence_of(:person),
+    )
+  end
+
+  it 'does NOT validates presence of `person` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:person),
     )
   end
 
@@ -40,6 +57,12 @@ RSpec.describe Move do
 
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
     expect(build(:move, status: :proposed)).not_to(
+      validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'does NOT validate uniqueness of `date` if `person_id` is nil' do
+    expect(build(:move, status: :requested, person: nil)).not_to(
       validate_uniqueness_of(:date),
     )
   end
