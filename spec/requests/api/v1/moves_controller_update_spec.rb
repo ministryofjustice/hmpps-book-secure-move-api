@@ -129,7 +129,7 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when changing a moves documents', :skip_before do
-          let(:after_documents) { [after_document] }
+          let(:after_documents) { create_list(:document, 2) }
           let(:move_params) do
             documents = after_documents.map { |d| { id: d.id, type: d.type } }
             {
