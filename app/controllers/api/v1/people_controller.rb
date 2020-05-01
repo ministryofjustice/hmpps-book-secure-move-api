@@ -4,6 +4,7 @@ module Api
   module V1
     class PeopleController < ApiController
       before_action :validate_timetable_filter_params, only: [:timetable]
+      before_action :validate_nomis_profile, only: %i[court_cases image timetable]
 
       def index
         prison_number = filter_params[:prison_number]
@@ -136,6 +137,11 @@ module Api
             }
           end
         end
+      end
+
+      def validate_nomis_profile
+        profile_validator = People::NomisProfileValidator.new(person.latest_profile)
+        profile_validator.validate!
       end
     end
   end
