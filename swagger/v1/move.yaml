@@ -128,6 +128,9 @@ Move:
         prison_transfer_reason:
           $ref: prison_transfer_reason_reference.yaml#/PrisonTransferReasonReference
           description: The reason for this prison transfer
+        documents:
+          $ref: documents_reference.yaml#/PrisonTransferReasonReference
+          description: The documents associated with this Move
         court_hearing:
           $ref: court_hearing_reference.yaml#/CourtHearingReference
           description: A court hearing generated when creating a move. May have corresponding

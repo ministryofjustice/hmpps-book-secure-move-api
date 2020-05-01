@@ -58,9 +58,13 @@ module Api
                        reason_comment move_agreed move_agreed_by date_from date_to],
         relationships: {},
       ].freeze
-      PERMITTED_PATCH_MOVE_PARAMS = [attributes: %i[date time_due status additional_information
-                                                    cancellation_reason cancellation_reason_comment
-                                                    reason_comment move_agreed move_agreed_by date_from date_to]].freeze
+      PERMITTED_PATCH_MOVE_PARAMS = [
+        :type,
+        attributes: %i[date time_due status additional_information
+                       cancellation_reason cancellation_reason_comment
+                       reason_comment move_agreed move_agreed_by date_from date_to],
+        relationships: {},
+      ].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
@@ -87,7 +91,13 @@ module Api
       end
 
       def patch_move_attributes
-        patch_move_params[:attributes]
+        document_ids = (patch_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
+
+        attributes = patch_move_params[:attributes]
+
+        return attributes if document_ids.blank?
+
+        attributes.merge(documents: Document.where(id: document_ids))
       end
 
       def render_move(move, status)
