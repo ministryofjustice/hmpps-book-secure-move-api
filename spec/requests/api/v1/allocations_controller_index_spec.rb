@@ -111,6 +111,29 @@ RSpec.describe Api::V1::AllocationsController do
           expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
         end
       end
+
+      describe 'validating locations before running queries' do
+        let(:filters) do
+          {
+            from_locations: 'foo',
+            to_locations: 'bar',
+            locations: 'baz',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          get '/api/v1/allocations', params: params, headers: headers
+        end
+
+        it 'is a bad request' do
+          expect(response.status).to eq(400)
+        end
+
+        it 'returns errors' do
+          expect(response.body).to eq('{"error":{"locations":["may not be used in combination with `from_locations` or `to_locations` filters."]}}')
+        end
+      end
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do
