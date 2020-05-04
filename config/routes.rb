@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       end
       resources :moves, only: %i[index show create destroy update] do
         resources :documents, only: %i[create destroy]
+        resources :events, only: %i[create], controller: 'move_events'
       end
       namespace :reference do
         resources :locations, only: %i[index show]

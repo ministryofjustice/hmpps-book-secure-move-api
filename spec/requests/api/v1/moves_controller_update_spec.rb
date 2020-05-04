@@ -23,6 +23,7 @@ RSpec.describe Api::V1::MovesController do
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
     let(:move) { Move.find_by(status: 'proposed') }
+    let(:before_documents) { create_list(:document, 2) }
 
     let(:move_params) do
       {
@@ -42,11 +43,11 @@ RSpec.describe Api::V1::MovesController do
     end
 
     before do
-      create :move, :proposed, move_type: 'prison_recall', from_location: from_location
+      create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents
 
       next if RSpec.current_example.metadata[:skip_before]
 
-      patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      do_patch
     end
 
     context 'when not authorized', :with_invalid_auth_headers do
@@ -66,7 +67,7 @@ RSpec.describe Api::V1::MovesController do
                  from_location: move.from_location,
                  to_location: move.to_location,
                  date: move.date)
-          patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+          do_patch
         end
 
         let(:errors_422) do
@@ -127,6 +128,47 @@ RSpec.describe Api::V1::MovesController do
           expect(response_json).to eq resource_to_json
         end
 
+        context 'when changing a moves documents', :skip_before do
+          let(:after_documents) { create_list(:document, 2) }
+          let(:move_params) do
+            documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+                additional_information: 'some more info',
+                cancellation_reason: 'other',
+                cancellation_reason_comment: 'some other reason',
+                move_type: 'court_appearance',
+                move_agreed: true,
+                move_agreed_by: 'Fred Bloggs',
+                date_from: date_from,
+                date_to: date_to,
+              },
+              relationships: { documents: { data: documents } },
+            }
+          end
+
+          it 'updates the moves documents' do
+            expect { do_patch }.
+              to change { move.reload.documents }.
+              from(before_documents).
+              to(after_documents)
+          end
+
+          it 'does not affect other relationships' do
+            expect { do_patch }.not_to change { move.reload.from_location }
+          end
+
+          it 'returns the updated documents in the response body' do
+            do_patch
+
+            expect(
+              response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
+            ).to eq(after_documents.pluck(:id))
+          end
+        end
+
         context 'when cancelling a move' do
           context 'when the supplier has a webhook subscription', :skip_before do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
@@ -140,7 +182,7 @@ RSpec.describe Api::V1::MovesController do
             before do
               allow(Faraday).to receive(:new).and_return(faraday_client)
               perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+                do_patch
               end
             end
 
@@ -165,7 +207,7 @@ RSpec.describe Api::V1::MovesController do
             before do
               allow(MoveMailer).to receive(:notify).and_return(notify_response)
               perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+                do_patch
               end
             end
 
@@ -199,7 +241,7 @@ RSpec.describe Api::V1::MovesController do
             before do
               allow(Faraday).to receive(:new).and_return(faraday_client)
               perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+                do_patch
               end
             end
 
@@ -233,7 +275,7 @@ RSpec.describe Api::V1::MovesController do
             before do
               allow(MoveMailer).to receive(:notify).and_return(notify_response)
               perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-                patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+                do_patch
               end
             end
 
@@ -260,12 +302,12 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with success 200'
 
         it 'updates the status of a move', skip_before: true do
-          patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+          do_patch
           expect(move.reload.status).to eq 'cancelled'
         end
 
         it 'does NOT update the reference of a move', skip_before: true do
-          expect { patch("/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json) }.not_to(
+          expect { do_patch }.not_to(
             change { move.reload.reference },
             )
         end
@@ -332,5 +374,9 @@ RSpec.describe Api::V1::MovesController do
         it_behaves_like 'an endpoint that responds with error 422'
       end
     end
+  end
+
+  def do_patch
+    patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
   end
 end

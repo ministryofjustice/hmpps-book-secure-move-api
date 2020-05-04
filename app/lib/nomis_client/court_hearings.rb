@@ -3,7 +3,7 @@
 module NomisClient
   class CourtHearings < NomisClient::Base
     class << self
-      def get(booking_id, start_date = Time.zone.today, end_date = Time.zone.today)
+      def get(booking_id, start_date, end_date)
         court_hearings_path = "/bookings/#{booking_id}/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}"
 
         response = NomisClient::Base.get(
