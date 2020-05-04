@@ -25,8 +25,9 @@ RSpec.describe Api::V1::AllocationsController do
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
-      describe 'filtering results' do
-        let(:date_from) { allocations.last.date }
+      describe 'filtering results by date' do
+        let(:allocation) { allocations.last }
+        let(:date_from) { allocation.date }
         let(:filters) do
           {
             bar: 'bar',
@@ -50,7 +51,21 @@ RSpec.describe Api::V1::AllocationsController do
         end
 
         it 'returns the allocation that matches the filter' do
-          expect(response_json).to include_json(data: [{ id: allocations.last.id }])
+          expect(response_json).to include_json(data: [{ id: allocation.id }])
+        end
+      end
+
+      describe 'filtering results by location' do
+        let(:allocation) { allocations.last }
+        let(:location) { allocations.last.from_location }
+        let(:params) { { filter: { from_locations: location.id } } }
+
+        it 'filters the results' do
+          expect(response_json['data'].size).to be 1
+        end
+
+        it 'returns the allocation that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: allocation.id }])
         end
       end
 
@@ -109,6 +124,29 @@ RSpec.describe Api::V1::AllocationsController do
 
         it 'returns errors' do
           expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
+        end
+      end
+
+      describe 'validating locations before running queries' do
+        let(:filters) do
+          {
+            from_locations: 'foo',
+            to_locations: 'bar',
+            locations: 'baz',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before do
+          get '/api/v1/allocations', params: params, headers: headers
+        end
+
+        it 'is a bad request' do
+          expect(response.status).to eq(400)
+        end
+
+        it 'returns errors' do
+          expect(response.body).to eq('{"error":{"locations":["may not be used in combination with `from_locations` or `to_locations` filters."]}}')
         end
       end
     end
