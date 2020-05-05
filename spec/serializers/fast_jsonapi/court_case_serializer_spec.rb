@@ -56,12 +56,12 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
                 data: {
                   attributes: {
                     key: 'test_supplier_1',
-                    name: supplier.name
+                    name: supplier.name,
                   },
                   id: supplier.id,
-                  type: :supplier
-                }
-              }
+                  type: :supplier,
+                },
+              },
             ],
           },
           id: location.id,
