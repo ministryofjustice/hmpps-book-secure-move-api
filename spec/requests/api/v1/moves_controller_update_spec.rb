@@ -146,10 +146,9 @@ RSpec.describe Api::V1::MovesController do
           end
 
           it 'updates the moves documents' do
-            expect { do_patch }.
-              to change { move.reload.documents }.
-              from(before_documents).
-              to(after_documents)
+            expect(move.reload.documents).to eq(before_documents)
+            do_patch
+            expect(move.reload.documents).to eq(after_documents)
           end
 
           it 'does not affect other relationships' do

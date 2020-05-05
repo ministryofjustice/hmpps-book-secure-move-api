@@ -13,6 +13,9 @@ module NomisClient
 
       @title = nomis_error['userMessage'].to_s
       @details = "#{nomis_error['developerMessage']} #{nomis_error['moreInfo']}".strip
+    rescue JSON::ParserError
+      @title = 'Unparseable error from Nomis'
+      @details = "Status #{status}. We tried to parse an error from Nomis and failed. Is the Elite2API routeable?"
     end
 
     def json_api_error
