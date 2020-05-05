@@ -137,6 +137,27 @@ RSpec.describe Api::V1::AllocationsController do
         end
       end
 
+      context 'when creating moves' do
+        let(:moves_count) { 1 }
+        let(:move) { allocation.moves.first }
+
+        it 'sets the `status` to `requested`' do
+          expect(move.status).to eq('requested')
+        end
+
+        it 'sets the same `date` for an allocation to a move' do
+          expect(move.date).to eq(allocation.date)
+        end
+
+        it 'sets the same `to_location` for an allocation to a move' do
+          expect(move.to_location).to eq(allocation.to_location)
+        end
+
+        it 'sets the same `from_location` for an allocation to a move' do
+          expect(move.from_location).to eq(allocation.from_location)
+        end
+      end
+
       context 'when the supplier has a webhook subscription', :skip_before do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }

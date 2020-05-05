@@ -58,20 +58,10 @@ module Api
 
       def allocation_attributes
         allocation_params[:attributes].merge(
-          from_location: Location.find(allocation_params.dig(:relationships, :from_location, :data, :id)),
-          to_location: Location.find(allocation_params.dig(:relationships, :to_location, :data, :id)),
+          from_location: from_location,
+          to_location: to_location,
           complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
         )
-      end
-
-      def moves
-        Array.new(allocation_params.dig(:attributes, :moves_count)) {
-          Move.new(
-            from_location: Location.find(allocation_params.dig(:relationships, :from_location, :data, :id)),
-            to_location: Location.find(allocation_params.dig(:relationships, :to_location, :data, :id)),
-            date: allocation_params.dig(:attributes, :date),
-          )
-        }
       end
 
       def render_allocation(allocation, status)
@@ -80,6 +70,24 @@ module Api
 
       def find_allocation
         Allocation.find(params[:id])
+      end
+
+      def from_location
+        Location.find(allocation_params.dig(:relationships, :from_location, :data, :id))
+      end
+
+      def to_location
+        Location.find(allocation_params.dig(:relationships, :to_location, :data, :id))
+      end
+
+      def moves
+        Array.new(allocation_params.dig(:attributes, :moves_count)) {
+          Move.new(
+            from_location: from_location,
+            to_location: to_location,
+            date: allocation_params.dig(:attributes, :date),
+          )
+        }
       end
     end
   end
