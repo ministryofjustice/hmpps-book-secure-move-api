@@ -28,6 +28,8 @@ module Api
 
     private
 
+      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations].freeze
+
       PERMITTED_ALLOCATION_PARAMS = [
         :type,
         attributes: %i[date prisoner_category sentence_length moves_count complete_in_full other_criteria],
@@ -37,7 +39,7 @@ module Api
       PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
       def filter_params
-        params.fetch(:filter, {}).permit(:date_from, :date_to).to_h
+        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
       def allocation_params
