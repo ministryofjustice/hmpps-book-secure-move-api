@@ -4,6 +4,8 @@ Page:
   description: The page of records to return, defaults to 1 (the first page)
   schema:
     type: integer
+    default: 1
+    minimum: 1
   example: 1
 PerPage:
   name: per_page
@@ -12,4 +14,6 @@ PerPage:
     value is 100.
   schema:
     type: integer
-  example: 1
+    default: 20
+    maximum: 100
+  example: 20

@@ -6,42 +6,61 @@
     consumes:
     - application/vnd.api+json
     parameters:
-    - name: Content-Type
-      in: header
-      description: Accepted request content type
-      schema:
-        type: string
-        default: application/vnd.api+json
-      required: true
+    - $ref: content_type_parameter.yaml#/ContentType
     - name: filter[date_from]
       in: query
       description: Filters results to only include allocations on and after the given
         date, e.g. `2019-05-02`
       schema:
         type: string
-        example: '2019-05-09'
       format: date
+      example: '2019-05-09'
     - name: filter[date_to]
       in: query
       description: Filters results to only include allocations up to and including
-        the given date, e.g. `2019-05-09`
+        the given date, e.g. `2021-05-09`
       schema:
         type: string
-        example: '2019-05-09'
       format: date
-    - name: page
+      example: '2021-05-09'
+    - name: filter[locations]
       in: query
-      description: The page of records to return, defaults to 1 (the first page)
+      description: |
+        Filters results to only include allocations with the specified `from_location` or `to_location` identifier.
+
+        Multiple location id's can be specified using a comma separator if required.
+
+        Note that this filter __cannot__ be used in combination with `filter[from_locations]` or `filter[to_locations]`.
       schema:
-        type: integer
-      example: 1
-    - name: per_page
+        type: string
+      format: uuid
+      example: '02cf0c8e-bf28-4e36-bf08-1e15fefa279b,0351fc23-5b8c-409e-aa87-1f7c4adb1ed6'
+    - name: filter[from_locations]
       in: query
-      description: Number of records to return in a single response, defaults to 20,
-        maximum value is 100.
+      description: |
+        Filters results to only include allocations with the specified `from_location` identifier.
+
+        Multiple location id's can be specified using a comma separator if required.
+
+        Note that this filter __cannot__ be used in combination with `filter[locations]`.
       schema:
-        type: integer
-      example: 1
+        type: string
+      example: '02cf0c8e-bf28-4e36-bf08-1e15fefa279b,0351fc23-5b8c-409e-aa87-1f7c4adb1ed6'
+      format: uuid
+    - name: filter[to_locations]
+      in: query
+      description: |
+        Filters results to only include allocations with the specified `to_location` identifier.
+
+        Multiple location id's can be specified using a comma separator if required.
+
+        Note that this filter __cannot__ be used in combination with `filter[locations]`.
+      schema:
+        type: string
+      example: '02cf0c8e-bf28-4e36-bf08-1e15fefa279b,0351fc23-5b8c-409e-aa87-1f7c4adb1ed6'
+      format: uuid
+    - $ref: pagination_parameters.yaml#/Page
+    - $ref: pagination_parameters.yaml#/PerPage
     responses:
       '200':
         description: success
