@@ -2,10 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe CourtCaseSerializer do
-  subject(:court_case_deserialized) { ActiveModelSerializers::Adapter.create(court_case_serializer).serializable_hash }
-
-  let(:court_case_serializer) { described_class.new(court_case) }
+RSpec.describe FastJsonapi::CourtCaseSerializer do
+  subject(:court_case_deserialized) { described_class.new(court_case, options).serializable_hash }
 
   let(:court_case) {
     CourtCase.new.build_from_nomis('id' => '111',
@@ -17,12 +15,33 @@ RSpec.describe CourtCaseSerializer do
                                    'agency' => { 'agencyId' => location.nomis_agency_id })
   }
 
+  let(:options) { {} }
+
   let(:location) { create :location, nomis_agency_id: 'SNARCC' }
 
   it 'return a serialized court cases' do
-    expect(court_case_deserialized[:data][:attributes]).to eq(nomis_case_id: '111', nomis_case_status: 'ACTIVE',
-                                                              case_start_date: '2016-11-14', case_type: 'Adult',
-                                                              case_number: 'T20167984')
-    expect(court_case_deserialized[:data][:relationships][:location][:data]).not_to be_nil
+    expected = {
+      data: {
+        id: '111',
+        type: :court_cases,
+        attributes: {
+          case_type: 'Adult',
+          nomis_case_id: '111',
+          nomis_case_status: 'ACTIVE',
+          case_start_date: '2016-11-14',
+          case_number: 'T20167984'
+        },
+        relationships: {
+          location: {
+            data: {
+              id: location.id,
+              type: :location
+            }
+          }
+        }
+      }
+    }
+
+    expect(court_case_deserialized).to eq(expected)
   end
 end
