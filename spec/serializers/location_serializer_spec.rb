@@ -45,6 +45,16 @@ RSpec.describe LocationSerializer do
   end
 
   it 'contains a suppliers attribute' do
-    expect(attributes[:suppliers]).not_to be_nil
+    expect(attributes[:suppliers]).to eq(
+      [
+        {
+          created_at: supplier.created_at.xmlschema,
+          id: supplier.id,
+          key: supplier.key,
+          name:supplier.name,
+          updated_at: supplier.updated_at.xmlschema,
+        }
+      ]
+    )
   end
 end
