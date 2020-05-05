@@ -35,7 +35,7 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
           location: {
             data: {
               id: location.id,
-              type: :location,
+              type: :locations,
             },
           },
         },
@@ -46,18 +46,16 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
           attributes: {
             can_upload_documents: false,
             disabled_at: nil,
-            id: location.id,
-            key: 'key_1',
+            key: location.key,
             location_type: 'prison',
             nomis_agency_id: 'SNARCC',
             title: location.title,
+            suppliers: [],
           },
           id: location.id,
-          relationships: { suppliers: { data: [] } },
         },
       ],
     }
-
     expect(court_case_deserialized).to eq(expected)
   end
 end

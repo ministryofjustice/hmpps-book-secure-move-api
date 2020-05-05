@@ -3,7 +3,7 @@ class FastJsonapi::CourtCaseSerializer
 
   set_type 'court_cases'
 
-  belongs_to :location, serializer: FastJsonapi::LocationSerializer
+  belongs_to :location, serializer: FastJsonapi::LocationSerializer, record_type: :locations
 
   attributes :case_type
 
