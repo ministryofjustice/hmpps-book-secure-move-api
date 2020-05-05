@@ -15,8 +15,9 @@ module Api
 
       def create
         allocation = Allocation.new(allocation_attributes)
-        allocation.save!
+        allocation.moves = moves if allocation.valid?
 
+        allocation.save!
         render_allocation(allocation, 201)
       end
 
@@ -56,6 +57,16 @@ module Api
           to_location: Location.find(allocation_params.dig(:relationships, :to_location, :data, :id)),
           complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
         )
+      end
+
+      def moves
+        Array.new(allocation_params.dig(:attributes, :moves_count)) {
+          Move.new(
+            from_location: Location.find(allocation_params.dig(:relationships, :from_location, :data, :id)),
+            to_location: Location.find(allocation_params.dig(:relationships, :to_location, :data, :id)),
+            date: allocation_params.dig(:attributes, :date),
+          )
+        }
       end
 
       def render_allocation(allocation, status)

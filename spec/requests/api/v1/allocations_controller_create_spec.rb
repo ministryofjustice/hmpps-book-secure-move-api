@@ -97,6 +97,11 @@ RSpec.describe Api::V1::AllocationsController do
           .to change(Allocation, :count).by(1)
       end
 
+      it 'creates multiple moves', skip_before: true do
+        expect { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
+          .to change(Move, :count).by(2)
+      end
+
       it 'audits the supplier' do
         expect(allocation.versions.map(&:whodunnit)).to eq([supplier.id])
       end
@@ -158,6 +163,11 @@ RSpec.describe Api::V1::AllocationsController do
       end
 
       it_behaves_like 'an endpoint that responds with error 422'
+
+      it 'does not create associated moves' do
+        expect { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
+          .not_to change(Move, :count)
+      end
     end
   end
 end
