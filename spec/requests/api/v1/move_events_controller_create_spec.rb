@@ -15,6 +15,7 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     let(:move) { create(:move) }
+    let(:move_id) { move.id }
     let(:new_location) { create(:location) }
     let(:data) do
       {
@@ -31,7 +32,8 @@ RSpec.describe Api::V1::MoveEventsController do
     end
 
     before do
-      post "/api/v1/moves/#{move.id}/events", params: { data: data }, headers: headers, as: :json
+      allow(Notifier).to receive(:prepare_notifications)
+      post "/api/v1/moves/#{move_id}/events", params: { data: data }, headers: headers, as: :json
     end
 
     describe 'Redirect event' do
@@ -40,6 +42,12 @@ RSpec.describe Api::V1::MoveEventsController do
 
         it 'updates the move to_location' do
           expect(move.reload.to_location).to eql(new_location)
+        end
+
+        describe 'webhook and email notifications' do
+          it 'calls the notifier when updating a person' do
+            expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
+          end
         end
       end
     end
@@ -55,6 +63,13 @@ RSpec.describe Api::V1::MoveEventsController do
       let(:detail_401) { 'Token expired or invalid' }
 
       it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with a missing move_id' do
+      let(:move_id) { 'foo-bar' }
+      let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with a reference to a missing relationship' do
