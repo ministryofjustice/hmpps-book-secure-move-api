@@ -7,6 +7,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
   let(:move) { create :move, from_location: location }
+  let(:action_name) { 'create' }
 
   before do
     create(:notification_type, :webhook)
@@ -64,8 +65,6 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a move' do
-    let(:action_name) { 'create' }
-
     context 'when a subscription has both a webhook and email addresses' do
       let(:subscription) { create :subscription }
 
@@ -92,5 +91,32 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       it_behaves_like 'it schedules NotifyEmailJob'
       it_behaves_like 'it does not schedule NotifyWebhookJob'
     end
+  end
+
+  context 'when creating a back-dated move' do
+    let(:move) { create :move, from_location: location, date: 2.days.ago }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it does not create an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it does not schedule NotifyEmailJob'
+  end
+
+  context 'when creating a move for today' do
+    let(:move) { create :move, from_location: location, date: Time.zone.today }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
+  end
+
+  context 'when creating a forward-dated move' do
+    let(:move) { create :move, from_location: location, date: 2.days.from_now }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
   end
 end

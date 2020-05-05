@@ -111,6 +111,17 @@ RSpec.describe Api::V1::PeopleController do
         put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
         expect(person.latest_profile.reload.first_names).to include(expected_data[:attributes][:first_names])
       end
+
+      describe 'webhook and email notifications' do
+        before do
+          allow(Notifier).to receive(:prepare_notifications)
+          put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        end
+
+        it 'calls the notifier when updating a person' do
+          expect(Notifier).to have_received(:prepare_notifications).with(topic: person, action_name: 'update')
+        end
+      end
     end
 
     context 'with gender_additional_information' do

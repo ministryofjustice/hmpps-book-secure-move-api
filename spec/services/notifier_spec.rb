@@ -25,6 +25,14 @@ RSpec.describe Notifier do
     end
   end
 
+  context 'when scheduled with a person' do
+    let(:topic) { create(:person) }
+
+    it 'queues a job' do
+      expect(PreparePersonNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name)
+    end
+  end
+
   context 'when called with another object' do
     let(:topic) { Object.new }
 
