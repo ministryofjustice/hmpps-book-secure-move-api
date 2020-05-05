@@ -19,8 +19,8 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
 
   let(:location) { create :location, nomis_agency_id: 'SNARCC' }
 
-  it 'return a serialized court cases' do
-    expected = {
+  let(:expected_court_case_deserialized) do
+    {
       data: {
         id: '111',
         type: :court_cases,
@@ -56,6 +56,9 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
         },
       ],
     }
-    expect(court_case_deserialized).to eq(expected)
+  end
+
+  it 'return a serialized court cases' do
+    expect(court_case_deserialized).to eq(expected_court_case_deserialized)
   end
 end
