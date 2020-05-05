@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_134954) do
+ActiveRecord::Schema.define(version: 2020_05_04_085851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -102,16 +102,16 @@ ActiveRecord::Schema.define(version: 2020_04_28_134954) do
   end
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "move_id", null: false
     t.string "event_name", null: false
     t.jsonb "details"
     t.datetime "client_timestamp", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "entity_id", null: false
+    t.string "entity_type", null: false
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
-    t.index ["move_id", "client_timestamp"], name: "index_events_on_move_id_and_client_timestamp"
-    t.index ["move_id", "event_name"], name: "index_events_on_move_id_and_event_name"
-    t.index ["move_id"], name: "index_events_on_move_id"
+    t.index ["entity_id", "entity_type", "event_name"], name: "index_events_on_entity_id_and_entity_type_and_event_name"
+    t.index ["entity_id", "entity_type"], name: "index_events_on_entity_id_and_entity_type"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -364,7 +364,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_134954) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "events", "moves"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"

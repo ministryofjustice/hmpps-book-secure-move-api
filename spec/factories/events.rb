@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :event do
-    association(:move)
+    association(:entity)
     event_name { 'move_created' }
     client_timestamp { Time.now.utc + rand(-60..60).seconds } # NB: the client_timestamp will never be perfectly in sync with system clock
 

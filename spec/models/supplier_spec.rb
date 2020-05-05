@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Supplier, type: :model do
-  subject(:supplier) { create(:supplier) }
+  subject(:supplier) { create(:supplier, name: 'Test Supplier 123') }
 
   it { is_expected.to have_and_belong_to_many(:locations) }
   it { is_expected.to have_many(:subscriptions) }
@@ -14,7 +14,7 @@ RSpec.describe Supplier, type: :model do
 
   context 'when not providing a key' do
     it 'generates it from the name' do
-      expect(supplier.key).to eq('test_supplier_1')
+      expect(supplier.key).to eq('test_supplier_123')
     end
   end
 end

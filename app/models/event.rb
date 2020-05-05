@@ -1,5 +1,5 @@
 class Event < ApplicationRecord
-  belongs_to :move
+  belongs_to :entity, polymorphic: true
 
   enum event_names: {
     move_created: 'move_created',
@@ -16,7 +16,7 @@ class Event < ApplicationRecord
     journey_uncancelled: 'journey_uncancelled',
   }
 
-  validates :move, presence: true
+  validates :entity, presence: true
   validates :event_name, presence: true, inclusion: { in: event_names }
   validates :client_timestamp, presence: true
 
