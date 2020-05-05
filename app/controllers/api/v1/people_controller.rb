@@ -18,11 +18,17 @@ module Api
 
       def create
         creator.call
+        # NB: to reduce duplicate notifications, we DO NOT currently notify on creating a person/profile, only when
+        # updating. This logic may change as the calls to the API get more streamlined - in which case we probably will
+        # need to call the notifier here.
         render_person(creator.person, 201)
       end
 
       def update
         updater.call
+        # NB: it is known and currently accepted that raising notifications on the patch-people endpoint will lead to
+        # duplicate move notifications (see P4-1357)
+        Notifier.prepare_notifications(topic: updater.person, action_name: 'update')
         render_person(updater.person, 200)
       end
 

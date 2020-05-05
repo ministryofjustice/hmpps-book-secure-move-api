@@ -11,14 +11,15 @@ class PrepareMoveNotificationsJob < ApplicationJob
       supplier.subscriptions.kept.each do |subscription|
         next unless subscription.enabled?
 
-        # always notify the webhook (if defined) on any change
+        # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
         if subscription.callback_url.present?
           NotifyWebhookJob.perform_later(
             build_notification_id(subscription, NotificationType::WEBHOOK, move, action_name),
           )
         end
 
-        if subscription.email_address.present? && should_email?(move, action_name)
+        # NB: only email in certain conditions (should_email?)
+        if subscription.email_address.present? && should_email?(move)
           NotifyEmailJob.perform_later(
             build_notification_id(subscription, NotificationType::EMAIL, move, action_name),
           )
@@ -38,9 +39,11 @@ private
           ).id }
   end
 
-  def should_email?(move, action_name)
-    # NB: only notify by email on move requested and move cancellation
-    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && %w(create update_status).include?(action_name)
+  def should_email?(move)
+    # NB: only email for:
+    #   * move.status must be Requested or Cancelled (not Proposed or Completed) moves, AND
+    #   * move must be current (i.e. move.date is not in the past OR move.to_date is not in the past)
+    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && move.current?
   end
 
   def event_type(action_name)
