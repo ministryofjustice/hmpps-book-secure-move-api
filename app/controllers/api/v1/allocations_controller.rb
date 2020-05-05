@@ -18,6 +18,11 @@ module Api
         allocation.moves = moves if allocation.valid?
 
         allocation.save!
+
+        allocation.moves.each do |move|
+          Notifier.prepare_notifications(topic: move, action_name: 'create')
+        end
+
         render_allocation(allocation, 201)
       end
 

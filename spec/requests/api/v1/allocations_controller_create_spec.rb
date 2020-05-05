@@ -35,10 +35,11 @@ RSpec.describe Api::V1::AllocationsController do
         complex_case2_attributes,
       ]
     }
+    let(:moves_count) { 2 }
     let(:allocation_attributes) {
       {
         date: Date.today,
-        moves_count: 2,
+        moves_count: moves_count,
         prisoner_category: :b,
         sentence_length: :short,
         other_criteria: 'curly hair',
@@ -47,7 +48,7 @@ RSpec.describe Api::V1::AllocationsController do
       }
     }
 
-    let!(:from_location) { create :location }
+    let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location }
     let!(:complex_case1) { create :allocation_complex_case }
     let!(:complex_case2) { create :allocation_complex_case, :self_harm }
@@ -70,10 +71,12 @@ RSpec.describe Api::V1::AllocationsController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
+      next if RSpec.current_example.metadata[:skip_before]
+
       post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
     end
 
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { ApiController::CONTENT_TYPE }
       let(:detail_401) { 'Token expired or invalid' }
@@ -131,6 +134,70 @@ RSpec.describe Api::V1::AllocationsController do
 
         it 'creates an allocation without complex cases' do
           expect(allocation.complex_cases).to be_empty
+        end
+      end
+
+      context 'when the supplier has a webhook subscription', :skip_before do
+        let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+        let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+        let(:notification) { subscription.notifications.last }
+        let(:faraday_client) {
+          class_double(Faraday, headers: {}, post:
+            instance_double(Faraday::Response, success?: true, status: 202))
+        }
+
+        before do
+          allow(Faraday).to receive(:new).and_return(faraday_client)
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
+          end
+        end
+
+        it 'enqueues a notification for each move created' do
+          expect(subscription.notifications.count).to eq(2)
+        end
+
+        describe 'notification record' do
+          let(:moves_count) { 1 }
+
+          it { expect(notification.delivered_at).not_to be_nil }
+          it { expect(notification.topic).to eql(allocation.moves.last) }
+          it { expect(notification.notification_type).to eql(notification_type_webhook) }
+          it { expect(notification.event_type).to eql('create_move') }
+          it { expect(notification.response_id).to be_nil }
+        end
+      end
+
+      context 'when the supplier has an email subscription', :skip_before do
+        let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+        let!(:notification_type_email) { create(:notification_type, :email) }
+        let(:notification) { subscription.notifications.last }
+        let(:notify_response) {
+          instance_double(ActionMailer::MessageDelivery, deliver_now!:
+              instance_double(Mail::Message, govuk_notify_response:
+                  instance_double(Notifications::Client::ResponseNotification, id: response_id)))
+        }
+        let(:response_id) { SecureRandom.uuid }
+
+        before do
+          allow(MoveMailer).to receive(:notify).and_return(notify_response)
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
+            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
+          end
+        end
+
+        it 'enqueues a notification for each move created' do
+          expect(subscription.notifications.count).to eq(2)
+        end
+
+        describe 'notification record' do
+          let(:moves_count) { 1 }
+
+          it { expect(notification.delivered_at).not_to be_nil }
+          it { expect(notification.topic).to eql(allocation.moves.last) }
+          it { expect(notification.notification_type).to eql(notification_type_email) }
+          it { expect(notification.event_type).to eql('create_move') }
+          it { expect(notification.response_id).to eql(response_id) }
         end
       end
     end
