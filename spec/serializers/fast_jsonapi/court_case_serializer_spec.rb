@@ -17,7 +17,8 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
 
   let(:options) { { include: [:location] } }
 
-  let(:location) { create :location, nomis_agency_id: 'SNARCC' }
+  let(:location) { create :location, :with_supplier, nomis_agency_id: 'SNARCC' }
+  let(:supplier) { location.suppliers.first }
 
   let(:expected_court_case_deserialized) do
     {
@@ -50,7 +51,18 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
             location_type: 'prison',
             nomis_agency_id: 'SNARCC',
             title: location.title,
-            suppliers: [],
+            suppliers: [
+              {
+                data: {
+                  attributes: {
+                    key: 'test_supplier_1',
+                    name: supplier.name
+                  },
+                  id: supplier.id,
+                  type: :supplier
+                }
+              }
+            ],
           },
           id: location.id,
         },

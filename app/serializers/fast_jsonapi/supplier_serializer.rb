@@ -3,5 +3,5 @@
 class FastJsonapi::SupplierSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :id, :name, :key
+  attributes :name, :key
 end

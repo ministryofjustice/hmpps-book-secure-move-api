@@ -13,6 +13,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_supplier do
+      after(:create) do |location, _|
+        create :supplier, locations: [location]
+      end
+    end
+
     trait :court do
       sequence(:key) { |x| "court_#{x}" }
       title { "#{Faker::Address.city} Crown Court" }
