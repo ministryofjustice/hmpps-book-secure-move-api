@@ -48,11 +48,13 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         let(:person_id) { person.id }
         let(:person) { create(:profile, :nomis_synced).person }
         let(:court_cases_from_nomis) {
+          create(:location)
+
           court_case = CourtCase.new.build_from_nomis(
             'id' => '1495077',
             'caseSeq' => 1,
             'beginDate' => '2020-01-01',
-            'agency' => { 'agencyId' => 'SNARCC' },
+            'agency' => { 'agencyId' => 'PEI' },
             'caseType' => 'Adult',
             'caseInfoNumber' => 'T20167984',
             'caseStatus' => 'ACTIVE',

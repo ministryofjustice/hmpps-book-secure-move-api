@@ -1,6 +1,8 @@
 class FastJsonapi::CourtCaseSerializer
   include FastJsonapi::ObjectSerializer
 
+  set_type 'court_cases'
+
   belongs_to :location, serializer: FastJsonapi::LocationSerializer
 
   attributes :case_type, :location_id
