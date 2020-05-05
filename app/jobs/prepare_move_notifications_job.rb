@@ -40,14 +40,10 @@ private
   end
 
   def should_email?(move)
-    # NB: only email for current moves (not back-dated ones):
-    #   * move.status must be Requested or Cancelled (not Proposed), AND
-    #   * move.date is not in the past OR move.to_date is not in the past
-
-    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) &&
-      ((move.date.present? && move.date >= Time.zone.today) ||
-          (move.date.nil? && move.date_to.present? && move.date_to >= Time.zone.today)
-      )
+    # NB: only email for:
+    #   * move.status must be Requested or Cancelled (not Proposed or Completed) moves, AND
+    #   * move must be current (i.e. move.date is not in the past OR move.to_date is not in the past)
+    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && move.current?
   end
 
   def event_type(action_name)

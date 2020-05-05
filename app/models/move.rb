@@ -91,6 +91,13 @@ class Move < VersionedModel
     existing&.id
   end
 
+  def current?
+    # NB: a current move relates to a move happening today or in the future (as opposed to a back-dated or historic move)
+    (self.date.present? && self.date >= Time.zone.today) ||
+      (self.date.nil? && self.date_to.present? && self.date_to >= Time.zone.today) ||
+      (self.date.nil? && self.date_to.nil? && self.date_from.present? && self.date_from >= Time.zone.today)
+  end
+
 private
 
   def date_to_after_date_from

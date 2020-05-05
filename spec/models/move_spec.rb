@@ -247,6 +247,70 @@ RSpec.describe Move do
     end
   end
 
+  describe '#current?' do
+    subject { move.current? }
+
+    context 'with date' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'with date_to' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: nil, date_to: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: nil, date_to: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: nil, date_to: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'with date_from' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
+
   context 'with versioning' do
     let(:move) { create(:move) }
 
