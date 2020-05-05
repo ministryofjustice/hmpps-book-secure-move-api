@@ -40,7 +40,7 @@ module Api
         response = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
         if response.success?
-          render json: response.court_cases, each_serializer: CourtCaseSerializer, include: :location
+          render json: FastJsonapi::CourtCaseSerializer.new(response.court_cases, include: [:location]).serializable_hash
         else
           render json: json_api_errors_for(response.error)
         end

@@ -1,7 +1,7 @@
 class CourtCase
   include ActiveModel::Serialization
 
-  attr_reader :id, :case_id, :case_info_number, :case_seq, :begin_date, :case_type, :case_status, :agency_id
+  attr_reader :id, :case_id, :case_info_number, :case_seq, :begin_date, :case_type, :case_status, :agency_id, :location_id
 
   def build_from_nomis(court_case)
     @id = court_case['id'] # since there is not UUID, we'll use the Nomis ID to identify the CourtCase
@@ -19,6 +19,10 @@ class CourtCase
   end
 
   def location
-    Location.find_by nomis_agency_id: @agency_id
+    @location ||= Location.find_by nomis_agency_id: @agency_id
+  end
+
+  def location_id
+    location&.id
   end
 end

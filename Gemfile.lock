@@ -114,6 +114,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.2.0)
       faraday (>= 0.8)
+    fast_jsonapi (1.5)
+      activesupport (>= 4.2)
     ffi (1.11.1)
     finite_machine (0.12.1)
       concurrent-ruby (~> 1.0)
@@ -398,6 +400,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   faraday
+  fast_jsonapi
   finite_machine
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
