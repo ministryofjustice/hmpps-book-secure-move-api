@@ -3,7 +3,7 @@
 class FastJsonapi::LocationSerializer
   include FastJsonapi::ObjectSerializer
 
-  has_many :suppliers, serializer: FastJsonapi::Supplier
+  has_many :suppliers, serializer: FastJsonapi::SupplierSerializer
 
   set_type 'locations'
 

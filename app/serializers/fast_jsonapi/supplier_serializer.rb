@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SupplierSerializer
+class FastJsonapi::SupplierSerializer
   include FastJsonapi::ObjectSerializer
 
   attributes :id, :name, :key

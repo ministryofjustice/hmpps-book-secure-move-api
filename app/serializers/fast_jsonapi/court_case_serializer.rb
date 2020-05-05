@@ -5,7 +5,7 @@ class FastJsonapi::CourtCaseSerializer
 
   belongs_to :location, serializer: FastJsonapi::LocationSerializer
 
-  attributes :case_type, :location_id
+  attributes :case_type
 
   attribute :nomis_case_id, &:case_id
   attribute :nomis_case_status, &:case_status
