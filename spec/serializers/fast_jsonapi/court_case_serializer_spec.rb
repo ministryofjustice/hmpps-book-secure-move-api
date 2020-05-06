@@ -51,16 +51,13 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
             location_type: 'prison',
             nomis_agency_id: 'SNARCC',
             title: location.title,
-            suppliers: [
+            suppliers:    [
               {
-                data: {
-                  attributes: {
-                    key: 'test_supplier_1',
-                    name: supplier.name,
-                  },
-                  id: supplier.id,
-                  type: :supplier,
-                },
+                "created_at" => supplier.created_at,
+                "id" => supplier.id,
+                "key" => supplier.key,
+                "name" => supplier.name,
+                "updated_at" => supplier.updated_at,
               },
             ],
           },
