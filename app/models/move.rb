@@ -35,7 +35,8 @@ class Move < VersionedModel
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :person, optional: true
+  belongs_to :person, optional: true # TODO: This relationship is deprecated, it will be removed soon
+  belongs_to :profile, optional: true
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
