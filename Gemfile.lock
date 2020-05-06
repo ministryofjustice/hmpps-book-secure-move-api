@@ -101,6 +101,28 @@ GEM
     dotenv-rails (2.7.5)
       dotenv (= 2.7.5)
       railties (>= 3.2, < 6.1)
+    dry-configurable (0.11.5)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.4, >= 0.4.7)
+      dry-equalizer (~> 0.2)
+    dry-container (0.7.2)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.1, >= 0.1.3)
+    dry-core (0.4.9)
+      concurrent-ruby (~> 1.0)
+    dry-equalizer (0.3.0)
+    dry-inflector (0.2.0)
+    dry-logic (1.0.6)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.2)
+      dry-equalizer (~> 0.2)
+    dry-types (1.4.0)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.3)
+      dry-core (~> 0.4, >= 0.4.4)
+      dry-equalizer (~> 0.3)
+      dry-inflector (~> 0.1, >= 0.1.2)
+      dry-logic (~> 1.0, >= 1.0.2)
     equatable (0.6.1)
     erubi (1.9.0)
     factory_bot (5.1.2)
@@ -132,6 +154,16 @@ GEM
     govuk_notify_rails (2.1.2)
       notifications-ruby-client (~> 5.1)
       rails (>= 4.1.0)
+    grape (1.3.2)
+      activesupport
+      builder
+      dry-types (>= 1.1)
+      mustermann-grape (~> 1.0.0)
+      rack (>= 1.3.0)
+      rack-accept
+    grape_fast_jsonapi (0.2.5)
+      fast_jsonapi (>= 1.5)
+      grape
     high_voltage (3.1.2)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
@@ -185,6 +217,10 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
+    mustermann-grape (1.0.1)
+      mustermann (>= 1.0.0)
     necromancer (0.5.1)
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
@@ -225,6 +261,8 @@ GEM
     public_suffix (4.0.4)
     puma (3.12.4)
     rack (2.2.2)
+    rack-accept (0.4.5)
+      rack (>= 0.4)
     rack-cors (1.1.0)
       rack (>= 2.0.0)
     rack-protection (2.0.8.1)
@@ -317,6 +355,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.10.1)
+    ruby2_keywords (0.0.2)
     ruby_dep (1.5.0)
     sassc (2.2.1)
       ffi (~> 1.9)
@@ -404,6 +443,8 @@ DEPENDENCIES
   finite_machine
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
+  grape
+  grape_fast_jsonapi
   high_voltage
   json-schema
   kaminari

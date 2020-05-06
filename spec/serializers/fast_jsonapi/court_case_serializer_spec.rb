@@ -53,11 +53,11 @@ RSpec.describe FastJsonapi::CourtCaseSerializer do
             title: location.title,
             suppliers:    [
               {
-                "created_at" => supplier.created_at,
-                "id" => supplier.id,
-                "key" => supplier.key,
-                "name" => supplier.name,
-                "updated_at" => supplier.updated_at,
+                'created_at' => supplier.created_at,
+                'id' => supplier.id,
+                'key' => supplier.key,
+                'name' => supplier.name,
+                'updated_at' => supplier.updated_at,
               },
             ],
           },

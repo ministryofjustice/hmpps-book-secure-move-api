@@ -38,6 +38,9 @@ module PecsMovePlatformBackend
 
     config.active_job.queue_adapter = :sidekiq
 
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end

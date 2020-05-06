@@ -1,3 +1,5 @@
+require_relative '../app/api/v2/court_cases'
+
 Rails.application.routes.draw do
   use_doorkeeper
 
@@ -39,4 +41,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  mount Api::V2::CourtCases => '/'
 end

@@ -26,6 +26,8 @@ gem 'faraday'
 gem 'fast_jsonapi'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
+gem 'grape'
+gem 'grape_fast_jsonapi'
 # static page serving for extra API documentation
 gem 'high_voltage'
 gem 'json-schema'
