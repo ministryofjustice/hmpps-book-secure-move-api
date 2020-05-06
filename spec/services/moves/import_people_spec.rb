@@ -6,7 +6,7 @@ RSpec.describe Moves::ImportPeople do
   subject(:importer) { described_class.new(input_data) }
 
   let(:input_data) do
-    [person_nomis_prison_number: prisoner_one.nomis_prison_number]
+    [prisoner_one.nomis_prison_number]
   end
 
   let!(:brixton_prison) { create(:location, nomis_agency_id: 'BXI', location_type: 'prison') }

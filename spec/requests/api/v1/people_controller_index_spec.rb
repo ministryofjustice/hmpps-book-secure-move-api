@@ -56,7 +56,7 @@ RSpec.describe Api::V1::PeopleController do
 
       before do
         allow(People::Finder).to receive(:new).and_return(people_finder)
-        allow(Moves::ImportPeople).to receive(:new).with([person_nomis_prison_number: prison_number])
+        allow(Moves::ImportPeople).to receive(:new).with([prison_number])
                                                    .and_return(instance_double('Moves::ImportPeople', call: nil))
         get '/api/v1/people', headers: headers, params: params
       end

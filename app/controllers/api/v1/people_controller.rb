@@ -71,10 +71,10 @@ module Api
         { errors: [error.json_api_error] }
       end
 
-      def import_person_from_nomis prison_number
+      def import_person_from_nomis(prison_number)
         # This prevents us from blaming the current user/application for the NOMIS sync
         PaperTrail.request(whodunnit: nil) do
-          Moves::ImportPeople.new([person_nomis_prison_number: prison_number]).call
+          Moves::ImportPeople.new([prison_number]).call
         end
       rescue StandardError => e
         Raven.capture_exception(e)
