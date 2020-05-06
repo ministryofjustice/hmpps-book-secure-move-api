@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :move do
-    association(:person)
     association(:profile)
     association(:from_location, factory: :location)
     association(:to_location, :court, factory: :location)
@@ -52,7 +51,7 @@ FactoryBot.define do
   end
 
   factory :from_court_to_prison, class: Move do
-    association(:person)
+    association(:profile)
     association(:from_location, :court, factory: :location)
     association(:to_location, factory: :location)
     date { Date.today }
