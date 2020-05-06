@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_081233) do
+ActiveRecord::Schema.define(version: 2020_05_06_105933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -162,6 +162,17 @@ ActiveRecord::Schema.define(version: 2020_05_04_081233) do
     t.string "key", null: false
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
+  end
+
+  create_table "locations_regions", id: false, force: :cascade do |t|
+    t.uuid "location_id", null: false
+    t.uuid "region_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "region_id"], name: "index_locations_regions_on_location_id_and_region_id", unique: true
+    t.index ["location_id"], name: "index_locations_regions_on_location_id"
+    t.index ["region_id", "location_id"], name: "index_locations_regions_on_region_id_and_location_id", unique: true
+    t.index ["region_id"], name: "index_locations_regions_on_region_id"
   end
 
   create_table "locations_suppliers", id: false, force: :cascade do |t|
@@ -327,6 +338,14 @@ ActiveRecord::Schema.define(version: 2020_05_04_081233) do
     t.integer "latest_nomis_booking_id"
   end
 
+  create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_regions_on_key"
+  end
+
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
     t.string "callback_url"
@@ -371,6 +390,8 @@ ActiveRecord::Schema.define(version: 2020_05_04_081233) do
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"
   add_foreign_key "journeys", "suppliers"
+  add_foreign_key "locations_regions", "locations"
+  add_foreign_key "locations_regions", "regions"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "allocations"

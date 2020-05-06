@@ -36,6 +36,12 @@ namespace :reference_data do
     NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
   end
 
+  desc 'create regions'
+  task create_regions: :environment do
+    regions = YAML.safe_load(File.read('./lib/tasks/data/regions.yml'))
+    Regions::Importer.new(regions).call
+  end
+
   desc 'create suppliers'
   task create_suppliers: :environment do
     require 'active_record/fixtures'

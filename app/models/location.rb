@@ -20,6 +20,7 @@ class Location < ApplicationRecord
   NOMIS_TYPES_WITH_DOCUMENTS = %w[STC SCH].freeze
 
   has_and_belongs_to_many :suppliers
+  has_and_belongs_to_many :regions
   # Deleting locations isn't really a thing in practice - so dependent: :destroy is a pragmatic choice
   has_many :moves_from, class_name: 'Move', foreign_key: :from_location_id, inverse_of: :from_location, dependent: :destroy
   has_many :moves_to, class_name: 'Move', foreign_key: :to_location_id, inverse_of: :to_location, dependent: :destroy
