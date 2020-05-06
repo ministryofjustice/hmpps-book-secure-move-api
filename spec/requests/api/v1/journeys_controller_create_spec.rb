@@ -16,7 +16,7 @@ RSpec.describe Api::V1::JourneysController do
     let(:move) { create(:move, from_location: locations.first, to_location: locations.last) }
 
 
-    # let(:journey) { create(:journey, move: move, supplier: supplier, client_timestamp: '2020-05-04T08:00:00Z', from_location: locations.first, to_location: locations.last) }
+    let(:journey) { create(:journey, move: move, supplier: supplier, client_timestamp: '2020-05-04T08:00:00Z', from_location: locations.first, to_location: locations.last) }
 
     let(:journey_params) {
       {
@@ -86,6 +86,8 @@ RSpec.describe Api::V1::JourneysController do
 
       it do
         puts JSON.pretty_generate(response_json)
+
+        puts Journey.all.inspect
       end
 
       # it_behaves_like 'an endpoint that responds with success 200'

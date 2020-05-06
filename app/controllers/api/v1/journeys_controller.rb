@@ -7,8 +7,8 @@ module Api
 
       PERMITTED_JOURNEY_PARAMS = [
           :type,
-          attributes: %i[timestamp billable vehicle],
-          relationships: { from_location: {}, to_location: {} },
+          attributes: [:timestamp, :billable, vehicle: {}],
+          relationships: [from_location: {}, to_location: {}],
       ].freeze
 
       def index
@@ -20,16 +20,10 @@ module Api
       end
 
       def create
-        puts "TEST0 params: #{params.inspect}"
-
-        # puts journey_attributes.inspect
-        byebug
-
-        # # journey = Journey.new(journey_attributes)
-        # # authorize!(:create, journey)
-        # # journey.save!
-        #
-        # render json: journey, status: :created
+        journey = Journey.new(journey_attributes)
+        authorize!(:create, journey)
+        journey.save!
+        render json: journey, status: :created
       end
 
       def update
@@ -62,9 +56,19 @@ module Api
         # NB: it is important to do .tap after the .merge to avoid modifying params
         @journey_attributes ||= journey_params[:attributes]
           .merge(
+            move: move,
+            supplier: current_user&.owner,
             from_location: Location.find(journey_params.dig(:relationships, :from_location, :data, :id)),
             to_location: Location.find(journey_params.dig(:relationships, :to_location, :data, :id)),
-          ).tap { |attribs| attribs[:client_timestamp] = Time.zone.parse(attribs.delete(:timestamp)) }
+            )
+          .then { |attribs|
+            attribs.merge(
+              client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
+              details: {
+                metadata: { vehicle: attribs.delete(:vehicle) },
+              },
+            )
+          }
       end
     end
   end
