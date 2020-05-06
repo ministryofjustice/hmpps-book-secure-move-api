@@ -10,7 +10,7 @@ module MoveEvents
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time, e.g. 2020-04-29T22:45:59.000Z')
+      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
     end
 
     def initialize(params)
