@@ -3,6 +3,8 @@
 module Api
   module V1
     class AllocationsController < ApiController
+      after_action :send_move_notifications, only: :create
+
       def index
         allocations_params = Allocations::ParamsValidator.new(filter_params)
         if allocations_params.valid?
@@ -14,16 +16,9 @@ module Api
       end
 
       def create
-        allocation = Allocation.new(allocation_attributes)
-        allocation.moves = moves if allocation.valid?
+        creator.call
 
-        allocation.save!
-
-        allocation.moves.each do |move|
-          Notifier.prepare_notifications(topic: move, action_name: 'create')
-        end
-
-        render_allocation(allocation, 201)
+        render_allocation(creator.allocation, 201)
       end
 
       def show
@@ -56,14 +51,6 @@ module Api
         params.require(:data).require(:attributes).permit(complex_cases: PERMITTED_COMPLEX_CASE_PARAMS)[:complex_cases]&.map(&:to_h)
       end
 
-      def allocation_attributes
-        allocation_params[:attributes].merge(
-          from_location: from_location,
-          to_location: to_location,
-          complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
-        )
-      end
-
       def render_allocation(allocation, status)
         render json: allocation, status: status, include: AllocationSerializer::INCLUDED_ATTRIBUTES
       end
@@ -72,22 +59,17 @@ module Api
         Allocation.find(params[:id])
       end
 
-      def from_location
-        Location.find(allocation_params.dig(:relationships, :from_location, :data, :id))
+      def creator
+        @creator ||= Allocations::Creator.new(
+          allocation_params: allocation_params,
+          complex_case_params: complex_case_params,
+        )
       end
 
-      def to_location
-        Location.find(allocation_params.dig(:relationships, :to_location, :data, :id))
-      end
-
-      def moves
-        Array.new(allocation_params.dig(:attributes, :moves_count)) {
-          Move.new(
-            from_location: from_location,
-            to_location: to_location,
-            date: allocation_params.dig(:attributes, :date),
-          )
-        }
+      def send_move_notifications
+        creator.allocation.moves.each do |move|
+          Notifier.prepare_notifications(topic: move, action_name: 'create')
+        end
       end
     end
   end
