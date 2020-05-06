@@ -3,6 +3,8 @@
 module Api
   module V1
     class AllocationsController < ApiController
+      after_action :send_move_notifications, only: :create
+
       def index
         allocations_params = Allocations::ParamsValidator.new(filter_params)
         if allocations_params.valid?
@@ -14,10 +16,9 @@ module Api
       end
 
       def create
-        allocation = Allocation.new(allocation_attributes)
-        allocation.save!
+        creator.call
 
-        render_allocation(allocation, 201)
+        render_allocation(creator.allocation, 201)
       end
 
       def show
@@ -50,20 +51,25 @@ module Api
         params.require(:data).require(:attributes).permit(complex_cases: PERMITTED_COMPLEX_CASE_PARAMS)[:complex_cases]&.map(&:to_h)
       end
 
-      def allocation_attributes
-        allocation_params[:attributes].merge(
-          from_location: Location.find(allocation_params.dig(:relationships, :from_location, :data, :id)),
-          to_location: Location.find(allocation_params.dig(:relationships, :to_location, :data, :id)),
-          complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
-        )
-      end
-
       def render_allocation(allocation, status)
         render json: allocation, status: status, include: AllocationSerializer::INCLUDED_ATTRIBUTES
       end
 
       def find_allocation
         Allocation.find(params[:id])
+      end
+
+      def creator
+        @creator ||= Allocations::Creator.new(
+          allocation_params: allocation_params,
+          complex_case_params: complex_case_params,
+        )
+      end
+
+      def send_move_notifications
+        creator.allocation.moves.each do |move|
+          Notifier.prepare_notifications(topic: move, action_name: 'create')
+        end
       end
     end
   end
