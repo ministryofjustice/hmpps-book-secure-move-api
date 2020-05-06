@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :move do
     association(:person)
+    association(:profile)
     association(:from_location, factory: :location)
     association(:to_location, :court, factory: :location)
     sequence(:date) { |n| Date.today + n.days }
