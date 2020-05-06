@@ -5,7 +5,12 @@ class JourneySerializer < ActiveModel::Serializer
 
   attributes :id, :billable, :state
   attribute :client_timestamp, key: :timestamp
+  attribute :vehicle
 
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer
+
+  def vehicle
+    object.details&.dig('metadata', 'vehicle')
+  end
 end

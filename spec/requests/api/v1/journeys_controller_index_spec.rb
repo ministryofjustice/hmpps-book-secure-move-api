@@ -43,7 +43,6 @@ RSpec.describe Api::V1::JourneysController do
         it { is_expected.not_to include(other_supplier_journey.id) } # NB: should not contain another supplier's journey in the same move
       end
 
-
       describe 'paginating results' do
         let(:intermediate_journeys_count) { 19 }
 

@@ -472,7 +472,7 @@
           "attributes": {
             "event_name": "lockout",
             "timestamp": "2020-04-21T13:20:50.52Z",
-            "reason": "late arrival due to van breakdown"
+            "notes": "late arrival due to van breakdown"
           },
           relationships": {
             "to_location": {

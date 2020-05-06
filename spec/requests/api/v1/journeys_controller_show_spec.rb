@@ -30,6 +30,10 @@ RSpec.describe Api::V1::JourneysController do
                 "billable": false,
                 "state": 'in_progress',
                 "timestamp": '2020-05-04T09:00:00+01:00',
+                "vehicle": {
+                  "id": '12345678ABC',
+                  "registration": 'AB12 CDE',
+                },
             },
             "relationships": {
                 "from_location": {
