@@ -12,6 +12,18 @@ RSpec.describe LocationSerializer do
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
 
+  let(:expected_suppliers) do
+    [
+      {
+        created_at: supplier.created_at.xmlschema,
+        id: supplier.id,
+        key: supplier.key,
+        name: supplier.name,
+        updated_at: supplier.updated_at.xmlschema,
+      },
+    ]
+  end
+
   it 'contains a type property' do
     expect(result_data[:type]).to eql 'locations'
   end
@@ -45,6 +57,6 @@ RSpec.describe LocationSerializer do
   end
 
   it 'contains a suppliers attribute' do
-    expect(attributes[:suppliers]).not_to be_nil
+    expect(attributes[:suppliers]).to eq(expected_suppliers)
   end
 end
