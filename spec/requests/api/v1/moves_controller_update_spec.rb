@@ -17,12 +17,10 @@ RSpec.describe Api::V1::MovesController do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
-
+    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents }
     let(:move_id) { move.id }
-    let(:person) { create(:person) }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
-    let(:move) { Move.find_by(status: 'proposed') }
     let(:before_documents) { create_list(:document, 2) }
 
     let(:move_params) do
@@ -43,8 +41,6 @@ RSpec.describe Api::V1::MovesController do
     end
 
     before do
-      create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents
-
       next if RSpec.current_example.metadata[:skip_before]
 
       do_patch
@@ -150,10 +146,9 @@ RSpec.describe Api::V1::MovesController do
           end
 
           it 'updates the moves documents' do
-            expect { do_patch }.
-              to change { move.reload.documents }.
-              from(before_documents).
-              to(after_documents)
+            expect(move.reload.documents).to eq(before_documents)
+            do_patch
+            expect(move.reload.documents).to eq(after_documents)
           end
 
           it 'does not affect other relationships' do
@@ -220,6 +215,8 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when updating an existing requested move without a change of move_status' do
+          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location }
+
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
@@ -253,7 +250,7 @@ RSpec.describe Api::V1::MovesController do
           end
 
           context 'when the supplier has an email subscription', :skip_before do
-            # NB: updates to existing moves should not trigger an email notification unless the move is cancelled
+            # NB: updates to existing moves should trigger an email notification
             let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
@@ -279,8 +276,8 @@ RSpec.describe Api::V1::MovesController do
               end
             end
 
-            it 'does NOT create an email notification' do
-              expect(subscription.notifications.count).to be 0
+            it 'creates an email notification' do
+              expect(subscription.notifications.count).to be 1
             end
           end
         end

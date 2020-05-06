@@ -37,6 +37,7 @@ class Move < VersionedModel
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :person, optional: true
   belongs_to :prison_transfer_reason, optional: true
+  belongs_to :allocation, inverse_of: :moves, optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
@@ -89,6 +90,13 @@ class Move < VersionedModel
 
   def existing_id
     existing&.id
+  end
+
+  def current?
+    # NB: a current move relates to a move happening today or in the future (as opposed to a back-dated or historic move)
+    (self.date.present? && self.date >= Time.zone.today) ||
+      (self.date.nil? && self.date_to.present? && self.date_to >= Time.zone.today) ||
+      (self.date.nil? && self.date_to.nil? && self.date_from.present? && self.date_from >= Time.zone.today)
   end
 
 private

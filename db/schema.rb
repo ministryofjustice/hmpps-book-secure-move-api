@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_134954) do
+ActiveRecord::Schema.define(version: 2020_05_04_081233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -198,6 +198,8 @@ ActiveRecord::Schema.define(version: 2020_04_28_134954) do
     t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
+    t.uuid "allocation_id"
+    t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
@@ -371,6 +373,7 @@ ActiveRecord::Schema.define(version: 2020_04_28_134954) do
   add_foreign_key "journeys", "suppliers"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
+  add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "people"
