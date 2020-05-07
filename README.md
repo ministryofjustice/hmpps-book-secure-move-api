@@ -90,11 +90,13 @@ following rake tasks:
 
 ```
 bundle exec rake reference_data:create_assessment_questions
+bundle exec rake reference_data:create_allocation_complex_cases
 bundle exec rake reference_data:create_ethnicities
 bundle exec rake reference_data:create_genders
 bundle exec rake reference_data:create_identifier_types
 bundle exec rake reference_data:create_locations
 bundle exec rake reference_data:create_nomis_alerts
+bundle exec rake reference_data:create_regions
 bundle exec rake reference_data:create_suppliers
 ```
 
