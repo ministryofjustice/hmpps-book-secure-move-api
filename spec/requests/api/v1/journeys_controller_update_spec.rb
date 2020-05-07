@@ -1,0 +1,215 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Api::V1::JourneysController do
+  let(:response_json) { JSON.parse(response.body) }
+
+  describe 'PATCH /moves/:move_id/journeys/:journey_id' do
+    let(:supplier) { create(:supplier) }
+    let(:application) { create(:application, owner: supplier) }
+    let(:access_token) { create(:access_token, application: application).token }
+    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+    let(:content_type) { ApiController::CONTENT_TYPE }
+
+    let(:from_location_id) { create(:location, suppliers: [supplier]).id }
+    let(:to_location_id) { create(:location, suppliers: [supplier]) .id }
+    let(:move) { create(:move, from_location_id: from_location_id) }
+    let(:move_id) { move.id }
+    # let(:journey_id) { create(:journey, from_location_id: from_location_id, to_location_id: to_location_id).id }
+    let(:journey) { create(:journey, move: move, supplier: supplier, billable: false, client_timestamp: '2020-05-04T08:00:00Z', from_location_id: from_location_id, to_location_id: to_location_id) }
+    let(:journey_id) { journey.id }
+
+    let(:timestamp) { '2020-05-04T12:12:12+01:00' }
+    let(:billable) { true }
+
+    let(:journey_params) {
+      {
+        data: {
+          "type": 'journeys',
+          "attributes": {
+              "billable": billable,
+              "timestamp": timestamp,
+              "vehicle": { "id": '9876', "registration": 'XYZ' },
+          },
+        },
+      }
+    }
+
+    before do
+      patch "/api/v1/moves/#{move_id}/journeys/#{journey_id}", params: journey_params, headers: headers, as: :json
+    end
+
+    context 'when successful' do
+      let(:schema) { load_yaml_schema('get_journey_responses.yaml') }
+      let(:data) {
+        {
+          "id": journey.id,
+          "type": 'journeys',
+          "attributes": {
+            "billable": true,
+            "state": 'in_progress',
+            "timestamp": '2020-05-04T09:00:00+01:00',
+            "vehicle": {
+              "id": '9876',
+              "registration": 'XYZ',
+            },
+          },
+          "relationships": {
+            "from_location": {
+              "data": {
+                "id": from_location_id,
+                "type": 'locations',
+              },
+            },
+            "to_location": {
+              "data": {
+                "id": to_location_id,
+                "type": 'locations',
+              },
+            },
+          },
+        }
+      }
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'returns the correct data' do
+        # puts JSON.pretty_generate(response_json)
+        expect(response_json).to include_json(data: data)
+      end
+    end
+
+    context 'when only updating billable' do
+      let(:journey_params) {
+        {
+          data: {
+            "type": 'journeys',
+            "attributes": {
+              "billable": billable,
+              "timestamp": timestamp,
+            },
+          },
+        }
+      }
+
+      let(:data) {
+        {
+          "id": journey.id,
+          "type": 'journeys',
+          "attributes": {
+            "billable": true,
+            "state": 'in_progress',
+            "timestamp": '2020-05-04T09:00:00+01:00',
+            "vehicle": {
+              "id": '12345678ABC',
+              "registration": 'AB12 CDE',
+            },
+          },
+        }
+      }
+
+      it 'returns the correct data' do
+        expect(response_json).to include_json(data: data)
+      end
+    end
+
+    context 'when only updating the vehicle' do
+      let(:journey_params) {
+        {
+          data: {
+            "type": 'journeys',
+            "attributes": {
+              "timestamp": timestamp,
+              "vehicle": {
+                "id": '9876',
+                "registration": 'XYZ',
+              },
+            },
+          },
+        }
+      }
+
+      let(:data) {
+        {
+          "id": journey.id,
+          "type": 'journeys',
+          "attributes": {
+            "billable": false,
+            "state": 'in_progress',
+            "timestamp": '2020-05-04T09:00:00+01:00',
+            "vehicle": {
+              "id": '9876',
+              "registration": 'XYZ',
+            },
+          },
+        }
+      }
+
+      it 'returns the correct data' do
+        puts JSON.pretty_generate(response_json)
+
+        expect(response_json).to include_json(data: data)
+      end
+    end
+
+    # context 'when unsuccessful' do
+    #   let(:schema) { load_yaml_schema('error_responses.yaml') }
+    #
+    #   context 'with a bad request' do
+    #     let(:journey_params) { nil }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 400'
+    #   end
+    #
+    #   context 'with an invalid timestamp' do
+    #     let(:timestamp) { 'foo-bar' }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 400' do
+    #       let(:errors_400) {
+    #         [{ 'title' => 'Invalid timestamp',
+    #            'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }]
+    #       }
+    #     end
+    #   end
+    #
+    #   context 'with an invalid billable' do
+    #     let(:billable) { 'foo-bar' }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 400' do
+    #       let(:errors_400) {
+    #         [{ 'title' => 'Invalid billable',
+    #            'detail' => 'Validation failed: Billable is not included in the list' }]
+    #       }
+    #     end
+    #   end
+    #
+    #   context 'when not authorized' do
+    #     let(:access_token) { 'foo-bar' }
+    #     let(:detail_401) { 'Token expired or invalid' }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 401'
+    #   end
+    #
+    #   context 'with a missing move_id' do
+    #     let(:move_id) { 'foo-bar' }
+    #     let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 404'
+    #   end
+    #
+    #   context 'with a reference to a missing relationship' do
+    #     let(:to_location_id) { 'foo-bar' }
+    #     let(:detail_404) { "Couldn't find Location with 'id'=foo-bar" }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 404'
+    #   end
+    #
+    #   context 'with an invalid CONTENT_TYPE header' do
+    #     let(:content_type) { 'application/xml' }
+    #
+    #     it_behaves_like 'an endpoint that responds with error 415'
+    #   end
+    # end
+  end
+end

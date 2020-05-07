@@ -4,11 +4,17 @@ module Api
   module V1
     class JourneysController < ApiController
       before_action :validate_params, only: %i[create update]
+      after_action :create_event, only: %i[create update]
 
-      PERMITTED_JOURNEY_PARAMS = [
+      PERMITTED_NEW_JOURNEY_PARAMS = [
           :type,
           attributes: [:timestamp, :billable, vehicle: {}],
           relationships: [from_location: {}, to_location: {}],
+      ].freeze
+
+      PERMITTED_UPDATE_JOURNEY_PARAMS = [
+          :type,
+          attributes: [:timestamp, :billable, vehicle: {}],
       ].freeze
 
       def index
@@ -20,14 +26,14 @@ module Api
       end
 
       def create
-        journey = Journey.new(journey_attributes)
         authorize!(:create, journey)
         journey.save!
         render json: journey, status: :created
       end
 
       def update
-        # TODO: coming soon
+        journey.update!(update_journey_attributes)
+        render json: journey, status: :ok
       end
 
     private
@@ -41,32 +47,50 @@ module Api
       end
 
       def journey
-        @journey ||= journeys.find(params.require(:id))
+        @journey ||= if action_name == 'create'
+                       Journey.new(new_journey_attributes)
+                     else
+                       journeys.find(params.require(:id))
+                     end
       end
 
       def validate_params
-        Journeys::ParamsValidator.new(journey_params, action_name).validate!
+        Journeys::ParamsValidator.new(params, action_name).validate!
       end
 
-      def journey_params
-        @journey_params ||= params.require(:data).permit(PERMITTED_JOURNEY_PARAMS).to_h
+      def new_journey_params
+        @new_journey_params ||= params.require(:data).permit(PERMITTED_NEW_JOURNEY_PARAMS).to_h
       end
 
-      def journey_attributes
-        # NB: it is important to do .tap after the .merge to avoid modifying params
-        @journey_attributes ||= journey_params[:attributes]
-          .merge(
+      def new_journey_attributes
+        # NB: we are calling dup() to avoid mutating the underlying params object
+        @new_journey_attributes ||= new_journey_params[:attributes].dup.tap do |attribs|
+          attribs.merge!(
             move: move,
             supplier: current_user&.owner,
-            from_location: Location.find(journey_params.dig(:relationships, :from_location, :data, :id)),
-            to_location: Location.find(journey_params.dig(:relationships, :to_location, :data, :id)),
-            )
-          .then { |attribs| # NB: we avoid mutating the original params by calling delete() after merge()
-            attribs.merge(
-              client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
-              details: { metadata: { vehicle: attribs.delete(:vehicle) } },
-            )
-          }
+            details: { metadata: { vehicle: attribs.delete(:vehicle) } },
+            client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
+            from_location: Location.find(new_journey_params.dig(:relationships, :from_location, :data, :id)),
+            to_location: Location.find(new_journey_params.dig(:relationships, :to_location, :data, :id)),
+          )
+        end
+      end
+
+      def update_journey_params
+        @update_journey_params ||= params.require(:data).permit(PERMITTED_UPDATE_JOURNEY_PARAMS).to_h
+      end
+
+      def update_journey_attributes
+        # NB: we are calling dup() to avoid mutating the underlying params object
+        @update_journey_attributes ||= update_journey_params[:attributes].dup.tap do |attribs|
+          attribs[:details] = { metadata: { vehicle: attribs.delete(:vehicle) } } if attribs[:vehicle].present?
+
+          attribs.delete(:timestamp) # throw the timestamp away for updates
+        end
+      end
+
+      def create_event
+        puts "IN CREATE EVENT: #{journey} (#{action_name})"
       end
     end
   end
