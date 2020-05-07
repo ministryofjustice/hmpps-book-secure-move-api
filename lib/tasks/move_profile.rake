@@ -1,7 +1,7 @@
 namespace :moves do
   desc 'Set all profile ids in all the moves'
   task set_profiles: :environment do
-    moves = Move.where(profile_id: nil).includes(person: :profiles)
+    moves = Move.where(profile_id: nil)
 
     total = moves.count
 
@@ -13,13 +13,10 @@ namespace :moves do
     moves.find_each(batch_size: 200).with_index do |move, n|
       puts "#{n}/#{total} moves processed ..." if (n % 200).zero? # Show progression
 
+      # The relationship Move -> Person does not exist anymore, so we need to access person this way:
+      person = Person.find(move.person_id)
 
-      # TODO: the rails rel Move -> Person does not exist anymore, so we'll need to use something like
-      # person = Person.find(move_id: person.move_id)
-      # profile = person.profiles.order(:updated_at).last
-
-      # TODO: move.person does not exist anymore, see TODO above!
-      profile = move.person.profiles.order(:updated_at).last # Take the profile that was most recently updated
+      profile = person.profiles.order(:updated_at).last
 
       # update only profile and skip validations: some moves are invalid because of uniqueness of 'date', but that does
       # not impact the correctness of this data migration.
