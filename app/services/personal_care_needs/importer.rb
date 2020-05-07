@@ -18,7 +18,7 @@ module PersonalCareNeeds
       DOMAIN_DISABILITY => 'Disability',
       DOMAIN_MATERNITY  => 'Maternity Status',
     }.freeze
-    DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION.default = 'Unknown'
+    DEFAULT_ALERT_TYPE_DESCRIPTION = 'Unknown'
 
     PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING = {
       'DI'     => { domain: DOMAIN_PHYSICAL,   question_key: QUESTION_KEY_FALLBACK        }, # Diabetic,Medical
@@ -64,7 +64,7 @@ module PersonalCareNeeds
       'AA'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Activities,Social Care
       'AS'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Services,Social Care
     }.freeze
-    PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING.default = { domain: DOMAIN_UNKNOWN, question_key: QUESTION_KEY_FALLBACK }
+    DEFAULT_PROBLEM_CODE_MAPPING = { domain: DOMAIN_UNKNOWN, question_key: QUESTION_KEY_FALLBACK }.freeze
 
     def initialize(profile:, personal_care_needs:)
       @profile = profile
@@ -73,9 +73,13 @@ module PersonalCareNeeds
 
     def call
       assessment_answers = personal_care_needs.map do |personal_care_need|
-        mapping = PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING[personal_care_need[:problem_code]]
+        mapping = PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING.fetch(
+          personal_care_need[:problem_code], DEFAULT_PROBLEM_CODE_MAPPING
+        )
 
-        description = DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION[mapping[:domain]]
+        description = DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION.fetch(
+          mapping[:domain], DEFAULT_ALERT_TYPE_DESCRIPTION
+        )
         question = AssessmentQuestion.find_by(key: mapping[:question_key])
 
         Profile::AssessmentAnswer.from_nomis_personal_care_need(personal_care_need, question, description)
