@@ -8,7 +8,7 @@ FactoryBot.define do
 
     trait :care_needs_fallback do
       category { 'health' }
-      key { PersonalCareNeeds::Importer::FALLBACK_QUESTION_KEY }
+      key { PersonalCareNeeds::Importer::QUESTION_KEY_FALLBACK  }
       title { 'Pregnancy' }
     end
 
