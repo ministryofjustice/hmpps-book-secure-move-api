@@ -2,8 +2,6 @@
 
 module PersonalCareNeeds
   class Importer
-    attr_accessor :profile, :personal_care_needs
-
     ASSESSMENT_ANSWER_CATEGORY = 'health'
 
     QUESTION_KEY_PREGNANT = 'pregnant'
@@ -19,7 +17,7 @@ module PersonalCareNeeds
       DOMAIN_PHYSICAL   => 'Medical',
       DOMAIN_DISABILITY => 'Disability',
       DOMAIN_MATERNITY  => 'Maternity Status',
-    }
+    }.freeze
     DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION.default = 'Unknown'
 
     PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING = {
@@ -65,7 +63,7 @@ module PersonalCareNeeds
       'MR'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Maintaining Relationships,Social Care
       'AA'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Activities,Social Care
       'AS'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Services,Social Care
-    }
+    }.freeze
     PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING.default = { domain: DOMAIN_UNKNOWN, question_key: QUESTION_KEY_FALLBACK }
 
     def initialize(profile:, personal_care_needs:)
@@ -86,7 +84,7 @@ module PersonalCareNeeds
       profile.merge_assessment_answers!(assessment_answers, ASSESSMENT_ANSWER_CATEGORY)
     end
 
-    private
+  private
 
     attr_reader :profile, :personal_care_needs
   end
