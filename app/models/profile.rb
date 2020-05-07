@@ -7,7 +7,7 @@ class Profile < VersionedModel
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true
 
-  has_many :moves, dependent: :destroy
+  has_one :move, dependent: :nullify
 
   validates :person, presence: true
   validates :last_name, presence: true
