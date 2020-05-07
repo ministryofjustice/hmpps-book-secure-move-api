@@ -69,7 +69,7 @@ class Profile
       self.created_at ||= Time.zone.now
     end
 
-    def self.from_nomis_personal_care_need(personal_care_need, assessment_question);
+    def self.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description);
       new(
         title: personal_care_need[:problem_description],
         assessment_question_id: assessment_question.id,
@@ -80,7 +80,7 @@ class Profile
         nomis_alert_code: personal_care_need.fetch(:problem_code),
         nomis_alert_type: personal_care_need.fetch(:problem_type),
         nomis_alert_description: personal_care_need[:problem_description],
-        # nomis_alert_type_description: alert[:alert_type_description], # Needs to be oneOf Medical, Maternity status, Disability
+        nomis_alert_type_description: alert_type_description, # Needs to be oneOf Medical, Maternity status, Disability
         imported_from_nomis: true,
       ).tap(&:set_timestamps)
     end
