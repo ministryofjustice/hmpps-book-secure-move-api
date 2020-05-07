@@ -195,4 +195,38 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       end
     end
   end
+
+  describe '.from_nomis_personal_care_need' do
+    let(:personal_care_need) do
+      {
+        problem_type: 'foo',
+        problem_code: 'bar',
+        problem_status: 'baz',
+        problem_description: 'qux',
+        start_date: '2010-06-21',
+        end_date: '2010-06-21',
+      }
+    end
+    let(:assessment_question) { instance_double('AssessmentQuestion', category: 'foo', id: 'bar', key: 'baz') }
+    let(:alert_type_description) { 'foo' }
+
+    it 'instantiates an expected AssessmentAnswer' do
+      result = described_class.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description)
+
+      expect(result.as_json).to eq(
+        assessment_question_id: 'bar',
+        category: 'foo',
+        comments: nil,
+        created_at: Date.parse('2010-06-21'),
+        expires_at: Date.parse('2010-06-21'),
+        imported_from_nomis: true,
+        key: 'baz',
+        nomis_alert_code: 'bar',
+        nomis_alert_description: 'qux',
+        nomis_alert_type: 'foo',
+        nomis_alert_type_description: 'foo',
+        title: 'qux',
+      )
+    end
+  end
 end
