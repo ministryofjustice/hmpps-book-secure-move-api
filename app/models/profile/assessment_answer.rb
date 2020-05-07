@@ -72,14 +72,14 @@ class Profile
     def self.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description);
       new(
         title: personal_care_need[:problem_description],
-        assessment_question_id: assessment_question.id,
         created_at: personal_care_need[:start_date],
         expires_at: personal_care_need[:end_date],
-        category: assessment_question.category,
-        key: assessment_question.key,
         nomis_alert_code: personal_care_need.fetch(:problem_code),
         nomis_alert_type: personal_care_need.fetch(:problem_type),
         nomis_alert_description: personal_care_need[:problem_description],
+        assessment_question_id: assessment_question.id,
+        category: assessment_question.category,
+        key: assessment_question.key,
         nomis_alert_type_description: alert_type_description, # Needs to be oneOf Medical, Maternity status, Disability
         imported_from_nomis: true,
       ).tap(&:set_timestamps)
