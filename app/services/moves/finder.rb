@@ -42,7 +42,7 @@ module Moves
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
-      scope = scope.includes(:from_location, :to_location, profile: %i[gender ethnicity] )
+      scope = scope.includes(:from_location, :to_location, profile: %i[gender ethnicity])
       scope = apply_filter(scope, :status)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
