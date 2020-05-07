@@ -163,7 +163,7 @@ RSpec.describe Api::V1::MovesController do
             ).to eq(after_documents.pluck(:id))
           end
 
-          context 'when there are no attributes in the patch' do
+          context 'when there are no attributes in the params' do
             let(:move_params) do
               documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
               {
