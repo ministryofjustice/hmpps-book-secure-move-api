@@ -66,7 +66,7 @@ RSpec.describe MoveSerializer do
 
   describe 'person' do
     context 'with a person' do
-      let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
+      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS } }
       let(:expected_json) do
         [
           {
@@ -123,6 +123,61 @@ RSpec.describe MoveSerializer do
 
     it 'contains an included from and to location' do
       expect(result[:included]).to(include_json(expected_json))
+    end
+  end
+
+  describe 'allocations' do
+    context 'with an allocation' do
+      let(:adapter_options) {
+        { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
+      }
+      let(:move) { create(:move, :with_allocation) }
+      let(:expected_json) do
+        [
+          {
+            id: move.allocation.id,
+            type: 'allocations',
+            attributes: {
+              moves_count: move.allocation.moves_count,
+              created_at: move.allocation.created_at.iso8601,
+            },
+            relationships: {
+              from_location: {
+                data: {
+                  id: move.from_location.id,
+                  type: 'locations',
+                },
+              },
+              to_location: {
+                data: {
+                  id: move.to_location.id,
+                  type: 'locations',
+                },
+              },
+            },
+          },
+        ]
+      end
+
+      it 'contains an allocation relationship' do
+        expect(result_data[:relationships][:allocation]).to eq(data: { id: move.allocation.id, type: 'allocations' })
+      end
+
+      it 'contains an included allocation' do
+        expect(result[:included]).to eq(expected_json)
+      end
+    end
+
+    context 'without an allocation' do
+      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+
+      it 'contains an empty allocation' do
+        expect(result_data[:relationships][:allocation]).to eq(data: nil)
+      end
+
+      it 'does not contain an included allocation' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people])
+      end
     end
   end
 end

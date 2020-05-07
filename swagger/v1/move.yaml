@@ -134,3 +134,6 @@ Move:
           $ref: court_hearing_reference.yaml#/CourtHearingReference
           description: A court hearing generated when creating a move. May have corresponding
             hearing in Nomis backend (see nomis fields).
+        allocation:
+          $ref: allocation_reference.yaml#/AllocationReference
+          description: The allocation associated with this move
