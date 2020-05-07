@@ -8,14 +8,19 @@ module PersonalCareNeeds
 
     QUESTION_KEY_PREGNANT = 'pregnant'
     QUESTION_KEY_SPECIAL_VEHICLE = 'special_vehicle'
-    QUESTION_KEY_FALLBACK = 'special_vehicle'
+    QUESTION_KEY_FALLBACK = 'pregnant'
 
     DOMAIN_PHYSICAL = 'PHY'
     DOMAIN_DISABILITY = 'DISAB'
     DOMAIN_MATERNITY = 'MATSTAT'
     DOMAIN_UNKNOWN = nil
 
-    DEFAULT_PROBLEM_CODE_MAPPING = { domain: DOMAIN_UNKNOWN, question_key: QUESTION_KEY_FALLBACK }.freeze
+    DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION = {
+      DOMAIN_PHYSICAL   => 'Medical',
+      DOMAIN_DISABILITY => 'Disability',
+      DOMAIN_MATERNITY  => 'Maternity Status',
+    }
+    DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION.default = 'Unknown'
 
     PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING = {
       'DI'     => { domain: DOMAIN_PHYSICAL,   question_key: QUESTION_KEY_FALLBACK        }, # Diabetic,Medical
@@ -60,7 +65,8 @@ module PersonalCareNeeds
       'MR'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Maintaining Relationships,Social Care
       'AA'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Activities,Social Care
       'AS'     => { domain: DOMAIN_UNKNOWN,    question_key: QUESTION_KEY_FALLBACK        }, # Accessing Services,Social Care
-    }.freeze
+    }
+    PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING.default = { domain: DOMAIN_UNKNOWN, question_key: QUESTION_KEY_FALLBACK }
 
     def initialize(profile:, personal_care_needs:)
       @profile = profile
@@ -69,27 +75,19 @@ module PersonalCareNeeds
 
     def call
       assessment_answers = personal_care_needs.map do |personal_care_need|
-        mapping = PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING.fetch(
-          personal_care_need[:problem_code], DEFAULT_PROBLEM_CODE_MAPPING
-        )
+        mapping = PROBLEM_CODE_TO_QUESTION_KEY_AND_DOMAIN_MAPPING[personal_care_need[:problem_code]]
 
-        question = find_assessment_question(personal_care_need)
-        domain = mapping[:domain]
+        description = DOMAIN_TO_NOMIS_ALERT_TYPE_DESCRIPTION[mapping[:domain]]
+        question = AssessmentQuestion.find_by(key: mapping[:question_key])
 
-        Profile::AssessmentAnswer.from_nomis_personal_care_need(personal_care_need, question, 'Medical Needs')
+        Profile::AssessmentAnswer.from_nomis_personal_care_need(personal_care_need, question, description)
       end
 
       profile.merge_assessment_answers!(assessment_answers, ASSESSMENT_ANSWER_CATEGORY)
     end
 
-  private
+    private
 
     attr_reader :profile, :personal_care_needs
-
-    def find_assessment_question(_ques)
-      question_key = [:question_key]
-
-      AssessmentQuestion.find_by(key: question_key)
-    end
   end
 end
