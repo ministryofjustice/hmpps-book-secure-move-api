@@ -61,12 +61,10 @@ module Api
             from_location: Location.find(journey_params.dig(:relationships, :from_location, :data, :id)),
             to_location: Location.find(journey_params.dig(:relationships, :to_location, :data, :id)),
             )
-          .then { |attribs|
+          .then { |attribs| # NB: we avoid mutating the original params by calling delete() after merge()
             attribs.merge(
               client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
-              details: {
-                metadata: { vehicle: attribs.delete(:vehicle) },
-              },
+              details: { metadata: { vehicle: attribs.delete(:vehicle) } },
             )
           }
       end

@@ -64,10 +64,16 @@ private
   end
 
   def render_resource_not_found_error(exception)
+    # NB: cleaner error message without a long WHERE id=foo clause
+    detail = if exception.is_a?(ActiveRecord::RecordNotFound) && exception.id.present?
+               "Couldn't find #{exception.model} with '#{exception.primary_key}'=#{exception.id}"
+             else
+               exception.to_s
+             end
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: exception.to_s,
+        detail: detail,
       }] },
       status: :not_found,
     )

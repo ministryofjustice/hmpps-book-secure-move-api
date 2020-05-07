@@ -71,14 +71,14 @@ RSpec.describe Api::V1::JourneysController do
 
       context "when attempting to access another supplier's journey" do
         let(:journey) { create(:journey, move: move) } # another journey for a different supplier, same move
-        let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id} [WHERE \"journeys\".\"move_id\" = $1 AND \"journeys\".\"supplier_id\" = $2]" }
+        let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id}" }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
 
       context "when attempting to access another move's journey" do
         let(:journey) { create(:journey, supplier: supplier) } # another journey for a different move, same supplier
-        let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id} [WHERE \"journeys\".\"move_id\" = $1 AND \"journeys\".\"supplier_id\" = $2]" }
+        let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id}" }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
