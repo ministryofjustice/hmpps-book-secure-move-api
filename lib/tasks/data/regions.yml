@@ -1,0 +1,151 @@
+---
+  1:
+    name: South of England
+    locations:
+    - ASI
+    - BLI
+    - BNI
+    - CWI
+    - CLI
+    - DAI
+    - EYI
+    - EEI
+    - EXI
+    - FDI
+    - GNI
+    - GMI
+    - LWI
+    - LYI
+    - PDI
+    - RCI
+    - SPI
+    - EHI
+    - VEI
+    - WCI
+  2:
+    name: London and the East of England
+    locations:
+    - BFI
+    - BAI
+    - BXI
+    - BRI
+    - CDI
+    - HOI
+    - HPI
+    - HBI
+    - ISI
+    - LTI
+    - NWI
+    - PVI
+    - PBI
+    - TSI
+    - MTI
+    - WWI
+    - WII
+    - WLI
+    - WSI
+    - FMI
+  3:
+    name: Midlands and York and Humberside
+    locations:
+    - BMI
+    - BSI
+    - DNI
+    - DGI
+    - FSI
+    - HDI
+    - HEI
+    - HLI
+    - HMI
+    - LEI
+    - LCI
+    - LII
+    - LHI
+    - MDI
+    - NSI
+    - NMI
+    - OWI
+    - ONI
+    - RNI
+    - SFI
+    - SKI
+    - SHI
+    - SUI
+    - SNI
+    - WEI
+    - WTI
+  4:
+    name: North East and North West
+    locations:
+    - ACI
+    - BCI
+    - DTI
+    - DMI
+    - FBI
+    - HVI
+    - HII
+    - HHI
+    - KMI
+    - KVI
+    - LFI
+    - LPI
+    - NLI
+    - PNI
+    - RSI
+    - TCI
+    - WMI
+  5A:
+    name: Wales
+    locations:
+    - BWI
+    - CFI
+    - UPI
+    - SWI
+    - UKI
+    - PRI
+  5B:
+    name: Female Estate
+    locations:
+    - AGI
+    - BZI
+    - DWI
+    - DHI
+    - ESI
+    - EWI
+    - FHI
+    - LNI
+    - NHI
+    - PFI
+    - SDI
+    - STI
+  6:
+    name: FNO Prisons and IRCs
+    locations:
+    - HCI
+    - MSI
+    - MHI
+  7:
+    name: Long Term High Security Estate
+    locations:
+    - AYI
+    - FKI
+    - FNI
+    - GHI
+    - GTI
+    - IWI
+    - LLI
+    - LGI
+    - MRI
+    - RHI
+    - SLI
+    - WDI
+    - WRI
+    - WHI
+  8:
+    name: Youth Custody Service
+    locations:
+    - FMI
+    - PRI
+    - CKI
+    - WNI
+    - WYI
