@@ -9,10 +9,15 @@ module Allocations
     end
 
     def call
-      apply_filters(Allocation)
+      scope = apply_filters(Allocation)
+      apply_ordering(scope)
     end
 
   private
+
+    def apply_ordering(scope)
+      scope.order(date: :desc)
+    end
 
     def location_id_params(name)
       filter_params[name].split(',')

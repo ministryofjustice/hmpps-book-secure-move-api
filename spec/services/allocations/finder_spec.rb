@@ -20,8 +20,8 @@ RSpec.describe Allocations::Finder do
       let!(:allocation_5_days_future) { create(:allocation, date: allocation.date + 5.days) }
       let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s } }
 
-      it 'returns allocations matching date range' do
-        expect(allocation_finder.call).to match_array [allocation, allocation_5_days_future]
+      it 'returns allocations matching date range sorted by descending date' do
+        expect(allocation_finder.call).to eq [allocation_5_days_future, allocation]
       end
     end
 
