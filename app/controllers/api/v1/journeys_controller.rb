@@ -55,11 +55,15 @@ module Api
       end
 
       def validate_params
-        Journeys::ParamsValidator.new(params.require(:data)).validate!(action_name.to_sym)
+        Journeys::ParamsValidator.new(data_params).validate!(action_name.to_sym)
+      end
+
+      def data_params
+        @data_params ||= params.require(:data)
       end
 
       def new_journey_params
-        @new_journey_params ||= params.require(:data).permit(PERMITTED_NEW_JOURNEY_PARAMS).to_h
+        @new_journey_params ||= data_params.permit(PERMITTED_NEW_JOURNEY_PARAMS).to_h
       end
 
       def new_journey_attributes
@@ -67,7 +71,7 @@ module Api
         @new_journey_attributes ||= new_journey_params[:attributes].dup.tap do |attribs|
           attribs.merge!(
             move: move,
-            supplier: current_user&.owner, # NB: using the logged in account as the supplier
+            supplier: current_user.owner, # NB: using the logged in account as the supplier
             client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
             from_location: Location.find(new_journey_params.dig(:relationships, :from_location, :data, :id)),
             to_location: Location.find(new_journey_params.dig(:relationships, :to_location, :data, :id)),
@@ -76,20 +80,24 @@ module Api
       end
 
       def update_journey_params
-        @update_journey_params ||= params.require(:data).permit(PERMITTED_UPDATE_JOURNEY_PARAMS).to_h
+        @update_journey_params ||= data_params.permit(PERMITTED_UPDATE_JOURNEY_PARAMS).to_h
       end
 
       def update_journey_attributes
         # NB: we are calling dup() to avoid mutating the underlying params object
         @update_journey_attributes ||= update_journey_params[:attributes].dup.tap do |attribs|
-          # attribs[:details] = { metadata: { vehicle: attribs.delete(:vehicle) } } if attribs[:vehicle].present?
-
           attribs.delete(:timestamp) # throw the timestamp away for updates
         end
       end
 
       def create_event
-        puts "IN CREATE EVENT: #{journey} (#{action_name})"
+        # Logs the event for posterity and the immutable event log
+        Event.create!(
+          event_name: action_name,
+          entity: journey,
+          client_timestamp: Time.zone.parse(params.dig(:data, :attributes, :timestamp)),
+          details: { data: data_params, supplier_id: current_user.owner.id },
+        )
       end
     end
   end
