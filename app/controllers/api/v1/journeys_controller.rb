@@ -55,7 +55,7 @@ module Api
       end
 
       def validate_params
-        Journeys::ParamsValidator.new(params, action_name).validate!
+        Journeys::ParamsValidator.new(params.require(:data)).validate!(action_name.to_sym)
       end
 
       def new_journey_params
@@ -67,8 +67,7 @@ module Api
         @new_journey_attributes ||= new_journey_params[:attributes].dup.tap do |attribs|
           attribs.merge!(
             move: move,
-            supplier: current_user&.owner,
-            details: { metadata: { vehicle: attribs.delete(:vehicle) } },
+            supplier: current_user&.owner, # NB: using the logged in account as the supplier
             client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
             from_location: Location.find(new_journey_params.dig(:relationships, :from_location, :data, :id)),
             to_location: Location.find(new_journey_params.dig(:relationships, :to_location, :data, :id)),
@@ -83,7 +82,7 @@ module Api
       def update_journey_attributes
         # NB: we are calling dup() to avoid mutating the underlying params object
         @update_journey_attributes ||= update_journey_params[:attributes].dup.tap do |attribs|
-          attribs[:details] = { metadata: { vehicle: attribs.delete(:vehicle) } } if attribs[:vehicle].present?
+          # attribs[:details] = { metadata: { vehicle: attribs.delete(:vehicle) } } if attribs[:vehicle].present?
 
           attribs.delete(:timestamp) # throw the timestamp away for updates
         end

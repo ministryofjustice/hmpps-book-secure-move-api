@@ -23,26 +23,23 @@ RSpec.describe Api::V1::JourneysController do
         data: {
           "type": 'journeys',
           "attributes": {
-              "billable": billable,
-              "timestamp": timestamp,
-              "vehicle": {
-                  "id": '12345678ABC',
-                  "registration": 'AB12 CDE',
-              },
+            "billable": billable,
+            "timestamp": timestamp,
+            "vehicle": { "id": '12345678ABC', "registration": 'AB12 CDE' },
           },
           "relationships": {
-              "from_location": {
-                  "data": {
-                      "id": from_location_id,
-                      "type": 'locations',
-                  },
+            "from_location": {
+              "data": {
+                "id": from_location_id,
+                "type": 'locations',
               },
-              "to_location": {
-                  "data": {
-                      "id": to_location_id,
-                      "type": 'locations',
-                  },
+            },
+            "to_location": {
+              "data": {
+                "id": to_location_id,
+                "type": 'locations',
               },
+            },
           },
         },
       }
@@ -54,19 +51,15 @@ RSpec.describe Api::V1::JourneysController do
 
     context 'when successful' do
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
-      let(:journey) { Journey.first }
       let(:data) {
         {
-          "id": journey.id,
+          "id": Journey.first&.id,
           "type": 'journeys',
           "attributes": {
             "billable": false,
             "state": 'in_progress',
             "timestamp": '2020-05-04T09:00:00+01:00',
-            "vehicle": {
-              "id": '12345678ABC',
-              "registration": 'AB12 CDE',
-            },
+            "vehicle": { "id": '12345678ABC', "registration": 'AB12 CDE' },
           },
           "relationships": {
             "from_location": {
