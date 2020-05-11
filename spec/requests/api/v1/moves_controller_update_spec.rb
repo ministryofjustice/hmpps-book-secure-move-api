@@ -146,9 +146,9 @@ RSpec.describe Api::V1::MovesController do
           end
 
           it 'updates the moves documents' do
-            expect(move.reload.documents).to eq(before_documents)
+            expect(move.reload.documents).to match_array(before_documents)
             do_patch
-            expect(move.reload.documents).to eq(after_documents)
+            expect(move.reload.documents).to match_array(after_documents)
           end
 
           it 'does not affect other relationships' do
@@ -160,7 +160,7 @@ RSpec.describe Api::V1::MovesController do
 
             expect(
               response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
-            ).to eq(after_documents.pluck(:id))
+            ).to match_array(after_documents.pluck(:id))
           end
 
           context 'when there are no attributes in the params' do

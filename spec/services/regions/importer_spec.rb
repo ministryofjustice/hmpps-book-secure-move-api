@@ -39,7 +39,7 @@ RSpec.describe Regions::Importer do
     it 'links to correct locations' do
       importer.call
 
-      expect(region1.locations.map(&:nomis_agency_id)).to match %w(FOO BAR)
+      expect(region1.locations.map(&:nomis_agency_id)).to match_array %w(FOO BAR)
     end
 
     it 'does not link to missing locations' do
