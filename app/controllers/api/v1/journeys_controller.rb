@@ -48,10 +48,20 @@ module Api
 
       def journey
         @journey ||= if action_name == 'create'
-                       Journey.new(new_journey_attributes)
+                       new_journey
                      else
-                       journeys.find(params.require(:id))
+                       find_journey
                      end
+      end
+
+      def new_journey
+        Journey.new(new_journey_attributes)
+      end
+
+      def find_journey
+        move.journeys.find(params.require(:id)).tap do |journey|
+          raise CanCan::AccessDenied.new('Not authorized', :manage, Journey) unless current_ability.can?(:manage, journey)
+        end
       end
 
       def validate_params
@@ -73,10 +83,20 @@ module Api
             move: move,
             supplier: current_user.owner, # NB: using the logged in account as the supplier
             client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
-            from_location: Location.find(new_journey_params.dig(:relationships, :from_location, :data, :id)),
-            to_location: Location.find(new_journey_params.dig(:relationships, :to_location, :data, :id)),
+            from_location: find_location(new_journey_params.dig(:relationships, :from_location, :data, :id)),
+            to_location: find_location(new_journey_params.dig(:relationships, :to_location, :data, :id)),
           )
         end
+      end
+
+      def find_location(location_id)
+        # Finds the referenced location or throws an ActiveModel::ValidationError (which will render as 422 Unprocessable Entity)
+        location = Location.find_or_initialize_by(id: location_id)
+        unless location.persisted?
+          location.errors.add(:location, "reference was not found id=#{location_id}")
+          raise ActiveModel::ValidationError.new(location)
+        end
+        location
       end
 
       def update_journey_params

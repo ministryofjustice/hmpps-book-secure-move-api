@@ -128,8 +128,8 @@ RSpec.describe Api::V1::JourneysController do
       context 'with an invalid timestamp' do
         let(:timestamp) { 'foo-bar' }
 
-        it_behaves_like 'an endpoint that responds with error 400' do
-          let(:errors_400) {
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) {
             [{ 'title' => 'Invalid timestamp',
                'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }]
           }
@@ -139,8 +139,8 @@ RSpec.describe Api::V1::JourneysController do
       context 'with an invalid billable' do
         let(:billable) { 'foo-bar' }
 
-        it_behaves_like 'an endpoint that responds with error 400' do
-          let(:errors_400) {
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) {
             [{ 'title' => 'Invalid billable',
                'detail' => 'Validation failed: Billable is not included in the list' }]
           }
@@ -154,14 +154,14 @@ RSpec.describe Api::V1::JourneysController do
         it_behaves_like 'an endpoint that responds with error 401'
       end
 
-      context 'with a missing move_id' do
+      context 'when the move_id is not found' do
         let(:move_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
 
-      context 'with a missing journey_id' do
+      context 'when the journey_id is not found' do
         let(:journey_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find Journey with 'id'=foo-bar" }
 

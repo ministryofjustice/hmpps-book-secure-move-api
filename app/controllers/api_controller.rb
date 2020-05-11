@@ -152,10 +152,10 @@ private
   def render_validation_error(exception)
     render(
       json: { errors: [{
-                         title: "Invalid #{exception.exception.model.errors.keys.join(', ')}",
+                         title: "Invalid #{exception.model.errors.keys.join(', ')}",
                          detail: exception.to_s,
                      }] },
-      status: :bad_request,
+      status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
         )
   end
 end

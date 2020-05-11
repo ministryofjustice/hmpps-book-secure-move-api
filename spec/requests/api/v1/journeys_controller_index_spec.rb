@@ -23,9 +23,10 @@ RSpec.describe Api::V1::JourneysController do
     let(:intermediate_journeys_count) { 1 }
     let(:page) { 1 }
     let(:per_page) { 20 }
+    let(:url) { "/api/v1/moves/#{move.id}/journeys" }
 
     before do
-      get "/api/v1/moves/#{move.id}/journeys?page=#{page}&per_page=#{per_page}", headers: headers, as: :json
+      get url, headers: headers, as: :json
     end
 
     context 'when successful' do
@@ -44,6 +45,7 @@ RSpec.describe Api::V1::JourneysController do
       end
 
       describe 'paginating results' do
+        let(:url) { "/api/v1/moves/#{move.id}/journeys?page=#{page}&per_page=#{per_page}" }
         let(:intermediate_journeys_count) { 19 }
 
         describe 'page size' do

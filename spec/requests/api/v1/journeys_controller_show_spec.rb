@@ -71,9 +71,9 @@ RSpec.describe Api::V1::JourneysController do
 
       context "when attempting to access another supplier's journey" do
         let(:journey) { create(:journey, move: move) } # another journey for a different supplier, same move
-        let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id}" }
+        let(:detail_401) { 'Not authorized' }
 
-        it_behaves_like 'an endpoint that responds with error 404'
+        it_behaves_like 'an endpoint that responds with error 401'
       end
 
       context "when attempting to access another move's journey" do
