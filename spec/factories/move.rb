@@ -36,6 +36,18 @@ FactoryBot.define do
     trait :with_transfer_reason do
       association :prison_transfer_reason
     end
+
+    trait :with_allocation do
+      after(:create) do |move|
+        create(
+          :allocation,
+          from_location: move.from_location,
+          to_location: move.to_location,
+          date: move.date,
+          moves: [move],
+        )
+      end
+    end
   end
 
   factory :from_court_to_prison, class: Move do

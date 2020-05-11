@@ -6,7 +6,7 @@ module PersonalCareNeeds
 
     QUESTION_KEY_PREGNANT = 'pregnant'
     QUESTION_KEY_SPECIAL_VEHICLE = 'special_vehicle'
-    QUESTION_KEY_FALLBACK = 'pregnant'
+    QUESTION_KEY_FALLBACK = 'health_issue'
 
     DOMAIN_PHYSICAL = 'PHY'
     DOMAIN_DISABILITY = 'DISAB'
