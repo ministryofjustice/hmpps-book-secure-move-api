@@ -116,3 +116,9 @@ Allocation:
         to_location:
           $ref: location_reference.yaml#/LocationReference
           description: The location (prison) that the people are being moved to
+        moves:
+          $ref: move_reference.yaml#/MoveReference
+          description: The moves associated with this Allocation
+        person:
+          $ref: person_reference.yaml#/PersonReference
+          description: The people being moved
