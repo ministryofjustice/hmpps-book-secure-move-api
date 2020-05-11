@@ -162,6 +162,34 @@ RSpec.describe Api::V1::MovesController do
               response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
             ).to match_array(after_documents.pluck(:id))
           end
+
+          context 'when there are no attributes in the params' do
+            let(:move_params) do
+              documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
+              {
+                type: 'moves',
+                relationships: { documents: { data: documents } },
+              }
+            end
+
+            it 'updates the moves documents' do
+              expect(move.reload.documents).to match_array(before_documents)
+              do_patch
+              expect(move.reload.documents).to match_array(after_documents)
+            end
+
+            it 'does not affect other relationships' do
+              expect { do_patch }.not_to change { move.reload.from_location }
+            end
+
+            it 'returns the updated documents in the response body' do
+              do_patch
+
+              expect(
+                response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
+              ).to match_array(after_documents.pluck(:id))
+            end
+          end
         end
 
         context 'when cancelling a move' do
