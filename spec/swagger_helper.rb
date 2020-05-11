@@ -78,6 +78,9 @@ RSpec.configure do |config|
           Allocation: {
             "$ref": 'allocation.yaml#/Allocation',
           },
+          AllocationReference: {
+            "$ref": 'allocation_reference.yaml#/AllocationReference',
+          },
           AllocationComplexCase: {
             "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
           },

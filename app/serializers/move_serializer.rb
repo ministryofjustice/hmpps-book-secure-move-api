@@ -10,13 +10,19 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
   has_many :documents, serializer: DocumentSerializer
   has_many :court_hearings, serializer: CourtHearingSerializer
+  belongs_to :allocation, serializer: AllocationSerializer
 
   INCLUDED_ATTRIBUTES = {
-    person: %i[first_names last_name date_of_birth assessment_answers indentifiers ethnicity gender reason_comment],
-    from_location: %i[location_type description],
-    to_location: %i[location_type description],
-    documents: %i[url filename filesize content_type],
-    prison_transfer_reason: %i[key title],
+    person: %i[ethnicity gender],
+    from_location: [],
+    to_location: [],
+    documents: [],
+    prison_transfer_reason: [],
     court_hearings: [],
+    allocation: [],
+  }.freeze
+
+  INCLUDED_FIELDS = {
+    allocation: %i[to_location from_location moves_count created_at],
   }.freeze
 end

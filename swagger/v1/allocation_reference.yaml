@@ -1,0 +1,25 @@
+AllocationReference:
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      oneOf:
+      - type: object
+      - type: 'null'
+      required:
+      - id
+      - type
+      properties:
+        type:
+          type: string
+          example: allocations
+          enum:
+          - allocations
+          description: The type of this object - always `allocations`
+        id:
+          type: string
+          format: uuid
+          example: 3561f372-9f1c-4e13-997e-b11e1647cce1
+          description: The unique identifier (UUID) of the object that this reference
+            points to

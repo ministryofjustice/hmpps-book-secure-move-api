@@ -8,7 +8,7 @@ module Api
         if moves_params.valid?
           moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
           # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings)
+          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS
         else
           render json: { error: moves_params.errors }, status: :bad_request
         end
@@ -101,7 +101,7 @@ module Api
       end
 
       def render_move(move, status)
-        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES
+        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def move
