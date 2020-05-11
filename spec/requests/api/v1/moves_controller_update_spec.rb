@@ -160,7 +160,7 @@ RSpec.describe Api::V1::MovesController do
 
             expect(
               response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
-            ).to eq(after_documents.pluck(:id))
+            ).to match_array(after_documents.pluck(:id))
           end
         end
 
