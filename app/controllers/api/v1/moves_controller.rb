@@ -93,7 +93,7 @@ module Api
       def patch_move_attributes
         document_ids = (patch_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
 
-        attributes = patch_move_params[:attributes]
+        attributes = patch_move_params.fetch(:attributes, {})
 
         return attributes if document_ids.blank?
 
