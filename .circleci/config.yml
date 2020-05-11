@@ -174,8 +174,12 @@ jobs:
       - prepare_tests
 
       - run:
+          name: rubocop
+          command: bundle exec rubocop
+
+      - run:
           name: run tests
-          command: COVERAGE=1 bundle exec rake
+          command: COVERAGE=1 bundle exec rspec
 
       - *notify_slack
 

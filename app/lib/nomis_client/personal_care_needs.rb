@@ -2,7 +2,7 @@
 
 module NomisClient
   class PersonalCareNeeds < NomisClient::Base
-    PERSONAL_CARE_TYPES = 'MATSTAT'
+    PERSONAL_CARE_TYPES = 'MATSTAT,PHY,DISAB'
 
     class << self
       def get(nomis_offender_numbers)
