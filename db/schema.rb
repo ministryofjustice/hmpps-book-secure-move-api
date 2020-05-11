@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_105933) do
+ActiveRecord::Schema.define(version: 2020_05_11_150020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -107,11 +107,11 @@ ActiveRecord::Schema.define(version: 2020_05_06_105933) do
     t.datetime "client_timestamp", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "entity_id", null: false
-    t.string "entity_type", null: false
+    t.uuid "eventable_id", null: false
+    t.string "eventable_type", null: false
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
-    t.index ["entity_id", "entity_type", "event_name"], name: "index_events_on_entity_id_and_entity_type_and_event_name"
-    t.index ["entity_id", "entity_type"], name: "index_events_on_entity_id_and_entity_type"
+    t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
+    t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 2020_05_06_105933) do
     t.uuid "to_location_id", null: false
     t.boolean "billable", default: false, null: false
     t.string "state", null: false
-    t.jsonb "details"
+    t.jsonb "vehicle"
     t.datetime "client_timestamp", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

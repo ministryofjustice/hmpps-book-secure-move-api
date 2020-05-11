@@ -23,7 +23,7 @@ class Journey < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
 
-  has_many :events, as: :entity, dependent: :destroy # NB: polymorphic association
+  has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   enum states: {
     in_progress: 'in_progress',
@@ -45,25 +45,7 @@ class Journey < ApplicationRecord
 
   after_initialize :initialize_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
 
-  def vehicle
-    get_metadata('vehicle')
-  end
-
-  def vehicle=(value)
-    set_metadata('vehicle', value)
-  end
-
 private
-
-  def get_metadata(key)
-    self.details.dig('metadata', key) if self.details.present?
-  end
-
-  def set_metadata(key, value)
-    self.details ||= {}
-    self.details['metadata'] ||= {}
-    self.details['metadata'][key] = value
-  end
 
   def state_machine
     @state_machine ||= JourneyStateMachine.new(self)

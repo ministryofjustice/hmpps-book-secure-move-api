@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  it { is_expected.to belong_to(:entity) }
-  it { is_expected.to validate_presence_of(:entity) }
+  it { is_expected.to belong_to(:eventable) }
+  it { is_expected.to validate_presence_of(:eventable) }
   it { is_expected.to validate_presence_of(:event_name) }
   it { is_expected.to validate_presence_of(:client_timestamp) }
   it { expect(described_class).to respond_to(:default_order) }

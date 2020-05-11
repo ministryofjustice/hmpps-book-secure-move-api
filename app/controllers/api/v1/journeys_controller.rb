@@ -94,7 +94,7 @@ module Api
         # Logs the event for posterity and the immutable event log
         Event.create!(
           event_name: action_name,
-          entity: journey,
+          eventable: journey,
           client_timestamp: Time.zone.parse(params.dig(:data, :attributes, :timestamp)),
           details: { data: data_params, supplier_id: current_user.owner.id },
         )

@@ -38,7 +38,7 @@ module Api
         if success
           render json: Image.new(person.id, url_for(person.image))
         else
-          render_resource_not_found_error(Exception.new('Image not found'))
+          raise ActiveRecord::RecordNotFound.new('Image not found')
         end
       end
 
