@@ -21,6 +21,9 @@
     },
     "SERVE_API_DOCS": {
       "value": "true"
+    },
+    "HEROKU_DISABLE_AUTH": {
+      "value": "true"
     }
   },
   "buildpacks": [
