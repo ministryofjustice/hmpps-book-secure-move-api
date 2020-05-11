@@ -6,8 +6,9 @@ module Api
 
         if should_save_in_nomis?
           CourtHearings::CreateInNomis.call(move, move.court_hearings)
+          Rails.logger.info("Saved to nomis #{court_hearing.attributes.to_json}")
         else
-          Raven.capture_message("CourtHearingsController: Move has not been specified for the court_hearing.id: #{court_hearing.id}", level: 'warning')
+          Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
         end
 
         render json: court_hearing, status: :created
@@ -41,9 +42,9 @@ module Api
       end
 
       def should_save_in_nomis?
-        do_not_save_to_nomis = params['do_not_save_to_nomis'] == 'true'
+        save_to_nomis = params.fetch('do_not_save_to_nomis', 'false') != 'true'
 
-        move && !do_not_save_to_nomis
+        move && save_to_nomis
       end
     end
   end
