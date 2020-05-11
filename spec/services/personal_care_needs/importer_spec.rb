@@ -25,9 +25,9 @@ RSpec.describe PersonalCareNeeds::Importer do
       },
     ]
   end
-  let(:problem_code) { 'ACCU9' }
+  let(:problem_code) { 'BRK' }
 
-  let!(:default_question) { create(:assessment_question, key: :pregnant, title: 'Pregnant', category: 'health') }
+  let!(:default_question) { create(:assessment_question, :care_needs_fallback) }
 
   let!(:assessment_question) { create(:assessment_question, key: :special_vehicle, title: 'Requires special vehicle', category: 'health') }
 
@@ -44,7 +44,7 @@ RSpec.describe PersonalCareNeeds::Importer do
 
       expect(profile.assessment_answers.first.as_json).to include(
         category: default_question.category,
-        key: default_question.key,
+        key: 'health_issue',
         nomis_alert_code: problem_code,
         nomis_alert_type_description: 'Unknown',
       )
