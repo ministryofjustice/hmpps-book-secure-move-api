@@ -73,17 +73,16 @@ module Api
       end
 
       def new_journey_params
-        @new_journey_params ||= data_params.permit(PERMITTED_NEW_JOURNEY_PARAMS).to_h
+        @new_journey_params ||= data_params.permit(PERMITTED_NEW_JOURNEY_PARAMS)
       end
 
       def new_journey_attributes
-        # NB: we are calling dup() to avoid mutating the underlying params object
-        @new_journey_attributes ||= new_journey_params[:attributes].dup.tap do |attribs|
+        @new_journey_attributes ||= new_journey_params.to_h[:attributes].tap do |attribs|
           attribs.merge!(
             move: move,
             client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
-            from_location: find_location(new_journey_params.dig(:relationships, :from_location, :data, :id)),
-            to_location: find_location(new_journey_params.dig(:relationships, :to_location, :data, :id)),
+            from_location: find_location(new_journey_params.require(:relationships).require(:from_location).require(:data).require(:id)),
+            to_location: find_location(new_journey_params.require(:relationships).require(:to_location).require(:data).require(:id)),
             supplier: supplier,
           )
         end
@@ -115,12 +114,11 @@ module Api
       end
 
       def update_journey_params
-        @update_journey_params ||= data_params.permit(PERMITTED_UPDATE_JOURNEY_PARAMS).to_h
+        @update_journey_params ||= data_params.permit(PERMITTED_UPDATE_JOURNEY_PARAMS)
       end
 
       def update_journey_attributes
-        # NB: we are calling dup() to avoid mutating the underlying params object
-        @update_journey_attributes ||= update_journey_params[:attributes].dup.tap do |attribs|
+        @update_journey_attributes ||= update_journey_params.to_h[:attributes].tap do |attribs|
           attribs.delete(:timestamp) # throw the timestamp away for updates
         end
       end

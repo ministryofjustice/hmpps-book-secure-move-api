@@ -68,6 +68,43 @@ RSpec.describe Api::V1::JourneysController do
         it 'does not update the timestamp' do
           expect(journey.client_timestamp).to eql Time.zone.parse('2020-05-04T08:00:00Z')
         end
+
+        context 'when attempting to update the from_location or to_location' do
+          let(:journey_params) {
+            {
+              data: {
+                "type": 'journeys',
+                "attributes": {
+                  "billable": billable,
+                  "timestamp": timestamp,
+                  "vehicle": { "id": '9876', "registration": 'XYZ' },
+                },
+                "relationships": {
+                  "from_location": {
+                    "data": {
+                      "id": to_location_id, # reversing from_location and to_location
+                      "type": 'locations',
+                    },
+                  },
+                  "to_location": {
+                    "data": {
+                      "id": from_location_id, # reversing from_location and to_location
+                      "type": 'locations',
+                    },
+                  },
+                },
+              },
+            }
+          }
+
+          it 'does not update from_location' do
+            expect(journey.from_location.id).to eql(from_location_id)
+          end
+
+          it 'does not update to_location' do
+            expect(journey.to_location.id).to eql(to_location_id)
+          end
+        end
       end
 
       context 'when only updating billable' do
