@@ -23,7 +23,8 @@
       "value": "true"
     },
     "HEROKU_DISABLE_AUTH": {
-      "value": "true"
+      "description": "Disable authentication on Heroku review apps if true",
+      "required": "true"
     }
   },
   "buildpacks": [
