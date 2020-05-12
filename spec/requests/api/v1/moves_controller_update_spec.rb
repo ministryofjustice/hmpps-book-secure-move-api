@@ -190,6 +190,27 @@ RSpec.describe Api::V1::MovesController do
               ).to match_array(after_documents.pluck(:id))
             end
           end
+
+          context 'when documents is an empty array' do
+            let(:after_documents) { [] }
+
+            let(:move_params) do
+              {
+                type: 'moves',
+                relationships: { documents: { data: after_documents } },
+              }
+            end
+
+            it 'removes the documents from the move' do
+              expect { do_patch }
+                .to change { move.reload.documents }
+                .from(before_documents)
+                .to([])
+            end
+
+            it 'does not actually delete any of the documents' do
+            end
+          end
         end
 
         context 'when cancelling a move' do
