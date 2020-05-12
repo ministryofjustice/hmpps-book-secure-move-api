@@ -226,8 +226,7 @@ RSpec.describe Api::V1::MovesController do
 
     context 'when supplier doesn\'t have rights to write the resource' do
       let(:move_id) { birmingham_move.id }
-
-      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id} [WHERE (from_location_id IN ('#{pentonville.id}'))]" }
+      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id}" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
@@ -266,8 +265,7 @@ RSpec.describe Api::V1::MovesController do
 
     context 'when supplier doesn\'t have rights to write the resource' do
       let(:move_id) { birmingham_move.id }
-
-      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id} [WHERE (from_location_id IN ('#{pentonville.id}'))]" }
+      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id}" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

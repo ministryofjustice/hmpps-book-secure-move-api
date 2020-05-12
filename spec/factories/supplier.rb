@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :supplier do
-    name { 'Test Supplier 1' }
+    sequence(:name) { |n| "Test Supplier #{n}" }
   end
 end

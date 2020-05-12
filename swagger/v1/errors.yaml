@@ -56,10 +56,8 @@ UnsupportedMediaType:
 UnprocessableEntity:
   type: object
   required:
-  - code
-  - detail
-  - source
   - title
+  - detail
   properties:
     title:
       type: string
