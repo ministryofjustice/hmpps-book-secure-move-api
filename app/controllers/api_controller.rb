@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  before_action :doorkeeper_authorize!
+  before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
@@ -21,10 +21,20 @@ class ApiController < ApplicationController
   end
 
   def user_for_paper_trail
+    return unless authentication_enabled?
+
     current_user.owner_id
   end
 
 private
+
+  def authentication_enabled?
+    return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
+
+    return false if Rails.env.production? && ENV['HEROKU_DISABLE_AUTH'] =~ /true/i
+
+    true
+  end
 
   def doorkeeper_unauthorized_render_options(*)
     {
@@ -64,10 +74,16 @@ private
   end
 
   def render_resource_not_found_error(exception)
+    # NB: exception is a ActiveRecord::RecordNotFound, this renders a cleaner error message without a long WHERE id=foo clause
+    detail = if exception.id.present?
+               "Couldn't find #{exception.model} with '#{exception.primary_key}'=#{exception.id}"
+             else
+               exception.to_s
+             end
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: exception.to_s,
+        detail: detail,
       }] },
       status: :not_found,
     )
@@ -146,10 +162,10 @@ private
   def render_validation_error(exception)
     render(
       json: { errors: [{
-                         title: "Invalid #{exception.exception.model.errors.keys.join(', ')}",
+                         title: "Invalid #{exception.model.errors.keys.join(', ')}",
                          detail: exception.to_s,
                      }] },
-      status: :bad_request,
+      status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
         )
   end
 end

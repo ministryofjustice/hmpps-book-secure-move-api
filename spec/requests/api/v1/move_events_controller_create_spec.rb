@@ -17,23 +17,25 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:move) { create(:move) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location) }
-    let(:data) do
+    let(:move_event_params) do
       {
-        type: 'events',
-        attributes: {
-          timestamp: '2020-04-23T18:25:43.511Z',
-          event_name: 'redirect',
-          notes: 'requested by PMU',
-        },
-        relationships: {
-          to_location: { data: { type: 'locations', id: new_location.id } },
+        data: {
+          type: 'events',
+          attributes: {
+            timestamp: '2020-04-23T18:25:43.511Z',
+            event_name: 'redirect',
+            notes: 'requested by PMU',
+          },
+          relationships: {
+            to_location: { data: { type: 'locations', id: new_location.id } },
+          },
         },
       }
     end
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/events", params: { data: data }, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/events", params: move_event_params, headers: headers, as: :json
     end
 
     describe 'Redirect event' do
@@ -53,13 +55,13 @@ RSpec.describe Api::V1::MoveEventsController do
     end
 
     context 'with a bad request' do
-      let(:data) { nil }
+      let(:move_event_params) { nil }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+    context 'when not authorized' do
+      let(:access_token) { 'foo-bar' }
       let(:detail_401) { 'Token expired or invalid' }
 
       it_behaves_like 'an endpoint that responds with error 401'

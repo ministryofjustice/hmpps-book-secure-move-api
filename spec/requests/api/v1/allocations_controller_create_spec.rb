@@ -7,7 +7,10 @@ RSpec.describe Api::V1::AllocationsController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::INCLUDED_ATTRIBUTES))
+    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::INCLUDED_ATTRIBUTES))
+    resource['data']['relationships']['moves']['data'] = UnorderedArray(*resource.dig('data', 'relationships', 'moves', 'data'))
+    resource['included'] = UnorderedArray(*resource['included'])
+    resource
   end
 
   describe 'POST /allocations' do
@@ -110,7 +113,7 @@ RSpec.describe Api::V1::AllocationsController do
       end
 
       it 'returns the correct data' do
-        expect(response_json).to eq resource_to_json
+        expect(response_json).to include_json resource_to_json
       end
 
       it 'sets the correct number of complex_cases' do

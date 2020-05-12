@@ -99,4 +99,34 @@ RSpec.describe AllocationSerializer do
       expect(result[:included]).to(include_json(expected_json))
     end
   end
+
+  describe 'moves' do
+    context 'with a move' do
+      let(:adapter_options) {
+        { include: AllocationSerializer::INCLUDED_ATTRIBUTES }
+      }
+      let(:allocation) { create(:allocation, :with_moves) }
+      let(:move) { allocation.moves.first }
+
+      it 'contains a moves relationship' do
+        expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
+      end
+
+      it 'contains an included move and person' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[people moves locations locations])
+      end
+    end
+
+    context 'without a move' do
+      let(:adapter_options) { { include: AllocationSerializer::INCLUDED_ATTRIBUTES } }
+
+      it 'contains empty moves' do
+        expect(result_data[:relationships][:moves][:data]).to be_empty
+      end
+
+      it 'does not contain an included allocation' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
+      end
+    end
+  end
 end

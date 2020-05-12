@@ -5,6 +5,11 @@ class AllocationSerializer < ActiveModel::Serializer
 
   has_one :from_location
   has_one :to_location
+  has_many :moves
 
-  INCLUDED_ATTRIBUTES = %i[from_location to_location].freeze
+  INCLUDED_ATTRIBUTES = {
+    from_location: [],
+    to_location: [],
+    moves: %i[person],
+  }.freeze
 end

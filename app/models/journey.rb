@@ -23,6 +23,8 @@ class Journey < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
 
+  has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
+
   enum states: {
     in_progress: 'in_progress',
     completed: 'completed',

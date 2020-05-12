@@ -1,4 +1,4 @@
-MoveReference:
+AllocationReference:
   type: object
   required:
   - data
@@ -7,17 +7,16 @@ MoveReference:
       oneOf:
       - type: object
       - type: 'null'
-      - type: array
       required:
       - id
       - type
       properties:
         type:
           type: string
-          example: moves
+          example: allocations
           enum:
-          - moves
-          description: The type of this object - always `moves`
+          - allocations
+          description: The type of this object - always `allocations`
         id:
           type: string
           format: uuid
