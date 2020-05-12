@@ -205,6 +205,21 @@ RSpec.describe Api::V1::MovesController do
               expect(move.reload.documents).to match_array([])
             end
           end
+
+          context 'when documents is nil' do
+            let(:move_params) do
+              {
+                type: 'moves',
+                relationships: { documents: { data: nil } },
+              }
+            end
+
+            it 'removes the documents from the move' do
+              expect(move.reload.documents).to match_array(before_documents)
+              do_patch
+              expect(move.reload.documents).to match_array(before_documents)
+            end
+          end
         end
 
         context 'when cancelling a move' do
