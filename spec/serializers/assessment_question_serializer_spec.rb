@@ -7,7 +7,7 @@ RSpec.describe AssessmentQuestionSerializer do
 
   let(:disabled_at) { Time.new(2019, 1, 1) }
   let(:assessment_question) { create :assessment_question, disabled_at: disabled_at }
-  let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
+  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'assessment_questions'
@@ -30,6 +30,6 @@ RSpec.describe AssessmentQuestionSerializer do
   end
 
   it 'contains a disabled_at attribute' do
-    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
+    expect(result[:data][:attributes][:disabled_at]).to eql disabled_at
   end
 end
