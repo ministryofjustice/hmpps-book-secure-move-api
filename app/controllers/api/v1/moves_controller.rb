@@ -32,6 +32,7 @@ module Api
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
         # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
+
         move.assign_attributes(patch_move_attributes)
         status_changed = move.status_changed?
         move.save!
@@ -90,13 +91,15 @@ module Api
         )
       end
 
+      # 1. Frontend specifies empty docs: update documents to be empty
+      # 2. Frontend does not include document relationship: don't update documents at all
       def patch_move_attributes
-        document_ids = (patch_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
-
         attributes = patch_move_params.fetch(:attributes, {})
+        document_ids = patch_move_params.dig(:relationships, :documents, :data)
 
-        return attributes if document_ids.blank?
+        return attributes if document_ids.nil?
 
+        document_ids = document_ids.map { |doc| doc[:id] }
         attributes.merge(documents: Document.where(id: document_ids))
       end
 
