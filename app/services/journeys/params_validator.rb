@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-module MoveEvents
+module Journeys
   class ParamsValidator
     include ActiveModel::Validations
 
-    attr_reader :event_name, :timestamp, :notes
+    attr_reader :timestamp, :billable
 
-    validates :event_name, inclusion: %w[redirect], presence: true
+    validates :billable, inclusion: { in: [true, false] }, allow_nil: true, on: :update # NB: billable is optional on update
+    validates :billable, inclusion: { in: [true, false] }, on: :create # NB: billable is required on create
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
@@ -14,9 +15,8 @@ module MoveEvents
     end
 
     def initialize(params)
-      @event_name = params.dig(:attributes, :event_name)
       @timestamp = params.dig(:attributes, :timestamp)
-      @notes = params.dig(:attributes, :notes)
+      @billable = params.dig(:attributes, :billable)
     end
   end
 end

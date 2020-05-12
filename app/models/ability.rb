@@ -11,10 +11,12 @@ class Ability
       can :manage, Move, Move.served_by(application.owner) do |move|
         move.from_location.suppliers.include?(application.owner)
       end
+      can :manage, Journey, supplier_id: application.owner_id
     else
-      # momentarily give all permissions to not break compatibility with
+      # temporarily give all permissions to non-supplier accounts so as not to break compatibility with
       # the frontend application
       can :manage, Move
+      can :manage, Journey
     end
   end
 end

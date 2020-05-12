@@ -76,7 +76,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
         run_test!
       end
 
-      response '400', 'bad request' do
+      response '422', 'unprocessable entity' do
         let(:person_id) { person.id }
         let(:person) { create(:profile).person } # since it is not nomis_synced latest_nomis_booking_id is nil
 

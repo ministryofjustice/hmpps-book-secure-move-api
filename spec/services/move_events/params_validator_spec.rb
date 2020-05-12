@@ -28,7 +28,7 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
 
     context 'when missing' do
-      let(:params) { { attributes: { timestamp: timestamp, notes: notes } } }
+      before { params[:attributes].delete(:event_name) }
 
       it { is_expected.not_to be_valid }
     end
@@ -48,7 +48,7 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
 
     context 'when missing' do
-      let(:params) { { attributes: { event_name: event_name, notes: notes } } }
+      before { params[:attributes].delete(:timestamp) }
 
       it { is_expected.not_to be_valid }
     end
