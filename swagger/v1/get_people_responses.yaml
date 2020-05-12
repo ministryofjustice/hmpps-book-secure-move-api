@@ -11,15 +11,18 @@
       type: array
       items:
         anyOf:
+        - type: array
+          items:
+            $ref: profile.yaml#/Profile
         - $ref: gender.yaml#/Gender
         - $ref: ethnicity.yaml#/Ethnicity
     links:
-      $ref: pagination_links.yaml#/PaginationLinks
+      $ref: people_pagination_links.yaml#/PeoplePaginationLinks
     meta:
       type: object
       properties:
         pagination:
-          $ref: pagination.yaml#/Pagination
+          $ref: people_pagination.yaml#/PeoplePagination
 '415':
   type: object
   required:
@@ -47,3 +50,12 @@
       type: array
       items:
         $ref: errors.yaml#/NotAuthorisedError
+'503':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/Forbidden

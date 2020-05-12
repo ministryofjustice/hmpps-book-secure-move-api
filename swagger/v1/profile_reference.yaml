@@ -1,24 +1,42 @@
 ProfileReference:
   type: object
   required:
+<<<<<<< HEAD
     - data
+=======
+  - data
+>>>>>>> P4-1235 New Swagger for person and profile
   properties:
     data:
       type: object
       required:
+<<<<<<< HEAD
         - type
         - id
+=======
+      - id
+      - type
+>>>>>>> P4-1235 New Swagger for person and profile
       properties:
         type:
           type: string
           example: profiles
           enum:
+<<<<<<< HEAD
             - profiles
+=======
+          - profiles
+>>>>>>> P4-1235 New Swagger for person and profile
           description: The type of this object - always `profiles`
         id:
           type: string
           format: uuid
+<<<<<<< HEAD
           example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
           description:
             The unique identifier (UUID) of the object that this reference
+=======
+          example: 3561f372-9f1c-4e13-997e-b11e1647cce1
+          description: The unique identifier (UUID) of the object that this reference
+>>>>>>> P4-1235 New Swagger for person and profile
             points to

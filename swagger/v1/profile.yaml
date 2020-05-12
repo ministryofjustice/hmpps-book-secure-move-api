@@ -1,9 +1,9 @@
 Profile:
   type: object
   required:
-    - id
-    - type
-    - attributes
+  - id
+  - type
+  - attributes
   properties:
     id:
       type: string
@@ -14,13 +14,13 @@ Profile:
       type: string
       example: profiles
       enum:
-        - profiles
+      - profiles
       description: The type of this object - always `profiles`
     attributes:
       type: object
       required:
-        - first_names
-        - last_name
+      - first_names
+      - last_name
       properties:
         first_names:
           type: string
@@ -33,7 +33,7 @@ Profile:
         date_of_birth:
           type: string
           format: date
-          example: "1965-10-24"
+          example: '1965-10-24'
           description: Profile's date of birth in ISO 8601 format
         image_url:
           type: string
@@ -59,16 +59,36 @@ Profile:
         gender_additional_information:
           oneOf:
             - type: string
-            - type: "null"
+            - type: 'null'
           description:
             Supporting information for detainees of certain genders to
             capture any relevant transport information
     relationships:
       type: object
       properties:
+        documents:
+          type: array
+          items:
+            $ref: document_reference.yaml#/DocumentReference
+          description: Profile's documents
+        court_hearings:
+          type: array
+          items:
+            $ref: court_hearing_reference.yaml#/CourtHearingReference
+          description: Profile's court hearings, since they were last requested
         gender:
           $ref: gender_reference.yaml#/GenderReference
           description: Profile's gender
         ethnicity:
           $ref: ethnicity_reference.yaml#/EthnicityReference
           description: Profile's ethnicity
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the profile was created or last updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the profile was created
+          readOnly: true

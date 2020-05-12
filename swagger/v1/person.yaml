@@ -22,18 +22,36 @@ Person:
       - first_names
       - last_name
       properties:
+        prison_number:
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: A5075DY
+          description: Prison Number, also known as Offender Number
+        police_national_computer_number:
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: 12/12345
+          description: Police National Computer Number
+        criminal_records_office_number:
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: 12345
+          description: Criminal Records Office Number
         first_names:
           type: string
-          example: Bob
+          example: Robert
           description: Person's first names
         last_name:
           type: string
-          example: Roberts
+          example: Robertson
           description: Person's surname
         date_of_birth:
           type: string
           format: date
-          example: '1965-10-24'
+          example: '1965-11-24'
           description: Person's date of birth in ISO 8601 format
         image_url:
           type: string
@@ -41,28 +59,30 @@ Person:
           example: http://localhost:3000/api/v1/people/88089bbd-8719-4192-b309-f9db9105d3e1/image.jpg
           description: URI pointing to the image of the person
           readOnly: true
-        assessment_answers:
-          type: array
-          items:
-            $ref: assessment_answer.yaml#/AssessmentAnswer
-          description: Collection of court information, risk and alerts that escorts
-            need to be aware of for safety, security and other reasons
-        identifiers:
-          type: array
-          items:
-            $ref: profile_identifier.yaml#/ProfileIdentifier
-          description: Collection of identifiers used to identify the person. Different
-            services have various id schemes such police criminal records number,
-            prison number etc. We may need to record several of these.
-        gender_additional_information:
-          oneOf:
-          - type: string
-          - type: 'null'
-          description: Supporting information for detainees of certain genders to
-            capture any relevant transport information
+        last_synced:
+          type: string
+          format: date-time
+          example: '2020-05-17T15:04:07.632Z'
+          description: The datetime this person was last synced with NOMIS in ISO 8601 format
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the person was created or last updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the person was created
+          readOnly: true
     relationships:
       type: object
       properties:
+        profiles:
+          type: array
+          items:
+            $ref: profile_reference.yaml#/ProfileReference
+          description: Person's profiles
         gender:
           $ref: gender_reference.yaml#/GenderReference
           description: Person's gender

@@ -1207,9 +1207,15 @@
     - application/vnd.api+json
     parameters:
     - $ref: content_type_parameter.yaml#/ContentType
-    - name: filter[police_national_computer]
+    - name: include
       in: query
-      description: Filters results to only include people identified by that police_national_computer.
+      description:
+      schema:
+        type: string
+        enum: [profiles, profiles.gender, profiles.ethnicity, profiles.court_hearings, gender, ethnicity]
+    - name: filter[police_national_computer_number]
+      in: query
+      description: Filters results to only include people identified by that police_national_computer_number.
         Either filter[police_national_computer] or filter[prison_number] or both filters
         are required.
       schema:
@@ -1220,7 +1226,7 @@
     - name: filter[prison_number]
       in: query
       description: Filters results to only include people identified by that prison_number.
-        Either filter[police_national_computer] or filter[prison_number] or both filters
+        Either filter[police_national_computer_number] or filter[prison_number] or both filters
         are required.
       schema:
         type: string
@@ -1236,6 +1242,12 @@
           application/vnd.api+json:
             schema:
               $ref: get_people_responses.yaml#/200
+      '400':
+        description: bad request (for example no filter has been provided)
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_people_responses.yaml#/400
       '401':
         description: unauthorized
         content:
@@ -1248,6 +1260,12 @@
           application/vnd.api+json:
             schema:
               $ref: get_people_responses.yaml#/415
+      '503':
+        description: forbidden (for example attempt to filter or include on an invalid attribute)
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_people_responses.yaml#/503
   post:
     summary: Creates a new person and their associated profile
     tags:
