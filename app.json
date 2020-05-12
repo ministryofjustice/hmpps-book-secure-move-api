@@ -27,6 +27,9 @@
       "required": "true"
     }
   },
+  "scripts": {
+    "postdeploy": "bundle exec rails db:schema:load db:schema:migrate fake_data:recreate_all"
+  },
   "buildpacks": [
     {
       "url": "heroku/nodejs"
