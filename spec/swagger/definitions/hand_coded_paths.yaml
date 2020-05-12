@@ -617,10 +617,8 @@
               $ref: post_documents_responses.yaml#/422
 /moves/{move_id}/journeys:
   get:
-    summary: '[NOT YET IMPLEMENTED] Gets a list of journeys'
+    summary: 'Gets a list of journeys'
     description: |
-      ## [NOT YET IMPLEMENTED]
-
       This method gets an ordered and paged list of journeys associated with the specified move. Journeys are ordered by
       `timestamp`.
     tags:
@@ -677,10 +675,8 @@
             schema:
               $ref: error_responses.yaml#/422
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates a new journey'
+    summary: 'Creates a new journey'
     description: |
-      ## [NOT YET IMPLEMENTED]
-
       This creates a new journey record and appends it to the move. It _does not_ update the destination of the parent
       move record: additional API calls to the `/moves/{move_id}/events` endpoint will be required in order to change
       the move's destination.
@@ -695,8 +691,9 @@
     - name: body
       in: body
       required: true
-      description: The journey object to be created. It must specify `timestamp`,
-        `billable`, `from_location` and `to_location`.
+      description: The journey object to be created. It must specify `timestamp`, `billable`, `from_location` and
+        `to_location`. Optionally, `supplier` can also be specified if required (otherwise the supplier will be taken from
+        the logged-in account).
       schema:
         $ref: post_journey.yaml#/PostJourney
     responses:
@@ -744,10 +741,8 @@
               $ref: error_responses.yaml#/422
 /moves/{move_id}/journeys/{journey_id}:
   get:
-    summary: '[NOT YET IMPLEMENTED] Gets a journey'
+    summary: 'Gets a journey'
     description: |
-      ## [NOT YET IMPLEMENTED]
-
       This method gets the specified journey associated with the move.
     tags:
     - Move Journeys
@@ -802,10 +797,8 @@
             schema:
               $ref: error_responses.yaml#/422
   patch:
-    summary: '[NOT YET IMPLEMENTED] Updates a journey''s metadata'
+    summary: 'Updates a journey''s metadata'
     description: |
-      ## [NOT YET IMPLEMENTED]
-
       This method updates the specified journey's metadata (e.g. `billable` or vehicle details). It _does not_ update
       the `from_location` or `to_location` of a journey: to change the locations cancel the journey and create a new
       one.
