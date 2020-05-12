@@ -192,12 +192,10 @@ RSpec.describe Api::V1::MovesController do
           end
 
           context 'when documents is an empty array' do
-            let(:after_documents) { [] }
-
             let(:move_params) do
               {
                 type: 'moves',
-                relationships: { documents: { data: after_documents } },
+                relationships: { documents: { data: [] } },
               }
             end
 
@@ -206,9 +204,6 @@ RSpec.describe Api::V1::MovesController do
                 .to change { move.reload.documents }
                 .from(before_documents)
                 .to([])
-            end
-
-            it 'does not actually delete any of the documents' do
             end
           end
         end
