@@ -200,10 +200,9 @@ RSpec.describe Api::V1::MovesController do
             end
 
             it 'removes the documents from the move' do
-              expect { do_patch }
-                .to change { move.reload.documents }
-                .from(before_documents)
-                .to([])
+              expect(move.reload.documents).to match_array(before_documents)
+              do_patch
+              expect(move.reload.documents).to match_array([])
             end
           end
         end
