@@ -4,6 +4,6 @@ class JourneySerializer < ActiveModel::Serializer
   attributes :id, :state, :billable, :vehicle
   attribute :client_timestamp, key: :timestamp
 
-  has_one :from_location, serializer: LocationSerializer
-  has_one :to_location, serializer: LocationSerializer
+  has_one :from_location
+  has_one :to_location
 end

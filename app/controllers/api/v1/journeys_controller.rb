@@ -9,7 +9,7 @@ module Api
       PERMITTED_NEW_JOURNEY_PARAMS = [
           :type,
           attributes: [:timestamp, :billable, vehicle: {}],
-          relationships: [from_location: {}, to_location: {}],
+          relationships: [from_location: {}, to_location: {}, supplier: {}],
       ].freeze
 
       PERMITTED_UPDATE_JOURNEY_PARAMS = [
@@ -81,10 +81,10 @@ module Api
         @new_journey_attributes ||= new_journey_params[:attributes].dup.tap do |attribs|
           attribs.merge!(
             move: move,
-            supplier: current_user.owner, # NB: using the logged in account as the supplier
             client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
             from_location: find_location(new_journey_params.dig(:relationships, :from_location, :data, :id)),
             to_location: find_location(new_journey_params.dig(:relationships, :to_location, :data, :id)),
+            supplier: supplier,
           )
         end
       end
@@ -97,6 +97,21 @@ module Api
           raise ActiveModel::ValidationError.new(location)
         end
         location
+      end
+
+      def find_supplier(supplier_id)
+        # NB: finds the supplier specified by id or uses the current_user's supplier account. Will raise an exception if not found or not accessible
+        supplier = Supplier.find_by(id: supplier_id) || current_user.owner
+        if supplier.nil? || (current_user.owner.present? && supplier != current_user.owner)
+          supplier.errors.add(:supplier, "reference is not valid for this account or not found id=#{supplier_id}")
+          raise ActiveModel::ValidationError.new(supplier)
+        end
+        supplier
+      end
+
+      def supplier
+        # NB: the supplier_id is typically blank as we generally use the logged-in account
+        @supplier ||= find_supplier(data_params.dig(:relationships, :supplier, :data, :id))
       end
 
       def update_journey_params
@@ -115,8 +130,8 @@ module Api
         Event.create!(
           event_name: action_name,
           eventable: journey,
-          client_timestamp: Time.zone.parse(params.dig(:data, :attributes, :timestamp)),
-          details: { data: data_params, supplier_id: current_user.owner.id },
+          client_timestamp: Time.zone.parse(data_params.dig(:attributes, :timestamp)),
+          details: { data: data_params, supplier_id: supplier.id },
         )
       end
     end

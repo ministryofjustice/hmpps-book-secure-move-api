@@ -1,55 +1,39 @@
 FactoryBot.define do
   factory :event do
-    association(:entity)
-    event_name { 'move_created' }
+    association(:eventable)
+    event_name { 'create' }
     client_timestamp { Time.now.utc + rand(-60..60).seconds } # NB: the client_timestamp will never be perfectly in sync with system clock
 
-    trait :move_created do
-      event_name { 'move_created' }
+    trait :create do
+      event_name { 'create' }
     end
 
-    trait :move_updated do
-      event_name { 'move_updated' }
+    trait :update do
+      event_name { 'update' }
     end
 
-    trait :move_completed do
-      event_name { 'move_completed' }
+    trait :cancel do
+      event_name { 'cancel' }
     end
 
-    trait :move_cancelled do
-      event_name { 'move_cancelled' }
+    trait :uncancel do
+      event_name { 'uncancel' }
     end
 
-    trait :move_redirected do
-      event_name { 'move_redirected' }
+    trait :complete do
+      event_name { 'complete' }
     end
 
-    trait :move_lockout do
-      event_name { 'move_lockout' }
+    trait :uncomplete do
+      event_name { 'uncomplete' }
     end
 
-    trait :journey_created do
-      event_name { 'journey_created' }
+    trait :redirect do
+      event_name { 'redirect' }
     end
 
-    trait :journey_updated do
-      event_name { 'journey_updated' }
-    end
-
-    trait :journey_completed do
-      event_name { 'journey_completed' }
-    end
-
-    trait :journey_uncompleted do
-      event_name { 'journey_uncompleted' }
-    end
-
-    trait :journey_cancelled do
-      event_name { 'journey_cancelled' }
-    end
-
-    trait :journey_uncancelled do
-      event_name { 'journey_uncancelled' }
+    trait :lockout do
+      event_name { 'lockout' }
     end
   end
 end

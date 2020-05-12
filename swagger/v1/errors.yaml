@@ -58,8 +58,6 @@ UnprocessableEntity:
   required:
   - title
   - detail
-#  - code
-#  - source
   properties:
     title:
       type: string
