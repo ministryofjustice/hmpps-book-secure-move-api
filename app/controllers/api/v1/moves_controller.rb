@@ -92,7 +92,7 @@ module Api
       end
 
       # 1. Frontend specifies empty docs: update documents to be empty
-      # 2. Frontend specifies no doc changes: don't update documents at all
+      # 2. Frontend does not include document relationship: don't update documents at all
       def patch_move_attributes
         attributes = patch_move_params.fetch(:attributes, {})
         document_ids = patch_move_params.dig(:relationships, :documents, :data)
