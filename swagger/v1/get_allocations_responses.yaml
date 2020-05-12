@@ -12,6 +12,8 @@
       items:
         anyOf:
         - $ref: location.yaml#/Location
+        - $ref: move.yaml#/Move
+        - $ref: person.yaml#/Person
     links:
       $ref: pagination_links.yaml#/PaginationLinks
     meta:
