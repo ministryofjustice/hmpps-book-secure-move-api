@@ -35,8 +35,7 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'does not delete the person' do
-        expect { delete "/api/v1/moves/#{move_id}", headers: headers }
-            .not_to change(Person, :count)
+        expect(Person.count).to be 1
       end
 
       it 'returns the correct data' do

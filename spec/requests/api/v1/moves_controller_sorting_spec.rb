@@ -179,11 +179,7 @@ RSpec.describe Api::V1::MovesController do
         context 'when name' do
           let(:people) { object_ids.map { |p_id| Person.find(p_id) } }
           let(:object_name) { 'person' }
-          let(:move_data) {
-            Move.all
-                                .sort_by { |move| move.profile.last_name }
-                                .map { |move| move.profile.person }
-          }
+          let(:move_data) { Move.all.sort_by { |move| move.person.latest_profile.last_name }.map(&:person) }
 
           context 'with default direction' do
             let(:sort_params) { { by: 'name' } }

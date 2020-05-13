@@ -2,13 +2,12 @@
 
 class Person < VersionedModel
   has_many :profiles, dependent: :destroy
-
-  has_many :moves, through: :profiles
+  has_many :moves, dependent: :destroy
 
   has_one_attached :image
 
   def latest_profile
-    profiles.order(:updated_at).last
+    profiles.last
   end
 
   def latest_nomis_booking_id
