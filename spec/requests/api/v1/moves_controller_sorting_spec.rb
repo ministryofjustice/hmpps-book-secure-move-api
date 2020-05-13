@@ -7,6 +7,7 @@ RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization' => "Bearer #{token.token}" } }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
+  let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
   describe 'GET /moves' do
     let!(:move1) { create :move }
@@ -25,27 +26,33 @@ RSpec.describe Api::V1::MovesController do
         context 'with invalid sort' do
           let(:sort_params) { { by: 'rabbits' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_by' => ['is not included in the list'] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) {
+              [{ 'title' => 'Invalid sort_by',
+                 'detail' => 'Validation failed: Sort by is not included in the list' }]
+            }
           end
         end
 
         context 'with invalid direction' do
           let(:sort_params) { { by: 'created_at', direction: 'rabbits' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_direction' => ['is not included in the list'] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) {
+              [{ 'title' => 'Invalid sort_direction',
+                 'detail' => 'Validation failed: Sort direction is not included in the list' }]
+            }
           end
         end
 
         context 'with only direction' do
           let(:sort_params) { { direction: 'asc' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_by' => ["can't be blank"] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) {
+              [{ 'title' => 'Invalid sort_by',
+                 'detail' => "Validation failed: Sort by can't be blank" }]
+            }
           end
         end
       end

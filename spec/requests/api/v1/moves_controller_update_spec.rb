@@ -29,8 +29,8 @@ RSpec.describe Api::V1::MovesController do
         attributes: {
           status: 'requested',
           additional_information: 'some more info',
-          cancellation_reason: 'other',
-          cancellation_reason_comment: 'some other reason',
+          cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
+          cancellation_reason_comment: nil,
           move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
@@ -113,11 +113,11 @@ RSpec.describe Api::V1::MovesController do
         end
 
         it 'updates the cancellation_reason of a move' do
-          expect(result.cancellation_reason).to eq 'other'
+          expect(result.cancellation_reason).to be nil
         end
 
         it 'updates the cancellation_reason_comment of a move' do
-          expect(result.cancellation_reason_comment).to eq 'some other reason'
+          expect(result.cancellation_reason_comment).to be nil
         end
 
         it 'returns the correct data' do
@@ -133,8 +133,8 @@ RSpec.describe Api::V1::MovesController do
               attributes: {
                 status: 'requested',
                 additional_information: 'some more info',
-                cancellation_reason: 'other',
-                cancellation_reason_comment: 'some other reason',
+                cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
+                cancellation_reason_comment: nil,
                 move_type: 'court_appearance',
                 move_agreed: true,
                 move_agreed_by: 'Fred Bloggs',
@@ -319,6 +319,7 @@ RSpec.describe Api::V1::MovesController do
             type: 'moves',
             attributes: {
               status: 'cancelled',
+              cancellation_reason: 'supplier_declined_to_move',
               reference: 'new reference',
             },
           }
@@ -354,6 +355,7 @@ RSpec.describe Api::V1::MovesController do
             type: 'moves',
             attributes: {
               status: 'cancelled',
+              cancellation_reason: 'supplier_declined_to_move',
               reference: 'new reference',
             },
           }

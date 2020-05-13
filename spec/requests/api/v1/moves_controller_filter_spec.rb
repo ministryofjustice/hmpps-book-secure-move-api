@@ -72,7 +72,7 @@ RSpec.describe Api::V1::MovesController do
           let(:filter_params) { { filter: { created_at_from: 'rabbit' } } }
 
           it 'errors' do
-            expect(response).to have_http_status(:bad_request)
+            expect(response).to have_http_status(:unprocessable_entity)
           end
         end
 
@@ -80,7 +80,7 @@ RSpec.describe Api::V1::MovesController do
           let(:filter_params) { { filter: { created_at_to: 'rabbit' } } }
 
           it 'errors' do
-            expect(response).to have_http_status(:bad_request)
+            expect(response).to have_http_status(:unprocessable_entity)
           end
         end
       end
