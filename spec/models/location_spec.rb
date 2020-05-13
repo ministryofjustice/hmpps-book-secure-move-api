@@ -36,7 +36,7 @@ RSpec.describe Location do
 
   describe '#supplier' do
     let(:supplier_one) { create(:supplier) }
-    let(:supplier_two) { create(:supplier, name: 'Test Supplier 2') }
+    let(:supplier_two) { create(:supplier) }
     let!(:location_one) { create(:location, suppliers: [supplier_one]) }
     let!(:location_two) { create(:location, suppliers: [supplier_two]) }
 
