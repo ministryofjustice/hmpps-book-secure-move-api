@@ -35,7 +35,7 @@ class Move < VersionedModel
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :profile, optional: true
+  belongs_to :person, optional: true
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
@@ -52,13 +52,13 @@ class Move < VersionedModel
     unless: ->(move) { move.move_type == 'prison_recall' },
   )
   validates :move_type, inclusion: { in: move_types }
-  validates :profile, presence: true, unless: -> { [MOVE_STATUS_REQUESTED, MOVE_STATUS_CANCELLED].include?(status) }
+  validates :person, presence: true, unless: -> { [MOVE_STATUS_REQUESTED, MOVE_STATUS_CANCELLED].include?(status) }
   validates :reference, presence: true
 
-  # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
+  # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
-  validates :date, uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
-            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) || profile_id.blank? }
+  validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
+            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) || person_id.blank? }
   validates :date, presence: true,
             unless: -> { status == MOVE_STATUS_PROPOSED }
   validates :date_from, presence: true,
@@ -86,7 +86,7 @@ class Move < VersionedModel
   end
 
   def existing
-    self.class.not_cancelled.find_by(date: date, profile_id: profile_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    self.class.not_cancelled.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
   def existing_id
@@ -98,10 +98,6 @@ class Move < VersionedModel
     (self.date.present? && self.date >= Time.zone.today) ||
       (self.date.nil? && self.date_to.present? && self.date_to >= Time.zone.today) ||
       (self.date.nil? && self.date_to.nil? && self.date_from.present? && self.date_from >= Time.zone.today)
-  end
-
-  def person
-    raise 'Attempt to Access to person!!!'
   end
 
 private

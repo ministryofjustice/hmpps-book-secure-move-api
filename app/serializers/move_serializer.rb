@@ -25,8 +25,4 @@ class MoveSerializer < ActiveModel::Serializer
   INCLUDED_FIELDS = {
     allocation: %i[to_location from_location moves_count created_at],
   }.freeze
-
-  def person
-    object&.profile&.person
-  end
 end

@@ -4,8 +4,8 @@ RSpec.describe PreparePersonNotificationsJob, type: :job do
   subject(:perform) { described_class.new.perform(topic_id: person.id, action_name: action_name) }
 
   let(:person) { create :person }
-  let!(:move1) { create :move, profile: person.latest_profile }
-  let!(:move2) { create :move, profile: person.latest_profile }
+  let!(:move1) { create :move, person: person }
+  let!(:move2) { create :move, person: person }
   let!(:other_move) { create :move }
 
   before do

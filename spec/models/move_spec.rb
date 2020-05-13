@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
-  # it { is_expected.to belong_to(:person).optional } # TODO: This relationship is deprecated, it will be removed soon
-  it { is_expected.to belong_to(:profile).optional }
+  it { is_expected.to belong_to(:person).optional }
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
@@ -28,27 +27,27 @@ RSpec.describe Move do
     )
   end
 
-  it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
+  it 'validates presence of `person` if `status` is NOT requested or cancelled' do
     expect(build(:move, status: :proposed)).to(
-      validate_presence_of(:profile),
+      validate_presence_of(:person),
     )
   end
 
-  it 'does NOT validates presence of `profile` if `status` is requested' do
+  it 'does NOT validates presence of `person` if `status` is requested' do
     expect(build(:move, status: :requested)).not_to(
-      validate_presence_of(:profile),
+      validate_presence_of(:person),
     )
   end
 
-  it 'does NOT validates presence of `profile` if `status` is cancelled' do
+  it 'does NOT validates presence of `person` if `status` is cancelled' do
     expect(build(:move, status: :cancelled)).not_to(
-      validate_presence_of(:profile),
+      validate_presence_of(:person),
     )
   end
 
   it 'validates uniqueness of `date` if `status` is NOT proposed or cancelled' do
     expect(create(:move)).to(
-      validate_uniqueness_of(:date).scoped_to(:status, :profile_id, :from_location_id, :to_location_id),
+      validate_uniqueness_of(:date).scoped_to(:status, :person_id, :from_location_id, :to_location_id),
     )
   end
 
@@ -64,8 +63,8 @@ RSpec.describe Move do
     )
   end
 
-  it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    expect(build(:move, status: :requested, profile: nil)).not_to(
+  it 'does NOT validate uniqueness of `date` if `person_id` is nil' do
+    expect(build(:move, status: :requested, person: nil)).not_to(
       validate_uniqueness_of(:date),
     )
   end
