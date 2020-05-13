@@ -71,6 +71,12 @@ RSpec.describe Move do
     )
   end
 
+  it 'does NOT validate presence of `date` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:date),
+    )
+  end
+
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
     expect(build(:move, status: :proposed)).not_to(
       validate_uniqueness_of(:date),

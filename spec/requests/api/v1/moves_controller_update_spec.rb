@@ -112,11 +112,11 @@ RSpec.describe Api::V1::MovesController do
           expect(result.additional_information).to eq 'some more info'
         end
 
-        it 'updates the cancellation_reason of a move' do
+        it 'does not update the cancellation_reason of a move' do
           expect(result.cancellation_reason).to be nil
         end
 
-        it 'updates the cancellation_reason_comment of a move' do
+        it 'does not update the cancellation_reason_comment of a move' do
           expect(result.cancellation_reason_comment).to be nil
         end
 
