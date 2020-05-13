@@ -86,7 +86,7 @@ module Api
           documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
           court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
-            )
+        )
       end
 
       def update_move_params

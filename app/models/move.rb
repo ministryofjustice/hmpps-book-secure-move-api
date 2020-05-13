@@ -93,26 +93,6 @@ class Move < VersionedModel
       (self.date.nil? && self.date_to.nil? && self.date_from.present? && self.date_from >= Time.zone.today)
   end
 
-  def prison_recall?
-    move_type == Move::move_types[:prison_recall]
-  end
-
-  def proposed?
-    status == MOVE_STATUS_PROPOSED
-  end
-
-  def requested?
-    status == MOVE_STATUS_REQUESTED
-  end
-
-  def completed?
-    status == MOVE_STATUS_COMPLETED
-  end
-
-  def cancelled?
-    status == MOVE_STATUS_CANCELLED
-  end
-
 private
 
   def date_to_after_date_from
