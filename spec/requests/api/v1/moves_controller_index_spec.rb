@@ -138,12 +138,11 @@ RSpec.describe Api::V1::MovesController do
           get '/api/v1/moves', params: params, headers: headers
         end
 
-        it 'is a bad request' do
-          expect(response.status).to eq(400)
-        end
-
-        it 'returns errors' do
-          expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) {
+            [{ 'title' => 'Invalid date_from',
+               'detail' => 'Validation failed: Date from is not a valid date.' }]
+          }
         end
       end
 

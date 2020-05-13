@@ -15,6 +15,20 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
+  describe 'cancellation_reason' do
+    context 'when the move is not cancelled' do
+      subject(:move) { build(:move, status: 'requested') }
+
+      it { is_expected.to validate_absence_of(:cancellation_reason) }
+    end
+
+    context 'when the move is cancelled' do
+      subject(:move) { build(:move, status: 'cancelled') }
+
+      it { is_expected.to validate_inclusion_of(:cancellation_reason).in_array(%w[made_in_error supplier_declined_to_move rejected other]) }
+    end
+  end
+
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
@@ -54,6 +68,12 @@ RSpec.describe Move do
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
     expect(build(:move, status: :cancelled)).not_to(
       validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'does NOT validate presence of `date` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:date),
     )
   end
 
@@ -216,7 +236,7 @@ RSpec.describe Move do
       end
 
       it 'ignores cancelled moves' do
-        move.update(status: :cancelled)
+        move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
         expect(duplicate.existing).to be_nil
       end
     end

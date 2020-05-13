@@ -57,7 +57,7 @@ RSpec.describe Moves::Finder do
 
     context 'with no location type and no location' do
       let!(:move) { create :move, move_type: 'prison_recall', to_location: nil }
-      let!(:cancelled_move) { create :move, status: 'cancelled' }
+      let!(:cancelled_move) { create :move, status: 'cancelled', cancellation_reason: 'made_in_error' }
       let!(:completed_move) { create :move, status: 'completed' }
 
       let(:filter_params) { {} }
@@ -114,7 +114,7 @@ RSpec.describe Moves::Finder do
     end
 
     context 'with multiple statuses' do
-      let!(:cancelled_move) { create :move, status: 'cancelled' }
+      let!(:cancelled_move) { create :move, status: 'cancelled', cancellation_reason: 'rejected' }
       let!(:completed_move) { create :move, status: 'completed' }
       let(:filter_params) { { status: [move.status, cancelled_move.status].join(',') } }
 

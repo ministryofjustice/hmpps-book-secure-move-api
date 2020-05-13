@@ -23,15 +23,6 @@
       properties:
         pagination:
           $ref: pagination.yaml#/Pagination
-'415':
-  type: object
-  required:
-  - errors
-  properties:
-    errors:
-      type: array
-      items:
-        $ref: errors.yaml#/UnsupportedMediaType
 '400':
   type: object
   required:
@@ -50,3 +41,21 @@
       type: array
       items:
         $ref: errors.yaml#/NotAuthorisedError
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnsupportedMediaType
+'422':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnprocessableEntity
