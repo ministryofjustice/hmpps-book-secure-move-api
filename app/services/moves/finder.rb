@@ -26,7 +26,7 @@ module Moves
     def apply_ordering(scope)
       case @order_by
       when :name
-        scope.joins(person: :profiles).merge(Profile.ordered_by_name(@order_direction))
+        scope.joins(:profile).merge(Profile.ordered_by_name(@order_direction))
       when :from_location
         scope.joins(:from_location).merge(Location.ordered_by_title(@order_direction))
       when :to_location
@@ -42,7 +42,7 @@ module Moves
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
-      scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
+      scope = scope.includes(:from_location, :to_location, profile: %i[gender ethnicity])
       scope = apply_filter(scope, :status)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)

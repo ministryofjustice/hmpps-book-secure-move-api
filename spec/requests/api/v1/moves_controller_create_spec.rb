@@ -305,7 +305,7 @@ RSpec.describe Api::V1::MovesController do
       let(:person) { profile.person }
       let(:move_attributes) do
         attributes_for(:move).merge(date: old_move.date,
-                                    person: person,
+                                    person: profile.person,
                                     from_location: from_location,
                                     to_location: to_location)
       end
@@ -315,14 +315,14 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'when there are multiple cancelled duplicates' do
-        let!(:old_move) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location) }
-        let!(:old_move2) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location, date: old_move.date) }
+        let!(:old_move) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
+        let!(:old_move2) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location, date: old_move.date) }
 
         it_behaves_like 'an endpoint that responds with success 201'
       end
 
       context 'when duplicate is active' do
-        let!(:old_move) { create(:move, person: person, from_location: from_location, to_location: to_location) }
+        let!(:old_move) { create(:move, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
             {

@@ -59,7 +59,7 @@ RSpec.describe Api::V1::MovesController do
       context 'with an existing requested move', :skip_before do
         before do
           create(:move, :requested,
-                 person: move.person,
+                 profile: move.profile,
                  from_location: move.from_location,
                  to_location: move.to_location,
                  date: move.date)
