@@ -24,7 +24,7 @@ namespace :data_maintenance do
     Location.prisons.each do |prison|
       from_moves = prison.moves_from.requested.select(&:from_nomis?).each do |move|
         move.update!(status: Move::MOVE_STATUS_CANCELLED,
-                     cancellation_reason: Move::cancellation_reasons[:made_in_error])
+                     cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR)
       end
 
       puts "Prison #{prison.title} cancelled #{from_moves.size} moves" if from_moves.any?
