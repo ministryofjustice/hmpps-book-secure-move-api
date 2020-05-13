@@ -93,13 +93,15 @@ module Api
         params.require(:data).permit(PERMITTED_UPDATE_MOVE_PARAMS).to_h
       end
 
+      # 1. Frontend specifies empty docs: update documents to be empty
+      # 2. Frontend does not include document relationship: don't update documents at all
       def update_move_attributes
-        document_ids = (update_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
-
         attributes = update_move_params.fetch(:attributes, {})
+        document_ids = update_move_params.dig(:relationships, :documents, :data)
 
-        return attributes if document_ids.blank?
+        return attributes if document_ids.nil?
 
+        document_ids = document_ids.map { |doc| doc[:id] }
         attributes.merge(documents: Document.where(id: document_ids))
       end
 
