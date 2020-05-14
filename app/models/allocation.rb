@@ -22,7 +22,7 @@ class Allocation < VersionedModel
   validates :prisoner_category, inclusion: { in: prisoner_categories }, allow_nil: true
   validates :sentence_length, inclusion: { in: sentence_lengths }, allow_nil: true
 
-  validates :moves_count, presence: true
+  validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :date, presence: true
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)

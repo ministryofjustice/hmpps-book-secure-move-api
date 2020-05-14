@@ -17,6 +17,7 @@ RSpec.describe Allocation do
   it { is_expected.to define_enum_for(:sentence_length).backed_by_column_of_type(:string) }
 
   it { is_expected.to validate_presence_of(:moves_count) }
+  it { is_expected.to validate_numericality_of(:moves_count) }
   it { is_expected.to validate_presence_of(:date) }
 
   context 'with versioning' do
