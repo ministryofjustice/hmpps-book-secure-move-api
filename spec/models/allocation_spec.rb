@@ -31,4 +31,27 @@ RSpec.describe Allocation do
       expect(allocation.versions.map(&:event)).to eq(%w[create])
     end
   end
+
+  describe 'cancellation_reason' do
+    context 'when the allocation is not cancelled' do
+      let(:allocation) { build(:allocation, status: nil) }
+
+      it { expect(allocation).to validate_absence_of(:cancellation_reason) }
+    end
+
+    context 'when the allocation is cancelled' do
+      let(:allocation) { build(:allocation, status: 'cancelled') }
+
+      it {
+        expect(allocation).to validate_inclusion_of(:cancellation_reason)
+          .in_array(%w[
+            made_in_error
+            supplier_declined_to_move
+            other
+            lack_of_space_at_receiving_establishment
+            sending_establishment_failed_to_fill_allocation
+          ])
+      }
+    end
+  end
 end

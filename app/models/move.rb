@@ -57,7 +57,7 @@ class Move < VersionedModel
   validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
   validates :status, inclusion: { in: statuses }
-  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
+  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS + Allocation::CANCELLATION_REASONS }, if: :cancelled?
   validates :cancellation_reason, absence: true, unless: :cancelled?
   validate :date_to_after_date_from
 

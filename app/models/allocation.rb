@@ -23,6 +23,14 @@ class Allocation < VersionedModel
     cancelled: ALLOCATION_STATUS_CANCELLED,
   }
 
+  CANCELLATION_REASONS = [
+    MADE_IN_ERROR = 'made_in_error',
+    SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    LACK_OF_SPACE = 'lack_of_space_at_receiving_establishment',
+    FAILED_TO_FILL_ALLOCATION = 'sending_establishment_failed_to_fill_allocation',
+    OTHER = 'other',
+  ].freeze
+
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
   has_many :moves, inverse_of: :allocation, dependent: :destroy
@@ -36,6 +44,9 @@ class Allocation < VersionedModel
 
   validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :date, presence: true
+
+  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
+  validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
 end

@@ -17,15 +17,25 @@ RSpec.describe Move do
 
   describe 'cancellation_reason' do
     context 'when the move is not cancelled' do
-      subject(:move) { build(:move, status: 'requested') }
+      let(:move) { build(:move, status: 'requested') }
 
-      it { is_expected.to validate_absence_of(:cancellation_reason) }
+      it { expect(move).to validate_absence_of(:cancellation_reason) }
     end
 
     context 'when the move is cancelled' do
-      subject(:move) { build(:move, status: 'cancelled') }
+      let(:move) { build(:move, status: 'cancelled') }
 
-      it { is_expected.to validate_inclusion_of(:cancellation_reason).in_array(%w[made_in_error supplier_declined_to_move rejected other]) }
+      it {
+        expect(move).to validate_inclusion_of(:cancellation_reason)
+          .in_array(%w[
+            made_in_error
+            supplier_declined_to_move
+            rejected
+            other
+            lack_of_space_at_receiving_establishment
+            sending_establishment_failed_to_fill_allocation
+          ])
+      }
     end
   end
 
