@@ -3,15 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe Moves::Finder do
-  subject(:results) { described_class.new(filter_params, ability, {}).call }
+  subject(:results) { described_class.new(filter_params, ability, order_params).call }
 
   let(:filter_params) { {} }
   let(:application) { Doorkeeper::Application.new(name: 'test') }
   let(:ability) { Ability.new(application) }
+  let(:order_params) { {} }
 
   describe 'filtering' do
     context 'with no filters' do
-      let!(:move) { create :move, :prison_recall }
+      let(:move) { create :move, :prison_recall }
       let!(:proposed_move) { create :move, :proposed }
       let!(:cancelled_supplier_declined_to_move) { create :move, :cancelled_supplier_declined_to_move }
       let!(:completed_move) { create :move, :completed }
@@ -206,6 +207,22 @@ RSpec.describe Moves::Finder do
         it 'returns empty results set' do
           expect(results).to be_empty
         end
+      end
+    end
+
+    describe 'sort order' do
+      let(:location1) { create :location, title: 'LOCATION1' }
+      let(:location2) { create :location, title: 'Location2' }
+      let(:location3) { create :location, title: 'LOCATION3' }
+      let!(:moves) do
+        create :move, to_location: location1
+        create :move, to_location: location2
+        create :move, to_location: location3
+      end
+      let(:order_params) { { by: :to_location, direction: :asc } }
+
+      it 'ordered by location (case-sensitive)' do
+        expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order
       end
     end
   end
