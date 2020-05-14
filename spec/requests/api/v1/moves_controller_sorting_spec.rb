@@ -185,7 +185,7 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(move_data.reverse.map(&:title))
+              expect(locations.map(&:title)).to eq(%w[location4 location2 LOCATION3 LOCATION1])
             end
           end
         end
