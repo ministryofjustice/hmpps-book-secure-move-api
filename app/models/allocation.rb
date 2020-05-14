@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Allocation < VersionedModel
+  ALLOCATION_STATUS_UNFILLED = 'unfilled'
+  ALLOCATION_STATUS_FILLED = 'filled'
+  ALLOCATION_STATUS_CANCELLED = 'cancelled'
+
   enum prisoner_category: {
     b: 'B',
     c: 'C',
@@ -10,6 +14,13 @@ class Allocation < VersionedModel
   enum sentence_length: {
     short: '16_or_less',
     long: 'more_than_16',
+  }
+
+  # TODO: implement statemachine, for now just allow an allocation to be cancelled
+  enum status: {
+    unfilled: ALLOCATION_STATUS_UNFILLED,
+    filled: ALLOCATION_STATUS_FILLED,
+    cancelled: ALLOCATION_STATUS_CANCELLED,
   }
 
   belongs_to :from_location, class_name: 'Location'

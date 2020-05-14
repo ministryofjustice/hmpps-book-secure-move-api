@@ -104,6 +104,15 @@ Allocation:
           - type: string
           - type: 'null'
           description: Additional information about the allocation
+        status:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - unfilled
+            - filled
+            - cancelled
+          description: Indicates the stage in it's lifecycle that this allocation is at
     relationships:
       type: object
       required:

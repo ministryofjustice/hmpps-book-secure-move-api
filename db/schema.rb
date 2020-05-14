@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_11_150020) do
+ActiveRecord::Schema.define(version: 2020_05_14_052159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2020_05_11_150020) do
     t.text "other_criteria"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
     t.index ["date"], name: "index_allocations_on_date"
   end
 
