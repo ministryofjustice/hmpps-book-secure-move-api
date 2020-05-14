@@ -49,6 +49,8 @@ module Moves
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
       scope = apply_supplier_filters(scope)
+      scope = apply_move_type_filters(scope)
+      scope = apply_cancellation_reason_filters(scope)
       scope
     end
 
@@ -81,6 +83,19 @@ module Moves
       return scope unless filter_params.key?(:supplier_id)
 
       scope.served_by(filter_params[:supplier_id])
+    end
+
+    def apply_move_type_filters(scope)
+      return scope unless filter_params.key?(:move_type)
+
+      scope.where(move_type: filter_params[:move_type])
+    end
+
+    def apply_cancellation_reason_filters(scope)
+      return scope unless filter_params.key?(:cancellation_reason)
+
+      # NB: only cancelled moves may have a cancellation reason
+      scope.cancelled.where(cancellation_reason: filter_params[:cancellation_reason])
     end
   end
 end

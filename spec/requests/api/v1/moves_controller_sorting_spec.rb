@@ -11,8 +11,8 @@ RSpec.describe Api::V1::MovesController do
 
   describe 'GET /moves' do
     let!(:move1) { create :move }
-    let!(:move2) { create :move, :with_transfer_reason }
-    let!(:move3) { create :move, :with_transfer_reason }
+    let!(:move2) { create :move, :prison_transfer }
+    let!(:move3) { create :move, :prison_transfer }
     let!(:move4) { create :move }
 
     before do
