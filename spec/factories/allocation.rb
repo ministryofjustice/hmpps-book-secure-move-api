@@ -8,7 +8,7 @@ FactoryBot.define do
 
     prisoner_category { Allocation.prisoner_categories.values.sample }
     sentence_length { Allocation.sentence_lengths.values.sample }
-    moves_count { Faker::Number.digit }
+    moves_count { Faker::Number.non_zero_digit }
     complete_in_full { false }
 
     trait :with_moves do

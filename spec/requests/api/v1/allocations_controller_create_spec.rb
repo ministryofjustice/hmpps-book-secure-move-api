@@ -269,5 +269,39 @@ RSpec.describe Api::V1::AllocationsController do
         end
       end
     end
+
+    context 'with incorrect moves_count type' do
+      let(:moves_count) { '27.5' }
+
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => 'Moves count must be an integer',
+            'source' => { 'pointer' => '/data/attributes/moves_count' },
+            'code' => 'not_an_integer',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
+
+    context 'with zero moves_count' do
+      let(:moves_count) { 0 }
+
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => 'Moves count must be greater than 0',
+            'source' => { 'pointer' => '/data/attributes/moves_count' },
+            'code' => 'greater_than',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
   end
 end
