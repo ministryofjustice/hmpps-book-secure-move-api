@@ -11,32 +11,27 @@ module Allocations
 
     def call
       self.allocation = Allocation.new(attributes)
+      allocation.moves = moves if allocation.valid?
 
       allocation.save!
     end
 
   private
 
-    def date
-      @date ||= allocation_params.dig(:attributes, :date)
-    end
-
     def from_location
-      @from_location ||= Location.find(allocation_params.dig(:relationships, :from_location, :data, :id))
+      Location.find(allocation_params.dig(:relationships, :from_location, :data, :id))
     end
 
     def to_location
-      @to_location ||= Location.find(allocation_params.dig(:relationships, :to_location, :data, :id))
+      Location.find(allocation_params.dig(:relationships, :to_location, :data, :id))
     end
 
     def moves
-      return [] unless date
-
-      Array.new(allocation_params.dig(:attributes, :moves_count)) {
+      Array.new(allocation.moves_count) {
         Move.new(
-          from_location: from_location,
-          to_location: to_location,
-          date: date,
+          from_location: allocation.from_location,
+          to_location: allocation.to_location,
+          date: allocation.date,
         )
       }
     end
@@ -46,7 +41,6 @@ module Allocations
         from_location: from_location,
         to_location: to_location,
         complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
-        moves: moves,
       )
     end
   end
