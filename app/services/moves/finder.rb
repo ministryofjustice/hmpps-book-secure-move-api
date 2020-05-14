@@ -43,14 +43,14 @@ module Moves
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
-      scope = apply_filter(scope, :status)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
+      scope = apply_filter(scope, :status)
+      scope = apply_filter(scope, :move_type)
+      scope = apply_filter(scope, :cancellation_reason)
       scope = apply_supplier_filters(scope)
-      scope = apply_move_type_filters(scope)
-      scope = apply_cancellation_reason_filters(scope)
       scope
     end
 
@@ -83,19 +83,6 @@ module Moves
       return scope unless filter_params.key?(:supplier_id)
 
       scope.served_by(filter_params[:supplier_id])
-    end
-
-    def apply_move_type_filters(scope)
-      return scope unless filter_params.key?(:move_type)
-
-      scope.where(move_type: filter_params[:move_type])
-    end
-
-    def apply_cancellation_reason_filters(scope)
-      return scope unless filter_params.key?(:cancellation_reason)
-
-      # NB: only cancelled moves may have a cancellation reason
-      scope.cancelled.where(cancellation_reason: filter_params[:cancellation_reason])
     end
   end
 end

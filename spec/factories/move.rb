@@ -46,6 +46,9 @@ FactoryBot.define do
       cancellation_reason { 'other' }
       cancellation_reason_comment { 'some other reason' }
     end
+    trait :completed do
+      status { 'completed' }
+    end
 
     #cancellation_reasons
     trait :cancelled_made_in_error do
