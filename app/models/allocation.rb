@@ -26,6 +26,7 @@ class Allocation < VersionedModel
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
   has_many :moves, inverse_of: :allocation, dependent: :destroy
+  has_many :events, as: :eventable, dependent: :destroy
 
   validates :from_location, presence: true
   validates :to_location, presence: true
