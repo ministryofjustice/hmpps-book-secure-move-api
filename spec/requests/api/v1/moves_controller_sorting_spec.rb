@@ -176,7 +176,7 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              # NB: this is a case-sensitive order
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
               expect(locations.map(&:title)).to eq(%w[LOCATION1 LOCATION3 location2 location4])
             end
           end
@@ -185,6 +185,7 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
               expect(locations.map(&:title)).to eq(%w[location4 location2 LOCATION3 LOCATION1])
             end
           end
