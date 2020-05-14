@@ -88,16 +88,24 @@ bundle exec rails fake_data:recreate_all
 To create reference data (seed data) needed in production run the
 following rake tasks:
 
-```
-bundle exec rake reference_data:create_assessment_questions
-bundle exec rake reference_data:create_allocation_complex_cases
+```bash
+bundle exec rake reference_data:create_locations
 bundle exec rake reference_data:create_ethnicities
 bundle exec rake reference_data:create_genders
 bundle exec rake reference_data:create_identifier_types
-bundle exec rake reference_data:create_locations
+bundle exec rake reference_data:create_assessment_questions
+bundle exec rake reference_data:create_allocation_complex_cases
 bundle exec rake reference_data:create_nomis_alerts
 bundle exec rake reference_data:create_regions
 bundle exec rake reference_data:create_suppliers
+bundle exec rake reference_data:create_prison_transfer_reasons
+bundle exec rake reference_data:link_suppliers
+```
+
+Alternatively, **all** of the reference data can be created at once by running the combined rake task:
+
+```bash
+bundle exec rake reference_data:create_all
 ```
 
 Some of these tasks pull data from NOMIS and therefore require
