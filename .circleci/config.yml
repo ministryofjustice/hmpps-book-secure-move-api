@@ -8,23 +8,51 @@ orbs:
   slack: circleci/slack@3.4.2
 
 aliases:
-  - &notify_slack
+  - &notify_slack_on_failure
     slack/notify-on-failure:
       only_for_branches: master
+  - &notify_slack_on_release_start
+    slack/notify:
+      channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
+      title: 'API is being prepared for release :building_construction:'
+      title_link: 'https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md'
+      message: A new release was created by ${CIRCLE_USERNAME}
+      footer: Click the title to view the changes
+      include_project_field: false
+      include_job_number_field: false
+      include_visit_job_action: false
+      color: '#1d70b8'
+      mentions: here
+  - &notify_slack_of_approval
+    slack/approval:
+      channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
+      message: 'API release *requires your approval* before it can be deployed :eyes:'
+      include_project_field: false
+      include_job_number_field: false
+      color: '#912b88'
+      mentions: $BUILD_NOTIFICATIONS_MENTION_ID
+  - &notify_slack_on_release_end
+    slack/notify:
+      channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
+      title: 'API has been deployed :rocket:'
+      title_link: https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases
+      message: This release was successfully deployed to production
+      footer: Click the title to view the release notes
+      include_project_field: false
+      include_job_number_field: false
+      include_visit_job_action: false
+      color: '#28a197'
+      mentions: here
   - &all_tags
     filters:
       tags:
         only: /.*/
-  - &only_master_and_tags
+  - &only_master
     filters:
-      tags:
-        only: /.*/
       branches:
         only: master
   - &only_master_and_create_dev
     filters:
-      tags:
-        only: /.*/
       branches:
         only:
         - master
@@ -92,9 +120,15 @@ commands:
     parameters:
       env:
         type: string
+      notify_slack:
+        type: string
+        default: ""
     steps:
       - checkout
-
+      - when:
+          condition: <<parameters.notify_slack>>
+          steps:
+            - *notify_slack_on_release_start
       - attach_workspace:
           at: .
 
@@ -133,6 +167,9 @@ commands:
     parameters:
       env:
         type: string
+      notify_slack:
+        type: string
+        default: ""
     steps:
       - checkout
 
@@ -166,8 +203,17 @@ commands:
             kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+      - when:
+          condition: <<parameters.notify_slack>>
+          steps:
+            - *notify_slack_on_release_end
 
 jobs:
+  notify_of_approval:
+    <<: *app_containers
+    steps:
+      - *notify_slack_of_approval
+
   test:
     <<: *app_containers
     steps:
@@ -181,7 +227,7 @@ jobs:
           name: run tests
           command: COVERAGE=1 bundle exec rspec
 
-      - *notify_slack
+      - *notify_slack_on_failure
 
   api_docs:
     <<: *app_containers
@@ -198,53 +244,57 @@ jobs:
             - swagger/v1/swagger.yaml
             - node_modules/*
 
+      - *notify_slack_on_failure
+
   build_dev:
     <<: *cloud_container
     steps:
       - build_for_k8s:
-         env: "dev"
+          env: "dev"
 
   deploy_dev:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
-         env: "dev"
+          env: "dev"
 
   build_staging:
     <<: *cloud_container
     steps:
       - build_for_k8s:
-         env: "staging"
+          env: "staging"
 
   deploy_staging:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
-         env: "staging"
+          env: "staging"
 
   build_preprod:
     <<: *cloud_container
     steps:
       - build_for_k8s:
-         env: "preprod"
+          env: "preprod"
 
   deploy_preprod:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
-         env: "preprod"
+          env: "preprod"
 
   build_production:
     <<: *cloud_container
     steps:
       - build_for_k8s:
-         env: "production"
+          env: "production"
+          notify_slack: "true"
 
   deploy_production:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
-         env: "production"
+          env: "production"
+          notify_slack: "true"
 
 workflows:
   version: 2
@@ -254,7 +304,7 @@ workflows:
       - test:
           <<: *all_tags
       - api_docs:
-          <<: *only_master_and_create_dev
+          <<: *all_tags
       - build_dev:
           <<: *only_master_and_create_dev
           requires:
@@ -265,20 +315,20 @@ workflows:
             - test
             - build_dev
       - build_staging:
-          <<: *only_master_and_tags
+          <<: *only_master
           requires:
             - api_docs
       - deploy_staging:
-          <<: *only_master_and_tags
+          <<: *only_master
           requires:
             - test
             - build_staging
       - build_preprod:
-          <<: *only_master_and_tags
+          <<: *only_deploy_tags
           requires:
             - api_docs
       - deploy_preprod:
-          <<: *only_master_and_tags
+          <<: *only_deploy_tags
           requires:
             - test
             - build_preprod
@@ -289,6 +339,11 @@ workflows:
       - hold_production:
           <<: *only_deploy_tags
           type: approval
+          requires:
+            - test
+            - build_production
+      - notify_of_approval:
+          <<: *only_deploy_tags
           requires:
             - test
             - build_production
