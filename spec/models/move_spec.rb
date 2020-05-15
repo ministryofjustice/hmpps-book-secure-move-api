@@ -32,8 +32,6 @@ RSpec.describe Move do
             supplier_declined_to_move
             rejected
             other
-            lack_of_space_at_receiving_establishment
-            sending_establishment_failed_to_fill_allocation
           ])
       }
     end

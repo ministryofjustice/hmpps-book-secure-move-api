@@ -102,8 +102,6 @@ Move:
             - made_in_error
             - supplier_declined_to_move
             - rejected
-            - lack_of_space_at_receiving_establishment
-            - sending_establishment_failed_to_fill_allocation
             - other
           - type: 'null'
           description: Reason the move has been cancelled
