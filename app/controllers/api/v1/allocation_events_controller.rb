@@ -3,6 +3,7 @@
 module Api
   module V1
     class AllocationEventsController < ApiController
+      before_action :validate_params, only: :create
       after_action :send_move_notifications, only: :create
 
       def create
@@ -25,6 +26,10 @@ module Api
         :type,
         attributes: %i[timestamp event_name],
       ].freeze
+
+      def validate_params
+        AllocationEvents::ParamsValidator.new(event_params).validate!(action_name.to_sym)
+      end
 
       def event_params
         params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
