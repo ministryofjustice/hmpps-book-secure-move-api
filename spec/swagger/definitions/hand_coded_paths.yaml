@@ -180,9 +180,35 @@
         items:
           type: string
           enum:
+          - proposed
           - requested
           - cancelled
           - completed
+    - name: filter[move_type]
+      in: query
+      explode: false
+      description: Filters results to only include moves with the given move_types
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - court_appearance
+          - prison_recall
+          - prison_transfer
+    - name: filter[cancellation_reason]
+      in: query
+      explode: false
+      description: Filters results to only include moves with the given cancellation_reasons
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - made_in_error
+          - supplier_declined_to_move
+          - rejected
+          - other
     - name: filter[from_location_id]
       description: Filters results to only include moves from the given location UUIDs
       in: query
