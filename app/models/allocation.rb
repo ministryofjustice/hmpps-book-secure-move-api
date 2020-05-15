@@ -24,11 +24,11 @@ class Allocation < VersionedModel
   }
 
   CANCELLATION_REASONS = [
-    MADE_IN_ERROR = 'made_in_error',
-    SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
-    LACK_OF_SPACE = 'lack_of_space_at_receiving_establishment',
-    FAILED_TO_FILL_ALLOCATION = 'sending_establishment_failed_to_fill_allocation',
-    OTHER = 'other',
+    CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
+    CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    CANCELLATION_REASON_LACK_OF_SPACE = 'lack_of_space_at_receiving_establishment',
+    CANCELLATION_REASON_FAILED_TO_FILL_ALLOCATION = 'sending_establishment_failed_to_fill_allocation',
+    CANCELLATION_REASON_OTHER = 'other',
   ].freeze
 
   belongs_to :from_location, class_name: 'Location'
@@ -45,15 +45,20 @@ class Allocation < VersionedModel
   validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :date, presence: true
 
-  # TODO: re-enable once cancellation reason is implemented in FE
-  # validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
-  # validates :cancellation_reason, absence: true, unless: :cancelled?
+  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
+  validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
 
   def cancel
-    self.status = ALLOCATION_STATUS_CANCELLED
-    self.moves.each { |move| move.assign_attributes(status: Move::MOVE_STATUS_CANCELLED) }
+    comment = 'Allocation was cancelled'
+
+    self.assign_attributes(
+      status: ALLOCATION_STATUS_CANCELLED,
+      cancellation_reason: CANCELLATION_REASON_OTHER,
+      cancellation_reason_comment: comment,
+      moves: moves.each { |move| move.cancel(comment: comment) },
+    )
 
     save!
   end

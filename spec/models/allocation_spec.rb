@@ -32,7 +32,7 @@ RSpec.describe Allocation do
     end
   end
 
-  xdescribe 'cancellation_reason' do
+  describe 'cancellation_reason' do
     context 'when the allocation is not cancelled' do
       let(:allocation) { build(:allocation, status: nil) }
 
@@ -68,6 +68,30 @@ RSpec.describe Allocation do
       allocation.reload.cancel
 
       expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_CANCELLED)
+    end
+
+    it 'sets the cancellation reason to other' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
+    end
+
+    it 'sets the cancellation reason comment to cancelled by allocation' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.cancellation_reason_comment).to eq('Allocation was cancelled')
+    end
+
+    it 'sets the cancellation reason on moves to other' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.moves.first.cancellation_reason).to eq(Move::CANCELLATION_REASON_OTHER)
+    end
+
+    it 'sets the cancellation reason comment on moves to cancelled by allocation' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.moves.first.cancellation_reason_comment).to eq('Allocation was cancelled')
     end
 
     it 'throws validation error if allocation invalid' do
