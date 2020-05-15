@@ -33,7 +33,7 @@ class Allocation < VersionedModel
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
-  has_many :moves, inverse_of: :allocation, dependent: :destroy
+  has_many :moves, inverse_of: :allocation, dependent: :destroy, autosave: true
   has_many :events, as: :eventable, dependent: :destroy
 
   validates :from_location, presence: true
@@ -45,8 +45,16 @@ class Allocation < VersionedModel
   validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :date, presence: true
 
-  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
-  validates :cancellation_reason, absence: true, unless: :cancelled?
+  # TODO: re-enable once cancellation reason is implemented in FE
+  # validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
+  # validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
+
+  def cancel
+    self.status = ALLOCATION_STATUS_CANCELLED
+    self.moves.each { |move| move.assign_attributes(status: Move::MOVE_STATUS_CANCELLED) }
+
+    save!
+  end
 end

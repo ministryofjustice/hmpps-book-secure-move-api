@@ -32,7 +32,7 @@ RSpec.describe Allocation do
     end
   end
 
-  describe 'cancellation_reason' do
+  xdescribe 'cancellation_reason' do
     context 'when the allocation is not cancelled' do
       let(:allocation) { build(:allocation, status: nil) }
 
@@ -52,6 +52,35 @@ RSpec.describe Allocation do
             sending_establishment_failed_to_fill_allocation
           ])
       }
+    end
+  end
+
+  describe '#cancel' do
+    let(:allocation) { create(:allocation, :with_moves, status: nil) }
+
+    it 'changes the status of an allocation to cancelled' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.status).to eq(described_class::ALLOCATION_STATUS_CANCELLED)
+    end
+
+    it 'changes the status of all associated moves to cancelled' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_CANCELLED)
+    end
+
+    it 'throws validation error if allocation invalid' do
+      allocation.from_location = nil
+
+      expect { allocation.cancel }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'does not update moves if allocation invalid' do
+      allocation.from_location = nil
+      allocation.cancel
+    rescue ActiveRecord::RecordInvalid
+      expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_REQUESTED)
     end
   end
 end

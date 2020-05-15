@@ -23,19 +23,32 @@ RSpec.describe Move do
     end
 
     context 'when the move is cancelled' do
-      let(:move) { build(:move, status: 'cancelled') }
+      context 'without an allocation' do
+        let(:move) { build(:move, status: 'cancelled') }
 
-      it {
-        expect(move).to validate_inclusion_of(:cancellation_reason)
-          .in_array(%w[
-            made_in_error
-            supplier_declined_to_move
-            rejected
-            other
-            lack_of_space_at_receiving_establishment
-            sending_establishment_failed_to_fill_allocation
-          ])
-      }
+        it {
+          expect(move).to validate_inclusion_of(:cancellation_reason)
+            .in_array(%w[
+              made_in_error
+              supplier_declined_to_move
+              rejected
+              other
+              lack_of_space_at_receiving_establishment
+              sending_establishment_failed_to_fill_allocation
+            ])
+        }
+      end
+
+      context 'with an allocation' do
+        let(:move) { create(:move, :with_allocation) }
+
+        it 'is valid with no cancellation reason' do
+          move.status = 'cancelled'
+          move.cancellation_reason = nil
+
+          expect(move).to be_valid
+        end
+      end
     end
   end
 

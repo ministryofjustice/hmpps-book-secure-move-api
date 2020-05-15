@@ -14,7 +14,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :allocations, only: %i[create index show]
+      resources :allocations, only: %i[create index show] do
+        resources :events, only: %i[create], controller: 'allocation_events'
+      end
+
       resources :documents, only: %i[create]
       resources :court_hearings, only: %i[create]
       resources :people, only: %i[index create update] do
