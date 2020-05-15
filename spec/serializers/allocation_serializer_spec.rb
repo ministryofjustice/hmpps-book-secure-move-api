@@ -62,6 +62,18 @@ RSpec.describe AllocationSerializer do
       expect(attributes[:other_criteria]).to eql allocation.other_criteria
     end
 
+    it 'contains a status attribute' do
+      expect(attributes[:status]).to eql allocation.status
+    end
+
+    it 'contains a cancellation_reason attribute' do
+      expect(attributes[:cancellation_reason]).to eql allocation.cancellation_reason
+    end
+
+    it 'contains a cancellation_reason_comment attribute' do
+      expect(attributes[:cancellation_reason_comment]).to eql allocation.cancellation_reason_comment
+    end
+
     it 'contains a created_at attribute' do
       expect(attributes[:created_at]).to eql allocation.created_at.iso8601
     end

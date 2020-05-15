@@ -57,8 +57,10 @@ class Move < VersionedModel
   validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
   validates :status, inclusion: { in: statuses }
+
   validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
   validates :cancellation_reason, absence: true, unless: :cancelled?
+
   validate :date_to_after_date_from
 
   before_validation :set_reference
@@ -69,6 +71,14 @@ class Move < VersionedModel
 
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
+
+  def cancel(reason: CANCELLATION_REASON_OTHER, comment: nil)
+    assign_attributes(
+      status: MOVE_STATUS_CANCELLED,
+      cancellation_reason: reason,
+      cancellation_reason_comment: comment,
+    )
+  end
 
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
