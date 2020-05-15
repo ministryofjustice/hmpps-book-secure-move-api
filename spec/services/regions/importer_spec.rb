@@ -51,7 +51,7 @@ RSpec.describe Regions::Importer do
 
   context 'with one existing record' do
     before do
-      Region.create!(key: '1', name: 'First region')
+      create(:region, key: '1', name: 'First region')
     end
 
     it 'creates only the missing items' do
@@ -60,7 +60,7 @@ RSpec.describe Regions::Importer do
   end
 
   context 'with one existing record with the wrong name' do
-    let!(:existing) { Region.create!(key: '2A', name: 'Wrong', locations: [unlinked_location]) }
+    let!(:existing) { create(:region, key: '2A', name: 'Wrong', locations: [unlinked_location]) }
 
     it 'updates the title of the existing record' do
       importer.call

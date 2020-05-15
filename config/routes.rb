@@ -9,17 +9,16 @@ Rails.application.routes.draw do
   get "/docs/*id" => 'pages#show', as: :page, format: false
   get 'docs/', to: 'pages#show', id: 'overview'
 
-  get '/ping', to: 'status#ping', format: :json
   get '/health', to: 'status#health', format: :json
+  get '/ping', to: 'status#ping', format: :json
 
   namespace :api do
     namespace :v1 do
       resources :allocations, only: %i[create index show] do
         resources :events, only: %i[create], controller: 'allocation_events'
       end
-
-      resources :documents, only: %i[create]
       resources :court_hearings, only: %i[create]
+      resources :documents, only: %i[create]
       resources :people, only: %i[index create update] do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
@@ -31,15 +30,16 @@ Rails.application.routes.draw do
         resources :journeys, only: %i[index show create update]
       end
       namespace :reference do
-        resources :locations, only: %i[index show]
         resources :allocation_complex_cases, only: :index
         resources :assessment_questions, only: :index
-        resources :genders, only: :index
         resources :ethnicities, only: :index
-        resources :nationalities, only: :index
+        resources :genders, only: :index
         resources :identifier_types, only: :index
-        resources :suppliers, only: %i[index show]
+        resources :locations, only: %i[index show]
+        resources :nationalities, only: :index
         resources :prison_transfer_reasons, only: %i[index]
+        resources :regions, only: :index
+        resources :suppliers, only: %i[index show]
       end
     end
   end

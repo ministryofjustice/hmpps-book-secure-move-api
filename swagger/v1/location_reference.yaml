@@ -4,7 +4,9 @@ LocationReference:
   - data
   properties:
     data:
-      type: object
+      oneOf:
+      - type: object
+      - type: array
       required:
       - type
       - id
@@ -19,5 +21,4 @@ LocationReference:
           type: string
           format: uuid
           example: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
-          description: The unique identifier (UUID) of the object that this reference
-            points to
+          description: The unique identifier (UUID) of the object that this reference points to
