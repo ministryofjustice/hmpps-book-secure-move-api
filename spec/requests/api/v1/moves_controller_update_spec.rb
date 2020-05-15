@@ -222,6 +222,66 @@ RSpec.describe Api::V1::MovesController do
           end
         end
 
+        context 'when changing a moves person' do
+          let(:after_person) { create(:person) }
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+              },
+              relationships: { person: { data: { id: after_person.id, type: 'people' } } },
+            }
+          end
+
+          it 'updates the moves person' do
+            expect(move.reload.person).to eq(after_person)
+          end
+
+          it 'does not affect other relationships', :skip_before do
+            expect { do_patch }.not_to change { move.reload.from_location }
+          end
+
+          it 'returns the updated documents in the response body' do
+            expect(
+              response_json.dig('data', 'relationships', 'person', 'data', 'id'),
+            ).to eq(after_person.id)
+          end
+
+          context 'when person is nil' do
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { person: { data: nil } },
+              }
+            end
+
+            it 'unlinks person from the move' do
+              expect(move.reload.person).to be_nil
+            end
+          end
+
+          context 'when there is no relationship defined' do
+            let(:before_person) { create(:person) }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, person: before_person }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+              }
+            end
+
+            it 'does nothing to person on move' do
+              expect(move.reload.person).to eq(before_person)
+            end
+          end
+        end
+
         context 'when cancelling a move' do
           context 'when the supplier has a webhook subscription', :skip_before do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
