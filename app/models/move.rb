@@ -54,6 +54,7 @@ class Move < VersionedModel
   # except that we need to allow multiple cancelled moves
   validates :date, uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
     unless: -> { proposed? || cancelled? || profile_id.blank? }
+  validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
   validates :status, inclusion: { in: statuses }
 
