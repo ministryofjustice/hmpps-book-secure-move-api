@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# NB: there is an issue in Doorkeeper which will cause an "uninitialized constant Doorkeeper::Application" error when
+# running this rake task in production mode. It relates to the lazy-loading of ActiveRecord and the work-around is to call
+# ActiveRecord::Base.logger first. See https://github.com/doorkeeper-gem/doorkeeper/issues/1319
+ActiveRecord::Base.logger
+
 namespace :auth do
   NO_OWNER = 'No owner'
 
