@@ -7,6 +7,10 @@ class Supplier < ApplicationRecord
   validates :name, :key, presence: true, uniqueness: true
   before_validation :ensure_key_has_value
 
+  def ==(other)
+    self.key == other.key
+  end
+
 private
 
   def ensure_key_has_value
