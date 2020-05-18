@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
-  # it { is_expected.to belong_to(:person).optional } # TODO: This relationship is deprecated, it will be removed soon
   it { is_expected.to belong_to(:profile).optional }
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
