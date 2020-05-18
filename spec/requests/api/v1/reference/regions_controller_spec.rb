@@ -66,6 +66,41 @@ RSpec.describe Api::V1::Reference::RegionsController do
       end
     end
 
+    context 'with multiple locations' do
+      let(:location1) { create(:location) }
+      let(:location2) { create(:location) }
+      let(:location3) { create(:location) }
+      let!(:region1) { create(:region, locations: [location1, location2]) }
+      let!(:region2) { create(:region, locations: [location2, location3]) }
+
+      let(:expected_relationships) do
+        UnorderedArray(
+          {
+            relationships: {
+              locations: {
+                data: UnorderedArray(
+                  { id: location1.id, type: 'locations' },
+                  id: location2.id, type: 'locations',
+                ),
+              },
+            },
+          },
+          relationships: {
+            locations: {
+              data: UnorderedArray(
+                { id: location2.id, type: 'locations' },
+                id: location3.id, type: 'locations',
+              ),
+            },
+          },
+        )
+      end
+
+      it 'has correct relationships for each location' do
+        expect(response_json).to include_json(data: expected_relationships)
+      end
+    end
+
     context 'when not authorized', :with_invalid_auth_headers do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { ApiController::CONTENT_TYPE }
