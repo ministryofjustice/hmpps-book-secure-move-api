@@ -12,6 +12,7 @@ RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, t
   path '/people/{person_id}/timetable' do
     get 'Returns timetable entries for a date range which defaults to today' do
       tags 'People'
+      deprecated true
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,

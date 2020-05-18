@@ -5,6 +5,7 @@ require 'swagger_helper'
 RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, type: :request do
   path '/people/{person_id}/court_cases' do
     get 'Retrieves the active court cases related to a person. It filters out the non-active court cases.' do
+      deprecated true
       tags 'People'
       produces 'application/vnd.api+json'
 

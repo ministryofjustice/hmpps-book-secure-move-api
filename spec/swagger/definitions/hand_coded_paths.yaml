@@ -1267,7 +1267,7 @@
             schema:
               $ref: get_people_responses.yaml#/503
   post:
-    summary: Creates a new person and their associated profile
+    summary: Creates a new person
     tags:
     - People
     consumes:
@@ -1318,8 +1318,7 @@
               $ref: post_people_responses.yaml#/422
 /people/{person_id}:
   patch:
-    summary: Updates an existing person and their associated profile. Aliased as PUT
-      /people/{person_id}.
+    summary: Update an existing person. You can optionally update any relationships (gender, ethnicity, profiles).
     tags:
     - People
     consumes:
@@ -1376,6 +1375,134 @@
           application/vnd.api+json:
             schema:
               $ref: put_people_responses.yaml#/422
+/people/{person_id}/profile/{profile_id}/court_cases:
+  get:
+    summary: Retrieves the active court cases related to a person. It filters out the non-active court cases
+    tags:
+      - People
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: profile_id
+        in: path
+        required: true
+        description: The ID of the person's profile
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: filter
+        in: query
+        description: 'Filter only active court cases.'
+        schema:
+          type: string
+          enum:
+            - true
+            - false
+        default: true
+        example: false
+        required: false
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_court_cases_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_court_cases_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_court_cases_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_court_cases_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_court_cases_responses.yaml#/415
+/people/{person_id}/profile/{profile_id}/court_hearings:
+  post:
+    summary: Creates a court hearing
+    tags:
+      - People
+    consumes:
+      - application/vnd.api+json
+    produces:
+      - application/vnd.api+json
+    parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: profile_id
+        in: path
+        required: true
+        description: The ID of the person's profile
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: do_not_save_to_nomis
+        in: query
+        deprecated: true
+        description: '[DEPRECATED - USE save_to_nomis instead] Restrict creating the court hearing in NOMIS as well as Book A Secure Move.'
+        schema:
+          type: string
+          enum:
+            - true
+            - false
+        default: false
+        example: false
+        required: false
+      - name: save_to_nomis
+        in: query
+        description: '[NOT YET IMPLEMENTED] Save the court hearing in NOMIS in addition to Book A Secure Move.'
+        schema:
+          type: string
+          enum:
+            - true
+            - false
+        default: true
+        example: false
+        required: false
+      - name: body
+        in: body
+        required: true
+        description: The court hearing to create
+        schema:
+          $ref: court_hearing.yaml#/CourtHearing
+        responses:
+          '201':
+            description: created
+            content:
+              application/vnd.api+json:
+                schema:
+                  $ref: post_court_hearings_responses.yaml#/201
 /reference/allocation_complex_cases:
   get:
     summary: Returns a list of allocation complex cases

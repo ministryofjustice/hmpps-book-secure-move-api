@@ -8,6 +8,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
   path '/court_hearings' do
     post 'Creates a court hearing' do
       tags 'Court Hearings'
+      deprecated true
       consumes 'application/vnd.api+json'
       produces 'application/vnd.api+json'
 
@@ -109,7 +110,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
       end
 
       response '201', 'created' do
-        schema '$ref' => 'post_court_hearing_responses.yaml#/201'
+        schema '$ref' => 'post_court_hearings_responses.yaml#/201'
 
         run_test!
       end
