@@ -29,8 +29,8 @@ RSpec.describe Api::V1::MovesController do
         attributes: {
           status: 'requested',
           additional_information: 'some more info',
-          cancellation_reason: 'other',
-          cancellation_reason_comment: 'some other reason',
+          cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
+          cancellation_reason_comment: nil,
           move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
@@ -112,12 +112,12 @@ RSpec.describe Api::V1::MovesController do
           expect(result.additional_information).to eq 'some more info'
         end
 
-        it 'updates the cancellation_reason of a move' do
-          expect(result.cancellation_reason).to eq 'other'
+        it 'does not update the cancellation_reason of a move' do
+          expect(result.cancellation_reason).to be nil
         end
 
-        it 'updates the cancellation_reason_comment of a move' do
-          expect(result.cancellation_reason_comment).to eq 'some other reason'
+        it 'does not update the cancellation_reason_comment of a move' do
+          expect(result.cancellation_reason_comment).to be nil
         end
 
         it 'returns the correct data' do
@@ -133,8 +133,8 @@ RSpec.describe Api::V1::MovesController do
               attributes: {
                 status: 'requested',
                 additional_information: 'some more info',
-                cancellation_reason: 'other',
-                cancellation_reason_comment: 'some other reason',
+                cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
+                cancellation_reason_comment: nil,
                 move_type: 'court_appearance',
                 move_agreed: true,
                 move_agreed_by: 'Fred Bloggs',
@@ -218,6 +218,66 @@ RSpec.describe Api::V1::MovesController do
               expect(move.reload.documents).to match_array(before_documents)
               do_patch
               expect(move.reload.documents).to match_array(before_documents)
+            end
+          end
+        end
+
+        context 'when changing a moves person' do
+          let(:after_person) { create(:person) }
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+              },
+              relationships: { person: { data: { id: after_person.id, type: 'people' } } },
+            }
+          end
+
+          it 'updates the moves person' do
+            expect(move.reload.person).to eq(after_person)
+          end
+
+          it 'does not affect other relationships', :skip_before do
+            expect { do_patch }.not_to change { move.reload.from_location }
+          end
+
+          it 'returns the updated documents in the response body' do
+            expect(
+              response_json.dig('data', 'relationships', 'person', 'data', 'id'),
+            ).to eq(after_person.id)
+          end
+
+          context 'when person is nil' do
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { person: { data: nil } },
+              }
+            end
+
+            it 'unlinks person from the move' do
+              expect(move.reload.person).to be_nil
+            end
+          end
+
+          context 'when there is no relationship defined' do
+            let(:before_person) { create(:person) }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, person: before_person }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+              }
+            end
+
+            it 'does nothing to person on move' do
+              expect(move.reload.person).to eq(before_person)
             end
           end
         end
@@ -349,6 +409,7 @@ RSpec.describe Api::V1::MovesController do
             type: 'moves',
             attributes: {
               status: 'cancelled',
+              cancellation_reason: 'supplier_declined_to_move',
               reference: 'new reference',
             },
           }
@@ -384,6 +445,7 @@ RSpec.describe Api::V1::MovesController do
             type: 'moves',
             attributes: {
               status: 'cancelled',
+              cancellation_reason: 'supplier_declined_to_move',
               reference: 'new reference',
             },
           }

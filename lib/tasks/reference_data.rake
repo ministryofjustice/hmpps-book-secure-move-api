@@ -93,6 +93,21 @@ namespace :reference_data do
     puts_summary_of_relationships
   end
 
+  desc 'create all of the necessary reference data'
+  task create_all: :environment do
+    Rake::Task['reference_data:create_locations'].invoke
+    Rake::Task['reference_data:create_ethnicities'].invoke
+    Rake::Task['reference_data:create_genders'].invoke
+    Rake::Task['reference_data:create_identifier_types'].invoke
+    Rake::Task['reference_data:create_assessment_questions'].invoke
+    Rake::Task['reference_data:create_allocation_complex_cases'].invoke
+    Rake::Task['reference_data:create_nomis_alerts'].invoke
+    Rake::Task['reference_data:create_regions'].invoke
+    Rake::Task['reference_data:create_suppliers'].invoke
+    Rake::Task['reference_data:create_prison_transfer_reasons'].invoke
+    Rake::Task['reference_data:link_suppliers'].invoke
+  end
+
 private
 
   def have_locations_changed?(locations1, locations2)

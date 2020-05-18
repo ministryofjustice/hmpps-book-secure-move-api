@@ -3,6 +3,8 @@
 module Api
   module V1
     class MovesController < ApiController
+      before_action :validate_filter_params, only: %i[index]
+
       def index
         moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
 
@@ -19,34 +21,32 @@ module Api
       end
 
       def show
-        render_move(move, 200)
+        render_move(move, :ok)
       end
 
       def create
-        move = Move.new(move_attributes)
+        move = Move.new(new_move_attributes)
         authorize!(:create, move)
         move.save!
 
         Notifier.prepare_notifications(topic: move, action_name: 'create')
 
-        render_move(move, 201)
+        render_move(move, :created)
       end
 
       def update
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
-        # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
+        updater.call
 
-        move.assign_attributes(patch_move_attributes)
-        status_changed = move.status_changed?
-        move.save!
-
-        Notifier.prepare_notifications(topic: move, action_name: status_changed ? 'update_status' : 'update')
-        render_move(move, 200)
+        Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
+        render_move(updater.move, :ok)
       end
 
       def destroy
-        move.destroy! # TODO: we probably should not be destroying moves
+        # TODO: raise ActiveRecord::ReadOnlyRecord.new('Move cannot be deleted')
+
+        move.destroy!
         Notifier.prepare_notifications(topic: move, action_name: 'destroy')
         render_move(move, 200)
       end
@@ -54,16 +54,16 @@ module Api
     private
 
       PERMITTED_FILTER_PARAMS = %i[
-        date_from date_to created_at_from created_at_to location_type status from_location_id to_location_id supplier_id
+        date_from date_to created_at_from created_at_to location_type status from_location_id to_location_id supplier_id move_type cancellation_reason
       ].freeze
-      PERMITTED_MOVE_PARAMS = [
+      PERMITTED_NEW_MOVE_PARAMS = [
         :type,
         attributes: %i[date time_due status move_type additional_information
                        cancellation_reason cancellation_reason_comment
                        reason_comment move_agreed move_agreed_by date_from date_to],
         relationships: {},
       ].freeze
-      PERMITTED_PATCH_MOVE_PARAMS = [
+      PERMITTED_UPDATE_MOVE_PARAMS = [
         :type,
         attributes: %i[date time_due status additional_information
                        cancellation_reason cancellation_reason_comment
@@ -75,38 +75,30 @@ module Api
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
-      def move_params
-        params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
+      def validate_filter_params
+        Moves::ParamsValidator.new(filter_params, params[:sort] || {}).validate!(action_name.to_sym)
       end
 
-      def patch_move_params
-        params.require(:data).permit(PERMITTED_PATCH_MOVE_PARAMS).to_h
+      def new_move_params
+        params.require(:data).permit(PERMITTED_NEW_MOVE_PARAMS).to_h
       end
 
-      def move_attributes
+      def new_move_attributes
         person = Person.find(move_params.dig(:relationships, :person, :data, :id))
-
-        move_params[:attributes].merge(
+        # moves are always created against the latest_profile for the person
+        new_move_params[:attributes].merge(
           person_id: person.id,
           profile: person.latest_profile,
-          from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
-          to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
-          documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
-          court_hearings: CourtHearing.where(id: (move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
-          prison_transfer_reason: PrisonTransferReason.find_by(id: move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
+          from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
+          to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
+          documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
+          court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
+          prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
       end
 
-      # 1. Frontend specifies empty docs: update documents to be empty
-      # 2. Frontend does not include document relationship: don't update documents at all
-      def patch_move_attributes
-        attributes = patch_move_params.fetch(:attributes, {})
-        document_ids = patch_move_params.dig(:relationships, :documents, :data)
-
-        return attributes if document_ids.nil?
-
-        document_ids = document_ids.map { |doc| doc[:id] }
-        attributes.merge(documents: Document.where(id: document_ids))
+      def update_move_params
+        params.require(:data).permit(PERMITTED_UPDATE_MOVE_PARAMS).to_h
       end
 
       def render_move(move, status)
@@ -118,6 +110,10 @@ module Api
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, profile: %i[gender ethnicity])
           .find(params[:id])
+      end
+
+      def updater
+        @updater ||= Moves::Updater.new(move, update_move_params)
       end
     end
   end

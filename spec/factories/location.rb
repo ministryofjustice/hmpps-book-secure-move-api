@@ -13,6 +13,12 @@ FactoryBot.define do
       end
     end
 
+    trait :prison do
+      title { "HMP #{Faker::Address.city}" }
+      location_type { Location::LOCATION_TYPE_PRISON }
+      nomis_agency_id { 'PEI' }
+    end
+
     trait :court do
       sequence(:key) { |x| "court_#{x}" }
       title { "#{Faker::Address.city} Crown Court" }

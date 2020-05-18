@@ -16,6 +16,28 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
+  describe 'cancellation_reason' do
+    context 'when the move is not cancelled' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:cancellation_reason) }
+    end
+
+    context 'when the move is cancelled' do
+      let(:move) { build(:move, status: 'cancelled') }
+
+      it {
+        expect(move).to validate_inclusion_of(:cancellation_reason)
+          .in_array(%w[
+            made_in_error
+            supplier_declined_to_move
+            rejected
+            other
+          ])
+      }
+    end
+  end
+
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
@@ -55,6 +77,12 @@ RSpec.describe Move do
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
     expect(build(:move, status: :cancelled)).not_to(
       validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'does NOT validate presence of `date` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:date),
     )
   end
 
@@ -217,7 +245,7 @@ RSpec.describe Move do
       end
 
       it 'ignores cancelled moves' do
-        move.update(status: :cancelled)
+        move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
         expect(duplicate.existing).to be_nil
       end
     end
@@ -311,6 +339,40 @@ RSpec.describe Move do
 
         it { is_expected.to be true }
       end
+    end
+  end
+
+  describe '#cancel' do
+    let(:move) { build(:move) }
+
+    it 'sets the default cancellation_reason attribute to other' do
+      move.cancel
+
+      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
+    end
+
+    it 'does not set the default cancellation_reason_comment attribute' do
+      move.cancel
+
+      expect(move.cancellation_reason_comment).to be_nil
+    end
+
+    it 'sets the cancellation_reason attribute' do
+      move.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+
+      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+    end
+
+    it 'sets the cancellation_reason_comment' do
+      move.cancel(comment: 'some comment')
+
+      expect(move.cancellation_reason_comment).to eq('some comment')
+    end
+
+    it 'sets the status to cancelled' do
+      move.cancel
+
+      expect(move.status).to eq('cancelled')
     end
   end
 
