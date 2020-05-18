@@ -15,7 +15,7 @@ module Types
     end
 
     def deserialize(value)
-      if String === value
+      if value.is_a?(String)
         decoded = begin
                     ::ActiveSupport::JSON.decode(value)
                   rescue StandardError

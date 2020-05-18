@@ -21,6 +21,7 @@ RSpec.describe Api::V1::MovesController do
     it 'contains all the expected moves' do
       expect(ids).to match_array(expected_moves.pluck(:id))
     end
+
     it 'does not contain any unexpected moves' do
       # NB: this is a necessary test to catch a dodgy test which has unexpected moves in the expected moves
       expect(ids & unexpected_moves.pluck(:id)).to be_empty
@@ -90,9 +91,9 @@ RSpec.describe Api::V1::MovesController do
         let(:filter_params) { { filter: { created_at_from: 'rabbit' } } }
         let(:errors_422) do
           [{
-             'title' => 'Invalid created_at_from',
-             'detail' => 'Validation failed: Created at from is not a valid date.',
-           }]
+            'title' => 'Invalid created_at_from',
+            'detail' => 'Validation failed: Created at from is not a valid date.',
+          }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -102,9 +103,9 @@ RSpec.describe Api::V1::MovesController do
         let(:filter_params) { { filter: { created_at_to: 'rabbit' } } }
         let(:errors_422) do
           [{
-               'title' => 'Invalid created_at_to',
-               'detail' => 'Validation failed: Created at to is not a valid date.',
-           }]
+            'title' => 'Invalid created_at_to',
+            'detail' => 'Validation failed: Created at to is not a valid date.',
+          }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'

@@ -11,8 +11,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       parameter name: :Authorization,
                 in: :header,
                 schema: {
-                    type: 'string',
-                    default: 'Bearer <your-client-token>',
+                  type: 'string',
+                  default: 'Bearer <your-client-token>',
                 },
                 required: true,
                 description: <<~DESCRIPTION
@@ -24,8 +24,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: 'header',
                 description: 'Accepted request content type',
                 schema: {
-                    type: 'string',
-                    default: 'application/vnd.api+json',
+                  type: 'string',
+                  default: 'application/vnd.api+json',
                 },
                 required: true
 
@@ -33,7 +33,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: :path,
                 description: 'The ID of the person',
                 schema: {
-                    type: :string,
+                  type: :string,
                 },
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',

@@ -49,9 +49,9 @@ module People
     end
 
     def profile_identifiers
-      PROFILE_IDENTIFIERS_MAPPING.map do |local, nomis|
+      PROFILE_IDENTIFIERS_MAPPING.map { |local, nomis|
         { value: nomis_attributes[nomis], identifier_type: local } if nomis_attributes[nomis]
-      end.compact
+      }.compact
     end
 
     def latest_nomis_booking_id

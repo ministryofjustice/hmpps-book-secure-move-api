@@ -14,9 +14,9 @@ namespace :auth do
 
     application = Doorkeeper::Application.new(name: name)
 
-    suppliers = Supplier.all.each_with_object({}) do |supplier, accumulator|
+    suppliers = Supplier.all.each_with_object({}) { |supplier, accumulator|
       accumulator[supplier.name] = supplier.id
-    end.merge(NO_OWNER => nil)
+    }.merge(NO_OWNER => nil)
     owner_id = prompt.select('Is this application owned by a supplier?', suppliers)
     if owner_id != NO_OWNER
       owner = Supplier.find(owner_id)

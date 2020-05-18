@@ -14,7 +14,7 @@ RSpec.shared_context 'with client authentication', shared_context: :metadata do
       '/oauth/token',
       params: { grant_type: 'client_credentials' },
       headers: { 'Authorization': "Basic #{Base64.strict_encode64(credentials)}" },
-      )
+    )
 
     @access_token = JSON.parse(session.response.body)['access_token']
   end

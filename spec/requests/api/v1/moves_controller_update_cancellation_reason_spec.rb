@@ -19,7 +19,7 @@ RSpec.describe Api::V1::MovesController do
     let(:move_id) { move.id }
     let(:cancellation_reason_comment) { nil }
 
-    let(:move_params) {
+    let(:move_params) do
       {
         data: {
           type: 'moves',
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::MovesController do
           }.merge(cancellation_reason_comment.nil? ? {} : { cancellation_reason_comment: cancellation_reason_comment }),
         },
       }
-    }
+    end
 
     before do
       patch "/api/v1/moves/#{move_id}", params: move_params, headers: headers, as: :json
@@ -86,10 +86,10 @@ RSpec.describe Api::V1::MovesController do
 
       context 'with an invalid reason' do
         let(:cancellation_reason) { 'fruit bats' }
-        let(:errors_422) {
+        let(:errors_422) do
           [{ "title": 'Unprocessable entity',
              "detail": 'Cancellation reason is not included in the list' }]
-        }
+        end
 
         it_behaves_like 'it does not set the cancellation_reason'
         it_behaves_like 'an endpoint that responds with error 422'
@@ -97,10 +97,10 @@ RSpec.describe Api::V1::MovesController do
 
       context 'with a missing reason' do
         let(:cancellation_reason) { nil }
-        let(:errors_422) {
+        let(:errors_422) do
           [{ "title": 'Unprocessable entity',
              "detail": 'Cancellation reason is not included in the list' }]
-        }
+        end
 
         it_behaves_like 'it does not set the cancellation_reason'
         it_behaves_like 'an endpoint that responds with error 422'
@@ -145,10 +145,10 @@ RSpec.describe Api::V1::MovesController do
 
       context 'with an invalid reason' do
         let(:cancellation_reason) { 'fruit bats' }
-        let(:errors_422) {
+        let(:errors_422) do
           [{ "title": 'Unprocessable entity',
              "detail": 'Cancellation reason is not included in the list' }]
-        }
+        end
 
         it_behaves_like 'an endpoint that responds with error 422'
         it_behaves_like 'it does not set the cancellation_reason'
@@ -156,10 +156,10 @@ RSpec.describe Api::V1::MovesController do
 
       context 'with a missing reason' do
         let(:cancellation_reason) { nil }
-        let(:errors_422) {
+        let(:errors_422) do
           [{ "title": 'Unprocessable entity',
              "detail": 'Cancellation reason is not included in the list' }]
-        }
+        end
 
         it_behaves_like 'an endpoint that responds with error 422'
         it_behaves_like 'it does not set the cancellation_reason'

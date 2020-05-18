@@ -16,30 +16,30 @@ RSpec.describe Api::V1::AllocationsController do
   describe 'POST /allocations' do
     let(:schema) { load_yaml_schema('post_allocations_responses.yaml') }
 
-    let(:complex_case1_attributes) {
+    let(:complex_case1_attributes) do
       {
         key: complex_case1.key,
         title: complex_case1.title,
         answer: false,
         allocation_complex_case_id: complex_case1.id,
       }
-    }
-    let(:complex_case2_attributes) {
+    end
+    let(:complex_case2_attributes) do
       {
         key: complex_case2.key,
         title: complex_case2.title,
         answer: true,
         allocation_complex_case_id: complex_case2.id,
       }
-    }
-    let(:complex_cases_attributes) {
+    end
+    let(:complex_cases_attributes) do
       [
         complex_case1_attributes,
         complex_case2_attributes,
       ]
-    }
+    end
     let(:moves_count) { 2 }
-    let(:allocation_attributes) {
+    let(:allocation_attributes) do
       {
         date: Date.today,
         moves_count: moves_count,
@@ -49,7 +49,7 @@ RSpec.describe Api::V1::AllocationsController do
         complete_in_full: true,
         complex_cases: complex_cases_attributes,
       }
-    }
+    end
 
     let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location }
@@ -144,10 +144,14 @@ RSpec.describe Api::V1::AllocationsController do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
-        let(:faraday_client) {
-          class_double(Faraday, headers: {}, post:
-            instance_double(Faraday::Response, success?: true, status: 202))
-        }
+        let(:faraday_client) do
+          class_double(
+            Faraday,
+            headers: {},
+            post:
+                        instance_double(Faraday::Response, success?: true, status: 202),
+          )
+        end
 
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
@@ -175,11 +179,17 @@ RSpec.describe Api::V1::AllocationsController do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
-        let(:notify_response) {
-          instance_double(ActionMailer::MessageDelivery, deliver_now!:
-              instance_double(Mail::Message, govuk_notify_response:
-                  instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-        }
+        let(:notify_response) do
+          instance_double(
+            ActionMailer::MessageDelivery,
+            deliver_now!:
+                          instance_double(
+                            Mail::Message,
+                            govuk_notify_response:
+                                              instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                          ),
+          )
+        end
         let(:response_id) { SecureRandom.uuid }
 
         before do

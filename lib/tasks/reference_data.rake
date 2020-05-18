@@ -75,12 +75,14 @@ namespace :reference_data do
         removed_locations = existing_location_keys - yaml_location_keys
         added_locations = yaml_location_keys - existing_location_keys
 
-        Raven.capture_message("Locations updated for the Supplier: #{supplier.name}. ",
-                              extra: {
-                                  added_locations: added_locations,
-                                  removed_locations: removed_locations,
-                              },
-                              level: 'warning')
+        Raven.capture_message(
+          "Locations updated for the Supplier: #{supplier.name}. ",
+          extra: {
+            added_locations: added_locations,
+            removed_locations: removed_locations,
+          },
+          level: 'warning',
+        )
 
         puts '- - -'
         puts "Locations removed from Supplier '#{supplier.name}': #{removed_locations}"
@@ -110,6 +112,7 @@ namespace :reference_data do
 
 private
 
+  # rubocop:disable all
   def have_locations_changed?(locations1, locations2)
     ((locations1 - locations2) + (locations2 - locations1)).any?
   end
@@ -126,4 +129,5 @@ private
       end
     end
   end
+  # rubocop:enable all
 end

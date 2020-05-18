@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
 class MoveSerializer < ActiveModel::Serializer
-  attributes :id, :reference, :status, :updated_at, :created_at, :time_due, :date, :move_type, :additional_information,
-             :cancellation_reason, :cancellation_reason_comment, :move_agreed, :move_agreed_by, :date_from, :date_to
+  attributes :id,
+             :reference,
+             :status,
+             :updated_at,
+             :created_at,
+             :time_due,
+             :date,
+             :move_type,
+             :additional_information,
+             :cancellation_reason,
+             :cancellation_reason_comment,
+             :move_agreed,
+             :move_agreed_by,
+             :date_from,
+             :date_to
 
   has_one :person, serializer: PersonSerializer
   has_one :from_location, serializer: LocationSerializer

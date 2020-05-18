@@ -6,9 +6,9 @@ module Api
       before_action :validate_params
 
       PERMITTED_EVENT_PARAMS = [
-          :type,
-          attributes: %i[timestamp event_name notes],
-          relationships: { to_location: {} },
+        :type,
+        attributes: %i[timestamp event_name notes],
+        relationships: { to_location: {} },
       ].freeze
 
       def create
@@ -27,9 +27,10 @@ module Api
           end
           render json: fake_event_object, status: :created
         else
-          render status: :bad_request, json: {
-            errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
-          }
+          render status: :bad_request,
+                 json: {
+                   errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
+                 }
         end
       end
 
@@ -38,9 +39,10 @@ module Api
       def validate_params
         MoveEvents::ParamsValidator.new(event_params).tap do |validator|
           if validator.invalid?
-            render status: :bad_request, json: {
-              errors: validator.errors.map { |field, message| { title: field, detail: message } },
-            }
+            render status: :bad_request,
+                   json: {
+                     errors: validator.errors.map { |field, message| { title: field, detail: message } },
+                   }
           end
         end
       end

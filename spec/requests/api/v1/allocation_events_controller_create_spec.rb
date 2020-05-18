@@ -85,7 +85,7 @@ RSpec.describe Api::V1::AllocationEventsController do
     end
 
     context 'with validation errors' do
-      # TODO add validation tests once the Event model is finalised
+      # TODO: add validation tests once the Event model is finalised
     end
   end
 end

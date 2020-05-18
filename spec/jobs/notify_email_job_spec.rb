@@ -3,7 +3,11 @@
 RSpec.describe NotifyEmailJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
-  let(:perform_and_ignore_errors!) { perform! rescue nil }
+  let(:perform_and_ignore_errors!) do
+    perform!
+  rescue StandardError
+    nil
+  end
   let(:subscription) { create(:subscription, :no_callback_url) }
   let(:notification) { create(:notification, :email, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
@@ -67,11 +71,17 @@ RSpec.describe NotifyEmailJob, type: :job do
     end
 
     context 'when the email is successfully delivered to Gov.uk Notify' do
-      let(:notify_response) {
-        instance_double(ActionMailer::MessageDelivery, deliver_now!:
-            instance_double(Mail::Message, govuk_notify_response:
-                instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-      }
+      let(:notify_response) do
+        instance_double(
+          ActionMailer::MessageDelivery,
+          deliver_now!:
+                      instance_double(
+                        Mail::Message,
+                        govuk_notify_response:
+                                        instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                      ),
+        )
+      end
       let(:response_id) { SecureRandom.uuid }
 
       before { allow(MoveMailer).to receive(:notify).and_return(notify_response) }
@@ -99,10 +109,13 @@ RSpec.describe NotifyEmailJob, type: :job do
     end
 
     context 'when Gov.uk Notify does not respond with a govuk_notify_response object' do
-      let(:notify_response) {
-        instance_double(ActionMailer::MessageDelivery, deliver_now!:
-            instance_double(Mail::Message, govuk_notify_response: nil))
-      }
+      let(:notify_response) do
+        instance_double(
+          ActionMailer::MessageDelivery,
+          deliver_now!:
+                      instance_double(Mail::Message, govuk_notify_response: nil),
+        )
+      end
 
       before { allow(MoveMailer).to receive(:notify).and_return(notify_response) }
 

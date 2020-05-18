@@ -13,11 +13,11 @@ RSpec.describe Regions::Importer do
     {
       '1': {
         name: 'First region',
-        locations: %w(FOO BAR),
+        locations: %w[FOO BAR],
       },
       '2A': {
         name: 'Second region',
-        locations: %w(FOO BUZZ),
+        locations: %w[FOO BUZZ],
       },
     }
   end
@@ -39,13 +39,13 @@ RSpec.describe Regions::Importer do
     it 'links to correct locations' do
       importer.call
 
-      expect(region1.locations.map(&:nomis_agency_id)).to match_array %w(FOO BAR)
+      expect(region1.locations.map(&:nomis_agency_id)).to match_array %w[FOO BAR]
     end
 
     it 'does not link to missing locations' do
       importer.call
 
-      expect(region2.locations.map(&:nomis_agency_id)).to match %w(FOO)
+      expect(region2.locations.map(&:nomis_agency_id)).to match %w[FOO]
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe Regions::Importer do
 
     it 'updates links to correct locations' do
       importer.call
-      expect(existing.reload.locations.map(&:nomis_agency_id)).to match %w(FOO)
+      expect(existing.reload.locations.map(&:nomis_agency_id)).to match %w[FOO]
     end
   end
 end

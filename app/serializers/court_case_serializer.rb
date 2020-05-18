@@ -1,6 +1,9 @@
 class CourtCaseSerializer < ActiveModel::Serializer
-  attributes :nomis_case_id, :nomis_case_status, :case_start_date,
-             :case_type, :case_number
+  attributes :nomis_case_id,
+             :nomis_case_status,
+             :case_start_date,
+             :case_type,
+             :case_number
 
   belongs_to :location, serializer: LocationSerializer
 

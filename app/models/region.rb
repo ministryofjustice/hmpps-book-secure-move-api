@@ -3,5 +3,7 @@
 class Region < ApplicationRecord
   has_and_belongs_to_many :locations
 
+  # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :name, :key, presence: true, uniqueness: true
+  # rubocop:enable Rails/UniqueValidationWithoutIndex
 end

@@ -50,7 +50,7 @@ FactoryBot.define do
       status { 'completed' }
     end
 
-    #cancellation_reasons
+    # cancellation_reasons
     trait :cancelled_made_in_error do
       status { 'cancelled' }
       cancellation_reason { 'made_in_error' }
@@ -86,7 +86,7 @@ FactoryBot.define do
     end
   end
 
-  factory :from_court_to_prison, class: Move do
+  factory :from_court_to_prison, class: 'Move' do
     association(:profile)
     association(:from_location, :court, factory: :location)
     association(:to_location, :prison, factory: :location)
