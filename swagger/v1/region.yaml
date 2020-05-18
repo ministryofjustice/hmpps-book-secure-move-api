@@ -1,0 +1,50 @@
+Region:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: 7cc9c528-3301-4d69-f200-69e482ce1ed8
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: regions
+      enum:
+      - regions
+      description: The type of this object - always `regions`
+    attributes:
+      type: object
+      required:
+      - key
+      - name
+      properties:
+        key:
+          type: string
+          example: 5A
+          description: Region key (reference number used internally)
+        name:
+          type: string
+          example: North Wales
+          description: Human readable label for this region
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the region was last created or updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the region was created
+          readOnly: true
+    relationships:
+      type: object
+      required:
+      - locations
+      properties:
+        locations:
+          $ref: location_reference.yaml#/LocationReference
+          description: The locations associated with this region

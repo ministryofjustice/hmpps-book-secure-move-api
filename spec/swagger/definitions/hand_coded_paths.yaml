@@ -1550,6 +1550,35 @@
           application/vnd.api+json:
             schema:
               $ref: get_nationalities_responses.yaml#/415
+/reference/regions:
+  get:
+    summary: Returns a list of regions (location groups)
+    tags:
+    - Regions
+    - Locations
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: content_type_parameter.yaml#/ContentType
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_regions_responses.yaml#/200
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_regions_responses.yaml#/401
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_regions_responses.yaml#/415
 /reference/suppliers:
   get:
     summary: Returns the list of suppliers

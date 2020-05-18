@@ -153,6 +153,9 @@ RSpec.configure do |config|
           ProfileIdentifier: {
             "$ref": 'profile_identifier.yaml#/ProfileIdentifier',
           },
+          Region: {
+            "$ref": 'region.yaml#/Region',
+          },
           Supplier: {
             "$ref": 'supplier.yaml#/Supplier',
           },
