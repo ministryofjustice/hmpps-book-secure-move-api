@@ -28,6 +28,10 @@ class ApiController < ApplicationController
 
 private
 
+  def validate_idempotency_key
+
+  end
+
   def authentication_enabled?
     return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
 

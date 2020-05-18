@@ -423,6 +423,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.2.3)
   rails-erd (~> 1.6)
+  redis
   rspec-json_expectations
   rspec-rails
   rswag-api

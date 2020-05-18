@@ -3,7 +3,7 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      before_action :validate_params
+      before_action :validate_params, :validate_idempotency_key
 
       PERMITTED_EVENT_PARAMS = [
           :type,
@@ -67,6 +67,10 @@ module Api
 
       def move
         @move ||= Move.accessible_by(current_ability).find(params.require(:move_id))
+      end
+
+      def event
+
       end
 
       def fake_event_object
