@@ -116,9 +116,9 @@ Move:
       required:
       - from_location
       properties:
-        person:
-          $ref: person_reference.yaml#/PersonReference
-          description: The person being moved
+        profile:
+          $ref: profile_reference.yaml#/ProfileReference
+          description: The profile being moved
         from_location:
           $ref: location_reference.yaml#/LocationReference
           description: The location that the person is being moved from
@@ -128,13 +128,6 @@ Move:
         prison_transfer_reason:
           $ref: prison_transfer_reason_reference.yaml#/PrisonTransferReasonReference
           description: The reason for this prison transfer
-        documents:
-          $ref: document_reference.yaml#/DocumentReference
-          description: The documents associated with this Move
-        court_hearing:
-          $ref: court_hearing_reference.yaml#/CourtHearingReference
-          description: A court hearing generated when creating a move. May have corresponding
-            hearing in Nomis backend (see nomis fields).
         allocation:
           $ref: allocation_reference.yaml#/AllocationReference
           description: The allocation associated with this move

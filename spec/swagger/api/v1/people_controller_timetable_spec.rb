@@ -71,13 +71,13 @@ RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, t
           location = create(:location)
 
           activity = Activity.new.build_from_nomis(
-            'eventId' => 401_732_488,
+            'eventId' => 401732488,
             'startTime' => '2020-04-22T08:30:00',
             'eventTypeDesc' => 'Prison Activities',
             'locationCode' => location.nomis_agency_id,
           )
           court_hearing = NomisCourtHearing.new.build_from_nomis(
-            'id' => 330_253_339,
+            'id' => 330253339,
             'dateTime' => '2020-04-22T08:30:00',
             'location' => { 'agencyId' => location.nomis_agency_id },
           )

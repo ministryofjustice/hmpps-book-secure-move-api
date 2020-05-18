@@ -1375,9 +1375,9 @@
           application/vnd.api+json:
             schema:
               $ref: put_people_responses.yaml#/422
-/people/{person_id}/profile/{profile_id}/court_cases:
+/people/{person_id}/court_cases:
   get:
-    summary: Retrieves the active court cases related to a person. It filters out the non-active court cases
+    summary: Retrieves the person's active court cases. It filters out the non-active court cases
     tags:
       - People
     consumes:
@@ -1399,9 +1399,9 @@
           type: string
         format: uuid
         example: 00525ecb-7316-492a-aae2-f69334b2a155
-      - name: filter
+      - name: filter[active]
         in: query
-        description: 'Filter only active court cases.'
+        description: Filter only active court cases.
         schema:
           type: string
           enum:
@@ -1441,7 +1441,72 @@
           application/vnd.api+json:
             schema:
               $ref: get_court_cases_responses.yaml#/415
-/people/{person_id}/profile/{profile_id}/court_hearings:
+/people/{person_id}/timetable:
+  get:
+    summary: Returns a person's timetable entries for a date range, default is just today.
+    tags:
+      - People
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: filter[date_from]
+        in: query
+        description: Only return timetable entries on or after this date. Defaults to today.
+        schema:
+          type: string
+        format: date
+        default: true
+        example: '2020-04-28'
+        required: false
+      - name: filter[date_to]
+        in: query
+        description: 'Only return timetable entries before or on this date. Defaults to today'
+        schema:
+          type: string
+        format: date
+        default: true
+        example: '2020-04-28'
+        required: false
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_timetable_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_timetable_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_timetable_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_timetable_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_timetable_responses.yaml#/415
+/people/{person_id}/profiles/{profile_id}/court_hearings:
   post:
     summary: Creates a court hearing
     tags:

@@ -12,7 +12,7 @@
       items:
         anyOf:
         - $ref: location.yaml#/Location
-        - $ref: person.yaml#/Person
+        - $ref: profile.yaml#/Profile
         - $ref: gender.yaml#/Gender
         - $ref: ethnicity.yaml#/Ethnicity
         - $ref: allocation.yaml#/Allocation
