@@ -6,18 +6,9 @@ module Api
       before_action :validate_filter_params, only: %i[index]
 
       def index
-        moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
-
-        if moves_params.valid?
-          moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-          # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-
-          serialization_params = { include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS }
-
-          paginate moves, serialization_params
-        else
-          render json: { error: moves_params.errors }, status: :bad_request
-        end
+        moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
+        # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
+        paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def show
