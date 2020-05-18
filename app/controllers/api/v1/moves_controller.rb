@@ -75,7 +75,7 @@ module Api
       end
 
       def new_move_attributes
-        person = Person.find(move_params.dig(:relationships, :person, :data, :id))
+        person = Person.find(new_move_params.dig(:relationships, :person, :data, :id))
         # moves are always created against the latest_profile for the person
         new_move_params[:attributes].merge(
           # TODO: Remove this attribute and make serializer work with nil person id
