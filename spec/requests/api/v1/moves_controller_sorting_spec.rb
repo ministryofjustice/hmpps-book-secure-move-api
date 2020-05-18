@@ -10,10 +10,16 @@ RSpec.describe Api::V1::MovesController do
   let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
   describe 'GET /moves' do
-    let!(:move1) { create :move }
-    let!(:move2) { create :move, :with_transfer_reason }
-    let!(:move3) { create :move, :with_transfer_reason }
-    let!(:move4) { create :move }
+    # NB sorting should be case-sensitive, i.e. LOCATION1, LOCATION3, location2, location4
+    let(:location1) { create :location, title: 'LOCATION1' }
+    let(:location2) { create :location, title: 'location2' }
+    let(:location3) { create :location, title: 'LOCATION3' }
+    let(:location4) { create :location, title: 'location4' }
+
+    let!(:move1) { create :move, to_location: location1 }
+    let!(:move2) { create :move, :prison_transfer, to_location: location2 }
+    let!(:move3) { create :move, :prison_transfer, to_location: location3 }
+    let!(:move4) { create :move, to_location: location4 }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
@@ -170,7 +176,8 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(move_data.map(&:title))
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
+              expect(locations.map(&:title)).to eq(%w[LOCATION1 LOCATION3 location2 location4])
             end
           end
 
@@ -178,7 +185,8 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(move_data.reverse.map(&:title))
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
+              expect(locations.map(&:title)).to eq(%w[location4 location2 LOCATION3 LOCATION1])
             end
           end
         end

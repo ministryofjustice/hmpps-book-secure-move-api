@@ -43,11 +43,13 @@ module Moves
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
       scope = scope.includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
-      scope = apply_filter(scope, :status)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
+      scope = apply_filter(scope, :status)
+      scope = apply_filter(scope, :move_type)
+      scope = apply_filter(scope, :cancellation_reason)
       scope = apply_supplier_filters(scope)
       scope
     end

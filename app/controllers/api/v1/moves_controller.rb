@@ -28,13 +28,10 @@ module Api
       def update
         raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
 
-        # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
-        move.assign_attributes(update_move_attributes)
-        status_changed = move.status_changed?
-        move.save!
+        updater.call
 
-        Notifier.prepare_notifications(topic: move, action_name: status_changed ? 'update_status' : 'update')
-        render_move(move, :ok)
+        Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
+        render_move(updater.move, :ok)
       end
 
       def destroy
@@ -48,7 +45,7 @@ module Api
     private
 
       PERMITTED_FILTER_PARAMS = %i[
-        date_from date_to created_at_from created_at_to location_type status from_location_id to_location_id supplier_id
+        date_from date_to created_at_from created_at_to location_type status from_location_id to_location_id supplier_id move_type cancellation_reason
       ].freeze
       PERMITTED_NEW_MOVE_PARAMS = [
         :type,
@@ -93,18 +90,6 @@ module Api
         params.require(:data).permit(PERMITTED_UPDATE_MOVE_PARAMS).to_h
       end
 
-      # 1. Frontend specifies empty docs: update documents to be empty
-      # 2. Frontend does not include document relationship: don't update documents at all
-      def update_move_attributes
-        attributes = update_move_params.fetch(:attributes, {})
-        document_ids = update_move_params.dig(:relationships, :documents, :data)
-
-        return attributes if document_ids.nil?
-
-        document_ids = document_ids.map { |doc| doc[:id] }
-        attributes.merge(documents: Document.where(id: document_ids))
-      end
-
       def render_move(move, status)
         render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS
       end
@@ -114,6 +99,10 @@ module Api
           .accessible_by(current_ability)
           .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
           .find(params[:id])
+      end
+
+      def updater
+        @updater ||= Moves::Updater.new(move, update_move_params)
       end
     end
   end
