@@ -27,6 +27,10 @@ class MoveSerializer < ActiveModel::Serializer
   }.freeze
 
   def person
-    object&.profile&.person
+    if object.profile_id
+      object&.profile&.person
+    else
+      Person.find(object.person_id)
+    end
   end
 end
