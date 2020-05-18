@@ -5,10 +5,14 @@ module Api
     class MovesController < ApiController
       def index
         moves_params = Moves::ParamsValidator.new(filter_params, params[:sort] || {})
+
         if moves_params.valid?
           moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
           # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-          paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS
+
+          serialization_params = { include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS }
+
+          paginate moves, serialization_params
         else
           render json: { error: moves_params.errors }, status: :bad_request
         end
@@ -80,8 +84,11 @@ module Api
       end
 
       def move_attributes
+        person = Person.find(move_params.dig(:relationships, :person, :data, :id))
+
         move_params[:attributes].merge(
-          profile: Person.find(move_params.dig(:relationships, :person, :data, :id)).latest_profile,
+          person_id: person.id,
+          profile: person.latest_profile,
           from_location: Location.find(move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
