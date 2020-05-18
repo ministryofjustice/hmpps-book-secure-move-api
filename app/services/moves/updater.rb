@@ -37,9 +37,10 @@ module Moves
     # 4. Frontend does not include person relationship: don't update person at all
     def attributes
       attributes = move_params.fetch(:attributes, {})
+      person = Person.find_by(id: person_attributes.dig(:data, :id)) unless person_attributes.nil?
 
       attributes[:documents] = Document.where(id: document_ids) unless document_attributes.nil?
-      attributes[:person] = Person.find_by(id: person_attributes.dig(:data, :id)) unless person_attributes.nil?
+      attributes[:profile] = person&.latest_profile  unless person_attributes.nil?
 
       attributes
     end
