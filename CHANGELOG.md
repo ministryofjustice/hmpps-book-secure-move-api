@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.10.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.1) (2020-05-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.0...v1.10.1)
+
+**Merged pull requests:**
+
+- P4-1441 Cancel allocations [\#459](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/459) ([cwrw](https://github.com/cwrw))
+- P4-1530 Allow person to be updated on a move [\#458](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/458) ([cwrw](https://github.com/cwrw))
+- P4-1525 Improve validation of `moves\_count` when creating an allocation [\#457](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/457) ([smoothcontract](https://github.com/smoothcontract))
+- P4-1468 bonus move filters [\#456](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/456) ([martyn-w](https://github.com/martyn-w))
+- P4-1428 Replicate review app database from main heroku API app [\#455](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/455) ([smoothcontract](https://github.com/smoothcontract))
+- V1.10.0 Update CHANGELOG.md [\#454](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/454) ([cwrw](https://github.com/cwrw))
+- Add slack notifications to CI workflow [\#453](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/453) ([teneightfive](https://github.com/teneightfive))
+
 ## [v1.10.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.0) (2020-05-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.9.0...v1.10.0)
