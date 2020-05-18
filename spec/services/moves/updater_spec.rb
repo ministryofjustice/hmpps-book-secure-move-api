@@ -65,7 +65,7 @@ RSpec.describe Moves::Updater do
     context 'with people' do
       let(:before_person) { create(:person) }
       let(:after_person) { create(:person) }
-      let!(:move) { create(:move, person: before_person) }
+      let!(:move) { create(:move, profile: before_person.latest_profile) }
 
       context 'with new person' do
         let(:move_params) {
@@ -76,7 +76,7 @@ RSpec.describe Moves::Updater do
         }
 
         it 'updates person association to new person' do
-          expect(updater.move.person).to eq(after_person)
+          expect(updater.move.profile.person).to eq(after_person)
         end
       end
 
@@ -88,14 +88,14 @@ RSpec.describe Moves::Updater do
           }
         }
 
-        it 'removes associated person' do
-          expect(updater.move.person).to be_nil
+        it 'removes associated profile' do
+          expect(updater.move.profile).to be_nil
         end
       end
 
       context 'with no person relationship' do
         it 'does not change old person associated' do
-          expect(updater.move.person).to eq(before_person)
+          expect(updater.move.profile.person).to eq(before_person)
         end
       end
     end

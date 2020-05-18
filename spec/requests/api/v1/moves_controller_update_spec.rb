@@ -17,7 +17,8 @@ RSpec.describe Api::V1::MovesController do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents }
+    let(:profile) { create(:profile) }
+    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents, profile: profile }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -59,7 +60,7 @@ RSpec.describe Api::V1::MovesController do
       context 'with an existing requested move', :skip_before do
         before do
           create(:move, :requested,
-                 profile: move.profile,
+                 profile: profile,
                  from_location: move.from_location,
                  to_location: move.to_location,
                  date: move.date)
@@ -235,7 +236,7 @@ RSpec.describe Api::V1::MovesController do
           end
 
           it 'updates the moves person' do
-            expect(move.reload.person).to eq(after_person)
+            expect(move.reload.profile.person).to eq(after_person)
           end
 
           it 'does not affect other relationships', :skip_before do
@@ -259,14 +260,14 @@ RSpec.describe Api::V1::MovesController do
               }
             end
 
-            it 'unlinks person from the move' do
-              expect(move.reload.person).to be_nil
+            it 'unlinks profile from the move' do
+              expect(move.reload.profile).to be_nil
             end
           end
 
           context 'when there is no relationship defined' do
             let(:before_person) { create(:person) }
-            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, person: before_person }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: before_person.latest_profile }
             let(:move_params) do
               {
                 type: 'moves',
@@ -277,7 +278,7 @@ RSpec.describe Api::V1::MovesController do
             end
 
             it 'does nothing to person on move' do
-              expect(move.reload.person).to eq(before_person)
+              expect(move.reload.profile.person).to eq(before_person)
             end
           end
         end
