@@ -79,7 +79,6 @@ module Api
         # moves are always created against the latest_profile for the person
         new_move_params[:attributes].merge(
           # TODO: Remove this attribute and make serializer work with nil person id
-          person_id: person.id,
           profile: person.latest_profile,
           from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),

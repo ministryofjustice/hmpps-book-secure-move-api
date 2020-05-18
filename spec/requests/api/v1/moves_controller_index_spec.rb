@@ -160,6 +160,49 @@ RSpec.describe Api::V1::MovesController do
           expect(has_court_hearings).to eq(false)
         end
       end
+
+      context 'when the move includes both a profile id and a person id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: person.id, profile_id: person.latest_profile.id) }
+
+        it 'returns the correct person' do
+          get '/api/v1/moves', params: params, headers: headers
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
+        end
+      end
+
+      context 'when the move includes neither profile id or person id' do
+        let!(:move) { create(:move, person_id: nil, profile_id: nil) }
+
+        it 'returns the correct person' do
+          get '/api/v1/moves', params: params, headers: headers
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to be_nil
+        end
+      end
+
+      context 'when the move includes only a person id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: person.id, profile_id: nil) }
+
+        it 'returns the correct person' do
+          get '/api/v1/moves', params: params, headers: headers
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
+        end
+      end
+
+      context 'when the move includes only a profile id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: nil, profile_id: person.latest_profile.id) }
+
+        it 'returns the correct person' do
+          get '/api/v1/moves', params: params, headers: headers
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
+        end
+      end
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do
