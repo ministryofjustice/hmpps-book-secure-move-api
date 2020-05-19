@@ -75,9 +75,10 @@ module Api
       end
 
       def new_move_attributes
+        person = Person.find(new_move_params.dig(:relationships, :person, :data, :id))
         # moves are always created against the latest_profile for the person
         new_move_params[:attributes].merge(
-          person: Person.find(new_move_params.dig(:relationships, :person, :data, :id)),
+          profile: person.latest_profile,
           from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
@@ -97,7 +98,7 @@ module Api
       def move
         @move ||= Move
           .accessible_by(current_ability)
-          .includes(:from_location, :to_location, person: { profiles: %i[gender ethnicity] })
+          .includes(:from_location, :to_location, profile: %i[gender ethnicity])
           .find(params[:id])
       end
 

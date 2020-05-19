@@ -144,7 +144,7 @@ Allocation:
           description: The location (prison) that the people are being moved to
         moves:
           $ref: move_reference.yaml#/MoveReference
-          description: The moves associated with this Allocation
+          description: The moves associated with this allocation
         person:
           $ref: person_reference.yaml#/PersonReference
           description: The people being moved

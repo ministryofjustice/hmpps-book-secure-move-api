@@ -89,41 +89,29 @@ namespace :reference_data do
         puts "Locations for the Supplier '#{supplier.name}' have not changed."
       end
     end
-
-    puts_summary_of_relationships
   end
 
   desc 'create all of the necessary reference data'
   task create_all: :environment do
-    Rake::Task['reference_data:create_locations'].invoke
-    Rake::Task['reference_data:create_ethnicities'].invoke
-    Rake::Task['reference_data:create_genders'].invoke
-    Rake::Task['reference_data:create_identifier_types'].invoke
-    Rake::Task['reference_data:create_assessment_questions'].invoke
-    Rake::Task['reference_data:create_allocation_complex_cases'].invoke
-    Rake::Task['reference_data:create_nomis_alerts'].invoke
-    Rake::Task['reference_data:create_regions'].invoke
-    Rake::Task['reference_data:create_suppliers'].invoke
-    Rake::Task['reference_data:create_prison_transfer_reasons'].invoke
-    Rake::Task['reference_data:link_suppliers'].invoke
+    %w[reference_data:create_locations
+       reference_data:create_ethnicities
+       reference_data:create_genders
+       reference_data:create_identifier_types
+       reference_data:create_assessment_questions
+       reference_data:create_allocation_complex_cases
+       reference_data:create_nomis_alerts
+       reference_data:create_regions
+       reference_data:create_suppliers
+       reference_data:create_prison_transfer_reasons
+       reference_data:link_suppliers].each do |task_name|
+      puts "Running '#{task_name}' ..."
+      Rake::Task[task_name].invoke
+    end
   end
 
 private
 
   def have_locations_changed?(locations1, locations2)
     ((locations1 - locations2) + (locations2 - locations1)).any?
-  end
-
-  def puts_summary_of_relationships
-    puts
-    puts 'Summary of relationships'
-    puts '========================'
-    Supplier.all.each do |supplier|
-      puts
-      puts "Supplier #{supplier.name}:"
-      supplier.locations.each do |location|
-        puts " - #{location.nomis_agency_id}: #{location.title}"
-      end
-    end
   end
 end

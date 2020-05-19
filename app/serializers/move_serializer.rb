@@ -25,4 +25,13 @@ class MoveSerializer < ActiveModel::Serializer
   INCLUDED_FIELDS = {
     allocation: %i[to_location from_location moves_count created_at],
   }.freeze
+
+  def person
+    # TODO: Remove the support for person id in future
+    if object.profile_id
+      object&.profile&.person
+    elsif object.person_id
+      Person.find(object.person_id)
+    end
+  end
 end
