@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# New Swagger created in hand_coded_paths.yaml
+# TODO Move this to a controller spec
 require 'swagger_helper'
 
 RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :rswag, type: :request do

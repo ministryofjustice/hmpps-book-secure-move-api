@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Swagger moved to hand_coded_paths.yaml
+# TODO move to controller spec
+
 require 'swagger_helper'
 
 RSpec.describe Api::V1::MovesController, :with_client_authentication, :rswag, type: :request do

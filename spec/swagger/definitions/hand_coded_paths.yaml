@@ -436,8 +436,41 @@
             schema:
               $ref: post_moves_responses.yaml#/422
 /moves/{move_id}:
+  get:
+    summary: Get a move.
+    tags:
+      - Moves
+    produces:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_move_responses.yaml#/200
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_move_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_move_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_move_responses.yaml#/415
   patch:
-    summary: Updates a move. Aliased as PUT /moves/{move_id}.
+    summary: Updates a move.
     tags:
     - Moves
     consumes:
@@ -730,15 +763,17 @@
           application/vnd.api+json:
             schema:
               $ref: error_responses.yaml#/422
-/moves/{move_id}/documents:
+/people/{person_id}/profiles/{profile_id}/documents:
   post:
-    summary: Creates a new document
+    summary: Creates a new document for the profile
     tags:
     - Documents
+    - Profiles
     consumes:
     - application/vnd.api+json
     parameters:
-    - $ref: move_id_parameter.yaml#/MoveId
+    - $ref: person_id_parameter.yaml#/PersonId
+    - $ref: profile_id_parameter.yaml#/ProfileId
     - name: body
       in: body
       required: true
@@ -1377,7 +1412,7 @@
               $ref: put_people_responses.yaml#/422
 /people/{person_id}/court_cases:
   get:
-    summary: Retrieves the person's active court cases. It filters out the non-active court cases
+    summary: Retrieves the person's active court cases from NOMIS. It filters out the non-active court cases
     tags:
       - People
     consumes:
@@ -1387,14 +1422,6 @@
         in: path
         required: true
         description: The ID of the person
-        schema:
-          type: string
-        format: uuid
-        example: 00525ecb-7316-492a-aae2-f69334b2a155
-      - name: profile_id
-        in: path
-        required: true
-        description: The ID of the person's profile
         schema:
           type: string
         format: uuid
@@ -1510,28 +1537,14 @@
   post:
     summary: Creates a court hearing
     tags:
-      - People
+      - Profiles
     consumes:
       - application/vnd.api+json
     produces:
       - application/vnd.api+json
     parameters:
-      - name: person_id
-        in: path
-        required: true
-        description: The ID of the person
-        schema:
-          type: string
-        format: uuid
-        example: 00525ecb-7316-492a-aae2-f69334b2a155
-      - name: profile_id
-        in: path
-        required: true
-        description: The ID of the person's profile
-        schema:
-          type: string
-        format: uuid
-        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - $ref: person_id_parameter.yaml#/PersonId
+      - $ref: profile_id_parameter.yaml#/ProfileId
       - name: do_not_save_to_nomis
         in: query
         deprecated: true

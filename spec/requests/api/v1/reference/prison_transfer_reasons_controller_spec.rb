@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO move Swagger to hand_coded_paths.yaml
+# TODO move to controller spec
+
 require 'swagger_helper'
 
 RSpec.describe Api::V1::Reference::PrisonTransferReasonsController, :rswag, :with_client_authentication do
@@ -12,7 +15,7 @@ RSpec.describe Api::V1::Reference::PrisonTransferReasonsController, :rswag, :wit
   path '/reference/prison_transfer_reasons' do
     let(:"Content-Type") { content_type }
     get 'Returns all reasons' do
-      tags 'Reasons'
+      tags 'Reasons', 'RSWAG'
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,

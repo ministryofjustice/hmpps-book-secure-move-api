@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+#
+# TODO move Swagger to hand_coded_paths.yaml
+# TODO move to controller spec
+#
 
 require 'swagger_helper'
 

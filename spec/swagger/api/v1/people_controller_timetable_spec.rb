@@ -1,5 +1,8 @@
 require 'swagger_helper'
 
+# Swagger moved to hand_coded_paths.yaml
+# TODO move to controller spec
+
 RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, type: :request do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -12,7 +15,6 @@ RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, t
   path '/people/{person_id}/timetable' do
     get 'Returns timetable entries for a date range which defaults to today' do
       tags 'People'
-      deprecated true
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,
