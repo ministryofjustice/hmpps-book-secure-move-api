@@ -86,5 +86,6 @@ end
 
 group :test do
   gem 'climate_control'
+  gem 'mock_redis'
   gem 'simplecov', require: false
 end

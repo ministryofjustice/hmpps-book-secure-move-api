@@ -15,6 +15,8 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
+  rescue_from Idempotence::ConflictError, with: :render_conflict_error
+  rescue_from Idempotence::KeyRequiredError, with: :render_bad_request_error
 
   def current_user
     doorkeeper_token&.application
@@ -28,8 +30,18 @@ class ApiController < ApplicationController
 
 private
 
-  def validate_idempotency_key
+  # NB: for new controllers
+  def validate_required_idempotency_key
+    idempotence_validator.call(request.headers['IDEMPOTENCY_KEY'], required: true)
+  end
 
+  # NB: for legacy controllers
+  def validate_optional_idempotency_key
+    idempotence_validator.call(prequest.headers['IDEMPOTENCY_KEY'], required: false)
+  end
+
+  def idempotence_validator
+    @idempotence_validator ||= Idempotence::Validator.new
   end
 
   def authentication_enabled?
@@ -137,6 +149,16 @@ private
         detail: "#{exception.exception.class}: #{exception.message}",
       }] },
       status: :service_unavailable,
+    )
+  end
+
+  def render_conflict_error(exception)
+    render(
+      json: { errors: [{
+           title: 'Idempotency Conflict Error',
+           detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :conflict,
     )
   end
 

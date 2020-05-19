@@ -11,9 +11,11 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:supplier) { create(:supplier) }
     let(:application) { create(:application, owner_id: supplier.id) }
     let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': current_idempotency_key } }
     let(:content_type) { ApiController::CONTENT_TYPE }
-
+    let(:previous_idempotency_key) { '1234' }
+    let(:current_idempotency_key) { '5678' }
+    let(:mock_redis) { MockRedis.new }
     let(:move) { create(:move) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location) }
@@ -35,6 +37,9 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
+      allow(Redis).to receive(:new) { mock_redis }
+      allow(ENV).to receive(:fetch).with('REDIS_URL', nil).and_return('http://some.where')
+      mock_redis.set(previous_idempotency_key, 'T')
       post "/api/v1/moves/#{move_id}/events", params: move_event_params, headers: headers, as: :json
     end
 
@@ -79,6 +84,26 @@ RSpec.describe Api::V1::MoveEventsController do
       let(:detail_404) { "Couldn't find Location without an ID" }
 
       it_behaves_like 'an endpoint that responds with error 404'
+    end
+
+    context 'with a non-idempotent request' do
+      let(:current_idempotency_key) { previous_idempotency_key }
+      let(:detail_409) { 'Idempotence::ConflictError: conflicting idempotency key: 1234' }
+
+      it_behaves_like 'an endpoint that responds with error 409'
+    end
+
+    context 'with a blank idempotency_key' do
+      let(:current_idempotency_key) { nil }
+
+      it_behaves_like 'an endpoint that responds with error 400' do
+        let(:errors_400) do
+          [{
+            'title' => 'Bad request',
+            'detail' => 'idempotency key is required',
+          }]
+        end
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
