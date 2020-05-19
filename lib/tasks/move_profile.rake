@@ -21,6 +21,6 @@ namespace :moves do
       move.update_attribute(:profile_id, profile.id)
     end
 
-    puts "#{moves_with_nil_profile.count} profile IDs have been successfully updated."
+    puts "#{total} profile IDs have been successfully updated."
   end
 end
