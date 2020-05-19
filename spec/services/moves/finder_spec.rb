@@ -16,10 +16,11 @@ RSpec.describe Moves::Finder do
       let!(:proposed_move) { create :move, :proposed }
       let!(:cancelled_supplier_declined_to_move) { create :move, :cancelled_supplier_declined_to_move }
       let!(:completed_move) { create :move, :completed }
+      let!(:move_with_allocation) { create(:move, :with_allocation) }
       let(:filter_params) { {} }
 
       it 'returns all moves' do
-        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move]
+        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation]
       end
     end
 
@@ -206,6 +207,35 @@ RSpec.describe Moves::Finder do
 
         it 'returns empty results set' do
           expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by has_relationship_to_allocation' do
+      let!(:move_with_allocation) { create(:move, :with_allocation) }
+      let!(:move_without_allocation) { create(:move) }
+
+      context 'with wrong type passed to has_relationship_to_allocation filter' do
+        let(:filter_params) { { has_relationship_to_allocation: Random.uuid } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(move_with_allocation, move_without_allocation)
+        end
+      end
+
+      context 'with has_relationship_to_allocation set as `false`' do
+        let(:filter_params) { { has_relationship_to_allocation: 'false' } }
+
+        it 'returns only moves without allocations' do
+          expect(results).to contain_exactly(move_without_allocation)
+        end
+      end
+
+      context 'with has_relationship_to_allocation set as `true`' do
+        let(:filter_params) { { has_relationship_to_allocation: 'true' } }
+
+        it 'returns only moves with allocations' do
+          expect(results).to contain_exactly(move_with_allocation)
         end
       end
     end
