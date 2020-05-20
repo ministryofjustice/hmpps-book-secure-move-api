@@ -143,6 +143,52 @@ RSpec.describe Api::V1::MovesController do
       end
     end
 
+    describe 'by has_relationship_to_allocation' do
+      let(:filter_params) { { filter: { has_relationship_to_allocation: filter_value } } }
+      let(:move_with_allocation) { create(:move, :with_allocation) }
+      let(:move_without_allocation) { create(:move) }
+
+      context 'when set to true' do
+        let(:expected_moves) { Move.where(id: move_with_allocation.id) }
+        let(:unexpected_moves) { Move.where(id: move_without_allocation.id) }
+        let(:filter_value) { true }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to false' do
+        let(:expected_moves) { Move.where(id: move_without_allocation.id) }
+        let(:unexpected_moves) { Move.where(id: move_with_allocation.id) }
+        let(:filter_value) { false }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to incorrect type' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_value) { 'some-value' }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to empty value' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_value) { nil }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when filter not set' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_params) { {} }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+    end
+
     describe 'by cancellation_reason' do
       let(:filter_params) { { filter: { cancellation_reason: cancellation_reason } } }
       let(:made_in_error_moves) { create_list :move, 3, :cancelled_made_in_error }

@@ -432,7 +432,6 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop-govuk
-  rubocop-rspec
   sassc-rails
   sentry-raven
   shoulda-matchers
