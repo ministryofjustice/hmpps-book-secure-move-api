@@ -1,5 +1,22 @@
 # Changelog
 
+## [v1.10.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.2) (2020-05-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.1...v1.10.2)
+
+**Merged pull requests:**
+
+- Remove rubocop-rspec from lock file as it's been removed from our gems [\#473](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/473) ([cwrw](https://github.com/cwrw))
+- P4-1560 Add allocation filter to moves endpoint [\#472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/472) ([cwrw](https://github.com/cwrw))
+- P4-1474 Add support for optional `requested\_by` attribute in allocation model [\#468](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/468) ([smoothcontract](https://github.com/smoothcontract))
+- Fix output for set\_profile\_from\_person rake [\#467](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/467) ([alexdesi](https://github.com/alexdesi))
+- Clearer last\_name sorting test [\#466](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/466) ([martyn-w](https://github.com/martyn-w))
+- Modernise rubocop [\#465](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/465) ([willfish](https://github.com/willfish))
+- Clean up rake tasks reference\_data [\#463](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/463) ([alexdesi](https://github.com/alexdesi))
+- \[P4-1450\] Migrate a moves reference from a Person to a Profile [\#462](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/462) ([willfish](https://github.com/willfish))
+- Update CHANGELOG.md [\#461](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/461) ([martyn-w](https://github.com/martyn-w))
+- P4-1384 GET /reference/regions API endpoint [\#460](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/460) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v1.10.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.1) (2020-05-15)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.0...v1.10.1)
@@ -220,6 +237,7 @@
 - support new 'dev' environment [\#341](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/341) ([starswan](https://github.com/starswan))
 - Revert "use vendor/bundle for bundler" [\#339](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/339) ([starswan](https://github.com/starswan))
 - p4-1188 emails for prison recall moves [\#338](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/338) ([starswan](https://github.com/starswan))
+- P4-1147 remove NOMIS sync from moves\#index [\#330](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/330) ([starswan](https://github.com/starswan))
 
 ## [v1.5.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.5.1) (2020-03-19)
 
@@ -239,7 +257,6 @@
 - Improve tasks recreate\_all fake data. [\#334](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/334) ([alexdesi](https://github.com/alexdesi))
 - P4-1159 cancel NOMIS synched moves from prisons [\#333](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/333) ([starswan](https://github.com/starswan))
 - Save picture in S3 and return S3 URL [\#332](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/332) ([alexdesi](https://github.com/alexdesi))
-- P4-1147 remove NOMIS sync from moves\#index [\#330](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/330) ([starswan](https://github.com/starswan))
 - P4 1090 send azure events [\#329](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/329) ([starswan](https://github.com/starswan))
 
 ## [v1.4.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.4.0) (2020-03-12)
