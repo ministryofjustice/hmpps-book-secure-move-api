@@ -20,7 +20,7 @@ module Allocations
     end
 
     def split_params(name)
-      filter_params[name].split(',')
+      filter_params[name]&.split(',')
     end
 
     def apply_filters(scope)

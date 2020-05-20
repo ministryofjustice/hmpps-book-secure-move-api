@@ -138,6 +138,14 @@ RSpec.describe Allocations::Finder do
           expect(allocation_finder.call).to be_empty
         end
       end
+
+      context 'with nil status' do
+        let(:filter_params) { { status: nil } }
+
+        it 'returns only allocations without a status' do
+          expect(allocation_finder.call).to contain_exactly(allocation)
+        end
+      end
     end
   end
 end
