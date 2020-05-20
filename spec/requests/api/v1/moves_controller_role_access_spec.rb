@@ -13,7 +13,10 @@ RSpec.describe Api::V1::MovesController do
   let!(:pentonville) { create :location, suppliers: [pentonville_supplier] }
   let!(:birmingham) do
     create :location,
-           key: 'hmp_birmingham', title: 'HMP Birmingham', nomis_agency_id: 'BMI', suppliers: [birmingham_supplier]
+           key: 'hmp_birmingham',
+           title: 'HMP Birmingham',
+           nomis_agency_id: 'BMI',
+           suppliers: [birmingham_supplier]
   end
 
   describe 'GET /moves' do
@@ -22,8 +25,12 @@ RSpec.describe Api::V1::MovesController do
 
     let!(:pentonville) { create :location, :with_moves, suppliers: [pentonville_supplier] }
     let!(:birmingham) do
-      create :location, :with_moves,
-             key: 'hmp_birmingham', title: 'HMP Birmingham', nomis_agency_id: 'BMI', suppliers: [birmingham_supplier]
+      create :location,
+             :with_moves,
+             key: 'hmp_birmingham',
+             title: 'HMP Birmingham',
+             nomis_agency_id: 'BMI',
+             suppliers: [birmingham_supplier]
     end
 
     before do

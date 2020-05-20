@@ -16,12 +16,10 @@ RSpec.configure do |config|
 
   def load_yaml_schema(file_name)
     File.open("#{Rails.root}/swagger/v1/#{file_name}") do |file|
-      begin
-        YAML.safe_load(file.read)
-      rescue Psych::SyntaxError => e
-        # Include original filename in exception to make debugging a less cryptic affair
-        raise Psych::SyntaxError.new(file_name, e.line, e.column, e.offset, e.problem, e.context)
-      end
+      YAML.safe_load(file.read)
+    rescue Psych::SyntaxError => e
+      # Include original filename in exception to make debugging a less cryptic affair
+      raise Psych::SyntaxError.new(file_name, e.line, e.column, e.offset, e.problem, e.context)
     end
   end
 

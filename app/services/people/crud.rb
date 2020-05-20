@@ -14,9 +14,9 @@ module People
   private
 
     def relationships
-      (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map do |attribute, value|
+      (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map { |attribute, value|
         ["#{attribute}_id", value[:data][:id]]
-      end.to_h
+      }.to_h
     end
 
     def assessment_answers

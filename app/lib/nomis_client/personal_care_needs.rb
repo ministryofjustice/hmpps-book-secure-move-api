@@ -6,11 +6,11 @@ module NomisClient
 
     class << self
       def get(nomis_offender_numbers)
-        get_response(nomis_offender_numbers: nomis_offender_numbers).map do |personal_care_needs|
+        get_response(nomis_offender_numbers: nomis_offender_numbers).map { |personal_care_needs|
           personal_care_needs['personalCareNeeds'].map do |personal_care_need_attributes|
             attributes_for(personal_care_needs['offenderNo'], personal_care_need_attributes)
           end
-        end.flatten
+        }.flatten
       end
 
       def get_response(nomis_offender_numbers:)

@@ -49,16 +49,33 @@ module Api
       ].freeze
       PERMITTED_NEW_MOVE_PARAMS = [
         :type,
-        attributes: %i[date time_due status move_type additional_information
-                       cancellation_reason cancellation_reason_comment
-                       reason_comment move_agreed move_agreed_by date_from date_to],
+        attributes: %i[date
+                       time_due
+                       status
+                       move_type
+                       additional_information
+                       cancellation_reason
+                       cancellation_reason_comment
+                       reason_comment
+                       move_agreed
+                       move_agreed_by
+                       date_from
+                       date_to],
         relationships: {},
       ].freeze
       PERMITTED_UPDATE_MOVE_PARAMS = [
         :type,
-        attributes: %i[date time_due status additional_information
-                       cancellation_reason cancellation_reason_comment
-                       reason_comment move_agreed move_agreed_by date_from date_to],
+        attributes: %i[date
+                       time_due
+                       status
+                       additional_information
+                       cancellation_reason
+                       cancellation_reason_comment
+                       reason_comment
+                       move_agreed
+                       move_agreed_by
+                       date_from
+                       date_to],
         relationships: {},
       ].freeze
 

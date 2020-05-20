@@ -3,7 +3,11 @@
 RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
-  let(:perform_and_ignore_errors!) { perform! rescue nil }
+  let(:perform_and_ignore_errors!) do
+    perform!
+  rescue StandardError
+    nil
+  end
   let(:subscription) { create(:subscription, :no_email_address) }
   let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
@@ -72,7 +76,6 @@ RSpec.describe NotifyWebhookJob, type: :job do
           end
         end
       end
-
 
       context 'when the callback response is a success' do
         let(:response) { instance_double(Faraday::Response, success?: true, status: 202) }

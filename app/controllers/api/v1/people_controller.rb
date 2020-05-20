@@ -38,7 +38,7 @@ module Api
         if success
           render json: Image.new(person.id, url_for(person.image))
         else
-          raise ActiveRecord::RecordNotFound.new('Image not found')
+          raise ActiveRecord::RecordNotFound, 'Image not found'
         end
       end
 
@@ -88,9 +88,20 @@ module Api
         :last_name,
         :date_of_birth,
         :gender_additional_information,
-        assessment_answers: [%i[key date expiry_data category title comments assessment_question_id
-                                nomis_alert_type nomis_alert_type_description nomis_alert_code nomis_alert_description
-                                created_at expires_at imported_from_nomis]],
+        assessment_answers: [%i[key
+                                date
+                                expiry_data
+                                category
+                                title
+                                comments
+                                assessment_question_id
+                                nomis_alert_type
+                                nomis_alert_type_description
+                                nomis_alert_code
+                                nomis_alert_description
+                                created_at
+                                expires_at
+                                imported_from_nomis]],
         identifiers: [%i[value identifier_type]],
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
@@ -132,9 +143,10 @@ module Api
       def validate_timetable_filter_params
         People::ParamsValidator.new(timetable_filter_params).tap do |validator|
           if validator.invalid?
-            render status: :bad_request, json: {
-              errors: validator.errors.map { |field, message| { title: field, detail: message } },
-            }
+            render status: :bad_request,
+                   json: {
+                     errors: validator.errors.map { |field, message| { title: field, detail: message } },
+                   }
           end
         end
       end

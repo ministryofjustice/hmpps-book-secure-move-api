@@ -7,14 +7,14 @@ module Api
       after_action :create_event, only: %i[create update]
 
       PERMITTED_NEW_JOURNEY_PARAMS = [
-          :type,
-          attributes: [:timestamp, :billable, vehicle: {}],
-          relationships: [from_location: {}, to_location: {}, supplier: {}],
+        :type,
+        attributes: [:timestamp, :billable, vehicle: {}],
+        relationships: [from_location: {}, to_location: {}, supplier: {}],
       ].freeze
 
       PERMITTED_UPDATE_JOURNEY_PARAMS = [
-          :type,
-          attributes: [:timestamp, :billable, vehicle: {}],
+        :type,
+        attributes: [:timestamp, :billable, vehicle: {}],
       ].freeze
 
       def index
@@ -93,7 +93,7 @@ module Api
         location = Location.find_or_initialize_by(id: location_id)
         unless location.persisted?
           location.errors.add(:location, "reference was not found id=#{location_id}")
-          raise ActiveModel::ValidationError.new(location)
+          raise ActiveModel::ValidationError, location
         end
         location
       end
@@ -103,7 +103,7 @@ module Api
         supplier = Supplier.find_by(id: supplier_id) || current_user.owner
         if supplier.nil? || (current_user.owner.present? && supplier != current_user.owner)
           supplier.errors.add(:supplier, "reference is not valid for this account or not found id=#{supplier_id}")
-          raise ActiveModel::ValidationError.new(supplier)
+          raise ActiveModel::ValidationError, supplier
         end
         supplier
       end

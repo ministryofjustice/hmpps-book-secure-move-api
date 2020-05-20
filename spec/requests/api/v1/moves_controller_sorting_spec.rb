@@ -38,10 +38,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { by: 'rabbits' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_by',
                  'detail' => 'Validation failed: Sort by is not included in the list' }]
-            }
+            end
           end
         end
 
@@ -49,10 +49,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { by: 'created_at', direction: 'rabbits' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_direction',
                  'detail' => 'Validation failed: Sort direction is not included in the list' }]
-            }
+            end
           end
         end
 
@@ -60,10 +60,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { direction: 'asc' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_by',
                  'detail' => "Validation failed: Sort by can't be blank" }]
-            }
+            end
           end
         end
       end
@@ -198,6 +198,11 @@ RSpec.describe Api::V1::MovesController do
 
         context 'when name' do
           let(:object_name) { 'person' }
+          let(:move_data) do
+            Move.all
+              .sort_by { |move| move.profile.last_name }
+              .map { |move| move.profile.person }
+          end
           let(:last_names) { object_ids.map { |person_id| Person.find(person_id).latest_profile.last_name } }
 
           context 'with default direction' do

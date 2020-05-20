@@ -5,16 +5,15 @@ require 'rails_helper'
 RSpec.describe AllocationSerializer do
   subject(:serializer) { described_class.new(allocation) }
 
-
   let(:complex_case) { create(:allocation_complex_case) }
-  let(:complex_case_answer_attributes) {
+  let(:complex_case_answer_attributes) do
     {
-    key: complex_case.key,
-    title: complex_case.title,
-    answer: true,
-    allocation_complex_case_id: complex_case.id,
-  }
-  }
+      key: complex_case.key,
+      title: complex_case.title,
+      answer: true,
+      allocation_complex_case_id: complex_case.id,
+    }
+  end
   let(:complex_case_answer) { Allocation::ComplexCaseAnswer.new(complex_case_answer_attributes) }
   let(:allocation) { create(:allocation, complex_cases: [complex_case_answer]) }
   let(:result) do
@@ -118,9 +117,9 @@ RSpec.describe AllocationSerializer do
 
   describe 'moves' do
     context 'with a move' do
-      let(:adapter_options) {
+      let(:adapter_options) do
         { include: AllocationSerializer::INCLUDED_ATTRIBUTES }
-      }
+      end
       let(:allocation) { create(:allocation, :with_moves) }
       let(:move) { allocation.moves.first }
 

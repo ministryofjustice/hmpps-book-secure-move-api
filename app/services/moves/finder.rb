@@ -11,7 +11,7 @@ module Moves
       @order_direction = if order_params[:by]
                            (order_params[:direction] || 'asc').to_sym
                          else
-        # default if no 'by' parameter is date descending
+                           # default if no 'by' parameter is date descending
                            :desc
                          end
     end

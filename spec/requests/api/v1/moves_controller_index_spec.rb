@@ -82,7 +82,7 @@ RSpec.describe Api::V1::MovesController do
                 },
               },
             ],
-            )
+          )
         end
         # rubocop:enable RSpec/ExampleLength
       end
@@ -139,10 +139,10 @@ RSpec.describe Api::V1::MovesController do
         end
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid date_from',
                'detail' => 'Validation failed: Date from is not a valid date.' }]
-          }
+          end
         end
       end
 

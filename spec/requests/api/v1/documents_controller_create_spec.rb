@@ -57,7 +57,7 @@ RSpec.describe Api::V1::DocumentsController do
             Rack::Test::UploadedFile.new(
               Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
               'application/msword',
-              )
+            )
           end
 
           schema '$ref' => 'post_documents_responses.yaml#/201'
@@ -71,7 +71,6 @@ RSpec.describe Api::V1::DocumentsController do
       end
     end
   end
-
 
   describe 'POST /moves/:move_id/documents' do
     let(:schema) { load_yaml_schema('post_documents_responses.yaml') }

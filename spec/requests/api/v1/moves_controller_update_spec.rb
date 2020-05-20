@@ -59,11 +59,14 @@ RSpec.describe Api::V1::MovesController do
 
       context 'with an existing requested move', :skip_before do
         before do
-          create(:move, :requested,
-                 profile: profile,
-                 from_location: move.from_location,
-                 to_location: move.to_location,
-                 date: move.date)
+          create(
+            :move,
+            :requested,
+            profile: profile,
+            from_location: move.from_location,
+            to_location: move.to_location,
+            date: move.date,
+          )
           do_patch
         end
 
@@ -109,6 +112,7 @@ RSpec.describe Api::V1::MovesController do
         it 'updates date_to' do
           expect(result.date_to).to eq date_to
         end
+
         it 'updates the additional_information of a move' do
           expect(result.additional_information).to eq 'some more info'
         end
@@ -288,10 +292,14 @@ RSpec.describe Api::V1::MovesController do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
-            let(:faraday_client) {
-              class_double(Faraday, headers: {}, post:
-                  instance_double(Faraday::Response, success?: true, status: 202))
-            }
+            let(:faraday_client) do
+              class_double(
+                Faraday,
+                headers: {},
+                post:
+                                  instance_double(Faraday::Response, success?: true, status: 202),
+              )
+            end
 
             before do
               allow(Faraday).to receive(:new).and_return(faraday_client)
@@ -311,11 +319,17 @@ RSpec.describe Api::V1::MovesController do
             let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
-            let(:notify_response) {
-              instance_double(ActionMailer::MessageDelivery, deliver_now!:
-                  instance_double(Mail::Message, govuk_notify_response:
-                      instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-            }
+            let(:notify_response) do
+              instance_double(
+                ActionMailer::MessageDelivery,
+                deliver_now!:
+                                  instance_double(
+                                    Mail::Message,
+                                    govuk_notify_response:
+                                                          instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                                  ),
+              )
+            end
             let(:response_id) { SecureRandom.uuid }
 
             before do
@@ -341,10 +355,14 @@ RSpec.describe Api::V1::MovesController do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
-            let(:faraday_client) {
-              class_double(Faraday, headers: {}, post:
-                  instance_double(Faraday::Response, success?: true, status: 202))
-            }
+            let(:faraday_client) do
+              class_double(
+                Faraday,
+                headers: {},
+                post:
+                                  instance_double(Faraday::Response, success?: true, status: 202),
+              )
+            end
             let(:move_params) do
               {
                 type: 'moves',
@@ -373,11 +391,17 @@ RSpec.describe Api::V1::MovesController do
             let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
-            let(:notify_response) {
-              instance_double(ActionMailer::MessageDelivery, deliver_now!:
-                  instance_double(Mail::Message, govuk_notify_response:
-                      instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-            }
+            let(:notify_response) do
+              instance_double(
+                ActionMailer::MessageDelivery,
+                deliver_now!:
+                                  instance_double(
+                                    Mail::Message,
+                                    govuk_notify_response:
+                                                          instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                                  ),
+              )
+            end
             let(:response_id) { SecureRandom.uuid }
             let(:move_params) do
               {
@@ -426,7 +450,7 @@ RSpec.describe Api::V1::MovesController do
         it 'does NOT update the reference of a move', skip_before: true do
           expect { do_patch }.not_to(
             change { move.reload.reference },
-            )
+          )
         end
       end
 

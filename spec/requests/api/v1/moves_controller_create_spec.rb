@@ -13,13 +13,13 @@ RSpec.describe Api::V1::MovesController do
   describe 'POST /moves' do
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
-    let(:move_attributes) {
+    let(:move_attributes) do
       { date: Date.today,
         time_due: Time.now,
         status: 'requested',
         additional_information: 'some more info',
         move_type: 'court_appearance' }
-    }
+    end
 
     let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
@@ -107,10 +107,14 @@ RSpec.describe Api::V1::MovesController do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
-        let(:faraday_client) {
-          class_double(Faraday, headers: {}, post:
-            instance_double(Faraday::Response, success?: true, status: 202))
-        }
+        let(:faraday_client) do
+          class_double(
+            Faraday,
+            headers: {},
+            post:
+                        instance_double(Faraday::Response, success?: true, status: 202),
+          )
+        end
 
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
@@ -132,11 +136,17 @@ RSpec.describe Api::V1::MovesController do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
-        let(:notify_response) {
-          instance_double(ActionMailer::MessageDelivery, deliver_now!:
-              instance_double(Mail::Message, govuk_notify_response:
-                  instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-        }
+        let(:notify_response) do
+          instance_double(
+            ActionMailer::MessageDelivery,
+            deliver_now!:
+                          instance_double(
+                            Mail::Message,
+                            govuk_notify_response:
+                                              instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                          ),
+          )
+        end
         let(:response_id) { SecureRandom.uuid }
 
         before do
@@ -219,7 +229,7 @@ RSpec.describe Api::V1::MovesController do
       context 'with explicit move_agreed and move_agreed_by' do
         let(:date_from) { Date.yesterday }
         let(:date_to) { Date.tomorrow }
-        let(:move_attributes) {
+        let(:move_attributes) do
           {
             date: Date.today,
             move_agreed: 'true',
@@ -227,7 +237,7 @@ RSpec.describe Api::V1::MovesController do
             date_from: date_from,
             date_to: date_to,
           }
-        }
+        end
 
         it 'sets date_from' do
           expect(response_json.dig('data', 'attributes', 'date_from')).to eq date_from.to_s
@@ -304,10 +314,12 @@ RSpec.describe Api::V1::MovesController do
       let(:profile) { create(:profile) }
       let(:person) { profile.person }
       let(:move_attributes) do
-        attributes_for(:move).merge(date: old_move.date,
-                                    person: profile.person,
-                                    from_location: from_location,
-                                    to_location: to_location)
+        attributes_for(:move).merge(
+          date: old_move.date,
+          person: profile.person,
+          from_location: from_location,
+          to_location: to_location,
+        )
       end
 
       before do

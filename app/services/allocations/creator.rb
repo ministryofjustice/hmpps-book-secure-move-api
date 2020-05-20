@@ -27,13 +27,13 @@ module Allocations
     end
 
     def moves
-      Array.new(allocation.moves_count) {
+      Array.new(allocation.moves_count) do
         Move.new(
           from_location: allocation.from_location,
           to_location: allocation.to_location,
           date: allocation.date,
         )
-      }
+      end
     end
 
     def attributes

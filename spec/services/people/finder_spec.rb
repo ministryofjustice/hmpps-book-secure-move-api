@@ -9,9 +9,12 @@ RSpec.describe People::Finder do
 
   # create a second person with different IDs to check filters work properly
   before do
-    create(:profile, profile_identifiers:
-      [{ identifier_type: 'police_national_computer', value: 'CD/765432' },
-       { identifier_type: 'prison_number', value: 'GFEDCBA' }])
+    create(
+      :profile,
+      profile_identifiers:
+            [{ identifier_type: 'police_national_computer', value: 'CD/765432' },
+             { identifier_type: 'prison_number', value: 'GFEDCBA' }],
+    )
   end
 
   describe 'filtering' do

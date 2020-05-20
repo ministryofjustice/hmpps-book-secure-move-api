@@ -17,15 +17,15 @@ class Subscription < ApplicationRecord
   end
 
   def secret=(value)
-    write_attribute(:encrypted_secret, Encryptor.encrypt(value))
+    self[:encrypted_secret] = Encryptor.encrypt(value)
   end
 
   def username=(value)
-    write_attribute(:encrypted_username, Encryptor.encrypt(value))
+    self[:encrypted_username] = Encryptor.encrypt(value)
   end
 
   def password=(value)
-    write_attribute(:encrypted_password, Encryptor.encrypt(value))
+    self[:encrypted_password] = Encryptor.encrypt(value)
   end
 
   def secret

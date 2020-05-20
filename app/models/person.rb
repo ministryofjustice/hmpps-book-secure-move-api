@@ -11,9 +11,7 @@ class Person < VersionedModel
     profiles.order(:updated_at).last
   end
 
-  def latest_nomis_booking_id
-    latest_profile.latest_nomis_booking_id
-  end
+  delegate :latest_nomis_booking_id, to: :latest_profile
 
   def attach_image(image_blob)
     "#{id}.jpg".tap do |filename|
