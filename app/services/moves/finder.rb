@@ -45,6 +45,7 @@ module Moves
       scope = scope.includes(:from_location, :to_location, profile: %i[gender ethnicity])
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
+      scope = apply_allocation_relationship_filters(scope)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
       scope = apply_filter(scope, :status)
@@ -83,6 +84,14 @@ module Moves
       return scope unless filter_params.key?(:supplier_id)
 
       scope.served_by(filter_params[:supplier_id])
+    end
+
+    def apply_allocation_relationship_filters(scope)
+      return scope unless filter_params.key?(:has_relationship_to_allocation)
+
+      scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
+      scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
+      scope
     end
   end
 end

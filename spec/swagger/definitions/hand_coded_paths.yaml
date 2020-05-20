@@ -320,6 +320,13 @@
         items:
           type: string
           format: uuid
+    - name: filter[has_relationship_to_allocation]
+      in: query
+      explode: false
+      description: Filters results to either exclude or include moves associated to an allocation optionally
+      schema:
+        type: boolean
+        example: true
     - name: sort[by]
       description: field to sort results by
       in: query
