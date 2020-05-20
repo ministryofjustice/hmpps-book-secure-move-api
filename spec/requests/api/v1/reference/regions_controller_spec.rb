@@ -80,7 +80,8 @@ RSpec.describe Api::V1::Reference::RegionsController do
               locations: {
                 data: UnorderedArray(
                   { id: location1.id, type: 'locations' },
-                  id: location2.id, type: 'locations',
+                  id: location2.id,
+                  type: 'locations',
                 ),
               },
             },
@@ -89,7 +90,8 @@ RSpec.describe Api::V1::Reference::RegionsController do
             locations: {
               data: UnorderedArray(
                 { id: location2.id, type: 'locations' },
-                id: location3.id, type: 'locations',
+                id: location3.id,
+                type: 'locations',
               ),
             },
           },
