@@ -89,8 +89,8 @@ module Moves
     def apply_allocation_relationship_filters(scope)
       return scope unless filter_params.key?(:has_relationship_to_allocation)
 
-      scope = scope.where.not(allocation: nil) if filter_params[:has_relationship_to_allocation] == 'true'
-      scope = scope.where(allocation: nil) if filter_params[:has_relationship_to_allocation] == 'false'
+      scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
+      scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
       scope
     end
   end

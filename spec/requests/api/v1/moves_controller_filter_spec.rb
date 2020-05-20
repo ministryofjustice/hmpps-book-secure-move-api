@@ -171,6 +171,22 @@ RSpec.describe Api::V1::MovesController do
 
         it_behaves_like 'it returns the correct moves'
       end
+
+      context 'when set to empty value' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_value) { nil }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when filter not set' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_params) { {} }
+
+        it_behaves_like 'it returns the correct moves'
+      end
     end
 
     describe 'by cancellation_reason' do

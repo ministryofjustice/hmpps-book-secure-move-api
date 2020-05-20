@@ -223,6 +223,14 @@ RSpec.describe Moves::Finder do
         end
       end
 
+      context 'with has_relationship_to_allocation set as `nil`' do
+        let(:filter_params) { { has_relationship_to_allocation: nil } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(move_with_allocation, move_without_allocation)
+        end
+      end
+
       context 'with has_relationship_to_allocation set as `false`' do
         let(:filter_params) { { has_relationship_to_allocation: 'false' } }
 
