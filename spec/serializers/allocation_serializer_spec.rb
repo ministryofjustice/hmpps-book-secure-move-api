@@ -62,6 +62,10 @@ RSpec.describe AllocationSerializer do
       expect(attributes[:other_criteria]).to eql allocation.other_criteria
     end
 
+    it 'contains a requested_by attribute' do
+      expect(attributes[:requested_by]).to eql allocation.requested_by
+    end
+
     it 'contains a status attribute' do
       expect(attributes[:status]).to eql allocation.status
     end
