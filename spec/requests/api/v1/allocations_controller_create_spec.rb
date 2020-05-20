@@ -46,6 +46,7 @@ RSpec.describe Api::V1::AllocationsController do
         prisoner_category: :b,
         sentence_length: :short,
         other_criteria: 'curly hair',
+        requested_by: 'Iama Requestor',
         complete_in_full: true,
         complex_cases: complex_cases_attributes,
       }
@@ -122,6 +123,14 @@ RSpec.describe Api::V1::AllocationsController do
 
       it 'sets the correct complex_cases attributes' do
         expect(response_json.dig('data', 'attributes', 'complex_cases').first).to match complex_case1_attributes.stringify_keys
+      end
+
+      context 'when omitting requested_by attribute' do
+        let(:allocation_attributes) { attributes_for(:allocation).except(:requested_by) }
+
+        it 'creates an allocation without requested_by' do
+          expect(allocation.requested_by).to be_nil
+        end
       end
 
       context 'when specifying nil complex_cases attribute' do
