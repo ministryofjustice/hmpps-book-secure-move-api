@@ -113,6 +113,7 @@ namespace :reference_data do
 
 private
 
+  # TODO: Move these methods outside of the rake task
   # rubocop:disable all
   def have_locations_changed?(locations1, locations2)
     ((locations1 - locations2) + (locations2 - locations1)).any?
