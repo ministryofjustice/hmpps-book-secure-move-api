@@ -18,6 +18,8 @@ class MoveSerializer < ActiveModel::Serializer
              :date_to
 
   has_one :person, serializer: PersonSerializer
+  has_one :profile, serializer: ProfileSerializer
+
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }
   has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
@@ -25,7 +27,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
 
-  INCLUDED_ATTRIBUTES = %w[
+  SUPPORTED_RELATIONSHIPS = %w[
     person.ethnicity
     person.gender
     from_location

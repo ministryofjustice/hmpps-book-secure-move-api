@@ -3,13 +3,17 @@
 module Api
   module V1
     class MovesController < ApiController
-      before_action :validate_filter_params, only: %i[index]
+      before_action :validate_filter_params, :validate_include_params, only: %i[index]
 
       def index
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-        # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-        includes = MoveSerializer::INCLUDED_ATTRIBUTES.dup - %w[court_hearings]
-        paginate moves, include: includes, fields: MoveSerializer::INCLUDED_FIELDS
+
+        paginate moves, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
+
+        # paginate moves,
+        #          include: [MoveSerializer::SUPPORTED_RELATIONSHIPS.dup.except(:court_hearings), :profile],
+        #          fields: MoveSerializer::INCLUDED_FIELDS,
+        #          optional_includes: include_params
       end
 
       def show
@@ -102,7 +106,7 @@ module Api
       end
 
       def render_move(move, status)
-        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS
+        render json: move, status: status, include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def move
@@ -114,6 +118,36 @@ module Api
 
       def updater
         @updater ||= Moves::Updater.new(move, update_move_params)
+      end
+
+      def included_relationships
+        # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
+        MoveSerializer::SUPPORTED_RELATIONSHIPS + include_params - %w[court_hearings]
+      end
+
+      # nil -> []
+      # "person, profile" -> ['person', 'profile']
+      def include_params
+        params[:include]
+          .to_s
+          .split(',')
+          .map(&:strip)
+      end
+
+      def validate_include_params
+        # TODO: this is temporary, once FE uses the `include` params for all the endpoints/resources,
+        # supported_attributes will be set to to MoveSerializer::SUPPORTED_RELATIONSHIPS
+        supported_attributes = MoveSerializer::SUPPORTED_RELATIONSHIPS + %w[profile]
+
+        include_params.each do |resource|
+          unless supported_attributes.include?(resource)
+            render status: :bad_request,
+                   json: {
+                     errors: [{ title: 'Bad request',
+                                detail: "'#{resource}' is not supported. Valid values are: #{supported_attributes.join(', ')}" }],
+                   }
+          end
+        end
       end
     end
   end
