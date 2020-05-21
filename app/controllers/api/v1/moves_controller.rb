@@ -123,10 +123,6 @@ module Api
       def updater
         @updater ||= Moves::Updater.new(move, update_move_params)
       end
-
-      def include_params
-        params.permit(:include)
-      end
     end
   end
 end
