@@ -8,7 +8,8 @@ module Api
       def index
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
         # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-        paginate moves, include: MoveSerializer::INCLUDED_ATTRIBUTES.dup.except(:court_hearings), fields: MoveSerializer::INCLUDED_FIELDS
+        includes = MoveSerializer::INCLUDED_ATTRIBUTES.dup - %w[court_hearings]
+        paginate moves, include: includes, fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def show
@@ -121,6 +122,11 @@ module Api
 
       def updater
         @updater ||= Moves::Updater.new(move, update_move_params)
+      end
+
+      # ["foo.bar", "baz.bim"]
+      def include_params
+        params.permit(:include)
       end
     end
   end
