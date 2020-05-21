@@ -167,6 +167,50 @@ RSpec.describe Api::V1::AllocationsController do
           expect(response.body).to eq('{"error":{"locations":["may not be used in combination with `from_locations` or `to_locations` filters."]}}')
         end
       end
+
+      describe 'included relationships', :skip_before do
+        let!(:allocations) { create_list :allocation, 2, :with_moves }
+
+        before do
+          get "/api/v1/allocations#{query_params}", params: params, headers: headers
+        end
+
+        context 'when not including the include query param' do
+          let(:query_params) { '' }
+
+          let(:included) do
+            from_locations = allocations.map(&:from_location)
+            to_locations = allocations.map(&:to_location)
+            moves = allocations.flat_map(&:moves)
+
+            from_locations + to_locations + moves
+          end
+
+          it 'returns the default includes' do
+            expect(response_json).to have_includes(included)
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:query_params) { '?include=foo.bar,from_location' }
+
+          let(:included) { allocations.map(&:from_location) }
+
+          it 'returns the valid provided includes' do
+            expect(response_json).to have_includes(included)
+          end
+        end
+
+        context 'when including an empty include query param' do
+          let(:query_params) { '?include=' }
+
+          let(:included) { [] }
+
+          it 'returns none of the includes' do
+            expect(response_json).to have_includes(included)
+          end
+        end
+      end
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do
