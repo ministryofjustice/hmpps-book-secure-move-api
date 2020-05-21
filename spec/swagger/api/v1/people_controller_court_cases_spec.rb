@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+# DONE -  moved to hand_coded_paths.yaml
+# DONE - tests moved to controller spec
+
 require 'swagger_helper'
 
 RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, type: :request do
   path '/people/{person_id}/court_cases' do
     get 'Retrieves the active court cases related to a person. It filters out the non-active court cases.' do
-      deprecated true
       tags 'People'
       produces 'application/vnd.api+json'
 
@@ -68,13 +70,13 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
         schema '$ref' => 'get_court_cases_responses.yaml#/200'
 
-        run_test!
+        # run_test!
       end
 
       response '404', 'not found' do
         let(:person_id) { 'invalid-id' }
 
-        run_test!
+        # run_test!
       end
 
       response '422', 'unprocessable entity' do
@@ -83,7 +85,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
         schema '$ref' => 'get_court_cases_responses.yaml#/400'
 
-        run_test!
+        # run_test!
       end
     end
   end

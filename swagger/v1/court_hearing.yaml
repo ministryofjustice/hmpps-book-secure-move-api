@@ -56,7 +56,7 @@ CourtHearing:
             in.
         comments:
           type: string
-          example: Witness for Joe Bloggs in Foo Bar court hearing.
+          example: Witness for Joe Bloggs in a court hearing.
           description: Arbitrary comments that are useful for humans but not touched
             by computers.
         case_start_date:

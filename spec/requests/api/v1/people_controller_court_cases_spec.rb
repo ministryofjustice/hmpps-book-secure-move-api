@@ -6,25 +6,26 @@ RSpec.describe Api::V1::PeopleController do
   let(:token) { create(:access_token) }
   let(:response_json) { JSON.parse(response.body) }
   let(:booking_id) { '1150262' }
+  let(:schema) { load_yaml_schema('get_court_cases_responses.yaml') }
 
   context 'when person is present ' do
     let(:person) { create(:profile, :nomis_synced).person }
 
     context 'when the court cases are present in Nomis ' do
-      let(:court_cases_from_nomis) do
-        OpenStruct.new(
-          success?: true,
-          court_cases:
-                      [CourtCase.new.build_from_nomis('id' => '1495077', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
-                       CourtCase.new.build_from_nomis('id' => '2222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })],
-        )
-      end
 
-      before do
+      let(:court_cases_from_nomis) {
+        OpenStruct.new(success?: true, court_cases:
+            [CourtCase.new.build_from_nomis('id' => '1495077', 'caseInfoNumber' => 'T20167984', 'caseType' => 'Adult', 'caseStatus' => 'ACTIVE', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
+             CourtCase.new.build_from_nomis('id' => '2222222', 'caseInfoNumber' => 'T20167984', 'caseType' => 'Adult', 'caseStatus' => 'ACTIVE', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })])
+      }
+
+      before {
         person.latest_profile.update(latest_nomis_booking_id: booking_id)
-
         allow(People::RetrieveCourtCases).to receive(:call).and_return(court_cases_from_nomis)
-      end
+        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+      }
+
+      it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns success' do
         get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }

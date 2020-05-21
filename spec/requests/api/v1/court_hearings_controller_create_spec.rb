@@ -6,6 +6,7 @@ RSpec.describe Api::V1::CourtHearingsController do
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /court_hearings' do
+    let(:schema) { load_yaml_schema('post_court_hearings_responses.yaml') }
     let(:court_hearing_attributes) do
       {
         'start_time': '2018-01-01T18:57Z',
@@ -30,16 +31,17 @@ RSpec.describe Api::V1::CourtHearingsController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
-    it 'returns 201' do
-      post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
+    context 'with valid params' do
+      before { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }
 
-      expect(response).to have_http_status(:created)
+      it_behaves_like 'an endpoint that responds with success 201'
     end
 
     it 'creates a court_hearing' do
       expect { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }
         .to change(CourtHearing, :count).by(1)
     end
+
 
     context 'when a move relationship is passed' do
       before do

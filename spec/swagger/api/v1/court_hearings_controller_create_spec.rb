@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# New Swagger created in hand_coded_paths.yaml
-# TODO Move this to a controller spec
+# DONE - New Swagger created in hand_coded_paths.yaml
+# DONE - Moved tests to a court_hearings_controller_create_spec
 require 'swagger_helper'
 
 RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :rswag, type: :request do
@@ -114,7 +114,7 @@ RSpec.describe Api::V1::CourtHearingsController, :with_client_authentication, :r
       response '201', 'created' do
         schema '$ref' => 'post_court_hearings_responses.yaml#/201'
 
-        run_test!
+        # run_test!
       end
     end
   end

@@ -16,6 +16,15 @@
       type: array
       items:
         $ref: errors.yaml#/BadRequest
+'422':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnprocessableEntity
 '401':
   type: object
   required:
