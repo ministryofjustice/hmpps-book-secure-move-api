@@ -46,7 +46,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { from_locations: from_location.id } }
 
       it 'returns allocations matching specified from_location' do
-        expect(allocation_finder.call).to match_array [allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation)
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { to_locations: to_location.id } }
 
       it 'returns allocations matching specified to_location' do
-        expect(allocation_finder.call).to match_array [allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation)
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { from_locations: from_location.id, to_locations: to_location.id } }
 
       it 'returns allocations matching specified from_location and to_location' do
-        expect(allocation_finder.call).to match_array [allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation)
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { locations: shared_location.id } }
 
       it 'returns allocations matching specified from_location or to_location' do
-        expect(allocation_finder.call).to match_array [allocation, other_allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
       end
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { from_locations: [from_location.id, other_location.id] } }
 
       it 'returns allocations matching either specified from_location' do
-        expect(allocation_finder.call).to match_array [allocation, other_allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { to_locations: [to_location.id, other_location.id] } }
 
       it 'returns allocations matching either specified to_location' do
-        expect(allocation_finder.call).to match_array [allocation, other_allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
       end
     end
 
@@ -106,7 +106,45 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { locations: [from_location.id, other_location.id] } }
 
       it 'returns allocations matching either specified from_location or to_location' do
-        expect(allocation_finder.call).to match_array [allocation, other_allocation]
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
+      end
+    end
+
+    describe 'by status' do
+      let!(:unfilled_allocation) { create :allocation, :unfilled, from_location: from_location, to_location: to_location }
+      let!(:filled_allocation) { create :allocation, :filled, from_location: from_location, to_location: to_location }
+      let!(:cancelled_allocation) { create :allocation, :cancelled, from_location: from_location, to_location: to_location }
+
+      context 'with matching status' do
+        let(:filter_params) { { status: 'filled' } }
+
+        it 'returns allocations matching status' do
+          expect(allocation_finder.call).to contain_exactly(filled_allocation)
+        end
+      end
+
+      context 'with multiple statuses' do
+        let(:filter_params) { { status: 'unfilled,cancelled' } }
+
+        it 'returns allocations matching status' do
+          expect(allocation_finder.call).to contain_exactly(unfilled_allocation, cancelled_allocation)
+        end
+      end
+
+      context 'with mis-matching status' do
+        let(:filter_params) { { status: 'foo' } }
+
+        it 'returns empty results set' do
+          expect(allocation_finder.call).to be_empty
+        end
+      end
+
+      context 'with nil status' do
+        let(:filter_params) { { status: nil } }
+
+        it 'returns only allocations without a status' do
+          expect(allocation_finder.call).to contain_exactly(allocation)
+        end
       end
     end
   end

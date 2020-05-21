@@ -13,7 +13,7 @@ RSpec.describe Api::V1::AllocationsController do
   describe 'GET /allocations' do
     let(:schema) { load_yaml_schema('get_allocations_responses.yaml') }
 
-    let!(:allocations) { create_list :allocation, 21 }
+    let!(:allocations) { create_list :allocation, 2 }
     let(:params) { {} }
 
     before do
@@ -69,7 +69,25 @@ RSpec.describe Api::V1::AllocationsController do
         end
       end
 
+      describe 'filtering results by status' do
+        let(:unfilled_allocation) { create :allocation, :unfilled }
+        let(:filled_allocation) { create :allocation, :filled }
+        let(:cancelled_allocation) { create :allocation, :cancelled }
+        let!(:allocations) { [unfilled_allocation, filled_allocation, cancelled_allocation] }
+        let(:params) { { filter: { status: 'cancelled' } } }
+
+        it 'filters the results' do
+          expect(response_json['data'].size).to be 1
+        end
+
+        it 'returns the allocation that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: cancelled_allocation.id }])
+        end
+      end
+
       describe 'paginating results' do
+        let!(:allocations) { create_list :allocation, 21 }
+
         let(:meta_pagination) do
           {
             per_page: 20,
