@@ -25,15 +25,16 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
 
-  INCLUDED_ATTRIBUTES = {
-    person: %i[ethnicity gender],
-    from_location: [],
-    to_location: [],
-    documents: [],
-    prison_transfer_reason: [],
-    court_hearings: [],
-    allocation: [],
-  }.freeze
+  INCLUDED_ATTRIBUTES = %w[
+    person.ethnicity
+    person.gender
+    from_location
+    to_location
+    documents
+    prison_transfer_reason
+    court_hearings
+    allocation
+  ].freeze
 
   INCLUDED_FIELDS = {
     allocation: %i[to_location from_location moves_count created_at],
