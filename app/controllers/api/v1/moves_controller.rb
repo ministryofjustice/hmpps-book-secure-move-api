@@ -124,7 +124,6 @@ module Api
         @updater ||= Moves::Updater.new(move, update_move_params)
       end
 
-      # ["foo.bar", "baz.bim"]
       def include_params
         params.permit(:include)
       end
