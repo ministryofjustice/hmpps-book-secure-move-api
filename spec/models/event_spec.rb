@@ -5,6 +5,7 @@ RSpec.describe Event, type: :model do
   it { is_expected.to validate_presence_of(:eventable) }
   it { is_expected.to validate_presence_of(:event_name) }
   it { is_expected.to validate_presence_of(:client_timestamp) }
+  it { is_expected.to validate_presence_of(:details) }
   it { expect(described_class).to respond_to(:default_order) }
 
   it 'validates event_name' do

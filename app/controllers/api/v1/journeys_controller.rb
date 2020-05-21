@@ -78,9 +78,10 @@ module Api
 
       def new_journey_attributes
         @new_journey_attributes ||= new_journey_params.to_h[:attributes].tap do |attribs|
+          attribs.delete(:timestamp) # throw the timestamp away as we are using client_timestamp instead
           attribs.merge!(
             move: move,
-            client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
+            client_timestamp: timestamp,
             from_location: find_location(new_journey_params.require(:relationships).require(:from_location).require(:data).require(:id)),
             to_location: find_location(new_journey_params.require(:relationships).require(:to_location).require(:data).require(:id)),
             supplier: supplier,
@@ -123,13 +124,19 @@ module Api
         end
       end
 
+      def timestamp
+        @timestamp ||= Time.zone.parse(data_params.dig(:attributes, :timestamp))
+      end
+
       def create_event
         # Logs the event for posterity and the immutable event log
-        Event.create!(
+        journey.events.create!(
           event_name: action_name,
-          eventable: journey,
-          client_timestamp: Time.zone.parse(data_params.dig(:attributes, :timestamp)),
-          details: { data: data_params, supplier_id: supplier.id },
+          client_timestamp: timestamp,
+          details: {
+            data_params: data_params,
+            supplier_id: supplier.id,
+          },
         )
       end
     end
