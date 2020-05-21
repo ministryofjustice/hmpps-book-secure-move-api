@@ -43,6 +43,7 @@ gem 'rails', '~> 5.2.3'
 gem 'sassc-rails'
 gem 'sentry-raven'
 gem 'sidekiq'
+gem 'strong_migrations', '~> 0.6.8'
 gem 'tty-prompt'
 gem 'validate_url', '~> 1.0.8'
 

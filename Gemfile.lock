@@ -355,6 +355,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    strong_migrations (0.6.8)
+      activerecord (>= 5)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -439,6 +441,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
+  strong_migrations (~> 0.6.8)
   timecop
   tty-prompt
   validate_url (~> 1.0.8)
