@@ -59,6 +59,18 @@
         type: string
       example: '02cf0c8e-bf28-4e36-bf08-1e15fefa279b,0351fc23-5b8c-409e-aa87-1f7c4adb1ed6'
       format: uuid
+    - name: filter[status]
+      in: query
+      explode: false
+      description: Filters results to only include allocations with the given statuses
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - filled
+          - unfilled
+          - cancelled
     - $ref: pagination_parameters.yaml#/Page
     - $ref: pagination_parameters.yaml#/PerPage
     responses:

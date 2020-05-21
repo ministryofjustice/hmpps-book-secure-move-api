@@ -29,7 +29,7 @@ module Api
 
     private
 
-      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations].freeze
+      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
 
       PERMITTED_ALLOCATION_PARAMS = [
         :type,
