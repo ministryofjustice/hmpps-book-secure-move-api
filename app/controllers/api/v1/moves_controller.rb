@@ -35,14 +35,6 @@ module Api
         render_move(updater.move, :ok)
       end
 
-      def destroy
-        # TODO: raise ActiveRecord::ReadOnlyRecord.new('Move cannot be deleted')
-
-        move.destroy!
-        Notifier.prepare_notifications(topic: move, action_name: 'destroy')
-        render_move(move, 200)
-      end
-
     private
 
       PERMITTED_FILTER_PARAMS = %i[
