@@ -14,7 +14,7 @@ class ProfileSerializer < ActiveModel::Serializer
   has_one :ethnicity, serializer: EthnicitySerializer, if: -> { object.ethnicity.present? }
   has_one :gender, serializer: GenderSerializer
 
-  INCLUDED_DETAIL = %i[ethnicity gender].freeze
+  SUPPORTED_RELATIONSHIPS = %i[ethnicity gender].freeze
 
   def assessment_answers
     object.assessment_answers || []

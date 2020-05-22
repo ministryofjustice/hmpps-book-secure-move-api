@@ -8,7 +8,9 @@ module Api
       def index
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
 
-        paginate moves, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
+        paginate moves,
+                 include: included_relationships - %w[court_hearings],
+                 fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def show
@@ -115,26 +117,12 @@ module Api
         @updater ||= Moves::Updater.new(move, update_move_params)
       end
 
-      def included_relationships
-        # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-        MoveSerializer::SUPPORTED_RELATIONSHIPS + include_params - %w[court_hearings]
-      end
-
-      # nil -> []
-      # "person, profile" -> ['person', 'profile']
-      def include_params
-        params[:include]
-          .to_s
-          .split(',')
-          .map(&:strip)
-      end
-
       def validate_include_params
         # TODO: this is temporary, once FE uses the `include` params for all the endpoints/resources,
         # supported_attributes will be set to to MoveSerializer::SUPPORTED_RELATIONSHIPS
         supported_attributes = MoveSerializer::SUPPORTED_RELATIONSHIPS + %w[profile]
 
-        include_params.each do |resource|
+        included_relationships.each do |resource|
           unless supported_attributes.include?(resource)
             render status: :bad_request,
                    json: {
@@ -143,6 +131,10 @@ module Api
                    }
           end
         end
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end
