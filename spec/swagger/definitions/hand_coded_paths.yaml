@@ -487,44 +487,6 @@
           application/vnd.api+json:
             schema:
               $ref: put_move_responses.yaml#/422
-  delete:
-    description: '## [DO NOT USE]
-
-
-      Moves should be cancelled instead of deleted'
-    deprecated: true
-    summary: '[DO NOT USE] Deletes a move'
-    tags:
-    - Moves
-    consumes:
-    - application/vnd.api+json
-    parameters:
-    - $ref: move_id_parameter.yaml#/MoveId
-    responses:
-      '200':
-        description: success
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/200
-      '401':
-        description: unauthorized
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/401
-      '404':
-        description: resource not found
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/404
-      '415':
-        description: invalid media type
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/415
 /moves/{move_id}/events:
   post:
     summary: '[NOT YET IMPLEMENTED] Creates a move event'
