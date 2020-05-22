@@ -39,7 +39,7 @@ FactoryBot.define do
 
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
-      details { { supplier_id: '1234', event_params: { attributes: { notes: 'foo' }, relationships: { to_location: { data: { id: create(:location).id } } } } } }
+      details { { event_params: { relationships: { to_location: { data: { id: create(:location).id } } } } } }
     end
   end
 end

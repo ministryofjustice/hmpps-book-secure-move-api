@@ -9,7 +9,7 @@ module EventLog
     # Process events in order of client_timestamp
     def call
       # iterate over all events in the log and apply changes to the move
-      events.find_each do |event|
+      events.each do |event| # NB: do not use events.find_each as it will break the ordering
         case event.event_name
         when 'redirect'
           move.to_location = event.to_location
