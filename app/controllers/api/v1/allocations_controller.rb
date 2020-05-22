@@ -9,7 +9,7 @@ module Api
         allocations_params = Allocations::ParamsValidator.new(filter_params)
         if allocations_params.valid?
           allocations = Allocations::Finder.new(filter_params).call
-          paginate allocations, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+          paginate allocations, include: includes
         else
           render_allocation({ error: allocations_params.errors }, :bad_request)
         end
@@ -52,7 +52,7 @@ module Api
       end
 
       def render_allocation(allocation, status)
-        render json: allocation, status: status, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+        render json: allocation, status: status, include: includes
       end
 
       def find_allocation
@@ -70,6 +70,10 @@ module Api
         creator.allocation.moves.each do |move|
           Notifier.prepare_notifications(topic: move, action_name: 'create')
         end
+      end
+
+      def includes
+        IncludeParamHandler.new(params).call || AllocationSerializer::INCLUDED_ATTRIBUTES
       end
     end
   end
