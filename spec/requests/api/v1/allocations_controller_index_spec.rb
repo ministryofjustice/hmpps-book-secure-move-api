@@ -212,7 +212,7 @@ RSpec.describe Api::V1::AllocationsController do
           end
         end
 
-        context 'when including an empty include query param' do
+        context 'when including a nil include query param' do
           let(:query_params) { '?include' }
 
           let(:included) do
