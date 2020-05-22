@@ -68,12 +68,12 @@ RSpec.describe Moves::Updater do
       let!(:move) { create(:move, profile: before_person.latest_profile) }
 
       context 'with new person' do
-        let(:move_params) {
+        let(:move_params) do
           {
             type: 'moves',
             relationships: { person: { data: { id: after_person.id, type: 'people' } } },
           }
-        }
+        end
 
         it 'updates person association to new person' do
           expect(updater.move.profile.person).to eq(after_person)
@@ -81,12 +81,12 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with empty person data' do
-        let(:move_params) {
+        let(:move_params) do
           {
             type: 'moves',
             relationships: { person: { data: nil } },
           }
-        }
+        end
 
         it 'removes associated profile' do
           expect(updater.move.profile).to be_nil
@@ -117,12 +117,12 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with empty documents' do
-        let(:move_params) {
+        let(:move_params) do
           {
             type: 'moves',
             relationships: { documents: { data: [] } },
           }
-        }
+        end
 
         it 'unsets associated documents' do
           expect(updater.move.documents).to be_empty
@@ -130,12 +130,12 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with nil documents' do
-        let(:move_params) {
+        let(:move_params) do
           {
             type: 'moves',
             relationships: { documents: { data: nil } },
           }
-        }
+        end
 
         it 'does nothing to existing documents' do
           expect(updater.move.documents).to match_array(before_documents)

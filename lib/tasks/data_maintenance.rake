@@ -23,8 +23,10 @@ namespace :data_maintenance do
   task cancel_synched_prison_moves: :environment do
     Location.prisons.each do |prison|
       from_moves = prison.moves_from.requested.select(&:from_nomis?).each do |move|
-        move.update!(status: Move::MOVE_STATUS_CANCELLED,
-                     cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR)
+        move.update!(
+          status: Move::MOVE_STATUS_CANCELLED,
+          cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR,
+        )
       end
 
       puts "Prison #{prison.title} cancelled #{from_moves.size} moves" if from_moves.any?

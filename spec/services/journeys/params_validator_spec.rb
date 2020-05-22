@@ -73,6 +73,7 @@ RSpec.describe Journeys::ParamsValidator do
     let(:params) { { attributes: { billable: billable, timestamp: timestamp } } }
 
     it { is_expected.to be_valid(validation_context) }
+
     it_behaves_like 'it validates required billable'
     it_behaves_like 'it validates timestamp'
   end
@@ -82,6 +83,7 @@ RSpec.describe Journeys::ParamsValidator do
     let(:params) { { attributes: { billable: billable, timestamp: timestamp } } }
 
     it { is_expected.to be_valid(validation_context) }
+
     it_behaves_like 'it validates optional billable'
     it_behaves_like 'it validates timestamp'
   end

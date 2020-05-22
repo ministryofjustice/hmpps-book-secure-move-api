@@ -53,7 +53,7 @@ class Allocation < VersionedModel
   def cancel
     comment = 'Allocation was cancelled'
 
-    self.assign_attributes(
+    assign_attributes(
       status: ALLOCATION_STATUS_CANCELLED,
       cancellation_reason: CANCELLATION_REASON_OTHER,
       cancellation_reason_comment: comment,

@@ -73,7 +73,8 @@ RSpec.describe MoveSerializer do
             id: move.profile.person_id,
             type: 'people',
             attributes: { first_names: move.profile.first_names,
-                          last_name: move.profile.last_name, date_of_birth: '1980-10-20' },
+                          last_name: move.profile.last_name,
+                          date_of_birth: '1980-10-20' },
           },
         ]
       end
@@ -128,9 +129,9 @@ RSpec.describe MoveSerializer do
 
   describe 'allocations' do
     context 'with an allocation' do
-      let(:adapter_options) {
+      let(:adapter_options) do
         { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
-      }
+      end
       let(:move) { create(:move, :with_allocation) }
       let(:expected_json) do
         [

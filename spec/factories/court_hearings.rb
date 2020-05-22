@@ -4,7 +4,7 @@ FactoryBot.define do
     case_number { 'T32423423423' }
     case_type { 'Adult' }
     comments { 'Witness for Foo Bar' }
-    nomis_case_id { 4232423 }
+    nomis_case_id { 4_232_423 }
   end
 
   trait :saved_to_nomis do

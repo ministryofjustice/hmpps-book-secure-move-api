@@ -8,8 +8,20 @@ FactoryBot.define do
 
     prisoner_category { Allocation.prisoner_categories.values.sample }
     sentence_length { Allocation.sentence_lengths.values.sample }
+    requested_by { Faker::Name.name }
     moves_count { Faker::Number.non_zero_digit }
     complete_in_full { false }
+
+    trait :unfilled do
+      status { 'unfilled' }
+    end
+    trait :filled do
+      status { 'filled' }
+    end
+    trait :cancelled do
+      status { 'cancelled' }
+      cancellation_reason { 'other' }
+    end
 
     trait :with_moves do
       moves_count { 1 }

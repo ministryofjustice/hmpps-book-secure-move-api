@@ -21,36 +21,50 @@ namespace :fake_data do
   end
 
   ASSESSMENT_ANSWERS = [
-    { category: :risk, title: 'Violent',
+    { category: :risk,
+      title: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, title: 'Escape',
+    { category: :risk,
+      title: 'Escape',
       comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, title: 'Must be held separately',
+    { category: :risk,
+      title: 'Must be held separately',
       comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, title: 'Self harm',
+    { category: :risk,
+      title: 'Self harm',
       comments: ['Attempted suicide'] },
-    { category: :risk, title: 'Concealed items',
+    { category: :risk,
+      title: 'Concealed items',
       comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, title: 'Any other risks',
+    { category: :risk,
+      title: 'Any other risks',
       comments: ['Train spotter', ''] },
-    { category: :health, title: 'Special diet or allergy',
+    { category: :health,
+      title: 'Special diet or allergy',
       comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, title: 'Health issue',
+    { category: :health,
+      title: 'Health issue',
       comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, title: 'Medication',
+    { category: :health,
+      title: 'Medication',
       comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
     { category: :health, title: 'Wheelchair user', comments: [''] },
     { category: :health, title: 'Pregnant', comments: [''] },
-    { category: :health, title: 'Any other requirements',
+    { category: :health,
+      title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court, title: 'Solicitor or other legal representation',
+    { category: :court,
+      title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court, title: 'Sign or other language interpreter',
+    { category: :court,
+      title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court, title: 'Any other information',
+    { category: :court,
+      title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
 
+  # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
       fake_assessment_answer(assessment_answer)
@@ -90,6 +104,7 @@ namespace :fake_data do
       }
     end
   end
+  # rubocop:enable all
 
   desc 'create fake prisons'
   task create_prisons: :environment do
@@ -252,7 +267,8 @@ namespace :fake_data do
   ETHNICITIES = [
     { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
     { key: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
-    { key: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+    { key: 'A3',
+      title: 'Asian or Asian British (Bangladeshi)',
       description: 'A3 - Asian or Asian British (Bangladeshi)' },
     { key: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
     { key: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },

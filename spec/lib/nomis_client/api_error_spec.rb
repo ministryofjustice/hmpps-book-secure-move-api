@@ -19,8 +19,9 @@ RSpec.describe NomisClient::ApiError do
     it 'returns a properly formatted api error' do
       expect(error.json_api_error).to eq(
         code: 'NOMIS-ERROR',
-        status: 400, title: 'User message.',
-        details: 'Developer message. More info.'
+        status: 400,
+        title: 'User message.',
+        details: 'Developer message. More info.',
       )
     end
 
@@ -30,8 +31,9 @@ RSpec.describe NomisClient::ApiError do
       it 'returns a properly formatted api error' do
         expect(error.json_api_error).to eq(
           code: 'NOMIS-ERROR',
-          status: 400, title: 'Unparseable error from Nomis',
-          details: "Status #{status}. We tried to parse an error from Nomis and failed. Is the Elite2API routeable?"
+          status: 400,
+          title: 'Unparseable error from Nomis',
+          details: "Status #{status}. We tried to parse an error from Nomis and failed. Is the Elite2API routeable?",
         )
       end
     end

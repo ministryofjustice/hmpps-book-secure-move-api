@@ -11,11 +11,14 @@ RSpec.describe Api::V1::PeopleController do
     let(:person) { create(:profile, :nomis_synced).person }
 
     context 'when the court cases are present in Nomis ' do
-      let(:court_cases_from_nomis) {
-        OpenStruct.new(success?: true, court_cases:
-            [CourtCase.new.build_from_nomis('id' => '1495077', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
-             CourtCase.new.build_from_nomis('id' => '2222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })])
-      }
+      let(:court_cases_from_nomis) do
+        OpenStruct.new(
+          success?: true,
+          court_cases:
+                      [CourtCase.new.build_from_nomis('id' => '1495077', 'beginDate' => '2020-01-01', 'agency' => { 'agencyId' => 'SNARCC' }),
+                       CourtCase.new.build_from_nomis('id' => '2222222', 'beginDate' => '2020-01-02', 'agency' => { 'agencyId' => 'SNARCC' })],
+        )
+      end
 
       before do
         person.latest_profile.update(latest_nomis_booking_id: booking_id)
@@ -37,7 +40,6 @@ RSpec.describe Api::V1::PeopleController do
         expect(response_json['included']).to be_a_kind_of Array
         expect(response_json['included'].first['type']).to eq 'locations'
       end
-
 
       context 'when we pass a filter in the query params' do
         let(:query) { '?filter[active]=true' }

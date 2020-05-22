@@ -8,7 +8,7 @@ RSpec.describe NomisCourtHearing do
 
     let(:nomis_court_hearing) do
       {
-        'id' => 330253339,
+        'id' => 330_253_339,
         'dateTime' => '2017-01-27T10:00:00',
         'location' => {
           'agencyId' => 'SNARCC',
@@ -20,11 +20,11 @@ RSpec.describe NomisCourtHearing do
     end
     let(:expected_attributes) do
       {
-        id:         nomis_court_hearing['id'],
+        id: nomis_court_hearing['id'],
         start_time: Time.parse(nomis_court_hearing['dateTime']),
-        type:       'Court',
-        reason:     'Court appearance',
-        agency_id:  nomis_court_hearing['location']['agencyId'],
+        type: 'Court',
+        reason: 'Court appearance',
+        agency_id: nomis_court_hearing['location']['agencyId'],
       }
     end
 

@@ -38,9 +38,9 @@ module Moves
     def attributes
       attributes = move_params.fetch(:attributes, {})
 
-      attributes[:documents] = Document.where(id: document_ids) if document_attributes != nil
+      attributes[:documents] = Document.where(id: document_ids) unless document_attributes.nil?
 
-      if person_attributes != nil
+      unless person_attributes.nil?
         person = Person.find_by(id: person_attributes.dig(:data, :id))
         attributes[:profile] = person&.latest_profile
       end

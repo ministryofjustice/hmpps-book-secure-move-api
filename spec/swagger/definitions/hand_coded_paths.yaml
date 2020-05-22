@@ -59,6 +59,18 @@
         type: string
       example: '02cf0c8e-bf28-4e36-bf08-1e15fefa279b,0351fc23-5b8c-409e-aa87-1f7c4adb1ed6'
       format: uuid
+    - name: filter[status]
+      in: query
+      explode: false
+      description: Filters results to only include allocations with the given statuses
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - filled
+          - unfilled
+          - cancelled
     - $ref: pagination_parameters.yaml#/Page
     - $ref: pagination_parameters.yaml#/PerPage
     responses:
@@ -320,6 +332,13 @@
         items:
           type: string
           format: uuid
+    - name: filter[has_relationship_to_allocation]
+      in: query
+      explode: false
+      description: Filters results to either exclude or include moves associated to an allocation optionally
+      schema:
+        type: boolean
+        example: true
     - name: sort[by]
       description: field to sort results by
       in: query
@@ -468,44 +487,6 @@
           application/vnd.api+json:
             schema:
               $ref: put_move_responses.yaml#/422
-  delete:
-    description: '## [DO NOT USE]
-
-
-      Moves should be cancelled instead of deleted'
-    deprecated: true
-    summary: '[DO NOT USE] Deletes a move'
-    tags:
-    - Moves
-    consumes:
-    - application/vnd.api+json
-    parameters:
-    - $ref: move_id_parameter.yaml#/MoveId
-    responses:
-      '200':
-        description: success
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/200
-      '401':
-        description: unauthorized
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/401
-      '404':
-        description: resource not found
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/404
-      '415':
-        description: invalid media type
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: delete_move_responses.yaml#/415
 /moves/{move_id}/events:
   post:
     summary: '[NOT YET IMPLEMENTED] Creates a move event'

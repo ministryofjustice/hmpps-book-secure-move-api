@@ -75,12 +75,14 @@ namespace :reference_data do
         removed_locations = existing_location_keys - yaml_location_keys
         added_locations = yaml_location_keys - existing_location_keys
 
-        Raven.capture_message("Locations updated for the Supplier: #{supplier.name}. ",
-                              extra: {
-                                  added_locations: added_locations,
-                                  removed_locations: removed_locations,
-                              },
-                              level: 'warning')
+        Raven.capture_message(
+          "Locations updated for the Supplier: #{supplier.name}. ",
+          extra: {
+            added_locations: added_locations,
+            removed_locations: removed_locations,
+          },
+          level: 'warning',
+        )
 
         puts '- - -'
         puts "Locations removed from Supplier '#{supplier.name}': #{removed_locations}"
@@ -89,27 +91,30 @@ namespace :reference_data do
         puts "Locations for the Supplier '#{supplier.name}' have not changed."
       end
     end
-
-    puts_summary_of_relationships
   end
 
   desc 'create all of the necessary reference data'
   task create_all: :environment do
-    Rake::Task['reference_data:create_locations'].invoke
-    Rake::Task['reference_data:create_ethnicities'].invoke
-    Rake::Task['reference_data:create_genders'].invoke
-    Rake::Task['reference_data:create_identifier_types'].invoke
-    Rake::Task['reference_data:create_assessment_questions'].invoke
-    Rake::Task['reference_data:create_allocation_complex_cases'].invoke
-    Rake::Task['reference_data:create_nomis_alerts'].invoke
-    Rake::Task['reference_data:create_regions'].invoke
-    Rake::Task['reference_data:create_suppliers'].invoke
-    Rake::Task['reference_data:create_prison_transfer_reasons'].invoke
-    Rake::Task['reference_data:link_suppliers'].invoke
+    %w[reference_data:create_locations
+       reference_data:create_ethnicities
+       reference_data:create_genders
+       reference_data:create_identifier_types
+       reference_data:create_assessment_questions
+       reference_data:create_allocation_complex_cases
+       reference_data:create_nomis_alerts
+       reference_data:create_regions
+       reference_data:create_suppliers
+       reference_data:create_prison_transfer_reasons
+       reference_data:link_suppliers].each do |task_name|
+      puts "Running '#{task_name}' ..."
+      Rake::Task[task_name].invoke
+    end
   end
 
 private
 
+  # TODO: Move these methods outside of the rake task
+  # rubocop:disable all
   def have_locations_changed?(locations1, locations2)
     ((locations1 - locations2) + (locations2 - locations1)).any?
   end
@@ -126,4 +131,5 @@ private
       end
     end
   end
+  # rubocop:enable all
 end

@@ -14,9 +14,10 @@ module Api
           allocation.save!
           render json: fake_event_object, status: :created
         else
-          render status: :bad_request, json: {
-            errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
-          }
+          render status: :bad_request,
+                 json: {
+                   errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
+                 }
         end
       end
 

@@ -48,10 +48,10 @@ private
 
   def event_type(action_name)
     {
-        'create' => 'create_move',
-        'update' => 'update_move',
-        'update_status' => 'update_move_status',
-        'destroy' => 'destroy_move',
+      'create' => 'create_move',
+      'update' => 'update_move',
+      'update_status' => 'update_move_status',
+      'destroy' => 'destroy_move',
     }[action_name]
   end
 end

@@ -21,29 +21,29 @@ RSpec.describe NotificationSerializer do
       JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
     end
 
-    let(:expected_result) {
+    let(:expected_result) do
       {
-          "data": {
-              "id": notification.id,
-              "type": 'notifications',
-              "attributes": {
-                  "event_type": 'move_created',
-                  "timestamp": notification.created_at.as_json,
-              },
-              "relationships": {
-                  "move": {
-                      "data": {
-                          "id": notification.topic.id,
-                          "type": 'moves',
-                      },
-                      "links": {
-                          "self": "http://localhost:4000/api/v1/moves/#{notification.topic.id}",
-                      },
-                  },
-              },
+        "data": {
+          "id": notification.id,
+          "type": 'notifications',
+          "attributes": {
+            "event_type": 'move_created',
+            "timestamp": notification.created_at.as_json,
           },
+          "relationships": {
+            "move": {
+              "data": {
+                "id": notification.topic.id,
+                "type": 'moves',
+              },
+              "links": {
+                "self": "http://localhost:4000/api/v1/moves/#{notification.topic.id}",
+              },
+            },
+          },
+        },
       }
-    }
+    end
 
     it 'contains a type property' do
       expect(result[:data][:type]).to eql 'notifications'

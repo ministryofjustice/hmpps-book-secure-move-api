@@ -121,9 +121,9 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'creates a new person' do
-        expect do
+        expect {
           post '/api/v1/people', params: person_params, headers: headers, as: :json
-        end.to change(Person, :count).by(1)
+        }.to change(Person, :count).by(1)
       end
 
       describe 'webhook and email notifications' do

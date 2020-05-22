@@ -18,7 +18,7 @@ RSpec.describe Api::V1::JourneysController do
     let(:timestamp) { '2020-05-04T09:00:00+01:00' }
     let(:billable) { false }
 
-    let(:journey_params) {
+    let(:journey_params) do
       {
         data: {
           "type": 'journeys',
@@ -43,7 +43,7 @@ RSpec.describe Api::V1::JourneysController do
           },
         },
       }
-    }
+    end
 
     before do
       post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers: headers, as: :json
@@ -51,7 +51,7 @@ RSpec.describe Api::V1::JourneysController do
 
     context 'when successful' do
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
-      let(:data) {
+      let(:data) do
         {
           "id": Journey.first&.id,
           "type": 'journeys',
@@ -76,7 +76,7 @@ RSpec.describe Api::V1::JourneysController do
             },
           },
         }
-      }
+      end
 
       it_behaves_like 'an endpoint that responds with success 201'
 
@@ -98,10 +98,10 @@ RSpec.describe Api::V1::JourneysController do
         let(:timestamp) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid timestamp',
                'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }]
-          }
+          end
         end
       end
 
@@ -109,10 +109,10 @@ RSpec.describe Api::V1::JourneysController do
         let(:billable) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid billable',
                'detail' => 'Validation failed: Billable is not included in the list' }]
-          }
+          end
         end
       end
 
@@ -134,10 +134,10 @@ RSpec.describe Api::V1::JourneysController do
         let(:to_location_id) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid location',
                'detail' => 'Validation failed: Location reference was not found id=foo-bar' }]
-          }
+          end
         end
       end
 

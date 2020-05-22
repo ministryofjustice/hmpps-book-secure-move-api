@@ -69,7 +69,7 @@ class Profile
       self.created_at ||= Time.zone.now
     end
 
-    def self.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description);
+    def self.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description)
       new(
         title: personal_care_need[:problem_description],
         created_at: personal_care_need[:start_date],

@@ -4,5 +4,5 @@ class IdentifierType < ApplicationRecord
   validates :key, presence: true
   validates :title, presence: true
 
-  alias key id
+  alias_method :key, :id
 end

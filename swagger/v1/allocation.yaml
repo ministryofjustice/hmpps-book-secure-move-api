@@ -84,6 +84,11 @@ Allocation:
           type: boolean
           example: 'true'
           description: Indicates if allocation must be completed (i.e. populated with prisoners) in full
+        requested_by:
+          oneOf:
+          - type: 'null'
+          - type: string
+          description: Name of the person requesting this allocation
         updated_at:
           type: string
           format: date-time

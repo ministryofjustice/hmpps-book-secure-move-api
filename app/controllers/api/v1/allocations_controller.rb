@@ -29,11 +29,11 @@ module Api
 
     private
 
-      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations].freeze
+      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
 
       PERMITTED_ALLOCATION_PARAMS = [
         :type,
-        attributes: %i[date prisoner_category sentence_length moves_count complete_in_full other_criteria],
+        attributes: %i[date prisoner_category sentence_length moves_count complete_in_full other_criteria requested_by],
         relationships: {},
       ].freeze
 

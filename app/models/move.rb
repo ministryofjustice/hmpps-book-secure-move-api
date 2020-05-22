@@ -52,8 +52,9 @@ class Move < VersionedModel
 
   # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
-  validates :date, uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
-    unless: -> { proposed? || cancelled? || profile_id.blank? }
+  validates :date,
+            uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
+            unless: -> { proposed? || cancelled? || profile_id.blank? }
   validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
   validates :status, inclusion: { in: statuses }
@@ -98,9 +99,9 @@ class Move < VersionedModel
 
   def current?
     # NB: a current move relates to a move happening today or in the future (as opposed to a back-dated or historic move)
-    (self.date.present? && self.date >= Time.zone.today) ||
-      (self.date.nil? && self.date_to.present? && self.date_to >= Time.zone.today) ||
-      (self.date.nil? && self.date_to.nil? && self.date_from.present? && self.date_from >= Time.zone.today)
+    (date.present? && date >= Time.zone.today) ||
+      (date.nil? && date_to.present? && date_to >= Time.zone.today) ||
+      (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
   end
 
   def person

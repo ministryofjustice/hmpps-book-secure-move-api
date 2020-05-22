@@ -1,7 +1,7 @@
 namespace :moves do
   desc 'Set all profile ids in all the moves'
   task set_profile_from_person: :environment do
-    moves_with_nil_profile = Move.where(profile_id: nil)
+    moves_with_nil_profile = Move.where(profile_id: nil).where.not(person_id: nil)
 
     total = moves_with_nil_profile.count
 
@@ -21,6 +21,6 @@ namespace :moves do
       move.update_attribute(:profile_id, profile.id)
     end
 
-    puts "#{moves_with_nil_profile.count} profile IDs have been successfully updated."
+    puts "#{total} profile IDs have been successfully updated."
   end
 end

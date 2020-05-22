@@ -102,7 +102,11 @@ RSpec.describe Allocation do
 
     it 'does not update moves if allocation invalid' do
       allocation.from_location = nil
-      allocation.cancel rescue ActiveRecord::RecordInvalid
+      begin
+        allocation.cancel
+      rescue StandardError
+        ActiveRecord::RecordInvalid
+      end
 
       expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_REQUESTED)
     end
