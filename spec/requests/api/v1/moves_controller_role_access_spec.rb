@@ -238,43 +238,4 @@ RSpec.describe Api::V1::MovesController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
   end
-
-  describe 'DELETE /moves/{move_id}' do
-    let(:schema) { load_yaml_schema('delete_move_responses.yaml') }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-
-    let!(:pentonville_move) { create :move, from_location: pentonville }
-    let!(:birmingham_move) { create :move, from_location: birmingham }
-
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
-
-      delete "/api/v1/moves/#{move_id}", headers: headers
-    end
-
-    context 'when successful' do
-      let(:resource_to_json) do
-        JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
-      end
-      let(:move_id) { pentonville_move.id }
-
-      it_behaves_like 'an endpoint that responds with success 200'
-
-      it 'deletes the move', skip_before: true do
-        expect { delete "/api/v1/moves/#{move_id}", headers: headers }
-          .to change(Move, :count).by(-1)
-      end
-
-      it 'returns the correct data' do
-        expect(response_json).to eq resource_to_json
-      end
-    end
-
-    context 'when supplier doesn\'t have rights to write the resource' do
-      let(:move_id) { birmingham_move.id }
-      let(:detail_404) { "Couldn't find Move with 'id'=#{birmingham_move.id}" }
-
-      it_behaves_like 'an endpoint that responds with error 404'
-    end
-  end
 end
