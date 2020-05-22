@@ -182,8 +182,9 @@ RSpec.describe Api::V1::AllocationsController do
             from_locations = allocations.map(&:from_location)
             to_locations = allocations.map(&:to_location)
             moves = allocations.flat_map(&:moves)
+            people = moves.map { |move| move&.profile&.person }
 
-            from_locations + to_locations + moves
+            from_locations + to_locations + moves + people
           end
 
           it 'returns the default includes' do
