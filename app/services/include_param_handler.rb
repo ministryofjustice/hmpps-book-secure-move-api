@@ -6,6 +6,6 @@ class IncludeParamHandler
   end
 
   def call
-    @params.fetch[:include]&.split(SEPARATOR)
+    @params[:include]&.split(SEPARATOR)
   end
 end
