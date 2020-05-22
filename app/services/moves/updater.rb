@@ -15,6 +15,7 @@ module Moves
       self.status_changed = move.status_changed?
 
       move.save!
+      move.allocation&.refresh_moves_count! if status_changed
     end
 
   private
