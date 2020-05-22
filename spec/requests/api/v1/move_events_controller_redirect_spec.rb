@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::MoveEventsController do
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'POST /moves/:move_id/redirect' do
+  describe 'POST /moves/:move_id/redirects' do
     let(:schema) { load_yaml_schema('post_move_redirect_responses.yaml') }
 
     let(:supplier) { create(:supplier) }
@@ -20,7 +20,7 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:redirect_params) do
       {
         data: {
-          type: 'redirect',
+          type: 'redirects',
           attributes: {
             timestamp: '2020-04-23T18:25:43.511Z',
             notes: 'requested by PMU',
@@ -34,7 +34,7 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/redirect", params: redirect_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/redirects", params: redirect_params, headers: headers, as: :json
     end
 
     context 'when successful' do

@@ -6,10 +6,10 @@ PostMoveRedirect:
   properties:
     type:
       type: string
-      example: redirect
+      example: redirects
       enum:
-      - redirect
-      description: The type of this object - always `redirect`
+      - redirects
+      description: The type of this object - always `redirects`
     attributes:
       type: object
       required:

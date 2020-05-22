@@ -11,8 +11,8 @@ module Api
         relationships: { to_location: {} },
       ].freeze
 
-      def redirect
-        create_event(action_name)
+      def redirects
+        create_event('redirect')
         run_event_logs
         render status: :no_content
       end

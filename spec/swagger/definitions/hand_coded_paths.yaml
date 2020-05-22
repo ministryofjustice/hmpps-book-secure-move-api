@@ -662,7 +662,7 @@
           application/vnd.api+json:
             schema:
               $ref: error_responses.yaml#/422
-/moves/{move_id}/redirect:
+/moves/{move_id}/redirects:
   post:
     summary: 'Redirects a move'
     description: |
