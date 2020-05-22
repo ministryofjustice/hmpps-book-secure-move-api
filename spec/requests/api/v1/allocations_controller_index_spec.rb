@@ -167,6 +167,50 @@ RSpec.describe Api::V1::AllocationsController do
           expect(response.body).to eq('{"error":{"locations":["may not be used in combination with `from_locations` or `to_locations` filters."]}}')
         end
       end
+
+      describe 'included relationships', :skip_before do
+        let!(:allocations) { create_list :allocation, 2, :with_moves }
+
+        before do
+          get "/api/v1/allocations#{query_params}", headers: headers
+        end
+
+        context 'when not including the include query param' do
+          let(:query_params) { '' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:query_params) { '?include=foo.bar,from_location' }
+
+          it 'returns the valid provided includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('locations')
+          end
+        end
+
+        context 'when including an empty include query param' do
+          let(:query_params) { '?include=' }
+
+          it 'returns none of the includes' do
+            returned_types = response_json['included']
+            expect(returned_types).to be_nil
+          end
+        end
+
+        context 'when including a nil include query param' do
+          let(:query_params) { '?include' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
+      end
     end
 
     context 'when not authorized', :skip_before, :with_invalid_auth_headers do
