@@ -11,6 +11,12 @@ module Api
         relationships: { to_location: {} },
       ].freeze
 
+      def complete
+        create_event('complete')
+        run_event_logs
+        render status: :no_content
+      end
+
       def redirects
         create_event('redirect')
         run_event_logs
@@ -53,14 +59,7 @@ module Api
     private
 
       def validate_params
-        MoveEvents::ParamsValidator.new(event_params).tap do |validator|
-          if validator.invalid?
-            render status: :bad_request,
-                   json: {
-                     errors: validator.errors.map { |field, message| { title: field, detail: message } },
-                   }
-          end
-        end
+        MoveEvents::ParamsValidator.new(event_params).validate!
       end
 
       def event_params
