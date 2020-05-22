@@ -1,0 +1,11 @@
+class IncludeParamHandler
+  SEPARATOR = ','.freeze
+
+  def initialize(params)
+    @params = params
+  end
+
+  def call
+    @params.fetch(:include, nil)&.split(SEPARATOR)
+  end
+end
