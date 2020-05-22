@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@ministryofjustice/frontend": "^0.0.17-alpha",
-    "govuk-frontend": "^3.5.0"
-  }
-}
