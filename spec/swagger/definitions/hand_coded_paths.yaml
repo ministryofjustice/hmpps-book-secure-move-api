@@ -489,9 +489,10 @@
               $ref: put_move_responses.yaml#/422
 /moves/{move_id}/events:
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates a move event'
+    deprecated: true
+    summary: '[DO NOT USE] Creates a move event'
     description: |
-      ## [NOT YET IMPLEMENTED]
+      ## [DO NOT USE]
 
       Creating a move event can change the underlying move''s status or other attributes.
 
@@ -625,6 +626,74 @@
                   data:
                     type: locations
                     id: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/redirect:
+  post:
+    summary: 'Redirects a move'
+    description: |
+      Redirecting a move changes the move''s to_location.
+
+      Move events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to
+      complete or cancel existing journeys.
+    tags:
+    - Moves
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: move_id_parameter.yaml#/MoveId
+    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
+    - name: body
+      in: body
+      required: true
+      description: |
+        ### Redirecting a Move
+
+        Creating a redirect event changes the move's destination (`to_location`). It _does not_ alter the journeys
+        associated with the move: additional API calls will be necessary to complete or cancel existing journeys and
+        create new journeys. The new destination must be specified via a `to_location` relationship. Optionally,
+        `notes` may be provided to assist with auditing.
+      schema:
+        $ref: post_move_redirect.yaml#/PostMoveRedirect
+    responses:
+      '204':
+        description: no content
+        content:
       '400':
         description: bad request
         content:

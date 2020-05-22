@@ -1,0 +1,27 @@
+PostMoveRedirect:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: redirect
+      enum:
+      - redirect
+      description: The type of this object - always `redirect`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes
+    relationships:
+      type: object
+      properties:
+        to_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: This is the location that the move is redirecting to.
