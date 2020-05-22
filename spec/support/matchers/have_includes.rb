@@ -5,10 +5,8 @@ RSpec::Matchers.define :have_includes do |*includes|
     @actual = response_json.fetch('included', []).map do |included|
       [included['id'], included['type']]
     end
-    @actual = @actual.sort_by { |(id, _type)| id }
 
     @expected = includes.flatten
-    @expected = @expected.sort_by(&:id)
     @expected = @expected.map do |entity|
       id = entity.id
       type = entity.class&.to_s&.pluralize&.tableize
@@ -16,7 +14,7 @@ RSpec::Matchers.define :have_includes do |*includes|
       [id, type]
     end
 
-    values_match?(@expected, @actual)
+    expect(@expected).to match_array(@actual)
   end
 
   def failure_message
