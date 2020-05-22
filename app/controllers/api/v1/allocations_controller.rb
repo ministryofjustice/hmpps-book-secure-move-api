@@ -73,7 +73,7 @@ module Api
       end
 
       def includes
-        params.fetch(:include, nil)&.split(',') || AllocationSerializer::INCLUDED_ATTRIBUTES
+        params[:include]&.split(',') || AllocationSerializer::INCLUDED_ATTRIBUTES
       end
     end
   end
