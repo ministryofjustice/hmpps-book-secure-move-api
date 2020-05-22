@@ -24,7 +24,7 @@ Rails.application.routes.draw do
         get 'court_cases', to: 'people#court_cases'
         get 'timetable', to: 'people#timetable'
       end
-      resources :moves, only: %i[index show create destroy update] do
+      resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
         resources :journeys, only: %i[index show create update]
         member do
