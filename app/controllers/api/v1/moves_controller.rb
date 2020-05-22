@@ -9,11 +9,6 @@ module Api
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
 
         paginate moves, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
-
-        # paginate moves,
-        #          include: [MoveSerializer::SUPPORTED_RELATIONSHIPS.dup.except(:court_hearings), :profile],
-        #          fields: MoveSerializer::INCLUDED_FIELDS,
-        #          optional_includes: include_params
       end
 
       def show

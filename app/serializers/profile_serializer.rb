@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ProfileSerializer < ActiveModel::Serializer
-  include Rails.application.routes.url_helpers
-
   attributes(
     :id,
     :first_names,
