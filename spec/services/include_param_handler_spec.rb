@@ -16,4 +16,10 @@ RSpec.describe IncludeParamHandler do
 
     it { expect(service.call).to eq(['foo.bar', 'baz.qux']) }
   end
+
+  context 'when the include param is an empty string' do
+    let(:include) { '' }
+
+    it { expect(service.call).to eq([]) }
+  end
 end
