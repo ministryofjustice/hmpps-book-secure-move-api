@@ -15,7 +15,7 @@ RSpec.describe Api::V1::MovesController do
   describe 'GET /moves' do
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
-    let!(:moves) { create_list :move, 21 }
+    let!(:moves) { create_list :move, 2 }
     let(:params) { {} }
 
     context 'when no params are provided' do
@@ -92,6 +92,8 @@ RSpec.describe Api::V1::MovesController do
       end
 
       describe 'paginating results' do
+        let!(:moves) { create_list :move, 21 }
+
         let(:meta_pagination) do
           {
             per_page: 20,
