@@ -172,7 +172,7 @@ RSpec.describe Api::V1::AllocationsController do
         let!(:allocations) { create_list :allocation, 2, :with_moves }
 
         before do
-          get "/api/v1/allocations#{query_params}", params: params, headers: headers
+          get "/api/v1/allocations#{query_params}", headers: headers
         end
 
         context 'when not including the include query param' do
