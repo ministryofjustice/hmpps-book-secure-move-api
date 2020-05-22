@@ -178,54 +178,36 @@ RSpec.describe Api::V1::AllocationsController do
         context 'when not including the include query param' do
           let(:query_params) { '' }
 
-          let(:included) do
-            from_locations = allocations.map(&:from_location)
-            to_locations = allocations.map(&:to_location)
-            moves = allocations.flat_map(&:moves)
-            people = moves.map { |move| move&.profile&.person }
-
-            from_locations + to_locations + moves + people
-          end
-
           it 'returns the default includes' do
-            expect(response_json).to have_includes(included)
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
           end
         end
 
         context 'when including the include query param' do
           let(:query_params) { '?include=foo.bar,from_location' }
 
-          let(:included) { allocations.map(&:from_location) }
-
           it 'returns the valid provided includes' do
-            expect(response_json).to have_includes(included)
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('locations')
           end
         end
 
         context 'when including an empty include query param' do
           let(:query_params) { '?include=' }
 
-          let(:included) { [] }
-
           it 'returns none of the includes' do
-            expect(response_json).to have_includes(included)
+            returned_types = response_json['included']
+            expect(returned_types).to be_nil
           end
         end
 
         context 'when including a nil include query param' do
           let(:query_params) { '?include' }
 
-          let(:included) do
-            from_locations = allocations.map(&:from_location)
-            to_locations = allocations.map(&:to_location)
-            moves = allocations.flat_map(&:moves)
-            people = moves.map { |move| move&.profile&.person }
-
-            from_locations + to_locations + moves + people
-          end
-
           it 'returns the default includes' do
-            expect(response_json).to have_includes(included)
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
           end
         end
       end
