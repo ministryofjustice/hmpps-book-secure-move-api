@@ -3,7 +3,8 @@
 module Api
   module V1
     class MovesController < ApiController
-      before_action :validate_filter_params, :validate_include_params, only: %i[index]
+      before_action :validate_filter_params, only: %i[index]
+      before_action :validate_include_params
 
       def index
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
@@ -118,12 +119,8 @@ module Api
       end
 
       def validate_include_params
-        # TODO: this is temporary, once FE uses the `include` params for all the endpoints/resources,
-        # supported_attributes will be set to to MoveSerializer::SUPPORTED_RELATIONSHIPS
-        supported_attributes = MoveSerializer::SUPPORTED_RELATIONSHIPS + %w[profile]
-
         included_relationships.each do |resource|
-          unless supported_attributes.include?(resource)
+          unless MoveSerializer::SUPPORTED_RELATIONSHIPS.include?(resource)
             render status: :bad_request,
                    json: {
                      errors: [{ title: 'Bad request',
