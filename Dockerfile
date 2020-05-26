@@ -22,21 +22,8 @@ COPY . /app
 
 RUN bundle install --verbose --without="development test" --jobs 4 --retry 3
 
-RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
-   && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-   && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-   && apt-get update \
-   && apt-get install -y nodejs yarn \
-   && apt-get clean
-
-RUN yarn install
-
-# Have to set SECRET_KEY_BASE here to arbitrary string, otherwise task doesn't run
-RUN SECRET_KEY_BASE=valuenotactuallyused bundle exec rails assets:precompile
-
 # Run the application as user 1000
 # directories/files need to be chowned otherwise we get Errno::EACCES
-
 ENV APPUID 1000
 
 RUN mkdir -p /home/appuser && \

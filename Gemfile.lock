@@ -130,7 +130,6 @@ GEM
     govuk_notify_rails (2.1.2)
       notifications-ruby-client (~> 5.1)
       rails (>= 4.1.0)
-    high_voltage (3.1.2)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
@@ -170,9 +169,6 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
-    markdown-rails (0.2.1)
-      rails
-      rdiscount (>= 1.6.8, < 2.0)
     method_source (1.0.0)
     mimemagic (0.3.3)
     mini_mime (1.0.2)
@@ -262,7 +258,6 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rdiscount (1.6.8)
     redis (4.1.3)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -319,14 +314,6 @@ GEM
       rexml
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
-    sassc (2.2.1)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
@@ -357,7 +344,6 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.0.1)
     thread_safe (0.3.6)
-    tilt (2.0.10)
     timecop (0.9.1)
     toml-rb (0.3.15)
       citrus (~> 3.0, > 3.0)
@@ -404,14 +390,12 @@ DEPENDENCIES
   finite_machine
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
-  high_voltage
   json-schema
   kaminari
   listen (>= 3.0.5, < 3.2)
   lograge (~> 0.11.2)
   logstash-event (~> 1.2)
   logstash-logger (~> 0.26.1)
-  markdown-rails
   net-http-persistent
   nokogiri (>= 1.10.4)
   notifications-ruby-client (~> 5.1.2)
@@ -432,7 +416,6 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop-govuk
-  sassc-rails
   sentry-raven
   shoulda-matchers
   sidekiq
