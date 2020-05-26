@@ -103,7 +103,7 @@ module Api
       end
 
       def render_move(move, status)
-        render json: move, status: status, include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS
+        render json: move, status: status, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def move
