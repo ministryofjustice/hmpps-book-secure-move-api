@@ -209,7 +209,7 @@ namespace :fake_data do
         to_location: prisons.sample,
         prisoner_category: Allocation.prisoner_categories.values.sample,
         sentence_length: Allocation.sentence_lengths.values.sample,
-        moves_count: Faker::Number.digit,
+        moves_count: Faker::Number.non_zero_digit,
         complete_in_full: Faker::Boolean.boolean,
         complex_cases: fake_complex_case_answers,
       )
