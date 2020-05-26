@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         member do
           post 'events', controller: 'move_events' # TODO: delete this route once the front end is updated
           post 'complete', controller: 'move_events'
+          post 'lockouts', controller: 'move_events'
           post 'redirects', controller: 'move_events'
         end
       end

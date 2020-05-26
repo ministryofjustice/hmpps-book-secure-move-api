@@ -17,6 +17,12 @@ module Api
         render status: :no_content
       end
 
+      def lockouts
+        create_event('lockout')
+        run_event_logs
+        render status: :no_content
+      end
+
       def redirects
         create_event('redirect')
         run_event_logs
