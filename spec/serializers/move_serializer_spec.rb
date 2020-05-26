@@ -53,20 +53,20 @@ RSpec.describe MoveSerializer do
   end
 
   context 'with main options' do
-    let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+    let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
     it 'contains a person' do
       expect(result_data[:relationships][:person]).to eq(data: { id: move.profile.person.id, type: 'people' })
     end
 
     it 'contains an included person' do
-      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations])
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations profiles])
     end
   end
 
   describe 'person' do
     context 'with a person' do
-      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS } }
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS } }
       let(:expected_json) do
         [
           {
@@ -85,7 +85,7 @@ RSpec.describe MoveSerializer do
     end
 
     context 'without a person' do
-      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
       let(:move) { create(:move, profile: nil) }
 
       it 'contains an empty person' do
@@ -170,14 +170,14 @@ RSpec.describe MoveSerializer do
     end
 
     context 'without an allocation' do
-      let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
       it 'contains an empty allocation' do
         expect(result_data[:relationships][:allocation]).to eq(data: nil)
       end
 
       it 'does not contain an included allocation' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people])
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
       end
     end
   end
