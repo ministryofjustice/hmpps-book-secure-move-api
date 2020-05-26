@@ -130,7 +130,7 @@ RSpec.describe MoveSerializer do
   describe 'allocations' do
     context 'with an allocation' do
       let(:adapter_options) do
-        { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
+        { include: %w[allocation.moves], fields: MoveSerializer::INCLUDED_FIELDS }
       end
       let(:move) { create(:move, :with_allocation) }
       let(:expected_json) do
@@ -155,6 +155,14 @@ RSpec.describe MoveSerializer do
                   type: 'locations',
                 },
               },
+              moves: {
+                data: [
+                  {
+                    id: move.id,
+                    type: 'moves',
+                  },
+                ],
+              },
             },
           },
         ]
@@ -166,6 +174,15 @@ RSpec.describe MoveSerializer do
 
       it 'contains an included allocation' do
         expect(result[:included]).to eq(expected_json)
+      end
+
+      context 'when allocation associated to multiple moves' do
+        let(:allocation) { create(:allocation, :with_moves, moves_count: 2) }
+        let(:move) { allocation.moves.first }
+
+        it 'contains an included allocation' do
+          expect(result[:included].map { |r| r[:type] }).to match_array(%w[allocations moves])
+        end
       end
     end
 

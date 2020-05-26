@@ -34,10 +34,11 @@ class MoveSerializer < ActiveModel::Serializer
     prison_transfer_reason
     court_hearings
     allocation
+    allocation.moves
   ].freeze
 
   INCLUDED_FIELDS = {
-    allocation: %i[to_location from_location moves_count created_at],
+    allocation: %i[to_location from_location moves_count moves created_at],
   }.freeze
 
   def person
