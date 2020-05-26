@@ -81,6 +81,15 @@ RSpec.describe Moves::Updater do
       end
     end
 
+    context 'when status is not updated with an associated allocation' do
+      let!(:allocation) { create :allocation, moves_count: 5 }
+      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+
+      it 'does not change allocation moves_count' do
+        expect { updater.call }.not_to change { allocation.reload.moves_count }
+      end
+    end
+
     context 'with people' do
       let(:before_person) { create(:person) }
       let(:after_person) { create(:person) }
