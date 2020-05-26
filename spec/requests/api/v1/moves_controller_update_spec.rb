@@ -288,6 +288,25 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when cancelling a move' do
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'cancelled',
+                cancellation_reason: 'other',
+              },
+            }
+          end
+
+          context 'with an associated allocation' do
+            let!(:allocation) { create :allocation, moves_count: 1 }
+            let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+
+            it 'updates the allocation moves_count' do
+              expect(allocation.reload.moves_count).to eq(0)
+            end
+          end
+
           context 'when the supplier has a webhook subscription', :skip_before do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
