@@ -49,6 +49,7 @@ class Allocation < VersionedModel
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
+  after_initialize :initialize_state
 
   def refresh_moves_count!
     self.moves_count = moves.not_cancelled.count
@@ -67,5 +68,15 @@ class Allocation < VersionedModel
     )
 
     save!
+  end
+
+  private
+
+  def state_machine
+    @state_machine ||= AllocationStateMachine.new(self)
+  end
+
+  def initialize_state
+    self.status = state_machine.current
   end
 end

@@ -130,4 +130,12 @@ RSpec.describe Allocation do
       expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_REQUESTED)
     end
   end
+
+  describe '#status' do
+    it 'sets the initial status to unfilled' do
+      allocation = create(:allocation)
+
+      expect(allocation).to be_unfilled
+    end
+  end
 end
