@@ -6,7 +6,7 @@ module MoveEvents
 
     attr_reader :timestamp, :type
 
-    validates :type, presence: true, inclusion: { in: %w[complete redirects] }
+    validates :type, presence: true, inclusion: { in: %w[complete redirects events] } # TODO: remove 'events' type once FE updated
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
