@@ -60,7 +60,7 @@ RSpec.describe MoveSerializer do
     end
 
     it 'contains an included person' do
-      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations])
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations profiles])
     end
   end
 
@@ -177,7 +177,7 @@ RSpec.describe MoveSerializer do
       end
 
       it 'does not contain an included allocation' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people])
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
       end
     end
   end
