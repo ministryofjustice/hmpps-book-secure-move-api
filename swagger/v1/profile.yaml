@@ -12,10 +12,10 @@ Profile:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: people
+      example: profiles
       enum:
-        - people
-      description: The type of this object - always `people`
+        - profiles
+      description: The type of this object - always `profiles`
     attributes:
       type: object
       required:
@@ -25,16 +25,16 @@ Profile:
         first_names:
           type: string
           example: Bob
-          description: Person's first names
+          description: Profile's first names
         last_name:
           type: string
           example: Roberts
-          description: Person's surname
+          description: Profile's surname
         date_of_birth:
           type: string
           format: date
           example: "1965-10-24"
-          description: Person's date of birth in ISO 8601 format
+          description: Profile's date of birth in ISO 8601 format
         image_url:
           type: string
           format: uri
@@ -68,7 +68,7 @@ Profile:
       properties:
         gender:
           $ref: gender_reference.yaml#/GenderReference
-          description: Person's gender
+          description: Profile's gender
         ethnicity:
           $ref: ethnicity_reference.yaml#/EthnicityReference
-          description: Person's ethnicity
+          description: Profile's ethnicity
