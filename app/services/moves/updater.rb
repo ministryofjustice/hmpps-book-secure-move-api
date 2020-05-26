@@ -14,8 +14,10 @@ module Moves
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
 
-      move.save!
-      move.allocation&.refresh_moves_count! if status_changed
+      move.transaction do
+        move.save!
+        move.allocation&.refresh_moves_count! if status_changed
+      end
     end
 
   private
