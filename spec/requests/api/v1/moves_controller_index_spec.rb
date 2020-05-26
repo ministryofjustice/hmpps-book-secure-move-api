@@ -59,44 +59,6 @@ RSpec.describe Api::V1::MovesController do
 
           expect(response_json).to include_json(data: [{ id: moves.first.id }])
         end
-
-        describe 'include param' do
-          # To be compliant with Json:Api spec, we must support the '?include=' param:
-          # https://jsonapi.org/format/#fetching-includes
-
-          context 'when the profile is requested' do
-            it 'includes profile in the response' do
-              get '/api/v1/moves?include=profile', params: params, headers: headers
-
-              profiles = response_json['included'].filter { |e| e['type'] == 'profiles' }
-
-              expect(profiles.count).to eq 1
-            end
-          end
-
-          describe 'when the profile is NOT requested' do
-            it 'does NOT include profile in the response' do
-              get_moves
-
-              profiles = response_json['included'].filter { |e| e['type'] == 'profiles' }
-
-              expect(profiles.count).to eq 0
-            end
-          end
-
-          context 'when include param contains an invalid resource' do
-            let(:resource) { 'invalid_resource' }
-
-            it 'return error 400' do
-              get "/api/v1/moves?include=#{resource}", params: params, headers: headers
-
-              response_error = response_json['errors'].first
-
-              expect(response_error['title']).to eq('Bad request')
-              expect(response_error['detail']).to include("'#{resource}' is not supported.")
-            end
-          end
-        end
       end
 
       context 'with a cancelled move' do
@@ -190,7 +152,7 @@ RSpec.describe Api::V1::MovesController do
         end
       end
 
-      describe 'relationships' do
+      describe 'included relationships' do
         let!(:moves) { [create(:move)] }
         let!(:court_hearing) { create(:court_hearing, move: moves.first) }
 
@@ -202,6 +164,31 @@ RSpec.describe Api::V1::MovesController do
           end
 
           expect(has_court_hearings).to eq(false)
+        end
+
+        it 'includes profile in the response' do
+          get '/api/v1/moves?include=profile', params: params, headers: headers
+
+          profiles = response_json['included'].filter { |e| e['type'] == 'profiles' }
+
+          expect(profiles.count).to eq 1
+        end
+
+        describe 'include query param' do
+          # To be compliant with Json:Api spec, we must support the '?include=' param:
+          # https://jsonapi.org/format/#fetching-includes
+          context 'when include param contains an invalid resource' do
+            let(:resource) { 'invalid_resource' }
+
+            it 'returns error 400' do
+              get "/api/v1/moves?include=#{resource}", params: params, headers: headers
+
+              response_error = response_json['errors'].first
+
+              expect(response_error['title']).to eq('Bad request')
+              expect(response_error['detail']).to include("'#{resource}' is not supported.")
+            end
+          end
         end
       end
 
