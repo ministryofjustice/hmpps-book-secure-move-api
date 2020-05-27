@@ -86,7 +86,9 @@ private
     if status.present?
       state_machine.restore!(status.to_sym)
     else
-      self.status = state_machine.current
+      # TODO: restore after data is backfilled on production
+      # self.status = state_machine.current
+      self.status = moves.not_cancelled.unfilled? ? :unfilled : :filled
     end
   end
 end

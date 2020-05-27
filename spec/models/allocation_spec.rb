@@ -182,72 +182,51 @@ RSpec.describe Allocation do
     end
 
     it 'restores the current status if it is set' do
-      allocation = create(:allocation, status: 'filled')
+      allocation = create(:allocation, :filled)
 
       expect(allocation).to be_filled
     end
 
     it 'updates the status from unfilled if it is filled' do
-      allocation = create(:allocation, status: 'unfilled')
+      allocation = create(:allocation, :unfilled)
 
       allocation.fill
       expect(allocation).to be_filled
     end
 
     it 'updates the status from unfilled if it is cancelled' do
-      allocation = create(:allocation, status: 'unfilled')
+      allocation = create(:allocation, :unfilled)
 
       allocation.cancel
       expect(allocation).to be_cancelled
     end
 
     it 'updates the status from filled if it is unfilled' do
-      allocation = create(:allocation, status: 'filled')
+      allocation = create(:allocation, :filled)
 
       allocation.unfill
       expect(allocation).to be_unfilled
     end
 
     it 'updates the status from filled if it is cancelled' do
-      allocation = create(:allocation, status: 'filled')
+      allocation = create(:allocation, :filled)
 
       allocation.cancel
       expect(allocation).to be_cancelled
     end
 
     it 'keeps the status filled if already set' do
-      allocation = create(:allocation, status: 'filled')
+      allocation = create(:allocation, :filled)
 
       allocation.fill
       expect(allocation).to be_filled
     end
 
     it 'keeps the status unfilled if already set' do
-      allocation = create(:allocation, status: 'unfilled')
+      allocation = create(:allocation, :unfilled)
 
       allocation.unfill
       expect(allocation).to be_unfilled
-    end
-
-    it 'updates the status from nil if it is filled' do
-      allocation = create(:allocation, status: nil)
-
-      allocation.fill
-      expect(allocation).to be_filled
-    end
-
-    it 'updates the status from nil if it is unfilled' do
-      allocation = create(:allocation, status: nil)
-
-      allocation.unfill
-      expect(allocation).to be_unfilled
-    end
-
-    it 'updates the status from nil if it is cancelled' do
-      allocation = create(:allocation, status: nil)
-
-      allocation.cancel
-      expect(allocation).to be_cancelled
     end
   end
 end
