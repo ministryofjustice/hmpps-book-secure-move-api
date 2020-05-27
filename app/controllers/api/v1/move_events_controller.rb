@@ -57,7 +57,7 @@ module Api
         else
           render status: :bad_request,
                  json: {
-                   errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
+                   errors: [{ title: 'invalid event_name', detail: "event_name is not supported" }],
                  }
         end
       end
@@ -82,7 +82,7 @@ module Api
       end
 
       def type
-        @type ||= event_params.dig(:type)
+        @type ||= event_params[:type]
       end
 
       def relationships
@@ -103,7 +103,7 @@ module Api
       end
 
       def create_event(event_name)
-        move.events.create!(
+        move.move_events.create!(
           event_name: event_name,
           client_timestamp: timestamp,
           details: {

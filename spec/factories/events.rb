@@ -3,7 +3,15 @@ FactoryBot.define do
     eventable { association(:move) }
     event_name { 'create' }
     client_timestamp { Time.now.utc + rand(-60..60).seconds } # NB: the client_timestamp will never be perfectly in sync with system clock
-    details { { supplier_id: '1234', event_params: { attributes: { notes: 'foo' } }, data_params: { attributes: { notes: 'bar' } } } }
+    details do
+      { supplier_id: '1234',
+        event_params: {
+          attributes: { notes: 'foo' },
+        },
+        data_params: {
+          attributes: { notes: 'bar' },
+        } }
+    end
 
     trait :create do
       event_name { 'create' }
@@ -40,10 +48,12 @@ FactoryBot.define do
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
       details do
-        { event_params: { relationships: {
-          from_location: { data: { id: create(:location).id } },
-          to_location: { data: { id: create(:location).id } },
-        } } }
+        { event_params: {
+          relationships: {
+            from_location: { data: { id: create(:location).id } },
+            to_location: { data: { id: create(:location).id } },
+          },
+        } }
       end
     end
   end
