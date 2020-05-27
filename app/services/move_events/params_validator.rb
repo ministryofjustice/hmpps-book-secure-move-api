@@ -4,9 +4,8 @@ module MoveEvents
   class ParamsValidator
     include ActiveModel::Validations
 
-    attr_reader :event_name, :timestamp, :notes
+    attr_reader :timestamp
 
-    validates :event_name, inclusion: %w[redirect], presence: true
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
@@ -14,9 +13,7 @@ module MoveEvents
     end
 
     def initialize(params)
-      @event_name = params.dig(:attributes, :event_name)
       @timestamp = params.dig(:attributes, :timestamp)
-      @notes = params.dig(:attributes, :notes)
     end
   end
 end
