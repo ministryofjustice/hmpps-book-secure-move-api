@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_26_152251) do
+ActiveRecord::Schema.define(version: 2020_05_27_125009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
     t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id"
+    t.uuid "person_id_backup"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -415,7 +415,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people"
+  add_foreign_key "moves", "people", column: "person_id_backup", name: "fk_rails_moves_person_id"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
