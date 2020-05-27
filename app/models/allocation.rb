@@ -68,8 +68,10 @@ class Allocation < VersionedModel
   end
 
   def refresh_status_and_moves_count!
-    moves.not_cancelled.empty? || moves.not_cancelled.unfilled? ? unfill : fill
-    self.moves_count = moves.not_cancelled.count
+    current_moves = moves.not_cancelled
+
+    current_moves.unfilled? ? unfill : fill
+    self.moves_count = current_moves.count
 
     save!
   end

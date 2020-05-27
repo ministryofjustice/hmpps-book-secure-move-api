@@ -42,7 +42,7 @@ RSpec.describe Allocation do
       let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
       it 'updates the number of non cancelled moves' do
-        expect { allocation.refresh_status_and_moves_count! }.to change { allocation.moves_count }.from(1).to(3)
+        expect { allocation.refresh_status_and_moves_count! }.to change(allocation, :moves_count).from(1).to(3)
       end
     end
 
