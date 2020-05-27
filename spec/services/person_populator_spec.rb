@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# TODO: Remove this once we've migrated all profile attributes to a person and are updating these attributes dynamically
 RSpec.describe PersonPopulator do
   subject(:populator) { described_class.new(person, profile) }
 

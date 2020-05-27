@@ -1,3 +1,4 @@
+# TODO: Remove this once we've migrated all profile attributes to a person and are updating these attributes dynamically
 class PersonPopulator
   def initialize(person, profile)
     @person = person
