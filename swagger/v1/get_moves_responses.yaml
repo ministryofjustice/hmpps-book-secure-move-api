@@ -16,6 +16,7 @@
         - $ref: gender.yaml#/Gender
         - $ref: ethnicity.yaml#/Ethnicity
         - $ref: allocation.yaml#/Allocation
+        - $ref: profile.yaml#/Profile
     links:
       $ref: pagination_links.yaml#/PaginationLinks
     meta:

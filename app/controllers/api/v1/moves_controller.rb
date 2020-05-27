@@ -4,12 +4,14 @@ module Api
   module V1
     class MovesController < ApiController
       before_action :validate_filter_params, only: %i[index]
+      before_action :validate_include_params
 
       def index
         moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-        # Excludes potentially many court hearing documents to reduce the request size. This was requested specifically by the frontend team.
-        includes = MoveSerializer::INCLUDED_ATTRIBUTES.dup - %w[court_hearings]
-        paginate moves, include: includes, fields: MoveSerializer::INCLUDED_FIELDS
+
+        paginate moves,
+                 include: included_relationships - %w[court_hearings],
+                 fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def show
@@ -102,7 +104,7 @@ module Api
       end
 
       def render_move(move, status)
-        render json: move, status: status, include: MoveSerializer::INCLUDED_ATTRIBUTES, fields: MoveSerializer::INCLUDED_FIELDS
+        render json: move, status: status, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
       end
 
       def move
@@ -114,6 +116,24 @@ module Api
 
       def updater
         @updater ||= Moves::Updater.new(move, update_move_params)
+      end
+
+      def validate_include_params
+        included_relationships.each do |resource|
+          unless MoveSerializer::SUPPORTED_RELATIONSHIPS.include?(resource)
+            supported_relationships = MoveSerializer::SUPPORTED_RELATIONSHIPS.join(', ')
+
+            render status: :bad_request,
+                   json: {
+                     errors: [{ title: 'Bad request',
+                                detail: "'#{resource}' is not supported. Valid values are: #{supported_relationships}" }],
+                   }
+          end
+        end
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

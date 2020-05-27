@@ -42,13 +42,18 @@ class Allocation < VersionedModel
   validates :prisoner_category, inclusion: { in: prisoner_categories }, allow_nil: true
   validates :sentence_length, inclusion: { in: sentence_lengths }, allow_nil: true
 
-  validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }, on: :create
   validates :date, presence: true
 
   validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
+
+  def refresh_moves_count!
+    self.moves_count = moves.not_cancelled.count
+    save!
+  end
 
   def cancel
     comment = 'Allocation was cancelled'
@@ -58,6 +63,7 @@ class Allocation < VersionedModel
       cancellation_reason: CANCELLATION_REASON_OTHER,
       cancellation_reason_comment: comment,
       moves: moves.each { |move| move.cancel(comment: comment) },
+      moves_count: 0,
     )
 
     save!

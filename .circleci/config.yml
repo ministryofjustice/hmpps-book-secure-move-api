@@ -14,34 +14,34 @@ aliases:
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: 'API is being prepared for release :building_construction:'
-      title_link: 'https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md'
+      title: "API is being prepared for release :building_construction:"
+      title_link: "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
       message: A new release was created by ${CIRCLE_USERNAME}
       footer: Click the title to view the changes
       include_project_field: false
       include_job_number_field: false
       include_visit_job_action: false
-      color: '#1d70b8'
+      color: "#1d70b8"
       mentions: here
   - &notify_slack_of_approval
     slack/approval:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      message: 'API release *requires your approval* before it can be deployed :eyes:'
+      message: "API release *requires your approval* before it can be deployed :eyes:"
       include_project_field: false
       include_job_number_field: false
-      color: '#912b88'
+      color: "#912b88"
       mentions: $BUILD_NOTIFICATIONS_MENTION_ID
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: 'API has been deployed :rocket:'
+      title: "API has been deployed :rocket:"
       title_link: https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases
       message: This release was successfully deployed to production
       footer: Click the title to view the release notes
       include_project_field: false
       include_job_number_field: false
       include_visit_job_action: false
-      color: '#28a197'
+      color: "#28a197"
       mentions: here
   - &all_tags
     filters:
@@ -55,8 +55,8 @@ aliases:
     filters:
       branches:
         only:
-        - master
-        - dev-auth-from-docs
+          - master
+          - dev-auth-from-docs
   - &only_deploy_tags
     filters:
       tags:
@@ -67,7 +67,7 @@ aliases:
 references:
   app_containers: &app_containers
     docker:
-      - image: circleci/ruby:2.6.2-node-browsers
+      - image: circleci/ruby:2.6.2
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -108,7 +108,6 @@ commands:
           name: install dependencies
           command: |
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
-            yarn install
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -243,7 +242,6 @@ jobs:
           root: .
           paths:
             - swagger/v1/swagger.yaml
-            - node_modules/*
 
       - *notify_slack_on_failure
 

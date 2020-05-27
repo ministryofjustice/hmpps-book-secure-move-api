@@ -11,6 +11,7 @@ RSpec.describe Moves::Updater do
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
   let(:status) { 'requested' }
+  let(:cancellation_reason) { nil }
 
   let(:move_params) do
     {
@@ -18,7 +19,7 @@ RSpec.describe Moves::Updater do
       attributes: {
         status: status,
         additional_information: 'some more info',
-        cancellation_reason: nil,
+        cancellation_reason: cancellation_reason,
         cancellation_reason_comment: nil,
         move_type: 'court_appearance',
         move_agreed: true,
@@ -29,14 +30,9 @@ RSpec.describe Moves::Updater do
     }
   end
 
-  before do
-    next if RSpec.current_example.metadata[:skip_before]
-
-    updater.call
-  end
-
   context 'with valid params' do
     it 'updates the correct attributes on an existing move' do
+      updater.call
       expect(updater.move).to have_attributes(
         status: 'requested',
         additional_information: 'some more info',
@@ -48,9 +44,31 @@ RSpec.describe Moves::Updater do
       )
     end
 
-    context 'when status updated' do
+    context 'when status changes without an associated allocation' do
       it 'sets `status_updated` to `true`' do
+        updater.call
         expect(updater.status_changed).to be_truthy
+      end
+    end
+
+    context 'when status changes to cancelled with an associated allocation' do
+      let!(:allocation) { create :allocation, moves_count: 5 }
+      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+
+      let(:cancellation_reason) { 'other' }
+      let(:status) { 'cancelled' }
+
+      it 'corrects allocation moves_count' do
+        expect { updater.call }.to change { allocation.reload.moves_count }.from(5).to(0)
+      end
+    end
+
+    context 'when status changes to non cancelled with an associated allocation' do
+      let!(:allocation) { create :allocation, moves_count: 5 }
+      let!(:move) { create :move, :cancelled, from_location: from_location, allocation: allocation }
+
+      it 'corrects allocation moves_count' do
+        expect { updater.call }.to change { allocation.reload.moves_count }.from(5).to(1)
       end
     end
 
@@ -58,7 +76,17 @@ RSpec.describe Moves::Updater do
       let(:status) { 'proposed' }
 
       it 'sets `status_updated` to `false`' do
+        updater.call
         expect(updater.status_changed).to be_falsey
+      end
+    end
+
+    context 'when status is not updated with an associated allocation' do
+      let!(:allocation) { create :allocation, moves_count: 5 }
+      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+
+      it 'does not change allocation moves_count' do
+        expect { updater.call }.not_to change { allocation.reload.moves_count }
       end
     end
 
@@ -76,7 +104,7 @@ RSpec.describe Moves::Updater do
         end
 
         it 'updates person association to new person' do
-          expect(updater.move.profile.person).to eq(after_person)
+          expect { updater.call }.to change { move.reload.profile.person }.from(before_person).to(after_person)
         end
       end
 
@@ -89,13 +117,13 @@ RSpec.describe Moves::Updater do
         end
 
         it 'removes associated profile' do
-          expect(updater.move.profile).to be_nil
+          expect { updater.call }.to change { move.reload.profile }.to(nil)
         end
       end
 
       context 'with no person relationship' do
         it 'does not change old person associated' do
-          expect(updater.move.profile.person).to eq(before_person)
+          expect { updater.call }.not_to change { move.reload.profile.person }
         end
       end
     end
@@ -112,6 +140,7 @@ RSpec.describe Moves::Updater do
         end
 
         it 'updates documents association to new documents' do
+          updater.call
           expect(updater.move.documents).to match_array(after_documents)
         end
       end
@@ -125,6 +154,7 @@ RSpec.describe Moves::Updater do
         end
 
         it 'unsets associated documents' do
+          updater.call
           expect(updater.move.documents).to be_empty
         end
       end
@@ -138,12 +168,14 @@ RSpec.describe Moves::Updater do
         end
 
         it 'does nothing to existing documents' do
+          updater.call
           expect(updater.move.documents).to match_array(before_documents)
         end
       end
 
       context 'with no document relationship' do
         it 'does nothing to existing documents' do
+          updater.call
           expect(updater.move.documents).to match_array(before_documents)
         end
       end
@@ -153,7 +185,7 @@ RSpec.describe Moves::Updater do
   context 'with invalid input params' do
     let(:status) { 'wrong status' }
 
-    it 'raises an error', :skip_before do
+    it 'raises an error' do
       expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end

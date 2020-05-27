@@ -7,7 +7,7 @@ RSpec.describe Api::V1::AllocationsController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::INCLUDED_ATTRIBUTES))
+    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS))
     resource['data']['relationships']['moves']['data'] = UnorderedArray(*resource.dig('data', 'relationships', 'moves', 'data'))
     resource['included'] = UnorderedArray(*resource['included'])
     resource
