@@ -13,6 +13,5 @@ class AddsFieldsToPeople < ActiveRecord::Migration[5.2]
 
     add_reference :people, :ethnicity, type: :uuid
     add_reference :people, :gender, type: :uuid
-    add_reference :people, :nationality, type: :uuid
   end
 end

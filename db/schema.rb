@@ -315,6 +315,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nomis_prison_number"
+    t.uuid "nationality_id"
     t.string "prison_number"
     t.string "criminal_records_office"
     t.string "police_national_computer"
@@ -325,7 +326,6 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
     t.string "latest_nomis_booking_id"
     t.uuid "ethnicity_id"
     t.uuid "gender_id"
-    t.uuid "nationality_id"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nationality_id"], name: "index_people_on_nationality_id"
