@@ -7,7 +7,7 @@ RSpec.describe Allocations::Finder do
 
   let!(:from_location) { create :location }
   let!(:to_location) { create :location }
-  let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
+  let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location, status: nil }
   let(:filter_params) { {} }
 
   describe 'filtering' do

@@ -19,7 +19,7 @@ RSpec.describe AllocationStateMachine do
     end
   end
 
-  it { is_expected.to respond_to(:fill, :unfill) }
+  it { is_expected.to respond_to(:fill, :unfill, :cancel) }
 
   context 'when in the unfilled status' do
     it_behaves_like 'state_machine target status', :unfilled
