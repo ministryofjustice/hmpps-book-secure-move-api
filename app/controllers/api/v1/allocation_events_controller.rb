@@ -9,7 +9,7 @@ module Api
       def create
         case event_name
         when 'cancel'
-          allocation.cancel_with_moves
+          allocation.cancel
 
           allocation.save!
           render json: fake_event_object, status: :created

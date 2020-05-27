@@ -51,9 +51,9 @@ class Allocation < VersionedModel
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
 
   after_initialize :initialize_state
-  delegate :fill, :unfill, :cancel, to: :state_machine
+  delegate :fill, :unfill, to: :state_machine
 
-  def cancel_with_moves
+  def cancel
     comment = 'Allocation was cancelled'
 
     assign_attributes(
@@ -62,7 +62,7 @@ class Allocation < VersionedModel
       moves: moves.each { |move| move.cancel(comment: comment) },
       moves_count: 0,
     )
-    cancel
+    state_machine.cancel
 
     save!
   end
