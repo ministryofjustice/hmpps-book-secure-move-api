@@ -15,7 +15,7 @@ module MoveEvents
 
     def initialize(params)
       @timestamp = params.dig(:attributes, :timestamp)
-      @type = params.dig(:type)
+      @type = params[:type]
     end
   end
 end
