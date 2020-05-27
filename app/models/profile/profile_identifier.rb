@@ -19,7 +19,7 @@ class Profile
       value.blank?
     end
 
-    def as_json
+    def as_json(_options = {})
       {
         identifier_type: identifier_type,
         value: value,
