@@ -37,11 +37,25 @@ RSpec.describe EventLog::MoveRunner do
 
   context 'when event_name=redirect' do
     let!(:event1) { create(:move_event, :redirect, eventable: move, client_timestamp: event1_timestamp, created_at: 100.minutes.ago, details: event1_details) }
-    let(:event1_details) { { note: 'Event1', event_params: { relationships: { to_location: { data: { id: event1_location.id } } } } } }
+    let(:event1_details) do
+      { note: 'Event1',
+        event_params: {
+          relationships: {
+            to_location: { data: { id: event1_location.id } },
+          },
+        } }
+    end
     let(:event1_location) { create(:location, title: 'Event1-Location') }
 
     let!(:event2) { create(:move_event, :redirect, eventable: move, client_timestamp: event2_timestamp, created_at: 1.minute.ago, details: event2_details) }
-    let(:event2_details) { { note: 'Event2', event_params: { relationships: { to_location: { data: { id: event2_location.id } } } } } }
+    let(:event2_details) do
+      { note: 'Event2',
+        event_params: {
+          relationships: {
+            to_location: { data: { id: event2_location.id } },
+          },
+        } }
+    end
     let(:event2_location) { create(:location, title: 'Event2-Location') }
 
     context 'when events are received in a chronological order' do
