@@ -1,5 +1,14 @@
 class Event < ApplicationRecord
-  EVENT_NAMES = %w[create update cancel uncancel complete uncomplete redirect lockout].freeze
+  EVENT_NAMES = [
+    CREATE = 'create'.freeze,
+    UPDATE = 'update'.freeze,
+    CANCEL = 'cancel'.freeze,
+    UNCANCEL = 'uncancel'.freeze,
+    COMPLETE = 'complete'.freeze,
+    UNCOMPLETE = 'uncomplete'.freeze,
+    REDIRECT = 'redirect'.freeze,
+    LOCKOUT = 'lockout'.freeze,
+  ].freeze
 
   belongs_to :eventable, polymorphic: true
 

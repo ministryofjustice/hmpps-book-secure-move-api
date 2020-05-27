@@ -1,0 +1,4 @@
+MoveCancellationReasonComment:
+  type: string
+  example: cancelled because the prisoner refused to move
+  description: Optional comment explaining why the move was cancelled

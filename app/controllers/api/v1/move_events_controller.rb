@@ -11,28 +11,34 @@ module Api
         relationships: { from_location: {}, to_location: {} },
       ].freeze
 
+      def cancel
+        create_event(Event::CANCEL)
+        run_event_logs
+        render status: :no_content
+      end
+
       def complete
-        create_event('complete')
+        create_event(Event::COMPLETE)
         run_event_logs
         render status: :no_content
       end
 
       def lockouts
-        create_event('lockout')
+        create_event(Event::LOCKOUT)
         run_event_logs
         render status: :no_content
       end
 
       def redirects
-        create_event('redirect')
+        create_event(Event::REDIRECT)
         run_event_logs
         render status: :no_content
       end
 
       def events
         # TODO: this method should be deleted, but kept here until the front end is updated
-        if  event_params.dig(:attributes, :event_name) == 'redirect'
-          event = create_event('redirect')
+        if  event_params.dig(:attributes, :event_name) == Event::REDIRECT
+          event = create_event(Event::REDIRECT)
           run_event_logs
           render status: :created,
                  json: {
@@ -57,7 +63,7 @@ module Api
         else
           render status: :bad_request,
                  json: {
-                   errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
+                   errors: [{ title: 'invalid event_name', detail: "event_name is not supported" }],
                  }
         end
       end

@@ -11,12 +11,14 @@ module EventLog
       # iterate over all events in the log and apply changes to the move
       events.each do |event| # NB: do not use events.find_each as it will break the ordering
         case event.event_name
-        when 'redirect'
-          move.to_location = event.to_location
-        when 'complete'
+        when Event::CANCEL
+          move.status = Move::MOVE_STATUS_CANCELLED
+        when Event::COMPLETE
           move.status = Move::MOVE_STATUS_COMPLETED
-        when 'lockout'
+        when Event::LOCKOUT
           # no action to perform when a move is locked out, this event is purely for auditing
+        when Event::REDIRECT
+          move.to_location = event.to_location
           # TODO: handle other move events here
         end
       end
