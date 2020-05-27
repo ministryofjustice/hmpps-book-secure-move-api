@@ -85,7 +85,7 @@ module Api
       end
 
       def create_event(event_name)
-        move.events.create!(
+        move.move_events.create!(
           event_name: event_name,
           client_timestamp: timestamp,
           details: {

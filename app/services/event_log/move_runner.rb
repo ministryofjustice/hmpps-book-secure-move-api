@@ -31,7 +31,7 @@ module EventLog
   private
 
     def events
-      move.events.default_order
+      move.move_events.default_order
     end
   end
 end
