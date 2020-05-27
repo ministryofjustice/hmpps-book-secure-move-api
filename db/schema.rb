@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_120027) do
+ActiveRecord::Schema.define(version: 2020_05_26_152251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -315,7 +315,22 @@ ActiveRecord::Schema.define(version: 2020_05_19_120027) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nomis_prison_number"
+    t.string "prison_number"
+    t.string "criminal_records_office"
+    t.string "police_national_computer"
+    t.string "first_names"
+    t.string "last_name"
+    t.date "date_of_birth"
+    t.string "gender_additional_information"
+    t.string "latest_nomis_booking_id"
+    t.uuid "ethnicity_id"
+    t.uuid "gender_id"
+    t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
+    t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
+    t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
+    t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
+    t.index ["prison_number"], name: "index_people_on_prison_number"
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
