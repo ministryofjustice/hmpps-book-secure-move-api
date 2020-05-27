@@ -3,8 +3,6 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.2'
-
 gem 'active_model_serializers', '~> 0.10.0'
 
 # don't enable this in dev/test - the insights envs are staging/preprod/prod
