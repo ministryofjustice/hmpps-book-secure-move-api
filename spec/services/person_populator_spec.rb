@@ -63,11 +63,8 @@ RSpec.describe PersonPopulator do
         police_national_computer
       ]
     end
-
-    it 'populates a person with the correct attributes' do
-      populator.call
-
-      expect(person.slice(*populated_attributes)).to eq(
+    let(:expected_attributes) do
+      {
         'first_names' => 'Randi',
         'last_name' => 'Vandervort',
         'date_of_birth' => Date.parse('1987-05-04'),
@@ -78,7 +75,13 @@ RSpec.describe PersonPopulator do
         'prison_number' => 'D39067ZZ',
         'criminal_records_office' => 'CRO/74506',
         'police_national_computer' => 'NPD4X0/3D',
-      )
+      }
+    end
+
+    it 'populates a person with the correct attributes' do
+      populator.call
+
+      expect(person.slice(*populated_attributes)).to eq(expected_attributes)
     end
   end
 end
