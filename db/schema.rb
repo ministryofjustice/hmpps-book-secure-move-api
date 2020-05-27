@@ -315,7 +315,6 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nomis_prison_number"
-    t.uuid "nationality_id"
     t.string "prison_number"
     t.string "criminal_records_office"
     t.string "police_national_computer"
@@ -329,7 +328,6 @@ ActiveRecord::Schema.define(version: 2020_05_26_152251) do
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
-    t.index ["nationality_id"], name: "index_people_on_nationality_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
     t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
     t.index ["prison_number"], name: "index_people_on_prison_number"
