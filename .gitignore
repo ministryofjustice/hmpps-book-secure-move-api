@@ -43,3 +43,5 @@ config/application_insights.toml
 
 # Ignore auto generated data diagram
 erd.pdf
+
+.DS_Store
