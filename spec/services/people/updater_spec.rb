@@ -175,11 +175,11 @@ RSpec.describe People::Updater do
       expect(updated_profile.ethnicity_id).to eql ethnicity.id
     end
 
-    it 'sets the correct Profile gender' do
-      expect(updated_profile.gender_id).to eql gender.id
+    it 'sets the correct Person gender' do
+      expect(updated_person.gender_id).to eql gender.id
     end
 
-    it 'sets the correct Person gender' do
+    it 'sets the correct Profile gender' do
       expect(updated_profile.gender_id).to eql gender.id
     end
   end
