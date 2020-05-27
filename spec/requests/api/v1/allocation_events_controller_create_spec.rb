@@ -42,6 +42,10 @@ RSpec.describe Api::V1::AllocationEventsController do
           expect(allocation.reload.status).to eql('cancelled')
         end
 
+        it 'updates the allocation moves_count' do
+          expect(allocation.reload.moves_count).to eq(0)
+        end
+
         it 'updates the allocation moves status' do
           expect(allocation.reload.moves.pluck(:status).uniq).to contain_exactly('cancelled')
         end

@@ -32,6 +32,19 @@ RSpec.describe Allocation do
     end
   end
 
+  describe '#refresh_moves_count!' do
+    let(:cancelled_move) { create :move, :cancelled }
+    let(:proposed_move) { create :move, :proposed }
+    let(:requested_move) { create :move, :requested }
+    let(:completed_move) { create :move, :completed }
+    let(:moves) { [cancelled_move, proposed_move, requested_move, completed_move] }
+    let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
+
+    it 'updates the number of non cancelled moves' do
+      expect { allocation.refresh_moves_count! }.to change { allocation.reload.moves_count }.from(1).to(3)
+    end
+  end
+
   describe 'cancellation_reason' do
     context 'when the allocation is not cancelled' do
       let(:allocation) { build(:allocation, status: nil) }
@@ -62,6 +75,12 @@ RSpec.describe Allocation do
       allocation.reload.cancel
 
       expect(allocation.reload.status).to eq(described_class::ALLOCATION_STATUS_CANCELLED)
+    end
+
+    it 'changes the moves_count of allocation to 0' do
+      allocation.reload.cancel
+
+      expect(allocation.reload.moves_count).to eq(0)
     end
 
     it 'changes the status of all associated moves to cancelled' do

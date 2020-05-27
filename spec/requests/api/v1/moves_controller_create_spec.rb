@@ -7,7 +7,7 @@ RSpec.describe Api::V1::MovesController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
   end
 
   describe 'POST /moves' do

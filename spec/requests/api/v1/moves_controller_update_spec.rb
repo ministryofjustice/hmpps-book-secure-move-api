@@ -8,7 +8,7 @@ RSpec.describe Api::V1::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
   end
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
@@ -288,6 +288,25 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when cancelling a move' do
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'cancelled',
+                cancellation_reason: 'other',
+              },
+            }
+          end
+
+          context 'with an associated allocation' do
+            let!(:allocation) { create :allocation, moves_count: 1 }
+            let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+
+            it 'updates the allocation moves_count' do
+              expect(allocation.reload.moves_count).to eq(0)
+            end
+          end
+
           context 'when the supplier has a webhook subscription', :skip_before do
             let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }

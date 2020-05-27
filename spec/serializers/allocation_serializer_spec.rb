@@ -118,7 +118,7 @@ RSpec.describe AllocationSerializer do
   describe 'moves' do
     context 'with a move' do
       let(:adapter_options) do
-        { include: AllocationSerializer::INCLUDED_ATTRIBUTES }
+        { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS }
       end
       let(:allocation) { create(:allocation, :with_moves) }
       let(:move) { allocation.moves.first }
@@ -133,7 +133,7 @@ RSpec.describe AllocationSerializer do
     end
 
     context 'without a move' do
-      let(:adapter_options) { { include: AllocationSerializer::INCLUDED_ATTRIBUTES } }
+      let(:adapter_options) { { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS } }
 
       it 'contains empty moves' do
         expect(result_data[:relationships][:moves][:data]).to be_empty
