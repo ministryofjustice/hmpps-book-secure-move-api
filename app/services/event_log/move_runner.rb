@@ -13,6 +13,8 @@ module EventLog
         case event.event_name
         when 'redirect'
           move.to_location = event.to_location
+        when 'complete'
+          move.status = Move::MOVE_STATUS_COMPLETED
           # TODO: handle other move events here
         end
       end
