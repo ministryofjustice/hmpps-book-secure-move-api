@@ -3,12 +3,12 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      before_action :validate_params
+      before_action :validate_params, :validate_relationships
 
       PERMITTED_EVENT_PARAMS = [
         :type,
         attributes: %i[timestamp event_name notes],
-        relationships: { to_location: {} },
+        relationships: { from_location: {}, to_location: {} },
       ].freeze
 
       def complete
@@ -31,8 +31,8 @@ module Api
 
       def events
         # TODO: this method should be deleted, but kept here until the front end is updated
-        if  event_name == 'redirect'
-          event = create_event(event_name)
+        if  event_params.dig(:attributes, :event_name) == 'redirect'
+          event = create_event('redirect')
           run_event_logs
           render status: :created,
                  json: {
@@ -68,12 +68,25 @@ module Api
         MoveEvents::ParamsValidator.new(event_params).validate!
       end
 
+      def validate_relationships
+        case type
+        when 'lockouts'
+          relationships.require(:from_location).require(:data).require(:id)
+        when 'redirects'
+          relationships.require(:to_location).require(:data).require(:id)
+        end
+      end
+
       def event_params
         @event_params ||= params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
       end
 
-      def event_name
-        @event_name ||= event_params.dig(:attributes, :event_name)
+      def type
+        @type ||= event_params.dig(:type)
+      end
+
+      def relationships
+        @relationships ||= params.require(:data).require(:relationships)
       end
 
       def timestamp

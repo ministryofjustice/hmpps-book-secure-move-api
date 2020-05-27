@@ -16,7 +16,7 @@ RSpec.describe Api::V1::MoveEventsController do
 
     let(:move) { create(:move) }
     let(:move_id) { move.id }
-    let(:new_location) { create(:location) }
+    let(:lockout_location) { create(:location) }
     let(:lockout_params) do
       {
         data: {
@@ -26,7 +26,7 @@ RSpec.describe Api::V1::MoveEventsController do
             notes: 'delayed by van breakdown',
           },
           relationships: {
-            to_location: { data: { type: 'locations', id: new_location.id } },
+            from_location: { data: { type: 'locations', id: lockout_location.id } },
           },
         },
       }
@@ -40,13 +40,13 @@ RSpec.describe Api::V1::MoveEventsController do
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 204'
 
-      it 'updates the move status' do
-        expect(move.reload.status).to eql('completed')
+      it 'does not update the move status' do
+        expect(move.reload.status).to eql('requested')
       end
 
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
-          expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
+          expect(Notifier).not_to have_received(:prepare_notifications)
         end
       end
     end
@@ -55,6 +55,19 @@ RSpec.describe Api::V1::MoveEventsController do
       let(:lockout_params) { nil }
 
       it_behaves_like 'an endpoint that responds with error 400'
+    end
+
+    context 'with a missing from_location' do
+      let(:lockout_params) { { data: { type: 'lockouts', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
+
+      it_behaves_like 'an endpoint that responds with error 400' do
+        let(:errors_400) do
+          [{
+            'title' => 'Bad request',
+            'detail' => 'param is missing or the value is empty: relationships',
+          }]
+        end
+      end
     end
 
     context 'when not authorized' do
