@@ -22,15 +22,15 @@ class Event < ApplicationRecord
   serialize :details, HashWithIndifferentAccessSerializer
 
   def supplier_id
-    @supplier_id ||= details.dig(:supplier_id)
+    @supplier_id ||= details[:supplier_id]
   end
 
   def event_params
-    @event_params ||= details.dig(:event_params)
+    @event_params ||= details[:event_params]
   end
 
   def data_params
-    @data_params ||= details.dig(:data_params)
+    @data_params ||= details[:data_params]
   end
 
   def notes
