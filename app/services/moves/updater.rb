@@ -13,10 +13,11 @@ module Moves
       move.assign_attributes(attributes)
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
+      profile_id_changed = move.profile_id_changed?
 
       move.transaction do
         move.save!
-        move.allocation&.refresh_moves_count! if status_changed
+        move.allocation&.refresh_status_and_moves_count! if status_changed || profile_id_changed
       end
     end
 

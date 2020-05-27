@@ -81,6 +81,10 @@ class Move < VersionedModel
     )
   end
 
+  def self.unfilled?
+    pluck(:profile_id).any?(&:nil?)
+  end
+
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
   end

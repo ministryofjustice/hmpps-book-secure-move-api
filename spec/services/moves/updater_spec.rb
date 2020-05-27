@@ -90,6 +90,68 @@ RSpec.describe Moves::Updater do
       end
     end
 
+    context 'with allocation' do
+      let(:person) { create(:person) }
+
+      context 'with a move linked to a person' do
+        let!(:move) { create(:move, :requested, :with_allocation, profile: nil) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { person: { data: { id: person.id, type: 'people' } } },
+          }
+        end
+
+        it 'sets the allocation status to filled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('filled')
+        end
+      end
+
+      context 'with a move unlinked to a person' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { person: { data: nil } },
+          }
+        end
+
+        it 'sets the allocation status to unfilled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('unfilled')
+        end
+      end
+
+      context 'with a move profile or status unchanged' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+
+        let(:move_params) do
+          {
+            type: 'moves',
+            attributes: {
+              additional_information: 'some more info',
+            },
+          }
+        end
+
+        it 'does not change the status' do
+          expect { updater.call }.not_to change { move.reload.allocation.status }
+        end
+      end
+
+      context 'with a move cancelled' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+        let(:status) { 'cancelled' }
+        let(:cancellation_reason) { 'other' }
+
+        it 'sets the allocation status to unfilled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('unfilled')
+        end
+      end
+    end
+
     context 'with people' do
       let(:before_person) { create(:person) }
       let(:after_person) { create(:person) }

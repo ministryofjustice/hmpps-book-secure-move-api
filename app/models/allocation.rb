@@ -49,12 +49,9 @@ class Allocation < VersionedModel
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
-  after_initialize :initialize_state
 
-  def refresh_moves_count!
-    self.moves_count = moves.not_cancelled.count
-    save!
-  end
+  after_initialize :initialize_state
+  delegate :fill, :unfill, to: :state_machine
 
   def cancel
     comment = 'Allocation was cancelled'
@@ -70,13 +67,24 @@ class Allocation < VersionedModel
     save!
   end
 
-  private
+  def refresh_status_and_moves_count!
+    moves.not_cancelled.empty? || moves.not_cancelled.unfilled? ? unfill : fill
+    self.moves_count = moves.not_cancelled.count
+
+    save!
+  end
+
+private
 
   def state_machine
     @state_machine ||= AllocationStateMachine.new(self)
   end
 
   def initialize_state
-    self.status = state_machine.current
+    if status.present?
+      state_machine.restore!(status.to_sym)
+    else
+      self.status = state_machine.current
+    end
   end
 end

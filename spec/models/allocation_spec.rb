@@ -32,16 +32,59 @@ RSpec.describe Allocation do
     end
   end
 
-  describe '#refresh_moves_count!' do
-    let(:cancelled_move) { create :move, :cancelled }
-    let(:proposed_move) { create :move, :proposed }
-    let(:requested_move) { create :move, :requested }
-    let(:completed_move) { create :move, :completed }
-    let(:moves) { [cancelled_move, proposed_move, requested_move, completed_move] }
-    let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
+  describe '#refresh_status_and_moves_count!' do
+    context 'when updating moves count' do
+      let(:cancelled_move) { create :move, :cancelled }
+      let(:proposed_move) { create :move, :proposed }
+      let(:requested_move) { create :move, :requested }
+      let(:completed_move) { create :move, :completed }
+      let(:moves) { [cancelled_move, proposed_move, requested_move, completed_move] }
+      let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
-    it 'updates the number of non cancelled moves' do
-      expect { allocation.refresh_moves_count! }.to change { allocation.reload.moves_count }.from(1).to(3)
+      it 'updates the number of non cancelled moves' do
+        expect { allocation.refresh_status_and_moves_count! }.to change { allocation.reload.moves_count }.from(1).to(3)
+      end
+    end
+
+    context 'when updating status' do
+      it 'sets status to `unfilled` if no profiles associated with uncancelled moves' do
+        moves = create_list(:move, 2, profile: nil)
+        cancelled_move = create(:move, :cancelled)
+        allocation = create(:allocation, moves: moves + [cancelled_move])
+
+        allocation.refresh_status_and_moves_count!
+        expect(allocation.reload).to be_unfilled
+      end
+
+      it 'sets status to `unfilled` if not all uncancelled moves are associated to profiles' do
+        move_without_profile = create(:move, profile: nil)
+        move_with_profile = create(:move)
+        cancelled_move = create(:move, :cancelled)
+
+        allocation = create(:allocation, moves: [move_without_profile, move_with_profile, cancelled_move])
+
+        allocation.refresh_status_and_moves_count!
+        expect(allocation.reload).to be_unfilled
+      end
+
+      it 'sets status to `filled` if all uncancelled moves are associated to profiles' do
+        moves = create_list(:move, 2)
+        cancelled_move = create(:move, :cancelled)
+
+        allocation = create(:allocation, moves: moves + [cancelled_move])
+
+        allocation.refresh_status_and_moves_count!
+        expect(allocation.reload).to be_filled
+      end
+
+      it 'sets status to `unfilled` if all moves cancelled' do
+        cancelled_move = create(:move, :cancelled)
+
+        allocation = create(:allocation, moves: [cancelled_move])
+
+        allocation.refresh_status_and_moves_count!
+        expect(allocation.reload).to be_unfilled
+      end
     end
   end
 
@@ -135,6 +178,40 @@ RSpec.describe Allocation do
     it 'sets the initial status to unfilled' do
       allocation = create(:allocation)
 
+      expect(allocation).to be_unfilled
+    end
+
+    it 'restores the current status if it is set' do
+      allocation = create(:allocation, status: 'filled')
+
+      expect(allocation).to be_filled
+    end
+
+    it 'updates the status from unfilled if it is filled' do
+      allocation = create(:allocation, status: 'unfilled')
+
+      allocation.fill
+      expect(allocation).to be_filled
+    end
+
+    it 'updates the status from filled if it is unfilled' do
+      allocation = create(:allocation, status: 'filled')
+
+      allocation.unfill
+      expect(allocation).to be_unfilled
+    end
+
+    it 'keeps the status filled if already set' do
+      allocation = create(:allocation, status: 'filled')
+
+      allocation.fill
+      expect(allocation).to be_filled
+    end
+
+    it 'keeps the status unfilled if already set' do
+      allocation = create(:allocation, status: 'unfilled')
+
+      allocation.unfill
       expect(allocation).to be_unfilled
     end
   end
