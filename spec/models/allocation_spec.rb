@@ -42,7 +42,7 @@ RSpec.describe Allocation do
       let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
       it 'updates the number of non cancelled moves' do
-        expect { allocation.refresh_status_and_moves_count! }.to change { allocation.reload.moves_count }.from(1).to(3)
+        expect { allocation.refresh_status_and_moves_count! }.to change { allocation.moves_count }.from(1).to(3)
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Allocation do
         allocation = create(:allocation, moves: moves + [cancelled_move])
 
         allocation.refresh_status_and_moves_count!
-        expect(allocation.reload).to be_unfilled
+        expect(allocation).to be_unfilled
       end
 
       it 'sets status to `unfilled` if not all uncancelled moves are associated to profiles' do
@@ -64,7 +64,7 @@ RSpec.describe Allocation do
         allocation = create(:allocation, moves: [move_without_profile, move_with_profile, cancelled_move])
 
         allocation.refresh_status_and_moves_count!
-        expect(allocation.reload).to be_unfilled
+        expect(allocation).to be_unfilled
       end
 
       it 'sets status to `filled` if all uncancelled moves are associated to profiles' do
@@ -74,7 +74,7 @@ RSpec.describe Allocation do
         allocation = create(:allocation, moves: moves + [cancelled_move])
 
         allocation.refresh_status_and_moves_count!
-        expect(allocation.reload).to be_filled
+        expect(allocation).to be_filled
       end
 
       it 'sets status to `unfilled` if all moves cancelled' do
@@ -83,7 +83,7 @@ RSpec.describe Allocation do
         allocation = create(:allocation, moves: [cancelled_move])
 
         allocation.refresh_status_and_moves_count!
-        expect(allocation.reload).to be_unfilled
+        expect(allocation).to be_unfilled
       end
     end
   end
@@ -115,45 +115,45 @@ RSpec.describe Allocation do
     let(:allocation) { create(:allocation, :with_moves, status: nil) }
 
     it 'changes the status of an allocation to cancelled' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.status).to eq(described_class::ALLOCATION_STATUS_CANCELLED)
     end
 
     it 'changes the moves_count of allocation to 0' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.moves_count).to eq(0)
     end
 
     it 'changes the status of all associated moves to cancelled' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_CANCELLED)
     end
 
     it 'sets the cancellation reason to other' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
     end
 
     it 'sets the cancellation reason comment to cancelled by allocation' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.cancellation_reason_comment).to eq('Allocation was cancelled')
     end
 
     it 'sets the cancellation reason on moves to other' do
-      allocation.reload.cancel
+      allocation.cancel
 
       expect(allocation.moves.first.cancellation_reason).to eq(Move::CANCELLATION_REASON_OTHER)
     end
 
     it 'sets the cancellation reason comment on moves to cancelled by allocation' do
-      allocation.reload.cancel
+      allocation.cancel
 
-      expect(allocation.reload.moves.first.cancellation_reason_comment).to eq('Allocation was cancelled')
+      expect(allocation.moves.first.cancellation_reason_comment).to eq('Allocation was cancelled')
     end
 
     it 'throws validation error if allocation invalid' do
