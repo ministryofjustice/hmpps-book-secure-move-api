@@ -4,9 +4,9 @@ module MoveEvents
   class ParamsValidator
     include ActiveModel::Validations
 
-    attr_reader :event_name, :timestamp, :notes
+    attr_reader :timestamp, :type
 
-    validates :event_name, inclusion: %w[redirect], presence: true
+    validates :type, presence: true, inclusion: { in: %w[complete redirects events] } # TODO: remove 'events' type once FE updated
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
@@ -14,9 +14,8 @@ module MoveEvents
     end
 
     def initialize(params)
-      @event_name = params.dig(:attributes, :event_name)
       @timestamp = params.dig(:attributes, :timestamp)
-      @notes = params.dig(:attributes, :notes)
+      @type = params[:type]
     end
   end
 end

@@ -11,21 +11,43 @@ module Api
         relationships: { to_location: {} },
       ].freeze
 
-      def create
-        # NB: this is a *temporary implementation* to immediately address the needs of P4-1355 and allow the frontend to
-        # update the destination of a move. They will do this by POSTing a redirect event to this endpoint. For now, we
-        # will simply update the move's to_location. In the future (P4-1180) we will have a funky immutable event log.
+      def complete
+        create_event('complete')
+        run_event_logs
+        render status: :no_content
+      end
 
-        case event_name
-        when 'redirect'
-          # NB: rather than update immediately, we need to detect whether the location has actually changed (or not) to
-          # prevent triggering duplicate webhook/email notifications
-          move.to_location = to_location
-          if move.to_location_id_changed?
-            move.save!
-            Notifier.prepare_notifications(topic: move, action_name: 'update')
-          end
-          render json: fake_event_object, status: :created
+      def redirects
+        create_event('redirect')
+        run_event_logs
+        render status: :no_content
+      end
+
+      def events
+        # TODO: this method should be deleted, but kept here until the front end is updated
+        if  event_name == 'redirect'
+          event = create_event(event_name)
+          run_event_logs
+          render status: :created,
+                 json: {
+                   data: {
+                     id: event.id,
+                     type: 'events',
+                     attributes: {
+                       event_name: event.event_name,
+                       timestamp: event.client_timestamp,
+                       notes: event.notes,
+                     },
+                     relationships: {
+                       to_location: {
+                         data: {
+                           type: 'locations',
+                           id: event.to_location.id,
+                         },
+                       },
+                     },
+                   },
+                 }
         else
           render status: :bad_request,
                  json: {
@@ -37,14 +59,7 @@ module Api
     private
 
       def validate_params
-        MoveEvents::ParamsValidator.new(event_params).tap do |validator|
-          if validator.invalid?
-            render status: :bad_request,
-                   json: {
-                     errors: validator.errors.map { |field, message| { title: field, detail: message } },
-                   }
-          end
-        end
+        MoveEvents::ParamsValidator.new(event_params).validate!
       end
 
       def event_params
@@ -59,39 +74,28 @@ module Api
         @timestamp ||= Time.zone.parse(event_params.dig(:attributes, :timestamp))
       end
 
-      def notes
-        @notes ||= event_params.dig(:attributes, :notes)
-      end
-
-      def to_location
-        @to_location ||= Location.find(event_params.dig(:relationships, :to_location, :data, :id))
+      def supplier_id
+        # NB: not all events will have a supplier_id so this could well be nil
+        current_user.owner&.id
       end
 
       def move
-        @move ||= Move.accessible_by(current_ability).find(params.require(:move_id))
+        @move ||= Move.accessible_by(current_ability).find(params.require(:id))
       end
 
-      def fake_event_object
-        # NB: this is a temporarily implementation to simulate the creation of a new event
-        {
-          data: {
-            id: SecureRandom.uuid,
-            type: 'events',
-            attributes: {
-              event_name: event_name,
-              timestamp: timestamp,
-              notes: notes,
-            },
-            relationships: {
-              to_location: {
-                data: {
-                  type: 'locations',
-                  id: to_location.id,
-                },
-              },
-            },
+      def create_event(event_name)
+        move.move_events.create!(
+          event_name: event_name,
+          client_timestamp: timestamp,
+          details: {
+            event_params: event_params,
+            supplier_id: supplier_id,
           },
-        }
+        )
+      end
+
+      def run_event_logs
+        EventLog::MoveRunner.new(move).call
       end
     end
   end
