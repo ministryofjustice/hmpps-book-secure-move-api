@@ -57,7 +57,7 @@ module Api
         else
           render status: :bad_request,
                  json: {
-                   errors: [{ title: 'invalid event_name', detail: "event_name is not supported" }],
+                   errors: [{ title: 'invalid event_name', detail: 'event_name is not supported' }],
                  }
         end
       end
