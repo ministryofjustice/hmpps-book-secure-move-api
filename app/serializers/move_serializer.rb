@@ -44,11 +44,6 @@ class MoveSerializer < ActiveModel::Serializer
   }.freeze
 
   def person
-    # TODO: Remove the support for person id in future
-    if object.profile_id
-      object&.profile&.person
-    elsif object.person_id
-      Person.find(object.person_id)
-    end
+    object&.profile&.person
   end
 end
