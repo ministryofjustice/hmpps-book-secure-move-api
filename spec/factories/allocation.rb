@@ -25,6 +25,13 @@ FactoryBot.define do
       cancellation_reason { 'other' }
     end
 
+    # TODO: remove when we no longer support nil statuses on allocations
+    trait :none do
+      before(:create) do |allocation|
+        allocation.assign_attributes(status: nil)
+      end
+    end
+
     trait :with_moves do
       moves_count { 1 }
       after(:create) do |allocation|

@@ -181,6 +181,12 @@ RSpec.describe Allocation do
       expect(allocation).to be_unfilled
     end
 
+    it 'sets the initial status to nil if set as none' do
+      allocation = create(:allocation, :none)
+
+      expect(allocation.status).to be_nil
+    end
+
     it 'restores the current status if it is set' do
       allocation = create(:allocation, :filled)
 
@@ -227,6 +233,27 @@ RSpec.describe Allocation do
 
       allocation.unfill
       expect(allocation).to be_unfilled
+    end
+
+    it 'updates the status from nil if it is filled' do
+      allocation = create(:allocation, :none)
+
+      allocation.fill
+      expect(allocation).to be_filled
+    end
+
+    it 'updates the status from nil if it is unfilled' do
+      allocation = create(:allocation, :none)
+
+      allocation.unfill
+      expect(allocation).to be_unfilled
+    end
+
+    it 'updates the status from nil if it is cancelled' do
+      allocation = create(:allocation, :none)
+
+      allocation.cancel
+      expect(allocation).to be_cancelled
     end
   end
 end

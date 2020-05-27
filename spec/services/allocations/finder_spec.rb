@@ -7,7 +7,8 @@ RSpec.describe Allocations::Finder do
 
   let!(:from_location) { create :location }
   let!(:to_location) { create :location }
-  let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
+
+  let!(:allocation) { create :allocation, :none, from_location: from_location, to_location: to_location }
   let(:filter_params) { {} }
 
   describe 'filtering' do
@@ -127,7 +128,7 @@ RSpec.describe Allocations::Finder do
         let(:filter_params) { { status: 'unfilled,cancelled' } }
 
         it 'returns allocations matching status' do
-          expect(allocation_finder.call).to contain_exactly(allocation, unfilled_allocation, cancelled_allocation)
+          expect(allocation_finder.call).to contain_exactly(unfilled_allocation, cancelled_allocation)
         end
       end
 
@@ -136,6 +137,14 @@ RSpec.describe Allocations::Finder do
 
         it 'returns empty results set' do
           expect(allocation_finder.call).to be_empty
+        end
+      end
+
+      context 'with nil status' do
+        let(:filter_params) { { status: nil } }
+
+        it 'returns only allocations without a status' do
+          expect(allocation_finder.call).to contain_exactly(allocation)
         end
       end
     end

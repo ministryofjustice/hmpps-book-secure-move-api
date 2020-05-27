@@ -395,7 +395,7 @@ RSpec.describe Move do
       expect(described_class).not_to be_unfilled
     end
 
-    it 'returns false if no moves are present' do
+    it 'returns true if no moves are present' do
       expect(described_class).to be_unfilled
     end
   end
