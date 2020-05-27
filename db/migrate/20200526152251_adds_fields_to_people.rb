@@ -13,5 +13,9 @@ class AddsFieldsToPeople < ActiveRecord::Migration[5.2]
 
     add_reference :people, :ethnicity, type: :uuid
     add_reference :people, :gender, type: :uuid
+
+    add_index :people, :prison_number
+    add_index :people, :criminal_records_office
+    add_index :people, :police_national_computer
   end
 end
