@@ -67,30 +67,6 @@ RSpec.describe AllocationStateMachine do
     end
   end
 
-  context 'when in the none status' do
-    let(:initial_state) { :none }
-
-    it_behaves_like 'state_machine target status', :none
-
-    context 'when the fill event is fired' do
-      before { machine.fill }
-
-      it_behaves_like 'state_machine target status', :filled
-    end
-
-    context 'when the unfill event is fired' do
-      before { machine.unfill }
-
-      it_behaves_like 'state_machine target status', :unfilled
-    end
-
-    context 'when the cancel event is fired' do
-      before { machine.cancel }
-
-      it_behaves_like 'state_machine target status', :cancelled
-    end
-  end
-
   context 'when in the cancelled status' do
     let(:initial_state) { :cancelled }
 

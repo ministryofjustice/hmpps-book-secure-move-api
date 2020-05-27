@@ -12,6 +12,8 @@ FactoryBot.define do
     moves_count { Faker::Number.non_zero_digit }
     complete_in_full { false }
 
+    after(:build) { |object| object.send(:initialize_state) }
+
     trait :unfilled do
       status { 'unfilled' }
     end
