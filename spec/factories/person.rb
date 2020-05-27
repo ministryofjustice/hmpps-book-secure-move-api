@@ -23,4 +23,9 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :person_without_profiles, class: 'Person' do
+    first_names { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+  end
 end
