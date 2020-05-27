@@ -23,8 +23,12 @@ Rails.application.routes.draw do
       end
       resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
-        resources :events, only: %i[create], controller: 'move_events'
         resources :journeys, only: %i[index show create update]
+        member do
+          post 'events', controller: 'move_events' # TODO: delete this route once the front end is updated
+          post 'complete', controller: 'move_events'
+          post 'redirects', controller: 'move_events'
+        end
       end
       namespace :reference do
         resources :allocation_complex_cases, only: :index
