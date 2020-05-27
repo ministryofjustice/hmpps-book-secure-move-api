@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe People::Updater do
-  subject(:updater) { described_class.new(person.id, params) }
+  subject(:updater) { described_class.new(person, params) }
 
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
@@ -18,9 +18,11 @@ RSpec.describe People::Updater do
       profile_identifiers: [
         { identifier_type: 'police_national_computer', value: 'ABC123' },
       ],
+      person: person,
     }
   end
-  let(:person) { create :person }
+  let(:person) { create(:person) }
+  let(:profile) { create(:profile, original_attributes) }
   let(:params) do
     {
       type: 'people',
@@ -51,6 +53,10 @@ RSpec.describe People::Updater do
 
     it 'sets the correct Profile attibutes' do
       expect(updated_profile.attributes.with_indifferent_access).to include(params[:attributes])
+    end
+
+    it 'sets the correct Person attibutes' do
+      expect(updated_person.attributes.with_indifferent_access).to include(params[:attributes])
     end
 
     it 'does not change original last_name' do
@@ -96,11 +102,19 @@ RSpec.describe People::Updater do
       expect(result).to be true
     end
 
-    it 'sets the identifiers attribute' do
+    it 'sets the identifiers attribute for the profile' do
       expect(updated_profile.profile_identifiers.as_json).to include_json(params[:attributes][:identifiers])
     end
 
-    it 'sets the assessment_answers attribute' do
+    it 'sets the identifiers attributes for the person' do
+      identifiers = params[:attributes][:identifiers]
+
+      identifiers.each do |identifier|
+        expect(updated_person.send(identifier[:identifier_type])).to eq(identifier[:value])
+      end
+    end
+
+    it 'sets the assessment_answers attribute for the profile' do
       expect(updated_profile.assessment_answers.as_json).to include_json(params[:attributes][:assessment_answers])
     end
   end
@@ -139,11 +153,19 @@ RSpec.describe People::Updater do
       expect(result).to be true
     end
 
+    it 'sets the correct Person ethnicity' do
+      expect(updated_person.ethnicity_id).to eql ethnicity.id
+    end
+
     it 'sets the correct Profile ethnicity' do
       expect(updated_profile.ethnicity_id).to eql ethnicity.id
     end
 
     it 'sets the correct Profile gender' do
+      expect(updated_profile.gender_id).to eql gender.id
+    end
+
+    it 'sets the correct Person gender' do
       expect(updated_profile.gender_id).to eql gender.id
     end
   end
