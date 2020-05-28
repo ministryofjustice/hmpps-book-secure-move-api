@@ -305,6 +305,10 @@ RSpec.describe Api::V1::MovesController do
             it 'updates the allocation moves_count' do
               expect(allocation.reload.moves_count).to eq(0)
             end
+
+            it 'updates the allocation status to unfilled' do
+              expect(move.reload.allocation).to be_unfilled
+            end
           end
 
           context 'when the supplier has a webhook subscription', :skip_before do
@@ -315,8 +319,7 @@ RSpec.describe Api::V1::MovesController do
               class_double(
                 Faraday,
                 headers: {},
-                post:
-                                  instance_double(Faraday::Response, success?: true, status: 202),
+                post: instance_double(Faraday::Response, success?: true, status: 202),
               )
             end
 
@@ -440,6 +443,57 @@ RSpec.describe Api::V1::MovesController do
 
             it 'creates an email notification' do
               expect(subscription.notifications.count).to be 1
+            end
+          end
+        end
+
+        context 'when move is associated to an allocation' do
+          let!(:move) { create :move, :with_allocation, profile: profile }
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'cancelled',
+                cancellation_reason: 'other',
+              },
+            }
+          end
+
+          it 'updates the allocation status to unfilled' do
+            expect(move.reload.allocation).to be_unfilled
+          end
+
+          context 'when linking a person' do
+            let!(:move) { create :move, :with_allocation, profile: nil }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { person: { data: { id: profile.person.id, type: 'people' } } },
+              }
+            end
+
+            it 'updates the allocation status to filled' do
+              expect(move.reload.allocation).to be_filled
+            end
+          end
+
+          context 'when unlinking a person' do
+            let!(:move) { create :move, :with_allocation, profile: profile }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { person: { data: nil } },
+              }
+            end
+
+            it 'updates the allocation status to unfilled' do
+              expect(move.reload.allocation).to be_unfilled
             end
           end
         end
