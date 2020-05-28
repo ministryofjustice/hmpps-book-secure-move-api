@@ -427,7 +427,7 @@ DEPENDENCIES
   validate_url (~> 1.0.8)
 
 RUBY VERSION
-   ruby 2.6.2p47
+   ruby 2.6.6p146
 
 BUNDLED WITH
    2.1.4
