@@ -75,11 +75,17 @@ RSpec.describe Api::V1::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
-    context 'with a reference to a missing relationship' do
-      let(:new_location) { build(:location) }
-      let(:detail_404) { "Couldn't find Location without an ID" }
+    context 'with a missing to_location relationship' do
+      let(:move_event_params) { { data: { type: 'redirects', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
 
-      it_behaves_like 'an endpoint that responds with error 404'
+      it_behaves_like 'an endpoint that responds with error 400' do
+        let(:errors_400) do
+          [{
+            'title' => 'Bad request',
+            'detail' => 'param is missing or the value is empty: relationships',
+          }]
+        end
+      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do
