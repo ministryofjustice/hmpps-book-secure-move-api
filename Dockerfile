@@ -1,4 +1,4 @@
-FROM ruby:2.6.2-stretch
+FROM ruby:2.6.6-stretch
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE ${APP_BUILD_DATE}
