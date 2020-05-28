@@ -7,7 +7,7 @@ module Api
       COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
       REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
-      DEPRECIATED_EVENT_PARAMS = [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
+      DEPRECATED_EVENT_PARAMS = [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
 
       def cancel
         validate_params!(cancel_params)
@@ -39,9 +39,9 @@ module Api
 
       def events
         # TODO: this method should be deleted, but kept here until the front end is updated
-        validate_params!(depreciated_event_params, require_to_location: true)
-        if  depreciated_event_params.dig(:attributes, :event_name) == Event::REDIRECT
-          event = create_event(Event::REDIRECT, depreciated_event_params)
+        validate_params!(deprecated_event_params, require_to_location: true)
+        if  deprecated_event_params.dig(:attributes, :event_name) == Event::REDIRECT
+          event = create_event(Event::REDIRECT, deprecated_event_params)
           run_event_logs
           render status: :created,
                  json: {
@@ -95,9 +95,9 @@ module Api
         @redirect_params ||= params.require(:data).permit(REDIRECT_PARAMS).to_h
       end
 
-      def depreciated_event_params
+      def deprecated_event_params
         # TODO: deleteme once FE updated
-        @depreciated_event_params ||= params.require(:data).permit(DEPRECIATED_EVENT_PARAMS).to_h
+        @deprecated_event_params ||= params.require(:data).permit(DEPRECATED_EVENT_PARAMS).to_h
       end
 
       def supplier_id
