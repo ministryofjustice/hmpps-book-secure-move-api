@@ -43,3 +43,6 @@ config/application_insights.toml
 
 # Ignore auto generated data diagram
 erd.pdf
+
+# Ignore local data directory for docker-compose
+.data

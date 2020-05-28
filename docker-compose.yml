@@ -8,13 +8,38 @@ version: '3'
 services:
   db:
     image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+    - './.data/postgres:/var/lib/postgresql/data'
+    ports:
+    - 5432:5432
+  s3:
+    image: localstack/localstack:latest
+    ports:
+      - '4563-4599:4563-4599'
+      - '8055:8080'
+    environment:
+      - DEBUG=0
+      - LOCALSTACK_SERVICES=s3
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - './.data/localstack:/tmp/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
   web:
     build: .
     environment:
-      - DATABASE_URL=postgresql://postgres@db/hmpps-book-secure-move-api
+      - DATABASE_URL=postgresql://postgres:postgres@db/hmpps-book-secure-move-api
       - SECRET_KEY_BASE=h463472fhaa91f4a277002e9652f86f330e636358e2090d86ab4a4f06845ege1
       - SERVE_API_DOCS=true
+      - AWS_ACCESS_KEY_ID=fakeid
+      - AWS_SECRET_ACCESS_KEY=fakesecret
+      - S3_BUCKET_NAME=apibook-a-secure-move-documents-s3-bucket
+      - S3_BACKEND=http://s3:4572
+      - ENCRYPTOR_SALT=saltnpepper
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - s3
