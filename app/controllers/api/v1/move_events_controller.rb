@@ -3,7 +3,7 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comments notes]].freeze
+      CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
       COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
       REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze

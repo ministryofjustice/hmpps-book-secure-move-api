@@ -43,6 +43,14 @@ RSpec.describe Api::V1::MoveEventsController do
         expect(move.reload.status).to eql('cancelled')
       end
 
+      it 'updates the move cancellation_reason' do
+        expect(move.reload.cancellation_reason).to eql('supplier_declined_to_move')
+      end
+
+      it 'updates the move cancellation_reason_comment' do
+        expect(move.reload.cancellation_reason_comment).to eql('no room on the bus')
+      end
+
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
           expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
@@ -78,7 +86,7 @@ RSpec.describe Api::V1::MoveEventsController do
 
     context 'with validation errors' do
       context 'with a bad timestamp' do
-        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: 'Foo-Bar' } } } }
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: 'Foo-Bar', cancellation_reason: 'rejected' } } } }
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Invalid timestamp', 'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }] }
@@ -86,10 +94,26 @@ RSpec.describe Api::V1::MoveEventsController do
       end
 
       context 'with a bad event type' do
-        let(:cancel_params) { { data: { type: 'Foo-bar', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
+        let(:cancel_params) { { data: { type: 'Foo-bar', attributes: { timestamp: '2020-04-23T18:25:43.511Z', cancellation_reason: 'rejected' } } } }
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Invalid type', 'detail' => 'Validation failed: Type is not included in the list' }] }
+        end
+      end
+
+      context 'with a bad cancellation_reason' do
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: '2020-04-23T18:25:43.511Z', cancellation_reason: 'Yo ho ho' } } } }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) { [{ 'title' => 'Invalid cancellation_reason', 'detail' => 'Validation failed: Cancellation reason is not included in the list' }] }
+        end
+      end
+
+      context 'with a missing cancellation_reason' do
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) { [{ 'title' => 'Invalid cancellation_reason', 'detail' => 'Validation failed: Cancellation reason is not included in the list' }] }
         end
       end
     end

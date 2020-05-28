@@ -92,7 +92,7 @@ RSpec.describe EventLog::MoveRunner do
         expect { runner.call }.to change(move, :cancellation_reason).from(nil).to('supplier_declined_to_move')
       end
 
-      it 'updates the move cancellation_reason_comments' do
+      it 'updates the move cancellation_reason_comment' do
         expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
       end
 
