@@ -1,5 +1,31 @@
 # Changelog
 
+## [v1.10.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.4) (2020-05-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.3...v1.10.4)
+
+**Merged pull requests:**
+
+- Fix broken fake\_data rake task [\#501](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/501) ([willfish](https://github.com/willfish))
+- Ruby 2.6.2 -\> 2.6.6 [\#500](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/500) ([willfish](https://github.com/willfish))
+- \[P4-1435\] Populate person fields [\#496](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/496) ([willfish](https://github.com/willfish))
+- P4-1555 Enhance Allocation status [\#494](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/494) ([cwrw](https://github.com/cwrw))
+- \[P4-1435\] Adds migration for extra person fields [\#493](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/493) ([willfish](https://github.com/willfish))
+- P4-1481 complete move [\#491](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/491) ([martyn-w](https://github.com/martyn-w))
+- Removes custom wiki [\#489](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/489) ([willfish](https://github.com/willfish))
+- Revert "Merge pull request \#486" [\#488](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/488) ([mafonso](https://github.com/mafonso))
+- Allocation `moves\_count` now includes only non cancelled moves [\#487](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/487) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-1567\] Fix create\_client\_application rake task [\#486](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/486) ([mafonso](https://github.com/mafonso))
+- P4-1554 Remove deprecated DELETE /moves/:id endpoint [\#485](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/485) ([smoothcontract](https://github.com/smoothcontract))
+- P4-1406 redirect move endpoint [\#484](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/484) ([martyn-w](https://github.com/martyn-w))
+- \[P4-1492\] Allocation includes [\#483](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/483) ([willfish](https://github.com/willfish))
+- \[P4-1451\] Support includes and return profile [\#482](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/482) ([alexdesi](https://github.com/alexdesi))
+- \[P4-1497\] Prepare includes [\#479](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/479) ([willfish](https://github.com/willfish))
+- V1.10.3 Update CHANGELOG.md [\#478](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/478) ([cwrw](https://github.com/cwrw))
+- P4-1561 Add support for filtering GET /allocations by status [\#475](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/475) ([smoothcontract](https://github.com/smoothcontract))
+- Remove skip\_before patter and make tests clearer. [\#471](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/471) ([alexdesi](https://github.com/alexdesi))
+- Fix create application rake task [\#464](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/464) ([martyn-w](https://github.com/martyn-w))
+
 ## [v1.10.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.3) (2020-05-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.2...v1.10.3)
@@ -211,6 +237,7 @@
 - P4-1263 Update date validation rules around proposed moves [\#356](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/356) ([smoothcontract](https://github.com/smoothcontract))
 - P4-1213 Use StringIO rather than temp file to serialize image blob [\#355](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/355) ([smoothcontract](https://github.com/smoothcontract))
 - Get court cases from Nomis [\#354](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/354) ([alexdesi](https://github.com/alexdesi))
+- P4-1200 fix old migration to be reversible [\#350](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/350) ([starswan](https://github.com/starswan))
 - P4-1027 Non-unique move return error rather than crashing [\#326](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/326) ([starswan](https://github.com/starswan))
 
 ## [v1.6.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.6.0) (2020-03-30)
@@ -226,10 +253,6 @@
 ## [v1.5.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.5.3) (2020-03-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.5.2...v1.5.3)
-
-**Merged pull requests:**
-
-- P4-1200 fix old migration to be reversible [\#350](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/350) ([starswan](https://github.com/starswan))
 
 ## [v1.5.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.5.2) (2020-03-26)
 
@@ -466,7 +489,6 @@
 - \[P4-669\] Ensure that `Move\#status` is imported from NOMIS [\#133](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/133) ([stevehook](https://github.com/stevehook))
 - \[P4-691\] Cancel duplicate moves when importing [\#132](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/132) ([stevehook](https://github.com/stevehook))
 - NomisClient now anonymises data when in test\_mod [\#131](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/131) ([ngw](https://github.com/ngw))
-- \[P4-680\] Import maternity status from NOMIS personal care needs API [\#130](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/130) ([stevehook](https://github.com/stevehook))
 - Add missing instruction to README [\#129](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/129) ([stevehook](https://github.com/stevehook))
 - Retrieves data on show + corrected fake\_data gen [\#128](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/128) ([ngw](https://github.com/ngw))
 - \[P4-675\] Fallback mappings to assessment questions [\#124](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/124) ([stevehook](https://github.com/stevehook))
@@ -487,6 +509,7 @@
 
 **Merged pull requests:**
 
+- \[P4-680\] Import maternity status from NOMIS personal care needs API [\#130](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/130) ([stevehook](https://github.com/stevehook))
 - \[P4-664\] Only synchronise move data from NOMIS for prisons [\#121](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/121) ([stevehook](https://github.com/stevehook))
 - \[P4-606\] Ensure that title and comments are set when importing alerts [\#120](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/120) ([stevehook](https://github.com/stevehook))
 - Fix assessment question description [\#119](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/119) ([teneightfive](https://github.com/teneightfive))
