@@ -166,6 +166,150 @@ RSpec.configure do |config|
       },
       paths: load_swagger_yaml('hand_coded_paths.yaml'),
     },
+
+    'v2/swagger.yaml' => {
+        basePath: '/api/v2',
+        openapi: '3.0.1',
+        info: {
+            title: 'PECS4 API V2 Docs',
+            version: 'v2',
+            description: 'Book A Secure Move supplier and frontend API.',
+        },
+        consumes: [
+            'application/vnd.api+json',
+        ],
+        servers: [
+            {
+                url: 'http://localhost:3000/api/v2',
+                description: 'Local development (localhost)',
+            },
+            {
+                url: 'https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+                description: 'Dev API',
+            },
+            {
+                url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+                description: 'Staging API',
+            },
+            {
+                url: 'https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+                description: 'PreProd API',
+            },
+            {
+                url: 'https://api.bookasecuremove.service.justice.gov.uk/api/v2',
+                description: 'Production API',
+            },
+        ],
+        security: [
+            {
+                oauth2: [],
+            },
+        ],
+        components: {
+            securitySchemes: {
+                oauth2: {
+                    type: :oauth2,
+                    flows: {
+                        clientCredentials: {
+                            authorizationUrl: '/oauth/authorize',
+                            tokenUrl: '/oauth/token/',
+                            scopes: {},
+                        },
+                    },
+                },
+            },
+            schemas: {
+                Allocation: {
+                    "$ref": 'allocation.yaml#/Allocation',
+                },
+                AllocationReference: {
+                    "$ref": 'allocation_reference.yaml#/AllocationReference',
+                },
+                AllocationComplexCase: {
+                    "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
+                },
+                AllocationComplexCaseAnswer: {
+                    "$ref": 'allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer',
+                },
+                AssessmentAnswer: {
+                    "$ref": 'assessment_answer.yaml#/AssessmentAnswer',
+                },
+                AssessmentQuestion: {
+                    "$ref": 'assessment_question.yaml#/AssessmentQuestion',
+                },
+                CourtCase: {
+                    "$ref": 'court_case.yaml#/CourtCase',
+                },
+                CourtHearing: {
+                    "$ref": 'court_hearing.yaml#/CourtHearing',
+                },
+                CourtHearingReference: {
+                    "$ref": 'court_hearing_reference.yaml#/CourtHearingReference',
+                },
+                Document: {
+                    "$ref": 'document.yaml#/Document',
+                },
+                Ethnicity: {
+                    "$ref": 'ethnicity.yaml#/Ethnicity',
+                },
+                Gender: {
+                    "$ref": 'gender.yaml#/Gender',
+                },
+                Journey: {
+                    "$ref": 'get_journey.yaml#/GetJourney',
+                },
+                JourneyEvent: {
+                    "$ref": 'get_journey_event.yaml#/GetJourneyEvent',
+                },
+                Location: {
+                    "$ref": 'location.yaml#/Location',
+                },
+                LocationReference: {
+                    "$ref": 'location_reference.yaml#/LocationReference',
+                },
+                Move: {
+                    "$ref": 'move.yaml#/Move',
+                },
+                MoveEvent: {
+                    "$ref": 'get_move_event.yaml#/GetMoveEvent',
+                },
+                MoveReference: {
+                    "$ref": 'move_reference.yaml#/MoveReference',
+                },
+                Nationality: {
+                    "$ref": 'nationality.yaml#/Nationality',
+                },
+                Pagination: {
+                    "$ref": 'pagination.yaml#/Pagination',
+                },
+                PaginationLinks: {
+                    "$ref": 'pagination_links.yaml#/PaginationLinks',
+                },
+                Person: {
+                    "$ref": 'person.yaml#/Person',
+                },
+                PersonReference: {
+                    "$ref": 'person_reference.yaml#/PersonReference',
+                },
+                PrisonTransferReason: {
+                    "$ref": 'prison_transfer_reason.yaml#/PrisonTransferReason',
+                },
+                ProfileIdentifier: {
+                    "$ref": 'profile_identifier.yaml#/ProfileIdentifier',
+                },
+                Region: {
+                    "$ref": 'region.yaml#/Region',
+                },
+                Supplier: {
+                    "$ref": 'supplier.yaml#/Supplier',
+                },
+                TimetableEntry: {
+                    "$ref": 'timetable_entry.yaml#/TimetableEntry',
+                },
+            },
+        },
+        paths: load_swagger_yaml('hand_coded_paths.yaml'),
+    },
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
