@@ -63,7 +63,6 @@ namespace :fake_data do
       title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
-
   # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
@@ -171,26 +170,27 @@ namespace :fake_data do
   desc 'create fake moves'
   task create_moves: :environment do
     puts 'create_moves...'
-    people = Person.all
+    profiles = Profile.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
-      person = people.sample
+      profile = profiles.sample
       from_location = prisons.sample
       to_location = courts.sample
       nomis_event_ids = []
       nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
-      unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
+      unless Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
         Move.create!(
           date: date,
+          date_from: date,
           time_due: time,
-          person: person,
+          profile: profile,
           from_location: from_location,
           to_location: to_location,
-          status: %w[requested completed cancelled].sample,
+          status: %w[proposed requested completed].sample,
           nomis_event_ids: nomis_event_ids,
         )
       end
