@@ -3,6 +3,9 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+version_file = File.join(File.dirname(__FILE__), '.ruby-version')
+ruby File.read(version_file)
+
 gem 'active_model_serializers', '~> 0.10.0'
 
 # don't enable this in dev/test - the insights envs are staging/preprod/prod
