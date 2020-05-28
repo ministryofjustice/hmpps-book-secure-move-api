@@ -13,9 +13,6 @@ class Person < VersionedModel
 
   has_one_attached :image
 
-  validates :last_name, presence: true
-  validates :first_names, presence: true
-
   def latest_profile
     profiles.order(:updated_at).last
   end
