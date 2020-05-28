@@ -125,6 +125,10 @@ RSpec.describe Api::V1::AllocationsController do
         expect(response_json.dig('data', 'attributes', 'complex_cases').first).to match complex_case1_attributes.stringify_keys
       end
 
+      it 'sets the correct status' do
+        expect(response_json.dig('data', 'attributes', 'status')).to eq(Allocation::ALLOCATION_STATUS_UNFILLED)
+      end
+
       context 'when omitting requested_by attribute' do
         let(:allocation_attributes) { attributes_for(:allocation).except(:requested_by) }
 

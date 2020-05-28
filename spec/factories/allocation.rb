@@ -12,6 +12,8 @@ FactoryBot.define do
     moves_count { Faker::Number.non_zero_digit }
     complete_in_full { false }
 
+    after(:build) { |object| object.send(:initialize_state) }
+
     trait :unfilled do
       status { 'unfilled' }
     end
@@ -21,6 +23,13 @@ FactoryBot.define do
     trait :cancelled do
       status { 'cancelled' }
       cancellation_reason { 'other' }
+    end
+
+    # TODO: remove when we no longer support nil statuses on allocations
+    trait :none do
+      before(:create) do |allocation|
+        allocation.assign_attributes(status: nil)
+      end
     end
 
     trait :with_moves do
