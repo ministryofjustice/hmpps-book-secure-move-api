@@ -13,6 +13,8 @@ module EventLog
         case event.event_name
         when Event::CANCEL
           move.status = Move::MOVE_STATUS_CANCELLED
+          move.cancellation_reason = event.cancellation_reason
+          move.cancellation_reason_comment = event.cancellation_reason_comment
         when Event::COMPLETE
           move.status = Move::MOVE_STATUS_COMPLETED
         when Event::LOCKOUT
@@ -26,8 +28,8 @@ module EventLog
       # save the move if it has changed, and notify webhooks and emails
       if move.changed?
         action_name = move.status_changed? ? 'update_status' : 'update'
+        move.save! # save before notifying
         Notifier.prepare_notifications(topic: move, action_name: action_name)
-        move.save!
         true
       else
         false

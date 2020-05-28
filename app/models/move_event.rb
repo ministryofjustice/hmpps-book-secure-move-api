@@ -8,4 +8,12 @@ class MoveEvent < Event
   def to_location
     @to_location ||= Location.find(event_params&.dig(:relationships, :to_location, :data, :id))
   end
+
+  def cancellation_reason
+    @cancellation_reason ||= event_params.dig(:attributes, :cancellation_reason)
+  end
+
+  def cancellation_reason_comment
+    @cancellation_reason_comment ||= event_params.dig(:attributes, :cancellation_reason_comment)
+  end
 end

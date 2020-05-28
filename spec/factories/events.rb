@@ -47,6 +47,7 @@ FactoryBot.define do
 
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
+      event_name { 'cancel' }
       details do
         { event_params: {
           relationships: {
@@ -54,6 +55,17 @@ FactoryBot.define do
             to_location: { data: { id: create(:location).id } },
           },
         } }
+      end
+
+      trait :cancel do
+        details do
+          { event_params: {
+            attributes: {
+              cancellation_reason: 'supplier_declined_to_move',
+              cancellation_reason_comment: 'computer says no',
+            },
+          } }
+        end
       end
     end
   end
