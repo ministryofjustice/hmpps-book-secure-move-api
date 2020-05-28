@@ -375,6 +375,31 @@ RSpec.describe Move do
     end
   end
 
+  describe '.unfilled?' do
+    it 'returns true if there are no profiles linked to a move' do
+      create_list(:move, 2, profile: nil)
+
+      expect(described_class).to be_unfilled
+    end
+
+    it 'returns true if not all moves have profiles linked' do
+      create(:move, profile: nil)
+      create(:move)
+
+      expect(described_class).to be_unfilled
+    end
+
+    it 'returns false if all moves are associated to a profile' do
+      create_list(:move, 2)
+
+      expect(described_class).not_to be_unfilled
+    end
+
+    it 'returns true if no moves are present' do
+      expect(described_class).to be_unfilled
+    end
+  end
+
   context 'with versioning' do
     let(:move) { create(:move) }
 
