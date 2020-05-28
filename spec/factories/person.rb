@@ -11,9 +11,9 @@ FactoryBot.define do
     last_name { Faker::Name.last_name }
     date_of_birth { Date.new(1980, 10, 20) }
 
-    police_national_computer { 'AB/1234567' }
-    prison_number { 'D39067ZZ' }
-    criminal_records_office { 'CRO/74506' }
+    sequence(:police_national_computer) { |seq| sprintf('AB/%07d', seq) }
+    sequence(:prison_number)            { |seq| sprintf('D%04dZZ', seq) }
+    sequence(:criminal_records_office)  { |seq| sprintf('CRO/%05d', seq) }
 
     trait :nomis_synced do
       sequence(:nomis_prison_number) do |seq|
