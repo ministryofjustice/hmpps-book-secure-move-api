@@ -3,8 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-version_file = File.join(File.dirname(__FILE__), '.ruby-version')
-ruby File.read(version_file)
+ruby File.read('.ruby-version')
 
 gem 'active_model_serializers', '~> 0.10.0'
 
