@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: remove file completely when allocation `events` endpoint is no longer in use
 require 'rails_helper'
 
 RSpec.describe AllocationEvents::ParamsValidator do

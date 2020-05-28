@@ -53,11 +53,9 @@ class Allocation < VersionedModel
   after_initialize :initialize_state
   delegate :fill, :unfill, to: :state_machine
 
-  def cancel
-    comment = 'Allocation was cancelled'
-
+  def cancel(reason: CANCELLATION_REASON_OTHER, comment: 'Allocation was cancelled')
     assign_attributes(
-      cancellation_reason: CANCELLATION_REASON_OTHER,
+      cancellation_reason: reason,
       cancellation_reason_comment: comment,
       moves: moves.each { |move| move.cancel(comment: comment) },
       moves_count: 0,

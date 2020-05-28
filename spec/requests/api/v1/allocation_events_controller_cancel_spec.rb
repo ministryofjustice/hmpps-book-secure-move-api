@@ -1,0 +1,121 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Api::V1::AllocationEventsController do
+  let(:response_json) { JSON.parse(response.body) }
+
+  describe 'POST /allocations/:id/cancel' do
+    let(:schema) { load_yaml_schema('post_allocation_cancel_responses.yaml') }
+
+    let(:supplier) { create(:supplier) }
+    let(:application) { create(:application, owner_id: supplier.id) }
+    let(:access_token) { create(:access_token, application: application).token }
+    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+    let(:content_type) { ApiController::CONTENT_TYPE }
+
+    let(:allocation) { create(:allocation, :with_moves) }
+    let(:move) { allocation.moves.first }
+    let(:allocation_id) { allocation.id }
+    let(:cancellation_reason) { 'made_in_error' }
+    let(:cancel_params) do
+      {
+        data: {
+          type: 'cancel',
+          attributes: {
+            cancellation_reason: cancellation_reason,
+            cancellation_reason_comment: 'FUBAR',
+          },
+        },
+      }
+    end
+
+    before do
+      allow(Notifier).to receive(:prepare_notifications)
+      post "/api/v1/allocations/#{allocation_id}/cancel", params: cancel_params, headers: headers, as: :json
+    end
+
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 204'
+
+      it 'updates the allocation cancellation reason' do
+        expect(allocation.reload.cancellation_reason).to eq(cancellation_reason)
+      end
+
+      it 'updates the allocation cancellation reason comment' do
+        expect(allocation.reload.cancellation_reason_comment).to eq('FUBAR')
+      end
+
+      it 'updates the allocation status' do
+        expect(allocation.reload.status).to eql('cancelled')
+      end
+
+      it 'updates the allocation moves_count' do
+        expect(allocation.reload.moves_count).to eq(0)
+      end
+
+      it 'updates the allocation moves status' do
+        expect(allocation.reload.moves.pluck(:status).uniq).to contain_exactly('cancelled')
+      end
+
+      describe 'webhook and email notifications' do
+        it 'calls the move notifier when updating the status' do
+          expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
+        end
+      end
+    end
+
+    context 'without specifying cancellation reason comment' do
+      let(:cancel_params) do
+        {
+          data: {
+            type: 'cancel',
+            attributes: {
+              cancellation_reason: cancellation_reason,
+            },
+          },
+        }
+      end
+
+      it 'updates the allocation cancellation reason comment' do
+        expect(allocation.reload.cancellation_reason_comment).to eq('Allocation was cancelled')
+      end
+    end
+
+    context 'with a bad request' do
+      let(:cancel_params) { nil }
+
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
+
+    context 'when not authorized' do
+      let(:access_token) { 'foo-bar' }
+      let(:detail_401) { 'Token expired or invalid' }
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with a missing id' do
+      let(:allocation_id) { 'foo-bar' }
+      let(:detail_404) { "Couldn't find Allocation with 'id'=foo-bar" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
+
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
+
+    context 'with validation errors' do
+      context 'with a bad cancellation reason' do
+        let(:cancellation_reason) { 'raining' }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) { [{ 'title' => 'Unprocessable entity', 'detail' => 'Cancellation reason is not included in the list' }] }
+        end
+      end
+    end
+  end
+end
