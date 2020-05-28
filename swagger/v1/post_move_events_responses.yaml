@@ -1,10 +1,4 @@
-'201':
-  type: object
-  required:
-  - data
-  properties:
-    data:
-      $ref: get_move_event.yaml#/GetMoveEvent
+'204': # no content
 '400':
   $ref: error_responses.yaml#/400
 '401':

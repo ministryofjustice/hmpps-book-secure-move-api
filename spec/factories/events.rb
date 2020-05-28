@@ -50,6 +50,7 @@ FactoryBot.define do
       details do
         { event_params: {
           relationships: {
+            from_location: { data: { id: create(:location).id } },
             to_location: { data: { id: create(:location).id } },
           },
         } }

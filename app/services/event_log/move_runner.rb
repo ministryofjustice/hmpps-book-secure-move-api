@@ -15,6 +15,8 @@ module EventLog
           move.to_location = event.to_location
         when 'complete'
           move.status = Move::MOVE_STATUS_COMPLETED
+        when 'lockout'
+          # no action to perform when a move is locked out, this event is purely for auditing
           # TODO: handle other move events here
         end
       end
