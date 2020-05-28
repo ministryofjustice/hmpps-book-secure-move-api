@@ -81,12 +81,65 @@ RSpec.describe Moves::Updater do
       end
     end
 
-    context 'when status is not updated with an associated allocation' do
-      let!(:allocation) { create :allocation, moves_count: 5 }
-      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+    context 'with allocation' do
+      let(:person) { create(:person) }
 
-      it 'does not change allocation moves_count' do
-        expect { updater.call }.not_to change { allocation.reload.moves_count }
+      context 'with a move linked to a person' do
+        let!(:move) { create(:move, :requested, :with_allocation, profile: nil) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { person: { data: { id: person.id, type: 'people' } } },
+          }
+        end
+
+        it 'sets the allocation status to filled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('filled')
+        end
+      end
+
+      context 'with a move unlinked to a person' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { person: { data: nil } },
+          }
+        end
+
+        it 'sets the allocation status to unfilled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('unfilled')
+        end
+      end
+
+      context 'with a move profile or status unchanged' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+
+        let(:move_params) do
+          {
+            type: 'moves',
+            attributes: {
+              additional_information: 'some more info',
+            },
+          }
+        end
+
+        it 'does not change the status' do
+          expect { updater.call }.not_to change { move.reload.allocation.status }
+        end
+      end
+
+      context 'with a move cancelled' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+        let(:status) { 'cancelled' }
+        let(:cancellation_reason) { 'other' }
+
+        it 'sets the allocation status to unfilled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('unfilled')
+        end
       end
     end
 

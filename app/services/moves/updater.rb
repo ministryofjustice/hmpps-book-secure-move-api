@@ -16,7 +16,7 @@ module Moves
 
       move.transaction do
         move.save!
-        move.allocation&.refresh_moves_count! if status_changed
+        move.allocation&.refresh_status_and_moves_count!
       end
     end
 

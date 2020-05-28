@@ -3,42 +3,45 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      before_action :validate_params, :validate_relationships
-
-      PERMITTED_EVENT_PARAMS = [
-        :type,
-        attributes: %i[timestamp event_name notes],
-        relationships: { from_location: {}, to_location: {} },
-      ].freeze
+      CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comments notes]].freeze
+      COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
+      LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
+      REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
+      DEPRECIATED_EVENT_PARAMS = [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
 
       def cancel
-        create_event(Event::CANCEL)
+        validate_params!(cancel_params)
+        create_event(Event::CANCEL, cancel_params)
         run_event_logs
         render status: :no_content
       end
 
       def complete
-        create_event(Event::COMPLETE)
+        validate_params!(complete_params)
+        create_event(Event::COMPLETE, complete_params)
         run_event_logs
         render status: :no_content
       end
 
       def lockouts
-        create_event(Event::LOCKOUT)
+        validate_params!(lockout_params, require_from_location: true)
+        create_event(Event::LOCKOUT, lockout_params)
         run_event_logs
         render status: :no_content
       end
 
       def redirects
-        create_event(Event::REDIRECT)
+        validate_params!(redirect_params, require_to_location: true)
+        create_event(Event::REDIRECT, redirect_params)
         run_event_logs
         render status: :no_content
       end
 
       def events
         # TODO: this method should be deleted, but kept here until the front end is updated
-        if  event_params.dig(:attributes, :event_name) == Event::REDIRECT
-          event = create_event(Event::REDIRECT)
+        validate_params!(depreciated_event_params, require_to_location: true)
+        if  depreciated_event_params.dig(:attributes, :event_name) == Event::REDIRECT
+          event = create_event(Event::REDIRECT, depreciated_event_params)
           run_event_logs
           render status: :created,
                  json: {
@@ -70,33 +73,31 @@ module Api
 
     private
 
-      def validate_params
+      def validate_params!(event_params, require_from_location: false, require_to_location: false)
         MoveEvents::ParamsValidator.new(event_params).validate!
+        params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id) if require_from_location
+        params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id) if require_to_location
       end
 
-      def validate_relationships
-        case type
-        when 'lockouts'
-          relationships.require(:from_location).require(:data).require(:id)
-        when 'redirects'
-          relationships.require(:to_location).require(:data).require(:id)
-        end
+      def cancel_params
+        @cancel_params ||= params.require(:data).permit(CANCEL_PARAMS).to_h
       end
 
-      def event_params
-        @event_params ||= params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
+      def complete_params
+        @complete_params ||= params.require(:data).permit(COMPLETE_PARAMS).to_h
       end
 
-      def type
-        @type ||= event_params[:type]
+      def lockout_params
+        @lockout_params ||= params.require(:data).permit(LOCKOUT_PARAMS).to_h
       end
 
-      def relationships
-        @relationships ||= params.require(:data).require(:relationships)
+      def redirect_params
+        @redirect_params ||= params.require(:data).permit(REDIRECT_PARAMS).to_h
       end
 
-      def timestamp
-        @timestamp ||= Time.zone.parse(event_params.dig(:attributes, :timestamp))
+      def depreciated_event_params
+        # TODO: deleteme once FE updated
+        @depreciated_event_params ||= params.require(:data).permit(DEPRECIATED_EVENT_PARAMS).to_h
       end
 
       def supplier_id
@@ -108,10 +109,10 @@ module Api
         @move ||= Move.accessible_by(current_ability).find(params.require(:id))
       end
 
-      def create_event(event_name)
+      def create_event(event_name, event_params)
         move.move_events.create!(
           event_name: event_name,
-          client_timestamp: timestamp,
+          client_timestamp: Time.zone.parse(event_params.dig(:attributes, :timestamp)),
           details: {
             event_params: event_params,
             supplier_id: supplier_id,
