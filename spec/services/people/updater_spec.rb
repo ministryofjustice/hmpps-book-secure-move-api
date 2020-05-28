@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe People::Updater do
-  subject(:updater) { described_class.new(person.id, params) }
+  subject(:updater) { described_class.new(person, params) }
 
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
-  let(:original_attributes) do
+  let(:original_profile_attributes) do
     {
       first_names: 'Robbie',
       last_name: 'Roberts',
@@ -18,9 +18,19 @@ RSpec.describe People::Updater do
       profile_identifiers: [
         { identifier_type: 'police_national_computer', value: 'ABC123' },
       ],
+      person: person,
     }
   end
-  let(:person) { create :person }
+  let(:original_person_attributes) do
+    {
+      first_names: 'Robbie',
+      last_name: 'Roberts',
+      date_of_birth: Date.civil(1980, 6, 1),
+      police_national_computer: 'ABC123',
+    }
+  end
+  let(:person) { create(:person, original_person_attributes) }
+  let(:profile) { create(:profile, original_profile_attributes) }
   let(:params) do
     {
       type: 'people',
@@ -35,7 +45,7 @@ RSpec.describe People::Updater do
   let(:updated_profile) { updated_person.latest_profile }
 
   before do
-    person.latest_profile.update(original_attributes)
+    person.latest_profile.update(original_profile_attributes)
   end
 
   context 'with valid input params' do
@@ -53,19 +63,29 @@ RSpec.describe People::Updater do
       expect(updated_profile.attributes.with_indifferent_access).to include(params[:attributes])
     end
 
+    it 'sets the correct Person attibutes' do
+      expect(updated_person.attributes.with_indifferent_access).to include(params[:attributes])
+    end
+
     it 'does not change original last_name' do
-      expect(updated_profile.last_name).to eq original_attributes[:last_name]
+      expect(updated_profile.last_name).to eq original_profile_attributes[:last_name]
     end
 
     it 'does not change original assessment_answers' do
       expect(updated_profile.assessment_answers.map(&:title)).to match_array(
-        original_attributes[:assessment_answers].pluck(:title),
+        original_profile_attributes[:assessment_answers].pluck(:title),
       )
     end
 
-    it 'does not change original identifiers' do
+    it 'does not change original identifiers for the Person' do
+      original_profile_attributes[:profile_identifiers].each do |identifier|
+        expect(updated_person.send(identifier[:identifier_type])).to eq(identifier[:value])
+      end
+    end
+
+    it 'does not change original identifiers for the Profile' do
       expect(updated_profile.profile_identifiers.map(&:value)).to match_array(
-        original_attributes[:profile_identifiers].pluck(:value),
+        original_profile_attributes[:profile_identifiers].pluck(:value),
       )
     end
   end
@@ -96,11 +116,19 @@ RSpec.describe People::Updater do
       expect(result).to be true
     end
 
-    it 'sets the identifiers attribute' do
+    it 'sets the identifier attributes for the Profile' do
       expect(updated_profile.profile_identifiers.as_json).to include_json(params[:attributes][:identifiers])
     end
 
-    it 'sets the assessment_answers attribute' do
+    it 'sets the identifiers attribute for the Person' do
+      identifiers = params[:attributes][:identifiers]
+
+      identifiers.each do |identifier|
+        expect(updated_person.send(identifier[:identifier_type])).to eq(identifier[:value])
+      end
+    end
+
+    it 'sets the assessment_answers attribute for the profile' do
       expect(updated_profile.assessment_answers.as_json).to include_json(params[:attributes][:assessment_answers])
     end
   end
@@ -139,8 +167,16 @@ RSpec.describe People::Updater do
       expect(result).to be true
     end
 
+    it 'sets the correct Person ethnicity' do
+      expect(updated_person.ethnicity_id).to eql ethnicity.id
+    end
+
     it 'sets the correct Profile ethnicity' do
       expect(updated_profile.ethnicity_id).to eql ethnicity.id
+    end
+
+    it 'sets the correct Person gender' do
+      expect(updated_person.gender_id).to eql gender.id
     end
 
     it 'sets the correct Profile gender' do

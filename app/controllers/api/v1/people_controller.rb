@@ -111,11 +111,11 @@ module Api
       end
 
       def updater
-        @updater ||= People::Updater.new(params[:id], person_params)
+        @updater ||= People::Updater.new(person, person_params)
       end
 
       def person
-        @person ||= Person.find(params[:person_id])
+        @person ||= Person.find(params[:person_id] || params[:id])
       end
 
       def render_person(person, status)

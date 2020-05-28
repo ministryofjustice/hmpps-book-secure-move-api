@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class Person < VersionedModel
-  has_many :profiles, dependent: :destroy
+  IDENTIFIER_TYPES = %i[
+    police_national_computer criminal_records_office prison_number
+  ].freeze
 
+  has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
+
+  belongs_to :ethnicity, optional: true
+  belongs_to :gender, optional: true
 
   has_one_attached :image
 
