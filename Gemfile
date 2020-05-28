@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.2'
+ruby File.read('.ruby-version')
 
 gem 'active_model_serializers', '~> 0.10.0'
 
@@ -26,10 +26,8 @@ gem 'faraday'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
 # static page serving for extra API documentation
-gem 'high_voltage'
 gem 'json-schema'
 gem 'kaminari'
-gem 'markdown-rails'
 gem 'net-http-persistent'
 gem 'nokogiri', '>= 1.10.4'
 gem 'notifications-ruby-client', '~> 5.1.2'
@@ -40,7 +38,6 @@ gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.3', '> 3.12.3'
 gem 'rails', '~> 5.2.3'
-gem 'sassc-rails'
 gem 'sentry-raven'
 gem 'sidekiq'
 gem 'tty-prompt'

@@ -42,7 +42,7 @@ class Allocation < VersionedModel
   validates :prisoner_category, inclusion: { in: prisoner_categories }, allow_nil: true
   validates :sentence_length, inclusion: { in: sentence_lengths }, allow_nil: true
 
-  validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }, on: :create
   validates :date, presence: true
 
   validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
@@ -50,16 +50,45 @@ class Allocation < VersionedModel
 
   attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
 
+  after_initialize :initialize_state
+  delegate :fill, :unfill, to: :state_machine
+
   def cancel
     comment = 'Allocation was cancelled'
 
     assign_attributes(
-      status: ALLOCATION_STATUS_CANCELLED,
       cancellation_reason: CANCELLATION_REASON_OTHER,
       cancellation_reason_comment: comment,
       moves: moves.each { |move| move.cancel(comment: comment) },
+      moves_count: 0,
     )
+    state_machine.cancel
 
     save!
+  end
+
+  def refresh_status_and_moves_count!
+    current_moves = moves.not_cancelled
+
+    current_moves.unfilled? ? unfill : fill
+    self.moves_count = current_moves.count
+
+    save!
+  end
+
+private
+
+  def state_machine
+    @state_machine ||= AllocationStateMachine.new(self)
+  end
+
+  def initialize_state
+    if status.present?
+      state_machine.restore!(status.to_sym)
+    else
+      # TODO: restore after data is backfilled on production
+      # self.status = state_machine.current
+      self.status = moves.not_cancelled.unfilled? ? :unfilled : :filled
+    end
   end
 end

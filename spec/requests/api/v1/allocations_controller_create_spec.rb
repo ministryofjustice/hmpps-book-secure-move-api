@@ -7,7 +7,7 @@ RSpec.describe Api::V1::AllocationsController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::INCLUDED_ATTRIBUTES))
+    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS))
     resource['data']['relationships']['moves']['data'] = UnorderedArray(*resource.dig('data', 'relationships', 'moves', 'data'))
     resource['included'] = UnorderedArray(*resource['included'])
     resource
@@ -123,6 +123,10 @@ RSpec.describe Api::V1::AllocationsController do
 
       it 'sets the correct complex_cases attributes' do
         expect(response_json.dig('data', 'attributes', 'complex_cases').first).to match complex_case1_attributes.stringify_keys
+      end
+
+      it 'sets the correct status' do
+        expect(response_json.dig('data', 'attributes', 'status')).to eq(Allocation::ALLOCATION_STATUS_UNFILLED)
       end
 
       context 'when omitting requested_by attribute' do
