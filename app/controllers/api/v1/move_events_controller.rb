@@ -5,6 +5,11 @@ module Api
     class MoveEventsController < ApiController
       before_action :validate_params, :validate_relationships
 
+      COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
+      LOCKOUTS_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
+      REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
+      EVENT_PARAMS_DEPRECIATED =  [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
+
       PERMITTED_EVENT_PARAMS = [
         :type,
         attributes: %i[timestamp event_name notes],
@@ -75,6 +80,10 @@ module Api
         when 'redirects'
           relationships.require(:to_location).require(:data).require(:id)
         end
+      end
+
+      def complete_params
+        @complete_params ||= params.require(:data)
       end
 
       def event_params

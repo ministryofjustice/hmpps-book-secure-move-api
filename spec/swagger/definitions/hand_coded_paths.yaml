@@ -586,14 +586,14 @@
 
         ---
       schema:
-        $ref: post_move_event.yaml#/PostMoveEvent
+        $ref: post_move_event_depreciated.yaml#/PostMoveEvent
     responses:
       '201':
         description: created
         content:
           application/vnd.api+json:
             schema:
-              $ref: post_move_events_responses.yaml#/201
+              $ref: post_move_events_responses_depreciated.yaml#/201
         examples:
           Complete:
             data:

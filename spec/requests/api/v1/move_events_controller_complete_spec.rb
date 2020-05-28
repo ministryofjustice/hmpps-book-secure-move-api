@@ -6,7 +6,7 @@ RSpec.describe Api::V1::MoveEventsController do
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /moves/:move_id/complete' do
-    let(:schema) { load_yaml_schema('post_move_complete_responses.yaml') }
+    let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
 
     let(:supplier) { create(:supplier) }
     let(:application) { create(:application, owner_id: supplier.id) }
