@@ -75,8 +75,12 @@ module Api
 
       def validate_params!(event_params, require_from_location: false, require_to_location: false)
         MoveEvents::ParamsValidator.new(event_params).validate!
-        params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id) if require_from_location
-        params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id) if require_to_location
+        if require_from_location
+          Location.find(params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id))
+        end
+        if require_to_location
+          Location.find(params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id))
+        end
       end
 
       def cancel_params
