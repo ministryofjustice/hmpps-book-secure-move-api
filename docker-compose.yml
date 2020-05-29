@@ -1,8 +1,3 @@
-# Simplify running the application inside a container locally.
-# Usage: `docker-compose up`
-#
-# Do not use docker-compose in production environments.
-#
 version: '3'
 
 services:
@@ -29,6 +24,8 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
   web:
     build: .
+    env_file:
+      - ./.env
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db/hmpps-book-secure-move-api
       - SECRET_KEY_BASE=h463472fhaa91f4a277002e9652f86f330e636358e2090d86ab4a4f06845ege1
@@ -37,7 +34,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=fakesecret
       - S3_BUCKET_NAME=apibook-a-secure-move-documents-s3-bucket
       - S3_BACKEND=http://s3:4572
-      - ENCRYPTOR_SALT=saltnpepper
     ports:
       - "3000:3000"
     depends_on:
