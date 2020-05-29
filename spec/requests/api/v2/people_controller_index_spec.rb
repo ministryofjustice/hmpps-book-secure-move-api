@@ -20,6 +20,14 @@ RSpec.describe Api::V2::PeopleController do
         before { get '/api/v2/people', params: params, headers: headers }
 
         it_behaves_like 'an endpoint that responds with success 200'
+
+        it 'returns correct attributes' do
+          expect(response_json['data']).to include('last_name', 'latest_nomis_booking_id', 'date_of_birth', 'gender_additional_information', 'latest_nomis_booking_id', 'ethnicity_id')
+        end
+
+        it 'returns the correct number of people' do
+          expect(response_json['data'].count).to eq(2)
+        end
       end
 
       describe 'filtering results by police_national_computer' do
@@ -133,42 +141,34 @@ RSpec.describe Api::V2::PeopleController do
         end
       end
 
-      xdescribe 'included relationships' do
-        let!(:people) { create_list :people, 2 }
+      describe 'included relationships' do
+        let!(:people) { create_list :person, 2 }
 
-        context 'when not including the include query param' do
-          let(:params) { '' }
+        before { get '/api/v2/people', params: params, headers: headers }
 
-          it 'returns the default includes' do
-            returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+        context 'when the include query param is empty' do
+          let(:params) { { include: [] } }
+
+          it 'does not include any resource' do
+            expect(response_json).not_to include('included')
           end
         end
 
-        context 'when including the include query param' do
-          let(:params) { { include: ['foo.bar', 'from_location'] } }
-
-          it 'returns the valid provided includes' do
-            returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('locations')
-          end
-        end
-
-        context 'when including an empty include query param' do
-          let(:params) { { include: '' } }
-
-          it 'returns none of the includes' do
-            returned_types = response_json['included']
-            expect(returned_types).to be_nil
-          end
-        end
-
-        context 'when including a nil include query param' do
+        context 'when include is nil' do
           let(:params) { { include: nil } }
 
-          it 'returns the default includes' do
+          it 'does not include any resource' do
+            expect(response_json).not_to include('included')
+          end
+        end
+
+        context 'when including the ethnicity query param' do
+          let(:params) { { include: %w[ethnicity gender profiles] } }
+
+          it 'returns the relevant ethnicity' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+
+            expect(returned_types).to contain_exactly('ethnicities', 'genders', 'profiles')
           end
         end
       end

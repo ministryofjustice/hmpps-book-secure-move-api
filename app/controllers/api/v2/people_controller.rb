@@ -6,8 +6,8 @@ module Api
       def index
         # people = People::Finder.new(filter_params).call
         people = Person.where(filter_params)
-        paginate people, include: PersonSerializer::INCLUDED_DETAIL
 
+        paginate people, include: included_relationships
       end
 
     private
@@ -16,6 +16,10 @@ module Api
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call
       end
     end
   end
