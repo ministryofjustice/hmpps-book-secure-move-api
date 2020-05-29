@@ -21,6 +21,7 @@ RSpec.describe Api::V2::PeopleController do
 
         it_behaves_like 'an endpoint that responds with success 200'
 
+        # TODO: think about this!
         it 'returns correct attributes' do
           expect(response_json['data'].first['attributes']).to include('last_name', 'first_names', 'date_of_birth', 'gender_additional_information')
         end
