@@ -5,7 +5,7 @@ ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
-RUN apk --update add git build-base postgresql-dev
+RUN apk --update --no-cache add git build-base postgresql-dev
 
 COPY . /app
 RUN gem update bundler --no-document
@@ -36,7 +36,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --no-cache tzdata postgresql-dev
+RUN apk add --update --no-cache tzdata postgresql-dev
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /app /app
