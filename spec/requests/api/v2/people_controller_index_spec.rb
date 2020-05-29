@@ -10,18 +10,20 @@ RSpec.describe Api::V2::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
-
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2 }
     let(:params) { {} }
 
     context 'when successful' do
-      before { get '/api/v2/people', params: params, headers: headers }
+      context 'when there are no params' do
+        before { get '/api/v2/people', params: params, headers: headers }
 
-      it_behaves_like 'an endpoint that responds with success 200'
+        it_behaves_like 'an endpoint that responds with success 200'
+      end
 
-      xdescribe 'filtering results by police_national_computer' do
+      describe 'filtering results by police_national_computer' do
+        let!(:person) { create(:person, police_national_computer: 'AB/1234567') }
         let(:filters) do
           {
             bar: 'bar',
@@ -30,9 +32,10 @@ RSpec.describe Api::V2::PeopleController do
           }
         end
         let(:params) { { filter: filters } }
-        let!(:person) { create(:person, :nomis_synced, police_national_computer: 'AB/1234567') }
 
-        it 'filters the results' do
+        before { get '/api/v2/people', params: params, headers: headers }
+
+        it 'returns the correct number of people' do
           expect(response_json['data'].size).to eq(1)
         end
 

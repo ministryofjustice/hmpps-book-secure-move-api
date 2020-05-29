@@ -5,8 +5,12 @@ module Api
     class PeopleController < ApiController
       def index
         # people = People::Finder.new(filter_params).call
-        people = Person.all
 
+        people = if filter_params.any?
+                   Person.where(filter_params)
+                 else
+                   Person.all
+                 end
         paginate people, include: PersonSerializer::INCLUDED_DETAIL
       end
 
@@ -15,7 +19,7 @@ module Api
       PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
 
       def filter_params
-        params.require(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
+        params.permit(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
       end
     end
   end
