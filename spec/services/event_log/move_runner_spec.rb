@@ -102,4 +102,15 @@ RSpec.describe EventLog::MoveRunner do
       end
     end
   end
+
+  context 'when event_name=lockout' do
+    # NB: lockout events have should have no effect on a move, they are purely for auditing
+    let!(:event) { create(:move_event, :lockout, eventable: move) }
+
+    it 'does not update the move status' do
+      expect { runner.call }.not_to change(move, :status).from('requested')
+    end
+
+    it_behaves_like 'it does not call the Notifier'
+  end
 end

@@ -7,6 +7,11 @@ RSpec.describe MoveEvent do
 
   it { expect(described_class).to be < Event }
 
+  describe 'from_location' do
+    it { expect(move_event.from_location).not_to be nil }
+    it { expect(move_event.from_location).to be_a Location }
+  end
+
   describe 'to_location' do
     it { expect(move_event.to_location).not_to be nil }
     it { expect(move_event.to_location).to be_a Location }

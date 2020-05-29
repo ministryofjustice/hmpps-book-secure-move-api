@@ -127,7 +127,7 @@ RSpec.configure do |config|
             "$ref": 'move.yaml#/Move',
           },
           MoveEvent: {
-            "$ref": 'get_move_event.yaml#/GetMoveEvent',
+            "$ref": 'get_move_event_depreciated.yaml#/GetMoveEvent',
           },
           MoveReference: {
             "$ref": 'move_reference.yaml#/MoveReference',
