@@ -20,7 +20,6 @@ private
     last_name
     date_of_birth
     gender_additional_information
-    latest_nomis_booking_id
     ethnicity_id
     gender_id
   ].freeze
