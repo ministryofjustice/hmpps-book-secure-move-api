@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::PersonSerializer do
   subject(:serializer) { described_class.new(person) }
 
-  let(:person) { create :person }
+  let(:person) { create :person, gender_additional_information: 'additional information' }
   let(:adapter_options) { {} }
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
@@ -29,6 +29,22 @@ RSpec.describe V2::PersonSerializer do
 
   it 'contains a date_of_birth attribute' do
     expect(result[:data][:attributes][:date_of_birth]).to eql person.date_of_birth.iso8601
+  end
+
+  it 'contains a gender_additional_information attribute' do
+    expect(result[:data][:attributes][:gender_additional_information]).to eql person.gender_additional_information
+  end
+
+  it 'contains a prison_number attribute' do
+    expect(result[:data][:attributes][:prison_number]).to eql person.prison_number
+  end
+
+  it 'contains a criminal_records_office attribute' do
+    expect(result[:data][:attributes][:criminal_records_office]).to eql person.criminal_records_office
+  end
+
+  it 'contains a criminal_records_office attribute' do
+    expect(result[:data][:attributes][:police_national_computer]).to eql person.police_national_computer
   end
 
   describe 'ethnicity' do
