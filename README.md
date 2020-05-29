@@ -167,6 +167,12 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+You can force rebuilding the container with:
+```
+docker-compose build
+```
+
+
 You should be able to see the swagger documentation pointing your browser to
 
 ```
