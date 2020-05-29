@@ -27,7 +27,11 @@ RSpec.describe EventLog::MoveRunner do
   end
 
   shared_examples_for 'it does not call the Notifier' do
-    before { runner.call }
+    before do
+      runner.call
+    rescue ActiveRecord::RecordInvalid
+      nil
+    end
 
     it 'calls the Notifier with update' do
       expect(Notifier).not_to have_received(:prepare_notifications)
@@ -138,6 +142,21 @@ RSpec.describe EventLog::MoveRunner do
 
     it 'does not update the move status' do
       expect { runner.call }.not_to change(move, :status).from('requested')
+    end
+
+    it_behaves_like 'it does not call the Notifier'
+  end
+
+  context 'when the move record fails to save' do
+    let!(:event) { create(:move_event, :broken_cancel, eventable: move) }
+
+    it 'does not update the move status' do
+      begin
+        runner.call # this raises a validation error
+      rescue ActiveRecord::RecordInvalid
+        nil
+      end
+      expect(move.reload.status).to eql('requested')
     end
 
     it_behaves_like 'it does not call the Notifier'

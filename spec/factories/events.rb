@@ -47,7 +47,6 @@ FactoryBot.define do
 
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
-      event_name { 'cancel' }
       details do
         { event_params: {
           relationships: {
@@ -58,11 +57,24 @@ FactoryBot.define do
       end
 
       trait :cancel do
+        event_name { 'cancel' }
         details do
           { event_params: {
             attributes: {
               cancellation_reason: 'supplier_declined_to_move',
               cancellation_reason_comment: 'computer says no',
+            },
+          } }
+        end
+      end
+
+      trait :broken_cancel do
+        event_name { 'cancel' }
+        details do
+          { event_params: {
+            attributes: {
+              cancellation_reason: nil,
+              cancellation_reason_comment: 'this is a broken event',
             },
           } }
         end

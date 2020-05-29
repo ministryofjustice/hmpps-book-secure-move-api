@@ -84,6 +84,22 @@ RSpec.describe Api::V1::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
+    context 'with a non-existent from_location' do
+      let(:lockout_params) do
+        {
+          data: {
+            type: 'lockouts',
+            attributes: { timestamp: '2020-04-23T18:25:43.511Z' },
+            relationships: { from_location: { data: { type: 'locations', id: 'atlantis' } } },
+          },
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with error 404' do
+        let(:detail_404) { "Couldn't find Location with 'id'=atlantis" }
+      end
+    end
+
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
