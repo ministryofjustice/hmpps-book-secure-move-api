@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         resources :journeys, only: %i[index show create update]
         member do
           post 'events', controller: 'move_events' # TODO: delete this route once the front end is updated
+          post 'cancel', controller: 'move_events'
           post 'complete', controller: 'move_events'
           post 'lockouts', controller: 'move_events'
           post 'redirects', controller: 'move_events'
