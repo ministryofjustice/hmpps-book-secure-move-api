@@ -43,16 +43,16 @@ RSpec.describe V2::PersonSerializer do
     expect(result[:data][:attributes][:criminal_records_office]).to eql person.criminal_records_office
   end
 
-  it 'contains a criminal_records_office attribute' do
+  it 'contains a police_national_computer attribute' do
     expect(result[:data][:attributes][:police_national_computer]).to eql person.police_national_computer
   end
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: :ethnicity } }
 
-      it 'contains a relationship to ethnicity' do
-        expect(result[:data][:relationships]).to include(:ethnicity)
-      end
+    it 'contains a relationship to ethnicity' do
+      expect(result[:data][:relationships]).to include(:ethnicity)
+    end
 
     context 'with the ethnicity' do
       it 'contains an included ethnicity' do
@@ -72,9 +72,9 @@ RSpec.describe V2::PersonSerializer do
   describe 'gender' do
     let(:adapter_options) { { include: :gender } }
 
-      it 'contains a relationship to gender' do
-        expect(result[:data][:relationships]).to include(:gender)
-      end
+    it 'contains a relationship to gender' do
+      expect(result[:data][:relationships]).to include(:gender)
+    end
 
     context 'with the gender' do
       it 'contains an included gender' do
@@ -94,9 +94,9 @@ RSpec.describe V2::PersonSerializer do
   describe 'profiles' do
     let(:adapter_options) { { include: :profiles } }
 
-      it 'contains a relationship to profiles' do
-        expect(result[:data][:relationships]).to include(:profiles)
-      end
+    it 'contains a relationship to profiles' do
+      expect(result[:data][:relationships]).to include(:profiles)
+    end
 
     context 'with profiles' do
       it 'contains an included gender' do
