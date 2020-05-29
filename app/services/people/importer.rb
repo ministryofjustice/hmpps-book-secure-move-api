@@ -84,7 +84,7 @@ module People
     end
 
     def last_synced_with_nomis
-      Time.zone.now
+      @last_synced_with_nomis ||= Time.zone.now
     end
   end
 end
