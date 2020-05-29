@@ -37,12 +37,13 @@ RSpec.describe Allocation do
       let(:cancelled_move) { create :move, :cancelled }
       let(:proposed_move) { create :move, :proposed }
       let(:requested_move) { create :move, :requested }
+      let(:booked_move) { create :move, :booked }
       let(:completed_move) { create :move, :completed }
-      let(:moves) { [cancelled_move, proposed_move, requested_move, completed_move] }
+      let(:moves) { [cancelled_move, proposed_move, requested_move, booked_move, completed_move] }
       let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
       it 'updates the number of non cancelled moves' do
-        expect { allocation.refresh_status_and_moves_count! }.to change(allocation, :moves_count).from(1).to(3)
+        expect { allocation.refresh_status_and_moves_count! }.to change(allocation, :moves_count).from(1).to(4)
       end
     end
 

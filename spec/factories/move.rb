@@ -41,6 +41,9 @@ FactoryBot.define do
     trait :requested do
       status { 'requested' }
     end
+    trait :booked do
+      status { 'booked' }
+    end
     trait :cancelled do
       status { 'cancelled' }
       cancellation_reason { 'other' }

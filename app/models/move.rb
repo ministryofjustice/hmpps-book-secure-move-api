@@ -3,18 +3,20 @@
 class Move < VersionedModel
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
+  MOVE_STATUS_BOOKED = 'booked'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'
 
   NOMIS_STATUS_TYPES = {
-    'SCH' => MOVE_STATUS_REQUESTED,
-    'EXP' => MOVE_STATUS_REQUESTED,
+    'SCH' => MOVE_STATUS_BOOKED,    # Scheduled == Booked
+    'EXP' => MOVE_STATUS_REQUESTED, # TODO: 'exp' is believed to mean 'expired' - more analysis is required to decide how to handle this
     'COMP' => MOVE_STATUS_COMPLETED,
   }.freeze
 
   enum status: {
     proposed: MOVE_STATUS_PROPOSED,
     requested: MOVE_STATUS_REQUESTED,
+    booked: MOVE_STATUS_BOOKED,
     completed: MOVE_STATUS_COMPLETED,
     cancelled: MOVE_STATUS_CANCELLED,
   }
@@ -47,7 +49,7 @@ class Move < VersionedModel
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: :prison_recall?
   validates :move_type, inclusion: { in: move_types }
-  validates :profile, presence: true, unless: -> { requested? || cancelled? }
+  validates :profile, presence: true, unless: -> { requested? || booked? || cancelled? }
   validates :reference, presence: true
 
   # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
