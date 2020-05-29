@@ -13,8 +13,11 @@ PostAllocationCancel:
     attributes:
       type: object
       required:
+      - timestamp
       - cancellation_reason
       properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
         cancellation_reason:
           oneOf:
           - type: 'null'

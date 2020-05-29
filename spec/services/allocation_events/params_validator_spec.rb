@@ -24,13 +24,13 @@ RSpec.describe AllocationEvents::ParamsValidator do
     context 'when nil' do
       let(:event_name) { nil }
 
-      it { is_expected.not_to be_valid }
+      it { is_expected.to be_valid }
     end
 
     context 'when missing' do
       before { params[:attributes].delete(:event_name) }
 
-      it { is_expected.not_to be_valid }
+      it { is_expected.to be_valid }
     end
   end
 

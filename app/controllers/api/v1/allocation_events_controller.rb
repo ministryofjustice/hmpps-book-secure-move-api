@@ -3,20 +3,26 @@
 module Api
   module V1
     class AllocationEventsController < ApiController
-      before_action :validate_params, only: :events
-      after_action :send_move_notifications
+      include Eventable
 
       def cancel
-        allocation.cancel(cancellation_details)
+        validate_params!(cancel_params)
+
+        allocation.transaction do
+          allocation.cancel(cancellation_details)
+          process_event(allocation.moves, Event::CANCEL, cancel_move_params)
+        end
 
         render status: :no_content
       end
 
       def events
         # TODO: this method should be deleted, but kept here until the front end is updated
+        validate_params!(event_params)
         case event_name
         when 'cancel'
           allocation.cancel
+          send_move_notifications
 
           render json: fake_event_object, status: :created
         else
@@ -30,26 +36,33 @@ module Api
     private
 
       # TODO: remove constant when allocation `events` endpoint is no longer in use
-      PERMITTED_EVENT_PARAMS = [
+      DEPRECATED_EVENT_PARAMS = [
         :type,
         attributes: %i[timestamp event_name],
       ].freeze
 
       PERMITTED_CANCEL_PARAMS = [
-        attributes: %i[cancellation_reason cancellation_reason_comment],
+        :type,
+        attributes: %i[timestamp cancellation_reason cancellation_reason_comment],
       ].freeze
 
-      def validate_params
-        # TODO: remove ParamsValidator completely when allocation `events` endpoint is no longer in use
+      def validate_params!(event_params)
         AllocationEvents::ParamsValidator.new(event_params).validate!(:cancel)
       end
 
       def cancel_params
-        params.require(:data).permit(PERMITTED_CANCEL_PARAMS).to_h
+        @cancel_params ||= params.require(:data).permit(PERMITTED_CANCEL_PARAMS).to_h
+      end
+
+      def cancel_move_params
+        cancel_params.tap do |params|
+          params[:attributes][:cancellation_reason] = Move::CANCELLATION_REASON_OTHER
+        end
       end
 
       def cancellation_details
         {
+          cancel_moves: false,
           reason: cancel_params.dig(:attributes, :cancellation_reason),
         }.tap do |details|
           comment = cancel_params.dig(:attributes, :cancellation_reason_comment)
@@ -59,7 +72,7 @@ module Api
 
       def event_params
         # TODO: remove method completely when allocation `events` endpoint is no longer in use
-        params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
+        params.require(:data).permit(DEPRECATED_EVENT_PARAMS).to_h
       end
 
       def allocation
@@ -67,6 +80,7 @@ module Api
       end
 
       def send_move_notifications
+        # TODO: remove method completely when allocation `events` endpoint is no longer in use
         allocation.moves.each do |move|
           Notifier.prepare_notifications(topic: move, action_name: 'update_status')
         end
