@@ -22,7 +22,7 @@ RSpec.describe Api::V2::PeopleController do
         it_behaves_like 'an endpoint that responds with success 200'
 
         it 'returns correct attributes' do
-          expect(response_json['data']).to include('last_name', 'latest_nomis_booking_id', 'date_of_birth', 'gender_additional_information', 'latest_nomis_booking_id', 'ethnicity_id')
+          expect(response_json['data'].first['attributes']).to include('last_name', 'first_names', 'date_of_birth', 'gender_additional_information')
         end
 
         it 'returns the correct number of people' do
@@ -36,28 +36,6 @@ RSpec.describe Api::V2::PeopleController do
           {
             bar: 'bar',
             police_national_computer: 'AB/1234567',
-            foo: 'foo',
-          }
-        end
-        let(:params) { { filter: filters } }
-
-        before { get '/api/v2/people', params: params, headers: headers }
-
-        it 'returns the correct number of people' do
-          expect(response_json['data'].size).to eq(1)
-        end
-
-        it 'returns the person that matches the filter' do
-          expect(response_json).to include_json(data: [{ id: person.id }])
-        end
-      end
-
-      describe 'filtering results by criminal_records_office' do
-        let!(:person) { create(:person, criminal_records_office: 'CRO0105d') }
-        let(:filters) do
-          {
-            bar: 'bar',
-            criminal_records_office: 'CRO0105d',
             foo: 'foo',
           }
         end
@@ -99,6 +77,8 @@ RSpec.describe Api::V2::PeopleController do
           expect(response_json).to include_json(data: [{ id: person.id }])
         end
       end
+
+      xdescribe 'filtering results by multiple values per filter'
 
       describe 'paginating results' do
         let!(:people) { create_list :person, 21 }

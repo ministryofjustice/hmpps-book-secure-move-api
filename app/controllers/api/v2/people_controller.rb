@@ -7,7 +7,7 @@ module Api
         # people = People::Finder.new(filter_params).call
         people = Person.where(filter_params)
 
-        paginate people, include: included_relationships
+        paginate people, include: included_relationships, each_serializer: ::V2::PersonSerializer
       end
 
     private
