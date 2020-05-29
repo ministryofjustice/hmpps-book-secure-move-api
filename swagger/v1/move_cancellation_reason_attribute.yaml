@@ -1,0 +1,9 @@
+MoveCancellationReason:
+  type: string
+  example: made_in_error
+  enum:
+  - made_in_error
+  - supplier_declined_to_move
+  - rejected
+  - other
+  description: The reason the move has been cancelled

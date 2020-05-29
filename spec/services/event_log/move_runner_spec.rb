@@ -5,9 +5,8 @@ require 'rails_helper'
 RSpec.describe EventLog::MoveRunner do
   subject(:runner) { described_class.new(move) }
 
-  let!(:move) { create(:move, to_location: original_location, status: move_status) }
+  let!(:move) { create(:move, :requested, to_location: original_location) }
   let(:original_location) { create(:location) }
-  let(:move_status) { 'requested' }
 
   before { allow(Notifier).to receive(:prepare_notifications) }
 
@@ -28,7 +27,11 @@ RSpec.describe EventLog::MoveRunner do
   end
 
   shared_examples_for 'it does not call the Notifier' do
-    before { runner.call }
+    before do
+      runner.call
+    rescue ActiveRecord::RecordInvalid
+      nil
+    end
 
     it 'calls the Notifier with update' do
       expect(Notifier).not_to have_received(:prepare_notifications)
@@ -81,6 +84,36 @@ RSpec.describe EventLog::MoveRunner do
     end
   end
 
+  context 'when event_name=cancel' do
+    let!(:event) { create(:move_event, :cancel, eventable: move) }
+
+    context 'when the move is requested' do
+      it 'updates the move status to cancelled' do
+        expect { runner.call }.to change(move, :status).from('requested').to('cancelled')
+      end
+
+      it 'updates the move cancellation_reason' do
+        expect { runner.call }.to change(move, :cancellation_reason).from(nil).to('supplier_declined_to_move')
+      end
+
+      it 'updates the move cancellation_reason_comment' do
+        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already cancelled' do
+      let!(:move) { create(:move, :cancelled, cancellation_reason: 'supplier_declined_to_move', cancellation_reason_comment: 'computer says no') }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { runner.call }.not_to change(move, :status).from('cancelled')
+      end
+    end
+  end
+
   context 'when event_name=complete' do
     let!(:event) { create(:move_event, :complete, eventable: move) }
 
@@ -93,7 +126,7 @@ RSpec.describe EventLog::MoveRunner do
     end
 
     context 'when the move is already completed' do
-      let(:move_status) { 'completed' }
+      let!(:move) { create(:move, :completed) }
 
       it_behaves_like 'it does not call the Notifier'
 
@@ -109,6 +142,21 @@ RSpec.describe EventLog::MoveRunner do
 
     it 'does not update the move status' do
       expect { runner.call }.not_to change(move, :status).from('requested')
+    end
+
+    it_behaves_like 'it does not call the Notifier'
+  end
+
+  context 'when the move record fails to save' do
+    let!(:event) { create(:move_event, :broken_cancel, eventable: move) }
+
+    it 'does not update the move status' do
+      begin
+        runner.call # this raises a validation error
+      rescue ActiveRecord::RecordInvalid
+        nil
+      end
+      expect(move.reload.status).to eql('requested')
     end
 
     it_behaves_like 'it does not call the Notifier'
