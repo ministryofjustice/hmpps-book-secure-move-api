@@ -11,40 +11,44 @@ class PersonSerializer < ActiveModel::Serializer
     :gender_additional_information,
   )
 
-  has_one :ethnicity, serializer: EthnicitySerializer, if: -> { ethnicity.present? }
+  has_one :ethnicity, serializer: EthnicitySerializer
   has_one :gender, serializer: GenderSerializer
 
   INCLUDED_DETAIL = %w[ethnicity gender].freeze
 
-  def first_names
-    object.latest_profile&.first_names
-  end
-
-  def last_name
-    object.latest_profile&.last_name
-  end
-
-  def date_of_birth
-    object.latest_profile&.date_of_birth
-  end
-
-  def ethnicity
-    object.latest_profile&.ethnicity
-  end
-
-  def gender
-    object.latest_profile&.gender
-  end
-
-  def gender_additional_information
-    object.latest_profile&.gender_additional_information
-  end
-
+  # TODO: AssessmentAnswers in V2 world need moving to the ProfileSerializer
   def assessment_answers
     object.latest_profile&.assessment_answers || []
   end
 
   def identifiers
-    object.latest_profile&.profile_identifiers || []
+    [police_national_computer, prison_number, criminal_records_office].compact
+  end
+
+  def police_national_computer
+    if object.police_national_computer.present?
+      {
+        value: object.police_national_computer,
+        identifier_type: 'police_national_computer',
+      }
+    end
+  end
+
+  def prison_number
+    if object.prison_number.present?
+      {
+        value: object.prison_number,
+        identifier_type: 'prison_number',
+      }
+    end
+  end
+
+  def criminal_records_office
+    if object.criminal_records_office.present?
+      {
+        value: object.criminal_records_office,
+        identifier_type: 'criminal_records_office',
+      }
+    end
   end
 end

@@ -72,8 +72,8 @@ RSpec.describe MoveSerializer do
           {
             id: move.profile.person_id,
             type: 'people',
-            attributes: { first_names: move.profile.first_names,
-                          last_name: move.profile.last_name,
+            attributes: { first_names: move.profile.person.first_names,
+                          last_name: move.profile.person.last_name,
                           date_of_birth: '1980-10-20' },
           },
         ]

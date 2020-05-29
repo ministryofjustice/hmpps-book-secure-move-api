@@ -7,6 +7,7 @@ RSpec.describe PersonSerializer do
 
   let(:person) { create :person }
   let(:adapter_options) { {} }
+
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
   end
@@ -20,11 +21,11 @@ RSpec.describe PersonSerializer do
   end
 
   it 'contains a first_names attribute' do
-    expect(result[:data][:attributes][:first_names]).to eql person.latest_profile.first_names
+    expect(result[:data][:attributes][:first_names]).to eql person.first_names
   end
 
   it 'contains a last_name attribute' do
-    expect(result[:data][:attributes][:last_name]).to eql person.latest_profile.last_name
+    expect(result[:data][:attributes][:last_name]).to eql person.last_name
   end
 
   describe '#assessment_answers' do
@@ -94,28 +95,25 @@ RSpec.describe PersonSerializer do
     end
 
     before do
-      profile = person.latest_profile
-      profile.profile_identifiers = profile_identifiers
-      profile.save!
+      person.update(criminal_records_office: nil, police_national_computer: 'ABC123456', prison_number: 'XYZ123456')
     end
 
     it 'contains two identifiers' do
-      expect(result[:data][:attributes][:identifiers]).to eql profile_identifiers
+      expect(result[:data][:attributes][:identifiers]).to match_array profile_identifiers
     end
   end
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
-    let(:ethnicity) { person.latest_profile&.ethnicity }
     let(:expected_json) do
       [
         {
-          id: ethnicity&.id,
+          id: person.ethnicity&.id,
           type: 'ethnicities',
           attributes: {
-            key: ethnicity&.key,
-            title: ethnicity&.title,
-            description: ethnicity&.description,
+            key: person.ethnicity&.key,
+            title: person.ethnicity&.title,
+            description: person.ethnicity&.description,
           },
         },
       ]
@@ -128,20 +126,19 @@ RSpec.describe PersonSerializer do
 
   describe 'gender' do
     before do
-      person.latest_profile.update(gender_additional_information: gender_additional_information)
+      person.update(gender_additional_information: gender_additional_information)
     end
 
     let(:adapter_options) { { include: { gender: %I[title description] } } }
-    let(:gender) { person.latest_profile&.gender }
     let(:gender_additional_information) { 'more info about the person' }
     let(:expected_json) do
       [
         {
-          id: gender&.id,
+          id: person.gender&.id,
           type: 'genders',
           attributes: {
-            title: gender&.title,
-            description: gender&.description,
+            title: person.gender&.title,
+            description: person.gender&.description,
           },
         },
       ]
