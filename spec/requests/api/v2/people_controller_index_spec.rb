@@ -3,67 +3,142 @@
 require 'rails_helper'
 
 RSpec.describe Api::V2::PeopleController do
-  let!(:token) { create(:access_token) }
+  let(:supplier) { create(:supplier) }
+  let!(:application) { create(:application, owner_id: supplier.id) }
+  let!(:access_token) { create(:access_token, application: application).token }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:response_json) { JSON.parse(response.body) }
+  let(:content_type) { ApiController::CONTENT_TYPE }
 
-  let(:schema) { load_yaml_schema('get_people_responses.yaml') }
 
   describe 'GET /people' do
-    let(:prison_number) { 'G5033UT' }
+    let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
+    let!(:people) { create_list :person, 2 }
+    let(:params) { {} }
 
-    describe 'filtering the results' do
-      let(:params) { { filter: { police_national_computer: 'AB/1234567' }, access_token: token.token } }
+    context 'when successful' do
+      before { get '/api/v2/people', params: params, headers: headers }
 
-      context 'when called with police_national_computer filter' do
-        let!(:people) { create_list :person, 2, :nomis_synced }
+      it_behaves_like 'an endpoint that responds with success 200'
 
-        before do
-          get '/api/v2/people', headers: headers, params: params
+      xdescribe 'filtering results by police_national_computer' do
+        let(:filters) do
+          {
+            bar: 'bar',
+            police_national_computer: 'AB/1234567',
+            foo: 'foo',
+          }
+        end
+        let(:params) { { filter: filters } }
+        let!(:person) { create(:person, :nomis_synced, police_national_computer: 'AB/1234567') }
+
+        it 'filters the results' do
+          expect(response_json['data'].size).to eq(1)
         end
 
-        it_behaves_like 'an endpoint that responds with success 200'
-
-        it 'returns the correct data' do
-          expect(response_json['data'].size).to eq(2)
+        it 'returns the person that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: person.id }])
         end
       end
 
-      #     context 'with no ethnicity' do
-      #       let!(:person) { create(:profile, ethnicity: nil).person }
-      #
-      #       before do
-      #         get '/api/v2/people', headers: headers, params: params
-      #       end
-      #
-      #       it_behaves_like 'an endpoint that responds with success 200'
-      #     end
-      #
-      #     it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
-      #       people_finder = instance_double('People::Finder', call: Person.all)
-      #       allow(People::Finder).to receive(:new).and_return(people_finder)
-      #
-      #       get '/api/v2/people', headers: headers, params: params
-      #
-      #       expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
-      #     end
-      #   end
-      #
-      #   context 'when the filter prison_number is used' do
-      #     let!(:people) { create_list :person, 5 }
-      #
-      #     let(:params) { { filter: { prison_number: prison_number }, access_token: token.token } }
-      #     let(:people_finder) { instance_double('People::Finder', call: Person.all) }
-      #
-      #     before do
-      #       allow(People::Finder).to receive(:new).and_return(people_finder)
-      #       allow(Moves::ImportPeople).to receive(:new).with([prison_number])
-      #                                                  .and_return(instance_double('Moves::ImportPeople', call: nil))
-      #       get '/api/v2/people', headers: headers, params: params
-      #     end
-      #
-      #     it 'requests data from NOMIS' do
-      #       expect(response).to have_http_status(:ok)
-      #     end
+      xdescribe 'filtering results by criminal_records_office'
+      xdescribe 'filtering results by prison_number'
+
+      xdescribe 'paginating results' do
+        let!(:people) { create_list :person, 21 }
+
+        let(:meta_pagination) do
+          {
+            per_page: 20,
+            total_pages: 2,
+            total_objects: 21,
+            links: {
+              first: '/api/v2/people?page=1',
+              last: '/api/v2/people?page=2',
+              next: '/api/v2/people?page=2',
+            },
+          }
+        end
+
+        it 'paginates 20 results per page' do
+          expect(response_json['data'].size).to eq 20
+        end
+
+        it 'returns 1 result on the second page' do
+          get '/api/v2/people?page=2', headers: headers
+
+          expect(response_json['data'].size).to eq 1
+        end
+
+        it 'allows setting a different page size' do
+          get '/api/v1/people?per_page=15', headers: headers
+
+          expect(response_json['data'].size).to eq 15
+        end
+
+        it 'provides meta data with pagination' do
+          get '/api/v2/people', headers: headers
+
+          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
+        end
+      end
+
+      xdescribe 'included relationships' do
+        let!(:people) { create_list :people, 2 }
+
+        context 'when not including the include query param' do
+          let(:params) { '' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:params) { { include: ['foo.bar', 'from_location'] } }
+
+          it 'returns the valid provided includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('locations')
+          end
+        end
+
+        context 'when including an empty include query param' do
+          let(:params) { { include: '' } }
+
+          it 'returns none of the includes' do
+            returned_types = response_json['included']
+            expect(returned_types).to be_nil
+          end
+        end
+
+        context 'when including a nil include query param' do
+          let(:params) { { include: nil } }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
+      end
+    end
+
+    xcontext 'when not authorized', :with_invalid_auth_headers do
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        get '/api/v2/people', headers: headers
+      end
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    xcontext 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

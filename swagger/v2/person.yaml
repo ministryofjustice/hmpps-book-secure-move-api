@@ -1,0 +1,64 @@
+Person:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: 88089bbd-8719-4192-b309-f9db9105d3e1
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: people
+      enum:
+      - people
+      description: The type of this object - always `people`
+    attributes:
+      type: object
+      required:
+      - first_names
+      - last_name
+      properties:
+        first_names:
+          type: string
+          example: Bob
+          description: Person's first names
+        last_name:
+          type: string
+          example: Roberts
+          description: Person's surname
+        date_of_birth:
+          type: string
+          format: date
+          example: '1965-10-24'
+          description: Person's date of birth in ISO 8601 format
+        gender_additional_information:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: Supporting information for detainees of certain genders to
+            capture any relevant transport information
+        prison_number:
+          type: string
+          example: TODO
+          description: TODO
+        criminal_records_office:
+          type: string
+          example: TODO
+          description: TODO
+        police_national_computer:
+          type: string
+          example: TODO
+          description: TODO
+    relationships:
+      type: object
+      properties:
+        gender:
+          $ref: ../v1/gender_reference.yaml#/GenderReference
+          description: Person's gender
+        ethnicity:
+          $ref: ../v1/ethnicity_reference.yaml#/EthnicityReference
+          description: Person's ethnicity
