@@ -44,10 +44,55 @@ RSpec.describe Api::V2::PeopleController do
         end
       end
 
-      xdescribe 'filtering results by criminal_records_office'
-      xdescribe 'filtering results by prison_number'
+      describe 'filtering results by criminal_records_office' do
+        let!(:person) { create(:person, criminal_records_office: 'CRO0105d') }
+        let(:filters) do
+          {
+            bar: 'bar',
+            criminal_records_office: 'CRO0105d',
+            foo: 'foo',
+          }
+        end
+        let(:params) { { filter: filters } }
 
-      xdescribe 'paginating results' do
+        before { get '/api/v2/people', params: params, headers: headers }
+
+        it 'returns the correct number of people' do
+          expect(response_json['data'].size).to eq(1)
+        end
+
+        it 'returns the person that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: person.id }])
+        end
+      end
+
+      describe 'filtering results by multiple filters' do
+        let!(:person) do
+          create(:person, criminal_records_office: 'CRO0105d', prison_number: 'D00001dZZ', police_national_computer: 'AB/00001d')
+        end
+        let(:filters) do
+          {
+            bar: 'bar',
+            criminal_records_office: 'CRO0105d',
+            police_national_computer: 'AB/00001d',
+            prison_number: 'D00001dZZ',
+            foo: 'foo',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before { get '/api/v2/people', params: params, headers: headers }
+
+        it 'returns the correct number of people' do
+          expect(response_json['data'].size).to eq(1)
+        end
+
+        it 'returns the person that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: person.id }])
+        end
+      end
+
+      describe 'paginating results' do
         let!(:people) { create_list :person, 21 }
 
         let(:meta_pagination) do
@@ -64,6 +109,8 @@ RSpec.describe Api::V2::PeopleController do
         end
 
         it 'paginates 20 results per page' do
+          get '/api/v2/people?page=1', headers: headers
+
           expect(response_json['data'].size).to eq 20
         end
 
@@ -74,7 +121,7 @@ RSpec.describe Api::V2::PeopleController do
         end
 
         it 'allows setting a different page size' do
-          get '/api/v1/people?per_page=15', headers: headers
+          get '/api/v2/people?per_page=15', headers: headers
 
           expect(response_json['data'].size).to eq 15
         end
