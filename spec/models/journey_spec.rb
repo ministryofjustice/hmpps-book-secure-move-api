@@ -31,7 +31,7 @@ RSpec.describe Journey, type: :model do
 
   shared_examples 'model is synchronised with state_machine for events and initialization' do
     context 'when nil state' do
-      it_behaves_like 'model is synchronised with state_machine', :in_progress
+      it_behaves_like 'model is synchronised with state_machine', :proposed
     end
 
     context 'when specified state' do
@@ -47,9 +47,9 @@ RSpec.describe Journey, type: :model do
     end
 
     context 'when the state changes with an event' do
-      before { journey.cancel }
+      before { journey.start }
 
-      it_behaves_like 'model is synchronised with state_machine', :cancelled
+      it_behaves_like 'model is synchronised with state_machine', :in_progress
     end
 
     context 'when the model state is manually updated outside of the state_machine' do

@@ -1,0 +1,44 @@
+Profile:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: 88089bbd-8719-4192-b309-f9db9105d3e1
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: profiles
+      enum:
+        - profiles
+      description: The type of this object - always `profiles`
+    attributes:
+      type: object
+      required:
+        - assessment_answers
+      properties:
+        assessment_answers:
+          type: array
+          items:
+            $ref: assessment_answer.yaml#/AssessmentAnswer
+          description:
+            Collection of court information, risk and alerts that escorts
+            need to be aware of for safety, security and other reasons
+        last_synced_with_nomis:
+          type: string
+          format: date
+          example: "2020-1-30"
+          description: Last time the profile was synced with Nomis
+    relationships:
+      type: object
+      properties:
+        gender:
+          $ref: gender_reference.yaml#/GenderReference
+          description: Profile's gender
+        ethnicity:
+          $ref: ethnicity_reference.yaml#/EthnicityReference
+          description: Profile's ethnicity
