@@ -22,7 +22,7 @@ RSpec.describe JourneySerializer do
   end
 
   it 'contains a `state` attribute' do
-    expect(result[:data][:attributes][:state]).to eql 'in_progress'
+    expect(result[:data][:attributes][:state]).to eql 'proposed'
   end
 
   it 'contains a `timestamp` attribute' do

@@ -32,11 +32,13 @@ GetJourney:
         state:
           type: string
           enum:
+          - proposed
+          - rejected
           - in_progress
           - cancelled
           - completed
           example: in_progress
-          description: the state of the journey (in_progress / cancelled / completed)
+          description: the state of the journey (proposed / rejected / in_progress / cancelled / completed)
         vehicle:
           type: object
           properties:
