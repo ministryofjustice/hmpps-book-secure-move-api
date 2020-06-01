@@ -35,7 +35,7 @@ gem 'oauth2'
 gem 'pager_api'
 gem 'paper_trail'
 gem 'pg', '~> 1.0.0'
-gem 'prometheus_exporter'
+gem 'prometheus_exporter', require: false
 gem 'puma', '~> 3.12.6'
 gem 'rails', '~> 5.2.3'
 gem 'sentry-raven'
