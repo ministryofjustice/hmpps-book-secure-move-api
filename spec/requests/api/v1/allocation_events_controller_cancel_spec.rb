@@ -75,24 +75,6 @@ RSpec.describe Api::V1::AllocationEventsController do
       end
     end
 
-    context 'without specifying cancellation reason comment' do
-      let(:cancel_params) do
-        {
-          data: {
-            type: 'cancel',
-            attributes: {
-              timestamp: '2020-04-23T18:25:43.511Z',
-              cancellation_reason: cancellation_reason,
-            },
-          },
-        }
-      end
-
-      it 'updates the allocation cancellation reason comment' do
-        expect(allocation.reload.cancellation_reason_comment).to eq('Allocation was cancelled')
-      end
-    end
-
     context 'with a bad request' do
       let(:cancel_params) { nil }
 
@@ -133,6 +115,10 @@ RSpec.describe Api::V1::AllocationEventsController do
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Unprocessable entity', 'detail' => 'Cancellation reason is not included in the list' }] }
+        end
+
+        it 'does not create an event' do
+          expect(Event.count).to eq(0)
         end
       end
 

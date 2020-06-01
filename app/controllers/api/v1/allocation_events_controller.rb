@@ -56,6 +56,8 @@ module Api
 
       def cancel_move_params
         cancel_params.tap do |params|
+          # NB: we should always provide the reason other for the cancelled underlying moves regardless
+          # of the reason chosen for cancelling the allocation
           params[:attributes][:cancellation_reason] = Move::CANCELLATION_REASON_OTHER
         end
       end
@@ -64,10 +66,8 @@ module Api
         {
           cancel_moves: false,
           reason: cancel_params.dig(:attributes, :cancellation_reason),
-        }.tap do |details|
-          comment = cancel_params.dig(:attributes, :cancellation_reason_comment)
-          details[:comment] = comment if comment
-        end
+          comment: cancel_params.dig(:attributes, :cancellation_reason_comment),
+        }
       end
 
       def event_params
