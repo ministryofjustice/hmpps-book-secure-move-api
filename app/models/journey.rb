@@ -26,6 +26,8 @@ class Journey < ApplicationRecord
   has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   enum states: {
+    proposed: 'proposed',
+    rejected: 'rejected',
     in_progress: 'in_progress',
     completed: 'completed',
     cancelled: 'cancelled',
@@ -41,7 +43,7 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
-  delegate :complete, :uncomplete, :cancel, :uncancel, to: :state_machine
+  delegate :start, :reject, :complete, :uncomplete, :cancel, :uncancel, to: :state_machine
 
   after_initialize :initialize_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
 
