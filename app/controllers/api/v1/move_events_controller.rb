@@ -3,7 +3,7 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      include Eventable
+      include Moves::Eventable
 
       CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
       COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze

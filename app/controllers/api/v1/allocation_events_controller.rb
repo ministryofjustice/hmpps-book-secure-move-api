@@ -3,7 +3,7 @@
 module Api
   module V1
     class AllocationEventsController < ApiController
-      include Eventable
+      include Moves::Eventable
 
       def cancel
         validate_params!(cancel_params)
