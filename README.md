@@ -153,3 +153,42 @@ CircleCI, find the build that you want to deploy and click the
 `test-build-deploy` link. This should take you to the workflow graph for
 that build where you can click the `hold_production` step to kick off
 the production deploy.
+
+
+## Running in docker-compose locally.
+
+You can run the build container locally using docker-compose.
+
+```bash
+# start the docker-compose stack in the background.
+docker-compose up -d
+
+# You can follow the logs by doing
+docker-compose logs -f
+```
+
+You can force rebuilding the container with:
+```
+docker-compose build
+```
+
+
+You should be able to see the swagger documentation pointing your browser to
+
+```
+http://localhost:3000/api-docs/index.html
+```
+
+If your database is fresh or was reset, you need to generate new application client credentials.
+You can do this by running the respecive rake task inside the compose stack.
+
+```bash
+docker exec -it hmpps-book-secure-move-api_web_1 bundle exec rake auth:create_client_application NAME=test
+```
+
+The docker-compose stack also exposes the Postgres port to the host, so you can update the reference data with:
+
+```
+$ export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hmpps-book-secure-move-api
+$ bundle exec rake reference_data:create_all
+```
