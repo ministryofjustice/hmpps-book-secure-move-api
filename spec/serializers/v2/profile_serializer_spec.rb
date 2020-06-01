@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::ProfileSerializer do
   subject(:serializer) { described_class.new(profile) }
 
-  let(:profile) { create(:profile, latest_nomis_booking_id: 2_717_111, last_synced_with_nomis: Time.now) }
+  let(:profile) { create(:profile, latest_nomis_booking_id: 2_717_111) }
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys }
 
@@ -15,10 +15,6 @@ RSpec.describe V2::ProfileSerializer do
 
   it 'contains id property' do
     expect(result[:data][:id]).to eql profile.id
-  end
-
-  it 'contains last_synced_with_nomis' do
-    expect(result[:data][:attributes][:last_synced_with_nomis]).to eql profile.last_synced_with_nomis.iso8601
   end
 
   it 'contains latest_nomis_booking_id' do

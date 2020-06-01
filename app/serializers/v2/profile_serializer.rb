@@ -6,7 +6,6 @@ module V2
       :id,
       :assessment_answers,
       :latest_nomis_booking_id,
-      :last_synced_with_nomis,
     )
   end
 end

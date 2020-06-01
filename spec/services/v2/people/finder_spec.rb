@@ -19,7 +19,7 @@ RSpec.describe V2::People::Finder do
         end
       end
 
-      context 'with multiple police_national_computeres' do
+      context 'with multiple police_national_computer values' do
         let(:filter_params) { { police_national_computer: 'AB/00006,AB/00007' } }
         let!(:person1) { create(:person, police_national_computer: 'AB/00006') }
         let!(:person2) { create(:person, police_national_computer: 'AB/00007') }
