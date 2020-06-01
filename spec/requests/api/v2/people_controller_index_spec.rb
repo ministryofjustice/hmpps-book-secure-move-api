@@ -10,7 +10,7 @@ RSpec.describe Api::V2::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
-  describe 'GET /people' do
+  describe 'GET /v2/people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2 }
     let(:params) { {} }
