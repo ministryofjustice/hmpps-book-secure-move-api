@@ -43,16 +43,16 @@ Person:
             capture any relevant transport information
         prison_number:
           type: string
-          example: TODO
-          description: TODO
+          example: D00001dZZ
+          description: The person identifier used in Nomis
         criminal_records_office:
           type: string
-          example: TODO
-          description: TODO
+          example: CRO0105d
+          description: The criminal record office identifier
         police_national_computer:
           type: string
-          example: TODO
-          description: TODO
+          example: AB/00001d
+          description: The person identifier used by the Police
     relationships:
       type: object
       properties:
