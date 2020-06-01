@@ -14,7 +14,7 @@ class PersonSerializer < ActiveModel::Serializer
   has_one :ethnicity, serializer: EthnicitySerializer, if: -> { ethnicity.present? }
   has_one :gender, serializer: GenderSerializer
 
-  INCLUDED_DETAIL = %w[ethnicity gender].freeze
+  SUPPORTED_RELATIONSHIPS = %w[ethnicity gender].freeze
 
   def first_names
     object.latest_profile&.first_names
