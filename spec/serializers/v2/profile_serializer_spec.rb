@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::ProfileSerializer do
   subject(:serializer) { described_class.new(profile) }
 
-  let(:profile) { create :profile }
+  let(:profile) { create(:profile, latest_nomis_booking_id: 2717111, last_synced_with_nomis: Time.now) }
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys }
 
@@ -17,10 +17,17 @@ RSpec.describe V2::ProfileSerializer do
     expect(result[:data][:id]).to eql profile.id
   end
 
+  it 'contains last_synced_with_nomis' do
+    expect(result[:data][:attributes][:last_synced_with_nomis]).to eql profile.last_synced_with_nomis.iso8601
+  end
+
+  it 'contains latest_nomis_booking_id' do
+    expect(result[:data][:attributes][:latest_nomis_booking_id]).to eql profile.latest_nomis_booking_id
+  end
+
   describe '#assessment_answers' do
     let(:risk_alert_type) { create :assessment_question, :risk }
     let(:health_alert_type) { create :assessment_question, :health }
-    let(:court_type) { create :assessment_question, :court }
 
     let(:risk_alert) do
       {
@@ -38,51 +45,20 @@ RSpec.describe V2::ProfileSerializer do
       }
     end
 
-    let(:court) do
-      {
-        title: court_type.title,
-        comments: 'Only speaks Spanish',
-        assessment_question_id: court_type.id,
-      }
-    end
-
-    before do
-      profile.assessment_answers = [
-        risk_alert,
-        health_alert,
-        court,
-      ]
-      profile.save!
-    end
+    let(:profile) { create(:profile, assessment_answers: [risk_alert, health_alert]) }
 
     it 'contains an `assessment_answers` nested collection' do
       expect(result[:data][:attributes][:assessment_answers].map do |alert|
         alert[:title]
-      end).to match_array [risk_alert_type.title, health_alert_type.title, court_type.title]
-    end
-  end
-
-  describe '#identifiers' do
-    let(:profile_identifiers) do
-      [
-        {
-          value: 'ABC123456',
-          identifier_type: 'police_national_computer',
-        },
-        {
-          value: 'XYZ123456',
-          identifier_type: 'prison_number',
-        },
-      ]
+      end).to match_array [risk_alert_type.title, health_alert_type.title]
     end
 
-    before do
-      profile.profile_identifiers = profile_identifiers
-      profile.save!
-    end
+    context 'with empty assessment_answers' do
+      let(:profile) { create :profile }
 
-    it 'contains two identifiers' do
-      expect(result[:data][:attributes][:profile_identifiers]).to eql profile_identifiers
+      it 'contains an `assessment_answers` nested collection' do
+        expect(result[:data][:attributes][:assessment_answers]).to be_empty
+      end
     end
   end
 end

@@ -5,7 +5,6 @@ module V2
     attributes(
       :id,
       :assessment_answers,
-      :profile_identifiers,
       :latest_nomis_booking_id,
       :last_synced_with_nomis,
     )
