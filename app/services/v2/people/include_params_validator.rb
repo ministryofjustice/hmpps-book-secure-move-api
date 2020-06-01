@@ -7,9 +7,11 @@ module V2
 
       attr_reader :relationships
 
-      validates_each :relationships, allow_blank: true do |record, attr, value|
-        unless (value - ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS).empty?
-          record.errors.add attr, "#{value} are not supported. Valid values are: #{::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS}"
+      validates_each :relationships, allow_blank: true do |record, _attr, values|
+        unsupported_values = values - ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+
+        unless unsupported_values.empty?
+          record.errors.add 'Bad request', "#{unsupported_values} is not supported. Valid values are: #{::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS}"
         end
       end
 

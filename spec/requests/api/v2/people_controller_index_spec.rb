@@ -22,9 +22,16 @@ RSpec.describe Api::V2::PeopleController do
         it_behaves_like 'an endpoint that responds with success 200'
 
         it 'returns correct attributes' do
-          expect(response_json['data'].first['attributes'])
-              .to include('first_names', 'last_name', 'date_of_birth', 'gender_additional_information',
-                          'nomis_prison_number', 'prison_number', 'criminal_records_office', 'police_national_computer')
+          expect(response_json['data'].first['attributes']).to include(
+            'first_names',
+            'last_name',
+            'date_of_birth',
+            'gender_additional_information',
+            'nomis_prison_number',
+            'prison_number',
+            'criminal_records_office',
+            'police_national_computer',
+          )
         end
 
         it 'returns the correct number of people' do
@@ -80,7 +87,26 @@ RSpec.describe Api::V2::PeopleController do
         end
       end
 
-      xdescribe 'filtering results by multiple values per filter'
+      describe 'filtering results by multiple values per filter'  do
+        let!(:person1) { create(:person, criminal_records_office: 'CRO0111d') }
+        let!(:person2) { create(:person, criminal_records_office: 'CRO0222d') }
+        let(:filters) do
+          {
+            criminal_records_office: 'CRO0111d,CRO0222d',
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        before { get '/api/v2/people', params: params, headers: headers }
+
+        it 'returns the correct number of people' do
+          expect(response_json['data'].size).to eq(2)
+        end
+
+        it 'returns the person that matches the filter' do
+          expect(response_json).to include_json(data: [{ id: person1.id }, { id: person2.id }])
+        end
+      end
 
       describe 'paginating results' do
         let!(:people) { create_list :person, 21 }
@@ -144,7 +170,7 @@ RSpec.describe Api::V2::PeopleController do
           end
         end
 
-        context 'when including the ethnicity query param' do
+        context 'when including the multiple query param' do
           let(:params) { { include: 'ethnicity,gender,profiles' } }
 
           it 'returns the relevant ethnicity' do
@@ -153,22 +179,33 @@ RSpec.describe Api::V2::PeopleController do
             expect(returned_types).to contain_exactly('ethnicities', 'genders', 'profiles')
           end
         end
+
+        context 'when including a non existing relationship in a query param' do
+          let(:params) { { include: 'gender,bar' } }
+
+          it 'responds with error 400' do
+            response_error = response_json['errors'].first
+
+            expect(response_error['title']).to eq('Bad request')
+            expect(response_error['detail']).to include('["bar"] is not supported.')
+          end
+        end
       end
     end
 
-    xcontext 'when not authorized', :with_invalid_auth_headers do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before do
-        get '/api/v2/people', headers: headers
-      end
+      before { get '/api/v2/people', headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
-    xcontext 'with an invalid CONTENT_TYPE header' do
+    context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
+
+      before { get '/api/v2/people', headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

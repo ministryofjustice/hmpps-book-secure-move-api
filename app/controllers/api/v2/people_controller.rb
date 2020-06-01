@@ -3,7 +3,7 @@
 module Api
   module V2
     class PeopleController < ApiController
-      before_action :validate_include_params
+      before_action :validate_include_params, only: :index
 
       def index
         people = ::V2::People::Finder.new(filter_params).call
@@ -24,7 +24,16 @@ module Api
       end
 
       def validate_include_params
-        ::V2::People::IncludeParamsValidator.new(included_relationships).validate!
+        ::V2::People::IncludeParamsValidator.new(included_relationships).tap do |validator|
+          if validator.invalid?
+            render(
+              status: :bad_request,
+              json: {
+                errors: validator.errors.map { |field, message| { title: field, detail: message } },
+              },
+            )
+          end
+        end
       end
     end
   end
