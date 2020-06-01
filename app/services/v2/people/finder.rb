@@ -20,11 +20,11 @@ module V2
       end
 
       def filters
-        allowed_filters.map { |filter_name, value| [filter_name, value&.split(',')] }.to_h
+        allowed_filters.map { |filter_name, value| [filter_name.to_sym, value&.split(',')] }.to_h
       end
 
       def allowed_filters
-        filter_params.select { |filter| %i[police_national_computer criminal_records_office prison_number].include?(filter) }
+        filter_params.select { |filter| %i[police_national_computer criminal_records_office prison_number].include?(filter.to_sym) }
       end
     end
   end
