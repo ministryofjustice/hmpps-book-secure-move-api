@@ -28,7 +28,7 @@ RSpec.describe Api::V1::JourneysController do
           "type": 'journeys',
           "attributes": {
             "billable": false,
-            "state": 'in_progress',
+            "state": 'proposed',
             "timestamp": '2020-05-04T09:00:00+01:00',
             "vehicle": {
               "id": '12345678ABC',
