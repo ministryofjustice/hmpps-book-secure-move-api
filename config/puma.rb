@@ -37,6 +37,7 @@ plugin :tmp_restart
 #
 if ENV['PROMETHEUS_METRICS'].in? %w[on true]
   on_worker_boot do
+    require 'prometheus_exporter'
     require 'prometheus_exporter/instrumentation'
     PrometheusExporter::Instrumentation::Process.start(type: 'web')
   end
