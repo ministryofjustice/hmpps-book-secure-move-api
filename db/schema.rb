@@ -325,7 +325,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_091307) do
     t.uuid "ethnicity_id"
     t.uuid "gender_id"
     t.datetime "last_synced_with_nomis"
-    t.datetime "latest_nomis_booking_id"
+    t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
