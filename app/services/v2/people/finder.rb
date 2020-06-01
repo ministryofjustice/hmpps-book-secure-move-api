@@ -15,16 +15,22 @@ module V2
 
     private
 
+      def split_params(name)
+        filter_params[name]&.split(',')
+      end
+
       def apply_filters(scope)
-        scope.where(filters)
+        scope = scope.includes(:profiles, :ethnicity, :gender)
+        %i[police_national_computer criminal_records_office prison_number].each do |param|
+          scope = apply_filter(param, scope)
+        end
+
+        scope
       end
 
-      def filters
-        allowed_filters.map { |filter_name, value| [filter_name.to_sym, value&.split(',')] }.to_h
-      end
-
-      def allowed_filters
-        filter_params.select { |filter| %i[police_national_computer criminal_records_office prison_number].include?(filter.to_sym) }
+      def apply_filter(param, scope)
+        scope = scope.where(param => split_params(param)) if filter_params.key?(param)
+        scope
       end
     end
   end
