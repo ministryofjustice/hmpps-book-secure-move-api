@@ -128,7 +128,7 @@ RSpec.describe V2::People::Finder do
         {
           police_national_computer: 'AB/00006',
           prison_number: 'D00007',
-          criminal_records_office: 'CR00006'
+          criminal_records_office: 'CR00006',
         }
       end
 
@@ -146,7 +146,7 @@ RSpec.describe V2::People::Finder do
         {
           police_national_computer: 'AB/00006',
           prison_number: 'D00007',
-          criminal_records_office: 'CR00006'
+          criminal_records_office: 'CR00006',
         }
       end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module V2
   module People
     class Finder
@@ -9,7 +10,7 @@ module V2
       end
 
       def call
-        scope = apply_filters(Person)
+        apply_filters(Person)
       end
 
     private

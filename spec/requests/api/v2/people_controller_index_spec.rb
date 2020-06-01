@@ -145,7 +145,7 @@ RSpec.describe Api::V2::PeopleController do
         end
 
         context 'when including the ethnicity query param' do
-          let(:params) { { include: %w[ethnicity gender profiles] } }
+          let(:params) { { include: 'ethnicity,gender,profiles' } }
 
           it 'returns the relevant ethnicity' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq

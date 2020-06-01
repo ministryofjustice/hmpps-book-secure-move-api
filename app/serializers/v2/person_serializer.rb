@@ -17,5 +17,7 @@ module V2
     has_one :ethnicity, serializer: EthnicitySerializer
     has_one :gender, serializer: GenderSerializer
     has_many :profiles, serializer: ProfileSerializer
+
+    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles].freeze
   end
 end

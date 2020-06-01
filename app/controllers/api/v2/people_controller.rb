@@ -3,9 +3,10 @@
 module Api
   module V2
     class PeopleController < ApiController
+      before_action :validate_include_params
+
       def index
-        # people = People::Finder.new(filter_params).call
-        people = Person.where(filter_params)
+        people = ::V2::People::Finder.new(filter_params).call
 
         paginate people, include: included_relationships, each_serializer: ::V2::PersonSerializer
       end
@@ -20,6 +21,10 @@ module Api
 
       def included_relationships
         IncludeParamHandler.new(params).call
+      end
+
+      def validate_include_params
+        ::V2::People::IncludeParamsValidator.new(included_relationships).validate!
       end
     end
   end
