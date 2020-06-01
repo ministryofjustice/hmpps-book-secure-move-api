@@ -8,7 +8,7 @@ RSpec.describe Api::V1::PeopleController do
 
   let(:schema) { load_yaml_schema('get_people_responses.yaml') }
 
-  describe 'GET /people' do
+  describe 'GET /v1/people' do
     let(:prison_number) { 'G5033UT' }
     let(:params) { { filter: { police_national_computer: 'AB/1234567' }, access_token: token.token } }
 
