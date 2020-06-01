@@ -216,11 +216,60 @@ namespace :fake_data do
     end
   end
 
+  desc 'create fake journeys'
+  task create_journeys: :environment do
+    puts 'create_journeys...'
+    Move
+        .left_outer_joins(:journeys).where(journeys: { move_id: nil })
+        .where(status: %w[completed booked requested])
+        .where.not(from_location: nil)
+        .find_each do |move|
+      # Creates some random journeys between A and B
+      current_location = move.from_location
+      number_of_journeys = rand(1..5)
+      journey_counter = 1
+      supplier = move.from_location.suppliers.first || Supplier.all.sample # pick a supplier based on the from location or at random
+      to_location = move.to_location || Location.order('RANDOM()').where(location_type: 'prison').first # pick a random prison if to_location was not specified
+      timestamp = move.date + rand(5..10).hours
+      vehicle = {
+        "id": rand(1..9999).to_s,
+        "registration": "#{('A'..'Z').to_a.sample(3).join}-#{rand(1..100)}",
+      }
+
+      while journey_counter < number_of_journeys
+        intermediate_location = Location.where.not(id: [move.from_location.id, current_location.id, to_location.id]).order('RANDOM()').first
+
+        move.journeys.create!(
+          client_timestamp: timestamp,
+          supplier: supplier,
+          from_location: current_location,
+          to_location: intermediate_location,
+          state: 'completed',
+          billable: [true, true, true, false].sample,
+          vehicle: vehicle,
+        )
+
+        timestamp += rand(30..90).minutes
+        current_location = intermediate_location
+        journey_counter += 1
+      end
+      move.journeys.create!(
+        client_timestamp: timestamp,
+        supplier: supplier,
+        from_location: current_location,
+        to_location: to_location,
+        state: 'completed',
+        billable: [true, true, true, false].sample,
+        vehicle: vehicle,
+      )
+    end
+  end
+
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -239,6 +288,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
       Rake::Task['fake_data:create_allocations'].invoke
+      Rake::Task['fake_data:create_journeys'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
