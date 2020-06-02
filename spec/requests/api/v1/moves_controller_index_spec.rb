@@ -167,7 +167,7 @@ RSpec.describe Api::V1::MovesController do
         end
 
         it 'includes profile in the response' do
-          get '/api/v1/moves?include=profile,person.gender', params: params, headers: headers
+          get '/api/v1/moves?include=profile,person,person.gender', params: params, headers: headers
 
           profiles = response_json['included'].filter { |e| e['type'] == 'profiles' }
 
