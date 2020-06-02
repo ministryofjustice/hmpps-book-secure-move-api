@@ -43,7 +43,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           get '/api/v1/allocations', headers: headers, params: params
 
-          expect(Allocations::Finder).to have_received(:new).with(date_from: date_from.to_s)
+          expect(Allocations::Finder).to have_received(:new).with({ date_from: date_from.to_s }, {})
         end
 
         it 'filters the results' do
@@ -82,6 +82,42 @@ RSpec.describe Api::V1::AllocationsController do
 
         it 'returns the allocation that matches the filter' do
           expect(response_json).to include_json(data: [{ id: cancelled_allocation.id }])
+        end
+      end
+
+      describe 'sorting results' do
+        let(:location) { create :location }
+        let(:allocation1) { create :allocation, moves_count: 1, from_location: location, to_location: location }
+        let(:allocation2) { create :allocation, moves_count: 2, from_location: location, to_location: location }
+        let(:allocation3) { create :allocation, moves_count: 3, from_location: location, to_location: location }
+        let!(:allocations) { [allocation1, allocation2, allocation3] }
+
+        let(:sort) do
+          {
+            bar: 'bar',
+            by: 'moves_count',
+            direction: 'desc',
+            foo: 'foo',
+          }
+        end
+
+        let(:params) { { sort: sort } }
+
+        it 'delegates the query execution to Allocations::Finder with the correct sorting', skip_before: true do
+          allocations_finder = instance_double('Allocations::Finder', call: Allocation.all)
+          allow(Allocations::Finder).to receive(:new).and_return(allocations_finder)
+
+          get '/api/v1/allocations', headers: headers, params: params
+
+          expect(Allocations::Finder).to have_received(:new).with({}, by: 'moves_count', direction: 'desc')
+        end
+
+        it 'returns the allocations in the correct order' do
+          expect(response_json).to include_json(data: [
+            { attributes: { moves_count: 3 } },
+            { attributes: { moves_count: 2 } },
+            { attributes: { moves_count: 1 } },
+          ])
         end
       end
 

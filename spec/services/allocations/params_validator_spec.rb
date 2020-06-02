@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Allocations::ParamsValidator do
-  subject(:params_validator) { described_class.new(filter_params) }
+  subject(:params_validator) { described_class.new(filter_params, sort_params) }
 
   let(:filter_params) { { date_from: date_from, date_to: date_to } }
+  let(:sort_params) { { by: 'date', direction: 'asc' } }
   let(:good_date) { '2019-05-05' }
   let(:date_from) { good_date }
   let(:date_to) { good_date }
@@ -64,6 +65,24 @@ RSpec.describe Allocations::ParamsValidator do
 
   context 'with from_locations, to_locations and locations' do
     let(:filter_params) { { from_locations: 'foo', to_locations: 'bar', locations: 'baz' } }
+
+    it { is_expected.not_to be_valid }
+  end
+
+  context 'without sort details' do
+    let(:sort_params) { {} }
+
+    it { is_expected.to be_valid }
+  end
+
+  context 'with invalid sort direction' do
+    let(:sort_params) { { direction: 'foo' } }
+
+    it { is_expected.not_to be_valid }
+  end
+
+  context 'with invalid sort by' do
+    let(:sort_params) { { by: 'foo' } }
 
     it { is_expected.not_to be_valid }
   end

@@ -71,6 +71,28 @@
           - filled
           - unfilled
           - cancelled
+    - name: sort[by]
+      description: field to sort results by
+      in: query
+      style: form
+      explode: false
+      schema:
+        type: string
+        enum:
+        - from_location
+        - to_location
+        - date
+        - moves_count
+    - name: sort[direction]
+      description: direction to sort by
+      in: query
+      style: form
+      explode: false
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     - $ref: pagination_parameters.yaml#/Page
     - $ref: pagination_parameters.yaml#/PerPage
     responses:
@@ -144,9 +166,10 @@
               $ref: post_allocations_responses.yaml#/422
 /allocations/{allocation_id}/events:
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates an allocation event'
+    deprecated: true
+    summary: '[DO NOT USE] Creates an allocation event'
     description: |
-      ## [NOT YET IMPLEMENTED]
+      ## [DO NOT USE]
 
       Creating an allocation event can change the underlying allocation's status or other attributes.
 
@@ -197,6 +220,67 @@
               attributes:
                 event_name: cancel
                 timestamp: '2020-04-21T13:20:50.52Z'
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/allocations/{allocation_id}/cancel:
+  post:
+    summary: 'Cancels an allocation and all associated moves'
+    description: |
+      Cancelling an allocation will change the allocation status to `cancelled`.
+      It will also cancel all associated moves with the allocation.
+    tags:
+    - Allocations
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: allocation_id_parameter.yaml#/AllocationId
+    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+    - $ref: content_type_parameter.yaml#/ContentType
+    - name: body
+      in: body
+      required: true
+      description: |
+        Cancellation reason must be specified. A cancellation reason comment may optionally be provided.
+      schema:
+        $ref: post_allocation_cancel.yaml#/PostAllocationCancel
+    responses:
+      '204':
+        description: no content
+        content:
       '400':
         description: bad request
         content:

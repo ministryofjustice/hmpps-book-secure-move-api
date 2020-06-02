@@ -4,9 +4,10 @@ module AllocationEvents
   class ParamsValidator
     include ActiveModel::Validations
 
+    # TODO: remove event_name when allocation `events` endpoint is no longer in use
     attr_reader :event_name, :timestamp
 
-    validates :event_name, inclusion: %w[cancel], presence: true
+    validates :event_name, inclusion: %w[cancel], allow_nil: true
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
