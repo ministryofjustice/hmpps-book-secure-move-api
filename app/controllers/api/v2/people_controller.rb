@@ -6,9 +6,9 @@ module Api
       before_action :validate_include_params, only: :index
 
       def create
-        person = Person.last
+        person = Person.create(new_person_attributes)
 
-        render json: person, status: :created
+        render json: person, status: :created, serializer: ::V2::PersonSerializer
       end
 
       def index
@@ -21,12 +21,31 @@ module Api
 
       PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
 
+      PERSON_ATTRIBUTES = %i[
+        first_names
+        last_name
+        date_of_birth
+        gender_additional_information
+      ].freeze
+      PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
+
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
       def supported_relationships
         ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def person_params
+        params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h
+      end
+
+      def new_person_attributes
+        person_params[:attributes].merge(
+          ethnicity_id: params.require(:data).dig(:relationships, :ethnicity, :data, :id),
+          gender_id: params.require(:data).dig(:relationships, :gender, :data, :id),
+        )
       end
     end
   end
