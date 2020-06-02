@@ -3,12 +3,12 @@
 module Api
   module V2
     class PeopleController < ApiController
-      before_action :validate_include_params, only: :index
+      before_action :validate_include_params, only: %i[index create]
 
       def create
         person = Person.create(new_person_attributes)
 
-        render json: person, status: :created, serializer: ::V2::PersonSerializer
+        render json: person, status: :created, include: included_relationships, serializer: ::V2::PersonSerializer
       end
 
       def index

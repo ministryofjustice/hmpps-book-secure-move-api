@@ -83,92 +83,86 @@ RSpec.describe Api::V2::PeopleController do
 
       it 'returns the correct data' do
         post '/api/v2/people', params: person_params, headers: headers, as: :json
-        # expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
-        #
+
         expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
       end
 
-      it 'returns the correct included resources' do
-        post '/api/v1/people', params: person_params, headers: headers, as: :json
+      describe 'include query param' do
+        before do
+          post "/api/v2/people#{query_params}", params: person_params, headers: headers, as: :json
+        end
 
-        expect(response_json).to include_json(included: expected_included)
+        context 'when including multiple relationships' do
+          let(:query_params) { '?include=gender,ethnicity' }
+
+          it 'includes the correct relationships' do
+            expect(response_json['included'].count).to eq(2)
+            expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
+          end
+        end
+
+        context 'when does NOT include any relationship' do
+          let(:query_params) { '' }
+
+          it 'does NOT include any relationships' do
+            expect(response_json).not_to include('included')
+          end
+        end
+
+        context 'when including a non existing relationship' do
+          let(:query_params) { '?include=gender,non-existent-relationship' }
+
+          it 'responds with error 400' do
+            response_error = response_json['errors'].first
+
+            expect(response_error['title']).to eq('Bad request')
+            expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
+          end
+        end
       end
 
       it 'creates a new person' do
         expect {
-          post '/api/v1/people', params: person_params, headers: headers, as: :json
+          post '/api/v2/people', params: person_params, headers: headers, as: :json
         }.to change(Person, :count).by(1)
       end
 
-      #   describe 'webhook and email notifications' do
-      #     before do
-      #       allow(Notifier).to receive(:prepare_notifications)
-      #       post '/api/v1/people', params: person_params, headers: headers, as: :json
-      #     end
-      #
-      #     it 'does NOT call the notifier when creating a person' do
-      #       expect(Notifier).not_to have_received(:prepare_notifications)
-      #     end
-      #   end
-      # end
-      #
-      # context 'with gender_additional_information' do
-      #   let(:gender_additional_information) { 'some additional info' }
-      #
-      #   it 'updates an existing person' do
-      #     post '/api/v1/people', params: person_params, headers: headers, as: :json
-      #     expect(Person.last.reload.latest_profile.gender_additional_information).to eq gender_additional_information
-      #   end
-      # end
-      #
-      # context 'with a bad request' do
-      #   before { post '/api/v1/people', params: {}, headers: headers, as: :json }
-      #
-      #   it_behaves_like 'an endpoint that responds with error 400'
-      # end
-      #
-      # context 'when not authorized', :with_invalid_auth_headers do
-      #   let(:detail_401) { 'Token expired or invalid' }
-      #   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      #   let(:content_type) { ApiController::CONTENT_TYPE }
-      #
-      #   before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
-      #
-      #   it_behaves_like 'an endpoint that responds with error 401'
-      # end
-      #
-      # context 'with an invalid CONTENT_TYPE header' do
-      #   let(:content_type) { 'application/xml' }
-      #
-      #   before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
-      #
-      #   it_behaves_like 'an endpoint that responds with error 415'
-      # end
-      #
-      # context 'with validation errors' do
-      #   let(:person_params) do
-      #     {
-      #       data: {
-      #         type: 'people',
-      #         attributes: { first_names: 'Bob' },
-      #       },
-      #     }
-      #   end
-      #
-      #   let(:errors_422) do
-      #     [
-      #       {
-      #         'title' => 'Unprocessable entity',
-      #         'detail' => "Last name can't be blank",
-      #         'source' => { 'pointer' => '/data/attributes/last_name' },
-      #         'code' => 'blank',
-      #       },
-      #     ]
-      #   end
-      #
-      #   before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
-      #
-      #   it_behaves_like 'an endpoint that responds with error 422'
+      describe 'webhook and email notifications' do
+        # TODO: verify if the to trigger prepare_notifications even in V2
+        # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
+        before do
+          allow(Notifier).to receive(:prepare_notifications)
+          post '/api/v2/people', params: person_params, headers: headers, as: :json
+        end
+
+        it 'does NOT call the notifier when creating a person' do
+          expect(Notifier).not_to have_received(:prepare_notifications)
+        end
+      end
+
+      context 'with a bad request' do
+        before { post '/api/v2/people', params: {}, headers: headers, as: :json }
+
+        it_behaves_like 'an endpoint that responds with error 400'
+      end
+
+      context 'when not authorized', :with_invalid_auth_headers do
+        let(:detail_401) { 'Token expired or invalid' }
+        let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+        let(:content_type) { ApiController::CONTENT_TYPE }
+
+        before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+
+        it_behaves_like 'an endpoint that responds with error 401'
+      end
+
+      context 'with an invalid CONTENT_TYPE header' do
+        let(:content_type) { 'application/xml' }
+
+        before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+
+        it_behaves_like 'an endpoint that responds with error 415'
+      end
     end
   end
 end

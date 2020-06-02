@@ -137,7 +137,7 @@ RSpec.describe Api::V2::PeopleController do
         context 'when the include query param is empty' do
           let(:params) { { include: [] } }
 
-          it 'does not include any resource' do
+          it 'does not include any relationship' do
             expect(response_json).not_to include('included')
           end
         end
@@ -145,15 +145,15 @@ RSpec.describe Api::V2::PeopleController do
         context 'when include is nil' do
           let(:params) { { include: nil } }
 
-          it 'does not include any resource' do
+          it 'does not include any relationship' do
             expect(response_json).not_to include('included')
           end
         end
 
-        context 'when including the multiple query param' do
+        context 'when including multiple relationships' do
           let(:params) { { include: 'ethnicity,gender,profiles' } }
 
-          it 'returns the relevant ethnicity' do
+          it 'includes the relevant relationships' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
 
             expect(returned_types).to contain_exactly('ethnicities', 'genders', 'profiles')
@@ -161,13 +161,13 @@ RSpec.describe Api::V2::PeopleController do
         end
 
         context 'when including a non existing relationship in a query param' do
-          let(:params) { { include: 'gender,bar' } }
+          let(:params) { { include: 'gender,non-existent-relationship' } }
 
           it 'responds with error 400' do
             response_error = response_json['errors'].first
 
             expect(response_error['title']).to eq('Bad request')
-            expect(response_error['detail']).to include('["bar"] is not supported.')
+            expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
           end
         end
       end
