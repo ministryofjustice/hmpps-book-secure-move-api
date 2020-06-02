@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::MoveEventsController do
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'POST /moves/:move_id/lockouts' do
+  describe 'POST /moves/:move_id/cancel' do
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
 
     let(:supplier) { create(:supplier) }
@@ -16,17 +16,16 @@ RSpec.describe Api::V1::MoveEventsController do
 
     let(:move) { create(:move) }
     let(:move_id) { move.id }
-    let(:lockout_location) { create(:location) }
-    let(:lockout_params) do
+    let(:new_location) { create(:location) }
+    let(:cancel_params) do
       {
         data: {
-          type: 'lockouts',
+          type: 'cancel',
           attributes: {
             timestamp: '2020-04-23T18:25:43.511Z',
-            notes: 'delayed by van breakdown',
-          },
-          relationships: {
-            from_location: { data: { type: 'locations', id: lockout_location.id } },
+            cancellation_reason: 'supplier_declined_to_move',
+            cancellation_reason_comment: 'no room on the bus',
+            notes: 'something went wrong',
           },
         },
       }
@@ -34,40 +33,35 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/lockouts", params: lockout_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/cancel", params: cancel_params, headers: headers, as: :json
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 204'
 
-      it 'does not update the move status' do
-        expect(move.reload.status).to eql('requested')
+      it 'updates the move status' do
+        expect(move.reload.status).to eql('cancelled')
+      end
+
+      it 'updates the move cancellation_reason' do
+        expect(move.reload.cancellation_reason).to eql('supplier_declined_to_move')
+      end
+
+      it 'updates the move cancellation_reason_comment' do
+        expect(move.reload.cancellation_reason_comment).to eql('no room on the bus')
       end
 
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
-          expect(Notifier).not_to have_received(:prepare_notifications)
+          expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
         end
       end
     end
 
     context 'with a bad request' do
-      let(:lockout_params) { nil }
+      let(:cancel_params) { nil }
 
       it_behaves_like 'an endpoint that responds with error 400'
-    end
-
-    context 'with a missing from_location' do
-      let(:lockout_params) { { data: { type: 'lockouts', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
-
-      it_behaves_like 'an endpoint that responds with error 400' do
-        let(:errors_400) do
-          [{
-            'title' => 'Bad request',
-            'detail' => 'param is missing or the value is empty: relationships',
-          }]
-        end
-      end
     end
 
     context 'when not authorized' do
@@ -84,22 +78,6 @@ RSpec.describe Api::V1::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
-    context 'with a non-existent from_location' do
-      let(:lockout_params) do
-        {
-          data: {
-            type: 'lockouts',
-            attributes: { timestamp: '2020-04-23T18:25:43.511Z' },
-            relationships: { from_location: { data: { type: 'locations', id: 'atlantis' } } },
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with error 404' do
-        let(:detail_404) { "Couldn't find Location with 'id'=atlantis" }
-      end
-    end
-
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
@@ -108,7 +86,7 @@ RSpec.describe Api::V1::MoveEventsController do
 
     context 'with validation errors' do
       context 'with a bad timestamp' do
-        let(:lockout_params) { { data: { type: 'lockouts', attributes: { timestamp: 'Foo-Bar' } } } }
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: 'Foo-Bar', cancellation_reason: 'rejected' } } } }
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Invalid timestamp', 'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }] }
@@ -116,10 +94,26 @@ RSpec.describe Api::V1::MoveEventsController do
       end
 
       context 'with a bad event type' do
-        let(:lockout_params) { { data: { type: 'Foo-bar', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
+        let(:cancel_params) { { data: { type: 'Foo-bar', attributes: { timestamp: '2020-04-23T18:25:43.511Z', cancellation_reason: 'rejected' } } } }
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Invalid type', 'detail' => 'Validation failed: Type is not included in the list' }] }
+        end
+      end
+
+      context 'with a bad cancellation_reason' do
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: '2020-04-23T18:25:43.511Z', cancellation_reason: 'Yo ho ho' } } } }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) { [{ 'title' => 'Invalid cancellation_reason', 'detail' => 'Validation failed: Cancellation reason is not included in the list' }] }
+        end
+      end
+
+      context 'with a missing cancellation_reason' do
+        let(:cancel_params) { { data: { type: 'cancel', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) { [{ 'title' => 'Invalid cancellation_reason', 'detail' => 'Validation failed: Cancellation reason is not included in the list' }] }
         end
       end
     end

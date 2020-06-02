@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_29_085159) do
+ActiveRecord::Schema.define(version: 2020_06_01_091307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.uuid "ethnicity_id"
     t.uuid "gender_id"
     t.datetime "last_synced_with_nomis"
+    t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
@@ -355,7 +356,6 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
-    t.datetime "last_synced_with_nomis"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
