@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+# TODO: remove file completely when allocation `events` endpoint is no longer in use
 require 'rails_helper'
 
 RSpec.describe Api::V1::AllocationEventsController do
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'POST /allocations/:allocation_id/events' do
+  describe 'POST /allocations/:id/events' do
     let(:schema) { load_yaml_schema('post_allocation_events_responses.yaml') }
 
     let(:supplier) { create(:supplier) }
