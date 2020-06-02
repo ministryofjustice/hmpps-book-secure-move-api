@@ -12,13 +12,13 @@ RSpec.describe People::Importer do
       aliases: nil,
       pnc_number: '05/886838E',
       cro_number: '610592/05U',
-      gender: gender.nomis_code,
-      ethnicity: ethnicity.title,
+      gender: 'foo',
+      ethnicity: 'bar',
       nationalities: 'British',
     }
   end
-  let(:gender) { create(:gender) }
-  let(:ethnicity) { create(:ethnicity) }
+  let!(:gender) { create(:gender, nomis_code: 'foo') }
+  let!(:ethnicity) { create(:ethnicity, title: 'bar') }
 
   describe '#call' do
     let(:now) { Time.zone.now }
@@ -86,24 +86,33 @@ RSpec.describe People::Importer do
       expect(profile.attributes).to include(expected_profile_attributes)
     end
 
+    it 'assigns the correct profile_identifiers for the `Profile`' do
+      actual_identifiers = JSON.parse(service.call.attributes.to_json).fetch('profile_identifiers')
+      expected_identifiers = [
+        { 'identifier_type' => 'police_national_computer', 'value' => '05/886838E' },
+        { 'identifier_type' => 'prison_number', 'value' => 'G8872UH' },
+        { 'identifier_type' => 'criminal_records_office', 'value' => '610592/05U' },
+      ]
+
+      expect(actual_identifiers).to match_array(expected_identifiers)
+    end
+
     context 'when called for an already saved `Person` and `Profile`' do
-      before do
-        service.call.save
+      let!(:person) { profile.person }
+
+      let(:profile) do
+        profile = service.call
+        profile.save
+        profile.reload
       end
 
       it 'returns the same persisted `Person`' do
-        person = service.call.person
-
-        expect(person).to be_a(Person)
-        expect(person).to be_persisted
+        expect(service.call.person).to eq(person)
       end
 
       # TODO: This is broken behaviour. Updates to a profile should effectively be a new profile for the person
       it 'returns the same persisted `Profile`' do
-        profile = service.call
-
-        expect(profile).to be_a(Profile)
-        expect(profile).to be_persisted
+        expect(service.call).to eq(profile)
       end
     end
   end
