@@ -222,7 +222,6 @@ namespace :fake_data do
     Move
         .left_outer_joins(:journeys).where(journeys: { move_id: nil })
         .where(status: %w[completed booked requested])
-        .where.not(from_location: nil)
         .find_each do |move|
       # Creates some random journeys between A and B
       current_location = move.from_location
