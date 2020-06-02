@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :people, only: %i[index]
+      resources :people, only: %i[index create]
     end
   end
 end
