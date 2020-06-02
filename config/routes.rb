@@ -45,5 +45,9 @@ Rails.application.routes.draw do
         resources :suppliers, only: %i[index show]
       end
     end
+
+    namespace :v2 do
+      resources :people, only: %i[index]
+    end
   end
 end
