@@ -45,20 +45,19 @@ module People
         ethnicity: ethnicity,
         profile_identifiers: profile_identifiers,
         latest_nomis_booking_id: latest_nomis_booking_id,
-        last_synced_with_nomis: last_synced_with_nomis,
       )
     end
 
     def gender
-      Gender.find_by(nomis_code: nomis_attributes[:gender])
+      @gender ||= Gender.find_by(nomis_code: nomis_attributes[:gender])
     end
 
     def ethnicity
-      Ethnicity.find_by(title: nomis_attributes[:ethnicity])
+      @ethnicity ||= Ethnicity.find_by(title: nomis_attributes[:ethnicity])
     end
 
     def first_names
-      [nomis_attributes[:first_name], nomis_attributes[:middle_names]].compact.join(' ')
+      @first_names ||= [nomis_attributes[:first_name], nomis_attributes[:middle_names]].compact.join(' ')
     end
 
     def police_national_computer

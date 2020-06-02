@@ -57,7 +57,6 @@ RSpec.describe People::Importer do
         'assessment_answers' => [],
         'gender_additional_information' => nil,
         'latest_nomis_booking_id' => 1_093_139,
-        'last_synced_with_nomis' => be_within(2.seconds).of(now),
       }
     end
 
