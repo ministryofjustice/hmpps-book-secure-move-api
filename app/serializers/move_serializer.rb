@@ -29,6 +29,7 @@ class MoveSerializer < ActiveModel::Serializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     profile
+    person
     person.ethnicity
     person.gender
     from_location
