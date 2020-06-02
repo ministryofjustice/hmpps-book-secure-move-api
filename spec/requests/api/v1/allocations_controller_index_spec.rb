@@ -122,13 +122,13 @@ RSpec.describe Api::V1::AllocationsController do
       end
 
       describe 'paginating results' do
-        let!(:allocations) { create_list :allocation, 21 }
+        let!(:allocations) { create_list :allocation, 6 }
 
         let(:meta_pagination) do
           {
-            per_page: 20,
+            per_page: 5,
             total_pages: 2,
-            total_objects: 21,
+            total_objects: 6,
             links: {
               first: '/api/v1/allocations?page=1',
               last: '/api/v1/allocations?page=2',
@@ -137,8 +137,8 @@ RSpec.describe Api::V1::AllocationsController do
           }
         end
 
-        it 'paginates 20 results per page' do
-          expect(response_json['data'].size).to eq 20
+        it 'paginates 5 results per page' do
+          expect(response_json['data'].size).to eq 5
         end
 
         it 'returns 1 result on the second page', skip_before: true do
@@ -148,9 +148,9 @@ RSpec.describe Api::V1::AllocationsController do
         end
 
         it 'allows setting a different page size', skip_before: true do
-          get '/api/v1/allocations?per_page=15', headers: headers
+          get '/api/v1/allocations?per_page=1', headers: headers
 
-          expect(response_json['data'].size).to eq 15
+          expect(response_json['data'].size).to eq 1
         end
 
         it 'provides meta data with pagination', skip_before: true do
