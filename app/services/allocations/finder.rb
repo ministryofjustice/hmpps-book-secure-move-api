@@ -4,8 +4,15 @@ module Allocations
   class Finder
     attr_reader :filter_params
 
-    def initialize(filter_params)
+    def initialize(filter_params, order_params)
       @filter_params = filter_params
+      @order_by = (order_params[:by] || 'date').to_sym
+      @order_direction = if order_params[:by]
+                           (order_params[:direction] || 'asc').to_sym
+                         else
+                           # default if no 'by' parameter is date descending
+                           :desc
+                         end
     end
 
     def call
@@ -16,7 +23,16 @@ module Allocations
   private
 
     def apply_ordering(scope)
-      scope.order(date: :desc)
+      case @order_by
+      when :from_location
+        scope.joins(:from_location).merge(Location.ordered_by_title(@order_direction))
+      when :to_location
+        scope.joins(:to_location).merge(Location.ordered_by_title(@order_direction))
+      when :moves_count, :date
+        scope.order(@order_by => @order_direction)
+      else
+        scope
+      end
     end
 
     def split_params(name)
