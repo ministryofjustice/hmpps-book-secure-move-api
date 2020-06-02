@@ -71,6 +71,28 @@
           - filled
           - unfilled
           - cancelled
+    - name: sort[by]
+      description: field to sort results by
+      in: query
+      style: form
+      explode: false
+      schema:
+        type: string
+        enum:
+        - from_location
+        - to_location
+        - date
+        - moves_count
+    - name: sort[direction]
+      description: direction to sort by
+      in: query
+      style: form
+      explode: false
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     - $ref: pagination_parameters.yaml#/Page
     - $ref: pagination_parameters.yaml#/PerPage
     responses:
