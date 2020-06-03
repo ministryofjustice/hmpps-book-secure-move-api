@@ -99,6 +99,10 @@ RSpec.describe Api::V1::MovesController do
         expect(response_json).to eq resource_to_json
       end
 
+      it 'does not provide a default value for move_agreed' do
+        expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq nil
+      end
+
       it 'sets the additional_information' do
         expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
       end
