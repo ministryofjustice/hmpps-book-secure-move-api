@@ -3,8 +3,6 @@
 module Api
   module V2
     class PeopleController < ApiController
-      before_action :validate_include_params, only: %i[index create]
-
       def create
         person = Person.create(person_attributes)
 
