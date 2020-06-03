@@ -27,7 +27,6 @@ RSpec.describe Api::V2::PeopleController do
             'last_name',
             'date_of_birth',
             'gender_additional_information',
-            'nomis_prison_number',
             'prison_number',
             'criminal_records_office',
             'police_national_computer',

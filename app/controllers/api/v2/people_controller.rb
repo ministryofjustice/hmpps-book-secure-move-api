@@ -25,7 +25,6 @@ module Api
         first_names
         last_name
         date_of_birth
-        nomis_prison_number
         prison_number
         criminal_records_office
         police_national_computer
