@@ -10,45 +10,70 @@ RSpec.describe Api::V1::Reference::LocationsController do
 
   describe 'GET /api/v1/reference/locations' do
     let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
+    let(:supplier) { create(:supplier) }
 
     let(:params) { {} }
 
     context 'when successful' do
-      let(:data) do
+      let!(:locations) do
         [
-          {
-            type: 'locations',
-            attributes: {
-              key: 'guildford_crown_court',
-              title: 'Guildford Crown Court',
-              location_type: 'court',
-              nomis_agency_id: 'GCC',
-              can_upload_documents: false,
-            },
-          },
-          {
-            type: 'locations',
-            attributes: {
-              key: 'hmp_pentonville',
-              title: 'HMP Pentonville',
-              location_type: 'prison',
-              nomis_agency_id: 'PEI',
-              can_upload_documents: true,
-            },
-          },
+          create(
+            :location,
+            key: 'guildford_crown_court',
+            title: 'Guildford Crown Court',
+            location_type: 'court',
+            nomis_agency_id: 'GCC',
+            can_upload_documents: false,
+            suppliers: [supplier],
+          ),
+          create(
+            :location,
+            key: 'hmp_pentonville',
+            title: 'HMP Pentonville',
+            location_type: 'prison',
+            nomis_agency_id: 'PEI',
+            can_upload_documents: true,
+            suppliers: [supplier],
+          ),
         ]
+      end
+      let(:expected_document) do
+        {
+          data: [
+            {
+              type: 'locations',
+              attributes: {
+                key: 'guildford_crown_court',
+                title: 'Guildford Crown Court',
+                location_type: 'court',
+                nomis_agency_id: 'GCC',
+                can_upload_documents: false,
+              },
+            },
+            {
+              type: 'locations',
+              attributes: {
+                key: 'hmp_pentonville',
+                title: 'HMP Pentonville',
+                location_type: 'prison',
+                nomis_agency_id: 'PEI',
+                can_upload_documents: true,
+              },
+            },
+          ],
+          included: [
+          ]
+        }
       end
 
       before do
-        data.each { |location| create(:location, location[:attributes]) }
-
         get '/api/v1/reference/locations', params: params, headers: headers
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(expected_document)
       end
     end
 

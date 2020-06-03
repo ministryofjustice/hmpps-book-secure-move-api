@@ -10,15 +10,15 @@ Location:
       type: string
       example: locations
       enum:
-      - locations
+        - locations
       description: The type of this object - always `locations`
     attributes:
       type: object
       required:
-      - key
-      - title
-      - location_type
-      - can_upload_documents
+        - key
+        - title
+        - location_type
+        - can_upload_documents
       properties:
         key:
           type: string
@@ -31,11 +31,12 @@ Location:
         location_type:
           type: string
           enum:
-          - court
-          - police
-          - prison
+            - court
+            - police
+            - prison
           example: court
-          description: Location type indicates whether this a prison, police station,
+          description:
+            Location type indicates whether this a prison, police station,
             court etc.
         nomis_agency_id:
           type: string
@@ -44,8 +45,9 @@ Location:
         disabled_at:
           type: String
           format: date-time
-          example: '2017-07-21T17:32:28Z'
-          description: The date-time at which a value was disabled, in ISO-8601 format,
+          example: "2017-07-21T17:32:28Z"
+          description:
+            The date-time at which a value was disabled, in ISO-8601 format,
             or null if it is enabled
         can_upload_documents:
           type: Boolean
