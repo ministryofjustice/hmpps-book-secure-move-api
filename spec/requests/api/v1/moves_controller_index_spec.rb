@@ -154,7 +154,6 @@ RSpec.describe Api::V1::MovesController do
           let(:query_params) { '?include=profile,person.ethnicity' }
 
           it 'includes the requested includes in the response' do
-            binding.pry
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
             expect(returned_types).to contain_exactly('profiles')
           end
