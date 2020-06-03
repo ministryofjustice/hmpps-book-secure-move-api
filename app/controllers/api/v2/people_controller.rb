@@ -25,6 +25,10 @@ module Api
         first_names
         last_name
         date_of_birth
+        nomis_prison_number
+        prison_number
+        criminal_records_office
+        police_national_computer
         gender_additional_information
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze

@@ -24,6 +24,10 @@ RSpec.describe Api::V2::PeopleController do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
+            nomis_prison_number: 'G3239GV',
+            prison_number: 'G3239GV', # TODO: should we remove this?
+            criminal_records_office: 'CRO0111d',
+            police_national_computer: 'AB/1234567',
             gender_additional_information: 'info about Bob',
           },
           relationships: {
@@ -52,6 +56,10 @@ RSpec.describe Api::V2::PeopleController do
             first_names: 'Bob',
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
+            nomis_prison_number: 'G3239GV',
+            prison_number: 'G3239GV', # TODO: should we remove this?
+            criminal_records_office: 'CRO0111d',
+            police_national_computer: 'AB/1234567',
             gender_additional_information: 'info about Bob',
           },
           relationships: {

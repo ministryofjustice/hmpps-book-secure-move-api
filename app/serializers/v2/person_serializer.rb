@@ -9,7 +9,7 @@ module V2
       :date_of_birth,
       :gender_additional_information,
       :nomis_prison_number,
-      :prison_number,
+      :prison_number, # TODO: should we remove this?
       :criminal_records_office,
       :police_national_computer,
     )
