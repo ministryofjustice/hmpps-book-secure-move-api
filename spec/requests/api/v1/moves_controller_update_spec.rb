@@ -247,7 +247,7 @@ RSpec.describe Api::V1::MovesController do
             expect { do_patch }.not_to change { move.reload.from_location }
           end
 
-          it 'returns the updated documents in the response body' do
+          it 'returns the updated person in the response body' do
             expect(
               response_json.dig('data', 'relationships', 'person', 'data', 'id'),
             ).to eq(after_person.id)
@@ -284,6 +284,95 @@ RSpec.describe Api::V1::MovesController do
             it 'does nothing to person on move' do
               expect(move.reload.profile.person).to eq(before_person)
             end
+          end
+        end
+
+        context 'when changing a moves profile' do
+          let(:after_profile) { create(:profile) }
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+              },
+              relationships: { profile: { data: { id: after_profile.id, type: 'profiles' } } },
+            }
+          end
+
+          it 'updates the moves profile' do
+            expect(move.reload.profile).to eq(after_profile)
+          end
+
+          it 'does not affect other relationships', :skip_before do
+            expect { do_patch }.not_to change { move.reload.from_location }
+          end
+
+          it 'returns the updated profile in the response body' do
+            expect(
+              response_json.dig('data', 'relationships', 'profile', 'data', 'id'),
+            ).to eq(after_profile.id)
+          end
+
+          context 'when profile is nil' do
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { profile: { data: nil } },
+              }
+            end
+
+            it 'unlinks profile from the move' do
+              expect(move.reload.profile).to be_nil
+            end
+          end
+
+          context 'when there is no relationship defined' do
+            let(:before_profile) { create(:profile) }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: before_profile }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+              }
+            end
+
+            it 'does nothing to profile on move' do
+              expect(move.reload.profile).to eq(before_profile)
+            end
+          end
+        end
+
+        # TODO: Remove when people/profiles migration is completed
+        context 'when changing a moves profile and person' do
+          let(:person) { create(:person) }
+          let(:profile) { create(:profile) }
+
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+              },
+              relationships: {
+                profile: { data: { id: profile.id, type: 'profiles' } },
+                person: { data: { id: person.id, type: 'people' } },
+              },
+            }
+          end
+
+          it 'updates the moves profile as the default' do
+            expect(move.reload.profile).to eq(profile)
+          end
+
+          it 'returns the profile person in the response' do
+            expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+            expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
           end
         end
 
@@ -489,6 +578,42 @@ RSpec.describe Api::V1::MovesController do
                   status: 'requested',
                 },
                 relationships: { person: { data: nil } },
+              }
+            end
+
+            it 'updates the allocation status to unfilled' do
+              expect(move.reload.allocation).to be_unfilled
+            end
+          end
+
+          context 'when linking a profile' do
+            let!(:move) { create :move, :with_allocation, profile: nil }
+            let(:profile) { create(:profile) }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { profile: { data: { id: profile.id, type: 'profiles' } } },
+              }
+            end
+
+            it 'updates the allocation status to filled' do
+              expect(move.reload.allocation).to be_filled
+            end
+          end
+
+          context 'when unlinking a profile' do
+            let(:profile) { create(:profile) }
+            let!(:move) { create :move, :with_allocation, profile: profile }
+            let(:move_params) do
+              {
+                type: 'moves',
+                attributes: {
+                  status: 'requested',
+                },
+                relationships: { profile: { data: nil } },
               }
             end
 
