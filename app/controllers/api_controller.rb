@@ -5,6 +5,7 @@ class ApiController < ApplicationController
   before_action :restrict_request_content_type
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
+  before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
 
@@ -15,6 +16,7 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
+  rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
 
   def current_user
     doorkeeper_token&.application
@@ -167,5 +169,33 @@ private
       }] },
       status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
     )
+  end
+
+  def render_include_validation_error(exception)
+    render(
+      json: {
+        errors: exception.errors.map do |field, message|
+          { title: field, detail: message }
+        end,
+      },
+      # NB: The json:api specification requires this is a 400
+      status: :bad_request,
+    )
+  end
+
+  def validate_include_params
+    include_params_validator.fully_validate!
+  end
+
+  def included_relationships
+    IncludeParamHandler.new(params).call
+  end
+
+  def include_params_validator
+    @include_params_validator ||= IncludeParamsValidator.new(included_relationships, supported_relationships)
+  end
+
+  def supported_relationships
+    []
   end
 end

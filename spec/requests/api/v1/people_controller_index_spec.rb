@@ -80,11 +80,31 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       context 'when including the include query param' do
-        let(:query_params) { '?include=foo.bar,gender' }
+        let(:query_params) { '?include=gender' }
 
         it 'returns the valid provided includes' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
           expect(returned_types).to contain_exactly('genders')
+        end
+      end
+
+      context 'when including an invalid include query param' do
+        let(:query_params) { '?include=foo.bar,gender' }
+
+        let(:expected_error) do
+          {
+            'errors' => [
+              {
+                'title' => 'Bad request',
+                'detail' => '["foo.bar"] is not supported. Valid values are: ["ethnicity", "gender"]',
+              },
+            ],
+          }
+        end
+
+        it 'returns a validation error' do
+          expect(response).to have_http_status(:bad_request)
+          expect(response_json).to eq(expected_error)
         end
       end
 

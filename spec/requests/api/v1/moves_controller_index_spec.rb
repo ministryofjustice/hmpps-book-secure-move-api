@@ -71,12 +71,8 @@ RSpec.describe Api::V1::MovesController do
           }
         end
         let(:params) { { filter: filters } }
-
-        # rubocop:disable RSpec/ExampleLength
-        it 'returns the correct attributes values for moves' do
-          get_moves
-
-          expect(response_json).to include_json(
+        let(:expected_move) do
+          {
             data: [
               {
                 id: move.id,
@@ -86,9 +82,14 @@ RSpec.describe Api::V1::MovesController do
                 },
               },
             ],
-          )
+          }
         end
-        # rubocop:enable RSpec/ExampleLength
+
+        it 'returns the correct attributes values for moves' do
+          get_moves
+
+          expect(response_json).to include_json(expected_move)
+        end
       end
 
       describe 'paginating results' do
@@ -133,41 +134,48 @@ RSpec.describe Api::V1::MovesController do
       end
 
       describe 'included relationships' do
-        let!(:moves) { [create(:move)] }
+        let!(:moves) { create_list(:move, 1) }
         let!(:court_hearing) { create(:court_hearing, move: moves.first) }
 
-        it 'does not return serialized court_hearings includes' do
-          get_moves
+        before do
+          get "/api/v1/moves#{query_params}", params: params, headers: headers
+        end
 
-          has_court_hearings = response_json['included'].any? do |entity|
-            entity['type'] == 'court_hearings'
+        context 'when not including the include query param' do
+          let(:query_params) { '' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('ethnicities', 'genders', 'locations', 'people', 'profiles')
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:query_params) { '?include=profile' }
+
+          it 'includes the requested includes in the response' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('profiles')
+          end
+        end
+
+        context 'when including an invalid include query param' do
+          let(:query_params) { '?include=foo.bar,profile' }
+
+          let(:expected_error) do
+            {
+              'errors' => [
+                {
+                  'detail' => match(/foo.bar/),
+                  'title' => 'Bad request',
+                },
+              ],
+            }
           end
 
-          expect(has_court_hearings).to eq(false)
-        end
-
-        it 'includes profile in the response' do
-          get '/api/v1/moves?include=profile', params: params, headers: headers
-
-          profiles = response_json['included'].filter { |e| e['type'] == 'profiles' }
-
-          expect(profiles.count).to eq 1
-        end
-
-        describe 'include query param' do
-          # To be compliant with Json:Api spec, we must support the '?include=' param:
-          # https://jsonapi.org/format/#fetching-includes
-          context 'when include param contains an invalid resource' do
-            let(:resource) { 'invalid_resource' }
-
-            it 'returns error 400' do
-              get "/api/v1/moves?include=#{resource}", params: params, headers: headers
-
-              response_error = response_json['errors'].first
-
-              expect(response_error['title']).to eq('Bad request')
-              expect(response_error['detail']).to include("'#{resource}' is not supported.")
-            end
+          it 'returns a validation error' do
+            expect(response).to have_http_status(:bad_request)
+            expect(response_json).to include(expected_error)
           end
         end
       end
