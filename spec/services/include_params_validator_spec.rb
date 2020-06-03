@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe IncludeParamsValidator do
   subject(:params_validator) { described_class.new(relationships, supported_relationships) }
 
-  let(:supported_relationships) { %w[ethnicity gender bar] }
+  let(:supported_relationships) { %w[ethnicity gender bar person.profiles.flibble] }
 
   describe '#valid?' do
     context 'with supported relationships' do
@@ -15,14 +15,12 @@ RSpec.describe IncludeParamsValidator do
     end
 
     context 'with explicit unnested relationships' do
-      let(:supported_relationships) { %w[ethnicity gender person.profiles.flibble] }
       let(:relationships) { %w[person person.profiles] }
 
       it { is_expected.to be_valid }
     end
 
     context 'with implicit unnested relationships' do
-      let(:supported_relationships) { %w[ethnicity gender person.profiles.flibble] }
       let(:relationships) { %w[person.profiles.flibble] }
 
       it { is_expected.to be_valid }
