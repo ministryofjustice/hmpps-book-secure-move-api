@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Types::JSONB, type: :model do
+RSpec.describe Types::Jsonb, type: :model do
   subject(:jsonb) { described_class.new(concrete_class) }
 
   let(:concrete_class) { Gender }
