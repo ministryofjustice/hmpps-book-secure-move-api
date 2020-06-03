@@ -134,7 +134,7 @@ RSpec.describe Api::V1::MovesController do
       end
 
       describe 'included relationships' do
-        let!(:moves) { create_list(:move, 1, profile: create(:profile, person: create(:person, ethnicity: create(:ethnicity)))) }
+        let!(:moves) { create_list(:move, 1) }
         let!(:court_hearing) { create(:court_hearing, move: moves.first) }
 
         before do
@@ -151,7 +151,7 @@ RSpec.describe Api::V1::MovesController do
         end
 
         context 'when including the include query param' do
-          let(:query_params) { '?include=profile,person.ethnicity' }
+          let(:query_params) { '?include=profile' }
 
           it 'includes the requested includes in the response' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
