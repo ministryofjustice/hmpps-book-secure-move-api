@@ -109,13 +109,13 @@ RSpec.describe Api::V2::PeopleController do
       end
 
       describe 'paginating results' do
-        let!(:people) { create_list :person, 21 }
+        let!(:people) { create_list :person, 6 }
 
         let(:meta_pagination) do
           {
-            per_page: 20,
+            per_page: 5,
             total_pages: 2,
-            total_objects: 21,
+            total_objects: 6,
             links: {
               first: '/api/v2/people?page=1',
               last: '/api/v2/people?page=2',
@@ -124,29 +124,9 @@ RSpec.describe Api::V2::PeopleController do
           }
         end
 
-        it 'paginates 20 results per page' do
-          get '/api/v2/people?page=1', headers: headers
+        before { get '/api/v2/people', params: params, headers: headers }
 
-          expect(response_json['data'].size).to eq 20
-        end
-
-        it 'returns 1 result on the second page' do
-          get '/api/v2/people?page=2', headers: headers
-
-          expect(response_json['data'].size).to eq 1
-        end
-
-        it 'allows setting a different page size' do
-          get '/api/v2/people?per_page=15', headers: headers
-
-          expect(response_json['data'].size).to eq 15
-        end
-
-        it 'provides meta data with pagination' do
-          get '/api/v2/people', headers: headers
-
-          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
-        end
+        it_behaves_like 'an endpoint that paginates resources'
       end
 
       describe 'included relationships' do
