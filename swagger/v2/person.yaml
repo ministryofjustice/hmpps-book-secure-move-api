@@ -57,8 +57,8 @@ Person:
       type: object
       properties:
         gender:
-          $ref: gender_reference.yaml#/GenderReference
+          $ref: '../v1/gender_reference.yaml#/GenderReference'
           description: Person's gender
         ethnicity:
-          $ref: ethnicity_reference.yaml#/EthnicityReference
+          $ref: '../v1/ethnicity_reference.yaml#/EthnicityReference'
           description: Person's ethnicity

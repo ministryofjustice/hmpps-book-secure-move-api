@@ -11,17 +11,17 @@
       type: array
       items:
         anyOf:
-        - $ref: gender.yaml#/Gender
-        - $ref: ethnicity.yaml#/Ethnicity
-        - $ref: profile.yaml#/Profile
-        - {}
+          - $ref: '../v1/gender.yaml#/Gender'
+          - $ref: '../v1/ethnicity.yaml#/Ethnicity'
+          - $ref: profile.yaml#/Profile
+          - {}
     links:
-      $ref: pagination_links.yaml#/PaginationLinks
+      $ref: '../v1/pagination_links.yaml#/PaginationLinks'
     meta:
       type: object
       properties:
         pagination:
-          $ref:  pagination.yaml#/Pagination
+          $ref: '../v1/pagination.yaml#/Pagination'
 '415':
   type: object
   required:
@@ -30,7 +30,7 @@
     errors:
       type: array
       items:
-        $ref:  errors.yaml#/UnsupportedMediaType
+        $ref: '../v1/errors.yaml#/UnsupportedMediaType'
 '400':
   type: object
   required:
@@ -39,7 +39,7 @@
     errors:
       type: array
       items:
-        $ref:  errors.yaml#/BadRequest
+        $ref: '../v1/errors.yaml#/BadRequest'
 '401':
   type: object
   required:
@@ -48,4 +48,4 @@
     errors:
       type: array
       items:
-        $ref:  errors.yaml#/NotAuthorisedError
+        $ref: '../v1/errors.yaml#/NotAuthorisedError'
