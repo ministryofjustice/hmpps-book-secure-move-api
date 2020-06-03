@@ -96,13 +96,13 @@ RSpec.describe Api::V1::Reference::LocationsController do
     end
 
     describe 'pagination' do
-      let!(:prisons) { create_list :location, 11 }
-      let!(:courts) { create_list :location, 10, :court }
+      let!(:prisons) { create_list :location, 4 }
+      let!(:courts) { create_list :location, 2, :court }
       let(:meta_pagination) do
         {
-          per_page: 20,
+          per_page: 5,
           total_pages: 2,
-          total_objects: 21,
+          total_objects: 6,
           links: {
             first: '/api/v1/reference/locations?page=1',
             last: '/api/v1/reference/locations?page=2',
@@ -111,37 +111,9 @@ RSpec.describe Api::V1::Reference::LocationsController do
         }
       end
 
-      context 'with no pagination parameters' do
-        before { get '/api/v1/reference/locations', headers: headers }
+      before { get '/api/v1/reference/locations', params: params, headers: headers }
 
-        it 'paginates 20 results per page' do
-          expect(response_json['data'].size).to eq 20
-        end
-
-        it 'provides meta data with pagination' do
-          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
-        end
-      end
-
-      context 'with page parameter' do
-        let(:params) { { page: 2 } }
-
-        before { get '/api/v1/reference/locations', params: params, headers: headers }
-
-        it 'returns 1 result on the second page' do
-          expect(response_json['data'].size).to eq 1
-        end
-      end
-
-      context 'with per_page parameter' do
-        let(:params) { { per_page: 15 } }
-
-        before { get '/api/v1/reference/locations', params: params, headers: headers }
-
-        it 'allows setting a different page size' do
-          expect(response_json['data'].size).to eq 15
-        end
-      end
+      it_behaves_like 'an endpoint that paginates resources'
     end
 
     describe 'filters' do

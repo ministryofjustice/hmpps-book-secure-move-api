@@ -6,9 +6,9 @@ module Api
       after_action :send_move_notifications, only: :create
 
       def index
-        allocations_params = Allocations::ParamsValidator.new(filter_params)
+        allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
         if allocations_params.valid?
-          allocations = Allocations::Finder.new(filter_params).call
+          allocations = Allocations::Finder.new(filter_params, sort_params).call
           paginate allocations, include: included_relationships
         else
           render_allocation({ error: allocations_params.errors }, :bad_request)
@@ -30,6 +30,7 @@ module Api
     private
 
       PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
+      PERMITTED_SORT_PARAMS = %i[by direction].freeze
 
       PERMITTED_ALLOCATION_PARAMS = [
         :type,
@@ -39,8 +40,12 @@ module Api
 
       PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
+      def sort_params
+        @sort_params ||= params.fetch(:sort, {}).permit(PERMITTED_SORT_PARAMS).to_h
+      end
+
       def filter_params
-        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+        @filter_params ||= params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
       def allocation_params
@@ -74,6 +79,10 @@ module Api
 
       def included_relationships
         IncludeParamHandler.new(params).call || AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        AllocationSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

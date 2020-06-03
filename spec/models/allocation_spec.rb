@@ -132,13 +132,25 @@ RSpec.describe Allocation do
       expect(allocation.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_CANCELLED)
     end
 
-    it 'sets the cancellation reason to other' do
+    it 'sets the provided cancellation reason' do
+      allocation.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+
+      expect(allocation.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+    end
+
+    it 'sets a default cancellation reason if reason not provided' do
       allocation.cancel
 
       expect(allocation.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
     end
 
-    it 'sets the cancellation reason comment to cancelled by allocation' do
+    it 'sets the cancellation reason comment if provided' do
+      allocation.cancel(comment: 'Too sunny')
+
+      expect(allocation.cancellation_reason_comment).to eq('Too sunny')
+    end
+
+    it 'sets a default cancellation reason comment if not provided' do
       allocation.cancel
 
       expect(allocation.cancellation_reason_comment).to eq('Allocation was cancelled')
@@ -150,7 +162,13 @@ RSpec.describe Allocation do
       expect(allocation.moves.first.cancellation_reason).to eq(Move::CANCELLATION_REASON_OTHER)
     end
 
-    it 'sets the cancellation reason comment on moves to cancelled by allocation' do
+    it 'sets the cancellation reason comment on moves if comment provided' do
+      allocation.cancel(comment: 'Too sunny')
+
+      expect(allocation.moves.first.cancellation_reason_comment).to eq('Too sunny')
+    end
+
+    it 'sets a default cancellation reason comment on moves if comment not provided' do
       allocation.cancel
 
       expect(allocation.moves.first.cancellation_reason_comment).to eq('Allocation was cancelled')
