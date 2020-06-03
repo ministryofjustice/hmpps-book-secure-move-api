@@ -87,16 +87,22 @@ module Api
       end
 
       def new_move_attributes
-        person = Person.find(new_move_params.dig(:relationships, :person, :data, :id))
-        # moves are always created against the latest_profile for the person
         new_move_params[:attributes].merge(
-          profile: person.latest_profile,
+          profile: profile_or_person_latest_profile,
           from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
           court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
+      end
+
+      def profile_or_person_latest_profile
+        person_id = new_move_params.dig(:relationships, :person, :data, :id)
+        # moves are always created against the latest_profile for the person if profile not provided
+        return Person.find(person_id).latest_profile if person_id
+
+        Profile.find(new_move_params.dig(:relationships, :profile, :data, :id))
       end
 
       def update_move_params
