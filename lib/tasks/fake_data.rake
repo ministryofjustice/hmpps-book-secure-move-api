@@ -216,7 +216,7 @@ namespace :fake_data do
     end
   end
 
-  desc 'create fake journeys'
+  desc 'create fake journeys with associated events'
   task create_journeys: :environment do
     puts 'create_journeys...'
     Move
@@ -235,16 +235,16 @@ namespace :fake_data do
         "registration": "#{('A'..'Z').to_a.sample(3).join}-#{rand(1..100)}",
       }
 
-      while journey_counter < number_of_journeys
+      if number_of_journeys > 1
         intermediate_location = Location.where.not(id: [move.from_location.id, current_location.id, to_location.id]).order('RANDOM()').first
 
-        move.journeys.create!(
+        journey = move.journeys.create!(
           client_timestamp: timestamp,
           supplier: supplier,
           from_location: current_location,
           to_location: intermediate_location,
           state: 'completed',
-          billable: [true, true, true, false].sample,
+          billable: true,
           vehicle: vehicle,
         )
 
@@ -252,6 +252,232 @@ namespace :fake_data do
         current_location = intermediate_location
         journey_counter += 1
       end
+
+      while journey_counter < number_of_journeys
+        # make some intermediate journeys which might or might not be billable
+        intermediate_location = Location.where.not(id: [move.from_location.id, current_location.id, to_location.id]).order('RANDOM()').first
+
+        # randomly create some events with intermediate journeys
+
+        case rand(1..6) # add some random events to the journeys
+        when 1 # unbillable lockout at current_location, redirect journey (not move) to intermediate_location, e.g. "delayed by flat tyre"
+          notes = ['delayed by flat tyre', 'delayed by van breakdown', 'delayed by prisoner escape', 'delayed by traffic conditions', 'delayed by driver unavailable'].sample
+          # lockout event
+          journey.events.create!(
+            event_name: 'lockout',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: notes,
+                },
+                relationships: {
+                  from_location: { data: { id: current_location.id } },
+                },
+              },
+            },
+          )
+
+          # unbillable journey for redirection to intermediate_location
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: current_location,
+            to_location: intermediate_location,
+            state: 'completed',
+            billable: false,
+            vehicle: vehicle,
+          )
+
+          journey.events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: 'redirecting because of lockout',
+                },
+                relationships: {
+                  to_location: { data: { id: intermediate_location.id } },
+                },
+              },
+            },
+          )
+
+          journey_counter += 1
+
+          # unbillable journey for redirection from intermediate_location back to current_location journey the following day
+          timestamp += 1.day
+
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: intermediate_location,
+            to_location: current_location,
+            state: 'completed',
+            billable: false,
+            vehicle: vehicle,
+          )
+
+          journey.events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: 'redirecting back because of lockout previous day',
+                },
+                relationships: {
+                  to_location: { data: { id: current_location.id } },
+                },
+              },
+            },
+          )
+
+          journey_counter += 1
+          # NB do not set current location to intermediate location in this case
+
+        when 2 # unbillable redirect at current_location, redirect journey (not move) to intermediate_location, e.g. "insufficient capacity in van"
+          notes = ['insufficient capacity in van', 'insufficient fuel', 'driver unavailable', 'van breakdown'].sample
+
+          # unbillable journey for redirection to intermediate_location
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: current_location,
+            to_location: intermediate_location,
+            state: 'completed',
+            billable: false,
+            vehicle: vehicle,
+          )
+
+          journey.events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: notes,
+                },
+                relationships: {
+                  to_location: { data: { id: intermediate_location.id } },
+                },
+              },
+            },
+          )
+
+          journey_counter += 1
+
+          # unbillable journey for redirection from intermediate_location back to current_location journey the same day
+          timestamp += rand(30..90).minutes
+
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: intermediate_location,
+            to_location: current_location,
+            state: 'completed',
+            billable: false,
+            vehicle: vehicle,
+          )
+
+          journey.events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: 'redirecting back because of earlier redirection',
+                },
+                relationships: {
+                  to_location: { data: { id: current_location.id } },
+                },
+              },
+            },
+          )
+
+          journey_counter += 1
+          # NB do not set current location to intermediate location in this case
+
+        when 3 # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
+          notes = ['requested by PMU for operational reasons', 'requested by prison because no space', 'requested by police because of security concerns'].sample
+          move.move_events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: notes,
+                },
+                relationships: {
+                  to_location: { data: { id: intermediate_location.id } },
+                },
+              },
+            },
+          )
+
+          # billable journey for redirection to intermediate_location
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: current_location,
+            to_location: intermediate_location,
+            state: 'completed',
+            billable: true,
+            vehicle: vehicle,
+          )
+
+          # subsequent redirect event back to to_location to make sure events remain consistent with move record; no journey record is required
+          timestamp += rand(30..90).minutes
+          move.move_events.create!(
+            event_name: 'redirect',
+            client_timestamp: timestamp,
+            details: {
+              fake: true,
+              supplier_id: supplier.id,
+              event_params: {
+                attributes: {
+                  notes: 'redirecting back to original destination following earlier redirect',
+                },
+                relationships: {
+                  to_location: { data: { id: to_location.id } },
+                },
+              },
+            },
+          )
+
+          journey_counter += 1
+          current_location = intermediate_location
+        else
+          # 50% chance of a conventional journey
+          journey = move.journeys.create!(
+            client_timestamp: timestamp,
+            supplier: supplier,
+            from_location: current_location,
+            to_location: intermediate_location,
+            state: 'completed',
+            billable: true,
+            vehicle: vehicle,
+          )
+          journey_counter += 1
+          current_location = intermediate_location
+        end
+
+        timestamp += rand(30..90).minutes
+      end
+
       move.journeys.create!(
         client_timestamp: timestamp,
         supplier: supplier,
@@ -268,7 +494,7 @@ namespace :fake_data do
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
