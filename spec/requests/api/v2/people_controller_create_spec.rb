@@ -11,10 +11,8 @@ RSpec.describe Api::V2::PeopleController do
   describe 'POST /people' do
     let(:schema) { load_yaml_schema('post_people_responses.yaml', version: 'v2') }
 
-    let(:ethnicity) { create :ethnicity }
-    let(:gender) { create :gender }
-    let(:risk_type_1) { create :assessment_question, :risk }
-    let(:risk_type_2) { create :assessment_question, :risk }
+    let(:ethnicity_id) { create(:ethnicity).id }
+    let(:gender_id) { create(:gender).id }
 
     let(:person_params) do
       {
@@ -32,13 +30,13 @@ RSpec.describe Api::V2::PeopleController do
           relationships: {
             ethnicity: {
               data: {
-                id: ethnicity.id,
+                id: ethnicity_id,
                 type: 'ethnicities',
               },
             },
             gender: {
               data: {
-                id: gender.id,
+                id: gender_id,
                 type: 'genders',
               },
             },
@@ -47,128 +45,135 @@ RSpec.describe Api::V2::PeopleController do
       }
     end
 
-    context 'when successful' do
-      let(:expected_data) do
-        {
-          type: 'people',
-          attributes: {
-            first_names: 'Bob',
-            last_name: 'Roberts',
-            date_of_birth: Date.new(1980, 1, 1).iso8601,
-            prison_number: 'G3239GV',
-            criminal_records_office: 'CRO0111d',
-            police_national_computer: 'AB/1234567',
-            gender_additional_information: 'info about Bob',
-          },
-          relationships: {
-            gender: {
-              data: {
-                type: 'genders',
-                id: gender.id,
-              },
-            },
-            ethnicity: {
-              data: {
-                type: 'ethnicities',
-                id: ethnicity.id,
-              },
+    let(:expected_data) do
+      {
+        type: 'people',
+        attributes: {
+          first_names: 'Bob',
+          last_name: 'Roberts',
+          date_of_birth: Date.new(1980, 1, 1).iso8601,
+          prison_number: 'G3239GV',
+          criminal_records_office: 'CRO0111d',
+          police_national_computer: 'AB/1234567',
+          gender_additional_information: 'info about Bob',
+        },
+        relationships: {
+          gender: {
+            data: {
+              type: 'genders',
+              id: gender_id,
             },
           },
-        }
+          ethnicity: {
+            data: {
+              type: 'ethnicities',
+              id: ethnicity_id,
+            },
+          },
+        },
+      }
+    end
+
+    let(:expected_included) do
+      []
+    end
+
+    context 'with valid params' do
+      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with success 201'
+    end
+
+    it 'returns the correct data' do
+      post '/api/v2/people', params: person_params, headers: headers, as: :json
+
+      expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
+    end
+
+    describe 'include query param' do
+      before do
+        post "/api/v2/people#{query_params}", params: person_params, headers: headers, as: :json
       end
 
-      let(:expected_included) do
-        []
+      context 'when including multiple relationships' do
+        let(:query_params) { '?include=gender,ethnicity' }
+
+        it 'includes the correct relationships' do
+          expect(response_json['included'].count).to eq(2)
+          expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
+        end
       end
 
-      context 'with valid params' do
-        before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+      context 'when does NOT include any relationship' do
+        let(:query_params) { '' }
 
-        it_behaves_like 'an endpoint that responds with success 201'
+        it 'does NOT include any relationships' do
+          expect(response_json).not_to include('included')
+        end
       end
 
-      it 'returns the correct data' do
+      context 'when including a non existing relationship' do
+        let(:query_params) { '?include=gender,non-existent-relationship' }
+
+        it 'responds with error 400' do
+          response_error = response_json['errors'].first
+
+          expect(response_error['title']).to eq('Bad request')
+          expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
+        end
+      end
+    end
+
+    it 'creates a new person' do
+      expect {
         post '/api/v2/people', params: person_params, headers: headers, as: :json
+      }.to change(Person, :count).by(1)
+    end
 
-        expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
+    describe 'webhook and email notifications' do
+      # TODO: verify if the to trigger prepare_notifications even in V2
+      # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
+      before do
+        allow(Notifier).to receive(:prepare_notifications)
+        post '/api/v2/people', params: person_params, headers: headers, as: :json
       end
 
-      describe 'include query param' do
-        before do
-          post "/api/v2/people#{query_params}", params: person_params, headers: headers, as: :json
-        end
-
-        context 'when including multiple relationships' do
-          let(:query_params) { '?include=gender,ethnicity' }
-
-          it 'includes the correct relationships' do
-            expect(response_json['included'].count).to eq(2)
-            expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
-          end
-        end
-
-        context 'when does NOT include any relationship' do
-          let(:query_params) { '' }
-
-          it 'does NOT include any relationships' do
-            expect(response_json).not_to include('included')
-          end
-        end
-
-        context 'when including a non existing relationship' do
-          let(:query_params) { '?include=gender,non-existent-relationship' }
-
-          it 'responds with error 400' do
-            response_error = response_json['errors'].first
-
-            expect(response_error['title']).to eq('Bad request')
-            expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
-          end
-        end
+      it 'does NOT call the notifier when creating a person' do
+        expect(Notifier).not_to have_received(:prepare_notifications)
       end
+    end
 
-      it 'creates a new person' do
-        expect {
-          post '/api/v2/people', params: person_params, headers: headers, as: :json
-        }.to change(Person, :count).by(1)
-      end
+    context 'when a relationship entity is not found' do
+      let(:ethnicity_id) { 999 }
+      let(:detail_404) { "Couldn't find Ethnicity with 'id'=999" }
 
-      describe 'webhook and email notifications' do
-        # TODO: verify if the to trigger prepare_notifications even in V2
-        # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
-        before do
-          allow(Notifier).to receive(:prepare_notifications)
-          post '/api/v2/people', params: person_params, headers: headers, as: :json
-        end
+      before { post '/api/v2/people#', params: person_params, headers: headers, as: :json }
 
-        it 'does NOT call the notifier when creating a person' do
-          expect(Notifier).not_to have_received(:prepare_notifications)
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
 
-      context 'with a bad request' do
-        before { post '/api/v2/people', params: {}, headers: headers, as: :json }
+    context 'with a bad request' do
+      before { post '/api/v2/people', params: {}, headers: headers, as: :json }
 
-        it_behaves_like 'an endpoint that responds with error 400'
-      end
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
 
-      context 'when not authorized', :with_invalid_auth_headers do
-        let(:detail_401) { 'Token expired or invalid' }
-        let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-        let(:content_type) { ApiController::CONTENT_TYPE }
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
 
-        before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
 
-        it_behaves_like 'an endpoint that responds with error 401'
-      end
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
 
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
 
-        before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
 
-        it_behaves_like 'an endpoint that responds with error 415'
-      end
+      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end
