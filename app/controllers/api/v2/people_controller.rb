@@ -3,8 +3,6 @@
 module Api
   module V2
     class PeopleController < ApiController
-      before_action :validate_include_params
-
       def index
         people = ::V2::People::Finder.new(filter_params).call
 

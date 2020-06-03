@@ -5,6 +5,7 @@ class ApiController < ApplicationController
   before_action :restrict_request_content_type
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
+  before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
 

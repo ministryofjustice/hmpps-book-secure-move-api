@@ -118,22 +118,12 @@ module Api
         @updater ||= Moves::Updater.new(move, update_move_params)
       end
 
-      def validate_include_params
-        included_relationships.each do |resource|
-          unless MoveSerializer::SUPPORTED_RELATIONSHIPS.include?(resource)
-            supported_relationships = MoveSerializer::SUPPORTED_RELATIONSHIPS.join(', ')
-
-            render status: :bad_request,
-                   json: {
-                     errors: [{ title: 'Bad request',
-                                detail: "'#{resource}' is not supported. Valid values are: #{supported_relationships}" }],
-                   }
-          end
-        end
-      end
-
       def included_relationships
         IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        MoveSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end
