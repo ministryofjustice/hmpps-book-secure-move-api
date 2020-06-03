@@ -48,7 +48,7 @@ module Moves
       attributes[:documents] = Document.where(id: document_ids) unless document_attributes.nil?
 
       # TODO: to be removed once move profile migration complete
-      unless person_attributes.nil?
+      if person_attributes.present? && profile_attributes.nil?
         person = Person.find_by(id: person_attributes.dig(:data, :id))
         attributes[:profile] = person&.latest_profile
       end

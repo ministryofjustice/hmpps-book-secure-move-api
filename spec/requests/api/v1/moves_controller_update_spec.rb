@@ -347,6 +347,35 @@ RSpec.describe Api::V1::MovesController do
           end
         end
 
+        # TODO: Remove when people/profiles migration is completed
+        context 'when changing a moves profile and person' do
+          let(:person) { create(:person) }
+          let(:profile) { create(:profile) }
+
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                status: 'requested',
+              },
+              relationships: {
+                profile: { data: { id: profile.id, type: 'profiles' } },
+                person: { data: { id: person.id, type: 'people' } },
+              },
+            }
+          end
+
+          it 'updates the moves profile as the default' do
+            expect(move.reload.profile).to eq(profile)
+          end
+
+          it 'returns the profile person in the response' do
+            expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+            expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
+          end
+        end
+
         context 'when cancelling a move' do
           let(:move_params) do
             {

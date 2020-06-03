@@ -98,11 +98,11 @@ module Api
       end
 
       def profile_or_person_latest_profile
-        person_id = new_move_params.dig(:relationships, :person, :data, :id)
-        # moves are always created against the latest_profile for the person if profile not provided
-        return Person.find(person_id).latest_profile if person_id
+        profile_id = new_move_params.dig(:relationships, :profile, :data, :id)
+        return Profile.find(profile_id) if profile_id
 
-        Profile.find(new_move_params.dig(:relationships, :profile, :data, :id))
+        # moves are always created against the latest_profile for the person if profile not provided
+        Person.find(new_move_params.dig(:relationships, :person, :data, :id)).latest_profile
       end
 
       def update_move_params
