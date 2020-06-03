@@ -61,8 +61,7 @@ RSpec.describe Api::V1::Reference::LocationsController do
               },
             },
           ],
-          included: [
-          ]
+          included: [],
         }
       end
 
