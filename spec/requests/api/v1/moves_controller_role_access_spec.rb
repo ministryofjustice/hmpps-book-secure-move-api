@@ -49,7 +49,7 @@ RSpec.describe Api::V1::MovesController do
       end
 
       it 'returns the right number of moves' do
-        expect(response_json['data'].size).to be 10
+        expect(response_json['data'].size).to be 2
       end
     end
   end
