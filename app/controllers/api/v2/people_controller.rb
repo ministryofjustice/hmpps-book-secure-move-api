@@ -43,17 +43,17 @@ module Api
       end
 
       def person_attributes
+        person_params[:attributes].merge(ethnicity: ethnicity, gender: gender)
+      end
+
+      def ethnicity
         ethnicity_id = params.require(:data).dig(:relationships, :ethnicity, :data, :id)
-        gender_id = params.require(:data).dig(:relationships, :gender, :data, :id)
-
-        # Validate the existence of Ethnicity and Gender
         Ethnicity.find(ethnicity_id) if ethnicity_id
-        Gender.find(gender_id) if gender_id
+      end
 
-        person_params[:attributes].merge(
-          ethnicity_id: ethnicity_id,
-          gender_id: gender_id,
-        )
+      def gender
+        gender_id = params.require(:data).dig(:relationships, :gender, :data, :id)
+        Gender.find(gender_id) if gender_id
       end
     end
   end

@@ -166,7 +166,7 @@ RSpec.describe Api::V2::PeopleController do
             response_error = response_json['errors'].first
 
             expect(response_error['title']).to eq('Bad request')
-            expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
+            expect(response_error['detail']).too include('["non-existent-relationship"] is not supported.')
           end
         end
       end
