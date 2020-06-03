@@ -1,6 +1,8 @@
 FROM ruby:2.6.6-alpine as build-stage
 
 ENV RAILS_ENV=production
+ENV RACK_ENV=production
+
 ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
@@ -29,6 +31,7 @@ ENV APP_GIT_COMMIT ${APP_GIT_COMMIT}
 ENV APPUID 1000
 
 ENV RAILS_ENV production
+ENV RACK_ENV production
 
 ENV PUMA_PORT 3000
 EXPOSE $PUMA_PORT

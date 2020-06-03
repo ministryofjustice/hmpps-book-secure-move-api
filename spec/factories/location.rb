@@ -9,7 +9,7 @@ FactoryBot.define do
 
     trait :with_moves do
       after(:create) do |location, _|
-        create_list :move, 10, from_location: location
+        create_list :move, 2, from_location: location
       end
     end
 

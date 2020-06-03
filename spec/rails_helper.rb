@@ -89,3 +89,7 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+Kaminari.configure do |config|
+  config.default_per_page = 5
+end
