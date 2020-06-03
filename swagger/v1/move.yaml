@@ -119,6 +119,9 @@ Move:
         person:
           $ref: person_reference.yaml#/PersonReference
           description: The person being moved
+        profile:
+          $ref: profile_reference.yaml#/ProfileReference
+          description: The profile for the person being moved
         from_location:
           $ref: location_reference.yaml#/LocationReference
           description: The location that the person is being moved from

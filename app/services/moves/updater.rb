@@ -30,6 +30,10 @@ module Moves
       move_params.dig(:relationships, :person)
     end
 
+    def profile_attributes
+      move_params.dig(:relationships, :profile)
+    end
+
     def document_ids
       document_attributes.map { |doc| doc[:id] }
     end
@@ -43,10 +47,13 @@ module Moves
 
       attributes[:documents] = Document.where(id: document_ids) unless document_attributes.nil?
 
+      # TODO: to be removed once move profile migration complete
       unless person_attributes.nil?
         person = Person.find_by(id: person_attributes.dig(:data, :id))
         attributes[:profile] = person&.latest_profile
       end
+
+      attributes[:profile] = Profile.find_by(id: profile_attributes.dig(:data, :id)) if profile_attributes.present?
 
       attributes
     end
