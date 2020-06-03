@@ -3,8 +3,7 @@
 class LocationSerializer < ActiveModel::Serializer
   type 'locations'
 
-  attributes :id,
-             :key,
+  attributes :key,
              :title,
              :location_type,
              :nomis_agency_id,
