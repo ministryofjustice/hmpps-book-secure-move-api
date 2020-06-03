@@ -6,7 +6,7 @@ module Api
       before_action :validate_include_params, only: %i[index create]
 
       def create
-        person = Person.create(new_person_attributes)
+        person = Person.create(person_attributes)
 
         render json: person, status: :created, include: included_relationships, serializer: ::V2::PersonSerializer
       end
@@ -44,7 +44,7 @@ module Api
         params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h
       end
 
-      def new_person_attributes
+      def person_attributes
         person_params[:attributes].merge(
           ethnicity_id: params.require(:data).dig(:relationships, :ethnicity, :data, :id),
           gender_id: params.require(:data).dig(:relationships, :gender, :data, :id),

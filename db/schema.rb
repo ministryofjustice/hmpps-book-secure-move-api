@@ -207,10 +207,10 @@ ActiveRecord::Schema.define(version: 2020_06_01_091307) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.uuid "prison_transfer_reason_id"
-    t.text "reason_comment"
     t.boolean "move_agreed", default: false, null: false
     t.string "move_agreed_by"
+    t.uuid "prison_transfer_reason_id"
+    t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
     t.uuid "allocation_id"
@@ -416,7 +416,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_091307) do
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "people"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

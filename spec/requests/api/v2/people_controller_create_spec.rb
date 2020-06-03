@@ -23,7 +23,7 @@ RSpec.describe Api::V2::PeopleController do
           attributes: {
             first_names: 'Bob',
             last_name: 'Roberts',
-            date_of_birth: Date.civil(1980, 1, 1),
+            date_of_birth: Date.new(1980, 1, 1),
             prison_number: 'G3239GV',
             criminal_records_office: 'CRO0111d',
             police_national_computer: 'AB/1234567',
@@ -54,7 +54,7 @@ RSpec.describe Api::V2::PeopleController do
           attributes: {
             first_names: 'Bob',
             last_name: 'Roberts',
-            date_of_birth: Date.civil(1980, 1, 1).iso8601,
+            date_of_birth: Date.new(1980, 1, 1).iso8601,
             prison_number: 'G3239GV',
             criminal_records_office: 'CRO0111d',
             police_national_computer: 'AB/1234567',
