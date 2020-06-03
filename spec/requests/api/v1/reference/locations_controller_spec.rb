@@ -86,37 +86,9 @@ RSpec.describe Api::V1::Reference::LocationsController do
         }
       end
 
-      context 'with no pagination parameters' do
-        before { get '/api/v1/reference/locations', headers: headers }
+      before { get '/api/v1/reference/locations', params: params, headers: headers }
 
-        it 'paginates 5 results per page' do
-          expect(response_json['data'].size).to eq 5
-        end
-
-        it 'provides meta data with pagination' do
-          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
-        end
-      end
-
-      context 'with page parameter' do
-        let(:params) { { page: 2 } }
-
-        before { get '/api/v1/reference/locations', params: params, headers: headers }
-
-        it 'returns 1 result on the second page' do
-          expect(response_json['data'].size).to eq 1
-        end
-      end
-
-      context 'with per_page parameter' do
-        let(:params) { { per_page: 2 } }
-
-        before { get '/api/v1/reference/locations', params: params, headers: headers }
-
-        it 'allows setting a different page size' do
-          expect(response_json['data'].size).to eq 2
-        end
-      end
+      it_behaves_like 'an endpoint that paginates resources'
     end
 
     describe 'filters' do

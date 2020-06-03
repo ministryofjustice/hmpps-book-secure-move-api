@@ -24,9 +24,10 @@ RSpec.describe Api::V1::JourneysController do
     let(:page) { 1 }
     let(:per_page) { 5 }
     let(:url) { "/api/v1/moves/#{move.id}/journeys" }
+    let(:params) { {} }
 
     before do
-      get url, headers: headers, as: :json
+      get url, params: params, headers: headers
     end
 
     context 'when successful' do
@@ -47,31 +48,8 @@ RSpec.describe Api::V1::JourneysController do
       describe 'paginating results' do
         let(:url) { "/api/v1/moves/#{move.id}/journeys?page=#{page}&per_page=#{per_page}" }
         let(:intermediate_journeys_count) { 4 }
-
-        describe 'page size' do
-          subject { response_json['data'].size }
-
-          context 'when page=1' do
-            let(:page) { 1 }
-
-            it { is_expected.to be(5) }
-          end
-
-          context 'when page=2' do
-            let(:page) { 2 }
-
-            it { is_expected.to be(1) }
-          end
-
-          context 'when per_page=15' do
-            let(:per_page) { 1 }
-
-            it { is_expected.to be(1) }
-          end
-        end
-
-        it 'provides meta data with pagination' do
-          expect(response_json['meta']['pagination']).to include_json(
+        let(:meta_pagination) do
+          {
             per_page: 5,
             total_pages: 2,
             total_objects: 6,
@@ -80,8 +58,10 @@ RSpec.describe Api::V1::JourneysController do
               last: "/api/v1/moves/#{move.id}/journeys?page=2&per_page=#{per_page}",
               next: "/api/v1/moves/#{move.id}/journeys?page=2&per_page=#{per_page}",
             },
-          )
+          }
         end
+
+        it_behaves_like 'an endpoint that paginates resources'
       end
     end
 

@@ -107,29 +107,9 @@ RSpec.describe Api::V1::MovesController do
           }
         end
 
-        it 'paginates 5 results per page as default' do
-          get_moves
+        before { get_moves }
 
-          expect(response_json['data'].size).to eq 5
-        end
-
-        it 'returns 1 result on the second page'  do
-          get '/api/v1/moves?page=2', headers: headers
-
-          expect(response_json['data'].size).to eq 1
-        end
-
-        it 'allows setting a different page size' do
-          get '/api/v1/moves?per_page=1', headers: headers
-
-          expect(response_json['data'].size).to eq 1
-        end
-
-        it 'provides meta data with pagination' do
-          get_moves
-
-          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
-        end
+        it_behaves_like 'an endpoint that paginates resources'
       end
 
       describe 'validating dates before running queries' do
