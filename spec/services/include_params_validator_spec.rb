@@ -14,6 +14,13 @@ RSpec.describe IncludeParamsValidator do
       it { is_expected.to be_valid }
     end
 
+    context 'with explicit unnested relationships' do
+      let(:supported_relationships) { %w[ethnicity gender person.profiles.flibble] }
+      let(:relationships) { %w[person person.profiles] }
+
+      it { is_expected.to be_valid }
+    end
+
     context 'with unsupported relationships' do
       let(:relationships) { %w[foo] }
 
