@@ -7,9 +7,9 @@ RSpec.describe Api::V1::Reference::LocationsController do
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
 
   describe 'GET /api/v1/reference/locations' do
-    let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
     let(:supplier) { create(:supplier) }
 
     let(:params) { {} }
@@ -65,14 +65,84 @@ RSpec.describe Api::V1::Reference::LocationsController do
         }
       end
 
-      before do
-        get '/api/v1/reference/locations', params: params, headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with success 200'
-
       it 'returns the correct data' do
         expect(response_json).to include_json(expected_document)
+      end
+
+      context 'when a valid include query is passed' do
+        it 'returns the correct data' do
+          expect(response_json).to include_json(expected_document)
+        end
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before do
+          get '/api/v1/reference/locations', params: params, headers: headers
+        end
+      end
+
+      describe 'included relationships', :skip_before do
+        let!(:allocations) { create_list :allocation, 2, :with_moves }
+
+        before do
+          get "/api/v1/allocations#{query_params}", headers: headers
+        end
+
+        context 'when not including the include query param' do
+          let(:query_params) { '' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:query_params) { '?include=from_location' }
+
+          it 'returns the valid provided includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('locations')
+          end
+        end
+
+        context 'when including an invalid include query param' do
+          let(:query_params) { '?include=foo.bar,from_location' }
+
+          let(:expected_error) do
+            {
+              'errors' => [
+                {
+                  'title' => 'Bad request',
+                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves.person"]',
+                },
+              ],
+            }
+          end
+
+          it 'returns a validation error' do
+            expect(response).to have_http_status(:bad_request)
+            expect(response_json).to eq(expected_error)
+          end
+        end
+
+        context 'when including an empty include query param' do
+          let(:query_params) { '?include=' }
+
+          it 'returns none of the includes' do
+            returned_types = response_json['included']
+            expect(returned_types).to be_nil
+          end
+        end
+
+        context 'when including a nil include query param' do
+          let(:query_params) { '?include' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+          end
+        end
       end
     end
 
