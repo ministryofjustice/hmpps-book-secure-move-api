@@ -26,6 +26,12 @@ RSpec.describe IncludeParamsValidator do
       it { is_expected.to be_valid }
     end
 
+    context 'with invalid unnested relationships' do
+      let(:relationships) { %w[profiles] }
+
+      it { is_expected.not_to be_valid }
+    end
+
     context 'with unsupported relationships' do
       let(:relationships) { %w[foo] }
 
