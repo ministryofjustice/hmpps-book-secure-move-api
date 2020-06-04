@@ -122,11 +122,15 @@ references:
       name: Run rspec tests
       command: false && COVERAGE=1 bundle exec rspec
 
+  _rubocop: &rubocop
+    run:
+      name: Run rubocop
+      command: bundle exec rubocop
+
 
   _attach-tmp-workspace: &attach-tmp-workspace
     attach_workspace:
       at: ~/repo/tmp
-
 
 executors:
   test-executor:
@@ -305,6 +309,12 @@ jobs:
       - store_test_results:
           path: /tmp/test-results/rspec
 
+  rubocop-tests:
+    executor: test-executor
+    steps:
+      - checkout
+      - build-base
+      - *rubocop
 
   test:
     <<: *app_containers
@@ -398,6 +408,9 @@ workflows:
               ignore:
                 - master
       - rspec-tests:
+          requires:
+            - build-test-container
+      - rubocop-tests:
           requires:
             - build-test-container
   test-build-deploy:
