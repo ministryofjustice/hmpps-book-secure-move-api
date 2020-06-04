@@ -112,6 +112,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
+
         expect(response_json).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
