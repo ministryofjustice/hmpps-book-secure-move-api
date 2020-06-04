@@ -131,8 +131,10 @@ references:
     run:
       name: Run rspec tests
       command: |
-        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings --timings-type=filename)
-        COVERAGE=1 bundle exec rspec ${TESTS}
+        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split )
+        echo ${TESTS}
+        # COVERAGE=1 bundle exec rspec ${TESTS}
+        COVERAGE=1 bundle exec rspec
 
   _rubocop: &rubocop
     run:
@@ -336,7 +338,7 @@ jobs:
 
   rspec-tests:
     executor: test-executor
-    parallelism: 3
+    parallelism: 1
     steps:
       - checkout
       - build-base
