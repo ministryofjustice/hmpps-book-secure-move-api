@@ -123,12 +123,6 @@ references:
         TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
 
-  _api_docs: &api_docs
-    run:
-      name: Generate API Docs
-      command: |
-        bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
-
   _rspec_exec: &rspec_exec
     run:
       name: Run rspec tests
@@ -137,11 +131,6 @@ references:
         echo ${TESTS}
         bundle exec rspec ${TESTS}
         #COVERAGE=1 bundle exec rspec
-
-  _rspec: &rspec
-    run:
-      name: Run rspec tests
-      command: bundle exec rspec
 
   _rubocop: &rubocop
     run:
