@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'fake_data/journeys'
+
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
@@ -216,11 +218,22 @@ namespace :fake_data do
     end
   end
 
+  desc 'create fake journeys with associated events'
+  task create_journeys: :environment do
+    puts 'create_journeys...'
+    Move
+        .left_outer_joins(:journeys).where(journeys: { move_id: nil })
+        .where(status: %w[completed booked requested])
+        .find_each do |move|
+      Tasks::FakeData::Journeys.new(move).call
+    end
+  end
+
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -239,6 +252,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
       Rake::Task['fake_data:create_allocations'].invoke
+      Rake::Task['fake_data:create_journeys'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
