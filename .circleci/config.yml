@@ -212,7 +212,7 @@ commands:
             export BUILD_DATE=$(date -Is) >> $BASH_ENV
             source $BASH_ENV
 
-            docker build \
+            DOCKER_BUILDKIT=1 docker build \
               --label build.git.sha=${CIRCLE_SHA1} \
               --label build.git.branch=${CIRCLE_BRANCH} \
               --label build.date=${BUILD_DATE} \
