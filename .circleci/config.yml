@@ -90,13 +90,11 @@ references:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
           GITHUB_TEAM_NAME_SLUG: book-a-secure-move
-
   _restore-cache: &restore-cache
     restore_cache:
       keys:
         - v2-dependencies-{{ checksum "Gemfile.lock" }}
         - v2-dependencies-
-
   _install-dependencies: &install-dependencies
     run:
       name: Install dependencies
@@ -105,27 +103,25 @@ references:
         gem install bundler -v $bundler_version
         bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
 
-
   _save-cache: &save-cache
     save_cache:
       key: v2-dependencies-{{ checksum "Gemfile.lock" }}
       paths:
         - vendor/bundle
-
   _wait-for-db: &wait-for-db
     run:
       name: Wait for DB
       command: dockerize -wait tcp://localhost:5432 -timeout 1m
-
   _create-db: &create-db
     run:
       name: Database setup
       command: bundle exec rake db:create
-
   _api_docs: &api_docs
     run:
-      name: Run rspec tests
-      command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
+      name: Generate API Docs
+      command: |
+      TESTS=("spec/swagger spec/requests" | circleci tests split)
+      bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
 
   _rspec: &rspec
     run:
@@ -140,8 +136,6 @@ references:
     run:
       name: Run rubocop
       command: bundle exec rubocop
-
-
   _attach-tmp-workspace: &attach-tmp-workspace
     attach_workspace:
       at: ~/repo/tmp
@@ -174,7 +168,6 @@ commands:
     description: "Checkout app code and fetch dependencies for running tests"
     steps:
       - checkout
-
       - run:
           name: Force Bundler
           command: |
@@ -196,7 +189,6 @@ commands:
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       # Database setup
       - run: bundle exec rake db:create
-
   build_image:
     description: "Builds a Docker image"
     steps:
@@ -335,6 +327,20 @@ jobs:
       - setup_remote_docker
       - build-base
 
+  api_docs:
+    executor: test-executor
+    parallelism: 2
+    steps:
+      - checkout
+      - build-base
+      - *api_docs
+      - persist_to_workspace:
+          root: .
+          paths:
+            - swagger/v1/swagger.yaml
+      - *notify_slack_on_failure
+
+
   rspec-tests:
     executor: test-executor
     parallelism: 6
@@ -368,18 +374,6 @@ jobs:
 
       - *notify_slack_on_failure
 
-  api_docs:
-    executor: test-executor
-    parallelism: 2
-    steps:
-      - checkout
-      - build-base
-      - *api_docs
-      - persist_to_workspace:
-          root: .
-          paths:
-            - swagger/v1/swagger.yaml
-      - *notify_slack_on_failure
 
 
   build_image:
