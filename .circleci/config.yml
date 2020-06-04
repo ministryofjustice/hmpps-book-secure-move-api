@@ -86,10 +86,11 @@ references:
         environment:
           GITHUB_TEAM_NAME_SLUG: book-a-secure-move
 
-  _restore_cache: &restore_cache
-    keys:
-      - v1-dependencies-{{ checksum "Gemfile.lock" }}
-      - v1-dependencies-
+  _restore-cache: &restore-cache
+    restore_cache:
+      keys:
+        - v2-dependencies-{{ checksum "Gemfile.lock" }}
+        - v2-dependencies-
 
   _install-dependencies: &install-dependencies
     run:
@@ -105,9 +106,7 @@ references:
       paths:
         - vendor/bundle
 
-
-
-executor:
+executors:
   test-executor:
     docker:
       - image: circleci/ruby:2.6.6
@@ -127,7 +126,7 @@ executor:
 commands:
   build-base:
     steps:
-      - *restore_cache
+      - *restore-cache
       - *install-dependencies
       - *save-cache
 
@@ -265,6 +264,13 @@ jobs:
       - setup_remote_docker
       - build-base
 
+  rspec-tests:
+    executor: test-executor
+    parallelism: 6
+    steps:
+      - checkout
+      - build-base
+
 
   test:
     <<: *app_containers
@@ -350,6 +356,16 @@ jobs:
 workflows:
   version: 2
 
+  test-branch:
+    jobs:
+      - build-test-container:
+          filters:
+            branches:
+              ignore:
+                - master
+      - rspec-tests:
+          requires:
+            - build-test-container
   test-build-deploy:
     jobs:
       - test:
