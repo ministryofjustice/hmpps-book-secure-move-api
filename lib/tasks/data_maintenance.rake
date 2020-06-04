@@ -39,4 +39,9 @@ namespace :data_maintenance do
       move.update_attribute(:nomis_event_ids, [move.nomis_event_id])
     end
   end
+
+  desc 'fix incorrect move_agreed for all moves except prison transfers'
+  task fix_move_agreed_for_non_prison_transfers: :environment do
+    Move.where(move_agreed: false).where.not(move_type: 'prison_transfer').update_all(move_agreed: nil)
+  end
 end

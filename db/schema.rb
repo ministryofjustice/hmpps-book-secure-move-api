@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_091307) do
+ActiveRecord::Schema.define(version: 2020_06_03_142002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -207,7 +207,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_091307) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.boolean "move_agreed", default: false, null: false
+    t.boolean "move_agreed"
     t.string "move_agreed_by"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
