@@ -424,7 +424,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 3.12.6)
   rack-cors
-  rails
+  rails (~> 6.0.3)
   rails-erd (~> 1.6)
   rspec-json_expectations
   rspec-rails
