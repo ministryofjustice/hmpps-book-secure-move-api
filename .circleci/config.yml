@@ -100,11 +100,33 @@ references:
         gem install bundler -v $bundler_version
         bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
 
+
   _save-cache: &save-cache
     save_cache:
       key: v2-dependencies-{{ checksum "Gemfile.lock" }}
       paths:
         - vendor/bundle
+
+  _wait-for-db: &wait-for-db
+    run:
+      name: Wait for DB
+      command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+  _create-db: &create-db
+    run:
+      name: Database setup
+      command: bundle exec rake db:create
+
+  _rspec: &rspec
+    run:
+      name: Run rspec tests
+      command: false && COVERAGE=1 bundle exec rspec
+
+
+  _attach-tmp-workspace: &attach-tmp-workspace
+    attach_workspace:
+      at: ~/repo/tmp
+
 
 executors:
   test-executor:
@@ -270,6 +292,18 @@ jobs:
     steps:
       - checkout
       - build-base
+      - *wait-for-db
+      - *create-db
+      - *attach-tmp-workspace
+      - *rspec
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - coverage/codeclimate.*.json
+      - store_artifacts:
+          path: tmp/coverage
+      - store_test_results:
+          path: /tmp/test-results/rspec
 
 
   test:
