@@ -159,6 +159,10 @@ module Api
       def included_relationships
         IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
       end
+
+      def supported_relationships
+        PersonSerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
   end
 end
