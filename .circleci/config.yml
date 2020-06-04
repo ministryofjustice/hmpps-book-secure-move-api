@@ -125,7 +125,7 @@ references:
   _api_docs: &api_docs
     run:
       name: Run rspec tests
-      command: COVERAGE=1 bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
+      command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
 
   _rspec: &rspec
     run:
