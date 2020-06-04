@@ -130,7 +130,9 @@ references:
   _rspec: &rspec
     run:
       name: Run rspec tests
-      command: COVERAGE=1 bundle exec rspec
+      command: |
+        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings --timings-type=filename)
+        COVERAGE=1 bundle exec rspec ${TESTS}
 
   _rubocop: &rubocop
     run:
@@ -323,8 +325,7 @@ jobs:
     executor: basic-executor
     steps:
       - hold-notification:
-          message: "Do you want to start building <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH>?"
-
+          message: "Start building <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH>?"
 
   build-test-container:
     executor: test-executor
@@ -335,7 +336,7 @@ jobs:
 
   rspec-tests:
     executor: test-executor
-    parallelism: 6
+    parallelism: 3
     steps:
       - checkout
       - build-base
