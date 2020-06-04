@@ -11,4 +11,6 @@ class LocationSerializer < ActiveModel::Serializer
              :disabled_at
 
   has_many :suppliers, serializer: SupplierSerializer
+
+  SUPPORTED_RELATIONSHIPS = %w[suppliers].freeze
 end

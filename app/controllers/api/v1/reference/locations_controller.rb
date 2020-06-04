@@ -6,7 +6,7 @@ module Api
       class LocationsController < ApiController
         def index
           types = Locations::Finder.new(filter_params).call
-          paginate types, include: %w[suppliers]
+          paginate types, include: included_relationships
         end
 
         def show
@@ -21,13 +21,17 @@ module Api
         end
 
         def render_location(location, status)
-          render json: location, status: status, include: %w[suppliers]
+          render json: location, status: status, include: included_relationships
         end
 
         PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id].freeze
 
         def filter_params
           params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+        end
+
+        def supported_relationships
+          LocationSerializer::SUPPORTED_RELATIONSHIPS
         end
       end
     end
