@@ -338,7 +338,7 @@ jobs:
 
   rspec-tests:
     executor: test-executor
-    parallelism: 6
+    parallelism: 10
     steps:
       - checkout
       - build-base
