@@ -117,10 +117,15 @@ references:
       name: Database setup
       command: bundle exec rake db:create
 
+  _api_docs: &api_docs
+    run:
+      name: Run rspec tests
+      command: COVERAGE=1 bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
+
   _rspec: &rspec
     run:
       name: Run rspec tests
-      command: false && COVERAGE=1 bundle exec rspec
+      command: COVERAGE=1 bundle exec rspec
 
   _rubocop: &rubocop
     run:
@@ -332,19 +337,15 @@ jobs:
       - *notify_slack_on_failure
 
   api_docs:
-    <<: *app_containers
+    executor: test-executor
     steps:
-      - prepare_tests
-
-      - run:
-          name: generate swagger documentation
-          command: false && bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
-
+      - checkout
+      - build-base
+      - *api_docs
       - persist_to_workspace:
           root: .
           paths:
             - swagger/v1/swagger.yaml
-
       - *notify_slack_on_failure
 
   build_dev:
@@ -407,12 +408,17 @@ workflows:
             branches:
               ignore:
                 - master
+      - api_docs:
+          <<: *all_tags
+          requires:
+            - build-test-container
       - rspec-tests:
           requires:
             - build-test-container
       - rubocop-tests:
           requires:
             - build-test-container
+
   test-build-deploy:
     jobs:
       - test:
