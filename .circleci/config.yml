@@ -123,6 +123,13 @@ references:
         TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
 
+  _api_docs_classic: &api_docs_classic
+    run:
+      name: Generate API Docs
+      command: |
+        bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
+
+
   _rspec: &rspec
     run:
       name: Run rspec tests
@@ -320,7 +327,7 @@ jobs:
       - setup_remote_docker
       - build-base
 
-  api_docs:
+  api_docs_exec:
     executor: test-executor
     parallelism: 4
     steps:
@@ -331,6 +338,22 @@ jobs:
           root: .
           paths:
             - swagger/v1/swagger.yaml
+      - *notify_slack_on_failure
+
+  api_docs:
+    <<: *app_containers
+    steps:
+      - prepare_tests
+
+      - run:
+          name: generate swagger documentation
+          command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - swagger/v1/swagger.yaml
+
       - *notify_slack_on_failure
 
   rspec-tests:
@@ -431,7 +454,7 @@ workflows:
             branches:
               ignore:
                 - master
-      - api_docs:
+      - api_docs_exec:
           <<: *all_tags
           requires:
             - build-test-container
@@ -444,7 +467,7 @@ workflows:
       - build_image:
           <<: *all_tags
           requires:
-            - api_docs
+            - api_docs_exec
 
   test-build-deploy:
     jobs:
