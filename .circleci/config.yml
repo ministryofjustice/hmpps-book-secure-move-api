@@ -129,8 +129,7 @@ references:
       command: |
         bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
 
-
-  _rspec: &rspec
+  _rspec_exec: &rspec_exec
     run:
       name: Run rspec tests
       command: |
@@ -138,6 +137,11 @@ references:
         echo ${TESTS}
         bundle exec rspec ${TESTS}
         #COVERAGE=1 bundle exec rspec
+
+  _rspec: &rspec
+    run:
+      name: Run rspec tests
+      command: bundle exec rspec
 
   _rubocop: &rubocop
     run:
@@ -356,7 +360,19 @@ jobs:
 
       - *notify_slack_on_failure
 
-  rspec-tests:
+  test:
+    <<: *app_containers
+    steps:
+      - prepare_tests
+      - run:
+          name: rubocop
+          command: bundle exec rubocop
+      - run:
+          name: run tests
+          command: COVERAGE=1 bundle exec rspec
+      - *notify_slack_on_failure
+
+  rspec_tests_exec:
     executor: test-executor
     parallelism: 6
     steps:
@@ -365,7 +381,7 @@ jobs:
       - *wait-for-db
       - *create-db
       - *attach-tmp-workspace
-      - *rspec
+      - *rspec_exec
 
   rubocop-tests:
     executor: test-executor
@@ -373,21 +389,6 @@ jobs:
       - checkout
       - build-base
       - *rubocop
-
-  test:
-    <<: *app_containers
-    steps:
-      - prepare_tests
-
-      - run:
-          name: rubocop
-          command: false && bundle exec rubocop
-
-      - run:
-          name: run tests
-          command: false && COVERAGE=1 bundle exec rspec
-
-      - *notify_slack_on_failure
 
   build_image:
     <<: *cloud_container
@@ -458,7 +459,7 @@ workflows:
           <<: *all_tags
           requires:
             - build-test-container
-      - rspec-tests:
+      - rspec_tests_exec:
           requires:
             - build-test-container
       - rubocop-tests:
