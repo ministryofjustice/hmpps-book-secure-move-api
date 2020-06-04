@@ -15,8 +15,8 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to validate_presence_of(:client_timestamp) }
   it { is_expected.to validate_presence_of(:state) }
   it { is_expected.to validate_exclusion_of(:billable).in_array([nil]) }
-  it { is_expected.to validate_inclusion_of(:state).in_array(%w[in_progress completed cancelled]) }
-  it { is_expected.to respond_to(:cancel, :uncancel, :complete, :uncomplete) }
+  it { is_expected.to validate_inclusion_of(:state).in_array(%w[proposed rejected in_progress completed cancelled]) }
+  it { is_expected.to respond_to(:start, :reject, :cancel, :uncancel, :complete, :uncomplete) }
   it { expect(described_class).to respond_to(:default_order) }
 
   shared_examples 'model is synchronised with state_machine' do |expected_state|
