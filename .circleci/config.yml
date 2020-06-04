@@ -116,14 +116,14 @@ references:
     run:
       name: Database setup
       command: bundle exec rake db:create
-  _api_docs: &api_docs
+  _api_docs_exec: &api_docs_exec
     run:
       name: Generate API Docs
       command: |
         TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
 
-  _api_docs_classic: &api_docs_classic
+  _api_docs: &api_docs
     run:
       name: Generate API Docs
       command: |
@@ -329,11 +329,11 @@ jobs:
 
   api_docs_exec:
     executor: test-executor
-    parallelism: 4
+    parallelism: 6
     steps:
       - checkout
       - build-base
-      - *api_docs
+      - *api_docs_exec
       - persist_to_workspace:
           root: .
           paths:
@@ -465,7 +465,7 @@ workflows:
           requires:
             - build-test-container
       - build_image:
-          <<: *all_tags
+          <<: *only_master_and_create_dev
           requires:
             - api_docs_exec
 
