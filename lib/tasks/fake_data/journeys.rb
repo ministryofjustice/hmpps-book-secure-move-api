@@ -16,7 +16,7 @@ module Tasks
       end
 
       # Creates some random journeys between A and B
-      def create(number_of_journeys = rand(1..5))
+      def call(number_of_journeys = rand(1..5))
         current_location = from_location
         journey_counter = 1
         timestamp = move.date + rand(5..10).hours
@@ -34,8 +34,8 @@ module Tasks
           intermediate_location = random_location(current_location)
 
           # randomly create some events with intermediate journeys
-          case rand(1..6) # add some random events to the journeys
-          when 1 # unbillable lockout at current_location, redirect journey (not move) to intermediate_location, e.g. "delayed by flat tyre"
+          case random_event # add some random events to the journeys
+          when :lockout_journey_unbillable # unbillable lockout at current_location, redirect journey (not move) to intermediate_location, e.g. "delayed by flat tyre"
             # lockout event
             create_lockout_journey_event(
               journey,
@@ -55,7 +55,7 @@ module Tasks
             create_redirect_journey_event(journey, timestamp, 'redirecting back because of lockout previous day', current_location)
             # NB do not set current location to intermediate location in this case
 
-          when 2 # unbillable redirect at current_location, redirect journey (not move) to intermediate_location, e.g. "insufficient capacity in van"
+          when :redirect_journey_unbillable # unbillable redirect at current_location, redirect journey (not move) to intermediate_location, e.g. "insufficient capacity in van"
             journey = create_journey(timestamp, current_location, intermediate_location, false)
             create_redirect_journey_event(
               journey,
@@ -72,7 +72,7 @@ module Tasks
 
             # NB do not set current location to intermediate location in this case
 
-          when 3 # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
+          when :redirect_move_billable # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
             create_redirect_move_event(
               timestamp,
               ['requested by PMU for operational reasons', 'requested by prison because no space', 'requested by police because of security concerns'].sample,
@@ -104,7 +104,7 @@ module Tasks
     private
 
       def random_location(current_location)
-        Location.where.not(id: [@from_location.id, current_location.id, @to_location.id]).order('RANDOM()').first
+        Location.where.not(id: [@from_location.id, current_location.id, @to_location.id]).order(Arel.sql('RANDOM()')).first
       end
 
       def create_journey(timestamp, journey_from, journey_to, billable)
@@ -174,6 +174,17 @@ module Tasks
             },
           },
         )
+      end
+
+      def random_event
+        case rand(1..6)
+        when 1
+          :lockout_journey_unbillable
+        when 2
+          :redirect_journey_unbillable
+        when 3
+          :redirect_move_billable
+        end
       end
     end
   end

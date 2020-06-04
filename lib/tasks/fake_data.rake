@@ -225,7 +225,7 @@ namespace :fake_data do
         .left_outer_joins(:journeys).where(journeys: { move_id: nil })
         .where(status: %w[completed booked requested])
         .find_each do |move|
-      Tasks::FakeData::Journeys.new(move).create
+      Tasks::FakeData::Journeys.new(move).call
     end
   end
 
