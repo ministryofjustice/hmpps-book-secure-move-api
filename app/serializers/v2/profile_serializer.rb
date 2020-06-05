@@ -3,9 +3,11 @@
 module V2
   class ProfileSerializer < ActiveModel::Serializer
     attributes(
-      :id,
       :assessment_answers,
-      :latest_nomis_booking_id,
     )
+
+    belongs_to :person, serializer: PersonSerializer
+
+    SUPPORTED_RELATIONSHIPS = %w[person].freeze
   end
 end

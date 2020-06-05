@@ -17,10 +17,6 @@ RSpec.describe V2::ProfileSerializer do
     expect(result[:data][:id]).to eql profile.id
   end
 
-  it 'contains latest_nomis_booking_id' do
-    expect(result[:data][:attributes][:latest_nomis_booking_id]).to eql profile.latest_nomis_booking_id
-  end
-
   describe '#assessment_answers' do
     let(:risk_alert_type) { create :assessment_question, :risk }
     let(:health_alert_type) { create :assessment_question, :health }
