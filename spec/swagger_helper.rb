@@ -164,7 +164,75 @@ RSpec.configure do |config|
           },
         },
       },
-      paths: load_swagger_yaml('hand_coded_paths.yaml'),
+      paths: load_swagger_yaml('hand_coded_paths_v1.yaml'),
+    },
+    'v2/swagger.yaml' => {
+      basePath: '/api/v2',
+      openapi: '3.0.1',
+      info: {
+        title: 'PECS4 API V2 Docs',
+        version: 'v2',
+        description: 'Book A Secure Move supplier and frontend API.',
+      },
+      consumes: [
+        'application/vnd.api+json',
+      ],
+      servers: [
+        {
+          url: 'http://localhost:3000/api/v2',
+          description: 'Local development (localhost)',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'Dev API',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'Staging API',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'PreProd API',
+        },
+        {
+          url: 'https://api.bookasecuremove.service.justice.gov.uk/api/v2',
+          description: 'Production API',
+        },
+      ],
+      security: [
+        {
+          oauth2: [],
+        },
+      ],
+      components: {
+        securitySchemes: {
+          oauth2: {
+            type: :oauth2,
+            flows: {
+              clientCredentials: {
+                authorizationUrl: '/oauth/authorize',
+                tokenUrl: '/oauth/token/',
+                scopes: {},
+              },
+            },
+          },
+        },
+        schemas: {
+          Ethnicity: {
+            "$ref": '../v1/ethnicity.yaml#/Ethnicity',
+          },
+          Gender: {
+            "$ref": '../v1/gender.yaml#/Gender',
+          },
+          Person: {
+            "$ref": '../v2/person.yaml#/Person',
+          },
+          Profile: {
+            "$ref": '../v2/profile.yaml#/Profile',
+          },
+        },
+      },
+      paths: load_swagger_yaml('hand_coded_paths_v2.yaml'),
     },
   }
 

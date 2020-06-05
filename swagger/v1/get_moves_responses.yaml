@@ -1,7 +1,7 @@
-'200':
+"200":
   type: object
   required:
-  - data
+    - data
   properties:
     data:
       type: array
@@ -11,12 +11,13 @@
       type: array
       items:
         anyOf:
-        - $ref: location.yaml#/Location
-        - $ref: person.yaml#/Person
-        - $ref: gender.yaml#/Gender
-        - $ref: ethnicity.yaml#/Ethnicity
-        - $ref: allocation.yaml#/Allocation
-        - $ref: profile.yaml#/Profile
+          - $ref: location.yaml#/Location
+          - $ref: person.yaml#/Person
+          - $ref: gender.yaml#/Gender
+          - $ref: ethnicity.yaml#/Ethnicity
+          - $ref: allocation.yaml#/Allocation
+          - $ref: profile.yaml#/Profile
+          - $ref: supplier.yaml#/Supplier
     links:
       $ref: pagination_links.yaml#/PaginationLinks
     meta:
@@ -24,37 +25,37 @@
       properties:
         pagination:
           $ref: pagination.yaml#/Pagination
-'400':
+"400":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/BadRequest
-'401':
+"401":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/NotAuthorisedError
-'415':
+"415":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/UnsupportedMediaType
-'422':
+"422":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array

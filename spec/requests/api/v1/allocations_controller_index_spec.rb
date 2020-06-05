@@ -217,7 +217,7 @@ RSpec.describe Api::V1::AllocationsController do
               'errors' => [
                 {
                   'title' => 'Bad request',
-                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves.person"]',
+                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves", "moves.person"]',
                 },
               ],
             }
