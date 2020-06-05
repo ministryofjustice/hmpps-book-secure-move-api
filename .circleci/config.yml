@@ -74,6 +74,7 @@ references:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
           GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+
   _save-cache: &save-cache
     save_cache:
       key: v2-dependencies-{{ checksum "Gemfile.lock" }}
@@ -126,6 +127,13 @@ references:
       at: /tmp/workspace
 
 executors:
+  basic-executor:
+    docker:
+      - image: cimg/base:2020.06
+        environment:
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+          REPO_NAME: hmpps-book-secure-move-api
+
   test-executor:
     docker:
       - image: circleci/ruby:2.6.6
@@ -142,6 +150,17 @@ executors:
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
 
+  cloud-platform-executor:
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+          REPO_NAME: hmpps-book-secure-move-api
+
+  image-executor:
+    docker:
+
+
 commands:
   build-base:
     description: "Checkout app code and fetch dependencies for running tests"
@@ -154,6 +173,12 @@ commands:
     description: "Create and seed the Database"
     steps:
       - *create-db
+
+  smoke-test-cmd:
+    description: "Check if image runs"
+    steps:
+      - run: echo "run"
+      - run: docker ps
 
   prepare_tests:
     description: "Checkout app code and fetch dependencies for running tests"
@@ -180,14 +205,10 @@ commands:
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       # Database setup
       - run: bundle exec rake db:create
-  build_image:
+
+  build_docker_image:
     description: "Builds a Docker image"
     steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: build docker image
           command: |
@@ -301,7 +322,7 @@ commands:
 
 jobs:
 
-  build-test-container:
+  setup_test_environment:
     executor: test-executor
     steps:
       - checkout
@@ -333,7 +354,7 @@ jobs:
       - *attach-tmp-workspace
       - *rspec
 
-  rubocop-tests:
+  rubocop_tests:
     executor: test-executor
     steps:
       - checkout
@@ -341,9 +362,17 @@ jobs:
       - *rubocop
 
   build_image:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
-      - build_image
+      - checkout
+      - setup_remote_docker
+      - build_docker_image
+
+  smoke_tests:
+    executor: basic-executor
+    steps:
+      - checkout
+      - smoke-test-cmd
 
   build_dev:
     <<: *cloud_container
@@ -400,23 +429,28 @@ workflows:
 
   test-build:
     jobs:
-      - build-test-container:
+      - setup_test_environment:
           <<: *all_tags
       - api_docs:
           <<: *all_tags
           requires:
-            - build-test-container
+            - setup_test_environment
       - rspec_tests:
           <<: *all_tags
           requires:
-              - build-test-container
-      - rubocop-tests:
+              - setup_test_environment
+      - rubocop_tests:
           <<: *all_tags
           requires:
-            - build-test-container
+            - setup_test_environment
       - build_image:
           <<: *all_tags
           requires:
             - api_docs
             - rspec_tests
-            - rubocop-tests
+            - rubocop_tests
+      - smoke_tests:
+          <<: *all_tags
+          requires:
+            - build_image
+
