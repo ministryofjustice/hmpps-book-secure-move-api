@@ -165,6 +165,10 @@ commands:
       - *restore-cache
       - *install-dependencies
       - *save-cache
+
+  seed-database:
+    description: "Create and seed the Database"
+    steps:
       - *create-db
 
   prepare_tests:
@@ -319,7 +323,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - build-base
-
+      - seed-database
 
   api_docs_exec:
     executor: test-executor
@@ -441,21 +445,22 @@ workflows:
   test-build:
     jobs:
       - build-test-container:
-          filters:
-            branches:
-              ignore:
-                - master
+          <<: *all_tags
       - api_docs_exec:
           <<: *all_tags
           requires:
             - build-test-container
       - rspec_tests_exec:
+          <<: *all_tags
           requires:
-            - build-test-container
+              - build-test-container
       - rubocop-tests:
+          <<: *all_tags
           requires:
             - build-test-container
       - build_image:
-          <<: *only_master_and_create_dev
+          <<: *all_tags
           requires:
             - api_docs_exec
+            - rspec_tests_exec
+            - rubocop-tests
