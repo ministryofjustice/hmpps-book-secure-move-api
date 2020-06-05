@@ -464,7 +464,7 @@ jobs:
       - retag_docker_image:
           env: "fake"
       - deploy_to_k8s:
-          env: "fake"
+          env: "dev"
 
   dev_tests:
     executor: basic-executor
