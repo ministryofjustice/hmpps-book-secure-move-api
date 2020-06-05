@@ -24,21 +24,16 @@ Profile:
         assessment_answers:
           type: array
           items:
-            $ref: '../v1/assessment_answer.yaml#/AssessmentAnswer'
+            $ref: "../v1/assessment_answer.yaml#/AssessmentAnswer"
           description:
             Collection of court information, risk and alerts that escorts
             need to be aware of for safety, security and other reasons
-        last_synced_with_nomis:
-          type: string
-          format: date
-          example: "2020-1-30"
-          description: Last time the profile was synced with Nomis
     relationships:
       type: object
       properties:
         gender:
-          $ref: '../v1/gender_reference.yaml#/GenderReference'
+          $ref: "../v1/gender_reference.yaml#/GenderReference"
           description: Profile's gender
         ethnicity:
-          $ref: '../v1/ethnicity_reference.yaml#/EthnicityReference'
+          $ref: "../v1/ethnicity_reference.yaml#/EthnicityReference"
           description: Profile's ethnicity
