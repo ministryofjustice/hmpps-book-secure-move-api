@@ -6,8 +6,11 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
+  aws-ecr: circleci/aws-ecr@6.9.0
 
 aliases:
+
+  # Slack notifications
   - &notify_slack_on_failure
     slack/notify-on-failure:
       only_for_branches: master
@@ -47,6 +50,7 @@ aliases:
       color: "#28a197"
       mentions: here
 
+  # Filter tags
   - &all_tags
     filters:
       tags:
@@ -54,7 +58,8 @@ aliases:
   - &only_master
     filters:
       branches:
-        only: master
+##        only: master
+        only: circleci_review
   - &only_master_and_create_dev
     filters:
       branches:
@@ -159,7 +164,11 @@ executors:
 
   image-executor:
     docker:
-      - image: ${ECR_ENDPOINT}/hmpps-book-secure-move-api/app
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+          REPO_NAME: hmpps-book-secure-move-api
+      - image: ${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:ci-latest
         environment:
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
           ENCRYPTOR_SALT: "*\xDB\x9E\a\x1ES1\xB7\xE3\xB8{\xF9Fl\x8Fnn?\x83\xC6\xBBR\x9Eq\x0F\x01./U\x0E\xF1\xDE"
@@ -191,12 +200,14 @@ commands:
       - run: docker ps
       - run: docker images
       - run:
-          name: pull app image
+          name: Login to ECR
           command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          name: Pull application image
+          command: |
             docker pull "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-
 
   prepare_tests:
     description: "Checkout app code and fetch dependencies for running tests"
@@ -228,10 +239,9 @@ commands:
     description: "Builds a Docker image"
     steps:
       - run:
-          name: build docker image
+          name: Build docker image
           command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
+            BUILD_DATE=$(date -Is)
 
             DOCKER_BUILDKIT=1 docker build \
               --label build.git.sha=${CIRCLE_SHA1} \
@@ -240,15 +250,22 @@ commands:
               --build-arg APP_BUILD_DATE=${BUILD_DATE} \
               --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
               --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
+              -t ci .
       - run:
-          name: push app image
+          name: Login to ECR
           command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          name: Tag push with gitsha
+          command: |
+            docker tag ci "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+      - run:
+          name: Tag for CI
+          command: |
+            docker tag ci "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:ci-latest"
+            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:ci-latest"
       - run:
           name: check image
           command: docker images
@@ -472,13 +489,13 @@ workflows:
           requires:
             - setup_test_environment
       - build_image:
-          <<: *all_tags
+          <<: *only_master
           requires:
             - api_docs
             - rspec_tests
             - rubocop_tests
       - smoke_tests:
-          <<: *all_tags
+          <<: *only_master
           requires:
             - build_image
 
