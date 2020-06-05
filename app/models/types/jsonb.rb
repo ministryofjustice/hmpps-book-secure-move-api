@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Types
-  class JSONB < ActiveRecord::Type::Value
+  class Jsonb < ActiveRecord::Type::Value
     def initialize(concrete_class)
       @concrete_class = concrete_class
     end

@@ -48,7 +48,7 @@ class Allocation < VersionedModel
   validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
-  attribute :complex_cases, Types::JSONB.new(Allocation::ComplexCaseAnswers)
+  attribute :complex_cases, Types::Jsonb.new(Allocation::ComplexCaseAnswers)
 
   after_initialize :initialize_state
   delegate :fill, :unfill, to: :state_machine
