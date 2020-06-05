@@ -227,6 +227,9 @@ RSpec.configure do |config|
           Person: {
             "$ref": '../v2/person.yaml#/Person',
           },
+          Profile: {
+            "$ref": '../v2/profile.yaml#/Profile',
+          },
         },
       },
       paths: load_swagger_yaml('hand_coded_paths_v2.yaml'),
