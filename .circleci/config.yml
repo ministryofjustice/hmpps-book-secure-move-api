@@ -211,7 +211,10 @@ commands:
        - run:
            name: Check if image runs
            command: |
-             curl -s localhost:3000/ping.json |jq
+             ps auxf
+             sleep 15
+             curl --version
+             curl -s --retry 30 --retry-connrefused localhost:3000/ping.json
 #      - run:
 #          name: Login to ECR
 #          command: |
