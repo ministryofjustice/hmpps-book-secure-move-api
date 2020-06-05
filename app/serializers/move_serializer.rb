@@ -32,7 +32,9 @@ class MoveSerializer < ActiveModel::Serializer
     person.ethnicity
     person.gender
     from_location
+    from_location.suppliers
     to_location
+    to_location.suppliers
     documents
     prison_transfer_reason
     court_hearings

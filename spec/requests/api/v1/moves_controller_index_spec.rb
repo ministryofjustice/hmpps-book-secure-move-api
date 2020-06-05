@@ -134,8 +134,19 @@ RSpec.describe Api::V1::MovesController do
       end
 
       describe 'included relationships' do
-        let!(:moves) { create_list(:move, 1) }
+        let!(:moves) do
+          create_list(
+            :move,
+            1,
+            from_location: from_location,
+            to_location: to_location,
+          )
+        end
+
         let!(:court_hearing) { create(:court_hearing, move: moves.first) }
+
+        let(:to_location) { create(:location, suppliers: [supplier]) }
+        let(:from_location) { create(:location, suppliers: [supplier]) }
 
         before do
           get "/api/v1/moves#{query_params}", params: params, headers: headers
@@ -146,7 +157,7 @@ RSpec.describe Api::V1::MovesController do
 
           it 'returns the default includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('ethnicities', 'genders', 'locations', 'people', 'profiles')
+            expect(returned_types).to contain_exactly('ethnicities', 'genders', 'locations', 'people', 'profiles', 'suppliers')
           end
         end
 
