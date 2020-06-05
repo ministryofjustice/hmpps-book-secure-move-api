@@ -246,7 +246,6 @@ commands:
           name: check image
           command: docker images
 
-
   build_for_k8s:
     description: "Builds a Docker image for staging/production and pushes to ECR"
     parameters:
@@ -390,7 +389,7 @@ jobs:
       - build_docker_image
 
   smoke_tests:
-    executor: basic-executor
+    executor: cloud-platform-executor
     steps:
       - checkout
       - setup_remote_docker
