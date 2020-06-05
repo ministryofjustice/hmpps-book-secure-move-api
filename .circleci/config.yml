@@ -69,22 +69,6 @@ aliases:
         ignore: /.*/
 
 references:
- # deprecated
-  app_containers: &app_containers
-    docker:
-      - image: circleci/ruby:2.6.6
-        environment:
-          BUNDLER_VERSION: 2.1.4
-          RAILS_ENV: test
-          RACK_ENV: test
-          DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api-old"
-          EXTERNAL_URL: mocked_in_tests
-          ENCRYPTOR_SALT: "*\xDB\x9E\a\x1ES1\xB7\xE3\xB8{\xF9Fl\x8Fnn?\x83\xC6\xBBR\x9Eq\x0F\x01./U\x0E\xF1\xDE"
-      - image: circleci/postgres:10-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: hmpps-book-secure-move-api-old
-          LANG: C.utf8
   cloud_container: &cloud_container
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
@@ -117,14 +101,14 @@ references:
     run:
       name: Database setup
       command: bundle exec rake db:create
-  _api_docs_exec: &api_docs_exec
+  _api_docs: &api_docs
     run:
       name: Generate API Docs
       command: |
         TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
 
-  _rspec_exec: &rspec_exec
+  _rspec: &rspec
     run:
       name: Run rspec tests
       command: |
@@ -139,7 +123,7 @@ references:
       command: bundle exec rubocop
   _attach-tmp-workspace: &attach-tmp-workspace
     attach_workspace:
-      at: ~/repo/tmp
+      at: /tmp/workspace
 
 executors:
   test-executor:
@@ -325,48 +309,20 @@ jobs:
       - build-base
       - seed-database
 
-  api_docs_exec:
+  api_docs:
     executor: test-executor
     parallelism: 6
     steps:
       - checkout
       - build-base
-      - *api_docs_exec
+      - *api_docs
       - persist_to_workspace:
           root: .
           paths:
             - swagger/v1/swagger.yaml
       - *notify_slack_on_failure
 
-  api_docs:
-    <<: *app_containers
-    steps:
-      - prepare_tests
-
-      - run:
-          name: generate swagger documentation
-          command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
-
-      - persist_to_workspace:
-          root: .
-          paths:
-            - swagger/v1/swagger.yaml
-
-      - *notify_slack_on_failure
-
-  test:
-    <<: *app_containers
-    steps:
-      - prepare_tests
-      - run:
-          name: rubocop
-          command: bundle exec rubocop
-      - run:
-          name: run tests
-          command: COVERAGE=1 bundle exec rspec
-      - *notify_slack_on_failure
-
-  rspec_tests_exec:
+  rspec_tests:
     executor: test-executor
     parallelism: 6
     steps:
@@ -375,7 +331,7 @@ jobs:
       - *wait-for-db
       - *create-db
       - *attach-tmp-workspace
-      - *rspec_exec
+      - *rspec
 
   rubocop-tests:
     executor: test-executor
@@ -446,11 +402,11 @@ workflows:
     jobs:
       - build-test-container:
           <<: *all_tags
-      - api_docs_exec:
+      - api_docs:
           <<: *all_tags
           requires:
             - build-test-container
-      - rspec_tests_exec:
+      - rspec_tests:
           <<: *all_tags
           requires:
               - build-test-container
@@ -461,6 +417,6 @@ workflows:
       - build_image:
           <<: *all_tags
           requires:
-            - api_docs_exec
-            - rspec_tests_exec
+            - api_docs
+            - rspec_tests
             - rubocop-tests
