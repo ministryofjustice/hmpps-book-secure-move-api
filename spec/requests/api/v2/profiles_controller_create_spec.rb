@@ -66,6 +66,64 @@ RSpec.describe Api::V2::ProfilesController do
       end
     end
 
+    context 'with included relationships' do
+      let(:profile_params) do
+        {
+          include: include_params,
+          data: {
+            type: 'profiles',
+            attributes: {
+              assessment_answers: [
+                { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
+                { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
+              ],
+            },
+          },
+        }
+      end
+
+      before do
+        post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+      end
+
+      context 'when the include query param is empty' do
+        let(:include_params) { [] }
+
+        it 'does not include any relationship' do
+          expect(response_json).not_to include('included')
+        end
+      end
+
+      context 'when include is nil' do
+        let(:include_params) { nil }
+
+        it 'does not include any relationship' do
+          expect(response_json).not_to include('included')
+        end
+      end
+
+      context 'when including multiple relationships' do
+        let(:include_params) { 'person' }
+
+        it 'includes the relevant relationships' do
+          returned_types = response_json['included'].map { |r| r['type'] }.uniq
+
+          expect(returned_types).to contain_exactly('people')
+        end
+      end
+
+      context 'when including a non existing relationship in a query param' do
+        let(:include_params) { 'person,non-existent-relationship' }
+
+        it 'responds with error 400' do
+          response_error = response_json['errors'].first
+
+          expect(response_error['title']).to eq('Bad request')
+          expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
+        end
+      end
+    end
+
     context 'with a bad request' do
       before { post "/api/v2/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
 

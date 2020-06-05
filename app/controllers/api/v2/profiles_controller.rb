@@ -5,7 +5,7 @@ module Api
     class ProfilesController < ApiController
       def create
         profile = person.profiles.create(profile_attributes)
-        render json: profile, status: :created, serializer: ::V2::ProfileSerializer
+        render json: profile, status: :created, include: included_relationships, serializer: ::V2::ProfileSerializer
       end
 
     private
@@ -45,6 +45,10 @@ module Api
 
       def person
         @person ||= Person.find(params.require(:person_id))
+      end
+
+      def supported_relationships
+        ::V2::ProfileSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end
