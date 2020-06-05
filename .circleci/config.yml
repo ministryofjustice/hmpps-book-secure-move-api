@@ -190,6 +190,13 @@ commands:
       - run: echo "run"
       - run: docker ps
       - run: docker images
+      - run:
+          name: pull app image
+          command: |
+            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${login}
+            docker pull "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+
 
   prepare_tests:
     description: "Checkout app code and fetch dependencies for running tests"
