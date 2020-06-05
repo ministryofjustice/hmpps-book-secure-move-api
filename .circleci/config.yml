@@ -242,6 +242,7 @@ jobs:
           root: .
           paths:
             - swagger/v1/swagger.yaml
+            - swagger/v2/swagger.yaml
 
       - *notify_slack_on_failure
 
