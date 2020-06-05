@@ -208,18 +208,19 @@ commands:
   smoke-test-cmd:
     description: "Check if image runs"
     steps:
-      - run: echo "run"
-      - run: docker ps
-      - run: docker images
-      - run:
-          name: Login to ECR
-          command: |
-            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${LOGIN_COMMAND}
-      - run:
-          name: Pull application image
-          command: |
-            docker pull "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+       - run:
+           name: Check if image runs
+           command: |
+             curl -s localhost:3000/ping.json |jq
+#      - run:
+#          name: Login to ECR
+#          command: |
+#            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+#            ${LOGIN_COMMAND}
+#      - run:
+#          name: Pull application image
+#         command: |
+#           docker pull "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
   prepare_tests:
     description: "Checkout app code and fetch dependencies for running tests"
