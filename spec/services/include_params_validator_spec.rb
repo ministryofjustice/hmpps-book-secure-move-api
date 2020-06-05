@@ -68,10 +68,23 @@ RSpec.describe IncludeParamsValidator do
 
     context 'when not valid' do
       let(:relationships) { %w[foo] }
+      let(:expected_message) do
+        {
+          "Bad request": [
+            '["foo"] is not supported. Valid values are: ["ethnicity", "gender", "bar", "person", "person.profiles", "person.profiles.flibble"]',
+          ],
+        }
+      end
 
       it 'propagates a custom validation error' do
         expect { params_validator.fully_validate! }
           .to raise_error(described_class::ValidationError)
+      end
+
+      it 'propagates the correct validation error messages' do
+        params_validator.fully_validate!
+      rescue described_class::ValidationError => e
+        expect(e.errors.messages).to eq(expected_message)
       end
     end
   end

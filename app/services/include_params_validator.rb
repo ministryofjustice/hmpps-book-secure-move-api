@@ -9,7 +9,7 @@ class IncludeParamsValidator
     unsupported_values = values - record.splatted_supported_relationships
 
     unless unsupported_values.empty?
-      record.errors.add 'Bad request', "#{unsupported_values} is not supported. Valid values are: #{record.supported_relationships}"
+      record.errors.add 'Bad request', "#{unsupported_values} is not supported. Valid values are: #{record.splatted_supported_relationships}"
     end
   end
 
