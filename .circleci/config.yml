@@ -160,10 +160,13 @@ executors:
 
 commands:
   build-base:
+    description: "Checkout app code and fetch dependencies for running tests"
     steps:
       - *restore-cache
       - *install-dependencies
       - *save-cache
+      - *create-db
+
   prepare_tests:
     description: "Checkout app code and fetch dependencies for running tests"
     steps:
@@ -316,6 +319,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - build-base
+
 
   api_docs_exec:
     executor: test-executor
