@@ -6,15 +6,14 @@
     data:
       type: array
       items:
-        $ref: person.yaml#/Person
+        $ref: ../v2/person.yaml#/Person
     included:
       type: array
       items:
         anyOf:
           - $ref: '../v1/gender.yaml#/Gender'
           - $ref: '../v1/ethnicity.yaml#/Ethnicity'
-          - $ref: profile.yaml#/Profile
-          - {}
+          - $ref: ../v2/profile.yaml#/Profile
     links:
       $ref: '../v1/pagination_links.yaml#/PaginationLinks'
     meta:
