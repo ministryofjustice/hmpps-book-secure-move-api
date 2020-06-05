@@ -301,7 +301,7 @@ commands:
     - run:
         name: Retag Image
         command: |
-          "aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag "<< parameters.env >>.latest" \
+          aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
           --image-manifest "$MANIFEST"
 
 
@@ -459,6 +459,7 @@ jobs:
   deploy_dev:
     executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
       - retag_docker_image:
           env: "fake"
       - deploy_to_k8s:
