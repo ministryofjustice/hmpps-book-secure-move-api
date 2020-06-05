@@ -308,10 +308,6 @@ commands:
             - *notify_slack_on_release_end
 
 jobs:
-  notify_of_approval:
-    <<: *app_containers
-    steps:
-      - *notify_slack_of_approval
 
   build-test-container:
     executor: test-executor
@@ -437,7 +433,7 @@ jobs:
 workflows:
   version: 2
 
-  test-branch:
+  test-build:
     jobs:
       - build-test-container:
           filters:
@@ -458,56 +454,3 @@ workflows:
           <<: *only_master_and_create_dev
           requires:
             - api_docs_exec
-
-test-build-deploy:
-  jobs:
-    - test:
-        <<: *all_tags
-    - api_docs:
-        <<: *all_tags
-    - build_dev:
-        <<: *only_master_and_create_dev
-        requires:
-          - api_docs
-    - deploy_dev:
-        <<: *only_master_and_create_dev
-        requires:
-          - test
-          - build_dev
-    - build_staging:
-        <<: *only_master
-        requires:
-          - api_docs
-    - deploy_staging:
-        <<: *only_master
-        requires:
-          - test
-          - build_staging
-    - build_preprod:
-        <<: *only_deploy_tags
-        requires:
-          - api_docs
-    - deploy_preprod:
-        <<: *only_deploy_tags
-        requires:
-          - test
-          - build_preprod
-    - build_production:
-        <<: *only_deploy_tags
-        requires:
-          - api_docs
-    - hold_production:
-        <<: *only_deploy_tags
-        type: approval
-        requires:
-          - test
-          - build_production
-    - notify_of_approval:
-        <<: *only_deploy_tags
-        requires:
-          - test
-          - build_production
-    - deploy_production:
-        <<: *only_deploy_tags
-        requires:
-          - hold_production
