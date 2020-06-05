@@ -13,7 +13,6 @@
         description:
           Filters results to only include people identified by that police_national_computer.
           Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office] are supported.
-          are supported.
         schema:
           type: string
           example: 07/1435713R
@@ -33,8 +32,7 @@
         in: query
         description:
           Filters results to only include people identified by that prison_number.
-          Either filter[police_national_computer] or filter[prison_number] or both filters
-          are supported.
+          Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office] are supported.
         schema:
           type: string
           example: G1234UT
