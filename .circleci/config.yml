@@ -372,6 +372,7 @@ jobs:
     executor: basic-executor
     steps:
       - checkout
+      - setup_remote_docker
       - smoke-test-cmd
 
   build_dev:
