@@ -188,7 +188,6 @@ executors:
           LANG: C.utf8
 
 
-
 commands:
   build-base:
     description: "Checkout app code and fetch dependencies for running tests"
@@ -279,6 +278,28 @@ commands:
           name: check image
           command: docker images
 
+  retag_docker_image:
+    description: "Retag an image for deployment staging/production and pushes to ECR"
+    parameters:
+      env:
+        type: string
+    steps:
+    - run:
+        name: Login to ECR
+        command: |
+          LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+          ${LOGIN_COMMAND}
+    - run:
+        name: Get image manifest from ECR
+        command: |
+          MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
+          --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
+    - run:
+        name: Retag Image
+        command: |
+          "aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag "<< parameters.env >>.latest" \
+          --image-manifest "$MANIFEST"
+
   build_for_k8s:
     description: "Builds a Docker image for staging/production and pushes to ECR"
     parameters:
@@ -327,6 +348,9 @@ commands:
             false && docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
 
 
+
+
+
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
     parameters:
@@ -345,7 +369,7 @@ commands:
           name: kubectl use context
           command: |
             setup-kube-auth
-            false && kubectl config use-context << parameters.env >>
+            kubectl config use-context << parameters.env >>
 
       - deploy:
           name: rolling update image to << parameters.env >>
@@ -353,19 +377,19 @@ commands:
             export BUILD_DATE=$(date -Is) >> $BASH_ENV
             source $BASH_ENV
 
-            false && kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
-                    deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
-                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            true || kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+                   deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
+                   webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
-            false &&  kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+            true || kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-deployment-<< parameters.env >> \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
 
-            false &&  kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
+            true || kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
                     webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
-            false &&  kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
+            true ||  kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
       - when:
@@ -437,10 +461,10 @@ jobs:
           env: "dev"
 
   deploy_dev:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - deploy_to_k8s:
-          env: "dev"
+          env: "fake"
 
   build_staging:
     <<: *cloud_container
@@ -509,4 +533,8 @@ workflows:
           <<: *only_master
           requires:
             - build_image
+      - deploy_dev:
+          requires:
+            - smoke_tests
+
 
