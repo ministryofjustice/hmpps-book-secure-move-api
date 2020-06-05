@@ -407,7 +407,7 @@ jobs:
 
   api_docs:
     executor: test-executor
-    parallelism: 6
+    parallelism: 8
     steps:
       - checkout
       - build-base
@@ -420,7 +420,7 @@ jobs:
 
   rspec_tests:
     executor: test-executor
-    parallelism: 6
+    parallelism: 8
     steps:
       - checkout
       - build-base
@@ -452,17 +452,6 @@ jobs:
       - setup_remote_docker
       - smoke-test-cmd
 
-  build_dev:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "dev"
-
-  dev_tests:
-    executor: basic-executor
-    steps:
-      - checkout
-
   deploy_dev:
     executor: cloud-platform-executor
     steps:
@@ -471,11 +460,10 @@ jobs:
       - deploy_to_k8s:
           env: "fake"
 
-  build_staging:
-    <<: *cloud_container
+  dev_tests:
+    executor: basic-executor
     steps:
-      - build_for_k8s:
-          env: "staging"
+      - checkout
 
   deploy_staging:
     <<: *cloud_container
@@ -483,24 +471,11 @@ jobs:
       - deploy_to_k8s:
           env: "staging"
 
-  build_preprod:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "preprod"
-
   deploy_preprod:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
           env: "preprod"
-
-  build_production:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "production"
-          notify_slack: "true"
 
   deploy_production:
     <<: *cloud_container
@@ -541,5 +516,8 @@ workflows:
       - deploy_dev:
           requires:
             - smoke_tests
+      - dev_tests:
+          requires:
+            - deploy_dev
 
 
