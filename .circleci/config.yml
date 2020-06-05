@@ -168,7 +168,7 @@ executors:
         environment:
           GITHUB_TEAM_NAME_SLUG: book-a-secure-move
           REPO_NAME: hmpps-book-secure-move-api
-      - image: ${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPO_NAME}:ci-latest
+      - image: ${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:ci-latest
         environment:
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
           ENCRYPTOR_SALT: "*\xDB\x9E\a\x1ES1\xB7\xE3\xB8{\xF9Fl\x8Fnn?\x83\xC6\xBBR\x9Eq\x0F\x01./U\x0E\xF1\xDE"
@@ -407,7 +407,7 @@ jobs:
 
   api_docs:
     executor: test-executor
-    parallelism: 6
+    parallelism: 8
     steps:
       - checkout
       - build-base
@@ -420,7 +420,7 @@ jobs:
 
   rspec_tests:
     executor: test-executor
-    parallelism: 6
+    parallelism: 8
     steps:
       - checkout
       - build-base
@@ -452,17 +452,6 @@ jobs:
       - setup_remote_docker
       - smoke-test-cmd
 
-  build_dev:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "dev"
-
-  dev_tests:
-    executor: basic-executor
-    steps:
-      - checkout
-
   deploy_dev:
     executor: cloud-platform-executor
     steps:
@@ -471,11 +460,10 @@ jobs:
       - deploy_to_k8s:
           env: "fake"
 
-  build_staging:
-    <<: *cloud_container
+  dev_tests:
+    executor: basic-executor
     steps:
-      - build_for_k8s:
-          env: "staging"
+      - checkout
 
   deploy_staging:
     <<: *cloud_container
@@ -483,24 +471,11 @@ jobs:
       - deploy_to_k8s:
           env: "staging"
 
-  build_preprod:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "preprod"
-
   deploy_preprod:
     <<: *cloud_container
     steps:
       - deploy_to_k8s:
           env: "preprod"
-
-  build_production:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "production"
-          notify_slack: "true"
 
   deploy_production:
     <<: *cloud_container
@@ -541,5 +516,8 @@ workflows:
       - deploy_dev:
           requires:
             - smoke_tests
+      - dev_tests:
+          requires:
+            - deploy_dev
 
 
