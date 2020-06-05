@@ -45,6 +45,10 @@ FactoryBot.define do
       event_name { 'lockout' }
     end
 
+    trait :reject do
+      event_name { 'reject' }
+    end
+
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
       details do
@@ -75,6 +79,18 @@ FactoryBot.define do
             attributes: {
               cancellation_reason: nil,
               cancellation_reason_comment: 'this is a broken event',
+            },
+          } }
+        end
+      end
+
+      trait :reject do
+        event_name { 'reject' }
+        details do
+          { event_params: {
+            attributes: {
+              rejection_reason: 'no_transport_available',
+              cancellation_reason_comment: 'computer says no',
             },
           } }
         end

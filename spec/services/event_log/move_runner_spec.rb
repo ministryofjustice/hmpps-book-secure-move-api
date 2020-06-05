@@ -114,6 +114,40 @@ RSpec.describe EventLog::MoveRunner do
     end
   end
 
+  context 'when event_name=reject' do
+    let!(:event) { create(:move_event, :reject, eventable: move) }
+
+    context 'when the move is requested' do
+      it 'updates the move status to cancelled' do
+        expect { runner.call }.to change(move, :status).from('requested').to('cancelled')
+      end
+
+      it 'updates the move rejection_reason' do
+        expect { runner.call }.to change(move, :rejection_reason).from(nil).to('no_transport_available')
+      end
+
+      it 'updates the move cancellation_reason' do
+        expect { runner.call }.to change(move, :cancellation_reason).from(nil).to('rejected')
+      end
+
+      it 'updates the move cancellation_reason_comment' do
+        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already rejected' do
+      let!(:move) { create(:move, :cancelled, rejection_reason: 'no_transport_available', cancellation_reason: 'rejected', cancellation_reason_comment: 'computer says no') }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { runner.call }.not_to change(move, :status).from('cancelled')
+      end
+    end
+  end
+
   context 'when event_name=complete' do
     let!(:event) { create(:move_event, :complete, eventable: move) }
 

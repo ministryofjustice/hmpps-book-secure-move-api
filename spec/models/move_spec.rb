@@ -37,6 +37,26 @@ RSpec.describe Move do
     end
   end
 
+  describe 'rejection_reason' do
+    context 'when the move is not rejected' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:rejection_reason) }
+    end
+
+    context 'when the move is rejected' do
+      let(:move) { build(:move, status: 'cancelled', cancellation_reason: 'rejected') }
+
+      it {
+        expect(move).to validate_inclusion_of(:rejection_reason)
+          .in_array(%w[
+            no_space_at_receiving_prison
+            no_transport_available
+          ])
+      }
+    end
+  end
+
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
@@ -274,6 +294,22 @@ RSpec.describe Move do
       it 'does not return moves with no supplier' do
         expect(described_class.served_by(supplier.id)).not_to include(move_without_supplier)
       end
+    end
+  end
+
+  describe '#rejected?' do
+    subject { move.rejected? }
+
+    context 'with cancellation_reason of rejected' do
+      let(:move) { build :move, cancellation_reason: 'rejected' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with cancellation_reason not rejected' do
+      let(:move) { build :move, cancellation_reason: 'other' }
+
+      it { is_expected.to be false }
     end
   end
 
