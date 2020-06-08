@@ -64,8 +64,15 @@ aliases:
       branches:
         ignore: /.*/
 
-references:
-  app_containers: &app_containers
+executors:
+  cloud-platform-executor:
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+          REPO_NAME: hmpps-book-secure-move-api
+
+  test-executor:
     docker:
       - image: circleci/ruby:2.6.6
         environment:
@@ -80,11 +87,7 @@ references:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
-  cloud_container: &cloud_container
-    docker:
-      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
-        environment:
-          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+
 
 commands:
   prepare_tests:
@@ -210,12 +213,12 @@ commands:
 
 jobs:
   notify_of_approval:
-    <<: *app_containers
+    executor: cloud-platform-executor
     steps:
       - *notify_slack_of_approval
 
   test:
-    <<: *app_containers
+    executor: test-executor
     steps:
       - prepare_tests
 
@@ -230,7 +233,7 @@ jobs:
       - *notify_slack_on_failure
 
   api_docs:
-    <<: *app_containers
+    executor: cloud-platform-executor
     steps:
       - prepare_tests
 
@@ -247,50 +250,50 @@ jobs:
       - *notify_slack_on_failure
 
   build_dev:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - build_for_k8s:
           env: "dev"
 
   deploy_dev:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - deploy_to_k8s:
           env: "dev"
 
   build_staging:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - build_for_k8s:
           env: "staging"
 
   deploy_staging:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - deploy_to_k8s:
           env: "staging"
 
   build_preprod:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - build_for_k8s:
           env: "preprod"
 
   deploy_preprod:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - deploy_to_k8s:
           env: "preprod"
 
   build_production:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - build_for_k8s:
           env: "production"
           notify_slack: "true"
 
   deploy_production:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
       - deploy_to_k8s:
           env: "production"
