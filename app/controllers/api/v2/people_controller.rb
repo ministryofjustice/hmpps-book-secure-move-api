@@ -3,16 +3,25 @@
 module Api
   module V2
     class PeopleController < ApiController
+      def index
+        people = ::V2::People::Finder.new(filter_params).call
+
+        paginate people, include: included_relationships, each_serializer: ::V2::PersonSerializer
+      end
+
       def create
         person = Person.create(person_attributes)
 
         render json: person, status: :created, include: included_relationships, serializer: ::V2::PersonSerializer
       end
 
-      def index
-        people = ::V2::People::Finder.new(filter_params).call
+      def update
+        person = Person.find(params[:id])
 
-        paginate people, include: included_relationships, each_serializer: ::V2::PersonSerializer
+        person.update(person_attributes)
+        Notifier.prepare_notifications(topic: person, action_name: 'update')
+
+        render json: person, status: :ok, include: included_relationships, serializer: ::V2::PersonSerializer
       end
 
     private
