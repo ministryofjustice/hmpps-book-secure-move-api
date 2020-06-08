@@ -9,6 +9,7 @@ module Api
       COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
       REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
+      REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment]].freeze
       DEPRECATED_EVENT_PARAMS = [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
 
       def cancel
@@ -32,6 +33,12 @@ module Api
       def redirects
         validate_params!(redirect_params, require_to_location: true)
         process_event(move, Event::REDIRECT, redirect_params)
+        render status: :no_content
+      end
+
+      def reject
+        validate_params!(reject_params)
+        process_event(move, Event::REJECT, reject_params)
         render status: :no_content
       end
 
@@ -95,6 +102,10 @@ module Api
 
       def redirect_params
         @redirect_params ||= params.require(:data).permit(REDIRECT_PARAMS).to_h
+      end
+
+      def reject_params
+        @reject_params ||= params.require(:data).permit(REJECT_PARAMS).to_h
       end
 
       def deprecated_event_params

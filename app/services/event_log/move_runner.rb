@@ -15,6 +15,11 @@ module EventLog
           move.status = Move::MOVE_STATUS_CANCELLED
           move.cancellation_reason = event.cancellation_reason
           move.cancellation_reason_comment = event.cancellation_reason_comment
+        when Event::REJECT
+          move.status = Move::MOVE_STATUS_CANCELLED
+          move.rejection_reason = event.rejection_reason
+          move.cancellation_reason = Move::CANCELLATION_REASON_REJECTED
+          move.cancellation_reason_comment = event.cancellation_reason_comment
         when Event::COMPLETE
           move.status = Move::MOVE_STATUS_COMPLETED
         when Event::LOCKOUT

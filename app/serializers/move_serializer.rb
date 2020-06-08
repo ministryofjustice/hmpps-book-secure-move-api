@@ -10,6 +10,7 @@ class MoveSerializer < ActiveModel::Serializer
              :date,
              :move_type,
              :additional_information,
+             :rejection_reason,
              :cancellation_reason,
              :cancellation_reason_comment,
              :move_agreed,

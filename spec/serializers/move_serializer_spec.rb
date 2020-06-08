@@ -31,6 +31,10 @@ RSpec.describe MoveSerializer do
       expect(attributes[:move_type]).to eql move.move_type
     end
 
+    it 'contains a rejection_reason attribute' do
+      expect(attributes[:rejection_reason]).to eql move.rejection_reason
+    end
+
     it 'contains a date attribute' do
       expect(attributes[:date]).to eql move.date.iso8601
     end

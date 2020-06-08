@@ -1,0 +1,24 @@
+PostMoveReject:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: reject
+      enum:
+      - reject
+      description: The type of this object - always `reject`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      - rejection_reason
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        rejection_reason:
+          $ref: move_rejection_reason_attribute.yaml#/MoveRejectionReason
+        cancellation_reason_comment:
+          $ref: move_cancellation_reason_comment_attribute.yaml#/MoveCancellationReasonComment
