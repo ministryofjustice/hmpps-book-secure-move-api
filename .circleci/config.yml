@@ -288,7 +288,7 @@ jobs:
       - *attach-tmp-workspace
       - *rspec
 
-  rubocop_tests:
+  linters:
     executor: test-executor
     steps:
       - checkout
@@ -361,7 +361,7 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
-      - rubocop_tests:
+      - linters:
           <<: *all_tags
           requires:
             - setup_test_environment
@@ -373,7 +373,7 @@ workflows:
           <<: *only_master_and_create_dev
           requires:
             - rspec_tests
-            - rubocop_tests
+            - linters
             - build_dev
       - build_staging:
           <<: *only_master
@@ -383,7 +383,7 @@ workflows:
           <<: *only_master
           requires:
             - rspec_tests
-            - rubocop_tests
+            - linters
             - build_staging
       - build_preprod:
           <<: *only_deploy_tags
@@ -393,7 +393,7 @@ workflows:
           <<: *only_deploy_tags
           requires:
             - rspec_tests
-            - rubocop_tests
+            - linters
             - build_preprod
       - build_production:
           <<: *only_deploy_tags
@@ -404,13 +404,13 @@ workflows:
           type: approval
           requires:
             - rspec_tests
-            - rubocop_tests
+            - linters
             - build_production
       - notify_of_approval:
           <<: *only_deploy_tags
           requires:
             - rspec_tests
-            - rubocop_tests
+            - linters
             - build_production
       - deploy_production:
           <<: *only_deploy_tags
