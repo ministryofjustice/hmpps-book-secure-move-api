@@ -52,7 +52,7 @@ Rails.application.routes.draw do
 
     namespace :v2 do
       resources :people, only: %i[index create] do
-        resources :profiles, only: %i[create]
+        resources :profiles, only: %i[create update]
       end
     end
   end
