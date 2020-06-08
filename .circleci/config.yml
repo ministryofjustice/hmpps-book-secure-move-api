@@ -288,6 +288,11 @@ jobs:
       - *attach-tmp-workspace
       - *rspec
 
+  test:
+    executor: test-executor
+    steps:
+      - checkout
+
   linters:
     executor: test-executor
     steps:
@@ -365,6 +370,10 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
+      - test:
+          requires:
+            - rspec_tests
+            - linters
       - build_dev:
           <<: *only_master_and_create_dev
           requires:
@@ -372,8 +381,7 @@ workflows:
       - deploy_dev:
           <<: *only_master_and_create_dev
           requires:
-            - rspec_tests
-            - linters
+            - test
             - build_dev
       - build_staging:
           <<: *only_master
@@ -382,8 +390,7 @@ workflows:
       - deploy_staging:
           <<: *only_master
           requires:
-            - rspec_tests
-            - linters
+            - test
             - build_staging
       - build_preprod:
           <<: *only_deploy_tags
@@ -392,8 +399,7 @@ workflows:
       - deploy_preprod:
           <<: *only_deploy_tags
           requires:
-            - rspec_tests
-            - linters
+            - test
             - build_preprod
       - build_production:
           <<: *only_deploy_tags
@@ -403,14 +409,12 @@ workflows:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - rspec_tests
-            - linters
+            - test
             - build_production
       - notify_of_approval:
           <<: *only_deploy_tags
           requires:
-            - rspec_tests
-            - linters
+            - test
             - build_production
       - deploy_production:
           <<: *only_deploy_tags
