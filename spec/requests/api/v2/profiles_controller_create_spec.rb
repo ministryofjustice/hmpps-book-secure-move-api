@@ -12,7 +12,7 @@ RSpec.describe Api::V2::ProfilesController do
   let(:risk_type_2) { create :assessment_question, :risk }
 
   describe 'POST /v2/people/:id/profiles' do
-    let(:schema) { load_yaml_schema('post_profile_responses.yaml', version: 'v2') }
+    let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v2') }
 
     let(:profile_params) do
       {
@@ -102,7 +102,7 @@ RSpec.describe Api::V2::ProfilesController do
         end
       end
 
-      context 'when including multiple relationships' do
+      context 'when including a relationship' do
         let(:include_params) { 'person' }
 
         it 'includes the relevant relationships' do
@@ -128,6 +128,13 @@ RSpec.describe Api::V2::ProfilesController do
       before { post "/api/v2/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
+    end
+
+    context 'when the person_id is not found' do
+      before { post "/api/v2/people/foo-bar/profiles", params: profile_params, headers: headers, as: :json }
+
+      let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'when not authorized', :with_invalid_auth_headers do
