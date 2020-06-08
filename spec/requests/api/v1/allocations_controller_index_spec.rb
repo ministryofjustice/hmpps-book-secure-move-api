@@ -196,7 +196,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           it 'returns the default includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
           end
         end
 
@@ -217,7 +217,7 @@ RSpec.describe Api::V1::AllocationsController do
               'errors' => [
                 {
                   'title' => 'Bad request',
-                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves", "moves.person"]',
+                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves", "moves.person", "moves.person.gender", "moves.person.ethnicity"]',
                 },
               ],
             }
@@ -243,7 +243,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           it 'returns the default includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
           end
         end
       end
