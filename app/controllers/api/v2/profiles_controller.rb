@@ -3,9 +3,17 @@
 module Api
   module V2
     class ProfilesController < ApiController
+      # TODO: add validation for assessment answers
       def create
-        profile = person.profiles.create(profile_attributes)
-        render json: profile, status: :created, include: included_relationships, serializer: ::V2::ProfileSerializer
+        profile = person.profiles.create(new_profile_attributes)
+        render_profile(profile, :created)
+      end
+
+      def update
+        profile = person.profiles.find(params.require(:id))
+
+        profile.update!(update_profile_attributes)
+        render_profile(profile, :ok)
       end
 
     private
@@ -17,7 +25,6 @@ module Api
             %i[
               key
               date
-              expiry_data
               category
               title
               comments
@@ -38,9 +45,13 @@ module Api
         params.require(:data).permit(PROFILE_ATTRIBUTES).to_h
       end
 
-      def profile_attributes
+      def new_profile_attributes
         # TODO: will be removed once we remove first name and last name from profiles
         profile_params[:attributes].merge(first_names: person.first_names, last_name: person.last_name)
+      end
+
+      def update_profile_attributes
+        profile_params[:attributes]
       end
 
       def person
@@ -49,6 +60,10 @@ module Api
 
       def supported_relationships
         ::V2::ProfileSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def render_profile(profile, status)
+        render json: profile, status: status, include: included_relationships, serializer: ::V2::ProfileSerializer
       end
     end
   end
