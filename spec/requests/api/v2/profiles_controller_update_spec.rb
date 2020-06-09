@@ -7,12 +7,11 @@ RSpec.describe Api::V2::ProfilesController do
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-  let(:person) { create(:person_without_profiles) }
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
-  describe 'POST /v2/people/:id/profiles' do
-    let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v2') }
+  describe 'PATCH /v2/people/:id/profiles' do
+    let(:schema) { load_yaml_schema('patch_profiles_responses.yaml', version: 'v2') }
 
     let(:profile_params) do
       {
@@ -39,30 +38,62 @@ RSpec.describe Api::V2::ProfilesController do
         },
       }
     end
+    let(:profile) { create(:profile) }
 
-    context 'with valid params' do
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+    context 'with no pre-existing assessment_answers on profile' do
+      before do
+        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+      end
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'adds assessment_answers to the profile' do
+        expect(profile.reload.assessment_answers.map(&:assessment_question_id)).to contain_exactly(risk_type_1.id, risk_type_2.id)
+      end
 
       it 'returns the correct data' do
         expect(response_json['data']).to include_json(expected_data)
       end
-
-      it 'creates a new profile' do
-        expect {
-          post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
-        }.to change(Profile, :count).by(1)
-      end
     end
 
-    context 'with a person associated to multiple profiles' do
-      it 'maintains previous profiles associated to the person' do
-        person = create(:person)
+    context 'with pre-existing assessment_answers on profile' do
+      let(:profile) { create(:profile, assessment_answers: [{ title: risk_type_1.title, assessment_question_id: risk_type_1.id }]) }
+      let(:profile_params) do
+        {
+          data: {
+            type: 'profiles',
+            attributes: {
+              assessment_answers: [
+                { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
+              ],
+            },
+          },
+        }
+      end
 
-        expect {
-          post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
-        }.to change(Profile, :count).from(1).to(2)
+      let(:expected_data) do
+        {
+          type: 'profiles',
+          attributes: {
+            assessment_answers: [
+              { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
+            ],
+          },
+        }
+      end
+
+      before do
+        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'updates the assessment_answers on the profile' do
+        expect(profile.reload.assessment_answers.map(&:assessment_question_id)).to contain_exactly(risk_type_2.id)
+      end
+
+      it 'returns the correct data' do
+        expect(response_json['data']).to include_json(expected_data)
       end
     end
 
@@ -83,7 +114,7 @@ RSpec.describe Api::V2::ProfilesController do
       end
 
       before do
-        post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -125,33 +156,48 @@ RSpec.describe Api::V2::ProfilesController do
     end
 
     context 'with a bad request' do
-      before { post "/api/v2/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
+      let(:schema) { load_yaml_schema('error_responses.yaml') }
+      let(:profile_params) { nil }
+
+      before do
+        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+      end
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
+    context 'when not authorized' do
+      let(:access_token) { 'foo-bar' }
+      let(:detail_401) { 'Token expired or invalid' }
+
+      before do
+        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+      end
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'when the profile_id is not found' do
+      let(:move_id) { 'foo-bar' }
+      let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
+
+      before { patch "/api/v2/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
+
     context 'when the person_id is not found' do
-      before { post '/api/v2/people/foo-bar/profiles', params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v2/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:detail_401) { 'Token expired or invalid' }
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v2/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

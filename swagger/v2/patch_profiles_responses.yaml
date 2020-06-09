@@ -1,0 +1,61 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: '../v2/profile.yaml#/Profile'
+'400':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/BadRequest'
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/NotAuthorisedError'
+'403':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/Forbidden'
+'404':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/ResourceNotFound'
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/UnsupportedMediaType'
+'422':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: '../v1/errors.yaml#/UnprocessableEntity'
