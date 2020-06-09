@@ -267,7 +267,7 @@
         content:
           application/vnd.api+json:
             schema:
-              $ref: put_people_responses.yaml#/200
+              $ref: patch_people_responses.yaml#/200
       '400':
         description: bad request
         content:
