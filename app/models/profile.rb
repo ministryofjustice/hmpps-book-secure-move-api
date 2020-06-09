@@ -9,11 +9,12 @@ class Profile < VersionedModel
 
   has_one :move, dependent: :nullify
 
+  has_many :documents, as: :documentable, dependent: :destroy
+
   validates :person, presence: true
   validates :last_name, presence: true
   validates :first_names, presence: true
   validate :validate_assessment_answers
-
   attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
   attribute :profile_identifiers, Types::Jsonb.new(Profile::ProfileIdentifiers)
 
