@@ -7,7 +7,7 @@ RSpec.describe IdentifierTypeSerializer do
 
   let(:disabled_at) { Time.new(2019, 1, 1) }
   let(:identifier_type) { create :identifier_type, disabled_at: disabled_at }
-  let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
+  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'identifier_types'
@@ -26,6 +26,6 @@ RSpec.describe IdentifierTypeSerializer do
   end
 
   it 'contains a disabled_at attribute' do
-    expect(Time.parse(result[:data][:attributes][:disabled_at])).to eql disabled_at
+    expect(result[:data][:attributes][:disabled_at]).to eql disabled_at
   end
 end

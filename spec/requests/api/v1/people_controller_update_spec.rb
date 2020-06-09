@@ -10,7 +10,7 @@ RSpec.describe Api::V1::PeopleController do
 
   describe 'PUT /api/v1/people' do
     let!(:person) { create :person }
-    let(:schema) { load_json_schema('put_people_responses.json') }
+    let(:schema) { load_yaml_schema('put_people_responses.yaml') }
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
     let(:risk_type_1) { create :assessment_question, :risk }
@@ -26,7 +26,8 @@ RSpec.describe Api::V1::PeopleController do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1),
             assessment_answers: [
-              { title: 'Escape risk', assessment_question_id: risk_type_1.id,
+              { title: 'Escape risk',
+                assessment_question_id: risk_type_1.id,
                 comments: 'Needs an inhaler',
                 nomis_alert_type: 'alert type',
                 nomis_alert_type_description: 'alert type description',
@@ -71,7 +72,8 @@ RSpec.describe Api::V1::PeopleController do
             last_name: 'Roberts',
             date_of_birth: Date.civil(1980, 1, 1).iso8601,
             assessment_answers: [
-              { title: risk_type_1.title, assessment_question_id: risk_type_1.id,
+              { title: risk_type_1.title,
+                assessment_question_id: risk_type_1.id,
                 comments: 'Needs an inhaler',
                 nomis_alert_type: 'alert type',
                 nomis_alert_type_description: 'alert type description',
@@ -102,14 +104,25 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'updates an existing person' do
-        expect do
+        expect {
           put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
-        end.to change(Person, :count).by(0)
+        }.to change(Person, :count).by(0)
       end
 
       it 'changes the assessment answers' do
         put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
         expect(person.latest_profile.reload.first_names).to include(expected_data[:attributes][:first_names])
+      end
+
+      describe 'webhook and email notifications' do
+        before do
+          allow(Notifier).to receive(:prepare_notifications)
+          put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        end
+
+        it 'calls the notifier when updating a person' do
+          expect(Notifier).to have_received(:prepare_notifications).with(topic: person, action_name: 'update')
+        end
       end
     end
 

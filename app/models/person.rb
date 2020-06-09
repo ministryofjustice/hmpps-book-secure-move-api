@@ -1,18 +1,23 @@
 # frozen_string_literal: true
 
 class Person < VersionedModel
+  IDENTIFIER_TYPES = %i[
+    police_national_computer criminal_records_office prison_number
+  ].freeze
+
   has_many :profiles, dependent: :destroy
-  has_many :moves, dependent: :destroy
+  has_many :moves, through: :profiles
+
+  belongs_to :ethnicity, optional: true
+  belongs_to :gender, optional: true
 
   has_one_attached :image
 
   def latest_profile
-    profiles.last
+    profiles.order(:updated_at).last
   end
 
-  def latest_nomis_booking_id
-    latest_profile.latest_nomis_booking_id
-  end
+  delegate :latest_nomis_booking_id, to: :latest_profile
 
   def attach_image(image_blob)
     "#{id}.jpg".tap do |filename|

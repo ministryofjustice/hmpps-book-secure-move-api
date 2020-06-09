@@ -9,8 +9,14 @@ FactoryBot.define do
 
     trait :with_moves do
       after(:create) do |location, _|
-        create_list :move, 10, from_location: location
+        create_list :move, 2, from_location: location
       end
+    end
+
+    trait :prison do
+      title { "HMP #{Faker::Address.city}" }
+      location_type { Location::LOCATION_TYPE_PRISON }
+      nomis_agency_id { 'PEI' }
     end
 
     trait :court do

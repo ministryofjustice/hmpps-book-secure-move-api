@@ -6,7 +6,7 @@ RSpec.describe Moves::ImportPeople do
   subject(:importer) { described_class.new(input_data) }
 
   let(:input_data) do
-    [person_nomis_prison_number: prisoner_one.nomis_prison_number]
+    [prisoner_one.nomis_prison_number]
   end
 
   let!(:brixton_prison) { create(:location, nomis_agency_id: 'BXI', location_type: 'prison') }
@@ -27,16 +27,16 @@ RSpec.describe Moves::ImportPeople do
      { prison_number: prisoner_two.nomis_prison_number, first_name: 'Bob' }]
   end
   let(:personal_care_needs_response) do
-    [{ offender_no: prisoner_one.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU9' },
-     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU9' },
-     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'MATSTAT', problem_code: 'ACCU4' }]
+    [{ offender_no: prisoner_one.nomis_prison_number, problem_type: 'FOO', problem_code: 'AA' },
+     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'FOO', problem_code: 'BAC' },
+     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'FOO', problem_code: 'TTG' }]
   end
 
   before do
     allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
     allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
-    # create fallback questions for PersonalCareNeeds importer and Alerts importer
+
     create(:assessment_question, :care_needs_fallback)
     create(:assessment_question, :alerts_fallback)
   end

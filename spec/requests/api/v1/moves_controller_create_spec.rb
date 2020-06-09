@@ -7,19 +7,19 @@ RSpec.describe Api::V1::MovesController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::INCLUDED_ATTRIBUTES))
+    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
   end
 
   describe 'POST /moves' do
-    let(:schema) { load_json_schema('post_moves_responses.json') }
+    let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
-    let(:move_attributes) {
+    let(:move_attributes) do
       { date: Date.today,
         time_due: Time.now,
         status: 'requested',
         additional_information: 'some more info',
         move_type: 'court_appearance' }
-    }
+    end
 
     let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
@@ -99,6 +99,10 @@ RSpec.describe Api::V1::MovesController do
         expect(response_json).to eq resource_to_json
       end
 
+      it 'does not provide a default value for move_agreed' do
+        expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq nil
+      end
+
       it 'sets the additional_information' do
         expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
       end
@@ -107,10 +111,14 @@ RSpec.describe Api::V1::MovesController do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
-        let(:faraday_client) {
-          class_double(Faraday, post:
-            instance_double(Faraday::Response, success?: true, status: 202))
-        }
+        let(:faraday_client) do
+          class_double(
+            Faraday,
+            headers: {},
+            post:
+                        instance_double(Faraday::Response, success?: true, status: 202),
+          )
+        end
 
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
@@ -132,11 +140,17 @@ RSpec.describe Api::V1::MovesController do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
-        let(:notify_response) {
-          instance_double(ActionMailer::MessageDelivery, deliver_now!:
-              instance_double(Mail::Message, govuk_notify_response:
-                  instance_double(Notifications::Client::ResponseNotification, id: response_id)))
-        }
+        let(:notify_response) do
+          instance_double(
+            ActionMailer::MessageDelivery,
+            deliver_now!:
+                          instance_double(
+                            Mail::Message,
+                            govuk_notify_response:
+                                              instance_double(Notifications::Client::ResponseNotification, id: response_id),
+                          ),
+          )
+        end
         let(:response_id) { SecureRandom.uuid }
 
         before do
@@ -219,7 +233,7 @@ RSpec.describe Api::V1::MovesController do
       context 'with explicit move_agreed and move_agreed_by' do
         let(:date_from) { Date.yesterday }
         let(:date_to) { Date.tomorrow }
-        let(:move_attributes) {
+        let(:move_attributes) do
           {
             date: Date.today,
             move_agreed: 'true',
@@ -227,7 +241,7 @@ RSpec.describe Api::V1::MovesController do
             date_from: date_from,
             date_to: date_to,
           }
-        }
+        end
 
         it 'sets date_from' do
           expect(response_json.dig('data', 'attributes', 'date_from')).to eq date_from.to_s
@@ -262,6 +276,70 @@ RSpec.describe Api::V1::MovesController do
           expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
         end
       end
+
+      context 'with a profile relationship' do
+        let(:profile) { create(:profile) }
+        let(:data) do
+          {
+            type: 'moves',
+            attributes: move_attributes,
+            relationships: {
+              profile: { data: { type: 'profiles', id: profile.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } },
+              to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+              documents: { data: [{ type: 'documents', id: document.id }] },
+              prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
+            },
+          }
+        end
+
+        it 'associates the profile with the newly created move' do
+          expect(move.profile).to eq(profile)
+        end
+
+        it 'returns the profile in the response' do
+          expected_response = { 'type' => 'profiles', 'id' => profile.id }
+
+          expect(response_json.dig('data', 'relationships', 'profile', 'data')).to eq(expected_response)
+        end
+
+        it 'returns the profile person in the response' do
+          expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+          expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
+        end
+      end
+
+      # TODO: Remove when people/profiles migration is completed
+      context 'with a profile and person relationship' do
+        let(:person) { create(:person) }
+        let(:profile) { create(:profile) }
+
+        let(:data) do
+          {
+            type: 'moves',
+            attributes: move_attributes,
+            relationships: {
+              profile: { data: { type: 'profiles', id: profile.id } },
+              person: { data: { type: 'people', id: person.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } },
+              to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+              documents: { data: [{ type: 'documents', id: document.id }] },
+              prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
+            },
+          }
+        end
+
+        it 'favours the profile passed in with the newly created move' do
+          expect(move.profile).to eq(profile)
+        end
+
+        it 'returns the profile person in the response' do
+          expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+          expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
+        end
+      end
     end
 
     context 'with a bad request' do
@@ -271,8 +349,8 @@ RSpec.describe Api::V1::MovesController do
     end
 
     context 'with a reference to a missing relationship' do
-      let(:person) { Person.new }
-      let(:detail_404) { "Couldn't find Person without an ID" }
+      let(:from_location) { build(:location) }
+      let(:detail_404) { "Couldn't find Location without an ID" }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
@@ -304,10 +382,12 @@ RSpec.describe Api::V1::MovesController do
       let(:profile) { create(:profile) }
       let(:person) { profile.person }
       let(:move_attributes) do
-        attributes_for(:move).merge(date: old_move.date,
-                                    person: person,
-                                    from_location: from_location,
-                                    to_location: to_location)
+        attributes_for(:move).merge(
+          date: old_move.date,
+          person: profile.person,
+          from_location: from_location,
+          to_location: to_location,
+        )
       end
 
       before do
@@ -315,14 +395,14 @@ RSpec.describe Api::V1::MovesController do
       end
 
       context 'when there are multiple cancelled duplicates' do
-        let!(:old_move) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location) }
-        let!(:old_move2) { create(:move, :cancelled, person: person, from_location: from_location, to_location: to_location, date: old_move.date) }
+        let!(:old_move) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
+        let!(:old_move2) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location, date: old_move.date) }
 
         it_behaves_like 'an endpoint that responds with success 201'
       end
 
       context 'when duplicate is active' do
-        let!(:old_move) { create(:move, person: person, from_location: from_location, to_location: to_location) }
+        let!(:old_move) { create(:move, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
             {

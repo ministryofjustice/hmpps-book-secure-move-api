@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_101454) do
+ActiveRecord::Schema.define(version: 2020_06_09_082714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -36,6 +36,13 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "allocation_complex_cases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "allocations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id", null: false
@@ -48,6 +55,10 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.text "other_criteria"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
+    t.string "cancellation_reason"
+    t.text "cancellation_reason_comment"
+    t.string "requested_by"
     t.index ["date"], name: "index_allocations_on_date"
   end
 
@@ -80,7 +91,10 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.string "documentable_type"
+    t.bigint "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
+    t.index ["documentable_type", "documentable_id"], name: "index_documents_on_documentable_type_and_documentable_id"
     t.index ["move_id"], name: "index_documents_on_move_id"
   end
 
@@ -92,6 +106,19 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "updated_at", null: false
     t.string "nomis_code"
     t.datetime "disabled_at"
+  end
+
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "event_name", null: false
+    t.jsonb "details"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "eventable_id", null: false
+    t.string "eventable_type", null: false
+    t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
+    t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
+    t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -110,6 +137,29 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "disabled_at"
   end
 
+  create_table "journeys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.uuid "supplier_id", null: false
+    t.uuid "from_location_id", null: false
+    t.uuid "to_location_id", null: false
+    t.boolean "billable", default: false, null: false
+    t.string "state", null: false
+    t.jsonb "vehicle"
+    t.datetime "client_timestamp", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_timestamp"], name: "index_journeys_on_client_timestamp"
+    t.index ["from_location_id"], name: "index_journeys_on_from_location_id"
+    t.index ["move_id", "client_timestamp"], name: "index_journeys_on_move_id_and_client_timestamp"
+    t.index ["move_id", "state"], name: "index_journeys_on_move_id_and_state"
+    t.index ["move_id"], name: "index_journeys_on_move_id"
+    t.index ["state"], name: "index_journeys_on_state"
+    t.index ["supplier_id", "billable"], name: "index_journeys_on_supplier_id_and_billable"
+    t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
+    t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
+    t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
+  end
+
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "location_type"
@@ -119,6 +169,17 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.string "key", null: false
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
+  end
+
+  create_table "locations_regions", id: false, force: :cascade do |t|
+    t.uuid "location_id", null: false
+    t.uuid "region_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id", "region_id"], name: "index_locations_regions_on_location_id_and_region_id", unique: true
+    t.index ["location_id"], name: "index_locations_regions_on_location_id"
+    t.index ["region_id", "location_id"], name: "index_locations_regions_on_region_id_and_location_id", unique: true
+    t.index ["region_id"], name: "index_locations_regions_on_region_id"
   end
 
   create_table "locations_suppliers", id: false, force: :cascade do |t|
@@ -136,7 +197,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id", null: false
+    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -149,12 +210,15 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.boolean "move_agreed", default: false, null: false
+    t.boolean "move_agreed"
     t.string "move_agreed_by"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
+    t.uuid "allocation_id"
+    t.string "rejection_reason"
+    t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
@@ -255,7 +319,23 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nomis_prison_number"
+    t.string "prison_number"
+    t.string "criminal_records_office"
+    t.string "police_national_computer"
+    t.string "first_names"
+    t.string "last_name"
+    t.date "date_of_birth"
+    t.string "gender_additional_information"
+    t.uuid "ethnicity_id"
+    t.uuid "gender_id"
+    t.datetime "last_synced_with_nomis"
+    t.integer "latest_nomis_booking_id"
+    t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
+    t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
+    t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
+    t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
+    t.index ["prison_number"], name: "index_people_on_prison_number"
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -282,6 +362,14 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.integer "latest_nomis_booking_id"
   end
 
+  create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_regions_on_key"
+  end
+
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "supplier_id", null: false
     t.string "callback_url"
@@ -291,6 +379,8 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email_address"
+    t.string "encrypted_username"
+    t.string "encrypted_password"
     t.index ["callback_url"], name: "index_subscriptions_on_callback_url"
     t.index ["discarded_at"], name: "index_subscriptions_on_discarded_at"
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
@@ -319,8 +409,15 @@ ActiveRecord::Schema.define(version: 2020_04_16_101454) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
+  add_foreign_key "journeys", "locations", column: "from_location_id"
+  add_foreign_key "journeys", "locations", column: "to_location_id"
+  add_foreign_key "journeys", "moves"
+  add_foreign_key "journeys", "suppliers"
+  add_foreign_key "locations_regions", "locations"
+  add_foreign_key "locations_regions", "regions"
   add_foreign_key "locations_suppliers", "locations"
   add_foreign_key "locations_suppliers", "suppliers"
+  add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "people"

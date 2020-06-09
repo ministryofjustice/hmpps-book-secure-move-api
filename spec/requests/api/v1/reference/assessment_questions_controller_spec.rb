@@ -7,7 +7,7 @@ RSpec.describe Api::V1::Reference::AssessmentQuestionsController do
   let!(:token) { create(:access_token) }
 
   describe 'GET /api/v1/reference/assessment_questions' do
-    let(:schema) { load_json_schema('get_assessment_questions_responses.json') }
+    let(:schema) { load_yaml_schema('get_assessment_questions_responses.yaml') }
 
     let!(:assessment_question) { FactoryBot.create(:assessment_question) }
     let(:data) do

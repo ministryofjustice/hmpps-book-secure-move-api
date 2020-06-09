@@ -16,12 +16,28 @@ class Subscription < ApplicationRecord
     !discarded?
   end
 
-  def secret=(sekret)
-    write_attribute(:encrypted_secret, Encryptor.encrypt(sekret))
+  def secret=(value)
+    self[:encrypted_secret] = Encryptor.encrypt(value)
+  end
+
+  def username=(value)
+    self[:encrypted_username] = Encryptor.encrypt(value)
+  end
+
+  def password=(value)
+    self[:encrypted_password] = Encryptor.encrypt(value)
   end
 
   def secret
     Encryptor.decrypt(encrypted_secret)
+  end
+
+  def username
+    Encryptor.decrypt(encrypted_username)
+  end
+
+  def password
+    Encryptor.decrypt(encrypted_password)
   end
 
 private

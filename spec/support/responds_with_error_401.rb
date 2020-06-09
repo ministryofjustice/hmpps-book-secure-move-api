@@ -18,7 +18,7 @@ RSpec.shared_examples 'an endpoint that responds with error 401' do
     expect(JSON.parse(response.body)).to include_json(errors: errors_401)
   end
 
-  it 'returns a valid 401 JSON response', with_json_schema: true do
+  it 'returns a valid 401 JSON response' do
     expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/401')).to be true
   end
 

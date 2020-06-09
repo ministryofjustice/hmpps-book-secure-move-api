@@ -2,60 +2,88 @@
 
 module People
   class Importer
-    PROFILE_IDENTIFIERS_MAPPING = {
+    NOMIS_IDENTIFIER_MAPPING = {
       'police_national_computer' => :pnc_number,
       'prison_number' => :prison_number,
       'criminal_records_office' => :cro_number,
     }.freeze
 
-    attr_accessor :nomis_attributes
-
     def initialize(nomis_attributes)
-      self.nomis_attributes = nomis_attributes
+      @nomis_attributes = nomis_attributes
     end
 
     def call
       person = Person.find_or_initialize_by(nomis_prison_number: nomis_attributes[:prison_number])
+      person.assign_attributes(person_attributes)
+
       profile = person.latest_profile || person.profiles.build
-      profile.assign_attributes(attributes)
-      # return profile rather than person so that save does both profile and person if both are new
+      profile.assign_attributes(profile_attributes)
+
       profile
     end
 
   private
 
-    def attributes
+    attr_reader :nomis_attributes
+
+    def person_attributes
+      nomis_attributes.slice(:last_name, :date_of_birth).merge(
+        first_names: first_names,
+        gender: gender,
+        ethnicity: ethnicity,
+        police_national_computer: police_national_computer,
+        prison_number: prison_number,
+        criminal_records_office: criminal_records_office,
+        last_synced_with_nomis: last_synced_with_nomis,
+      )
+    end
+
+    def profile_attributes
       nomis_attributes.slice(:last_name, :date_of_birth, :aliases).merge(
         first_names: first_names,
-        gender_id: find_gender,
-        ethnicity_id: find_ethnicity,
+        gender: gender,
+        ethnicity: ethnicity,
         profile_identifiers: profile_identifiers,
         latest_nomis_booking_id: latest_nomis_booking_id,
       )
     end
 
-    def find_gender
-      gender_param = nomis_attributes[:gender]
-      gender_param ? Gender.find_by(nomis_code: gender_param).id : nil
+    def gender
+      @gender ||= Gender.find_by(nomis_code: nomis_attributes[:gender])
     end
 
-    def find_ethnicity
-      ethnicity_param = nomis_attributes[:ethnicity]
-      ethnicity_param ? Ethnicity.find_by(title: ethnicity_param).id : nil
+    def ethnicity
+      @ethnicity ||= Ethnicity.find_by(title: nomis_attributes[:ethnicity])
     end
 
     def first_names
-      [nomis_attributes[:first_name], nomis_attributes[:middle_names]].compact.join(' ')
+      @first_names ||= [nomis_attributes[:first_name], nomis_attributes[:middle_names]].compact.join(' ')
+    end
+
+    def police_national_computer
+      nomis_attributes[NOMIS_IDENTIFIER_MAPPING['police_national_computer']]
+    end
+
+    def prison_number
+      nomis_attributes[NOMIS_IDENTIFIER_MAPPING['prison_number']]
+    end
+
+    def criminal_records_office
+      nomis_attributes[NOMIS_IDENTIFIER_MAPPING['criminal_records_office']]
     end
 
     def profile_identifiers
-      PROFILE_IDENTIFIERS_MAPPING.map do |local, nomis|
+      NOMIS_IDENTIFIER_MAPPING.map { |local, nomis|
         { value: nomis_attributes[nomis], identifier_type: local } if nomis_attributes[nomis]
-      end.compact
+      }.compact
     end
 
     def latest_nomis_booking_id
       nomis_attributes[:latest_booking_id]
+    end
+
+    def last_synced_with_nomis
+      @last_synced_with_nomis ||= Time.zone.now
     end
   end
 end

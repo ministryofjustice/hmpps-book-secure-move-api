@@ -1,0 +1,18 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: court_case.yaml#/CourtCase
+'400':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/BadRequest

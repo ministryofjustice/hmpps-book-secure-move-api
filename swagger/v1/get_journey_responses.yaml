@@ -1,0 +1,12 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: get_journey.yaml#/GetJourney
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: location.yaml#/Location

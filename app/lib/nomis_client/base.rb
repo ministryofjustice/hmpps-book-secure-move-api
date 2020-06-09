@@ -51,9 +51,11 @@ module NomisClient
         Rails.logger.info "NomisClient request took (#{total_request_seconds}s): #{ENV['NOMIS_API_PATH_PREFIX']}#{path}"
 
         response
-      rescue Faraday::ConnectionFailed, Faraday::TimeoutError
+      rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
         retries += 1
         retry if retries <= MAX_RETRIES
+
+        raise e, 'Nomis Connection Error'
       end
 
       def update_json_headers(params)

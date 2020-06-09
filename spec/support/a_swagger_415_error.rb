@@ -11,7 +11,7 @@ RSpec.shared_examples 'a swagger 415 error' do
     ]
   end
 
-  schema '$ref' => '#/definitions/error_responses/415'
+  schema '$ref' => 'error_responses.yaml#/415'
 
   run_test!
 

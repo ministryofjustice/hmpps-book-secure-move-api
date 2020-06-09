@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MovesController do
+  subject(:get_moves) { get '/api/v1/moves', params: params, headers: headers }
+
   let(:supplier) { create(:supplier) }
   let!(:application) { create(:application, owner_id: supplier.id) }
   let!(:access_token) { create(:access_token, application: application).token }
@@ -11,20 +13,18 @@ RSpec.describe Api::V1::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /moves' do
-    let(:schema) { load_json_schema('get_moves_responses.json') }
+    let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
-    let!(:moves) { create_list :move, 21 }
+    let!(:moves) { create_list :move, 2 }
     let(:params) { {} }
 
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
+    context 'when no params are provided' do
+      before { get_moves }
 
-      get '/api/v1/moves', params: params, headers: headers
+      it_behaves_like 'an endpoint that responds with success 200'
     end
 
-    context 'when successful' do
-      it_behaves_like 'an endpoint that responds with success 200'
-
+    context 'when called with correct params' do
       describe 'filtering results' do
         let(:from_location_id) { moves.first.from_location_id }
         let(:filters) do
@@ -37,24 +37,26 @@ RSpec.describe Api::V1::MovesController do
         let(:params) { { filter: filters } }
         let(:ability) { Ability.new }
 
-        before do
+        it 'delegates the query execution to Moves::Finder with the correct filters' do
           allow(Ability).to receive(:new).and_return(ability)
-        end
 
-        it 'delegates the query execution to Moves::Finder with the correct filters', skip_before: true do
           moves_finder = instance_double('Moves::Finder', call: Move.all)
           allow(Moves::Finder).to receive(:new).and_return(moves_finder)
 
-          get '/api/v1/moves', headers: headers, params: params
+          get_moves
 
           expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {})
         end
 
         it 'filters the results' do
+          get_moves
+
           expect(response_json['data'].size).to be 1
         end
 
         it 'returns the move that matches the filter' do
+          get_moves
+
           expect(response_json).to include_json(data: [{ id: moves.first.id }])
         end
       end
@@ -69,10 +71,8 @@ RSpec.describe Api::V1::MovesController do
           }
         end
         let(:params) { { filter: filters } }
-
-        # rubocop:disable RSpec/ExampleLength
-        it 'returns the correct attributes values for moves' do
-          expect(response_json).to include_json(
+        let(:expected_move) do
+          {
             data: [
               {
                 id: move.id,
@@ -82,17 +82,24 @@ RSpec.describe Api::V1::MovesController do
                 },
               },
             ],
-            )
+          }
         end
-        # rubocop:enable RSpec/ExampleLength
+
+        it 'returns the correct attributes values for moves' do
+          get_moves
+
+          expect(response_json).to include_json(expected_move)
+        end
       end
 
       describe 'paginating results' do
+        let!(:moves) { create_list :move, 6 }
+
         let(:meta_pagination) do
           {
-            per_page: 20,
+            per_page: 5,
             total_pages: 2,
-            total_objects: 21,
+            total_objects: 6,
             links: {
               first: '/api/v1/moves?page=1',
               last: '/api/v1/moves?page=2',
@@ -101,27 +108,9 @@ RSpec.describe Api::V1::MovesController do
           }
         end
 
-        it 'paginates 20 results per page' do
-          expect(response_json['data'].size).to eq 20
-        end
+        before { get_moves }
 
-        it 'returns 1 result on the second page', skip_before: true do
-          get '/api/v1/moves?page=2', headers: headers
-
-          expect(response_json['data'].size).to eq 1
-        end
-
-        it 'allows setting a different page size', skip_before: true do
-          get '/api/v1/moves?per_page=15', headers: headers
-
-          expect(response_json['data'].size).to eq 15
-        end
-
-        it 'provides meta data with pagination', skip_before: true do
-          get '/api/v1/moves', headers: headers
-
-          expect(response_json['meta']['pagination']).to include_json(meta_pagination)
-        end
+        it_behaves_like 'an endpoint that paginates resources'
       end
 
       describe 'validating dates before running queries' do
@@ -134,31 +123,114 @@ RSpec.describe Api::V1::MovesController do
         end
         let(:params) { { filter: filters } }
 
-        before do
-          get '/api/v1/moves', params: params, headers: headers
-        end
+        before { get_moves }
 
-        it 'is a bad request' do
-          expect(response.status).to eq(400)
-        end
-
-        it 'returns errors' do
-          expect(response.body).to eq('{"error":{"date_from":["is not a valid date."]}}')
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{ 'title' => 'Invalid date_from',
+               'detail' => 'Validation failed: Date from is not a valid date.' }]
+          end
         end
       end
 
-      describe 'relationships' do
-        let!(:moves) { [create(:move)] }
+      describe 'included relationships' do
+        let!(:moves) do
+          create_list(
+            :move,
+            1,
+            from_location: from_location,
+            to_location: to_location,
+          )
+        end
+
         let!(:court_hearing) { create(:court_hearing, move: moves.first) }
 
-        it 'does not return serialized court_hearings includes', skip_before: true do
-          get '/api/v1/moves', params: params, headers: headers
+        let(:to_location) { create(:location, suppliers: [supplier]) }
+        let(:from_location) { create(:location, suppliers: [supplier]) }
 
-          has_court_hearings = response_json['included'].any? do |entity|
-            entity['type'] == 'court_hearings'
+        before do
+          get "/api/v1/moves#{query_params}", params: params, headers: headers
+        end
+
+        context 'when not including the include query param' do
+          let(:query_params) { '' }
+
+          it 'returns the default includes' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('ethnicities', 'genders', 'locations', 'people', 'profiles', 'suppliers')
+          end
+        end
+
+        context 'when including the include query param' do
+          let(:query_params) { '?include=profile' }
+
+          it 'includes the requested includes in the response' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('profiles')
+          end
+        end
+
+        context 'when including an invalid include query param' do
+          let(:query_params) { '?include=foo.bar,profile' }
+
+          let(:expected_error) do
+            {
+              'errors' => [
+                {
+                  'detail' => match(/foo.bar/),
+                  'title' => 'Bad request',
+                },
+              ],
+            }
           end
 
-          expect(has_court_hearings).to eq(false)
+          it 'returns a validation error' do
+            expect(response).to have_http_status(:bad_request)
+            expect(response_json).to include(expected_error)
+          end
+        end
+      end
+
+      context 'when the move includes both a profile id and a person id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: person.id, profile_id: person.latest_profile.id) }
+
+        it 'returns the correct person' do
+          get_moves
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
+        end
+      end
+
+      context 'when the move includes neither profile id or person id' do
+        let!(:move) { create(:move, person_id: nil, profile_id: nil) }
+
+        it 'returns the correct person' do
+          get_moves
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to be_nil
+        end
+      end
+
+      context 'when the move includes only a person id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: person.id, profile_id: nil) }
+
+        it 'returns the correct person' do
+          get_moves
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
+        end
+      end
+
+      context 'when the move includes only a profile id' do
+        let(:person) { create(:person) }
+        let!(:move) { create(:move, person_id: nil, profile_id: person.latest_profile.id) }
+
+        it 'returns the correct person' do
+          get_moves
+          person_id = response_json['data'][0].dig('relationships', 'person', 'data', 'id')
+          expect(person_id).to eq(person.id)
         end
       end
     end
@@ -167,15 +239,15 @@ RSpec.describe Api::V1::MovesController do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before do
-        get '/api/v1/moves', headers: headers
-      end
+      before { get_moves }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
 
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
+
+      before { get_moves }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

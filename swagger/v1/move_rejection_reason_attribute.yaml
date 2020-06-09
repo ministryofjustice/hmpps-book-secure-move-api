@@ -1,0 +1,7 @@
+MoveRejectionReason:
+  type: string
+  example: made_in_error
+  enum:
+  - no_space_at_receiving_prison
+  - no_transport_available
+  description: The reason the move has been rejected

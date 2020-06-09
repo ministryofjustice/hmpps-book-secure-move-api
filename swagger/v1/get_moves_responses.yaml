@@ -1,0 +1,63 @@
+"200":
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: move.yaml#/Move
+    included:
+      type: array
+      items:
+        anyOf:
+          - $ref: location.yaml#/Location
+          - $ref: person.yaml#/Person
+          - $ref: gender.yaml#/Gender
+          - $ref: ethnicity.yaml#/Ethnicity
+          - $ref: allocation.yaml#/Allocation
+          - $ref: profile.yaml#/Profile
+          - $ref: supplier.yaml#/Supplier
+    links:
+      $ref: pagination_links.yaml#/PaginationLinks
+    meta:
+      type: object
+      properties:
+        pagination:
+          $ref: pagination.yaml#/Pagination
+"400":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/BadRequest
+"401":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotAuthorisedError
+"415":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnsupportedMediaType
+"422":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnprocessableEntity

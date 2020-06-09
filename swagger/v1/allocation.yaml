@@ -1,0 +1,155 @@
+Allocation:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: allocations
+      enum:
+      - allocations
+      description: The type of this object - always `allocations`
+    attributes:
+      type: object
+      required:
+      - moves_count
+      - date
+      properties:
+        moves_count:
+          type: integer
+          example: 5
+          description: The number of prisoners to move in this allocation. This must be set when creating an allocation. When retrieving an allocation this will reflect the number of associated non-cancelled moves (i.e. cancelled moves are excluded from this count).
+        prisoner_category:
+          oneOf:
+          - type: string
+            enum:
+            - b
+            - c
+            - d
+          - type: 'null'
+          example: b
+          description: Indicates the prisoner category
+        sentence_length:
+          oneOf:
+          - type: string
+            enum:
+            - short
+            - long
+          - type: 'null'
+          example: short
+          description: Indicates the sentence length - short is 16 months or less,
+            long is over 16 months
+        complex_cases:
+          oneOf:
+          - type: array
+            items:
+              $ref: allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer
+          - type: 'null'
+          example:
+            [
+              {
+                key: 'hold_separately',
+                title: 'Segregated prisoners',
+                answer: true,
+                allocation_complex_case_id: '0c6610b4-d995-4170-97f7-b505ea956e64'
+              },
+              {
+                key: 'self_harm',
+                title: 'Self harm / prisoners on ACCT',
+                answer: false,
+                allocation_complex_case_id: '53717e48-20d8-454c-880d-b9e57902ac7f'
+              },
+              {
+                key: 'mental_health_issue',
+                title: 'Mental health issues',
+                answer: false,
+                allocation_complex_case_id: '2714c3f4-28b1-458c-8457-750299bac39e'
+              },
+              {
+                key: 'under_drug_treatment',
+                title: 'Integrated Drug Treatment System',
+                answer: true,
+                allocation_complex_case_id: 'e9b76dc0-bc41-424d-9f60-b7204aaed9dd'
+              }
+            ]
+          description: Collection of indicators for complex cases
+        complete_in_full:
+          type: boolean
+          example: 'true'
+          description: Indicates if allocation must be completed (i.e. populated with prisoners) in full
+        requested_by:
+          oneOf:
+          - type: 'null'
+          - type: string
+          description: Name of the person requesting this allocation
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the allocation was last created or updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the allocation was created
+          readOnly: true
+        date:
+          type: string
+          format: date
+          example: '2020-05-17'
+          description: Date on which the allocation is scheduled
+        other_criteria:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: Additional information about the allocation
+        status:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - unfilled
+            - filled
+            - cancelled
+          description: Indicates the stage in it's lifecycle that this allocation is at
+        cancellation_reason:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - made_in_error
+            - supplier_declined_to_move
+            - lack_of_space_at_receiving_establishment
+            - sending_establishment_failed_to_fill_allocation
+            - other
+          description: Reason the allocation has been cancelled
+        cancellation_reason_comment:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: In case 'other' is chosen as cancellation_reason, further details
+            can be specified
+    relationships:
+      type: object
+      required:
+      - from_location
+      - to_location
+      properties:
+        from_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: The location (prison) that the people are being moved from
+        to_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: The location (prison) that the people are being moved to
+        moves:
+          $ref: move_reference.yaml#/MoveReference
+          description: The moves associated with this allocation
+        person:
+          $ref: person_reference.yaml#/PersonReference
+          description: The people being moved

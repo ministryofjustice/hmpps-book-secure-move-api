@@ -10,52 +10,59 @@ RSpec.describe PersonalCareNeeds::Importer do
     )
   end
 
-  let(:person) { create :person, :nomis_synced }
+  let(:person) { create(:person, :nomis_synced) }
   let(:profile) { person.latest_profile }
   let(:personal_care_needs) do
     [
       {
         offender_no: person.nomis_prison_number,
-        problem_type: 'MATSTAT',
-        problem_code: 'ACCU9',
-        problem_status: 'ON',
-        problem_description: 'Preg, acc under 9mths',
+        problem_type: 'foo',
+        problem_code: problem_code,
+        problem_status: 'bar',
+        problem_description: 'baz',
         start_date: '2010-06-21',
         end_date: '2010-06-21',
       },
     ]
   end
-  let(:moves) do
-    [{
-      person_nomis_prison_number: person.nomis_prison_number,
-      from_location_nomis_agency_id: 'BXI',
-      to_location_nomis_agency_id: 'WDGRCC',
-      date: '2019-08-19',
-      time_due: '2019-08-19T17:00:00',
-      status: 'requested',
-      nomis_event_id: 123_456,
-    }]
-  end
-  let(:prison_numbers_response) { [{ prison_number: person.nomis_prison_number, first_name: 'Bob' }] }
+  let(:problem_code) { 'BRK' }
 
-  let!(:pregnant_question) { create :assessment_question, key: :pregnant, title: 'Pregnant' }
+  let!(:default_question) { create(:assessment_question, :care_needs_fallback) }
 
-  before do
-    allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
-    allow(NomisClient::Alerts).to receive(:get).and_return([])
-    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs)
+  let!(:assessment_question) { create(:assessment_question, key: :special_vehicle, title: 'Requires special vehicle', category: 'health') }
 
-    create(:location, nomis_agency_id: 'BXI')
+  it 'appends a new assessment answer but does not save it' do
+    expect { importer.call }.to change { profile.assessment_answers.count }.from(0).to(1)
+    expect(profile.reload.assessment_answers.count).to eq(0)
   end
 
-  context 'with no relevant nomis alert mappings' do
-    it 'creates a new assessment answer' do
-      expect { importer.call }.to change { profile.assessment_answers.count }.by(1)
-    end
+  context 'when the problem code is not recognised' do
+    let(:problem_code) { 'foo' }
 
-    it 'sets the nomis alert code' do
+    it 'appends an assessment answer with the default values' do
       importer.call
-      expect(profile.assessment_answers.map(&:nomis_alert_code)).to eq %w[ACCU9]
+
+      expect(profile.assessment_answers.first.as_json).to include(
+        category: default_question.category,
+        key: 'health_issue',
+        nomis_alert_code: problem_code,
+        nomis_alert_type_description: 'Unknown',
+      )
+    end
+  end
+
+  context 'when the problem code is recognised' do
+    let(:problem_code) { 'BRK' }
+
+    it 'appends an assessment answer with special vehicle and physical domain values' do
+      importer.call
+
+      expect(profile.assessment_answers.first.as_json).to include(
+        category: assessment_question.category,
+        key: assessment_question.key,
+        nomis_alert_code: problem_code,
+        nomis_alert_type_description: 'Medical',
+      )
     end
   end
 end

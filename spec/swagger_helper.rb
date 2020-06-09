@@ -6,20 +6,8 @@ def swagger_file(*relative_path)
   File.read(Rails.root.join('spec', 'swagger', 'definitions', *relative_path))
 end
 
-def swagger_v1_file(*relative_path)
-  File.read(Rails.root.join('swagger', 'v1', *relative_path))
-end
-
 def load_swagger_yaml(*relative_path)
-  YAML.safe_load(swagger_file(*relative_path)).deep_symbolize_keys
-end
-
-def load_swagger_json(*relative_path)
-  JSON.parse(swagger_file(*relative_path))
-end
-
-def load_swagger_v1_json(*relative_path)
-  JSON.parse(swagger_v1_file(*relative_path))
+  YAML.safe_load(swagger_file(*relative_path))
 end
 
 RSpec.configure do |config|
@@ -87,89 +75,164 @@ RSpec.configure do |config|
           },
         },
         schemas: {
-          CourtHearing: {
-            "$ref": 'court_hearing.json#/CourtHearing',
+          Allocation: {
+            "$ref": 'allocation.yaml#/Allocation',
           },
-          CourtHearingReference: {
-            "$ref": 'court_hearing_reference.json#/CourtHearingReference',
+          AllocationReference: {
+            "$ref": 'allocation_reference.yaml#/AllocationReference',
           },
-          CourtCase: {
-            "$ref": 'court_case.json#/CourtCase',
+          AllocationComplexCase: {
+            "$ref": 'allocation_complex_case.yaml#/AllocationComplexCase',
           },
-          Move: {
-            "$ref": 'move.json#/Move',
-          },
-          MoveReference: {
-            "$ref": 'move_reference.json#/MoveReference',
-          },
-          PersonReference: {
-            "$ref": 'person_reference.json#/PersonReference',
-          },
-          LocationReference: {
-            "$ref": 'location_reference.json#/LocationReference',
-          },
-          Location: {
-            "$ref": 'location.json#/Location',
-          },
-          Person: {
-            "$ref": 'person.json#/Person',
-          },
-          Ethnicity: {
-            "$ref": 'ethnicity.json#/Ethnicity',
-          },
-          Gender: {
-            "$ref": 'gender.json#/Gender',
-          },
-          Nationality: {
-            "$ref": 'nationality.json#/Nationality',
-          },
-          Supplier: {
-            "$ref": 'supplier.json#/Supplier',
-          },
-          Document: {
-            "$ref": 'document.json#/Document',
+          AllocationComplexCaseAnswer: {
+            "$ref": 'allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer',
           },
           AssessmentAnswer: {
-            "$ref": 'assessment_answer.json#/AssessmentAnswer',
+            "$ref": 'assessment_answer.yaml#/AssessmentAnswer',
           },
           AssessmentQuestion: {
-            "$ref": 'assessment_question.json#/AssessmentQuestion',
+            "$ref": 'assessment_question.yaml#/AssessmentQuestion',
           },
-          PrisonTransferReason: {
-            "$ref": 'prison_transfer_reason.json#/PrisonTransferReason',
+          CourtCase: {
+            "$ref": 'court_case.yaml#/CourtCase',
           },
-          ProfileIdentifier: {
-            "$ref": 'profile_identifier.json#/ProfileIdentifier',
+          CourtHearing: {
+            "$ref": 'court_hearing.yaml#/CourtHearing',
           },
-          PaginationLinks: {
-            "$ref": 'pagination_links.json#/PaginationLinks',
+          CourtHearingReference: {
+            "$ref": 'court_hearing_reference.yaml#/CourtHearingReference',
+          },
+          Document: {
+            "$ref": 'document.yaml#/Document',
+          },
+          Ethnicity: {
+            "$ref": 'ethnicity.yaml#/Ethnicity',
+          },
+          Gender: {
+            "$ref": 'gender.yaml#/Gender',
+          },
+          Journey: {
+            "$ref": 'get_journey.yaml#/GetJourney',
+          },
+          JourneyEvent: {
+            "$ref": 'get_journey_event.yaml#/GetJourneyEvent',
+          },
+          Location: {
+            "$ref": 'location.yaml#/Location',
+          },
+          LocationReference: {
+            "$ref": 'location_reference.yaml#/LocationReference',
+          },
+          Move: {
+            "$ref": 'move.yaml#/Move',
+          },
+          MoveEvent: {
+            "$ref": 'get_move_event_depreciated.yaml#/GetMoveEvent',
+          },
+          MoveReference: {
+            "$ref": 'move_reference.yaml#/MoveReference',
+          },
+          Nationality: {
+            "$ref": 'nationality.yaml#/Nationality',
           },
           Pagination: {
-            "$ref": 'pagination.json#/Pagination',
+            "$ref": 'pagination.yaml#/Pagination',
+          },
+          PaginationLinks: {
+            "$ref": 'pagination_links.yaml#/PaginationLinks',
+          },
+          Person: {
+            "$ref": 'person.yaml#/Person',
+          },
+          PersonReference: {
+            "$ref": 'person_reference.yaml#/PersonReference',
+          },
+          PrisonTransferReason: {
+            "$ref": 'prison_transfer_reason.yaml#/PrisonTransferReason',
+          },
+          ProfileIdentifier: {
+            "$ref": 'profile_identifier.yaml#/ProfileIdentifier',
+          },
+          Region: {
+            "$ref": 'region.yaml#/Region',
+          },
+          Supplier: {
+            "$ref": 'supplier.yaml#/Supplier',
+          },
+          TimetableEntry: {
+            "$ref": 'timetable_entry.yaml#/TimetableEntry',
           },
         },
       },
-      definitions: {
-        court_case: load_swagger_json('court_case.json'),
-        court_hearing: load_swagger_json('court_hearing.json'),
-        court_hearing_reference: load_swagger_json('court_hearing_reference.json'),
-        document: load_swagger_json('document.json'),
-        prison_transfer_reason: load_swagger_v1_json('prison_transfer_reason.json'),
-        prison_transfer_reason_reference: load_swagger_v1_json('prison_transfer_reason_reference.json'),
-        location_reference: load_swagger_json('location_reference.json'),
-        move: load_swagger_v1_json('move.json'),
-        move_reference: load_swagger_json('move_reference.json'),
-        person_reference: load_swagger_json('person_reference.json'),
-        get_court_cases_responses: load_swagger_json('get_court_cases_responses.json'),
-        get_move_responses: load_swagger_json('get_move_responses.json'),
-        get_reasons_responses: load_swagger_json('get_prison_transfer_reasons_responses.json'),
-        delete_document_responses: load_swagger_json('delete_document_responses.json'),
-        post_court_hearing_responses: load_swagger_json('post_court_hearing_responses.json'),
-        post_document_responses: load_swagger_json('post_document_responses.json'),
-        errors: load_swagger_json('errors.json'),
-        error_responses: load_swagger_json('error_responses.json'),
+      paths: load_swagger_yaml('hand_coded_paths_v1.yaml'),
+    },
+    'v2/swagger.yaml' => {
+      basePath: '/api/v2',
+      openapi: '3.0.1',
+      info: {
+        title: 'PECS4 API V2 Docs',
+        version: 'v2',
+        description: 'Book A Secure Move supplier and frontend API.',
       },
-      paths: load_swagger_json('hand_coded_paths.json'),
+      consumes: [
+        'application/vnd.api+json',
+      ],
+      servers: [
+        {
+          url: 'http://localhost:3000/api/v2',
+          description: 'Local development (localhost)',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'Dev API',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'Staging API',
+        },
+        {
+          url: 'https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2',
+          description: 'PreProd API',
+        },
+        {
+          url: 'https://api.bookasecuremove.service.justice.gov.uk/api/v2',
+          description: 'Production API',
+        },
+      ],
+      security: [
+        {
+          oauth2: [],
+        },
+      ],
+      components: {
+        securitySchemes: {
+          oauth2: {
+            type: :oauth2,
+            flows: {
+              clientCredentials: {
+                authorizationUrl: '/oauth/authorize',
+                tokenUrl: '/oauth/token/',
+                scopes: {},
+              },
+            },
+          },
+        },
+        schemas: {
+          Ethnicity: {
+            "$ref": '../v1/ethnicity.yaml#/Ethnicity',
+          },
+          Gender: {
+            "$ref": '../v1/gender.yaml#/Gender',
+          },
+          Person: {
+            "$ref": '../v2/person.yaml#/Person',
+          },
+          Profile: {
+            "$ref": '../v2/profile.yaml#/Profile',
+          },
+        },
+      },
+      paths: load_swagger_yaml('hand_coded_paths_v2.yaml'),
     },
   }
 

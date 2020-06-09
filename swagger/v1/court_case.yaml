@@ -1,0 +1,56 @@
+CourtCase:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      example: '1234567'
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: court_cases
+      enum:
+      - court_cases
+      description: The type of this object - always `court_cases`
+    attributes:
+      type: object
+      required:
+      - nomis_case_id
+      - nomis_case_status
+      - case_start_date
+      - case_type
+      - case_number
+      properties:
+        nomis_case_id:
+          type: string
+          example: '1234567'
+          description: The case id that uniquely identifies the court case
+        nomis_case_status:
+          type: string
+          example: ACTIVE
+          description: The state of the nomis court case
+        case_start_date:
+          type: string
+          example: '2020-01-01'
+          description: ISO8601-compatible date
+        case_type:
+          type: string
+          example: Adult
+          description: The type of the nomis court case
+        case_number:
+          type: string
+          example: T20167984
+          description: The case number that uniquely identifies the court case. This
+            is a number that is part of the court system not nomis specific.
+    relationships:
+      type: object
+      attributes:
+        location:
+          type: object
+          attributes:
+            data:
+              type: object
+              nullable: true

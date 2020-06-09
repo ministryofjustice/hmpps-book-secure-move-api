@@ -1,0 +1,8 @@
+'200':
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      data:
+        "$ref": allocation.yaml#/Allocation

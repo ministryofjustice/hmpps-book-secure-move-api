@@ -1,0 +1,11 @@
+JourneyEventName:
+  type: string
+  example: complete
+  enum:
+  - start
+  - reject
+  - complete
+  - uncomplete
+  - cancel
+  - uncancel
+  description: The type of this journey event - either `start`, `reject`, `complete`, `uncomplete`, `cancel` or `uncancel`

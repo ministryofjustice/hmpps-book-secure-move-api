@@ -3,14 +3,19 @@
 RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
 
-  let(:perform_and_ignore_errors!) { perform! rescue nil }
+  let(:perform_and_ignore_errors!) do
+    perform!
+  rescue StandardError
+    nil
+  end
   let(:subscription) { create(:subscription, :no_email_address) }
   let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
-  let(:client) { class_double(Faraday, post: nil) }
+  let(:client) { class_double(Faraday, post: nil, headers: client_headers) }
+  let(:client_headers) { {} }
   let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
-  let(:headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
+  let(:post_headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
 
   context 'when notification and subscription are active' do
     before { allow(Faraday).to receive(:new).and_return(client) }
@@ -50,13 +55,35 @@ RSpec.describe NotifyWebhookJob, type: :job do
     context 'when a response is received from the callback_url' do
       before { allow(client).to receive(:post).and_return(response) }
 
+      describe 'basic authentication' do
+        subject(:authorization) { client_headers['Authorization'] }
+
+        let(:response) { instance_double(Faraday::Response, success?: true, status: 202) }
+
+        before { perform! }
+
+        context 'when the subscription has basic authentication enabled' do
+          it 'sets the basic authentication header' do
+            expect(authorization).to eql("Basic #{Base64.strict_encode64('username:password')}")
+          end
+        end
+
+        context 'when the subscription does not have basic authentication enabled' do
+          let(:subscription) { create(:subscription, :no_email_address, :no_basic_auth) }
+
+          it 'does not set the basic authentication header' do
+            expect(authorization).to be_nil
+          end
+        end
+      end
+
       context 'when the callback response is a success' do
         let(:response) { instance_double(Faraday::Response, success?: true, status: 202) }
 
         before { perform! }
 
         it 'posts JSON to the callback_url' do
-          expect(client).to have_received(:post).with(notification.subscription.callback_url, data, headers)
+          expect(client).to have_received(:post).with(notification.subscription.callback_url, data, post_headers)
         end
 
         it 'updates delivered_at' do
@@ -65,7 +92,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       context 'when the callback response is a failure' do
-        let(:response) { instance_double(Faraday::Response, success?: false, status: 503) }
+        let(:response) { instance_double(Faraday::Response, success?: false, status: 503, reason_phrase: 'Server error') }
 
         it 'raises Notification failed error' do
           expect { perform! }.to raise_error(RuntimeError, /non-success status received/)

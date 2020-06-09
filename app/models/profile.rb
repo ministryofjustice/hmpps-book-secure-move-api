@@ -7,13 +7,16 @@ class Profile < VersionedModel
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true
 
+  has_one :move, dependent: :nullify
+
+  has_many :documents, as: :documentable, dependent: :destroy
+
   validates :person, presence: true
   validates :last_name, presence: true
   validates :first_names, presence: true
   validate :validate_assessment_answers
-
-  attribute :assessment_answers, Profile::AssessmentAnswers::Type.new
-  attribute :profile_identifiers, Profile::ProfileIdentifiers::Type.new
+  attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
+  attribute :profile_identifiers, Types::Jsonb.new(Profile::ProfileIdentifiers)
 
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
 

@@ -4,8 +4,11 @@ module Api
       def create
         court_hearing = CourtHearing.create!(court_hearings_attributes)
 
-        if move
+        if should_save_in_nomis?
           CourtHearings::CreateInNomis.call(move, move.court_hearings)
+          Rails.logger.info("Saved to nomis #{court_hearing.attributes.to_json}")
+        else
+          Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
         end
 
         render json: court_hearing, status: :created
@@ -29,11 +32,19 @@ module Api
       end
 
       def move
-        id = params.require(:data).dig(:relationships, :moves, :data, :id)
+        @move ||= begin
+                    id = params.require(:data).dig(:relationships, :move, :data, :id)
 
-        return if id.blank?
+                    return if id.blank?
 
-        Move.find(id)
+                    Move.find(id)
+                  end
+      end
+
+      def should_save_in_nomis?
+        save_to_nomis = params.fetch('do_not_save_to_nomis', 'false') != 'true'
+
+        move && save_to_nomis
       end
     end
   end

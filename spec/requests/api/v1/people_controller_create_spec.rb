@@ -9,7 +9,7 @@ RSpec.describe Api::V1::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'POST /people' do
-    let(:schema) { load_json_schema('post_people_responses.json') }
+    let(:schema) { load_yaml_schema('post_people_responses.yaml') }
 
     let(:ethnicity) { create :ethnicity }
     let(:gender) { create :gender }
@@ -112,6 +112,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
+
         expect(response_json).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
@@ -121,9 +122,20 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'creates a new person' do
-        expect do
+        expect {
           post '/api/v1/people', params: person_params, headers: headers, as: :json
-        end.to change(Person, :count).by(1)
+        }.to change(Person, :count).by(1)
+      end
+
+      describe 'webhook and email notifications' do
+        before do
+          allow(Notifier).to receive(:prepare_notifications)
+          post '/api/v1/people', params: person_params, headers: headers, as: :json
+        end
+
+        it 'does NOT call the notifier when creating a person' do
+          expect(Notifier).not_to have_received(:prepare_notifications)
+        end
       end
     end
 

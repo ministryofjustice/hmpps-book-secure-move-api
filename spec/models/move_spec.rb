@@ -5,13 +5,57 @@ require 'rails_helper'
 RSpec.describe Move do
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
-  it { is_expected.to belong_to(:person) }
+  it { is_expected.to belong_to(:profile).optional }
+  it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
+  it { is_expected.to have_many(:journeys) }
+  it { is_expected.to have_many(:move_events) }
 
   it { is_expected.to validate_presence_of(:from_location) }
-  it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+  describe 'cancellation_reason' do
+    context 'when the move is not cancelled' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:cancellation_reason) }
+    end
+
+    context 'when the move is cancelled' do
+      let(:move) { build(:move, status: 'cancelled') }
+
+      it {
+        expect(move).to validate_inclusion_of(:cancellation_reason)
+          .in_array(%w[
+            made_in_error
+            supplier_declined_to_move
+            rejected
+            other
+          ])
+      }
+    end
+  end
+
+  describe 'rejection_reason' do
+    context 'when the move is not rejected' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:rejection_reason) }
+    end
+
+    context 'when the move is rejected' do
+      let(:move) { build(:move, status: 'cancelled', cancellation_reason: 'rejected') }
+
+      it {
+        expect(move).to validate_inclusion_of(:rejection_reason)
+          .in_array(%w[
+            no_space_at_receiving_prison
+            no_transport_available
+          ])
+      }
+    end
+  end
 
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
@@ -25,9 +69,27 @@ RSpec.describe Move do
     )
   end
 
+  it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
+    expect(build(:move, status: :proposed)).to(
+      validate_presence_of(:profile),
+    )
+  end
+
+  it 'does NOT validates presence of `profile` if `status` is requested' do
+    expect(build(:move, status: :requested)).not_to(
+      validate_presence_of(:profile),
+    )
+  end
+
+  it 'does NOT validates presence of `profile` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:profile),
+    )
+  end
+
   it 'validates uniqueness of `date` if `status` is NOT proposed or cancelled' do
     expect(create(:move)).to(
-      validate_uniqueness_of(:date).scoped_to(:status, :person_id, :from_location_id, :to_location_id),
+      validate_uniqueness_of(:date).scoped_to(:status, :profile_id, :from_location_id, :to_location_id),
     )
   end
 
@@ -37,8 +99,20 @@ RSpec.describe Move do
     )
   end
 
+  it 'does NOT validate presence of `date` if `status` is cancelled' do
+    expect(build(:move, status: :cancelled)).not_to(
+      validate_presence_of(:date),
+    )
+  end
+
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
     expect(build(:move, status: :proposed)).not_to(
+      validate_uniqueness_of(:date),
+    )
+  end
+
+  it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
+    expect(build(:move, status: :requested, profile: nil)).not_to(
       validate_uniqueness_of(:date),
     )
   end
@@ -190,7 +264,7 @@ RSpec.describe Move do
       end
 
       it 'ignores cancelled moves' do
-        move.update(status: :cancelled)
+        move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
         expect(duplicate.existing).to be_nil
       end
     end
@@ -220,6 +294,145 @@ RSpec.describe Move do
       it 'does not return moves with no supplier' do
         expect(described_class.served_by(supplier.id)).not_to include(move_without_supplier)
       end
+    end
+  end
+
+  describe '#rejected?' do
+    subject { move.rejected? }
+
+    context 'with cancellation_reason of rejected' do
+      let(:move) { build :move, cancellation_reason: 'rejected' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with cancellation_reason not rejected' do
+      let(:move) { build :move, cancellation_reason: 'other' }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe '#current?' do
+    subject { move.current? }
+
+    context 'with date' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'with date_to' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: nil, date_to: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: nil, date_to: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: nil, date_to: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'with date_from' do
+      context 'when yesterday' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: 1.day.ago }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when today' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: Time.zone.today }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when tomorrow' do
+        let(:move) { build :move, date: nil, date_to: nil, date_from: 1.day.from_now }
+
+        it { is_expected.to be true }
+      end
+    end
+  end
+
+  describe '#cancel' do
+    let(:move) { build(:move) }
+
+    it 'sets the default cancellation_reason attribute to other' do
+      move.cancel
+
+      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
+    end
+
+    it 'does not set the default cancellation_reason_comment attribute' do
+      move.cancel
+
+      expect(move.cancellation_reason_comment).to be_nil
+    end
+
+    it 'sets the cancellation_reason attribute' do
+      move.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+
+      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+    end
+
+    it 'sets the cancellation_reason_comment' do
+      move.cancel(comment: 'some comment')
+
+      expect(move.cancellation_reason_comment).to eq('some comment')
+    end
+
+    it 'sets the status to cancelled' do
+      move.cancel
+
+      expect(move.status).to eq('cancelled')
+    end
+  end
+
+  describe '.unfilled?' do
+    it 'returns true if there are no profiles linked to a move' do
+      create_list(:move, 2, profile: nil)
+
+      expect(described_class).to be_unfilled
+    end
+
+    it 'returns true if not all moves have profiles linked' do
+      create(:move, profile: nil)
+      create(:move)
+
+      expect(described_class).to be_unfilled
+    end
+
+    it 'returns false if all moves are associated to a profile' do
+      create_list(:move, 2)
+
+      expect(described_class).not_to be_unfilled
+    end
+
+    it 'returns true if no moves are present' do
+      expect(described_class).to be_unfilled
     end
   end
 

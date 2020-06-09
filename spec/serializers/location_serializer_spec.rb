@@ -8,7 +8,7 @@ RSpec.describe LocationSerializer do
   let(:disabled_at) { Time.new(2019, 1, 1) }
   let(:supplier) { create(:supplier) }
   let(:location) { create :location, disabled_at: disabled_at, suppliers: [supplier] }
-  let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys }
+  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: %w[suppliers]).serializable_hash }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
 
@@ -41,10 +41,10 @@ RSpec.describe LocationSerializer do
   end
 
   it 'contains a disabled_at attribute' do
-    expect(Time.parse(attributes[:disabled_at])).to eql disabled_at
+    expect(attributes[:disabled_at]).to eql disabled_at
   end
 
-  it 'contains a suppliers attribute' do
-    expect(attributes[:suppliers]).not_to be_nil
+  it 'contains an included supplier' do
+    expect(result[:included].map { |r| r[:type] }).to match_array(%w[suppliers])
   end
 end

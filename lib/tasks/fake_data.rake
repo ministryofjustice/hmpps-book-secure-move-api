@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'fake_data/journeys'
+
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
@@ -21,36 +23,49 @@ namespace :fake_data do
   end
 
   ASSESSMENT_ANSWERS = [
-    { category: :risk, title: 'Violent',
+    { category: :risk,
+      title: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, title: 'Escape',
+    { category: :risk,
+      title: 'Escape',
       comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, title: 'Must be held separately',
+    { category: :risk,
+      title: 'Must be held separately',
       comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, title: 'Self harm',
+    { category: :risk,
+      title: 'Self harm',
       comments: ['Attempted suicide'] },
-    { category: :risk, title: 'Concealed items',
+    { category: :risk,
+      title: 'Concealed items',
       comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, title: 'Any other risks',
+    { category: :risk,
+      title: 'Any other risks',
       comments: ['Train spotter', ''] },
-    { category: :health, title: 'Special diet or allergy',
+    { category: :health,
+      title: 'Special diet or allergy',
       comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, title: 'Health issue',
+    { category: :health,
+      title: 'Health issue',
       comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, title: 'Medication',
+    { category: :health,
+      title: 'Medication',
       comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
     { category: :health, title: 'Wheelchair user', comments: [''] },
     { category: :health, title: 'Pregnant', comments: [''] },
-    { category: :health, title: 'Any other requirements',
+    { category: :health,
+      title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court, title: 'Solicitor or other legal representation',
+    { category: :court,
+      title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court, title: 'Sign or other language interpreter',
+    { category: :court,
+      title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court, title: 'Any other information',
+    { category: :court,
+      title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
-
+  # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
       fake_assessment_answer(assessment_answer)
@@ -79,6 +94,18 @@ namespace :fake_data do
       }
     end
   end
+
+  def fake_complex_case_answers
+    AllocationComplexCase.all.map do |complex_case|
+      {
+        allocation_complex_case_id: complex_case.id,
+        title: complex_case.title,
+        key: complex_case.key,
+        answer: [true, false].sample,
+      }
+    end
+  end
+  # rubocop:enable all
 
   desc 'create fake prisons'
   task create_prisons: :environment do
@@ -145,29 +172,60 @@ namespace :fake_data do
   desc 'create fake moves'
   task create_moves: :environment do
     puts 'create_moves...'
-    people = Person.all
+    profiles = Profile.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
-      person = people.sample
+      profile = profiles.sample
       from_location = prisons.sample
       to_location = courts.sample
       nomis_event_ids = []
       nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
-      unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
+      unless Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
         Move.create!(
           date: date,
+          date_from: date,
           time_due: time,
-          person: person,
+          profile: profile,
           from_location: from_location,
           to_location: to_location,
-          status: %w[requested completed cancelled].sample,
+          status: %w[proposed requested completed].sample,
           nomis_event_ids: nomis_event_ids,
         )
       end
+    end
+  end
+
+  desc 'create fake allocations'
+  task create_allocations: :environment do
+    puts 'create_allocations...'
+    prisons = Location.where(location_type: 'prison').all
+    50.times do
+      date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
+      Allocation.create!(
+        date: date,
+        from_location: prisons.sample,
+        to_location: prisons.sample,
+        prisoner_category: Allocation.prisoner_categories.values.sample,
+        sentence_length: Allocation.sentence_lengths.values.sample,
+        moves_count: Faker::Number.non_zero_digit,
+        complete_in_full: Faker::Boolean.boolean,
+        complex_cases: fake_complex_case_answers,
+      )
+    end
+  end
+
+  desc 'create fake journeys with associated events'
+  task create_journeys: :environment do
+    puts 'create_journeys...'
+    Move
+        .left_outer_joins(:journeys).where(journeys: { move_id: nil })
+        .where(status: %w[completed booked requested])
+        .find_each do |move|
+      Tasks::FakeData::Journeys.new(move).call
     end
   end
 
@@ -175,7 +233,7 @@ namespace :fake_data do
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -193,6 +251,8 @@ namespace :fake_data do
       Rake::Task['fake_data:create_prisons'].invoke
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
+      Rake::Task['fake_data:create_allocations'].invoke
+      Rake::Task['fake_data:create_journeys'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -221,7 +281,8 @@ namespace :fake_data do
   ETHNICITIES = [
     { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
     { key: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
-    { key: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+    { key: 'A3',
+      title: 'Asian or Asian British (Bangladeshi)',
       description: 'A3 - Asian or Asian British (Bangladeshi)' },
     { key: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
     { key: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },

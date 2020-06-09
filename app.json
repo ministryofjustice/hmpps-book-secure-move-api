@@ -1,0 +1,70 @@
+{
+  "name": "Book a secure move API",
+  "description": "",
+  "repository": "https://github.com/ministryofjustice/hmpps-book-secure-move-api",
+  "env": {
+	  "MASTER_DATABASE_URL": {
+      "description": "DATABASE_URL value from main API application deployed on Heroku",
+	    "required": true
+	  },
+    "ENCRYPTOR_SALT": {
+      "description": "Secret salt value for encryption/decryption",
+      "required": true
+    },
+    "S3_ACCESS_KEY_ID": {
+      "description": "Public access key for AWS S3 storage",
+      "required": true
+    },
+    "S3_SECRET_ACCESS_KEY": {
+      "description": "Private secrete access key for AWS S3 storage",
+      "required": true
+    },
+    "S3_BUCKET_NAME": {
+      "description": "Name of the storage bucket to use on AWS S3",
+      "required": true
+    },
+    "NOMIS_SITE": {
+      "description": "Base URL for NOMIS API",
+      "required": true
+    },
+    "NOMIS_CLIENT_ID": {
+      "description": "User ID to authenticate with for NOMIS API",
+      "required": true
+    },
+    "NOMIS_CLIENT_SECRET": {
+      "description": "User secret to authenticate with for NOMIS API",
+      "required": true
+    },
+    "NOMIS_AUTH_SCHEME": {
+      "description": "Authentication scheme to use with NOMIS API",
+      "required": true
+    },
+    "NOMIS_API_PATH_PREFIX": {
+      "description": "Namespace for general NOMIS API endpoints",
+      "required": true
+    },
+    "NOMIS_AUTH_PATH_PREFIX": {
+      "description": "Namespace for authentication NOMIS API endpoints",
+      "required": true
+    },
+    "SERVE_API_DOCS": {
+      "description": "Enable endpoints for static documentation",
+      "value": true
+    },
+    "HEROKU_DISABLE_AUTH": {
+      "description": "Disable authentication on Heroku review apps if true",
+      "required": true
+    }
+  },
+  "scripts": {
+    "postdeploy": "pg_dump $MASTER_DATABASE_URL | psql $DATABASE_URL && bundle exec rails db:migrate"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}

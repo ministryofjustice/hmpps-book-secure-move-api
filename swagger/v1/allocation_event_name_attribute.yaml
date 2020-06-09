@@ -1,0 +1,6 @@
+AllocationEventName:
+  type: string
+  example: cancel
+  enum:
+  - cancel
+  description: The type of this move event

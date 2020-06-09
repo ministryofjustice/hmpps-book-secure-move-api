@@ -25,45 +25,52 @@ class Move < VersionedModel
     prison_transfer: 'prison_transfer',
   }
 
-  MOVE_CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error'
+  CANCELLATION_REASONS = [
+    CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
+    CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    CANCELLATION_REASON_REJECTED = 'rejected',
+    CANCELLATION_REASON_OTHER = 'other',
+  ].freeze
 
-  enum cancellation_reason: {
-    made_in_error: MOVE_CANCELLATION_REASON_MADE_IN_ERROR,
-    supplier_declined_to_move: 'supplier_declined_to_move',
-    other: 'other',
-  }
+  REJECTION_REASONS = [
+    REJECTION_REASON_NO_SPACE = 'no_space_at_receiving_prison',
+    REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
+  ].freeze
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :person
+  belongs_to :profile, optional: true
   belongs_to :prison_transfer_reason, optional: true
+  belongs_to :allocation, inverse_of: :moves, optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
+  has_many :journeys, -> { default_order }, dependent: :restrict_with_exception, inverse_of: :move
   has_many :court_hearings, dependent: :restrict_with_exception
+  has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
-  validates(
-    :to_location,
-    presence: true,
-    unless: ->(move) { move.move_type == 'prison_recall' },
-  )
+  validates :to_location, presence: true, unless: :prison_recall?
   validates :move_type, inclusion: { in: move_types }
-  validates :person, presence: true
+  validates :profile, presence: true, unless: -> { requested? || cancelled? }
   validates :reference, presence: true
 
-  # we need to avoid creating/updating a move with the same person/date/from/to if there is already one in the same state
+  # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
-  validates :date, uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
-            unless: -> { [MOVE_STATUS_PROPOSED, MOVE_STATUS_CANCELLED].include?(status) }
-  validates :date, presence: true,
-            unless: -> { status == MOVE_STATUS_PROPOSED }
-  validates :date_from, presence: true,
-            if: -> { status == MOVE_STATUS_PROPOSED }
+  validates :date,
+            uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
+            unless: -> { proposed? || cancelled? || profile_id.blank? }
+  validates :date, presence: true, unless: -> { proposed? || cancelled? }
+  validates :date_from, presence: true, if: :proposed?
+  validates :status, inclusion: { in: statuses }
+
+  validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
+  validates :cancellation_reason, absence: true, unless: :cancelled?
+
+  validates :rejection_reason, inclusion: { in: REJECTION_REASONS }, allow_nil: true, if: :rejected?
+  validates :rejection_reason, absence: true, unless: :rejected?
 
   validate :date_to_after_date_from
-
-  validates :status, inclusion: { in: statuses }
 
   before_validation :set_reference
   before_validation :set_move_type
@@ -74,6 +81,22 @@ class Move < VersionedModel
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
+  def cancel(reason: CANCELLATION_REASON_OTHER, comment: nil)
+    assign_attributes(
+      status: MOVE_STATUS_CANCELLED,
+      cancellation_reason: reason,
+      cancellation_reason_comment: comment,
+    )
+  end
+
+  def self.unfilled?
+    none? || exists?(profile_id: nil)
+  end
+
+  def rejected?
+    cancellation_reason == CANCELLATION_REASON_REJECTED
+  end
+
   def nomis_event_id=(event_id)
     nomis_event_ids << event_id
   end
@@ -83,11 +106,22 @@ class Move < VersionedModel
   end
 
   def existing
-    self.class.not_cancelled.find_by(date: date, person_id: person_id, from_location_id: from_location_id, to_location_id: to_location_id)
+    self.class.not_cancelled.find_by(date: date, profile_id: profile_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
 
   def existing_id
     existing&.id
+  end
+
+  def current?
+    # NB: a current move relates to a move happening today or in the future (as opposed to a back-dated or historic move)
+    (date.present? && date >= Time.zone.today) ||
+      (date.nil? && date_to.present? && date_to >= Time.zone.today) ||
+      (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
+  end
+
+  def person
+    raise 'Attempt to Access to person!!!'
   end
 
 private

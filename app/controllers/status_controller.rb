@@ -20,10 +20,11 @@ class StatusController < ApplicationController
     }
 
     status = checks.values.all? ? :ok : :bad_gateway
-    render status: status, json: {
-      checks: checks,
-      healthy: checks.values.all? { |val| val == true },
-    }
+    render status: status,
+           json: {
+             checks: checks,
+             healthy: checks.values.all? { |val| val == true },
+           }
   end
 
 private

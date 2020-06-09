@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  before_action :doorkeeper_authorize!
+  before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
+  before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
 
@@ -13,16 +14,29 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
+  rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
+  rescue_from ActiveModel::ValidationError, with: :render_validation_error
+  rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
 
   def current_user
     doorkeeper_token&.application
   end
 
   def user_for_paper_trail
+    return unless authentication_enabled?
+
     current_user.owner_id
   end
 
 private
+
+  def authentication_enabled?
+    return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
+
+    return false if Rails.env.production? && ENV['HEROKU_DISABLE_AUTH'] =~ /true/i
+
+    true
+  end
 
   def doorkeeper_unauthorized_render_options(*)
     {
@@ -62,10 +76,16 @@ private
   end
 
   def render_resource_not_found_error(exception)
+    # NB: exception is a ActiveRecord::RecordNotFound, this renders a cleaner error message without a long WHERE id=foo clause
+    detail = if exception.id.present?
+               "Couldn't find #{exception.model} with '#{exception.primary_key}'=#{exception.id}"
+             else
+               exception.to_s
+             end
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: exception.to_s,
+        detail: detail,
       }] },
       status: :not_found,
     )
@@ -108,6 +128,16 @@ private
     )
   end
 
+  def render_connection_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Connection Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :service_unavailable,
+    )
+  end
+
   def validation_errors(record)
     errors = record.errors
     errors.keys.flat_map do |field|
@@ -129,5 +159,43 @@ private
   # Allow always-bodyless requests (GET, DELETE HEAD) to omit the Content-Type
   def valid_empty_request?
     request.content_type.nil? && (request.get? || request.delete? || request.head?)
+  end
+
+  def render_validation_error(exception)
+    render(
+      json: { errors: [{
+        title: "Invalid #{exception.model.errors.keys.join(', ')}",
+        detail: exception.to_s,
+      }] },
+      status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
+    )
+  end
+
+  def render_include_validation_error(exception)
+    render(
+      json: {
+        errors: exception.errors.map do |field, message|
+          { title: field, detail: message }
+        end,
+      },
+      # NB: The json:api specification requires this is a 400
+      status: :bad_request,
+    )
+  end
+
+  def validate_include_params
+    include_params_validator.fully_validate!
+  end
+
+  def included_relationships
+    IncludeParamHandler.new(params).call
+  end
+
+  def include_params_validator
+    @include_params_validator ||= IncludeParamsValidator.new(included_relationships, supported_relationships)
+  end
+
+  def supported_relationships
+    []
   end
 end

@@ -6,11 +6,13 @@ RSpec.describe NomisClient::Base do
   let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
   let(:token) do
-    instance_double('OAuth2::AccessToken',
-                    get: oauth2_response,
-                    post: oauth2_response,
-                    expires?: true,
-                    expires_at: token_expires_at)
+    instance_double(
+      'OAuth2::AccessToken',
+      get: oauth2_response,
+      post: oauth2_response,
+      expires?: true,
+      expires_at: token_expires_at,
+    )
   end
   let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
 
@@ -108,10 +110,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:get).and_raise(Faraday::ConnectionFailed, 'connection failed')
-        described_class.get(api_endpoint)
       end
 
-      it 'is called MAX_RETRIES times' do
+      it 'is called MAX_RETRIES + 1 times' do
+        expect {
+          described_class.get(api_endpoint)
+        }.to raise_exception(Faraday::ConnectionFailed)
+
         expect(token).to have_received(:get).exactly(3).times
       end
     end
@@ -123,10 +128,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:get).and_raise(Faraday::TimeoutError)
-        described_class.get(api_endpoint)
       end
 
-      it 'is called MAX_RETRIES times' do
+      it 'is called MAX_RETRIES + 1 times' do
+        expect {
+          described_class.get(api_endpoint)
+        }.to raise_exception(Faraday::TimeoutError)
+
         expect(token).to have_received(:get).exactly(3).times
       end
     end
@@ -134,12 +142,14 @@ RSpec.describe NomisClient::Base do
 
   describe '.post' do
     let(:response) do
-      described_class.post(api_endpoint,
-                           body: { offenderNos: %w[G3239GV] }.to_json,
-                           headers: {
-                             'Accept': 'application/json',
-                             'Content-Type': 'application/json',
-                           })
+      described_class.post(
+        api_endpoint,
+        body: { offenderNos: %w[G3239GV] }.to_json,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      )
     end
     let(:api_endpoint) { '/prisoners' }
 
@@ -226,10 +236,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:post).and_raise(Faraday::ConnectionFailed, 'connection failed')
-        described_class.post(api_endpoint)
       end
 
       it 'is called MAX_RETRIES times' do
+        expect {
+          described_class.post(api_endpoint)
+        }.to raise_exception(Faraday::ConnectionFailed)
+
         expect(token).to have_received(:post).exactly(3).times
       end
     end
@@ -241,10 +254,13 @@ RSpec.describe NomisClient::Base do
 
       before do
         allow(token).to receive(:post).and_raise(Faraday::TimeoutError)
-        described_class.post('/example')
       end
 
       it 'is called MAX_RETRIES times' do
+        expect {
+          described_class.post('/example')
+        }.to raise_exception(Faraday::TimeoutError)
+
         expect(token).to have_received(:post).exactly(3).times
       end
     end

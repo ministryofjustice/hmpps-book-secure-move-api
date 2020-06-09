@@ -3,16 +3,16 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.2'
+ruby File.read('.ruby-version')
 
 gem 'active_model_serializers', '~> 0.10.0'
 
 # don't enable this in dev/test - the insights envs are staging/preprod/prod
 group :production, :staging, :preprod do
-# usage docs for application_insights gem at
-# https://github.com/microsoft/ApplicationInsights-Ruby
-# Gem to add insights automatically to a Rack application
-# enhanced to support a RequestTracker with an ignore list
+  # usage docs for application_insights gem at
+  # https://github.com/microsoft/ApplicationInsights-Ruby
+  # Gem to add insights automatically to a Rack application
+  # enhanced to support a RequestTracker with an ignore list
   gem 'appinsights', github: 'ministryofjustice/appinsights'
 end
 gem 'aws-sdk-s3', require: false
@@ -23,12 +23,11 @@ gem 'cancancan'
 gem 'discard'
 gem 'doorkeeper'
 gem 'faraday'
+gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
 # static page serving for extra API documentation
-gem 'high_voltage'
 gem 'json-schema'
 gem 'kaminari'
-gem 'markdown-rails'
 gem 'net-http-persistent'
 gem 'nokogiri', '>= 1.10.4'
 gem 'notifications-ruby-client', '~> 5.1.2'
@@ -37,9 +36,8 @@ gem 'pager_api'
 gem 'paper_trail'
 gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
-gem 'puma', '~> 3.12.3', '> 3.12.3'
-gem 'rails', '~> 5.2.3'
-gem 'sassc-rails'
+gem 'puma', '~> 3.12.6'
+gem 'rails', '~> 6.0.3'
 gem 'sentry-raven'
 gem 'sidekiq'
 gem 'tty-prompt'
@@ -58,10 +56,11 @@ gem 'logstash-event', '~> 1.2'
 gem 'logstash-logger', '~> 0.26.1'
 
 group :development, :test do
-  gem 'dotenv', '~> 2.7'
-  gem 'dotenv-rails', '~> 2.7'
+  gem 'dotenv'
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'github_changelog_generator'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-json_expectations'
@@ -76,7 +75,6 @@ group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rails-erd', '~> 1.6'
   gem 'rubocop-govuk'
-  gem 'rubocop-rspec'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end

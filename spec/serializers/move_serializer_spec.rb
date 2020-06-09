@@ -31,6 +31,10 @@ RSpec.describe MoveSerializer do
       expect(attributes[:move_type]).to eql move.move_type
     end
 
+    it 'contains a rejection_reason attribute' do
+      expect(attributes[:rejection_reason]).to eql move.rejection_reason
+    end
+
     it 'contains a date attribute' do
       expect(attributes[:date]).to eql move.date.iso8601
     end
@@ -53,32 +57,48 @@ RSpec.describe MoveSerializer do
   end
 
   context 'with main options' do
-    let(:adapter_options) { { include: MoveSerializer::INCLUDED_ATTRIBUTES } }
+    let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
     it 'contains a person' do
-      expect(result_data[:relationships][:person]).to eq(data: { id: move.person.id, type: 'people' })
+      expect(result_data[:relationships][:person]).to eq(data: { id: move.profile.person.id, type: 'people' })
     end
 
     it 'contains an included person' do
-      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations])
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people ethnicities genders locations locations profiles])
     end
   end
 
   describe 'person' do
-    let(:adapter_options) { { include: { person: %I[first_names last_name] } } }
-    let(:expected_json) do
-      [
-        {
-          id: move.person_id,
-          type: 'people',
-          attributes: { first_names: move.person.latest_profile.first_names,
-                        last_name: move.person.latest_profile.last_name, date_of_birth: '1980-10-20' },
-        },
-      ]
+    context 'with a person' do
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS } }
+      let(:expected_json) do
+        [
+          {
+            id: move.profile.person_id,
+            type: 'people',
+            attributes: { first_names: move.profile.first_names,
+                          last_name: move.profile.last_name,
+                          date_of_birth: '1980-10-20' },
+          },
+        ]
+      end
+
+      it 'contains an included person' do
+        expect(result[:included]).to(include_json(expected_json))
+      end
     end
 
-    it 'contains an included person' do
-      expect(result[:included]).to(include_json(expected_json))
+    context 'without a person' do
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
+      let(:move) { create(:move, profile: nil) }
+
+      it 'contains an empty person' do
+        expect(result_data[:relationships][:person]).to eq(data: nil)
+      end
+
+      it 'does not contain an included person' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
+      end
     end
   end
 
@@ -108,6 +128,61 @@ RSpec.describe MoveSerializer do
 
     it 'contains an included from and to location' do
       expect(result[:included]).to(include_json(expected_json))
+    end
+  end
+
+  describe 'allocations' do
+    context 'with an allocation' do
+      let(:adapter_options) do
+        { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
+      end
+      let(:move) { create(:move, :with_allocation) }
+      let(:expected_json) do
+        [
+          {
+            id: move.allocation.id,
+            type: 'allocations',
+            attributes: {
+              moves_count: move.allocation.moves_count,
+              created_at: move.allocation.created_at.iso8601,
+            },
+            relationships: {
+              from_location: {
+                data: {
+                  id: move.from_location.id,
+                  type: 'locations',
+                },
+              },
+              to_location: {
+                data: {
+                  id: move.to_location.id,
+                  type: 'locations',
+                },
+              },
+            },
+          },
+        ]
+      end
+
+      it 'contains an allocation relationship' do
+        expect(result_data[:relationships][:allocation]).to eq(data: { id: move.allocation.id, type: 'allocations' })
+      end
+
+      it 'contains an included allocation' do
+        expect(result[:included]).to eq(expected_json)
+      end
+    end
+
+    context 'without an allocation' do
+      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
+
+      it 'contains an empty allocation' do
+        expect(result_data[:relationships][:allocation]).to eq(data: nil)
+      end
+
+      it 'does not contain an included allocation' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
+      end
     end
   end
 end

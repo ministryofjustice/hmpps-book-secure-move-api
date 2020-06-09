@@ -26,9 +26,20 @@ namespace :reference_data do
     AssessmentQuestions::Importer.new.call
   end
 
+  desc 'create allocation complex cases'
+  task create_allocation_complex_cases: :environment do
+    AllocationComplexCases::Importer.new.call
+  end
+
   desc 'create NOMIS alert mappings'
   task create_nomis_alerts: :environment do
     NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
+  end
+
+  desc 'create regions'
+  task create_regions: :environment do
+    regions = YAML.safe_load(File.read('./lib/tasks/data/regions.yml'))
+    Regions::Importer.new(regions).call
   end
 
   desc 'create suppliers'
@@ -53,10 +64,62 @@ namespace :reference_data do
     # suppliers have exactly the locations listed in supplier_locations.yml
     supplier_locations.each do |supplier_name, codes|
       supplier = Supplier.find_by(key: supplier_name.to_s)
-      locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
-      supplier.locations = locations
-    end
+      locations_in_yaml = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
 
+      existing_location_keys = supplier.locations.pluck(:key)
+      yaml_location_keys = locations_in_yaml.map(&:key)
+
+      if have_locations_changed?(existing_location_keys, yaml_location_keys)
+        supplier.locations = locations_in_yaml
+
+        removed_locations = existing_location_keys - yaml_location_keys
+        added_locations = yaml_location_keys - existing_location_keys
+
+        Raven.capture_message(
+          "Locations updated for the Supplier: #{supplier.name}. ",
+          extra: {
+            added_locations: added_locations,
+            removed_locations: removed_locations,
+          },
+          level: 'warning',
+        )
+
+        puts '- - -'
+        puts "Locations removed from Supplier '#{supplier.name}': #{removed_locations}"
+        puts "Locations added to Supplier '#{supplier.name}': #{added_locations}"
+      else
+        puts "Locations for the Supplier '#{supplier.name}' have not changed."
+      end
+    end
+  end
+
+  desc 'create all of the necessary reference data'
+  task create_all: :environment do
+    %w[reference_data:create_locations
+       reference_data:create_ethnicities
+       reference_data:create_genders
+       reference_data:create_identifier_types
+       reference_data:create_assessment_questions
+       reference_data:create_allocation_complex_cases
+       reference_data:create_nomis_alerts
+       reference_data:create_regions
+       reference_data:create_suppliers
+       reference_data:create_prison_transfer_reasons
+       reference_data:link_suppliers].each do |task_name|
+      puts "Running '#{task_name}' ..."
+      Rake::Task[task_name].invoke
+    end
+  end
+
+private
+
+  # TODO: Move these methods outside of the rake task
+  # rubocop:disable all
+  def have_locations_changed?(locations1, locations2)
+    ((locations1 - locations2) + (locations2 - locations1)).any?
+  end
+
+  def puts_summary_of_relationships
     puts
     puts 'Summary of relationships'
     puts '========================'
@@ -68,4 +131,5 @@ namespace :reference_data do
       end
     end
   end
+  # rubocop:enable all
 end

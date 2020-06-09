@@ -14,6 +14,7 @@ AllCops:
     - "db/**/*"
     - "bin/**/*"
     - "config/**/*"
+    - "tmp/**/*"
 
 Style/Documentation:
   Enabled: false
@@ -21,7 +22,7 @@ Style/Documentation:
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/BlockLength:
@@ -69,3 +70,7 @@ Rails/TimeZone:
   Exclude:
     - "spec/**/**/*"
     - "app/services/moves/anonymiser.rb"
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"

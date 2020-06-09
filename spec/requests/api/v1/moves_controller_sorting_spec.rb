@@ -7,12 +7,24 @@ RSpec.describe Api::V1::MovesController do
   let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization' => "Bearer #{token.token}" } }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
+  let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
   describe 'GET /moves' do
-    let!(:move1) { create :move }
-    let!(:move2) { create :move, :with_transfer_reason }
-    let!(:move3) { create :move, :with_transfer_reason }
-    let!(:move4) { create :move }
+    # NB sorting should be case-sensitive, i.e. LOCATION1, LOCATION3, location2, location4
+    let(:location1) { create :location, title: 'LOCATION1' }
+    let(:location2) { create :location, title: 'location2' }
+    let(:location3) { create :location, title: 'LOCATION3' }
+    let(:location4) { create :location, title: 'location4' }
+
+    let(:profile1) { create :profile, last_name: 'PROFILE1' }
+    let(:profile2) { create :profile, last_name: 'profile2' }
+    let(:profile3) { create :profile, last_name: 'PROFILE3' }
+    let(:profile4) { create :profile, last_name: 'profile4' }
+
+    let!(:move1) { create :move, profile: profile1, to_location: location1 }
+    let!(:move2) { create :move, :prison_transfer, profile: profile2, to_location: location2 }
+    let!(:move3) { create :move, :prison_transfer, profile: profile3, to_location: location3 }
+    let!(:move4) { create :move, profile: profile4, to_location: location4 }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
@@ -25,27 +37,33 @@ RSpec.describe Api::V1::MovesController do
         context 'with invalid sort' do
           let(:sort_params) { { by: 'rabbits' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_by' => ['is not included in the list'] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) do
+              [{ 'title' => 'Invalid sort_by',
+                 'detail' => 'Validation failed: Sort by is not included in the list' }]
+            end
           end
         end
 
         context 'with invalid direction' do
           let(:sort_params) { { by: 'created_at', direction: 'rabbits' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_direction' => ['is not included in the list'] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) do
+              [{ 'title' => 'Invalid sort_direction',
+                 'detail' => 'Validation failed: Sort direction is not included in the list' }]
+            end
           end
         end
 
         context 'with only direction' do
           let(:sort_params) { { direction: 'asc' } }
 
-          it 'produces an error' do
-            expect(response).to have_http_status(:bad_request)
-            expect(JSON.parse(response.body)).to eq('error' => { 'sort_by' => ["can't be blank"] })
+          it_behaves_like 'an endpoint that responds with error 422' do
+            let(:errors_422) do
+              [{ 'title' => 'Invalid sort_by',
+                 'detail' => "Validation failed: Sort by can't be blank" }]
+            end
           end
         end
       end
@@ -163,7 +181,8 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(move_data.map(&:title))
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
+              expect(locations.map(&:title)).to eq(%w[LOCATION1 LOCATION3 location2 location4])
             end
           end
 
@@ -171,29 +190,34 @@ RSpec.describe Api::V1::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(move_data.reverse.map(&:title))
+              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
+              expect(locations.map(&:title)).to eq(%w[location4 location2 LOCATION3 LOCATION1])
             end
           end
         end
 
         context 'when name' do
-          let(:people) { object_ids.map { |p_id| Person.find(p_id) } }
           let(:object_name) { 'person' }
-          let(:move_data) { Move.all.sort_by { |move| move.person.latest_profile.last_name }.map(&:person) }
+          let(:move_data) do
+            Move.all
+              .sort_by { |move| move.profile.last_name }
+              .map { |move| move.profile.person }
+          end
+          let(:last_names) { object_ids.map { |person_id| Person.find(person_id).latest_profile.last_name } }
 
           context 'with default direction' do
             let(:sort_params) { { by: 'name' } }
 
-            it 'sorts by to location' do
-              expect(people).to eq(move_data)
+            it 'sorts by to last_name (ascending, case sensitive)' do
+              expect(last_names).to eq(%w[PROFILE1 PROFILE3 profile2 profile4])
             end
           end
 
           context 'with reverse direction' do
             let(:sort_params) { { by: 'name', direction: 'desc' } }
 
-            it 'sorts by to location' do
-              expect(people).to eq(move_data.reverse)
+            it 'sorts by last_name (descending, case sensitive)' do
+              expect(last_names).to eq(%w[profile4 profile2 PROFILE3 PROFILE1])
             end
           end
         end

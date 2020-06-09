@@ -62,7 +62,7 @@ RSpec.describe Api::V1::DocumentsController, :rswag, :with_client_authentication
           JSON.parse(ActionController::Base.render(json: document))
         end
 
-        schema "$ref": '#/definitions/delete_document_responses/200'
+        schema '$ref' => 'delete_document_responses.yaml#/200'
 
         run_test! do |_example|
           expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))

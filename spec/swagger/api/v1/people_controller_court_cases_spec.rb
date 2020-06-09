@@ -11,8 +11,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       parameter name: :Authorization,
                 in: :header,
                 schema: {
-                    type: 'string',
-                    default: 'Bearer <your-client-token>',
+                  type: 'string',
+                  default: 'Bearer <your-client-token>',
                 },
                 required: true,
                 description: <<~DESCRIPTION
@@ -24,8 +24,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: 'header',
                 description: 'Accepted request content type',
                 schema: {
-                    type: 'string',
-                    default: 'application/vnd.api+json',
+                  type: 'string',
+                  default: 'application/vnd.api+json',
                 },
                 required: true
 
@@ -33,16 +33,21 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: :path,
                 description: 'The ID of the person',
                 schema: {
-                    type: :string,
+                  type: :string,
                 },
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
                 required: true
+      parameter name: :'filter[active]',
+                in: :query,
+                description: 'Filter only active court cases.',
+                schema: { type: :string, default: 'true', example: 'false', enum: %w[true false] },
+                required: false
 
       response '200', 'success' do
         let(:person_id) { person.id }
         let(:person) { create(:profile, :nomis_synced).person }
-        let(:court_cases_from_nomis) {
+        let(:court_cases_from_nomis) do
           court_case = CourtCase.new.build_from_nomis(
             'id' => '1495077',
             'caseSeq' => 1,
@@ -54,19 +59,28 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
           )
 
           [court_case]
-        }
-
-        before do
-          allow(People::RetrieveCourtCases).to receive(:call).with(person).and_return(court_cases_from_nomis)
         end
 
-        schema "$ref": '#/definitions/get_court_cases_responses/200'
+        before do
+          allow(People::RetrieveCourtCases).to receive(:call).with(person, nil).and_return(OpenStruct.new(success?: true, court_cases: court_cases_from_nomis))
+        end
+
+        schema '$ref' => 'get_court_cases_responses.yaml#/200'
 
         run_test!
       end
 
       response '404', 'not found' do
         let(:person_id) { 'invalid-id' }
+
+        run_test!
+      end
+
+      response '422', 'unprocessable entity' do
+        let(:person_id) { person.id }
+        let(:person) { create(:profile).person } # since it is not nomis_synced latest_nomis_booking_id is nil
+
+        schema '$ref' => 'get_court_cases_responses.yaml#/400'
 
         run_test!
       end

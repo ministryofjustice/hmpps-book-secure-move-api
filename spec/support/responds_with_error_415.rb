@@ -18,7 +18,7 @@ RSpec.shared_examples 'an endpoint that responds with error 415' do
     expect(JSON.parse(response.body)).to include_json(errors: errors_415)
   end
 
-  it 'returns a valid 415 JSON response', with_json_schema: true do
+  it 'returns a valid 415 JSON response' do
     expect(JSON::Validator.validate!(schema, response_json, fragment: '#/415')).to be true
   end
 

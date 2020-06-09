@@ -23,7 +23,8 @@ RSpec.describe 'Status', type: :request do
 
       it 'returns json containing the applications version information' do
         expect(response.body).to eq(
-          { build_date: build_date, commit_id: git_commit,
+          { build_date: build_date,
+            commit_id: git_commit,
             build_tag: build_tag }.to_json,
         )
       end

@@ -10,7 +10,7 @@ RSpec.shared_examples 'a swagger 404 error' do
     ]
   end
 
-  schema '$ref' => '#/definitions/error_responses/404'
+  schema '$ref' => 'error_responses.yaml#/404'
 
   run_test!
 
