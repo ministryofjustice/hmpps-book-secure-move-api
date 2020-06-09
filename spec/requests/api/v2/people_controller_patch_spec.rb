@@ -8,8 +8,8 @@ RSpec.describe Api::V2::PeopleController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
-  describe 'PUT /api/v2/people' do
-    let(:schema) { load_yaml_schema('put_people_responses.yaml') } # Note: V1 put_people_responses is equal V2 put_people_responses
+  describe 'PATCH /api/v2/people' do
+    let(:schema) { load_yaml_schema('patch_people_responses.yaml', version: 'v2') }
 
     let(:person) { create :person }
     let(:ethnicity_id) { create(:ethnicity).id }
@@ -80,20 +80,20 @@ RSpec.describe Api::V2::PeopleController do
     end
 
     context 'with valid params' do
-      before { put "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
     it 'returns the correct data' do
-      put "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
+      patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
 
       expect(response_json).to include_json(data: expected_data.merge(id: person.id))
     end
 
     describe 'include query param' do
       before do
-        put "/api/v2/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json
+        patch "/api/v2/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json
       end
 
       context 'when including multiple relationships' do
@@ -128,7 +128,7 @@ RSpec.describe Api::V2::PeopleController do
     describe 'webhook and email notifications' do
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        put "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
+        patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
       end
 
       it 'calls the notifier when updating a person' do
@@ -137,7 +137,7 @@ RSpec.describe Api::V2::PeopleController do
     end
 
     context 'with a bad request' do
-      before { put "/api/v2/people/#{person.id}", params: {}, headers: headers, as: :json }
+      before { patch "/api/v2/people/#{person.id}", params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
@@ -147,7 +147,7 @@ RSpec.describe Api::V2::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': content_type } }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before { put "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -155,7 +155,7 @@ RSpec.describe Api::V2::PeopleController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { put "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

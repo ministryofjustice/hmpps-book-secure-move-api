@@ -12,16 +12,16 @@ module Api
       def create
         person = Person.create(person_attributes)
 
-        render json: person, status: :created, include: included_relationships, serializer: ::V2::PersonSerializer
+        render_person(person, :created)
       end
 
       def update
         person = Person.find(params[:id])
 
-        person.update(person_attributes)
+        person.update!(person_attributes)
         Notifier.prepare_notifications(topic: person, action_name: 'update')
 
-        render json: person, status: :ok, include: included_relationships, serializer: ::V2::PersonSerializer
+        render_person(person, :ok)
       end
 
     private
@@ -63,6 +63,10 @@ module Api
       def gender
         gender_id = params.require(:data).dig(:relationships, :gender, :data, :id)
         Gender.find(gender_id) if gender_id
+      end
+
+      def render_person(person, status)
+        render json: person, status: status, include: included_relationships, serializer: ::V2::PersonSerializer
       end
     end
   end
