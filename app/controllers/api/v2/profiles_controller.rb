@@ -3,6 +3,7 @@
 module Api
   module V2
     class ProfilesController < ApiController
+      # TODO: add validation for assessment answers
       def create
         profile = person.profiles.create(new_profile_attributes)
         render_profile(profile, :created)
