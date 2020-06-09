@@ -6,6 +6,7 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to belong_to(:person).required }
   it { is_expected.to belong_to(:ethnicity).optional }
   it { is_expected.to belong_to(:gender).optional }
+  it { is_expected.to have_many(:documents) }
 
   it { is_expected.to validate_presence_of(:person) }
   it { is_expected.to validate_presence_of(:last_name) }
