@@ -91,13 +91,11 @@ ActiveRecord::Schema.define(version: 2020_06_09_082714) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
-    t.uuid "profile_id"
     t.string "documentable_type"
     t.bigint "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
     t.index ["documentable_type", "documentable_id"], name: "index_documents_on_documentable_type_and_documentable_id"
     t.index ["move_id"], name: "index_documents_on_move_id"
-    t.index ["profile_id"], name: "index_documents_on_profile_id"
   end
 
   create_table "ethnicities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
