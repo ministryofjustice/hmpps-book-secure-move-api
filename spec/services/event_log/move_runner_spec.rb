@@ -114,6 +114,34 @@ RSpec.describe EventLog::MoveRunner do
     end
   end
 
+  context 'when event_name=approve' do
+    let!(:event) { create(:move_event, :approve, eventable: move) }
+
+    context 'when the move is proposed' do
+      let!(:move) { create(:move, :proposed, date: Date.today) }
+
+      it 'updates the move status to requested' do
+        expect { runner.call }.to change(move, :status).from('proposed').to('requested')
+      end
+
+      it 'updates the move date' do
+        expect { runner.call }.to change(move, :date).from(Date.today).to(Date.tomorrow)
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already requested' do
+      let!(:move) { create(:move, :requested, date: Date.tomorrow) }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { runner.call }.not_to change(move, :status).from('requested')
+      end
+    end
+  end
+
   context 'when event_name=reject' do
     let!(:event) { create(:move_event, :reject, eventable: move) }
 

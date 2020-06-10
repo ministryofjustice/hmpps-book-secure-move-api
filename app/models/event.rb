@@ -8,6 +8,7 @@ class Event < ApplicationRecord
     UNCOMPLETE = 'uncomplete'.freeze,
     REDIRECT = 'redirect'.freeze,
     LOCKOUT = 'lockout'.freeze,
+    APPROVE = 'approve'.freeze,
     REJECT = 'reject'.freeze,
   ].freeze
 
