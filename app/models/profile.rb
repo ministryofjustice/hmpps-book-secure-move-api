@@ -9,7 +9,7 @@ class Profile < VersionedModel
 
   has_one :move, dependent: :nullify
 
-  has_many :documents, -> { kept }, as: :documentable, dependent: :destroy
+  has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
 
   validates :person, presence: true
   validates :last_name, presence: true

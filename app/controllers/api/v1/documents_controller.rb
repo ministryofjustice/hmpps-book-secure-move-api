@@ -39,7 +39,7 @@ module Api
       end
 
       def profile
-        Move.find_by(id: params.dig(:move_id)).profile
+        Move.find_by(id: params.dig(:move_id))&.profile
       end
     end
   end
