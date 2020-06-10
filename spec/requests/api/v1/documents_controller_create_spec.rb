@@ -99,16 +99,21 @@ RSpec.describe Api::V1::DocumentsController do
 
       it_behaves_like 'an endpoint that responds with success 201'
 
-      it 'adds a document to the move' do
+      it 'creates a document' do
         expect(move.documents.count).to eq(1)
+        expect(move.profile.documents.count).to eq(1)
+      end
+
+      it 'enables accessing a document on the move and the profile' do
+        expect(move.profile.documents).to match_array(move.documents)
       end
 
       it 'attaches a file to the document' do
-        expect(move.documents.last.file).to be_attached
+        expect(move.profile.documents.last.file).to be_attached
       end
 
       it 'adds the right file to the document' do
-        expect(move.documents.last.file.filename).to eq 'file-sample_100kB.doc'
+        expect(move.profile.documents.last.file.filename).to eq 'file-sample_100kB.doc'
       end
     end
 

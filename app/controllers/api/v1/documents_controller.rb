@@ -24,24 +24,22 @@ module Api
 
     private
 
-      PERMITTED_DOCUMENT_PARAMS = [
-        attributes: %i[file],
-      ].freeze
-
-      def document_params
-        params.require(:data).permit(PERMITTED_DOCUMENT_PARAMS).to_h
+      def document_attributes
+        document_params[:attributes].merge(documentable: profile)
       end
 
-      def document_attributes
-        document_params[:attributes].merge(
-          move: Move.find_by(id: params.dig(:move_id)),
-        )
+      def document_params
+        params.require(:data).permit(attributes: %i[file]).to_h
       end
 
     protected
 
       def set_restricted_request_content_type
         @restricted_request_content_type = 'multipart/form-data'
+      end
+
+      def profile
+        Move.find_by(id: params.dig(:move_id)).profile
       end
     end
   end

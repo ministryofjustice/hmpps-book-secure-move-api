@@ -18,8 +18,8 @@ RSpec.describe Api::V1::DocumentsController do
     let(:schema) { load_yaml_schema('delete_document_responses.yaml') }
 
     let!(:move) { create :move }
-    let!(:document) { create :document, move: move }
     let(:move_id) { move.id }
+    let(:document) { create :document, move: move }
     let(:document_id) { document.id }
 
     before do
@@ -29,35 +29,68 @@ RSpec.describe Api::V1::DocumentsController do
     end
 
     context 'when successful' do
-      it 'returns a success code' do
-        expect(response).to have_http_status(:ok)
+      context 'when the document is associated with a profile' do
+        let!(:document) { create :document, move: move }
+
+        it 'returns a valid 200 JSON response' do
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
+        end
+
+        it 'forces the content type to ApiController::CONTENT_TYPE' do
+          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+        end
+
+        it 'deletes the document from the profile', skip_before: true do
+          expect(move.documents.count).to eq(1)
+          delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers
+          expect(move.documents.count).to eq(0)
+        end
+
+        it 'does not delete the document', skip_before: true do
+          expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+            .not_to change(Document, :count)
+        end
+
+        it 'does not delete the move' do
+          expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+            .not_to change(Move, :count)
+        end
+
+        it 'returns the correct data' do
+          expect(response_json).to eq resource_to_json
+        end
       end
 
-      it 'returns a valid 200 JSON response' do
-        expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
-      end
+      context 'when the document is associated with a move' do
+        let!(:document) { create :document, documentable: move.profile }
 
-      it 'forces the content type to ApiController::CONTENT_TYPE' do
-        expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
-      end
+        it 'returns a valid 200 JSON response' do
+          expect(JSON::Validator.validate!(schema, response_json, fragment: '#/200')).to be true
+        end
 
-      it 'deletes the document from the move', skip_before: true do
-        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
-          .to change { move.documents.count }.by(-1)
-      end
+        it 'forces the content type to ApiController::CONTENT_TYPE' do
+          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+        end
 
-      it 'does not delete the document', skip_before: true do
-        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
-          .not_to change(Document, :count)
-      end
+        it 'does not delete the document', skip_before: true do
+          expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+            .not_to change(Document, :count)
+        end
 
-      it 'does not delete the move' do
-        expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
-          .not_to change(Move, :count)
-      end
+        it 'does not delete the move' do
+          expect { delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers }
+            .not_to change(Move, :count)
+        end
 
-      it 'returns the correct data' do
-        expect(response_json).to eq resource_to_json
+        it 'returns the correct data' do
+          expect(response_json).to eq resource_to_json
+        end
+
+        it 'deletes the document from the profile', skip_before: true do
+          expect(move.profile.documents.count).to eq(1)
+          delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers
+          expect(move.profile.documents.count).to eq(0)
+        end
       end
     end
 

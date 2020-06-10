@@ -124,6 +124,12 @@ class Move < VersionedModel
     raise 'Attempt to Access to person!!!'
   end
 
+  def documents
+    # We need to make sure that we're returning Documents that are either for the current
+    # moves profile or the current move to support backwards compatibility.
+    Document.kept.where(move_id: id).or(Document.where(documentable_id: profile_id))
+  end
+
 private
 
   def date_to_after_date_from

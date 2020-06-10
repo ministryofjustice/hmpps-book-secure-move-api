@@ -157,9 +157,7 @@ RSpec.describe Move do
   end
 
   context 'without automatic reference generation' do
-    # rubocop:disable RSpec/AnyInstance
     before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
-    # rubocop:enable RSpec/AnyInstance
 
     it { is_expected.to validate_presence_of(:reference) }
   end
@@ -408,6 +406,26 @@ RSpec.describe Move do
       move.cancel
 
       expect(move.status).to eq('cancelled')
+    end
+  end
+
+  describe '#documents' do
+    let(:move) { create(:move) }
+
+    context 'when documents are associated with a Move via the move_id' do
+      let!(:document) { create(:document, move: move) }
+
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
+    end
+
+    context "when documents are associated with a move's profile via documentable_id" do
+      let!(:document) { create(:document, documentable: move.profile) }
+
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
     end
   end
 
