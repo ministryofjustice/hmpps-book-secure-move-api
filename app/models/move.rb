@@ -127,7 +127,7 @@ class Move < VersionedModel
   def documents
     # We need to make sure that we're returning Documents that are either for the current
     # moves profile or the current move to support backwards compatibility.
-    Document.kept.where(move_id: id).or(Document.where(documentable_id: profile_id))
+    Document.kept.where(move_id: id).or(Document.where(documentable: profile))
   end
 
 private
