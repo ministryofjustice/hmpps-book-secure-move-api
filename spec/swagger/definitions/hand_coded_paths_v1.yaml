@@ -571,181 +571,6 @@
           application/vnd.api+json:
             schema:
               $ref: put_move_responses.yaml#/422
-/moves/{move_id}/events:
-  post:
-    deprecated: true
-    summary: '[DO NOT USE] Creates a move event'
-    description: |
-      ## [DO NOT USE]
-
-      Creating a move event can change the underlying move''s status or other attributes.
-
-      Move events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to
-      complete or cancel existing journeys.
-
-      Use the `event_name` attribute to specify the type of event:
-
-      * `complete` - completes a move
-      * `redirect` - redirects a move to a new `to_location`
-      * `lockout` - indicates the move has been locked out at `to_location`
-    tags:
-    - Moves
-    consumes:
-    - application/vnd.api+json
-    parameters:
-    - $ref: move_id_parameter.yaml#/MoveId
-    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
-    - $ref: content_type_parameter.yaml#/ContentType
-    - name: body
-      in: body
-      required: true
-      description: |
-        ### Completing a Move
-
-        A move is completed by POSTing a `complete` event. Completing a move will change the move status to `completed`.
-        It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or
-        cancel existing journeys.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "complete",
-            "timestamp": "2020-04-21T13:20:50.52Z"
-          }
-        }
-        ```
-
-        ### Redirecting a Move
-
-        Creating a redirect event changes the move's destination (`to_location`). It _does not_ alter the journeys
-        associated with the move: additional API calls will be necessary to complete or cancel existing journeys and
-        create new journeys. The new destination should be specified via a `to_location` relationship. Optionally,
-        `notes` may be provided to assist with auditing.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "redirect",
-            "timestamp": "2020-04-21T13:20:50.52Z",
-            "notes": "requested by PMU"
-          },
-          relationships": {
-            "to_location": {
-              "data": {
-                "type": "locations",
-                "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
-              }
-            }
-          }
-        }
-        ```
-
-        ### Recording a Lockout
-
-        Creating a lockout event _does not_ change the underlying move's status or destination. It _does not_ alter the
-        journeys associated with the move: additional API calls will be necessary to complete or cancel existing
-        journeys and create new journeys. The lockout location should be specified via a `to_location` relationship.
-        Optionally, `notes` may be provided to assist with auditing.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "lockout",
-            "timestamp": "2020-04-21T13:20:50.52Z",
-            "notes": "late arrival due to van breakdown"
-          },
-          relationships": {
-            "to_location": {
-              "data": {
-                "type": "locations",
-                "id": "c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1"
-              }
-            }
-          }
-        }
-        ```
-
-        ---
-      schema:
-        $ref: post_move_event_depreciated.yaml#/PostMoveEvent
-    responses:
-      '201':
-        description: created
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: post_move_events_responses_depreciated.yaml#/201
-        examples:
-          Complete:
-            data:
-              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
-              type: events
-              attributes:
-                event_name: complete
-                timestamp: '2020-04-21T13:20:50.52Z'
-          Redirect:
-            data:
-              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
-              type: events
-              attributes:
-                event_name: redirect
-                timestamp: '2020-04-21T13:20:50.52Z'
-              relationships:
-                to_location:
-                  data:
-                    type: locations
-                    id: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
-          Lockout:
-            data:
-              id: 355b78b6-57da-4c52-9c41-29a90376c0d7
-              type: events
-              attributes:
-                event_name: lockout
-                timestamp: '2020-04-21T13:20:50.52Z'
-              relationships:
-                to_location:
-                  data:
-                    type: locations
-                    id: c3f9cc0c-0154-49ec-b01e-d60ded8e0ab1
-      '400':
-        description: bad request
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/400
-      '401':
-        description: unauthorized
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/401
-      '404':
-        description: resource not found
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/404
-      '409':
-        description: conflict
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/409
-      '415':
-        description: invalid media type
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/415
-      '422':
-        description: unprocessable entity
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: error_responses.yaml#/422
 /moves/{move_id}/cancel:
   post:
     summary: 'Cancels a move'
@@ -1192,7 +1017,7 @@
     summary: 'Creates a new journey'
     description: |
       This creates a new journey record and appends it to the move. It _does not_ update the destination of the parent
-      move record: additional API calls to the `/moves/{move_id}/events` endpoint will be required in order to change
+      move record: additional API calls to the `/moves/{move_id}/{event}` endpoint will be required in order to change
       the move's destination.
     tags:
     - Move Journeys
@@ -1674,7 +1499,7 @@
         content:
           application/vnd.api+json:
             schema:
-              $ref: put_people_responses.yaml#/201
+              $ref: put_people_responses.yaml#/200
       '400':
         description: bad request
         content:

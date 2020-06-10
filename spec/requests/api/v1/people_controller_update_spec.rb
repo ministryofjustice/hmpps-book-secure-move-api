@@ -100,7 +100,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'returns the correct data' do
         put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
-        expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: Person.last&.id))
+        expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: person.id))
       end
 
       it 'updates an existing person' do

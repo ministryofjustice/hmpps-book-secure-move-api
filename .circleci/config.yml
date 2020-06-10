@@ -50,9 +50,18 @@ aliases:
   - &only_master
     filters:
       branches:
-        only: master
+        only:
+          - master
   - &only_master_and_create_dev
     filters:
+      branches:
+        only:
+          - master
+          - dev-auth-from-docs
+  - &only_for_deployment
+    filters:
+      tags:
+        only: /^v.*/
       branches:
         only:
           - master
@@ -154,54 +163,55 @@ commands:
     steps:
       - *create-db
 
-
-  build_for_k8s:
-    description: "Builds a Docker image for staging/production and pushes to ECR"
-    parameters:
-      env:
-        type: string
-      notify_slack:
-        type: string
-        default: ""
+  build_docker_image:
+    description: "Builds a Docker image"
     steps:
-      - checkout
-      - when:
-          condition: <<parameters.notify_slack>>
-          steps:
-            - *notify_slack_on_release_start
-      - attach_workspace:
-          at: .
-
-      - setup_remote_docker:
-          docker_layer_caching: true
-
       - run:
-          name: build docker image
+          name: Build docker image
           command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
+            BUILD_DATE=$(date -Is)
 
-            docker build \
+            DOCKER_BUILDKIT=1 docker build \
               --label build.git.sha=${CIRCLE_SHA1} \
               --label build.git.branch=${CIRCLE_BRANCH} \
               --label build.date=${BUILD_DATE} \
               --build-arg APP_BUILD_DATE=${BUILD_DATE} \
               --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
               --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
-
+              -t ci .
       - run:
-          name: push app image
+          name: Login to ECR
           command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          name: Tag push with Git SHA
+          command: |
+            docker tag ci "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+      - run:
+          name: check image
+          command: docker images
 
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
-
+  retag_docker_image:
+    description: "Re-tag an image for deployment."
+    parameters:
+      env:
+        type: string
+    steps:
+      - run:
+          name: Login to ECR
+          command: |
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          # make it a dry-run by not using a proper tag for now
+          name: Retag image
+          command: |
+            MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
+            --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
+            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.lastest \
+            --image-manifest "${MANIFEST}"
 
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
@@ -296,52 +306,46 @@ jobs:
       - *attach-tmp-workspace
       - *rubocop
 
-  build_dev:
+  build_image:
     executor: cloud-platform-executor
     steps:
-      - build_for_k8s:
-          env: "dev"
+      - checkout
+      - setup_remote_docker
+      - build_docker_image
 
   deploy_dev:
     executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "dev"
       - deploy_to_k8s:
           env: "dev"
-
-  build_staging:
-    executor: cloud-platform-executor
-    steps:
-      - build_for_k8s:
-          env: "staging"
 
   deploy_staging:
     executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "staging"
       - deploy_to_k8s:
           env: "staging"
-
-  build_preprod:
-    executor: cloud-platform-executor
-    steps:
-      - build_for_k8s:
-          env: "preprod"
 
   deploy_preprod:
     executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "preprod"
       - deploy_to_k8s:
           env: "preprod"
-
-  build_production:
-    executor: cloud-platform-executor
-    steps:
-      - build_for_k8s:
-          env: "production"
-          notify_slack: "true"
 
   deploy_production:
     executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "production"
       - deploy_to_k8s:
           env: "production"
           notify_slack: "true"
@@ -365,53 +369,33 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
-      - build_dev:
-          <<: *only_master_and_create_dev
+      - build_image:
+          <<: *only_for_deployment
           requires:
             - api_docs
+            - rspec_tests
+            - linters
       - deploy_dev:
           <<: *only_master_and_create_dev
           requires:
-            - rspec_tests
-            - linters
-            - build_dev
-      - build_staging:
-          <<: *only_master
-          requires:
-            - api_docs
+            - build_image
       - deploy_staging:
           <<: *only_master
           requires:
-            - rspec_tests
-            - linters
-            - build_staging
-      - build_preprod:
-          <<: *only_deploy_tags
-          requires:
-            - api_docs
+            - build_image
       - deploy_preprod:
           <<: *only_deploy_tags
           requires:
-            - rspec_tests
-            - linters
-            - build_preprod
-      - build_production:
-          <<: *only_deploy_tags
-          requires:
-            - api_docs
+            - build_image
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - rspec_tests
-            - linters
-            - build_production
+            - build_image
       - notify_of_approval:
           <<: *only_deploy_tags
           requires:
-            - rspec_tests
-            - linters
-            - build_production
+            - build_image
       - deploy_production:
           <<: *only_deploy_tags
           requires:
