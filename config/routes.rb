@@ -32,6 +32,7 @@ Rails.application.routes.draw do
           post 'complete', controller: 'move_events'
           post 'lockouts', controller: 'move_events'
           post 'redirects', controller: 'move_events'
+          post 'approve', controller: 'move_events'
           post 'reject', controller: 'move_events'
         end
       end
