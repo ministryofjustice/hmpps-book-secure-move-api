@@ -158,7 +158,8 @@ RSpec.describe Move do
 
   context 'without automatic reference generation' do
     before do
-      allow(Moves::ReferenceGenerator).to receive(:new).and_return(double(call: nil))
+      service = instance_double('Moves::ReferenceGenerator', call: nil)
+      allow(Moves::ReferenceGenerator).to receive(:new).and_return(service)
     end
 
     it { is_expected.to validate_presence_of(:reference) }
