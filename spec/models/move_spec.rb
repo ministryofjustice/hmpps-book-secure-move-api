@@ -157,7 +157,9 @@ RSpec.describe Move do
   end
 
   context 'without automatic reference generation' do
-    before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
+    before do
+      allow(Moves::ReferenceGenerator).to receive(:new).and_return(double(call: nil))
+    end
 
     it { is_expected.to validate_presence_of(:reference) }
   end
