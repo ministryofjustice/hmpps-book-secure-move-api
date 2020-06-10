@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_142242) do
     t.string "documentable_type"
     t.uuid "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
+    t.index ["documentable_type", "documentable_id"], name: "index_documents_on_documentable_type_and_documentable_id"
     t.index ["move_id"], name: "index_documents_on_move_id"
   end
 
