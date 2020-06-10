@@ -45,8 +45,16 @@ FactoryBot.define do
       event_name { 'lockout' }
     end
 
+    trait :lodging do
+      event_name { 'lodging' }
+    end
+
     trait :reject do
       event_name { 'reject' }
+    end
+
+    trait :start do
+      event_name { 'start' }
     end
 
     # NB: move_event factory inherits from the event factory
