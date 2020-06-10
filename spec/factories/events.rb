@@ -45,6 +45,10 @@ FactoryBot.define do
       event_name { 'lockout' }
     end
 
+    trait :approve do
+      event_name { 'approve' }
+    end
+
     trait :reject do
       event_name { 'reject' }
     end
@@ -79,6 +83,17 @@ FactoryBot.define do
             attributes: {
               cancellation_reason: nil,
               cancellation_reason_comment: 'this is a broken event',
+            },
+          } }
+        end
+      end
+
+      trait :approve do
+        event_name { 'approve' }
+        details do
+          { event_params: {
+            attributes: {
+              date: Date.tomorrow,
             },
           } }
         end

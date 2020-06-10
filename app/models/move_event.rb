@@ -1,6 +1,10 @@
 class MoveEvent < Event
   # NB: this class exposes a few methods specific to moves to the Event model
 
+  def date
+    @date ||= event_params.dig(:attributes, :date)
+  end
+
   def rejection_reason
     @rejection_reason ||= event_params.dig(:attributes, :rejection_reason)
   end

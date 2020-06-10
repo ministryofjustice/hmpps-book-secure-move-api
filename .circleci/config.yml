@@ -122,7 +122,7 @@ references:
       command: bundle exec rubocop
   _attach-tmp-workspace: &attach-tmp-workspace
     attach_workspace:
-      at: /tmp/workspace
+      at: .
 
 
 executors:
@@ -278,6 +278,7 @@ jobs:
     parallelism: 8
     steps:
       - checkout
+      - *attach-tmp-workspace
       - build-base
       - *api_docs
       - persist_to_workspace:
@@ -310,6 +311,7 @@ jobs:
     executor: cloud-platform-executor
     steps:
       - checkout
+      - *attach-tmp-workspace
       - setup_remote_docker
       - build_docker_image
 
