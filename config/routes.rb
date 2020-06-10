@@ -23,6 +23,8 @@ Rails.application.routes.draw do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
         get 'timetable', to: 'people#timetable'
+
+        resources :profiles, only: %i[create update]
       end
       resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  module V2
+  module V1
     class ProfilesController < ApiController
       # TODO: add validation for assessment answers
       def create

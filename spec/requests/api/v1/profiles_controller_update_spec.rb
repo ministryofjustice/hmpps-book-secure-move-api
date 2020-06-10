@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::ProfilesController do
+RSpec.describe Api::V1::ProfilesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -10,8 +10,8 @@ RSpec.describe Api::V2::ProfilesController do
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
-  describe 'PATCH /v2/people/:id/profiles' do
-    let(:schema) { load_yaml_schema('patch_profiles_responses.yaml', version: 'v2') }
+  describe 'PATCH /v1/people/:id/profiles' do
+    let(:schema) { load_yaml_schema('patch_profiles_responses.yaml', version: 'v1') }
 
     let(:profile_params) do
       {
@@ -42,7 +42,7 @@ RSpec.describe Api::V2::ProfilesController do
 
     context 'with no pre-existing assessment_answers on profile' do
       before do
-        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -83,7 +83,7 @@ RSpec.describe Api::V2::ProfilesController do
       end
 
       before do
-        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -114,7 +114,7 @@ RSpec.describe Api::V2::ProfilesController do
       end
 
       before do
-        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -160,7 +160,7 @@ RSpec.describe Api::V2::ProfilesController do
       let(:profile_params) { nil }
 
       before do
-        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with error 400'
@@ -171,7 +171,7 @@ RSpec.describe Api::V2::ProfilesController do
       let(:detail_401) { 'Token expired or invalid' }
 
       before do
-        patch "/api/v2/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with error 401'
@@ -181,13 +181,13 @@ RSpec.describe Api::V2::ProfilesController do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
 
-      before { patch "/api/v2/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'when the person_id is not found' do
-      before { patch "/api/v2/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 
@@ -197,7 +197,7 @@ RSpec.describe Api::V2::ProfilesController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { patch "/api/v2/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
