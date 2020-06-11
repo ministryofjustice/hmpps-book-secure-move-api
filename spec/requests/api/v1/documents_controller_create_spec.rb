@@ -80,7 +80,7 @@ RSpec.describe Api::V1::DocumentsController do
 
     let(:file) do
       Rack::Test::UploadedFile.new(
-        Rails.root.join('spec', 'fixtures', 'file-sample_100kB.doc'),
+        Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
         'application/msword',
       )
     end
