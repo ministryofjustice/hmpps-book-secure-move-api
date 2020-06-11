@@ -40,7 +40,7 @@ module Allocations
     end
 
     def apply_filters(scope)
-      scope = scope.includes(from_location: :suppliers, to_location: :suppliers)
+      scope = scope.includes(moves: { profile: %i[gender ethnicity] }, from_location: :suppliers, to_location: :suppliers)
       scope = apply_date_range_filters(scope)
       scope = apply_location_filters(scope)
       scope = apply_status_filters(scope)
