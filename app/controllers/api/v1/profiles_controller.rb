@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  module V2
+  module V1
     class ProfilesController < ApiController
       # TODO: add validation for assessment answers
       def create
@@ -59,11 +59,11 @@ module Api
       end
 
       def supported_relationships
-        ::V2::ProfileSerializer::SUPPORTED_RELATIONSHIPS
+        ProfileSerializer::SUPPORTED_RELATIONSHIPS
       end
 
       def render_profile(profile, status)
-        render json: profile, status: status, include: included_relationships, serializer: ::V2::ProfileSerializer
+        render json: profile, status: status, include: included_relationships, serializer: ProfileSerializer
       end
     end
   end

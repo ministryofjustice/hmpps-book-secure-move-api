@@ -19,28 +19,8 @@ Profile:
     attributes:
       type: object
       required:
-        - first_names
-        - last_name
+        - assessment_answers
       properties:
-        first_names:
-          type: string
-          example: Bob
-          description: Profile's first names
-        last_name:
-          type: string
-          example: Roberts
-          description: Profile's surname
-        date_of_birth:
-          type: string
-          format: date
-          example: "1965-10-24"
-          description: Profile's date of birth in ISO 8601 format
-        image_url:
-          type: string
-          format: uri
-          example: http://localhost:3000/api/v1/people/88089bbd-8719-4192-b309-f9db9105d3e1/image.jpg
-          description: URI pointing to the image of the person
-          readOnly: true
         assessment_answers:
           type: array
           items:
@@ -48,27 +28,3 @@ Profile:
           description:
             Collection of court information, risk and alerts that escorts
             need to be aware of for safety, security and other reasons
-        identifiers:
-          type: array
-          items:
-            $ref: profile_identifier.yaml#/ProfileIdentifier
-          description:
-            Collection of identifiers used to identify the person. Different
-            services have various id schemes such police criminal records number,
-            prison number etc. We may need to record several of these.
-        gender_additional_information:
-          oneOf:
-            - type: string
-            - type: "null"
-          description:
-            Supporting information for detainees of certain genders to
-            capture any relevant transport information
-    relationships:
-      type: object
-      properties:
-        gender:
-          $ref: gender_reference.yaml#/GenderReference
-          description: Profile's gender
-        ethnicity:
-          $ref: ethnicity_reference.yaml#/EthnicityReference
-          description: Profile's ethnicity

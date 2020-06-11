@@ -19,7 +19,7 @@ class MoveSerializer < ActiveModel::Serializer
              :date_to
 
   has_one :person, serializer: PersonSerializer
-  has_one :profile, serializer: ProfileSerializer
+  has_one :profile, serializer: ProfileSerializer # <- TODO: update the serializer
 
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }

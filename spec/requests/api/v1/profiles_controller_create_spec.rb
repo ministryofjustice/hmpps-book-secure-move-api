@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::ProfilesController do
+RSpec.describe Api::V1::ProfilesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -11,8 +11,8 @@ RSpec.describe Api::V2::ProfilesController do
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
-  describe 'POST /v2/people/:id/profiles' do
-    let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v2') }
+  describe 'POST /v1/people/:id/profiles' do
+    let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v1') }
 
     let(:profile_params) do
       {
@@ -41,7 +41,7 @@ RSpec.describe Api::V2::ProfilesController do
     end
 
     context 'with valid params' do
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 201'
 
@@ -51,7 +51,7 @@ RSpec.describe Api::V2::ProfilesController do
 
       it 'creates a new profile' do
         expect {
-          post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         }.to change(Profile, :count).by(1)
       end
     end
@@ -61,7 +61,7 @@ RSpec.describe Api::V2::ProfilesController do
         person = create(:person)
 
         expect {
-          post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         }.to change(Profile, :count).from(1).to(2)
       end
     end
@@ -83,7 +83,7 @@ RSpec.describe Api::V2::ProfilesController do
       end
 
       before do
-        post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -125,13 +125,13 @@ RSpec.describe Api::V2::ProfilesController do
     end
 
     context 'with a bad request' do
-      before { post "/api/v2/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
     context 'when the person_id is not found' do
-      before { post '/api/v2/people/foo-bar/profiles', params: profile_params, headers: headers, as: :json }
+      before { post '/api/v1/people/foo-bar/profiles', params: profile_params, headers: headers, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 
@@ -143,7 +143,7 @@ RSpec.describe Api::V2::ProfilesController do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { ApiController::CONTENT_TYPE }
 
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -151,7 +151,7 @@ RSpec.describe Api::V2::ProfilesController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { post "/api/v2/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
