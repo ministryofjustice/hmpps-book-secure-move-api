@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_142242) do
+ActiveRecord::Schema.define(version: 2020_06_11_110523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -347,19 +347,19 @@ ActiveRecord::Schema.define(version: 2020_06_09_142242) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "last_name", null: false
-    t.string "first_names", null: false
-    t.date "date_of_birth"
-    t.string "aliases", default: [], array: true
-    t.uuid "gender_id"
-    t.uuid "ethnicity_id"
-    t.uuid "nationality_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "assessment_answers"
-    t.jsonb "profile_identifiers"
-    t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
+    t.string "gender_additional_information"
+    t.jsonb "profile_identifiers"
+    t.uuid "nationality_id"
+    t.uuid "ethnicity_id"
+    t.uuid "gender_id"
+    t.string "aliases"
+    t.datetime "date_of_birth"
+    t.string "first_names"
+    t.string "last_name"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
