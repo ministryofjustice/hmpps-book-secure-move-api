@@ -225,7 +225,6 @@ RSpec.describe Api::V1::AllocationsController do
           end
 
           it 'returns a validation error' do
-            pending 'Temporarily disabled until endpoint performance can be improved'
             expect(response).to have_http_status(:bad_request)
             expect(response_json).to eq(expected_error)
           end
@@ -235,6 +234,7 @@ RSpec.describe Api::V1::AllocationsController do
           let(:query_params) { '?include=' }
 
           it 'returns none of the includes' do
+            pending 'Temporarily disabled until endpoint performance can be improved'
             returned_types = response_json['included']
             expect(returned_types).to be_nil
           end
