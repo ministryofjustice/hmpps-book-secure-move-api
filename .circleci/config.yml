@@ -275,7 +275,7 @@ jobs:
 
   api_docs:
     executor: test-executor
-    parallelism: 8
+    parallelism: 2
     steps:
       - checkout
       - *attach-tmp-workspace
@@ -290,7 +290,7 @@ jobs:
 
   rspec_tests:
     executor: test-executor
-    parallelism: 8
+    parallelism: 4
     steps:
       - checkout
       - build-base
