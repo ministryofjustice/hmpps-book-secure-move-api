@@ -9,7 +9,7 @@ module Api
         allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
         if allocations_params.valid?
           allocations = Allocations::Finder.new(filter_params, sort_params).call
-          paginate allocations, include: included_relationships(minimum: true)
+          paginate allocations, include: included_relationships
         else
           render_allocation({ error: allocations_params.errors }, :bad_request)
         end
@@ -77,10 +77,8 @@ module Api
         end
       end
 
-      def included_relationships(minimum: false)
-        return if IncludeParamHandler.new(params).call
-
-        minimum ? AllocationSerializer::MINIMUM_RELATIONSHIPS : AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      def included_relationships
+        IncludeParamHandler.new(params).call || AllocationSerializer::SUPPORTED_RELATIONSHIPS
       end
 
       def supported_relationships

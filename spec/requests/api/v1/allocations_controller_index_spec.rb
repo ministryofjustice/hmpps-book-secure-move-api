@@ -194,9 +194,9 @@ RSpec.describe Api::V1::AllocationsController do
         context 'when not including the include query param' do
           let(:query_params) { '' }
 
-          it 'returns the default minimum includes' do
+          it 'returns the default includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
           end
         end
 
@@ -204,7 +204,6 @@ RSpec.describe Api::V1::AllocationsController do
           let(:query_params) { '?include=from_location' }
 
           it 'returns the valid provided includes' do
-            pending 'Temporarily disabled until endpoint performance can be improved'
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
             expect(returned_types).to contain_exactly('locations')
           end
@@ -225,7 +224,6 @@ RSpec.describe Api::V1::AllocationsController do
           end
 
           it 'returns a validation error' do
-            pending 'Temporarily disabled until endpoint performance can be improved'
             expect(response).to have_http_status(:bad_request)
             expect(response_json).to eq(expected_error)
           end
@@ -243,9 +241,9 @@ RSpec.describe Api::V1::AllocationsController do
         context 'when including a nil include query param' do
           let(:query_params) { '?include' }
 
-          it 'returns the default minimum includes' do
+          it 'returns the default includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
           end
         end
       end
