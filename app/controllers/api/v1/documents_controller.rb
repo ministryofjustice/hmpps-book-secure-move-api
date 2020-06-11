@@ -39,7 +39,11 @@ module Api
       end
 
       def profile
-        Move.find_by(id: params.dig(:move_id))&.profile
+        move_id = params[:move_id]
+
+        if move_id
+          Move.accessible_by(current_ability).find(move_id)&.profile
+        end
       end
     end
   end
