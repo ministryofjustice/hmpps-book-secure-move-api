@@ -59,11 +59,11 @@ module Api
       end
 
       def supported_relationships
-        ::V2::ProfileSerializer::SUPPORTED_RELATIONSHIPS
+        ProfileSerializer::SUPPORTED_RELATIONSHIPS
       end
 
       def render_profile(profile, status)
-        render json: profile, status: status, include: included_relationships, serializer: ::V2::ProfileSerializer
+        render json: profile, status: status, include: included_relationships, serializer: ProfileSerializer
       end
     end
   end
