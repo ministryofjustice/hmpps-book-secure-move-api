@@ -430,6 +430,15 @@ RSpec.describe Move do
         expect(move.documents).to eq([document])
       end
     end
+
+    context 'when documents not associated to a profile or move' do
+      let!(:document) { create(:document, documentable: nil) }
+      let(:move) { create(:move, profile: nil) }
+
+      it 'returns no documents' do
+        expect(move.documents).to be_empty
+      end
+    end
   end
 
   describe '.unfilled?' do
