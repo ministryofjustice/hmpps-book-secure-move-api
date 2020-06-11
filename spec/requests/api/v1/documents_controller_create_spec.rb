@@ -78,17 +78,18 @@ RSpec.describe Api::V1::DocumentsController do
     let(:access_token) { create(:access_token).token }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
+    let(:file) do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
+        'application/msword',
+      )
+    end
+
     before do
       post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers
     end
 
     context 'when successful' do
-      let(:file) do
-        Rack::Test::UploadedFile.new(
-          Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
-          'application/msword',
-        )
-      end
       let(:data) do
         {
           attributes: {
@@ -115,6 +116,23 @@ RSpec.describe Api::V1::DocumentsController do
       it 'adds the right file to the document' do
         expect(move.profile.documents.last.file.filename).to eq 'file-sample_100kB.doc'
       end
+    end
+
+    context 'with an unauthorised supplier' do
+      let(:supplier) { create(:supplier) }
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application: application).token }
+
+      let(:data) do
+        {
+          attributes: {
+            file: file,
+          },
+        }
+      end
+      let(:detail_404) { "Couldn't find Move with 'id'=#{move.id}" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with a bad request' do
