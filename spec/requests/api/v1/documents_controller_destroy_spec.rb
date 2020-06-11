@@ -87,9 +87,8 @@ RSpec.describe Api::V1::DocumentsController do
         end
 
         it 'deletes the document from the profile', skip_before: true do
-          expect(move.profile.documents.count).to eq(1)
-          delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers
-          expect(move.profile.documents.count).to eq(0)
+          expect{delete "/api/v1/moves/#{move_id}/documents/#{document_id}", headers: headers}.to change{Counter.count}.from(1).to(0)
+
         end
       end
     end
