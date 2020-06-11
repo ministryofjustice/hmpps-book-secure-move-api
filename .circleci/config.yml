@@ -232,7 +232,11 @@ commands:
           command: |
             setup-kube-auth
             kubectl config use-context << parameters.env >>
-
+      - run:
+          name: run db migrations
+          command: |
+             false
+            
       - deploy:
           name: rolling update image to << parameters.env >>
           command: |

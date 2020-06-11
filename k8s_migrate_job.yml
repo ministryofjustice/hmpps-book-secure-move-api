@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hmpps-book-secure-move-api-migrate-db-__ENV__
+  namespace: hmpps-book-secure-move-api-__ENV__
+spec:
+  template:
+    metadata:
+      name: hmpps-book-secure-move-api-migrate-db-__ENV__
+      labels:
+        app: hmpps-book-secure-move-api-web-__ENV__
+        job: migrate-db
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: app
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/book-a-secure-move/hmpps-book-secure-move-api:__ENV__.latest
+          command: ["false"]
+          env:
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: hmpps-book-secure-move-api-secrets-__ENV__
+                  key: secret_key_base_key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rds-instance-hmpps-book-secure-move-api-__ENV__
+                  key: url
