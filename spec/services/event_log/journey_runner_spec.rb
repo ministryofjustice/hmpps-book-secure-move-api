@@ -107,6 +107,22 @@ RSpec.describe EventLog::JourneyRunner do
     end
   end
 
+  describe 'lockout event' do
+    # NB: lockout events have should have no effect on a journey, they are purely for auditing
+    let!(:event) { create(:event, :lockout, eventable: journey) }
+    let(:inital_state) { :in_progress }
+
+    it_behaves_like 'it does not change the state'
+  end
+
+  describe 'lodging event' do
+    # NB: lodging events have should have no effect on a journey, they are purely for auditing
+    let!(:event) { create(:event, :lodging, eventable: journey) }
+    let(:inital_state) { :in_progress }
+
+    it_behaves_like 'it does not change the state'
+  end
+
   describe 'uncancel event' do
     let!(:event) { create(:event, :uncancel, eventable: journey) }
 

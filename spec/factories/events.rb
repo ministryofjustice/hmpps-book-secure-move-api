@@ -57,6 +57,22 @@ FactoryBot.define do
       event_name { 'start' }
     end
 
+    trait :locations do
+      details do
+        { supplier_id: '1234',
+          event_params: {
+            attributes: { notes: 'foo' },
+            relationships: {
+              from_location: { data: { id: create(:location).id } },
+              to_location: { data: { id: create(:location).id } },
+            }
+          },
+          data_params: {
+            attributes: { notes: 'bar' },
+          } }
+      end
+    end
+
     # NB: move_event factory inherits from the event factory
     factory :move_event, class: 'MoveEvent' do
       details do
