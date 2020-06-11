@@ -80,7 +80,7 @@ RSpec.describe Api::V1::DocumentsController do
 
     let(:file) do
       Rack::Test::UploadedFile.new(
-        Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
+        Rails.root.join('spec', 'fixtures', 'file-sample_100kB.doc'),
         'application/msword',
       )
     end
@@ -118,7 +118,7 @@ RSpec.describe Api::V1::DocumentsController do
       end
     end
 
-    context 'with an unauthorised supplier' do
+    context "with a supplier without access to the move's location" do
       let(:supplier) { create(:supplier) }
       let(:application) { create(:application, owner: supplier) }
       let(:access_token) { create(:access_token, application: application).token }

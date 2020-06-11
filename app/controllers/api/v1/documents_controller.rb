@@ -42,7 +42,7 @@ module Api
         move_id = params[:move_id]
 
         if move_id
-          Move.accessible_by(current_ability).find(move_id)&.profile
+          Move.accessible_by(current_ability).find(move_id).profile
         end
       end
     end
