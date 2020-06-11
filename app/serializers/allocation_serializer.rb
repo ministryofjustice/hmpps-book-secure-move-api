@@ -19,5 +19,6 @@ class AllocationSerializer < ActiveModel::Serializer
   has_one :to_location
   has_many :moves
 
+  MINIMUM_RELATIONSHIPS = { from_location: [], to_location: [], moves: %i[person] }.freeze
   SUPPORTED_RELATIONSHIPS = %w[from_location to_location moves.person moves.person.gender moves.person.ethnicity].freeze
 end
