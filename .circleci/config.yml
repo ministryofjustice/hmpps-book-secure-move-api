@@ -198,7 +198,14 @@ commands:
     parameters:
       env:
         type: string
+      notify_slack:
+        type: string
+        default: ""
     steps:
+      - when:
+          condition: <<parameters.notify_slack>>
+          steps:
+            - *notify_slack_on_release_start
       - run:
           name: Login to ECR
           command: |
@@ -347,6 +354,7 @@ jobs:
       - setup_remote_docker
       - retag_docker_image:
           env: "preprod"
+          notify_slack: "true"
       - deploy_to_k8s:
           env: "preprod"
 
