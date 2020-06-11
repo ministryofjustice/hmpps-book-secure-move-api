@@ -78,17 +78,18 @@ RSpec.describe Api::V1::DocumentsController do
     let(:access_token) { create(:access_token).token }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
+    let(:file) do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
+        'application/msword',
+      )
+    end
+
     before do
       post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers
     end
 
     context 'when successful' do
-      let(:file) do
-        Rack::Test::UploadedFile.new(
-          Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
-          'application/msword',
-        )
-      end
       let(:data) do
         {
           attributes: {
@@ -99,17 +100,39 @@ RSpec.describe Api::V1::DocumentsController do
 
       it_behaves_like 'an endpoint that responds with success 201'
 
-      it 'adds a document to the move' do
+      it 'creates a document' do
         expect(move.documents.count).to eq(1)
+        expect(move.profile.documents.count).to eq(1)
+      end
+
+      it 'enables accessing a document on the move and the profile' do
+        expect(move.profile.documents).to match_array(move.documents)
       end
 
       it 'attaches a file to the document' do
-        expect(move.documents.last.file).to be_attached
+        expect(move.profile.documents.last.file).to be_attached
       end
 
       it 'adds the right file to the document' do
-        expect(move.documents.last.file.filename).to eq 'file-sample_100kB.doc'
+        expect(move.profile.documents.last.file.filename).to eq 'file-sample_100kB.doc'
       end
+    end
+
+    context "with a supplier without access to the move's location" do
+      let(:supplier) { create(:supplier) }
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application: application).token }
+
+      let(:data) do
+        {
+          attributes: {
+            file: file,
+          },
+        }
+      end
+      let(:detail_404) { "Couldn't find Move with 'id'=#{move.id}" }
+
+      it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with a bad request' do
