@@ -78,7 +78,7 @@ module Api
       end
 
       def standard_params
-        @cancel_params ||= params.require(:data).permit(STANDARD_PARAMS).to_h
+        @standard_params ||= params.require(:data).permit(STANDARD_PARAMS).to_h
       end
 
       def journey

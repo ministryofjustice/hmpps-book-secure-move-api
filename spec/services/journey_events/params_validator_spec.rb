@@ -7,54 +7,10 @@ RSpec.describe JourneyEvents::ParamsValidator do
 
   let(:params) { { type: type, attributes: { timestamp: timestamp } } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
-  let(:type) { 'redirects' }
+  let(:type) { 'start' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
-  end
-
-  describe 'cancellation_reason' do
-    let(:type) { 'cancel' }
-
-    context 'when invalid' do
-      let(:cancellation_reason) { 'foo-bar' }
-
-      it { is_expected.not_to be_valid }
-    end
-
-    context 'when nil' do
-      let(:cancellation_reason) { nil }
-
-      it { is_expected.not_to be_valid }
-    end
-
-    context 'when missing' do
-      before { params.delete(:cancellation_reason) }
-
-      it { is_expected.not_to be_valid }
-    end
-  end
-
-  describe 'rejection_reason' do
-    let(:type) { 'reject' }
-
-    context 'when invalid' do
-      let(:rejection_reason) { 'foo-bar' }
-
-      it { is_expected.not_to be_valid }
-    end
-
-    context 'when nil' do
-      let(:rejection_reason) { nil }
-
-      it { is_expected.not_to be_valid }
-    end
-
-    context 'when missing' do
-      before { params.delete(:rejection_reason) }
-
-      it { is_expected.not_to be_valid }
-    end
   end
 
   describe 'type' do

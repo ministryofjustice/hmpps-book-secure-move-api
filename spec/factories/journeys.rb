@@ -10,7 +10,6 @@ FactoryBot.define do
     # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
     after(:build) { |object| object.send(:initialize_state) }
 
-
     # Journey statuses
     trait :proposed do
       state { 'proposed' }

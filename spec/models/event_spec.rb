@@ -34,6 +34,7 @@ RSpec.describe Event, type: :model do
 
   context 'with locations' do
     subject(:event) { build(:event, :locations) }
+
     describe 'from_location' do
       it { expect(event.from_location).not_to be nil }
       it { expect(event.from_location).to be_a Location }

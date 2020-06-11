@@ -65,7 +65,7 @@ FactoryBot.define do
             relationships: {
               from_location: { data: { id: create(:location).id } },
               to_location: { data: { id: create(:location).id } },
-            }
+            },
           },
           data_params: {
             attributes: { notes: 'bar' },
