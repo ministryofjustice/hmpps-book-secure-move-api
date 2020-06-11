@@ -23,14 +23,12 @@ module People
 
     def update_person
       person.update!(
-        person_params.merge(relationships).merge(person_identifiers),
+        person_params.merge(person_relationships).merge(person_identifiers),
       )
     end
 
     def update_profile
-      profile.update!(
-        profile_params.merge(relationships).merge(assessment_answers).merge(profile_identifiers),
-      )
+      profile.update!(profile_assessment_answers)
     end
   end
 end

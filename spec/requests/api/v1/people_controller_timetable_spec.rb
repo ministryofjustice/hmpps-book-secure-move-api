@@ -29,7 +29,7 @@ RSpec.describe Api::V1::PeopleController do
   end
 
   context 'when person is present' do
-    let(:person) { create(:profile, :nomis_synced, latest_nomis_booking_id: booking_id).person }
+    let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: booking_id) }
     let(:nomis_success) { true }
 
     let(:nomis_court_hearings_struct) do

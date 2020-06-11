@@ -13,11 +13,11 @@ class Person < VersionedModel
 
   has_one_attached :image
 
+  scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
+
   def latest_profile
     profiles.order(:updated_at).last
   end
-
-  delegate :latest_nomis_booking_id, to: :latest_profile
 
   def attach_image(image_blob)
     "#{id}.jpg".tap do |filename|

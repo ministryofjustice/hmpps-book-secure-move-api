@@ -57,6 +57,30 @@ RSpec.describe MoveSerializer do
   end
 
   context 'with main options' do
+    let(:expected_json) do
+      [
+        {
+          id: move.profile.person_id,
+          type: 'people',
+          attributes: {
+            first_names: move.profile.person.first_names,
+            last_name: move.profile.person.last_name,
+            date_of_birth: '1980-10-20',
+            assessment_answers: [],
+            identifiers: [
+              { value: move.profile.person.police_national_computer, identifier_type: 'police_national_computer' },
+              { value: move.profile.person.prison_number, identifier_type: 'prison_number' },
+              { value: move.profile.person.criminal_records_office, identifier_type: 'criminal_records_office' },
+            ],
+            gender_additional_information: nil,
+          },
+        },
+      ]
+
+      it 'contains an included person' do
+        expect(result[:included]).to(include_json(expected_json))
+      end
+    end
     let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
     it 'contains a person' do
@@ -71,21 +95,6 @@ RSpec.describe MoveSerializer do
   describe 'person' do
     context 'with a person' do
       let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS } }
-      let(:expected_json) do
-        [
-          {
-            id: move.profile.person_id,
-            type: 'people',
-            attributes: { first_names: move.profile.first_names,
-                          last_name: move.profile.last_name,
-                          date_of_birth: '1980-10-20' },
-          },
-        ]
-      end
-
-      it 'contains an included person' do
-        expect(result[:included]).to(include_json(expected_json))
-      end
     end
 
     context 'without a person' do

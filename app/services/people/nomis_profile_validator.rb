@@ -6,8 +6,8 @@ module People
 
     validates :latest_nomis_booking_id, presence: true
 
-    def initialize(profile)
-      @latest_nomis_booking_id = profile.latest_nomis_booking_id
+    def initialize(person)
+      @latest_nomis_booking_id = person.latest_nomis_booking_id
     end
   end
 end
