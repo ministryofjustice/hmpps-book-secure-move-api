@@ -204,7 +204,6 @@ RSpec.describe Api::V1::AllocationsController do
           let(:query_params) { '?include=from_location' }
 
           it 'returns the valid provided includes' do
-            pending 'Temporarily disabled until endpoint performance can be improved'
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
             expect(returned_types).to contain_exactly('locations')
           end
@@ -234,7 +233,6 @@ RSpec.describe Api::V1::AllocationsController do
           let(:query_params) { '?include=' }
 
           it 'returns none of the includes' do
-            pending 'Temporarily disabled until endpoint performance can be improved'
             returned_types = response_json['included']
             expect(returned_types).to be_nil
           end
