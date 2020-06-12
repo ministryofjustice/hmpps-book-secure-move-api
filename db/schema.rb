@@ -358,8 +358,8 @@ ActiveRecord::Schema.define(version: 2020_06_11_110523) do
     t.uuid "gender_id"
     t.string "aliases"
     t.datetime "date_of_birth"
-    t.string "first_names"
-    t.string "last_name"
+    t.string "first_names", default: ""
+    t.string "last_name", default: ""
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
