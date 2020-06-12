@@ -28,8 +28,10 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
 
+  # TODO: Remove support for person on a Move
   SUPPORTED_RELATIONSHIPS = %w[
-    profile.person
+    person.ethnicity
+    person.gender
     profile.person.ethnicity
     profile.person.gender
     from_location
