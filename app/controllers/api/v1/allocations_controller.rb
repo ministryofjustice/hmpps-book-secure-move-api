@@ -9,7 +9,7 @@ module Api
         allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
         if allocations_params.valid?
           allocations = Allocations::Finder.new(filter_params, sort_params).call
-          paginate allocations, include: minimum_relationships
+          paginate allocations, include: included_relationships
         else
           render_allocation({ error: allocations_params.errors }, :bad_request)
         end
@@ -75,12 +75,6 @@ module Api
         creator.allocation.moves.each do |move|
           Notifier.prepare_notifications(topic: move, action_name: 'create')
         end
-      end
-
-      def minimum_relationships
-        # FIXME: Validate the include param but then ignore and override to return only minimal relations
-        IncludeParamHandler.new(params).call
-        AllocationSerializer::MINIMUM_RELATIONSHIPS
       end
 
       def included_relationships
