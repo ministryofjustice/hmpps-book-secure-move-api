@@ -5,18 +5,23 @@ require 'rails_helper'
 RSpec.describe MoveEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
-  let(:params) { { type: type, attributes: { timestamp: timestamp } } }
+  let(:attributes) { { timestamp: timestamp } }
+  let(:params) { { type: type, attributes: attributes } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
   let(:type) { 'redirects' }
-  let(:cancellation_reason) { 'supplier_declined_to_move' }
-  let(:rejection_reason) { 'no_transport_available' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
   end
 
   describe 'cancellation_reason' do
+    let(:attributes) { { timestamp: timestamp, cancellation_reason: cancellation_reason } }
+    let(:cancellation_reason) { 'supplier_declined_to_move' }
     let(:type) { 'cancel' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
 
     context 'when invalid' do
       let(:cancellation_reason) { 'foo-bar' }
@@ -31,14 +36,20 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
 
     context 'when missing' do
-      before { params.delete(:cancellation_reason) }
+      before { attributes.delete(:cancellation_reason) }
 
       it { is_expected.not_to be_valid }
     end
   end
 
   describe 'rejection_reason' do
+    let(:attributes) { { timestamp: timestamp, rejection_reason: rejection_reason } }
+    let(:rejection_reason) { 'no_transport_available' }
     let(:type) { 'reject' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
 
     context 'when invalid' do
       let(:rejection_reason) { 'foo-bar' }
@@ -53,7 +64,35 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
 
     context 'when missing' do
-      before { params.delete(:rejection_reason) }
+      before { attributes.delete(:rejection_reason) }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'date' do
+    let(:attributes) { { timestamp: timestamp, date: date } }
+    let(:date) { '2020-06-10' }
+    let(:type) { 'approve' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid' do
+      let(:date) { 'foo' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:date) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { attributes.delete(:date) }
 
       it { is_expected.not_to be_valid }
     end

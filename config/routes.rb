@@ -23,6 +23,8 @@ Rails.application.routes.draw do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
         get 'timetable', to: 'people#timetable'
+
+        resources :profiles, only: %i[create update]
       end
       resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
@@ -43,6 +45,7 @@ Rails.application.routes.draw do
           post 'complete', controller: 'move_events'
           post 'lockouts', controller: 'move_events'
           post 'redirects', controller: 'move_events'
+          post 'approve', controller: 'move_events'
           post 'reject', controller: 'move_events'
         end
       end
@@ -61,9 +64,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :people, only: %i[index create update] do
-        resources :profiles, only: %i[create update]
-      end
+      resources :people, only: %i[index create update]
     end
   end
 end

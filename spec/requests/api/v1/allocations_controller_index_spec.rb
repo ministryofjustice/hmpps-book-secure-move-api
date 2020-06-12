@@ -194,9 +194,9 @@ RSpec.describe Api::V1::AllocationsController do
         context 'when not including the include query param' do
           let(:query_params) { '' }
 
-          it 'returns the default includes' do
+          it 'returns the default minimum includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'ethnicities', 'genders')
           end
         end
 
@@ -241,9 +241,9 @@ RSpec.describe Api::V1::AllocationsController do
         context 'when including a nil include query param' do
           let(:query_params) { '?include' }
 
-          it 'returns the default includes' do
+          it 'returns the default minimum includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'genders', 'ethnicities')
+            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'ethnicities', 'genders')
           end
         end
       end

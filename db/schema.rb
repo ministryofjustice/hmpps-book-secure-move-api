@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_082714) do
+ActiveRecord::Schema.define(version: 2020_06_09_142242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_082714) do
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.string "documentable_type"
-    t.bigint "documentable_id"
+    t.uuid "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
     t.index ["documentable_type", "documentable_id"], name: "index_documents_on_documentable_type_and_documentable_id"
     t.index ["move_id"], name: "index_documents_on_move_id"
