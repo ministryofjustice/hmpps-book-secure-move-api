@@ -232,7 +232,15 @@ commands:
           command: |
             setup-kube-auth
             kubectl config use-context << parameters.env >>
-
+      - run:
+          name: run db migrations
+          command: |
+            set -o errexit
+            sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
+            kubectl wait --for=condition=complete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+            exit_code=$?
+            kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+            exit ${exit_code}
       - deploy:
           name: rolling update image to << parameters.env >>
           command: |
