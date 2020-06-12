@@ -59,6 +59,10 @@
   "scripts": {
     "postdeploy": "pg_dump $MASTER_DATABASE_URL | psql $DATABASE_URL && bundle exec rails db:migrate"
   },
+  "addons": [
+    "heroku-postgresql",
+    "heroku-redis"
+  ],
   "buildpacks": [
     {
       "url": "heroku/ruby"
