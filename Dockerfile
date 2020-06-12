@@ -46,5 +46,5 @@ COPY --chown=appuser:appgroup --from=build-stage /app /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
 
 USER $APPUID
-ENTRYPOINT ["./run.sh"]
+CMD ["./run.sh"]
 
