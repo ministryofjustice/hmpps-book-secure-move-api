@@ -3,7 +3,7 @@
 module Api
   module V1
     class JourneyEventsController < ApiController
-      include Moves::Eventable
+      include Journeys::Eventable
 
       STANDARD_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
@@ -60,7 +60,7 @@ module Api
     private
 
       def validate_params!(event_params, require_from_location: false, require_to_location: false)
-        MoveEvents::ParamsValidator.new(event_params).validate!
+        JourneyEvents::ParamsValidator.new(event_params).validate!
         if require_from_location
           Location.find(params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id))
         end
