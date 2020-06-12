@@ -24,7 +24,7 @@ module People
 
     def create_profile!
       @profile = Profile.new(profile_assessment_answers.merge(person: person))
-      @person.save!
+      @profile.save!
     end
   end
 end

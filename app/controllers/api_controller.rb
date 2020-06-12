@@ -6,7 +6,24 @@ class ApiController < ApplicationController
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
   before_action :validate_include_params
+  # # before_action :validate_and_set_version
 
+  # def validate_version_header
+  #   # Get header
+  #   # if nil then set version 1
+  #   # if has_value validate value against constant
+  #   # Advantages:
+  #   # 1. Frontend support out of box
+  #   # 2. Less playing with masking routes
+  #   # 3. Surface all v1 implementations in v1 document
+  # end
+
+  # 1. Release support for our intended workflow (v2)
+  #   - synchronise with nomis in profile endpoint
+  #   - merge v2 into people controller and support separation of profile creation
+  #   - Cleanup on the profile
+  # 2. Globalise v2 swagger doc
+  # 3. Tell suppliers support for v1 ends in 3 months
   CONTENT_TYPE = 'application/vnd.api+json'
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
