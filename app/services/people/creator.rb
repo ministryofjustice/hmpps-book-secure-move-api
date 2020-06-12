@@ -6,24 +6,25 @@ module People
 
     def call
       Profile.transaction do
-        create_person
-        create_profile
-        profile.save!
+        create_person!
+        create_profile!
       end
     end
 
   private
 
-    def create_person
+    def create_person!
       @person = Person.new(
         person_params
           .merge(person_relationships)
           .merge(person_identifiers),
       )
+      @person.save!
     end
 
-    def create_profile
+    def create_profile!
       @profile = Profile.new(profile_assessment_answers.merge(person: person))
+      @person.save!
     end
   end
 end

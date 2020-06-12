@@ -171,5 +171,31 @@ RSpec.describe Api::V1::PeopleController do
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
+
+    context 'with validation errors' do
+      let(:person_params) do
+        {
+          data: {
+            type: 'people',
+            attributes: { first_names: 'Bob' },
+          },
+        }
+      end
+
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Last name can't be blank",
+            'source' => { 'pointer' => '/data/attributes/last_name' },
+            'code' => 'blank',
+          },
+        ]
+      end
+
+      before { post '/api/v1/people', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
   end
 end
