@@ -283,7 +283,7 @@ jobs:
 
   api_docs:
     executor: test-executor
-    parallelism: 2
+    parallelism: 1
     steps:
       - checkout
       - *attach-tmp-workspace
