@@ -9,22 +9,18 @@ module People
     end
 
     ATTRIBUTES = %i[first_names last_name date_of_birth gender_additional_information].freeze
-    PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
+    PERSON_ASSOCIATIONS = %i[gender ethnicity].freeze
 
   protected
 
-    def relationships
-      (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map { |attribute, value|
+    def person_relationships
+      (params[:relationships] || {}).slice(*PERSON_ASSOCIATIONS).map { |attribute, value|
         ["#{attribute}_id", value[:data][:id]]
       }.to_h
     end
 
-    def assessment_answers
+    def profile_assessment_answers
       params[:attributes].slice(:assessment_answers)
-    end
-
-    def profile_identifiers
-      identifiers ? { profile_identifiers: identifiers } : {}
     end
 
     def person_identifiers
@@ -39,10 +35,9 @@ module People
       end
     end
 
-    def profile_params
+    def person_params
       params[:attributes].slice(*ATTRIBUTES)
     end
-    alias_method :person_params, :profile_params
 
   private
 

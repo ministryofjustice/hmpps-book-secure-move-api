@@ -15,25 +15,15 @@ module People
   private
 
     def apply_filters(scope)
-      scope = scope.joins(:profiles)
-
       if filter_params.key?(:police_national_computer)
-        scope = scope.where('profiles.profile_identifiers @> ?', police_national_computer.to_json)
+        scope = scope.where(police_national_computer: filter_params[:police_national_computer])
       end
 
       if filter_params.key?(:prison_number)
-        scope = scope.where('profiles.profile_identifiers @> ?', prison_number.to_json)
+        scope = scope.where(prison_number: filter_params[:prison_number])
       end
 
       scope
-    end
-
-    def police_national_computer
-      [{ identifier_type: 'police_national_computer', value: filter_params[:police_national_computer] }]
-    end
-
-    def prison_number
-      [{ identifier_type: 'prison_number', value: filter_params[:prison_number] }]
     end
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe People::RetrieveImage do
   let(:person) { create(:person) }
 
   it 'returns false if latest_nomis_booking_id is empty' do
-    person.latest_profile.update(latest_nomis_booking_id: nil)
+    person.update(latest_nomis_booking_id: nil)
 
     expect(retrieve_image).to eq(false)
   end

@@ -144,7 +144,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'updates an existing person' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(Person.last.reload.latest_profile.gender_additional_information).to eq gender_additional_information
+        expect(Person.last.reload.gender_additional_information).to eq gender_additional_information
       end
     end
 
