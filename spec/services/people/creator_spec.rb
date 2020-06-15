@@ -12,6 +12,9 @@ RSpec.describe People::Creator do
         first_names: 'Bob',
         last_name: 'Roberts',
         date_of_birth: Date.civil(1980, 1, 1),
+        criminal_records_office: nil,
+        prison_number: nil,
+        police_national_computer: nil,
       },
     }
   end
