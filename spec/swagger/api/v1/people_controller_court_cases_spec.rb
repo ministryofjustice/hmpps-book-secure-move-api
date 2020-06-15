@@ -46,7 +46,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
       response '200', 'success' do
         let(:person_id) { person.id }
-        let(:person) { create(:profile, :nomis_synced).person }
+        let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
         let(:court_cases_from_nomis) do
           court_case = CourtCase.new.build_from_nomis(
             'id' => '1495077',

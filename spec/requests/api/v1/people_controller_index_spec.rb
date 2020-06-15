@@ -13,7 +13,7 @@ RSpec.describe Api::V1::PeopleController do
     let(:params) { { filter: { police_national_computer: 'AB/1234567' }, access_token: token.token } }
 
     context 'when called with police_national_computer filter' do
-      let!(:people) { create_list :person, 5, :nomis_synced }
+      let!(:people) { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
 
       before do
         get '/api/v1/people', headers: headers, params: params
@@ -27,7 +27,7 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'with no ethnicity' do
-      let!(:person) { create(:profile, ethnicity: nil).person }
+      let!(:person) { create(:person, ethnicity: nil) }
 
       before do
         get '/api/v1/people', headers: headers, params: params
@@ -46,7 +46,9 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'when the filter prison_number is used' do
-      let!(:people) { create_list :person, 5 }
+      let!(:people) { create_list :person, 5, gender: gender, ethnicity: ethnicity }
+      let(:gender) { create(:gender) }
+      let(:ethnicity) { create(:ethnicity) }
 
       let(:params) { { filter: { prison_number: prison_number }, access_token: token.token } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
@@ -64,7 +66,7 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     describe 'included relationships', :skip_before do
-      let!(:people) { create_list :person, 2 }
+      let!(:people) { create_list :person, 2, police_national_computer: 'AB/1234567' }
 
       before do
         get "/api/v1/people#{query_params}", headers: headers, params: params
@@ -122,6 +124,7 @@ RSpec.describe Api::V1::PeopleController do
 
         it 'returns the default includes' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
+
           expect(returned_types).to contain_exactly('ethnicities', 'genders')
         end
       end

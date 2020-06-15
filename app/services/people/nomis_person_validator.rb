@@ -1,13 +1,13 @@
 module People
-  class NomisProfileValidator
+  class NomisPersonValidator
     include ActiveModel::Validations
 
     attr_reader :latest_nomis_booking_id
 
     validates :latest_nomis_booking_id, presence: true
 
-    def initialize(profile)
-      @latest_nomis_booking_id = profile.latest_nomis_booking_id
+    def initialize(person)
+      @latest_nomis_booking_id = person.latest_nomis_booking_id
     end
   end
 end

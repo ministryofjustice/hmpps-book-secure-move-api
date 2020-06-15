@@ -1,7 +1,7 @@
 module CourtHearings
   class CreateInNomis
     def self.call(move, court_hearings)
-      booking_id = move.profile.latest_nomis_booking_id
+      booking_id = move.profile.person.latest_nomis_booking_id
 
       body_locations = {
         "fromPrisonLocation": move.from_location.nomis_agency_id,
@@ -17,11 +17,11 @@ module CourtHearings
             'comments': hearing.comments,
           }.merge(body_locations),
         )
-        if response&.status == 201
-          new_hearing_id = JSON.parse(response.body)['id']
+        next unless response&.status == 201
 
-          hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
-        end
+        new_hearing_id = JSON.parse(response.body)['id']
+
+        hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
       end
     end
   end

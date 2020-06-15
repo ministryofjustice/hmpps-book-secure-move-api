@@ -45,18 +45,9 @@ RSpec.describe People::Importer do
       {
         'id' => nil,
         'person_id' => nil,
-        'last_name' => 'JAVAS',
-        'first_names' => "EF'LIAICO MATTHEWS BARNARDOS",
-        'date_of_birth' => Date.parse('1989-10-01'),
-        'aliases' => nil,
-        'gender_id' => gender.id,
-        'ethnicity_id' => ethnicity.id,
-        'nationality_id' => nil,
         'created_at' => nil,
         'updated_at' => nil,
         'assessment_answers' => [],
-        'gender_additional_information' => nil,
-        'latest_nomis_booking_id' => 1_093_139,
       }
     end
 
@@ -84,17 +75,6 @@ RSpec.describe People::Importer do
       profile = service.call
 
       expect(profile.attributes).to include(expected_profile_attributes)
-    end
-
-    it 'assigns the correct profile_identifiers for the `Profile`' do
-      actual_identifiers = JSON.parse(service.call.attributes.to_json).fetch('profile_identifiers')
-      expected_identifiers = [
-        { 'identifier_type' => 'police_national_computer', 'value' => '05/886838E' },
-        { 'identifier_type' => 'prison_number', 'value' => 'G8872UH' },
-        { 'identifier_type' => 'criminal_records_office', 'value' => '610592/05U' },
-      ]
-
-      expect(actual_identifiers).to match_array(expected_identifiers)
     end
 
     context 'when called for an already saved `Person` and `Profile`' do
