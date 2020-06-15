@@ -1,8 +1,8 @@
 ProfileIdentifier:
   type: object
   required:
-  - value
-  - identifier_type
+    - value
+    - identifier_type
   properties:
     value:
       type: string
@@ -11,10 +11,9 @@ ProfileIdentifier:
     identifier_type:
       type: string
       enum:
-      - police_national_computer
-      - criminal_records_office
-      - prison_number
-      - niche_reference
-      - athena_reference
-      description: Different services have different schemes for identifying people,
+        - police_national_computer
+        - criminal_records_office
+        - prison_number
+      description:
+        Different services have different schemes for identifying people,
         e.g. police PNC number, prison number.
