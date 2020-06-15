@@ -347,8 +347,8 @@ ActiveRecord::Schema.define(version: 2020_06_11_110523) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "last_name", null: false
-    t.string "first_names", null: false
+    t.string "last_name", default: ""
+    t.string "first_names", default: ""
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
     t.uuid "gender_id"
