@@ -1,0 +1,21 @@
+PostJourneyUncomplete:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: uncomplete
+      enum:
+      - uncomplete
+      description: The type of this object - always `uncomplete`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes

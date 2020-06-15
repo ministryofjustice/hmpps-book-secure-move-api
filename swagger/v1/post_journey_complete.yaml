@@ -1,0 +1,21 @@
+PostJourneyComplete:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: complete
+      enum:
+      - complete
+      description: The type of this object - always `complete`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes

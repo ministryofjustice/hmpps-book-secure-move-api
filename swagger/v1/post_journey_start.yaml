@@ -1,0 +1,21 @@
+PostJourneyStart:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: start
+      enum:
+      - start
+      description: The type of this object - always `start`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes
