@@ -25,8 +25,8 @@ module Journeys
       )
     end
 
-    def run_event_logs(move)
-      EventLog::JourneyRunner.new(move).call
+    def run_event_logs(journey)
+      EventLog::JourneyRunner.new(journey).call
     end
   end
 end
