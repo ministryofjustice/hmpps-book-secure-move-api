@@ -1,5 +1,5 @@
 module People
-  class NomisProfileValidator
+  class NomisPersonValidator
     include ActiveModel::Validations
 
     attr_reader :latest_nomis_booking_id

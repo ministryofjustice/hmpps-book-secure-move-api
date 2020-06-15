@@ -152,7 +152,7 @@ module Api
       end
 
       def validate_nomis_profile
-        profile_validator = People::NomisProfileValidator.new(person)
+        profile_validator = People::NomisPersonValidator.new(person)
         profile_validator.validate!
       end
 

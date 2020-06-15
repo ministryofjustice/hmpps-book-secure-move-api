@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe People::NomisProfileValidator do
+RSpec.describe People::NomisPersonValidator do
   subject(:validator) { described_class.new(person) }
 
   context 'when latest_nomis_booking_id is empty' do
