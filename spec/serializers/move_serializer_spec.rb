@@ -70,14 +70,17 @@ RSpec.describe MoveSerializer do
 
   describe 'person' do
     context 'with a person' do
-      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS } }
+      # TODO: Remove support for person on a Move
+      let(:adapter_options) { { include: 'person', fields: MoveSerializer::INCLUDED_FIELDS } }
+
       let(:expected_json) do
+        person = move.profile.person
         [
           {
-            id: move.profile.person_id,
+            id: person.id,
             type: 'people',
-            attributes: { first_names: move.profile.first_names,
-                          last_name: move.profile.last_name,
+            attributes: { first_names: person.first_names,
+                          last_name: person.last_name,
                           date_of_birth: '1980-10-20' },
           },
         ]

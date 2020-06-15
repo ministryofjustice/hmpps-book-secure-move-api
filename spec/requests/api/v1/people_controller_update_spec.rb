@@ -109,9 +109,9 @@ RSpec.describe Api::V1::PeopleController do
         }.to change(Person, :count).by(0)
       end
 
-      it 'changes the assessment answers' do
+      it 'changes the first_names' do
         put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
-        expect(person.latest_profile.reload.first_names).to include(expected_data[:attributes][:first_names])
+        expect(person.reload.first_names).to include(expected_data[:attributes][:first_names])
       end
 
       describe 'webhook and email notifications' do
@@ -131,7 +131,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'updates an existing person' do
         put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
-        expect(person.reload.latest_profile.gender_additional_information).to eq gender_additional_information
+        expect(person.reload.gender_additional_information).to eq gender_additional_information
       end
     end
 
