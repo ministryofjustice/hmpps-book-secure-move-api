@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'fake_data/journeys'
+require 'faker'
 
 namespace :fake_data do
   desc 'create fake people'
@@ -9,15 +10,18 @@ namespace :fake_data do
     ethnicities = Ethnicity.all.to_a
     genders = Gender.all.to_a
     50.times do
-      person = Person.create!
-      person.profiles << Profile.new(
+      person = Person.create!(
         first_names: Faker::Name.first_name,
         last_name: Faker::Name.last_name,
         date_of_birth: Faker::Date.between(from: 80.years.ago, to: 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
+        criminal_records_office: criminal_records_office,
+        prison_number: prison_number,
+        police_national_computer: police_national_computer,
+      )
+      person.profiles << Profile.new(
         assessment_answers: fake_assessment_answers,
-        profile_identifiers: fake_profile_identifiers,
       )
     end
   end
@@ -65,7 +69,6 @@ namespace :fake_data do
       title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
-  # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
       fake_assessment_answer(assessment_answer)
@@ -86,13 +89,20 @@ namespace :fake_data do
     }
   end
 
-  def fake_profile_identifiers
-    IDENTIFIER_TYPES.sample(2).map do |identifier_type|
-      {
-        identifier_type: identifier_type[:id],
-        value: rand(1_000_000).to_s,
-      }
-    end
+  def prison_number
+    sprintf('D%04dZZ', seq)
+  end
+
+  def police_national_computer
+    sprintf('AB/%07d', seq)
+  end
+
+  def criminal_records_office
+    sprintf('CRO/%05d', seq)
+  end
+
+  def seq
+    Time.zone.now.to_i
   end
 
   def fake_complex_case_answers
@@ -105,7 +115,6 @@ namespace :fake_data do
       }
     end
   end
-  # rubocop:enable all
 
   desc 'create fake prisons'
   task create_prisons: :environment do
@@ -158,14 +167,6 @@ namespace :fake_data do
     puts 'create_ethnicities...'
     ETHNICITIES.each do |attributes|
       Ethnicity.create!(attributes)
-    end
-  end
-
-  desc 'create identifier types'
-  task create_identifier_types: :environment do
-    puts 'create_identifier_types...'
-    IDENTIFIER_TYPES.each do |attributes|
-      IdentifierType.create!(attributes)
     end
   end
 
@@ -250,7 +251,6 @@ namespace :fake_data do
   task recreate_all: :environment do
     if Rails.env.development? || Rails.env.test?
       Rake::Task['fake_data:drop_all'].invoke
-      Rake::Task['fake_data:create_identifier_types'].invoke
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_assessment_questions'].invoke
@@ -304,12 +304,6 @@ namespace :fake_data do
     { key: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
     { key: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
     { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' },
-  ].freeze
-
-  IDENTIFIER_TYPES = [
-    { id: 'police_national_computer', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
-    { id: 'prison_number', title: 'Prisoner No', description: 'Prisoner ID used in NOMIS and other systems' },
-    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' },
   ].freeze
 
   TOWN_NAMES = [
