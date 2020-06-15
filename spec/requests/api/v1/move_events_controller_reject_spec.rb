@@ -24,6 +24,7 @@ RSpec.describe Api::V1::MoveEventsController do
             timestamp: '2020-04-23T18:25:43.511Z',
             rejection_reason: 'no_space_at_receiving_prison',
             cancellation_reason_comment: 'no room on the broom',
+            rebook: 'true',
           },
         },
       }
@@ -51,6 +52,11 @@ RSpec.describe Api::V1::MoveEventsController do
 
       it 'updates the move rejection_reason' do
         expect(move.reload.rejection_reason).to eql('no_space_at_receiving_prison')
+      end
+
+      it 'creates a new move linked to the original move' do
+        rebooked_move = move.reload.rebooked
+        expect(rebooked_move.original_move).to eq(move)
       end
 
       describe 'webhook and email notifications' do

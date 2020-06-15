@@ -27,6 +27,7 @@ class MoveSerializer < ActiveModel::Serializer
   has_many :documents, serializer: DocumentSerializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
+  belongs_to :original_move, serializer: MoveSerializer
 
   # TODO: Remove support for person on a Move
   SUPPORTED_RELATIONSHIPS = %w[
@@ -42,6 +43,7 @@ class MoveSerializer < ActiveModel::Serializer
     prison_transfer_reason
     court_hearings
     allocation
+    original_move
   ].freeze
 
   INCLUDED_FIELDS = {
