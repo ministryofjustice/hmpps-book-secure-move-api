@@ -40,7 +40,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 required: true
 
       response '200', 'success' do
-        let(:person_id) { create(:profile, :nomis_synced).person.id }
+        let(:person_id) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foo').id }
         let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
 
         before do

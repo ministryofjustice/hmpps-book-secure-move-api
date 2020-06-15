@@ -20,11 +20,11 @@ RSpec.describe PersonSerializer do
   end
 
   it 'contains a first_names attribute' do
-    expect(result[:data][:attributes][:first_names]).to eql person.latest_profile.first_names
+    expect(result[:data][:attributes][:first_names]).to eql person.first_names
   end
 
   it 'contains a last_name attribute' do
-    expect(result[:data][:attributes][:last_name]).to eql person.latest_profile.last_name
+    expect(result[:data][:attributes][:last_name]).to eql person.last_name
   end
 
   describe '#assessment_answers' do
@@ -94,9 +94,10 @@ RSpec.describe PersonSerializer do
     end
 
     before do
-      profile = person.latest_profile
-      profile.profile_identifiers = profile_identifiers
-      profile.save!
+      person.police_national_computer = 'ABC123456'
+      person.prison_number = 'XYZ123456'
+      person.criminal_records_office = nil
+      person.save!
     end
 
     it 'contains two identifiers' do
@@ -106,16 +107,16 @@ RSpec.describe PersonSerializer do
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
-    let(:ethnicity) { person.latest_profile&.ethnicity }
+    let(:ethnicity) { person.ethnicity }
     let(:expected_json) do
       [
         {
-          id: ethnicity&.id,
+          id: ethnicity.id,
           type: 'ethnicities',
           attributes: {
-            key: ethnicity&.key,
-            title: ethnicity&.title,
-            description: ethnicity&.description,
+            key: ethnicity.key,
+            title: ethnicity.title,
+            description: ethnicity.description,
           },
         },
       ]
@@ -124,15 +125,27 @@ RSpec.describe PersonSerializer do
     it 'contains an included ethnicity' do
       expect(result[:included]).to(include_json(expected_json))
     end
+
+    context 'without an ethnicity' do
+      let(:person) { create(:person_without_profiles, ethnicity: nil) }
+
+      it 'contains empty ethnicity' do
+        expect(result[:data][:relationships][:ethnicity][:data]).to be_nil
+      end
+
+      it 'does not contain an included ethnicity' do
+        expect(result[:included]).to be_nil
+      end
+    end
   end
 
   describe 'gender' do
     before do
-      person.latest_profile.update(gender_additional_information: gender_additional_information)
+      person.update(gender_additional_information: gender_additional_information)
     end
 
     let(:adapter_options) { { include: { gender: %I[title description] } } }
-    let(:gender) { person.latest_profile&.gender }
+    let(:gender) { person.gender }
     let(:gender_additional_information) { 'more info about the person' }
     let(:expected_json) do
       [
