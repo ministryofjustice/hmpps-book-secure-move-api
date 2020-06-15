@@ -8,7 +8,7 @@ RSpec.describe Api::V1::PeopleController do
   let(:booking_id) { '1150262' }
 
   context 'when person is present ' do
-    let(:person) { create(:profile, :nomis_synced).person }
+    let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: booking_id) }
 
     context 'when the court cases are present in Nomis ' do
       let(:court_cases_from_nomis) do
@@ -21,8 +21,6 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       before do
-        person.latest_profile.update(latest_nomis_booking_id: booking_id)
-
         allow(People::RetrieveCourtCases).to receive(:call).and_return(court_cases_from_nomis)
       end
 
@@ -66,7 +64,7 @@ RSpec.describe Api::V1::PeopleController do
       let(:booking_id) { nil }
 
       it 'returns 422 bad request' do
-        person.latest_profile.update(latest_nomis_booking_id: booking_id)
+        person.update(latest_nomis_booking_id: booking_id)
 
         get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
 

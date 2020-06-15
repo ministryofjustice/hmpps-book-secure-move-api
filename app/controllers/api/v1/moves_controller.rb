@@ -116,7 +116,7 @@ module Api
       def move
         @move ||= Move
           .accessible_by(current_ability)
-          .includes(:from_location, :to_location, profile: %i[gender ethnicity])
+          .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
           .find(params[:id])
       end
 

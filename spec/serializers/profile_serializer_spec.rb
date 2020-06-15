@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ProfileSerializer do
   subject(:serializer) { described_class.new(profile) }
 
-  let(:profile) { create(:profile, latest_nomis_booking_id: 2_717_111) }
+  let(:profile) { create(:profile) }
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys }
 
