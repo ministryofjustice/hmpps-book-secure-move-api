@@ -210,7 +210,7 @@ commands:
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
             --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
-            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.lastest \
+            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
             --image-manifest "${MANIFEST}"
 
   deploy_to_k8s:
@@ -239,6 +239,7 @@ commands:
             sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
             kubectl wait --for=condition=complete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit_code=$?
+            kubectl logs job/hmpps-book-secure-move-api-migrate-db-< parameters.env >>
             kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit ${exit_code}
       - deploy:
