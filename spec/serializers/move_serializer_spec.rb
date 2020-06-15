@@ -153,7 +153,7 @@ RSpec.describe MoveSerializer do
     end
   end
 
-  describe 'allocations' do
+  describe 'allocation' do
     context 'with an allocation' do
       let(:adapter_options) do
         { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
@@ -202,7 +202,34 @@ RSpec.describe MoveSerializer do
         expect(result_data[:relationships][:allocation]).to eq(data: nil)
       end
 
-      it 'does not contain an included allocation' do
+      it 'does not contain an included move' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
+      end
+    end
+  end
+
+  describe 'original_move' do
+    let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
+
+    context 'with an original_move' do
+      let(:original_move) { create(:move) }
+      let(:move) { create(:move, original_move: original_move) }
+
+      it 'contains an original_move relationship' do
+        expect(result_data[:relationships][:original_move]).to eq(data: { id: original_move.id, type: 'moves' })
+      end
+
+      it 'contains an included original_move' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles moves])
+      end
+    end
+
+    context 'without an original_move' do
+      it 'contains an empty original_move' do
+        expect(result_data[:relationships][:allocation]).to eq(data: nil)
+      end
+
+      it 'does not contain an included move' do
         expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
       end
     end
