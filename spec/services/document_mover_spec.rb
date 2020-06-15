@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# TODO: Remove this once we've migrated all profile attributes to a person and are updating these attributes dynamically
+# TODO: Remove this once we've migrated all moves to a profile
 RSpec.describe DocumentMover do
   subject(:mover) { described_class.new(document) }
 
