@@ -113,6 +113,36 @@ RSpec.describe Moves::Updater do
         end
       end
 
+      context 'with a move linked to a profile' do
+        let!(:move) { create(:move, :requested, :with_allocation, profile: nil) }
+        let(:profile) { create(:profile) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { profile: { data: { id: profile.id, type: 'profiles' } } },
+          }
+        end
+
+        it 'sets the allocation status to filled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('filled')
+        end
+      end
+
+      context 'with a move unlinked to a profile' do
+        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:allocation) { create(:allocation, :filled) }
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { profile: { data: nil } },
+          }
+        end
+
+        it 'sets the allocation status to unfilled' do
+          expect { updater.call }.to change { move.reload.allocation.status }.to('unfilled')
+        end
+      end
+
       context 'with a move profile or status unchanged' do
         let!(:move) { create(:move, :requested, allocation: allocation) }
         let!(:allocation) { create(:allocation, :filled) }
@@ -177,6 +207,44 @@ RSpec.describe Moves::Updater do
       context 'with no person relationship' do
         it 'does not change old person associated' do
           expect { updater.call }.not_to change { move.reload.profile.person }
+        end
+      end
+    end
+
+    context 'with profile' do
+      let(:before_profile) { create(:profile) }
+      let(:after_profile) { create(:profile) }
+      let!(:move) { create(:move, profile: before_profile) }
+
+      context 'with new profile' do
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { profile: { data: { id: after_profile.id, type: 'profiles' } } },
+          }
+        end
+
+        it 'updates profile association to new profile' do
+          expect { updater.call }.to change { move.reload.profile }.from(before_profile).to(after_profile)
+        end
+      end
+
+      context 'with empty profile data' do
+        let(:move_params) do
+          {
+            type: 'moves',
+            relationships: { profile: { data: nil } },
+          }
+        end
+
+        it 'removes associated profile' do
+          expect { updater.call }.to change { move.reload.profile }.to(nil)
+        end
+      end
+
+      context 'with no profile relationship' do
+        it 'does not change old profile associated' do
+          expect { updater.call }.not_to change { move.reload.profile }
         end
       end
     end

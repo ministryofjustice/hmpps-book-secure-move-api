@@ -7,4 +7,5 @@ Rswag::Ui.configure do |c|
   # then the list below should correspond to the relative paths for those endpoints
 
   c.swagger_endpoint '/api-docs/v1/swagger.yaml', 'PECS4 API V1 Docs'
+  c.swagger_endpoint '/api-docs/v2/swagger.yaml', 'PECS4 API V2 Docs'
 end

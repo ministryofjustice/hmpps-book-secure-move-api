@@ -37,6 +37,26 @@ RSpec.describe Move do
     end
   end
 
+  describe 'rejection_reason' do
+    context 'when the move is not rejected' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:rejection_reason) }
+    end
+
+    context 'when the move is rejected' do
+      let(:move) { build(:move, status: 'cancelled', cancellation_reason: 'rejected') }
+
+      it {
+        expect(move).to validate_inclusion_of(:rejection_reason)
+          .in_array(%w[
+            no_space_at_receiving_prison
+            no_transport_available
+          ])
+      }
+    end
+  end
+
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
@@ -143,9 +163,10 @@ RSpec.describe Move do
   end
 
   context 'without automatic reference generation' do
-    # rubocop:disable RSpec/AnyInstance
-    before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
-    # rubocop:enable RSpec/AnyInstance
+    before do
+      service = instance_double('Moves::ReferenceGenerator', call: nil)
+      allow(Moves::ReferenceGenerator).to receive(:new).and_return(service)
+    end
 
     it { is_expected.to validate_presence_of(:reference) }
   end
@@ -283,6 +304,22 @@ RSpec.describe Move do
     end
   end
 
+  describe '#rejected?' do
+    subject { move.rejected? }
+
+    context 'with cancellation_reason of rejected' do
+      let(:move) { build :move, cancellation_reason: 'rejected' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with cancellation_reason not rejected' do
+      let(:move) { build :move, cancellation_reason: 'other' }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#current?' do
     subject { move.current? }
 
@@ -378,6 +415,35 @@ RSpec.describe Move do
       move.cancel
 
       expect(move.status).to eq('cancelled')
+    end
+  end
+
+  describe '#documents' do
+    let(:move) { create(:move) }
+
+    context 'when documents are associated with a Move via the move_id' do
+      let!(:document) { create(:document, move: move) }
+
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
+    end
+
+    context "when documents are associated with a move's profile via documentable_id" do
+      let!(:document) { create(:document, documentable: move.profile) }
+
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
+    end
+
+    context 'when documents not associated to a profile or move' do
+      let!(:document) { create(:document, documentable: nil) }
+      let(:move) { create(:move, profile: nil) }
+
+      it 'returns no documents' do
+        expect(move.documents).to be_empty
+      end
     end
   end
 

@@ -4,24 +4,15 @@ class Profile < VersionedModel
   before_validation :set_assessment_answers
 
   belongs_to :person
-  belongs_to :ethnicity, optional: true
-  belongs_to :gender, optional: true
 
   has_one :move, dependent: :nullify
 
+  has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
+
   validates :person, presence: true
-  validates :last_name, presence: true
-  validates :first_names, presence: true
+
   validate :validate_assessment_answers
-
-  attribute :assessment_answers, Types::JSONB.new(Profile::AssessmentAnswers)
-  attribute :profile_identifiers, Types::JSONB.new(Profile::ProfileIdentifiers)
-
-  scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
-
-  IDENTIFIER_TYPES = %w[
-    police_national_computer criminal_records_office prison_number niche_reference athena_reference
-  ].freeze
+  attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
 
   # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
   # full of update records where nothing actually changes - making the audit next to useless.
@@ -40,25 +31,6 @@ class Profile < VersionedModel
 
     unless deleted.empty? && inserted.empty? && changed.empty?
       self.assessment_answers = new_list
-    end
-  end
-
-  # Have to override setting of profile identifiers as well
-  # to prevent a no-op being recorded as a change by PaperTrail
-  def profile_identifiers=(new_identifiers)
-    inserted = new_identifiers.reject do |new|
-      profile_identifiers.map(&:identifier_type).include?(new[:identifier_type])
-    end
-    deleted = profile_identifiers.reject do |old|
-      new_identifiers.map { |pi| pi[:identifier_type] }.include?(old.identifier_type)
-    end
-    changed = profile_identifiers.select do |old|
-      new_id = new_identifiers.detect { |pi| pi[:identifier_type] == old.identifier_type }
-      new_id && new_id[:value] != old.value
-    end
-
-    unless deleted.empty? && inserted.empty? && changed.empty?
-      super
     end
   end
 

@@ -10,6 +10,7 @@ class MoveSerializer < ActiveModel::Serializer
              :date,
              :move_type,
              :additional_information,
+             :rejection_reason,
              :cancellation_reason,
              :cancellation_reason_comment,
              :move_agreed,
@@ -18,21 +19,25 @@ class MoveSerializer < ActiveModel::Serializer
              :date_to
 
   has_one :person, serializer: PersonSerializer
-  has_one :profile, serializer: ProfileSerializer
+  has_one :profile, serializer: ProfileSerializer # <- TODO: update the serializer
 
   has_one :from_location, serializer: LocationSerializer
-  has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }
-  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
+  has_one :to_location, serializer: LocationSerializer
+  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
   has_many :documents, serializer: DocumentSerializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
 
+  # TODO: Remove support for person on a Move
   SUPPORTED_RELATIONSHIPS = %w[
-    profile
     person.ethnicity
     person.gender
+    profile.person.ethnicity
+    profile.person.gender
     from_location
+    from_location.suppliers
     to_location
+    to_location.suppliers
     documents
     prison_transfer_reason
     court_hearings

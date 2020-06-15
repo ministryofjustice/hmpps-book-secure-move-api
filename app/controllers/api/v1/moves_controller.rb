@@ -87,16 +87,22 @@ module Api
       end
 
       def new_move_attributes
-        person = Person.find(new_move_params.dig(:relationships, :person, :data, :id))
-        # moves are always created against the latest_profile for the person
         new_move_params[:attributes].merge(
-          profile: person.latest_profile,
+          profile: profile_or_person_latest_profile,
           from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
           documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
           court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
+      end
+
+      def profile_or_person_latest_profile
+        profile_id = new_move_params.dig(:relationships, :profile, :data, :id)
+        return Profile.find(profile_id) if profile_id
+
+        # moves are always created against the latest_profile for the person if profile not provided
+        Person.find(new_move_params.dig(:relationships, :person, :data, :id)).latest_profile
       end
 
       def update_move_params
@@ -110,7 +116,7 @@ module Api
       def move
         @move ||= Move
           .accessible_by(current_ability)
-          .includes(:from_location, :to_location, profile: %i[gender ethnicity])
+          .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
           .find(params[:id])
       end
 
@@ -118,22 +124,12 @@ module Api
         @updater ||= Moves::Updater.new(move, update_move_params)
       end
 
-      def validate_include_params
-        included_relationships.each do |resource|
-          unless MoveSerializer::SUPPORTED_RELATIONSHIPS.include?(resource)
-            supported_relationships = MoveSerializer::SUPPORTED_RELATIONSHIPS.join(', ')
-
-            render status: :bad_request,
-                   json: {
-                     errors: [{ title: 'Bad request',
-                                detail: "'#{resource}' is not supported. Valid values are: #{supported_relationships}" }],
-                   }
-          end
-        end
-      end
-
       def included_relationships
         IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        MoveSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

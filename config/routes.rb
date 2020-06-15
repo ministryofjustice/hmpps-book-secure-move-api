@@ -12,7 +12,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :allocations, only: %i[create index show] do
-        resources :events, only: %i[create], controller: 'allocation_events'
+        member do
+          post 'events', controller: 'allocation_events' # TODO: delete this route once the front end is updated
+          post 'cancel', controller: 'allocation_events'
+        end
       end
       resources :court_hearings, only: %i[create]
       resources :documents, only: %i[create]
@@ -20,16 +23,19 @@ Rails.application.routes.draw do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
         get 'timetable', to: 'people#timetable'
+
+        resources :profiles, only: %i[create update]
       end
       resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
         resources :journeys, only: %i[index show create update]
         member do
-          post 'events', controller: 'move_events' # TODO: delete this route once the front end is updated
           post 'cancel', controller: 'move_events'
           post 'complete', controller: 'move_events'
           post 'lockouts', controller: 'move_events'
           post 'redirects', controller: 'move_events'
+          post 'approve', controller: 'move_events'
+          post 'reject', controller: 'move_events'
         end
       end
       namespace :reference do
@@ -44,6 +50,10 @@ Rails.application.routes.draw do
         resources :regions, only: :index
         resources :suppliers, only: %i[index show]
       end
+    end
+
+    namespace :v2 do
+      resources :people, only: %i[index create update]
     end
   end
 end

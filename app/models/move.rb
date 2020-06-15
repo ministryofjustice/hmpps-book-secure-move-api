@@ -34,6 +34,11 @@ class Move < VersionedModel
     CANCELLATION_REASON_OTHER = 'other',
   ].freeze
 
+  REJECTION_REASONS = [
+    REJECTION_REASON_NO_SPACE = 'no_space_at_receiving_prison',
+    REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
+  ].freeze
+
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true
@@ -64,6 +69,9 @@ class Move < VersionedModel
   validates :cancellation_reason, inclusion: { in: CANCELLATION_REASONS }, if: :cancelled?
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
+  validates :rejection_reason, inclusion: { in: REJECTION_REASONS }, allow_nil: true, if: :rejected?
+  validates :rejection_reason, absence: true, unless: :rejected?
+
   validate :date_to_after_date_from
 
   before_validation :set_reference
@@ -85,6 +93,10 @@ class Move < VersionedModel
 
   def self.unfilled?
     none? || exists?(profile_id: nil)
+  end
+
+  def rejected?
+    cancellation_reason == CANCELLATION_REASON_REJECTED
   end
 
   def nomis_event_id=(event_id)
@@ -112,6 +124,12 @@ class Move < VersionedModel
 
   def person
     raise 'Attempt to Access to person!!!'
+  end
+
+  def documents
+    # We need to make sure that we're returning Documents that are either for the current
+    # moves profile or the current move to support backwards compatibility.
+    Document.kept.where(move_id: id).or(Document.where(documentable: profile).where.not(documentable: nil))
   end
 
 private

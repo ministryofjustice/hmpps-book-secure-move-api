@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'fake_data/journeys'
+
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
@@ -173,6 +175,7 @@ namespace :fake_data do
     profiles = Profile.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
+    file = StringIO.new(File.read('spec/fixtures/file-sample_100kB.doc'))
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
@@ -182,18 +185,23 @@ namespace :fake_data do
       to_location = courts.sample
       nomis_event_ids = []
       nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
-      unless Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
-        Move.create!(
-          date: date,
-          date_from: date,
-          time_due: time,
-          profile: profile,
-          from_location: from_location,
-          to_location: to_location,
-          status: %w[proposed requested booked completed].sample,
-          nomis_event_ids: nomis_event_ids,
-        )
-      end
+      next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
+
+      move = Move.create!(
+        date: date,
+        date_from: date,
+        time_due: time,
+        profile: profile,
+        from_location: from_location,
+        to_location: to_location,
+        status: %w[proposed requested booked completed].sample,
+        nomis_event_ids: nomis_event_ids,
+      )
+      document = Document.new(move: move)
+      document.file.attach(io: file, filename: 'file-sample_100kB.doc')
+      document.save!
+    ensure
+      file.rewind
     end
   end
 
@@ -216,11 +224,22 @@ namespace :fake_data do
     end
   end
 
+  desc 'create fake journeys with associated events'
+  task create_journeys: :environment do
+    puts 'create_journeys...'
+    Move
+        .left_outer_joins(:journeys).where(journeys: { move_id: nil })
+        .where(status: %w[completed booked requested])
+        .find_each do |move|
+      Tasks::FakeData::Journeys.new(move).call
+    end
+  end
+
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Journey, Move, Document, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -239,6 +258,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
       Rake::Task['fake_data:create_allocations'].invoke
+      Rake::Task['fake_data:create_journeys'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end

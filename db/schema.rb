@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_29_085159) do
+ActiveRecord::Schema.define(version: 2020_06_11_110523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -91,7 +91,10 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.string "documentable_type"
+    t.uuid "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
+    t.index ["documentable_type", "documentable_id"], name: "index_documents_on_documentable_type_and_documentable_id"
     t.index ["move_id"], name: "index_documents_on_move_id"
   end
 
@@ -207,13 +210,14 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.boolean "move_agreed", default: false, null: false
+    t.boolean "move_agreed"
     t.string "move_agreed_by"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
     t.date "date_from"
     t.date "date_to"
     t.uuid "allocation_id"
+    t.string "rejection_reason"
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
@@ -325,6 +329,7 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.uuid "ethnicity_id"
     t.uuid "gender_id"
     t.datetime "last_synced_with_nomis"
+    t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
@@ -342,8 +347,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "last_name", null: false
-    t.string "first_names", null: false
+    t.string "last_name", default: ""
+    t.string "first_names", default: ""
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
     t.uuid "gender_id"
@@ -355,7 +360,6 @@ ActiveRecord::Schema.define(version: 2020_05_29_085159) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
-    t.datetime "last_synced_with_nomis"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

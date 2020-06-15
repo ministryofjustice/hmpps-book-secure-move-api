@@ -31,6 +31,10 @@ RSpec.describe MoveSerializer do
       expect(attributes[:move_type]).to eql move.move_type
     end
 
+    it 'contains a rejection_reason attribute' do
+      expect(attributes[:rejection_reason]).to eql move.rejection_reason
+    end
+
     it 'contains a date attribute' do
       expect(attributes[:date]).to eql move.date.iso8601
     end
@@ -66,14 +70,17 @@ RSpec.describe MoveSerializer do
 
   describe 'person' do
     context 'with a person' do
-      let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS, fields: MoveSerializer::INCLUDED_FIELDS } }
+      # TODO: Remove support for person on a Move
+      let(:adapter_options) { { include: 'person', fields: MoveSerializer::INCLUDED_FIELDS } }
+
       let(:expected_json) do
+        person = move.profile.person
         [
           {
-            id: move.profile.person_id,
+            id: person.id,
             type: 'people',
-            attributes: { first_names: move.profile.first_names,
-                          last_name: move.profile.last_name,
+            attributes: { first_names: person.first_names,
+                          last_name: person.last_name,
                           date_of_birth: '1980-10-20' },
           },
         ]
@@ -124,6 +131,25 @@ RSpec.describe MoveSerializer do
 
     it 'contains an included from and to location' do
       expect(result[:included]).to(include_json(expected_json))
+    end
+
+    context 'without a to_location' do
+      let(:adapter_options) do
+        {
+          include: {
+            to_location: %I[location_type title],
+          },
+        }
+      end
+      let(:move) { create(:move, :prison_recall) }
+
+      it 'contains empty location' do
+        expect(result_data[:relationships][:to_location][:data]).to be_nil
+      end
+
+      it 'does not contain an included location' do
+        expect(result[:included]).to be_nil
+      end
     end
   end
 
@@ -178,6 +204,43 @@ RSpec.describe MoveSerializer do
 
       it 'does not contain an included allocation' do
         expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations ethnicities genders people profiles])
+      end
+    end
+  end
+
+  describe 'prison_transfer_reason' do
+    let(:adapter_options) do
+      {
+        include: {
+          prison_transfer_reason: %I[title],
+        },
+      }
+    end
+    let(:move) { create(:move, :prison_transfer) }
+
+    let(:expected_json) do
+      [
+        {
+          id: move.prison_transfer_reason.id,
+          type: 'prison_transfer_reasons',
+          attributes: { title: move.prison_transfer_reason.title },
+        },
+      ]
+    end
+
+    it 'contains an included prison_transfer_reason' do
+      expect(result[:included]).to(include_json(expected_json))
+    end
+
+    context 'without a prison_transfer_reason' do
+      let(:move) { create(:move, prison_transfer_reason: nil) }
+
+      it 'contains empty prison_transfer_reason' do
+        expect(result_data[:relationships][:prison_transfer_reason][:data]).to be_nil
+      end
+
+      it 'does not contain an included prison_transfer_reason' do
+        expect(result[:included]).to be_nil
       end
     end
   end

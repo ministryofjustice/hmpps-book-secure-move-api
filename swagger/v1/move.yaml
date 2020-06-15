@@ -44,7 +44,9 @@ Move:
           - prison_transfer
           description: Indicates the type of move, e.g. prison transfer or court appearance
         move_agreed:
-          type: boolean
+          oneOf:
+          - type: boolean
+          - type: 'null'
           example: 'true'
           description: Indicates if the moved has been agreed
         move_agreed_by:

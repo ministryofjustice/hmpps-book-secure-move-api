@@ -13,7 +13,7 @@ module Api
 
         people = People::Finder.new(filter_params).call
 
-        paginate people, include: PersonSerializer::INCLUDED_DETAIL
+        paginate people, include: included_relationships
       end
 
       def create
@@ -119,7 +119,7 @@ module Api
       end
 
       def render_person(person, status)
-        render json: person, status: status, include: PersonSerializer::INCLUDED_DETAIL
+        render json: person, status: status, include: included_relationships
       end
 
       def person_params
@@ -152,8 +152,16 @@ module Api
       end
 
       def validate_nomis_profile
-        profile_validator = People::NomisProfileValidator.new(person.latest_profile)
+        profile_validator = People::NomisPersonValidator.new(person)
         profile_validator.validate!
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        PersonSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

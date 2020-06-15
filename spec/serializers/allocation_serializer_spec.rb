@@ -116,32 +116,30 @@ RSpec.describe AllocationSerializer do
   end
 
   describe 'moves' do
-    context 'with a move' do
-      let(:adapter_options) do
-        { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS }
-      end
-      let(:allocation) { create(:allocation, :with_moves) }
-      let(:move) { allocation.moves.first }
+    let(:adapter_options) do
+      { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS }
+    end
+    let(:allocation) { create(:allocation, :with_moves) }
+    let(:move) { allocation.moves.first }
 
-      it 'contains a moves relationship' do
-        expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
-      end
-
-      it 'contains an included move and person' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[people moves locations locations])
-      end
+    it 'contains a moves relationship' do
+      expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
     end
 
-    context 'without a move' do
-      let(:adapter_options) { { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS } }
+    it 'contains an included move and person' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people moves locations locations genders ethnicities])
+    end
+  end
 
-      it 'contains empty moves' do
-        expect(result_data[:relationships][:moves][:data]).to be_empty
-      end
+  context 'without a move' do
+    let(:adapter_options) { { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS } }
 
-      it 'does not contain an included allocation' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
-      end
+    it 'contains empty moves' do
+      expect(result_data[:relationships][:moves][:data]).to be_empty
+    end
+
+    it 'does not contain an included allocation' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
     end
   end
 end

@@ -33,7 +33,7 @@ RSpec.describe Api::V1::MovesController do
         relationships: {
           person: { data: { type: 'people', id: person.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : { data: nil },
           documents: { data: [{ type: 'documents', id: document.id }] },
           prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
         },
@@ -97,6 +97,10 @@ RSpec.describe Api::V1::MovesController do
 
       it 'returns the correct data' do
         expect(response_json).to eq resource_to_json
+      end
+
+      it 'does not provide a default value for move_agreed' do
+        expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq nil
       end
 
       it 'sets the additional_information' do
@@ -270,6 +274,70 @@ RSpec.describe Api::V1::MovesController do
 
         it 'sets the move_type to `prison_recall`' do
           expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        end
+      end
+
+      context 'with a profile relationship' do
+        let(:profile) { create(:profile) }
+        let(:data) do
+          {
+            type: 'moves',
+            attributes: move_attributes,
+            relationships: {
+              profile: { data: { type: 'profiles', id: profile.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } },
+              to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+              documents: { data: [{ type: 'documents', id: document.id }] },
+              prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
+            },
+          }
+        end
+
+        it 'associates the profile with the newly created move' do
+          expect(move.profile).to eq(profile)
+        end
+
+        it 'returns the profile in the response' do
+          expected_response = { 'type' => 'profiles', 'id' => profile.id }
+
+          expect(response_json.dig('data', 'relationships', 'profile', 'data')).to eq(expected_response)
+        end
+
+        it 'returns the profile person in the response' do
+          expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+          expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
+        end
+      end
+
+      # TODO: Remove when people/profiles migration is completed
+      context 'with a profile and person relationship' do
+        let(:person) { create(:person) }
+        let(:profile) { create(:profile) }
+
+        let(:data) do
+          {
+            type: 'moves',
+            attributes: move_attributes,
+            relationships: {
+              profile: { data: { type: 'profiles', id: profile.id } },
+              person: { data: { type: 'people', id: person.id } },
+              from_location: { data: { type: 'locations', id: from_location.id } },
+              to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+              documents: { data: [{ type: 'documents', id: document.id }] },
+              prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
+            },
+          }
+        end
+
+        it 'favours the profile passed in with the newly created move' do
+          expect(move.profile).to eq(profile)
+        end
+
+        it 'returns the profile person in the response' do
+          expected_response = { 'type' => 'people', 'id' => profile.person.id }
+
+          expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
         end
       end
     end

@@ -8,6 +8,8 @@ class Event < ApplicationRecord
     UNCOMPLETE = 'uncomplete'.freeze,
     REDIRECT = 'redirect'.freeze,
     LOCKOUT = 'lockout'.freeze,
+    APPROVE = 'approve'.freeze,
+    REJECT = 'reject'.freeze,
   ].freeze
 
   belongs_to :eventable, polymorphic: true
@@ -35,5 +37,13 @@ class Event < ApplicationRecord
 
   def notes
     @notes ||= event_params.dig(:attributes, :notes)
+  end
+
+  def from_location
+    @from_location ||= Location.find_by(id: event_params&.dig(:relationships, :from_location, :data, :id))
+  end
+
+  def to_location
+    @to_location ||= Location.find_by(id: event_params&.dig(:relationships, :to_location, :data, :id))
   end
 end

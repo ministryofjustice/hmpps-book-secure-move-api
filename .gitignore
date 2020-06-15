@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+vendor
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -39,7 +40,12 @@ coverage
 
 # Ignore dynamically generated Swagger docs
 swagger/v1/swagger.yaml
+swagger/v2/swagger.yaml
+
 config/application_insights.toml
 
 # Ignore auto generated data diagram
 erd.pdf
+
+# Ignore local data directory for docker-compose
+.data

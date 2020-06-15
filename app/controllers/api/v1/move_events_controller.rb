@@ -3,72 +3,49 @@
 module Api
   module V1
     class MoveEventsController < ApiController
+      include Moves::Eventable
+
       CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
       COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
       REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
-      DEPRECATED_EVENT_PARAMS = [:type, attributes: %i[timestamp event_name notes], relationships: { to_location: {} }].freeze
+      APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
+      REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment]].freeze
 
       def cancel
         validate_params!(cancel_params)
-        create_event(Event::CANCEL, cancel_params)
-        run_event_logs
+        process_event(move, Event::CANCEL, cancel_params)
         render status: :no_content
       end
 
       def complete
         validate_params!(complete_params)
-        create_event(Event::COMPLETE, complete_params)
-        run_event_logs
+        process_event(move, Event::COMPLETE, complete_params)
         render status: :no_content
       end
 
       def lockouts
         validate_params!(lockout_params, require_from_location: true)
-        create_event(Event::LOCKOUT, lockout_params)
-        run_event_logs
+        process_event(move, Event::LOCKOUT, lockout_params)
         render status: :no_content
       end
 
       def redirects
         validate_params!(redirect_params, require_to_location: true)
-        create_event(Event::REDIRECT, redirect_params)
-        run_event_logs
+        process_event(move, Event::REDIRECT, redirect_params)
         render status: :no_content
       end
 
-      def events
-        # TODO: this method should be deleted, but kept here until the front end is updated
-        validate_params!(deprecated_event_params, require_to_location: true)
-        if  deprecated_event_params.dig(:attributes, :event_name) == Event::REDIRECT
-          event = create_event(Event::REDIRECT, deprecated_event_params)
-          run_event_logs
-          render status: :created,
-                 json: {
-                   data: {
-                     id: event.id,
-                     type: 'events',
-                     attributes: {
-                       event_name: event.event_name,
-                       timestamp: event.client_timestamp,
-                       notes: event.notes,
-                     },
-                     relationships: {
-                       to_location: {
-                         data: {
-                           type: 'locations',
-                           id: event.to_location.id,
-                         },
-                       },
-                     },
-                   },
-                 }
-        else
-          render status: :bad_request,
-                 json: {
-                   errors: [{ title: 'invalid event_name', detail: 'event_name is not supported' }],
-                 }
-        end
+      def approve
+        validate_params!(approve_params)
+        process_event(move, Event::APPROVE, approve_params)
+        render status: :no_content
+      end
+
+      def reject
+        validate_params!(reject_params)
+        process_event(move, Event::REJECT, reject_params)
+        render status: :no_content
       end
 
     private
@@ -99,33 +76,16 @@ module Api
         @redirect_params ||= params.require(:data).permit(REDIRECT_PARAMS).to_h
       end
 
-      def deprecated_event_params
-        # TODO: deleteme once FE updated
-        @deprecated_event_params ||= params.require(:data).permit(DEPRECATED_EVENT_PARAMS).to_h
+      def approve_params
+        @approve_params ||= params.require(:data).permit(APPROVE_PARAMS).to_h
       end
 
-      def supplier_id
-        # NB: not all events will have a supplier_id so this could well be nil
-        current_user.owner&.id
+      def reject_params
+        @reject_params ||= params.require(:data).permit(REJECT_PARAMS).to_h
       end
 
       def move
         @move ||= Move.accessible_by(current_ability).find(params.require(:id))
-      end
-
-      def create_event(event_name, event_params)
-        move.move_events.create!(
-          event_name: event_name,
-          client_timestamp: Time.zone.parse(event_params.dig(:attributes, :timestamp)),
-          details: {
-            event_params: event_params,
-            supplier_id: supplier_id,
-          },
-        )
-      end
-
-      def run_event_logs
-        EventLog::MoveRunner.new(move).call
       end
     end
   end
