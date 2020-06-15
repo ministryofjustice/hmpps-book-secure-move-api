@@ -6,9 +6,7 @@ class CreateRegions < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    create_join_table :locations, :regions do |t|
-      t.references :location, type: :uuid, null: false, index: true, foreign_key: true
-      t.references :region, type: :uuid, null: false, index: true, foreign_key: true
+    create_join_table :locations, :regions, column_options: { type: :uuid, null: false, index: true, foreign_key: true } do |t|
       t.index %i[location_id region_id], unique: true
       t.index %i[region_id location_id], unique: true
       t.timestamps
