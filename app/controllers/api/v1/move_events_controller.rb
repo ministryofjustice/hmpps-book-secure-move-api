@@ -10,7 +10,7 @@ module Api
       LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
       REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
       APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
-      REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment]].freeze
+      REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook]].freeze
 
       def cancel
         validate_params!(cancel_params)

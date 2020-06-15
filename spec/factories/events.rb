@@ -110,6 +110,19 @@ FactoryBot.define do
           } }
         end
       end
+
+      trait :reject_with_rebook do
+        event_name { 'reject' }
+        details do
+          { event_params: {
+            attributes: {
+              rejection_reason: 'no_transport_available',
+              cancellation_reason_comment: 'computer says no',
+              rebook: true,
+            },
+          } }
+        end
+      end
     end
   end
 end

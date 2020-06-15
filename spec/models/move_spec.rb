@@ -412,6 +412,50 @@ RSpec.describe Move do
     end
   end
 
+  describe '#rebook' do
+    let(:original_move) { create(:move, :proposed, :with_allocation) }
+
+    it 'returns a move' do
+      expect(original_move.rebook).to be_a(described_class)
+    end
+
+    it 'returns a new move instance' do
+      expect(original_move.rebook).not_to eq(original_move)
+    end
+
+    it 'copies the original move from location' do
+      expect(original_move.rebook.from_location_id).to eq(original_move.from_location_id)
+    end
+
+    it 'copies the original move to location' do
+      expect(original_move.rebook.to_location_id).to eq(original_move.to_location_id)
+    end
+
+    it 'copies the original move profile' do
+      expect(original_move.rebook.profile_id).to eq(original_move.profile_id)
+    end
+
+    it 'copies the original move allocation' do
+      expect(original_move.rebook.allocation_id).to eq(original_move.allocation_id)
+    end
+
+    it 'sets the move status to proposed' do
+      expect(original_move.rebook.status).to eq('proposed')
+    end
+
+    it 'sets the move date to 7 days in the future' do
+      expect(original_move.rebook.date).to eq(original_move.date + 7.days)
+    end
+
+    it 'sets the move from date to 7 days in the future' do
+      expect(original_move.rebook.date_from).to eq(original_move.date + 7.days)
+    end
+
+    it 'relates the new move to the original move' do
+      expect(original_move.rebook.original_move).to eq(original_move)
+    end
+  end
+
   describe '#documents' do
     let(:move) { create(:move) }
 
