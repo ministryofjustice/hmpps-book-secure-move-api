@@ -55,7 +55,8 @@ RSpec.describe Api::V1::MoveEventsController do
       end
 
       it 'creates a new move linked to the original move' do
-        expect(Move.last.original_move).to eq(move)
+        rebooked_move = move.reload.rebooked
+        expect(rebooked_move.original_move).to eq(move)
       end
 
       describe 'webhook and email notifications' do

@@ -413,46 +413,56 @@ RSpec.describe Move do
   end
 
   describe '#rebook' do
-    let(:original_move) { create(:move, :proposed, :with_allocation) }
+    let!(:original_move) { create(:move, :proposed, :with_allocation) }
 
-    it 'returns a move' do
-      expect(original_move.rebook).to be_a(described_class)
+    context 'when not yet rebooked' do
+      it 'creates a new move' do
+        expect { original_move.rebook }.to change(described_class, :count).by(1)
+      end
+
+      it 'copies the original move from location' do
+        expect(original_move.rebook.from_location_id).to eq(original_move.from_location_id)
+      end
+
+      it 'copies the original move to location' do
+        expect(original_move.rebook.to_location_id).to eq(original_move.to_location_id)
+      end
+
+      it 'copies the original move profile' do
+        expect(original_move.rebook.profile_id).to eq(original_move.profile_id)
+      end
+
+      it 'copies the original move allocation' do
+        expect(original_move.rebook.allocation_id).to eq(original_move.allocation_id)
+      end
+
+      it 'sets the move status to proposed' do
+        expect(original_move.rebook.status).to eq('proposed')
+      end
+
+      it 'sets the move date to 7 days in the future' do
+        expect(original_move.rebook.date).to eq(original_move.date + 7.days)
+      end
+
+      it 'sets the move from date to 7 days in the future' do
+        expect(original_move.rebook.date_from).to eq(original_move.date + 7.days)
+      end
+
+      it 'relates the new move to the original move' do
+        expect(original_move.rebook.original_move).to eq(original_move)
+      end
     end
 
-    it 'returns a new move instance' do
-      expect(original_move.rebook).not_to eq(original_move)
-    end
+    context 'when previously rebooked' do
+      it 'does not create a new move' do
+        original_move.rebook
+        expect { original_move.rebook }.not_to change(described_class, :count)
+      end
 
-    it 'copies the original move from location' do
-      expect(original_move.rebook.from_location_id).to eq(original_move.from_location_id)
-    end
-
-    it 'copies the original move to location' do
-      expect(original_move.rebook.to_location_id).to eq(original_move.to_location_id)
-    end
-
-    it 'copies the original move profile' do
-      expect(original_move.rebook.profile_id).to eq(original_move.profile_id)
-    end
-
-    it 'copies the original move allocation' do
-      expect(original_move.rebook.allocation_id).to eq(original_move.allocation_id)
-    end
-
-    it 'sets the move status to proposed' do
-      expect(original_move.rebook.status).to eq('proposed')
-    end
-
-    it 'sets the move date to 7 days in the future' do
-      expect(original_move.rebook.date).to eq(original_move.date + 7.days)
-    end
-
-    it 'sets the move from date to 7 days in the future' do
-      expect(original_move.rebook.date_from).to eq(original_move.date + 7.days)
-    end
-
-    it 'relates the new move to the original move' do
-      expect(original_move.rebook.original_move).to eq(original_move)
+      it 'returns the previously rebooked move' do
+        rebooked_before = original_move.rebook
+        expect(original_move.rebook).to eq(rebooked_before)
+      end
     end
   end
 

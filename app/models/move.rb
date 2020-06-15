@@ -90,8 +90,12 @@ class Move < VersionedModel
     )
   end
 
+  def rebooked
+    self.class.find_by(original_move_id: id)
+  end
+
   def rebook
-    self.class.new(
+    rebooked || self.class.create(
       original_move_id: id,
       from_location_id: from_location_id,
       to_location_id: to_location_id,

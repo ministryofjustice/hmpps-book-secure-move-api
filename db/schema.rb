@@ -421,6 +421,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
+  add_foreign_key "moves", "moves", column: "original_move_id"
   add_foreign_key "moves", "people"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
