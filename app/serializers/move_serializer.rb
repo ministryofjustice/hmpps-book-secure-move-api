@@ -22,8 +22,8 @@ class MoveSerializer < ActiveModel::Serializer
   has_one :profile, serializer: ProfileSerializer # <- TODO: update the serializer
 
   has_one :from_location, serializer: LocationSerializer
-  has_one :to_location, serializer: LocationSerializer, if: -> { object.to_location.present? }
-  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer, if: -> { object.prison_transfer_reason.present? }
+  has_one :to_location, serializer: LocationSerializer
+  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
   has_many :documents, serializer: DocumentSerializer
   has_many :court_hearings, serializer: CourtHearingSerializer
   belongs_to :allocation, serializer: AllocationSerializer
