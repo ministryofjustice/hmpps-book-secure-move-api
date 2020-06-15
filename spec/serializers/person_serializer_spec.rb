@@ -106,16 +106,16 @@ RSpec.describe PersonSerializer do
 
   describe 'ethnicity' do
     let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
-    let(:ethnicity) { person.latest_profile&.ethnicity }
+    let(:ethnicity) { person.latest_profile.ethnicity }
     let(:expected_json) do
       [
         {
-          id: ethnicity&.id,
+          id: ethnicity.id,
           type: 'ethnicities',
           attributes: {
-            key: ethnicity&.key,
-            title: ethnicity&.title,
-            description: ethnicity&.description,
+            key: ethnicity.key,
+            title: ethnicity.title,
+            description: ethnicity.description,
           },
         },
       ]
@@ -123,6 +123,18 @@ RSpec.describe PersonSerializer do
 
     it 'contains an included ethnicity' do
       expect(result[:included]).to(include_json(expected_json))
+    end
+
+    context 'without an ethnicity' do
+      let(:person) { create(:person_without_profiles) }
+
+      it 'contains empty ethnicity' do
+        expect(result[:data][:relationships][:ethnicity][:data]).to be_nil
+      end
+
+      it 'does not contain an included ethnicity' do
+        expect(result[:included]).to be_nil
+      end
     end
   end
 

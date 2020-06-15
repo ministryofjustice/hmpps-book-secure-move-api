@@ -4,7 +4,9 @@ PrisonTransferReasonReference:
   - data
   properties:
     data:
-      type: object
+      oneOf:
+      - type: object
+      - type: 'null'
       required:
       - type
       - id
