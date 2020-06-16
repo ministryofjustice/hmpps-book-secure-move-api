@@ -413,7 +413,7 @@ RSpec.describe Move do
   end
 
   describe '#rebook' do
-    let!(:original_move) { create(:move, :proposed, :with_allocation) }
+    let!(:original_move) { create(:move, :proposed, :with_allocation, :with_date_to) }
 
     context 'when not yet rebooked' do
       it 'creates a new move' do
@@ -440,12 +440,31 @@ RSpec.describe Move do
         expect(original_move.rebook.status).to eq('proposed')
       end
 
-      it 'sets the move date to 7 days in the future' do
+      it 'sets the move date to 7 days in the future if present' do
         expect(original_move.rebook.date).to eq(original_move.date + 7.days)
       end
 
-      it 'sets the move from date to 7 days in the future' do
-        expect(original_move.rebook.date_from).to eq(original_move.date + 7.days)
+      it 'sets the move date to nil if not present' do
+        original_move.date = nil
+        expect(original_move.rebook.date).to be_nil
+      end
+
+      it 'sets the move from date to 7 days in the future if present' do
+        expect(original_move.rebook.date_from).to eq(original_move.date_from + 7.days)
+      end
+
+      it 'sets the move date from to nil if not present' do
+        original_move.date_from = nil
+        expect(original_move.rebook.date_from).to be_nil
+      end
+
+      it 'sets the move to date to 7 days in the future if present' do
+        expect(original_move.rebook.date_to).to eq(original_move.date_to + 7.days)
+      end
+
+      it 'sets the move to date to nil if not present' do
+        original_move.date_to = nil
+        expect(original_move.rebook.date_to).to be_nil
       end
 
       it 'relates the new move to the original move' do
