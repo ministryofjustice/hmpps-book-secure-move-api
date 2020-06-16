@@ -90,6 +90,20 @@ RSpec.describe Api::V1::ProfilesController do
           ]
         end
 
+        let(:expected_assessment_answers) do
+          [
+            {
+              'category' => 'risk',
+              'created_at' => '2020-06-16',
+              'imported_from_nomis' => true,
+              'key' => 'other_risks',
+              'nomis_alert_code' => 'ACCU9',
+              'nomis_alert_type' => 'MATSTAT',
+              'title' => 'Other Risks',
+            },
+          ]
+        end
+
         before do
           allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
           allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
@@ -103,20 +117,9 @@ RSpec.describe Api::V1::ProfilesController do
         it 'imports the assessment answers from Nomis' do
           resp = JSON.parse(response.body)
 
-          expected_answers = [
-            {
-              'category' => 'risk',
-              'created_at' => '2020-06-16',
-              'imported_from_nomis' => true,
-              'key' => 'other_risks',
-              'nomis_alert_code' => 'ACCU9',
-              'nomis_alert_type' => 'MATSTAT',
-              'title' => 'Other Risks',
-            },
-          ]
           actual_answers = resp.dig('data', 'attributes', 'assessment_answers')
 
-          expect(actual_answers).to include_json(expected_answers)
+          expect(actual_answers).to include_json(expected_assessment_answers)
         end
 
         context 'when the person does NOT have a prison_number' do
