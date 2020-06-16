@@ -11,6 +11,7 @@ RSpec.describe Api::V1::ProfilesController do
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
+
   describe 'POST /v1/people/:id/profiles' do
     let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v1') }
 
@@ -67,31 +68,55 @@ RSpec.describe Api::V1::ProfilesController do
         }
       end
 
-      context 'when the person has a prison_number' do
+      context 'when the person has a prison_number', with_nomis_client_authentication: true do
         let(:prison_number) { 'G5033UT' }
+        let(:alerts_response_body) { [{ 'offenderNo' => person.prison_number, 'alertCode' => 'ACCU9', 'alertType' => 'MATSTAT' }] }
+        let(:personal_care_needs_response_body) { [] }
+
+        let(:alerts_response) do
+          instance_double(
+              'OAuth2::Response',
+              body: alerts_response_body.to_json,
+              parsed: alerts_response_body,
+              status: 200,
+              )
+        end
+
+        let(:personal_care_needs_response) do
+          instance_double(
+              'OAuth2::Response',
+              body: personal_care_needs_response_body.to_json,
+              parsed: personal_care_needs_response_body,
+              status: 200,
+              )
+        end
 
         before do
-          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
+          create :assessment_question, :alerts_fallback
 
+          allow(token).to receive(:post).and_return(alerts_response, personal_care_needs_response)
+
+          binding.pry
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         end
 
         it 'imports the assessment answers from Nomis' do
-          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:call)
-                                                                  .with(person.profiles.last, person.prison_number)
+          resp = JSON.parse(response.body)
+
+          expect(resp['data']['attributes']['assessment_answers'][0]).to include('nomis_alert_type' => 'MATSTAT', 'nomis_alert_code' => 'ACCU9')
         end
 
         context 'when the person does NOT have a prison_number' do
           let(:prison_number) { nil }
 
           before do
-            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
-
             post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
           end
 
           it 'does NOT import the assessment answers from Nomis' do
-            expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:call)
+            resp = JSON.parse(response.body)
+
+            expect(resp['data']['attributes']['assessment_answers'].count).to eq(0)
           end
         end
       end

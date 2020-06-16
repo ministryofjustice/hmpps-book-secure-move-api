@@ -70,6 +70,8 @@ class Profile
     end
 
     def self.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description)
+      puts '--ID'
+      puts assessment_question.id
       new(
         title: personal_care_need[:problem_description],
         created_at: personal_care_need[:start_date],
