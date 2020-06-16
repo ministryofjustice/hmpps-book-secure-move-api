@@ -56,6 +56,47 @@ RSpec.describe Api::V1::ProfilesController do
       end
     end
 
+    describe 'update assessment answers from Alerts and Personal Care Needs from in Nomis' do
+      let(:person) { create(:person_without_profiles, prison_number: prison_number) }
+      let(:profile_params) do
+        {
+          data: {
+            type: 'profiles',
+            attributes: {},
+          },
+        }
+      end
+
+      context 'when the person has the prison_number' do
+        let(:prison_number) { 'G5033UT' }
+
+        before do
+          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
+
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        end
+
+        it 'creates the profile using NOMIS attributes' do
+          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:call)
+                                                                  .with(person.profiles.last, person.prison_number)
+        end
+
+        context 'when the person has NOT a prison_number' do
+          let(:prison_number) { nil }
+
+          before do
+            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
+
+            post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          end
+
+          it 'the profile has NOT assessment answers' do
+            expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:call)
+          end
+        end
+      end
+    end
+
     context 'with a person associated to multiple profiles' do
       it 'maintains previous profiles associated to the person' do
         person = create(:person)
