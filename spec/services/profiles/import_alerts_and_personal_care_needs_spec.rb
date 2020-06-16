@@ -21,9 +21,9 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds do
     let(:alerts_response) { [{ offender_no: person.prison_number, alert_code: 'ACCU9', alert_type: 'MATSTAT' }] }
 
     it 'updates the profile' do
-      updated_profile = described_class.call(profile, prison_number)
+      described_class.call(profile, prison_number)
 
-      expect(updated_profile.assessment_answers[0].attributes).to include({ 'nomis_alert_code' => 'ACCU9', 'nomis_alert_type' => 'MATSTAT' })
+      expect(profile.assessment_answers[0].attributes).to include({ 'nomis_alert_code' => 'ACCU9', 'nomis_alert_type' => 'MATSTAT' })
     end
   end
 
@@ -31,9 +31,9 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds do
     let(:personal_care_needs_response) { [{ offender_no: person.prison_number, problem_type: 'FOO', problem_code: 'AA' }] }
 
     it 'updates the profile' do
-      updated_profile = described_class.call(profile, prison_number)
+      described_class.call(profile, prison_number)
 
-      expect(updated_profile.assessment_answers[0].attributes).to include({ 'nomis_alert_type': 'FOO', 'nomis_alert_code': 'AA' })
+      expect(profile.assessment_answers[0].attributes).to include({ 'nomis_alert_type': 'FOO', 'nomis_alert_code': 'AA' })
     end
   end
 end
