@@ -4,6 +4,8 @@ module MoveEvents
   class ParamsValidator
     include ActiveModel::Validations
 
+    ACCEPTABLE_PLURAL_VERBS = %w[cancels completes approves rejects].freeze
+
     attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason
 
     validates :type, presence: true, inclusion: { in: %w[cancel complete lockouts redirects approve reject] }
@@ -31,6 +33,14 @@ module MoveEvents
       @date = params.dig(:attributes, :date)
       @cancellation_reason = params.dig(:attributes, :cancellation_reason)
       @rejection_reason = params.dig(:attributes, :rejection_reason)
+
+      singularize_acceptable_plural_types
+    end
+
+  private
+
+    def singularize_acceptable_plural_types
+      @type = @type.singularize if ACCEPTABLE_PLURAL_VERBS.include?(@type)
     end
   end
 end
