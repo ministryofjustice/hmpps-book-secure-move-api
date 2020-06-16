@@ -71,13 +71,14 @@ RSpec.describe Api::V1::ProfilesController do
         let(:prison_number) { 'G5033UT' }
 
         before do
-          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
+          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new) # .with(anything, prison_number)
+                                            .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true))
 
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         end
 
         it 'imports the assessment answers from Nomis' do
-          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:call)
+          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:new)
                                                                   .with(person.profiles.last, person.prison_number)
         end
 
@@ -85,13 +86,14 @@ RSpec.describe Api::V1::ProfilesController do
           let(:prison_number) { nil }
 
           before do
-            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:call)
+            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
+                                                                   .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
 
             post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
           end
 
           it 'does NOT import the assessment answers from Nomis' do
-            expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:call)
+            expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:new)
           end
         end
       end
