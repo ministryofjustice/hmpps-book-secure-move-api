@@ -1,4 +1,4 @@
-FROM ruby:2.6.6-alpine as build-stage
+FROM ruby:2.7.0-alpine as build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
