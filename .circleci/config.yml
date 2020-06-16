@@ -126,7 +126,6 @@ references:
     attach_workspace:
       at: .
 
-
 executors:
   cloud-platform-executor:
     docker:
@@ -137,7 +136,7 @@ executors:
 
   test-executor:
     docker:
-      - image: circleci/ruby:2.6.6
+      - image: circleci/ruby:2.7.0
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -150,7 +149,6 @@ executors:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
-
 
 commands:
   build-base:
