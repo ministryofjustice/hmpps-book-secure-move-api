@@ -20,6 +20,9 @@ module Api
         profile = person.profiles.find(params.require(:id))
 
         profile.update!(profile_attributes)
+
+        Notifier.prepare_notifications(topic: profile.person, action_name: 'update')
+
         render_profile(profile, :ok)
       end
 
