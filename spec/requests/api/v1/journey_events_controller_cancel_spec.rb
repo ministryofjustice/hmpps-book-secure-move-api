@@ -15,7 +15,7 @@ RSpec.describe Api::V1::JourneyEventsController do
       let(:params) do
         {
           data: {
-            type: 'cancel',
+            type: 'cancels',
             attributes: {
               timestamp: '2020-04-23T18:25:43.511Z',
               notes: 'something noteworthy',

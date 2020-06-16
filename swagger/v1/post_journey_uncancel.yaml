@@ -6,10 +6,10 @@ PostJourneyUncancel:
   properties:
     type:
       type: string
-      example: uncancel
+      example: uncancels
       enum:
-      - uncancel
-      description: The type of this object - always `uncancel`
+      - uncancels
+      description: The type of this object - always `uncancels`
     attributes:
       type: object
       required:

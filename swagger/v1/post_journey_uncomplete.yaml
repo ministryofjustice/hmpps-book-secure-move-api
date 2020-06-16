@@ -6,10 +6,10 @@ PostJourneyUncomplete:
   properties:
     type:
       type: string
-      example: uncomplete
+      example: uncompletes
       enum:
-      - uncomplete
-      description: The type of this object - always `uncomplete`
+      - uncompletes
+      description: The type of this object - always `uncompletes`
     attributes:
       type: object
       required:

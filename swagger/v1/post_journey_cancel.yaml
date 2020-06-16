@@ -6,10 +6,10 @@ PostJourneyCancel:
   properties:
     type:
       type: string
-      example: cancel
+      example: cancels
       enum:
-      - cancel
-      description: The type of this object - always `cancel`
+      - cancels
+      description: The type of this object - always `cancels`
     attributes:
       type: object
       required:

@@ -6,10 +6,10 @@ PostJourneyComplete:
   properties:
     type:
       type: string
-      example: complete
+      example: completes
       enum:
-      - complete
-      description: The type of this object - always `complete`
+      - completes
+      description: The type of this object - always `completes`
     attributes:
       type: object
       required:

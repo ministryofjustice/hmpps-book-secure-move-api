@@ -6,7 +6,7 @@ module JourneyEvents
 
     attr_reader :timestamp, :type
 
-    validates :type, presence: true, inclusion: { in: %w[cancel complete lockouts lodgings start reject uncomplete uncancel] }
+    validates :type, presence: true, inclusion: { in: %w[cancels completes lockouts lodgings starts rejects uncompletes uncancels] }
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError

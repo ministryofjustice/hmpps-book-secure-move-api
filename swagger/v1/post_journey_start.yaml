@@ -6,10 +6,10 @@ PostJourneyStart:
   properties:
     type:
       type: string
-      example: start
+      example: starts
       enum:
-      - start
-      description: The type of this object - always `start`
+      - starts
+      description: The type of this object - always `starts`
     attributes:
       type: object
       required:
