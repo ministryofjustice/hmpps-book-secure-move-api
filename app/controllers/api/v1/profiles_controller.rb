@@ -6,6 +6,11 @@ module Api
       # TODO: add validation for assessment answers
       def create
         profile = person.profiles.create(profile_attributes)
+
+        if person.prison_number.present?
+          Profiles::ImportAlertsAndPersonalCareNeeds.call(profile, person.prison_number)
+        end
+
         render_profile(profile, :created)
       end
 
