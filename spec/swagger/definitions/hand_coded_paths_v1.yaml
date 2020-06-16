@@ -1,3 +1,187 @@
+/person_escort_records:
+  get:
+    summary: Returns a list of moves
+    tags:
+    - Moves
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: content_type_parameter.yaml#/ContentType
+    - $ref: pagination_parameters.yaml#/Page
+    - $ref: pagination_parameters.yaml#/PerPage
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_person_escort_record_responses.yaml#/200
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_person_escort_record_responses.yaml#/401
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: get_person_escort_record_responses.yaml#/415
+  post:
+    summary: Creates a new person escort record
+    tags:
+    - PersonEscortRecord
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - name: body
+      in: body
+      required: true
+      description: The person_escort_record object to be created
+      schema:
+        $ref: person_escort_record.yaml#/PersonEscortRecord
+    responses:
+      '201':
+        description: created
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/201
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_person_escort_record_responses.yaml#/422
+/person_escort_records/{person_escort_record_id}:
+  patch:
+    summary: Updates a person_escort_record
+    tags:
+    - PersonEscortRecord
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: person_escort_record_id_parameter.yaml#/PersonEscortRecordId
+    - name: body
+      in: body
+      required: true
+      description: The person_escort_record object to be modified
+      schema:
+        $ref: person_escort_record.yaml#/PersonEscortRecord
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_person_escort_record_responses.yaml#/422
+/responses/{response_id}:
+  patch:
+    summary: Updates a response. Aliased as PUT /responses/{response_id}.
+    tags:
+    - responses
+    consumes:
+    - application/vnd.api+json
+    parameters:
+    - $ref: response_id_parameter.yaml#/ResponseId
+    - name: body
+      in: body
+      required: true
+      description: The response object to be modified
+      schema:
+        $ref: response.yaml#/Response
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_response_responses.yaml#/422
 /allocations:
   get:
     summary: Returns a list of allocations
