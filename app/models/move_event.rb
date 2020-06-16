@@ -1,6 +1,10 @@
 class MoveEvent < Event
   # NB: this class exposes a few methods specific to moves to the Event model
 
+  def rebook?
+    @rebook ||= event_params.dig(:attributes, :rebook).to_s == 'true'
+  end
+
   def date
     @date ||= event_params.dig(:attributes, :date)
   end

@@ -58,6 +58,7 @@ aliases:
         only:
           - master
           - dev-auth-from-docs
+          - /.*-deploydev/
   - &only_for_deployment
     filters:
       tags:
@@ -66,6 +67,7 @@ aliases:
         only:
           - master
           - dev-auth-from-docs
+          - /.*-deploydev/
   - &only_deploy_tags
     filters:
       tags:
@@ -124,7 +126,6 @@ references:
     attach_workspace:
       at: .
 
-
 executors:
   cloud-platform-executor:
     docker:
@@ -135,7 +136,7 @@ executors:
 
   test-executor:
     docker:
-      - image: circleci/ruby:2.6.6
+      - image: circleci/ruby:2.7.0
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -148,7 +149,6 @@ executors:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
-
 
 commands:
   build-base:
@@ -210,7 +210,7 @@ commands:
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
             --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
-            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.lastest \
+            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
             --image-manifest "${MANIFEST}"
 
   deploy_to_k8s:
