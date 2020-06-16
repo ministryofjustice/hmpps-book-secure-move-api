@@ -10,64 +10,54 @@ module Api
       LODGING_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
 
       def cancel
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::CANCEL, standard_params)
         render status: :no_content
       end
 
       def complete
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::COMPLETE, standard_params)
         render status: :no_content
       end
 
       def lockouts
-        validate_params!(lockout_params, require_from_location: true)
+        JourneyEvents::ParamsValidator.new(lockout_params).validate!
         process_event(journey, Event::LOCKOUT, lockout_params)
         render status: :no_content
       end
 
       def lodgings
-        validate_params!(lockout_params, require_to_location: true)
+        JourneyEvents::ParamsValidator.new(lodging_params).validate!
         process_event(journey, Event::LODGING, lodging_params)
         render status: :no_content
       end
 
       def reject
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::REJECT, standard_params)
         render status: :no_content
       end
 
       def start
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::START, standard_params)
         render status: :no_content
       end
 
       def uncancel
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::UNCANCEL, standard_params)
         render status: :no_content
       end
 
       def uncomplete
-        validate_params!(standard_params)
+        JourneyEvents::ParamsValidator.new(standard_params).validate!
         process_event(journey, Event::UNCOMPLETE, standard_params)
         render status: :no_content
       end
 
     private
-
-      def validate_params!(event_params, require_from_location: false, require_to_location: false)
-        JourneyEvents::ParamsValidator.new(event_params).validate!
-        if require_from_location
-          Location.find(params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id))
-        end
-        if require_to_location
-          Location.find(params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id))
-        end
-      end
 
       def lockout_params
         @lockout_params ||= params.require(:data).permit(LOCKOUT_PARAMS).to_h

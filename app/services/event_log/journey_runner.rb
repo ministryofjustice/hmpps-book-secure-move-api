@@ -21,12 +21,7 @@ module EventLog
       end
 
       # save the journey if it has changed
-      if journey.changed? && journey.valid?
-        journey.save!
-        true
-      else
-        false
-      end
+      journey.save! if journey.changed? && journey.valid?
     end
 
   private
