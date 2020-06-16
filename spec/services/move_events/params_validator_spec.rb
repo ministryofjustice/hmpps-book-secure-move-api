@@ -118,10 +118,10 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
 
     context 'with acceptable plural actions' do
-      let(:type) { 'cancels' }
+      let(:type) { 'completes' }
 
       it 'converts to singular action' do
-        expect(params_validator.type).to eq('cancel')
+        expect(params_validator.type).to eq('complete')
       end
 
       it { is_expected.to be_valid }
