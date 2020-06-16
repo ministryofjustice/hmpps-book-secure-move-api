@@ -11,7 +11,6 @@ RSpec.describe Api::V1::ProfilesController do
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
-
   describe 'POST /v1/people/:id/profiles' do
     let(:schema) { load_yaml_schema('post_profiles_responses.yaml', version: 'v1') }
 
@@ -70,40 +69,52 @@ RSpec.describe Api::V1::ProfilesController do
 
       context 'when the person has a prison_number', with_nomis_client_authentication: true do
         let(:prison_number) { 'G5033UT' }
-        let(:alerts_response_body) { [{ 'offenderNo' => person.prison_number, 'alertCode' => 'ACCU9', 'alertType' => 'MATSTAT' }] }
-        let(:personal_care_needs_response_body) { [] }
 
         let(:alerts_response) do
-          instance_double(
-              'OAuth2::Response',
-              body: alerts_response_body.to_json,
-              parsed: alerts_response_body,
-              status: 200,
-              )
+          [
+            {
+              offender_no: prison_number,
+              alert_code: 'ACCU9', alert_type: 'MATSTAT'
+            }
+          ]
         end
 
         let(:personal_care_needs_response) do
-          instance_double(
-              'OAuth2::Response',
-              body: personal_care_needs_response_body.to_json,
-              parsed: personal_care_needs_response_body,
-              status: 200,
-              )
+          [
+            {
+              offender_no: prison_number,
+              problem_type: 'FOO', problem_code: 'AA'
+            }
+          ]
         end
 
         before do
-          create :assessment_question, :alerts_fallback
+          allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
+          allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
 
-          allow(token).to receive(:post).and_return(alerts_response, personal_care_needs_response)
+          create(:assessment_question, :care_needs_fallback)
+          create(:assessment_question, :alerts_fallback)
 
-          binding.pry
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         end
 
         it 'imports the assessment answers from Nomis' do
           resp = JSON.parse(response.body)
 
-          expect(resp['data']['attributes']['assessment_answers'][0]).to include('nomis_alert_type' => 'MATSTAT', 'nomis_alert_code' => 'ACCU9')
+          expected_answers = [
+            {
+              'category' => 'risk',
+              'created_at' => '2020-06-16',
+              'imported_from_nomis' => true,
+              'key' => 'other_risks',
+              'nomis_alert_code' => 'ACCU9',
+              'nomis_alert_type' => 'MATSTAT',
+              'title' => 'Other Risks',
+            },
+          ]
+          actual_answers = resp.dig('data', 'attributes', 'assessment_answers')
+
+          expect(actual_answers).to include_json(expected_answers)
         end
 
         context 'when the person does NOT have a prison_number' do
