@@ -205,7 +205,6 @@ commands:
             LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
             ${LOGIN_COMMAND}
       - run:
-          # make it a dry-run by not using a proper tag for now
           name: Retag image
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
@@ -239,6 +238,7 @@ commands:
             sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
             kubectl wait --for=condition=complete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit_code=$?
+            kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit ${exit_code}
       - deploy:
