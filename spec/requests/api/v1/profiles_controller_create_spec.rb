@@ -67,15 +67,16 @@ RSpec.describe Api::V1::ProfilesController do
         }
       end
 
-      context 'when the person has a prison_number', with_nomis_client_authentication: true do
+      context 'when the person has a prison_number' do
         let(:prison_number) { 'G5033UT' }
 
         let(:alerts_response) do
           [
             {
               offender_no: prison_number,
-              alert_code: 'ACCU9', alert_type: 'MATSTAT'
-            }
+              alert_code: 'ACCU9',
+              alert_type: 'MATSTAT',
+            },
           ]
         end
 
@@ -83,8 +84,9 @@ RSpec.describe Api::V1::ProfilesController do
           [
             {
               offender_no: prison_number,
-              problem_type: 'FOO', problem_code: 'AA'
-            }
+              problem_type: 'FOO',
+              problem_code: 'AA',
+            },
           ]
         end
 
