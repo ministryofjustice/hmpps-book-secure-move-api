@@ -6,8 +6,6 @@ module Api
       # TODO: add validation for assessment answers
       def create
         profile = person.profiles.create(profile_attributes)
-        Profiles::ImportAlertsAndPersonalCareNeeds
-        NomisClient::Alerts
 
         if person.prison_number.present?
           Profiles::ImportAlertsAndPersonalCareNeeds.call(profile, person.prison_number)

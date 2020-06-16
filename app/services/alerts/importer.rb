@@ -21,8 +21,6 @@ module Alerts
 
     def build_alert(alert)
       assessment_question = find_assessment_question(alert)
-      puts 'ID:'
-      puts assessment_question.id
 
       Profile::AssessmentAnswer.new(
         #  the mapping of these 3 fields is irrelevant because profile.save
