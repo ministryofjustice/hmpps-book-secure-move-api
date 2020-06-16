@@ -56,7 +56,7 @@ RSpec.describe Api::V1::ProfilesController do
       end
     end
 
-    describe 'update assessment answers from Alerts and Personal Care Needs from in Nomis' do
+    describe 'updating assessment answers from Nomis' do
       let(:person) { create(:person_without_profiles, prison_number: prison_number) }
       let(:profile_params) do
         {
@@ -67,7 +67,7 @@ RSpec.describe Api::V1::ProfilesController do
         }
       end
 
-      context 'when the person has the prison_number' do
+      context 'when the person has a prison_number' do
         let(:prison_number) { 'G5033UT' }
 
         before do
@@ -76,12 +76,12 @@ RSpec.describe Api::V1::ProfilesController do
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         end
 
-        it 'creates the profile using NOMIS attributes' do
+        it 'imports the assessment answers from Nomis' do
           expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:call)
                                                                   .with(person.profiles.last, person.prison_number)
         end
 
-        context 'when the person has NOT a prison_number' do
+        context 'when the person does NOT have a prison_number' do
           let(:prison_number) { nil }
 
           before do
@@ -90,7 +90,7 @@ RSpec.describe Api::V1::ProfilesController do
             post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
           end
 
-          it 'the profile has NOT assessment answers' do
+          it 'does NOT import the assessment answers from Nomis' do
             expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:call)
           end
         end
