@@ -1,5 +1,34 @@
 # Changelog
 
+## [v1.10.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.6) (2020-06-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.5...v1.10.6)
+
+**Merged pull requests:**
+
+- Remove NodeJS buildpack [\#556](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/556) ([smoothcontract](https://github.com/smoothcontract))
+- P4 1665 move profile controller under v1 [\#555](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/555) ([alexdesi](https://github.com/alexdesi))
+- Reinstate swagger documentation [\#554](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/554) ([mafonso](https://github.com/mafonso))
+- \[P4-1500\] Populate document on profile [\#553](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/553) ([willfish](https://github.com/willfish))
+- P4-1650 Add an explicit endpoint to approve a move [\#552](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/552) ([smoothcontract](https://github.com/smoothcontract))
+- P4-1646 remove move/id/events endpoint [\#550](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/550) ([martyn-w](https://github.com/martyn-w))
+- \[P4-1500\] Adds support for documentable relationship [\#549](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/549) ([willfish](https://github.com/willfish))
+- P4-1496 Add PATCH endpoint for Profile V2 [\#548](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/548) ([cwrw](https://github.com/cwrw))
+- Adds support for allocation.moves.person.{gender,ethnicity} [\#547](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/547) ([willfish](https://github.com/willfish))
+- tweak connection pool and sidekiq concurrency [\#545](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/545) ([martyn-w](https://github.com/martyn-w))
+- \[P4-1631\] Streamline Pipeline "Part II - One image to deploy them all"  [\#544](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/544) ([mafonso](https://github.com/mafonso))
+- \[P4-1631\] Streamline Pipeline "Part I - Divide and Conquer" [\#543](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/543) ([mafonso](https://github.com/mafonso))
+- Add PUT /v2/people endpoint [\#542](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/542) ([alexdesi](https://github.com/alexdesi))
+- Bump websocket-extensions from 0.1.4 to 0.1.5 [\#540](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/540) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-1579 Add new endpoint to explicitly reject a move [\#538](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/538) ([smoothcontract](https://github.com/smoothcontract))
+- Return supplier on locations for moves [\#537](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/537) ([willfish](https://github.com/willfish))
+- P4-1495 Add Profile v2 POST endpoint [\#536](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/536) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#534](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/534) ([martyn-w](https://github.com/martyn-w))
+- Rails 6 [\#533](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/533) ([willfish](https://github.com/willfish))
+- \[P4-1610\] Move to included supplier instead of supplier attribute [\#525](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/525) ([willfish](https://github.com/willfish))
+- P4-1597 fake journeys generator [\#521](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/521) ([martyn-w](https://github.com/martyn-w))
+- Setup API V2 Swagger docs [\#507](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/507) ([alexdesi](https://github.com/alexdesi))
+
 ## [v1.10.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.5) (2020-06-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v1.10.4...v1.10.5)
@@ -54,7 +83,6 @@
 - \[P4-1497\] Prepare includes [\#479](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/479) ([willfish](https://github.com/willfish))
 - V1.10.3 Update CHANGELOG.md [\#478](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/478) ([cwrw](https://github.com/cwrw))
 - P4-1561 Add support for filtering GET /allocations by status [\#475](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/475) ([smoothcontract](https://github.com/smoothcontract))
-- P4-1560 Add allocation filter to moves endpoint [\#472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/472) ([cwrw](https://github.com/cwrw))
 - Remove skip\_before patter and make tests clearer. [\#471](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/471) ([alexdesi](https://github.com/alexdesi))
 - Fix create application rake task [\#464](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/464) ([martyn-w](https://github.com/martyn-w))
 
@@ -73,6 +101,7 @@
 **Merged pull requests:**
 
 - Remove rubocop-rspec from lock file as it's been removed from our gems [\#473](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/473) ([cwrw](https://github.com/cwrw))
+- P4-1560 Add allocation filter to moves endpoint [\#472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/472) ([cwrw](https://github.com/cwrw))
 - P4-1474 Add support for optional `requested\_by` attribute in allocation model [\#468](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/468) ([smoothcontract](https://github.com/smoothcontract))
 - Fix output for set\_profile\_from\_person rake [\#467](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/467) ([alexdesi](https://github.com/alexdesi))
 - Clearer last\_name sorting test [\#466](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/466) ([martyn-w](https://github.com/martyn-w))
@@ -310,6 +339,7 @@
 **Merged pull requests:**
 
 - Add link Pentonville \(PVI\) -\> Serco supplier [\#337](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/337) ([alexdesi](https://github.com/alexdesi))
+- P4 1090 send azure events [\#329](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/329) ([starswan](https://github.com/starswan))
 - P4 1047 1122 email notifications [\#328](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/328) ([martyn-w](https://github.com/martyn-w))
 
 ## [v1.5.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.5.0) (2020-03-18)
@@ -322,7 +352,6 @@
 - P4-1159 cancel NOMIS synched moves from prisons [\#333](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/333) ([starswan](https://github.com/starswan))
 - Save picture in S3 and return S3 URL [\#332](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/332) ([alexdesi](https://github.com/alexdesi))
 - P4-1147 remove NOMIS sync from moves\#index [\#330](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/330) ([starswan](https://github.com/starswan))
-- P4 1090 send azure events [\#329](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/329) ([starswan](https://github.com/starswan))
 
 ## [v1.4.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.4.0) (2020-03-12)
 

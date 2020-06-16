@@ -58,6 +58,7 @@ aliases:
         only:
           - master
           - dev-auth-from-docs
+          - /.*-deploydev/
   - &only_for_deployment
     filters:
       tags:
@@ -66,6 +67,7 @@ aliases:
         only:
           - master
           - dev-auth-from-docs
+          - /.*-deploydev/
   - &only_deploy_tags
     filters:
       tags:
@@ -106,7 +108,7 @@ references:
     run:
       name: Generate API Docs
       command: |
-        TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
+        TESTS=$(circleci tests glob "spec/requests/**/*_rswag_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
   _rspec: &rspec
     run:
@@ -124,7 +126,6 @@ references:
     attach_workspace:
       at: .
 
-
 executors:
   cloud-platform-executor:
     docker:
@@ -135,7 +136,7 @@ executors:
 
   test-executor:
     docker:
-      - image: circleci/ruby:2.6.6
+      - image: circleci/ruby:2.7.0
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -148,7 +149,6 @@ executors:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
-
 
 commands:
   build-base:
@@ -205,7 +205,6 @@ commands:
             LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
             ${LOGIN_COMMAND}
       - run:
-          # make it a dry-run by not using a proper tag for now
           name: Retag image
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
@@ -239,6 +238,7 @@ commands:
             sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
             kubectl wait --for=condition=complete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit_code=$?
+            kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit ${exit_code}
       - deploy:
