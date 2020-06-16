@@ -7,7 +7,7 @@ RSpec.describe JourneyEvents::ParamsValidator do
 
   let(:params) { { type: type, attributes: { timestamp: timestamp } } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
-  let(:type) { 'start' }
+  let(:type) { 'starts' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
