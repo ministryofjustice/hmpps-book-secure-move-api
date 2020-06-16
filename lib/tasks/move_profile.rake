@@ -18,7 +18,9 @@ namespace :moves do
 
       # update only profile and skip validations: some moves are invalid because of uniqueness of 'date', but that does
       # not impact the correctness of this data migration.
+      # rubocop:disable Rails/SkipsModelValidations
       move.update_attribute(:profile_id, profile.id)
+      # rubocop:enable Rails/SkipsModelValidations
     end
 
     puts "#{total} profile IDs have been successfully updated."

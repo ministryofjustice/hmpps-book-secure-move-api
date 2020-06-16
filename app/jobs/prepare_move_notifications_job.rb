@@ -19,11 +19,11 @@ class PrepareMoveNotificationsJob < ApplicationJob
         end
 
         # NB: only email in certain conditions (should_email?)
-        if subscription.email_address.present? && should_email?(move)
-          NotifyEmailJob.perform_later(
-            build_notification_id(subscription, NotificationType::EMAIL, move, action_name),
-          )
-        end
+        next unless subscription.email_address.present? && should_email?(move)
+
+        NotifyEmailJob.perform_later(
+          build_notification_id(subscription, NotificationType::EMAIL, move, action_name),
+        )
       end
     end
   end
