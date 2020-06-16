@@ -33,7 +33,7 @@ RSpec.describe Api::V1::MovesController do
         relationships: {
           person: { data: { type: 'people', id: person.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
-          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+          to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : { data: nil },
           documents: { data: [{ type: 'documents', id: document.id }] },
           prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
         },

@@ -42,6 +42,7 @@ class Move < VersionedModel
   belongs_to :profile, optional: true
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
+  belongs_to :original_move, class_name: 'Move', optional: true
   # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
   has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
@@ -89,6 +90,23 @@ class Move < VersionedModel
     )
   end
 
+  def rebooked
+    self.class.find_by(original_move_id: id)
+  end
+
+  def rebook
+    rebooked || self.class.create(
+      original_move_id: id,
+      from_location_id: from_location_id,
+      to_location_id: to_location_id,
+      allocation_id: allocation_id,
+      profile_id: profile_id,
+      status: MOVE_STATUS_PROPOSED,
+      date: date + 7.days,
+      date_from: date + 7.days,
+    )
+  end
+
   def self.unfilled?
     none? || exists?(profile_id: nil)
   end
@@ -127,7 +145,7 @@ class Move < VersionedModel
   def documents
     # We need to make sure that we're returning Documents that are either for the current
     # moves profile or the current move to support backwards compatibility.
-    Document.kept.where(move_id: id).or(Document.where(documentable: profile))
+    Document.kept.where(move_id: id).or(Document.where(documentable: profile).where.not(documentable: nil))
   end
 
 private

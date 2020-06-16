@@ -6,10 +6,10 @@ PostMoveReject:
   properties:
     type:
       type: string
-      example: reject
+      example: rejects
       enum:
-      - reject
-      description: The type of this object - always `reject`
+      - rejects
+      description: The type of this object - always `rejects`
     attributes:
       type: object
       required:
@@ -22,3 +22,9 @@ PostMoveReject:
           $ref: move_rejection_reason_attribute.yaml#/MoveRejectionReason
         cancellation_reason_comment:
           $ref: move_cancellation_reason_comment_attribute.yaml#/MoveCancellationReasonComment
+        rebook:
+          oneOf:
+          - type: boolean
+          - type: 'null'
+          example: 'true'
+          description: Indicates if the move should be automatically rebooked in 7 days time

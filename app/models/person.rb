@@ -7,17 +7,19 @@ class Person < VersionedModel
 
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
-
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true
 
   has_one_attached :image
 
+  scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
+
+  validates :last_name, presence: true
+  validates :first_names, presence: true
+
   def latest_profile
     profiles.order(:updated_at).last
   end
-
-  delegate :latest_nomis_booking_id, to: :latest_profile
 
   def attach_image(image_blob)
     "#{id}.jpg".tap do |filename|

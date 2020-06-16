@@ -165,6 +165,16 @@ RSpec.describe EventLog::MoveRunner do
       it_behaves_like 'it calls the Notifier with an update_status action_name'
     end
 
+    context 'when a rebook is requested' do
+      let!(:event) { create(:move_event, :reject_with_rebook, eventable: move) }
+
+      it 'creates a new move' do
+        expect { runner.call }.to change(Move, :count).by(1)
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
     context 'when the move is already rejected' do
       let!(:move) { create(:move, :cancelled, rejection_reason: 'no_transport_available', cancellation_reason: 'rejected', cancellation_reason_comment: 'computer says no') }
 

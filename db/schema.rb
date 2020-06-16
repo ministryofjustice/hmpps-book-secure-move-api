@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_142242) do
+ActiveRecord::Schema.define(version: 2020_06_12_133540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_142242) do
     t.date "date_to"
     t.uuid "allocation_id"
     t.string "rejection_reason"
+    t.uuid "original_move_id"
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
@@ -347,8 +348,8 @@ ActiveRecord::Schema.define(version: 2020_06_09_142242) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "last_name", null: false
-    t.string "first_names", null: false
+    t.string "last_name", default: ""
+    t.string "first_names", default: ""
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
     t.uuid "gender_id"
@@ -420,6 +421,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_142242) do
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
+  add_foreign_key "moves", "moves", column: "original_move_id"
   add_foreign_key "moves", "people"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"

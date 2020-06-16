@@ -5,14 +5,14 @@ module Api
     class ProfilesController < ApiController
       # TODO: add validation for assessment answers
       def create
-        profile = person.profiles.create(new_profile_attributes)
+        profile = person.profiles.create(profile_attributes)
         render_profile(profile, :created)
       end
 
       def update
         profile = person.profiles.find(params.require(:id))
 
-        profile.update!(update_profile_attributes)
+        profile.update!(profile_attributes)
         render_profile(profile, :ok)
       end
 
@@ -41,17 +41,12 @@ module Api
         ],
       ].freeze
 
+      def profile_attributes
+        profile_params[:attributes]
+      end
+
       def profile_params
         params.require(:data).permit(PROFILE_ATTRIBUTES).to_h
-      end
-
-      def new_profile_attributes
-        # TODO: will be removed once we remove first name and last name from profiles
-        profile_params[:attributes].merge(first_names: person.first_names, last_name: person.last_name)
-      end
-
-      def update_profile_attributes
-        profile_params[:attributes]
       end
 
       def person
