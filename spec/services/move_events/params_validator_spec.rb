@@ -116,6 +116,24 @@ RSpec.describe MoveEvents::ParamsValidator do
 
       it { is_expected.not_to be_valid }
     end
+
+    context 'with acceptable plural actions' do
+      let(:type) { 'completes' }
+
+      it 'converts to singular action' do
+        expect(params_validator.type).to eq('complete')
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'with expected plural actions' do
+      let(:type) { 'lockouts' }
+
+      it 'remains as a plural action' do
+        expect(params_validator.type).to eq('lockouts')
+      end
+    end
   end
 
   describe 'timestamp' do
