@@ -108,7 +108,7 @@ references:
     run:
       name: Generate API Docs
       command: |
-        TESTS=$(circleci tests glob "spec/swagger/*_helper.rb" "spec/requests/**/*_spec.rb" | circleci tests split )
+        TESTS=$(circleci tests glob "spec/requests/**/*_rswag_spec.rb" | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
   _rspec: &rspec
     run:
