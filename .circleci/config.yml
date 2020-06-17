@@ -347,7 +347,6 @@ jobs:
       - deploy_to_k8s:
           env: "uat"
 
-
   deploy_staging:
     executor: cloud-platform-executor
     steps:
@@ -395,20 +394,19 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
-      - build_image:
-          <<: *only_for_deployment
+      - hold_build:
+          <<: *all_tags
+          type: approval
           requires:
             - api_docs
             - rspec_tests
             - linters
-      - hold_dev:
-          <<: *all_tags
-          type: approval
+      - build_image:
           requires:
-            - build_image
+            - hold_build
       - deploy_dev:
           requires:
-            - hold_dev
+            - build_image
       - hold_uat:
           <<: *all_tags
           type: approval
