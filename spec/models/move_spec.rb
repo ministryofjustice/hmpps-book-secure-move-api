@@ -81,6 +81,12 @@ RSpec.describe Move do
     )
   end
 
+  it 'validates presence of `profile` if `status` is booked' do
+    expect(build(:move, status: :booked)).to(
+      validate_presence_of(:profile),
+    )
+  end
+
   it 'does NOT validates presence of `profile` if `status` is cancelled' do
     expect(build(:move, status: :cancelled)).not_to(
       validate_presence_of(:profile),
@@ -375,40 +381,6 @@ RSpec.describe Move do
 
         it { is_expected.to be true }
       end
-    end
-  end
-
-  describe '#cancel' do
-    let(:move) { build(:move) }
-
-    it 'sets the default cancellation_reason attribute to other' do
-      move.cancel
-
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
-    end
-
-    it 'does not set the default cancellation_reason_comment attribute' do
-      move.cancel
-
-      expect(move.cancellation_reason_comment).to be_nil
-    end
-
-    it 'sets the cancellation_reason attribute' do
-      move.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
-
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
-    end
-
-    it 'sets the cancellation_reason_comment' do
-      move.cancel(comment: 'some comment')
-
-      expect(move.cancellation_reason_comment).to eq('some comment')
-    end
-
-    it 'sets the status to cancelled' do
-      move.cancel
-
-      expect(move.status).to eq('cancelled')
     end
   end
 

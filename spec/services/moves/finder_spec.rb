@@ -122,6 +122,7 @@ RSpec.describe Moves::Finder do
     describe 'by move status' do
       let!(:proposed_move) { create :move, :proposed }
       let!(:requested_move) { create :move, :requested }
+      let!(:booked_move) { create :move, :booked }
       let!(:cancelled_move) { create :move, :cancelled }
       let!(:completed_move) { create :move, :completed }
 
@@ -134,10 +135,10 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with multiple statuses' do
-        let(:filter_params) { { status: 'requested,completed' } }
+        let(:filter_params) { { status: 'requested,completed,booked' } }
 
         it 'returns moves matching status' do
-          expect(results).to match_array [requested_move, completed_move]
+          expect(results).to match_array [requested_move, completed_move, booked_move]
         end
       end
 

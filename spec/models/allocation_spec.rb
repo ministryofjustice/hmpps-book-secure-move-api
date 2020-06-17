@@ -37,12 +37,13 @@ RSpec.describe Allocation do
       let(:cancelled_move) { create :move, :cancelled }
       let(:proposed_move) { create :move, :proposed }
       let(:requested_move) { create :move, :requested }
+      let(:booked_move) { create :move, :booked }
       let(:completed_move) { create :move, :completed }
-      let(:moves) { [cancelled_move, proposed_move, requested_move, completed_move] }
+      let(:moves) { [cancelled_move, proposed_move, requested_move, booked_move, completed_move] }
       let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
       it 'updates the number of non cancelled moves' do
-        expect { allocation.refresh_status_and_moves_count! }.to change(allocation, :moves_count).from(1).to(3)
+        expect { allocation.refresh_status_and_moves_count! }.to change(allocation, :moves_count).from(1).to(4)
       end
     end
 
@@ -126,12 +127,6 @@ RSpec.describe Allocation do
       expect(allocation.moves_count).to eq(0)
     end
 
-    it 'changes the status of all associated moves to cancelled' do
-      allocation.cancel
-
-      expect(allocation.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_CANCELLED)
-    end
-
     it 'sets the provided cancellation reason' do
       allocation.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
 
@@ -156,39 +151,10 @@ RSpec.describe Allocation do
       expect(allocation.cancellation_reason_comment).to eq('Allocation was cancelled')
     end
 
-    it 'sets the cancellation reason on moves to other' do
-      allocation.cancel
-
-      expect(allocation.moves.first.cancellation_reason).to eq(Move::CANCELLATION_REASON_OTHER)
-    end
-
-    it 'sets the cancellation reason comment on moves if comment provided' do
-      allocation.cancel(comment: 'Too sunny')
-
-      expect(allocation.moves.first.cancellation_reason_comment).to eq('Too sunny')
-    end
-
-    it 'sets a default cancellation reason comment on moves if comment not provided' do
-      allocation.cancel
-
-      expect(allocation.moves.first.cancellation_reason_comment).to eq('Allocation was cancelled')
-    end
-
     it 'throws validation error if allocation invalid' do
       allocation.from_location = nil
 
       expect { allocation.cancel }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it 'does not update moves if allocation invalid' do
-      allocation.from_location = nil
-      begin
-        allocation.cancel
-      rescue StandardError
-        ActiveRecord::RecordInvalid
-      end
-
-      expect(allocation.reload.moves.pluck(:status)).to contain_exactly(Move::MOVE_STATUS_REQUESTED)
     end
   end
 

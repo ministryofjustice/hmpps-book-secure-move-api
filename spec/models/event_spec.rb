@@ -12,7 +12,7 @@ RSpec.describe Event, type: :model do
 
   it 'validates event_name' do
     expect(described_class.new).to validate_inclusion_of(:event_name).in_array(%w[
-      create update cancel uncancel complete uncomplete redirect lockout
+      create update cancel uncancel complete uncomplete redirect start lockout lodging reject
     ])
   end
 
@@ -30,5 +30,19 @@ RSpec.describe Event, type: :model do
 
   describe 'notes' do
     it { expect(event.notes).to eql('foo') }
+  end
+
+  context 'with locations' do
+    subject(:event) { build(:event, :locations) }
+
+    describe 'from_location' do
+      it { expect(event.from_location).not_to be nil }
+      it { expect(event.from_location).to be_a Location }
+    end
+
+    describe 'to_location' do
+      it { expect(event.to_location).not_to be nil }
+      it { expect(event.to_location).to be_a Location }
+    end
   end
 end

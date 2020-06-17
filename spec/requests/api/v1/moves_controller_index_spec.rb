@@ -92,6 +92,25 @@ RSpec.describe Api::V1::MovesController do
         end
       end
 
+      context 'with a booked move' do
+        let(:move) { create(:move, :booked) }
+        let!(:moves) { [move] }
+        let(:from_location_id) { move.from_location_id }
+        let(:filters) do
+          {
+            from_location_id: from_location_id,
+          }
+        end
+        let(:params) { { filter: filters } }
+
+        it 'returns the correct attributes values for moves' do
+          get_moves
+          expect(response_json).to include_json(
+            data: [{ id: move.id }],
+          )
+        end
+      end
+
       describe 'paginating results' do
         let!(:moves) { create_list :move, 6 }
 
