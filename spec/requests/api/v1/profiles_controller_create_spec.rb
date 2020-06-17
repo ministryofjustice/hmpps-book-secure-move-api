@@ -102,7 +102,7 @@ RSpec.describe Api::V1::ProfilesController do
 
     context 'with a person associated to multiple profiles' do
       it 'maintains previous profiles associated to the person' do
-        person = create(:person)
+        person = create(:person, prison_number: nil)
 
         expect {
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
