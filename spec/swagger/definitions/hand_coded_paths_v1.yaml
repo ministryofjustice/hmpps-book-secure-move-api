@@ -369,6 +369,7 @@
           enum:
           - proposed
           - requested
+          - booked
           - cancelled
           - completed
     - name: filter[move_type]
