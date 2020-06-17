@@ -99,91 +99,92 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
-    #
-    # describe 'include query param' do
-    #   before do
-    #     post "/api/v2/people#{query_params}", params: person_params, headers: headers, as: :json
-    #   end
-    #
-    #   context 'when including multiple relationships' do
-    #     let(:query_params) { '?include=gender,ethnicity' }
-    #
-    #     it 'includes the correct relationships' do
-    #       expect(response_json['included'].count).to eq(2)
-    #       expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
-    #     end
-    #   end
-    #
-    #   context 'when does NOT include any relationship' do
-    #     let(:query_params) { '' }
-    #
-    #     it 'does NOT include any relationships' do
-    #       expect(response_json).not_to include('included')
-    #     end
-    #   end
-    #
-    #   context 'when including a non existing relationship' do
-    #     let(:query_params) { '?include=gender,non-existent-relationship' }
-    #
-    #     it 'responds with error 400' do
-    #       response_error = response_json['errors'].first
-    #
-    #       expect(response_error['title']).to eq('Bad request')
-    #       expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
-    #     end
-    #   end
-    # end
-    #
-    # it 'creates a new person' do
-    #   expect {
-    #     post '/api/v2/people', params: person_params, headers: headers, as: :json
-    #   }.to change(Person, :count).by(1)
-    # end
-    #
-    # describe 'webhook and email notifications' do
-    #   # TODO: verify if the to trigger prepare_notifications even in V2
-    #   # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
-    #   before do
-    #     allow(Notifier).to receive(:prepare_notifications)
-    #     post '/api/v2/people', params: person_params, headers: headers, as: :json
-    #   end
-    #
-    #   it 'does NOT call the notifier when creating a person' do
-    #     expect(Notifier).not_to have_received(:prepare_notifications)
-    #   end
-    # end
-    #
-    # context 'when a relationship entity is not found' do
-    #   let(:ethnicity_id) { 999 }
-    #   let(:detail_404) { "Couldn't find Ethnicity with 'id'=999" }
-    #
-    #   before { post '/api/v2/people#', params: person_params, headers: headers, as: :json }
-    #
-    #   it_behaves_like 'an endpoint that responds with error 404'
-    # end
-    #
-    # context 'with a bad request' do
-    #   before { post '/api/v2/people', params: {}, headers: headers, as: :json }
-    #
-    #   it_behaves_like 'an endpoint that responds with error 400'
-    # end
-    #
-    # context 'when not authorized', :with_invalid_auth_headers do
-    #   let(:detail_401) { 'Token expired or invalid' }
-    #   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-    #   let(:content_type) { ApiController::CONTENT_TYPE }
-    #
-    #   before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
-    #
-    #   it_behaves_like 'an endpoint that responds with error 401'
-    # end
-    #
-    # context 'with an invalid CONTENT_TYPE header' do
-    #   let(:content_type) { 'application/xml' }
-    #
-    #   before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
-    #
-    #   it_behaves_like 'an endpoint that responds with error 415'
-    # end
+
+    describe 'include query param' do
+      before do
+        post "/api/people#{query_params}", params: person_params, headers: headers, as: :json
+      end
+
+      context 'when including multiple relationships' do
+        let(:query_params) { '?include=gender,ethnicity' }
+
+        it 'includes the correct relationships' do
+          expect(response_json['included'].count).to eq(2)
+          expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
+        end
+      end
+
+      context 'when does NOT include any relationship' do
+        let(:query_params) { '' }
+
+        it 'does NOT include any relationships' do
+          expect(response_json).not_to include('included')
+        end
+      end
+
+      context 'when including a non existing relationship' do
+        let(:query_params) { '?include=gender,non-existent-relationship' }
+
+        it 'responds with error 400' do
+          response_error = response_json['errors'].first
+
+          expect(response_error['title']).to eq('Bad request')
+          expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
+        end
+      end
+    end
+
+
+    it 'creates a new person' do
+      expect {
+        post '/api/people', params: person_params, headers: headers, as: :json
+      }.to change(Person, :count).by(1)
+    end
+
+    describe 'webhook and email notifications' do
+      # TODO: verify if the to trigger prepare_notifications even in V2
+      # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
+      before do
+        allow(Notifier).to receive(:prepare_notifications)
+        post '/api/people', params: person_params, headers: headers, as: :json
+      end
+
+      it 'does NOT call the notifier when creating a person' do
+        expect(Notifier).not_to have_received(:prepare_notifications)
+      end
+    end
+
+    context 'when a relationship entity is not found' do
+      let(:ethnicity_id) { 999 }
+      let(:detail_404) { "Couldn't find Ethnicity with 'id'=999" }
+
+      before { post '/api/people#', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 404'
+    end
+
+    context 'with a bad request' do
+      before { post '/api/people', params: {}, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 400'
+    end
+
+    context 'when not authorized', :with_invalid_auth_headers do
+      let(:detail_401) { 'Token expired or invalid' }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+      let(:content_type) { ApiController::CONTENT_TYPE }
+
+      before { post '/api/people', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 401'
+    end
+
+    context 'with an invalid CONTENT_TYPE header' do
+      let(:content_type) { 'application/xml' }
+
+      before { post '/api/people', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with error 415'
+    end
   end
 end
