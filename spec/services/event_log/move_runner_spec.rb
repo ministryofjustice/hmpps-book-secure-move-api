@@ -142,6 +142,30 @@ RSpec.describe EventLog::MoveRunner do
     end
   end
 
+  context 'when event_name=accept' do
+    let!(:event) { create(:move_event, :accept, eventable: move) }
+
+    context 'when the move is requested' do
+      let!(:move) { create(:move, :requested) }
+
+      it 'updates the move status to booked' do
+        expect { runner.call }.to change(move, :status).from('requested').to('booked')
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already booked' do
+      let!(:move) { create(:move, :booked) }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { runner.call }.not_to change(move, :status).from('booked')
+      end
+    end
+  end
+
   context 'when event_name=reject' do
     let!(:event) { create(:move_event, :reject, eventable: move) }
 

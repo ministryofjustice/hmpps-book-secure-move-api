@@ -40,6 +40,7 @@ Rails.application.routes.draw do
           end
         end
         member do
+          post 'accept', controller: 'move_events'
           post 'cancel', controller: 'move_events'
           post 'complete', controller: 'move_events'
           post 'lockouts', controller: 'move_events'

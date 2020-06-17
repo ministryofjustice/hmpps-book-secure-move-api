@@ -10,6 +10,7 @@ class Event < ApplicationRecord
     START = 'start'.freeze,
     LOCKOUT = 'lockout'.freeze,
     LODGING = 'lodging'.freeze,
+    ACCEPT = 'accept'.freeze,
     APPROVE = 'approve'.freeze,
     REJECT = 'reject'.freeze,
   ].freeze
