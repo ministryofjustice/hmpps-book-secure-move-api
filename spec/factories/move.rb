@@ -87,6 +87,10 @@ FactoryBot.define do
         )
       end
     end
+
+    trait :with_date_to do
+      date_to { date + 3.days }
+    end
   end
 
   factory :from_court_to_prison, class: 'Move' do
