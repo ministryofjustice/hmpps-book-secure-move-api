@@ -19,5 +19,13 @@ class AllocationSerializer < ActiveModel::Serializer
   has_one :to_location
   has_many :moves
 
-  SUPPORTED_RELATIONSHIPS = %w[from_location to_location moves.person moves.person.gender moves.person.ethnicity].freeze
+  SUPPORTED_RELATIONSHIPS = %w[
+    from_location
+    to_location
+    moves.person
+    moves.person.gender
+    moves.person.ethnicity
+    moves.profile.person.ethnicity
+    moves.profile.person.gender
+  ].freeze
 end

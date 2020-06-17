@@ -196,7 +196,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           it 'returns the default minimum includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'ethnicities', 'genders')
+            expect(returned_types).to contain_exactly('profiles', 'people', 'moves', 'locations', 'ethnicities', 'genders')
           end
         end
 
@@ -217,7 +217,7 @@ RSpec.describe Api::V1::AllocationsController do
               'errors' => [
                 {
                   'title' => 'Bad request',
-                  'detail' => '["foo.bar"] is not supported. Valid values are: ["from_location", "to_location", "moves", "moves.person", "moves.person.gender", "moves.person.ethnicity"]',
+                  'detail' => /\["foo\.bar"\] is not supported/,
                 },
               ],
             }
@@ -225,7 +225,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           it 'returns a validation error' do
             expect(response).to have_http_status(:bad_request)
-            expect(response_json).to eq(expected_error)
+            expect(response_json).to include(expected_error)
           end
         end
 
@@ -243,7 +243,7 @@ RSpec.describe Api::V1::AllocationsController do
 
           it 'returns the default minimum includes' do
             returned_types = response_json['included'].map { |r| r['type'] }.uniq
-            expect(returned_types).to contain_exactly('people', 'moves', 'locations', 'ethnicities', 'genders')
+            expect(returned_types).to contain_exactly('profiles', 'people', 'moves', 'locations', 'ethnicities', 'genders')
           end
         end
       end
