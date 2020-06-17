@@ -51,10 +51,6 @@ Rails.application.routes.draw do
         resources :suppliers, only: %i[index show]
       end
     end
-
-    namespace :v2 do
-      resources :people, only: %i[index create update]
-    end
   end
 
   # TODO: this is just to add the support for /api/action (withour versions)
