@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Allocation < VersionedModel
+  include StateMachineable
+
   ALLOCATION_STATUS_UNFILLED = 'unfilled'
   ALLOCATION_STATUS_FILLED = 'filled'
   ALLOCATION_STATUS_CANCELLED = 'cancelled'
@@ -35,6 +37,8 @@ class Allocation < VersionedModel
   has_many :moves, inverse_of: :allocation, dependent: :destroy, autosave: true
   has_many :events, as: :eventable, dependent: :destroy
 
+  validates :status, presence: true
+
   validates :from_location, presence: true
   validates :to_location, presence: true
 
@@ -49,7 +53,8 @@ class Allocation < VersionedModel
 
   attribute :complex_cases, Types::Jsonb.new(Allocation::ComplexCaseAnswers)
 
-  after_initialize :initialize_state
+  has_state_machine AllocationStateMachine, on: :status
+
   delegate :fill, :unfill, to: :state_machine
 
   def cancel(reason: CANCELLATION_REASON_OTHER, comment: 'Allocation was cancelled')
@@ -71,21 +76,5 @@ class Allocation < VersionedModel
     self.moves_count = current_moves.count
 
     save!
-  end
-
-private
-
-  def state_machine
-    @state_machine ||= AllocationStateMachine.new(self)
-  end
-
-  def initialize_state
-    if status.present?
-      state_machine.restore!(status.to_sym)
-    else
-      # TODO: restore after data is backfilled on production
-      # self.status = state_machine.current
-      self.status = moves.not_cancelled.unfilled? ? :unfilled : :filled
-    end
   end
 end

@@ -7,8 +7,8 @@ FactoryBot.define do
     client_timestamp { Time.now.utc + rand(-60..60).seconds } # NB: the client_timestamp will never be perfectly in sync with system clock
     vehicle { { id: '12345678ABC', registration: 'AB12 CDE' } }
 
-    # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
-    after(:build) { |object| object.send(:initialize_state) }
+    # NB we need to restore_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
+    after(:build) { |journey| journey.restore_state }
 
     # Journey statuses
     trait :proposed do
