@@ -17,7 +17,16 @@ module Api
       end
 
       def create
-        creator.call
+        # TODO: the plain is to create controller modules that drives the behaviour
+        # The modules will contain: PERSON_ATTRIBUTES, PERMITTED_FILTER_PARAMS, filter_params, ...
+        case api_version
+        when '1'
+          creator.call
+          render_person(creator.person, 201)
+        when '2'
+
+        end
+
         # NB: to reduce duplicate notifications, we DO NOT currently notify on creating a person/profile, only when
         # updating. This logic may change as the calls to the API get more streamlined - in which case we probably will
         # need to call the notifier here.
@@ -66,7 +75,6 @@ module Api
       end
 
     private
-
       def json_api_errors_for(error)
         { errors: [error.json_api_error] }
       end

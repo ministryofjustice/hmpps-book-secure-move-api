@@ -8,6 +8,7 @@ class ApiController < ApplicationController
   before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
+  REGEXP_API_VERSION = %r(.*version=(?<version>\d+))
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
@@ -26,6 +27,11 @@ class ApiController < ApplicationController
     return unless authentication_enabled?
 
     current_user.owner_id
+  end
+
+  def api_version
+    res = request.headers['Accept'].match(REGEXP_API_VERSION)
+    res&.[](:version)
   end
 
 private
