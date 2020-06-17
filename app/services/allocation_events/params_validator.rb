@@ -4,6 +4,8 @@ module AllocationEvents
   class ParamsValidator
     include ActiveModel::Validations
 
+    attr_reader :timestamp
+
     validates_each :timestamp, presence: true do |record, attr, value|
       Time.iso8601(value)
     rescue ArgumentError
