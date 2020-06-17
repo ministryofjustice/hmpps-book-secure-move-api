@@ -384,40 +384,6 @@ RSpec.describe Move do
     end
   end
 
-  describe '#cancel' do
-    let(:move) { build(:move) }
-
-    it 'sets the default cancellation_reason attribute to other' do
-      move.cancel
-
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
-    end
-
-    it 'does not set the default cancellation_reason_comment attribute' do
-      move.cancel
-
-      expect(move.cancellation_reason_comment).to be_nil
-    end
-
-    it 'sets the cancellation_reason attribute' do
-      move.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
-
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
-    end
-
-    it 'sets the cancellation_reason_comment' do
-      move.cancel(comment: 'some comment')
-
-      expect(move.cancellation_reason_comment).to eq('some comment')
-    end
-
-    it 'sets the status to cancelled' do
-      move.cancel
-
-      expect(move.status).to eq('cancelled')
-    end
-  end
-
   describe '#rebook' do
     let!(:original_move) { create(:move, :proposed, :with_allocation, :with_date_to) }
 

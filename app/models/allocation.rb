@@ -16,7 +16,6 @@ class Allocation < VersionedModel
     long: 'more_than_16',
   }
 
-  # TODO: implement statemachine, for now just allow an allocation to be cancelled
   enum status: {
     unfilled: ALLOCATION_STATUS_UNFILLED,
     filled: ALLOCATION_STATUS_FILLED,
@@ -53,16 +52,12 @@ class Allocation < VersionedModel
   after_initialize :initialize_state
   delegate :fill, :unfill, to: :state_machine
 
-  def cancel(cancel_moves: true, reason: CANCELLATION_REASON_OTHER, comment: 'Allocation was cancelled')
+  def cancel(reason: CANCELLATION_REASON_OTHER, comment: 'Allocation was cancelled')
     assign_attributes(
       cancellation_reason: reason,
       cancellation_reason_comment: comment,
       moves_count: 0,
     )
-
-    # TODO: remove cancellation of moves when allocation `events` endpoint is no longer
-    # in use - this will be handled by event runner instead
-    moves.each { |move| move.cancel(comment: comment) } if cancel_moves
 
     state_machine.cancel
 

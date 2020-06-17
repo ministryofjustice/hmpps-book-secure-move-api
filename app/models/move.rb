@@ -84,14 +84,6 @@ class Move < VersionedModel
   scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
-  def cancel(reason: CANCELLATION_REASON_OTHER, comment: nil)
-    assign_attributes(
-      status: MOVE_STATUS_CANCELLED,
-      cancellation_reason: reason,
-      cancellation_reason_comment: comment,
-    )
-  end
-
   def rebooked
     self.class.find_by(original_move_id: id)
   end
