@@ -16,7 +16,7 @@ module Api
       def accept
         validate_params!(accept_params)
         MoveEvents::ParamsValidator.new(accept_params).validate!
-        process_event(move, Event::ACCEPT, complete_params)
+        process_event(move, Event::ACCEPT, accept_params)
         render status: :no_content
       end
 
