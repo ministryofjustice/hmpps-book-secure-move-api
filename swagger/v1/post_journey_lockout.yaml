@@ -1,0 +1,27 @@
+PostJourneyLockout:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: lockouts
+      enum:
+      - lockouts
+      description: The type of this object - always `lockouts`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes
+    relationships:
+      type: object
+      properties:
+        from_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: This is the location that the journey has been locked out from.

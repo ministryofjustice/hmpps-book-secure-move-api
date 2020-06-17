@@ -45,12 +45,36 @@ FactoryBot.define do
       event_name { 'lockout' }
     end
 
+    trait :lodging do
+      event_name { 'lodging' }
+    end
+
     trait :approve do
       event_name { 'approve' }
     end
 
     trait :reject do
       event_name { 'reject' }
+    end
+
+    trait :start do
+      event_name { 'start' }
+    end
+
+    trait :locations do
+      details do
+        { supplier_id: '1234',
+          event_params: {
+            attributes: { notes: 'foo' },
+            relationships: {
+              from_location: { data: { id: create(:location).id } },
+              to_location: { data: { id: create(:location).id } },
+            },
+          },
+          data_params: {
+            attributes: { notes: 'bar' },
+          } }
+      end
     end
 
     # NB: move_event factory inherits from the event factory

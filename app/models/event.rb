@@ -7,7 +7,9 @@ class Event < ApplicationRecord
     COMPLETE = 'complete'.freeze,
     UNCOMPLETE = 'uncomplete'.freeze,
     REDIRECT = 'redirect'.freeze,
+    START = 'start'.freeze,
     LOCKOUT = 'lockout'.freeze,
+    LODGING = 'lodging'.freeze,
     APPROVE = 'approve'.freeze,
     REJECT = 'reject'.freeze,
   ].freeze

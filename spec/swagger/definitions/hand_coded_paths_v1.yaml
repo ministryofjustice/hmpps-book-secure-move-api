@@ -1263,140 +1263,507 @@
           application/vnd.api+json:
             schema:
               $ref: error_responses.yaml#/422
-/moves/{move_id}/journeys/{journey_id}/events:
+/moves/{move_id}/journeys/{journey_id}/cancel:
   post:
-    summary: '[NOT YET IMPLEMENTED] Creates a journey event'
+    summary: 'Cancels a journey'
     description: |
-      ### [NOT YET IMPLEMENTED]
+      Cancelling a journey will change the journey state from `in_progress` to `cancelled`.
 
-      Creating a journey event will change a journey's state.
-
-      Completing or cancelling a journey _does not_ alter the state of parent move object: additional API calls on the
-      `/moves/{move_id}/events` endpoint will be necessary to complete or cancel the move.
-
-      Use the `event_name` attribute to specify the type of event:
-
-      * `complete` - completes a journey
-      * `uncomplete` - uncompletes a journey and reverts the state to `in_progress`
-      * `cancel` - cancels a journey
-      * `uncancel` - uncancels a journey and reverts the state to `in_progress`
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
     tags:
-    - Move Journeys
+      - Move Journeys
     consumes:
-    - application/vnd.api+json
+      - application/vnd.api+json
     parameters:
-    - $ref: move_id_parameter.yaml#/MoveId
-    - $ref: journey_id_parameter.yaml#/JourneyId
-    - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
-    - $ref: content_type_parameter.yaml#/ContentType
-    - name: body
-      in: body
-      required: true
-      description: |
-        ### Completing a journey
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Cancelling a Journey
 
-        A journey is completed by POSTing a `complete` event. Completing a journey will change the journey state from
-        `in_progress` to `completed`. Only a journey which is `in_progress` may be completed.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "complete",
-            "timestamp": "2020-04-21T13:20:50.52Z"
-          }
-        }
-        ```
-
-        ### Uncompleting a journey
-
-        A journey is uncompleted by POSTing an `uncomplete` event. Uncompleting a journey will change the journey state
-        from `completed` to `in_progress`. Only a journey which is `completed` may be uncompleted.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "uncomplete",
-            "timestamp": "2020-04-21T13:20:50.52Z"
-          }
-        }
-        ```
-
-        ### Cancelling a journey
-
-        A journey is cancelled by POSTing a `cancel` event. Cancelling a journey will change the journey state from
-        `in_progress` to `cancelled`. Only a journey which is `in_progress` may be cancelled.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "cancel",
-            "timestamp": "2020-04-21T13:20:50.52Z"
-          }
-        }
-        ```
-
-        ### Uncancelling a journey
-
-        A journey is uncancelled by POSTing an `uncancel` event. Uncancelling a journey will change the journey state
-        from `cancelled` to `in_progress`. Only a journey which is `cancelled` may be uncancelled.
-
-        ```
-        {
-          "type": "events",
-          "attributes": {
-            "event_name": "uncancel",
-            "timestamp": "2020-04-21T13:20:50.52Z"
-          }
-        }
-        ```
-
-        ---
-      schema:
-        $ref: post_journey_event.yaml#/PostJourneyEvent
+          A journey is cancelled by POSTing a `cancel` event. A journey must be in an `in_progress` state in order to be
+          cancelled. Cancelling a journey will change the journey state to `cancelled`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_cancel.yaml#/PostJourneyCancel
     responses:
-      '201':
-        description: created
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
         content:
           application/vnd.api+json:
             schema:
-              type: object
-              required:
-              - data
-              properties:
-                data:
-                  $ref: get_journey_event.yaml#/GetJourneyEvent
-        examples:
-          Completed:
-            data:
-              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
-              type: events
-              attributes:
-                event_name: complete
-                timestamp: '2020-04-21T13:20:50.52Z'
-          Uncompleted:
-            data:
-              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
-              type: events
-              attributes:
-                event_name: uncomplete
-                timestamp: '2020-04-21T13:20:50.52Z'
-          Cancelled:
-            data:
-              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
-              type: events
-              attributes:
-                event_name: cancel
-                timestamp: '2020-04-21T13:20:50.52Z'
-          Uncancelled:
-            data:
-              id: d0911846-eb20-49dd-b4e1-9f65bcee4b7b
-              type: events
-              attributes:
-                event_name: uncancel
-                timestamp: '2020-04-21T13:20:50.52Z'
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/complete:
+  post:
+    summary: 'Completes a journey'
+    description: |
+      Completing a journey will change the journey state from `in_progress` to `completed`.
+
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Completing a Journey
+
+          A journey is completed by POSTing a `complete` event. A journey must be in an `in_progress` state in order to be
+          completed. Completing a journey will change the journey state to `completed`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_complete.yaml#/PostJourneyComplete
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/lockouts:
+  post:
+    summary: 'Records a lockout against a journey'
+    description: |
+      Recording a lockout event does not change the journey's state. After recording the lockout, the journey should be
+      completed or cancelled and additional journey records created to a new location.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Record a Lockout event
+
+          A lockout is recorded by POSTing a `lockouts` event. Recording a lockout _does not_ change a journey's state.
+          Additional API calls will be necessary to complete or cancel existing journeys or create new journeys.
+        schema:
+          $ref: post_journey_lockout.yaml#/PostJourneyLockout
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/lodgings:
+  post:
+    summary: 'Records a lodging against a journey'
+    description: |
+      Recording a lodging event does not change the journey's state and is purely an auditing event.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Record a Lodging event
+
+          A lodging is recorded by POSTing a `lodgings` event. Recording a lodging _does not_ change a journey's state.
+          Additional API calls may be necessary to complete or cancel existing journeys or create new journeys.
+        schema:
+          $ref: post_journey_lodging.yaml#/PostJourneyLodging
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/reject:
+  post:
+    summary: 'Rejects a proposed journey'
+    description: |
+      Rejecting a journey will change the `proposed` journey state to `rejected`.
+
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Rejecting a Journey
+
+          A journey is rejected by POSTing a `reject` event. A journey must be in a `proposed` state in order to be
+          rejected. Rejecting a journey will change the journey state to `rejected`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_reject.yaml#/PostJourneyReject
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/start:
+  post:
+    summary: 'Starts a proposed journey'
+    description: |
+      Starting a journey will change the `proposed` journey state to `in_progress`.
+
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Starting a Journey
+
+          A journey is started by POSTing a `start` event. A journey must be in a `proposed` state in order to be
+          started. Starting a journey will change the journey state to `in_progress`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_start.yaml#/PostJourneyStart
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/uncancel:
+  post:
+    summary: 'Uncancels a journey'
+    description: |
+      Uncancelling a journey will revert the `cancelled` journey state to `in_progress`.
+
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Uncancelling a Journey
+
+          A journey is uncancelled by POSTing an `uncancel` event. A journey must be in an `cancelled` state in order to be
+          uncancelled. Uncancelling a journey will revert the journey state back to `in_progress`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_uncancel.yaml#/PostJourneyUncancel
+    responses:
+      '204':
+        description: no content
+        content:
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/404
+      '409':
+        description: conflict
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/409
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: error_responses.yaml#/422
+/moves/{move_id}/journeys/{journey_id}/uncomplete:
+  post:
+    summary: 'Uncompletes a journey'
+    description: |
+      Uncompleting a journey will revert the `completed` journey state back to `in_progress`.
+
+      Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
+      complete or cancel the move.
+    tags:
+      - Move Journeys
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - $ref: move_id_parameter.yaml#/MoveId
+      - $ref: journey_id_parameter.yaml#/JourneyId
+      - $ref: idempotency_key_parameter.yaml#/IdempotencyKey
+      - $ref: content_type_parameter.yaml#/ContentType
+      - name: body
+        in: body
+        required: true
+        description: |
+          ### Uncompleting a Journey
+
+          A journey is uncompleted by POSTing an `uncomplete` event. A journey must be in a `completed` state in order to be
+          uncompleted. Uncompleting a journey will revert the journey state back to `in_progress`. It _does not_ alter the move
+          associated with the journey: additional API calls will be necessary to complete or cancel the move.
+        schema:
+          $ref: post_journey_uncomplete.yaml#/PostJourneyUncomplete
+    responses:
+      '204':
+        description: no content
+        content:
       '400':
         description: bad request
         content:
@@ -1593,6 +1960,135 @@
           application/vnd.api+json:
             schema:
               $ref: put_people_responses.yaml#/422
+/people/{person_id}/profiles:
+  post:
+    summary: "Creates a new profile"
+    description: >
+      This creates a new profile for a person. If the person has a prison_number,
+      the new profile is updated with Alerts and Personal Care Needs from NOMIS.
+    tags:
+      - Profiles
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: body
+        in: body
+        required: true
+        description: The profile object to be created
+        schema:
+          $ref: profile.yaml#/Profile
+    responses:
+      '201':
+        description: created
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/201
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: post_profiles_responses.yaml#/422
+/people/{person_id}/profiles/{profile_id}:
+  patch:
+    summary: "Updates a profile"
+    tags:
+      - Profiles
+    consumes:
+      - application/vnd.api+json
+    parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: profile_id
+        in: path
+        required: true
+        description: The ID of the profile
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: body
+        in: body
+        required: true
+        description: The profile object to be modified
+        schema:
+          $ref: profile.yaml#/Profile
+    responses:
+      '200':
+        description: success
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/200
+      '400':
+        description: bad request
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/400
+      '401':
+        description: unauthorized
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/401
+      '404':
+        description: resource not found
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/404
+      '415':
+        description: invalid media type
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/415
+      '422':
+        description: unprocessable entity
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: patch_profiles_responses.yaml#/422
 /reference/allocation_complex_cases:
   get:
     summary: Returns a list of allocation complex cases

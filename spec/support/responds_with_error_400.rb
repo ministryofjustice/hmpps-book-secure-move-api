@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'an endpoint that responds with error 400' do
+  let(:response_json) { JSON.parse(response.body) }
+  let(:schema) { load_yaml_schema('error_responses.yaml') }
   let(:errors_400) do
     [
       {

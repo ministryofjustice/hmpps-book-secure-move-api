@@ -28,7 +28,18 @@ Rails.application.routes.draw do
       end
       resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
-        resources :journeys, only: %i[index show create update]
+        resources :journeys, only: %i[index show create update] do
+          member do
+            post 'cancel', controller: 'journey_events'
+            post 'complete', controller: 'journey_events'
+            post 'lockouts', controller: 'journey_events'
+            post 'lodgings', controller: 'journey_events'
+            post 'reject', controller: 'journey_events'
+            post 'start', controller: 'journey_events'
+            post 'uncancel', controller: 'journey_events'
+            post 'uncomplete', controller: 'journey_events'
+          end
+        end
         member do
           post 'cancel', controller: 'move_events'
           post 'complete', controller: 'move_events'
