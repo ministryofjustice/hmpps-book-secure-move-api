@@ -59,6 +59,11 @@ aliases:
           - master
           - dev-auth-from-docs
           - /.*-deploydev/
+  - &only_create_uat
+    filters:
+      branches:
+        only:
+          - /.*-deployuat/
   - &only_for_deployment
     filters:
       tags:
@@ -68,6 +73,7 @@ aliases:
           - master
           - dev-auth-from-docs
           - /.*-deploydev/
+          - /.*-deployuat/
   - &only_deploy_tags
     filters:
       tags:
@@ -332,6 +338,16 @@ jobs:
       - deploy_to_k8s:
           env: "dev"
 
+  deploy_uat:
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "uat"
+      - deploy_to_k8s:
+          env: "uat"
+
+
   deploy_staging:
     executor: cloud-platform-executor
     steps:
@@ -385,10 +401,22 @@ workflows:
             - api_docs
             - rspec_tests
             - linters
-      - deploy_dev:
-          <<: *only_master_and_create_dev
+      - hold_dev:
+          <<: *all_tags
+          type: approval
           requires:
             - build_image
+      - deploy_dev:
+          requires:
+            - hold_dev
+      - hold_uat:
+          <<: *all_tags
+          type: approval
+          requires:
+            - build_image
+      - deploy_uat:
+          requires:
+            - hold_uat
       - deploy_staging:
           <<: *only_master
           requires:
