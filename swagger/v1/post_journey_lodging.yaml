@@ -1,0 +1,27 @@
+PostJourneyLodging:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: lodgings
+      enum:
+      - lodgings
+      description: The type of this object - always `lodgings`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes
+    relationships:
+      type: object
+      properties:
+        to_location:
+          $ref: location_reference.yaml#/LocationReference
+          description: This is the location that the journey has been lodged at.

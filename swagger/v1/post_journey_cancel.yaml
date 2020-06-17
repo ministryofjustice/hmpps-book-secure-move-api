@@ -1,4 +1,4 @@
-PostJourneyEvent:
+PostJourneyCancel:
   type: object
   required:
   - type
@@ -6,17 +6,16 @@ PostJourneyEvent:
   properties:
     type:
       type: string
-      example: events
+      example: cancels
       enum:
-      - events
-      description: The type of this object - always `events`
+      - cancels
+      description: The type of this object - always `cancels`
     attributes:
       type: object
       required:
-      - event_name
       - timestamp
       properties:
-        event_name:
-          $ref: journey_event_name_attribute.yaml#/JourneyEventName
         timestamp:
           $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes

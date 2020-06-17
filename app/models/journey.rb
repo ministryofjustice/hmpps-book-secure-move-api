@@ -43,9 +43,27 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
-  delegate :start, :reject, :complete, :uncomplete, :cancel, :uncancel, to: :state_machine
+  delegate :start,
+           :reject,
+           :complete,
+           :uncomplete,
+           :cancel,
+           :uncancel,
+           :proposed?,
+           :in_progress?,
+           :completed?,
+           :cancelled?,
+           :rejected?,
+           to: :state_machine
 
   after_initialize :initialize_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
+
+  def reload(options = nil)
+    # special (necessary) hack so that when reloading a record the state machine is correctly synchronised
+    super
+    state_machine.restore!(state.to_sym)
+    self
+  end
 
 private
 
@@ -55,10 +73,8 @@ private
 
   def initialize_state
     if state.present?
-      # set the internal state_machine to the state, if specified
       state_machine.restore!(state.to_sym)
     else
-      # set the state to the state_machine's initial state
       self.state = state_machine.current
     end
   end

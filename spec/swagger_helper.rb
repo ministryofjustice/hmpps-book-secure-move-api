@@ -114,9 +114,6 @@ RSpec.configure do |config|
           Journey: {
             "$ref": 'get_journey.yaml#/GetJourney',
           },
-          JourneyEvent: {
-            "$ref": 'get_journey_event.yaml#/GetJourneyEvent',
-          },
           Location: {
             "$ref": 'location.yaml#/Location',
           },
