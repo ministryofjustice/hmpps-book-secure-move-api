@@ -5,165 +5,61 @@ require 'rails_helper'
 RSpec.describe EventLog::JourneyRunner do
   subject(:runner) { described_class.new(journey) }
 
-  let(:journey) { create(:journey, inital_state) }
+  let(:journey) { create(:journey, initial_state) }
 
   shared_examples 'it does not change the state' do
     it 'does not update the journey state' do
-      expect { runner.call }.not_to change(journey, :state).from(inital_state.to_s)
+      expect { runner.call }.not_to change(journey, :state).from(initial_state.to_s)
     end
   end
 
   shared_examples 'it changes the state to' do |new_state|
     it 'updates the journey state' do
-      expect { runner.call }.to change(journey, :state).from(inital_state.to_s).to(new_state.to_s)
+      expect { runner.call }.to change(journey, :state).from(initial_state.to_s).to(new_state.to_s)
     end
   end
 
-  describe 'start event' do
-    let!(:event) { create(:event, :start, eventable: journey) }
+  describe 'proposed -> start + complete -> completed' do
+    let(:initial_state) { :proposed }
 
-    context 'when the journey is proposed' do
-      let(:inital_state) { :proposed }
-
-      it_behaves_like 'it changes the state to', :in_progress
+    before do
+      create(:event, :start, eventable: journey, client_timestamp: 1.minute.ago)
+      create(:event, :complete, eventable: journey, client_timestamp: 1.minute.from_now)
     end
 
-    context 'when the journey is already in_progress' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
+    it_behaves_like 'it changes the state to', :completed
   end
 
-  describe 'reject event' do
-    let!(:event) { create(:event, :reject, eventable: journey) }
+  describe 'completed -> uncomplete + cancel -> cancelled' do
+    let(:initial_state) { :completed }
 
-    context 'when the journey is proposed' do
-      let(:inital_state) { :proposed }
-
-      it_behaves_like 'it changes the state to', :rejected
+    before do
+      create(:event, :uncomplete, eventable: journey, client_timestamp: 1.minute.ago)
+      create(:event, :cancel, eventable: journey, client_timestamp: 1.minute.from_now)
     end
 
-    context 'when the journey is already rejected' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it does not change the state'
-    end
+    it_behaves_like 'it changes the state to', :cancelled
   end
 
-  describe 'cancel event' do
-    let!(:event) { create(:event, :cancel, eventable: journey) }
+  describe 'proposed -> complete + cancel -> proposed' do
+    let(:initial_state) { :proposed }
 
-    context 'when the journey is in_progress' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it changes the state to', :cancelled
+    before do
+      create(:event, :complete, eventable: journey, client_timestamp: 1.minute.ago)
+      create(:event, :cancel, eventable: journey, client_timestamp: 1.minute.from_now)
     end
 
-    context 'when the journey is already cancelled' do
-      let(:inital_state) { :cancelled }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
+    it_behaves_like 'it does not change the state' # NB: these are not valid events given the initial state so the state should not be updated
   end
 
-  describe 'complete event' do
-    let!(:event) { create(:event, :complete, eventable: journey) }
+  describe 'in_progress -> lodging + lockout -> in_progress' do
+    let(:initial_state) { :in_progress }
 
-    context 'when the journey is in_progress' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it changes the state to', :completed
+    before do
+      create(:event, :lodging, eventable: journey, client_timestamp: 1.minute.ago)
+      create(:event, :lockout, eventable: journey, client_timestamp: 1.minute.from_now)
     end
-
-    context 'when the journey is already completed' do
-      let(:inital_state) { :completed }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
-  end
-
-  describe 'lockout event' do
-    # NB: lockout events have should have no effect on a journey, they are purely for auditing
-    let!(:event) { create(:event, :lockout, eventable: journey) }
-    let(:inital_state) { :in_progress }
 
     it_behaves_like 'it does not change the state'
-  end
-
-  describe 'lodging event' do
-    # NB: lodging events have should have no effect on a journey, they are purely for auditing
-    let!(:event) { create(:event, :lodging, eventable: journey) }
-    let(:inital_state) { :in_progress }
-
-    it_behaves_like 'it does not change the state'
-  end
-
-  describe 'uncancel event' do
-    let!(:event) { create(:event, :uncancel, eventable: journey) }
-
-    context 'when the journey is cancelled' do
-      let(:inital_state) { :cancelled }
-
-      it_behaves_like 'it changes the state to', :in_progress
-    end
-
-    context 'when the journey is already in_progress' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
-  end
-
-  describe 'uncomplete event' do
-    let!(:event) { create(:event, :uncomplete, eventable: journey) }
-
-    context 'when the journey is completed' do
-      let(:inital_state) { :completed }
-
-      it_behaves_like 'it changes the state to', :in_progress
-    end
-
-    context 'when the journey is already in_progress' do
-      let(:inital_state) { :in_progress }
-
-      it_behaves_like 'it does not change the state'
-    end
-
-    context 'when the journey is in an irrelevant state' do
-      let(:inital_state) { :rejected }
-
-      it_behaves_like 'it does not change the state'
-    end
   end
 end
