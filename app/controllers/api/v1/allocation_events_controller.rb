@@ -41,7 +41,6 @@ module Api
 
       def cancellation_details
         {
-          cancel_moves: false,
           reason: cancel_params.dig(:attributes, :cancellation_reason),
           comment: cancel_params.dig(:attributes, :cancellation_reason_comment),
         }
