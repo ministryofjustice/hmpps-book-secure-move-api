@@ -1594,8 +1594,7 @@
               $ref: put_people_responses.yaml#/422
 /people/{person_id}/profiles:
   post:
-    deprecated: true
-    summary: "[DO NOT USE] Creates a new profile"
+    summary: "Creates a new profile"
     description: >
       This creates a new profile for a person. If the person has a prison_number,
       the new profile is updated with Alerts and Personal Care Needs from NOMIS.
@@ -1657,8 +1656,7 @@
               $ref: post_profiles_responses.yaml#/422
 /people/{person_id}/profiles/{profile_id}:
   patch:
-    deprecated: true
-    summary: "[DO NOT USE] Updates a profile"
+    summary: "Updates a profile"
     tags:
       - Profiles
     consumes:
