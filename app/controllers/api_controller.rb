@@ -207,11 +207,11 @@ private
   end
 
   def extend_versioned_controller_helper
-    extend version_helper
-  rescue NameError
-  end
+    version = "V#{api_version}"
+    helper_module = "#{controller_name.capitalize}Helper"
 
-  def version_helper
-    "V#{api_version}::#{controller_name.capitalize}Helper".constantize
+    if version.constantize.const_defined?(helper_module)
+      extend "#{version}::#{helper_module}".constantize
+    end
   end
 end
