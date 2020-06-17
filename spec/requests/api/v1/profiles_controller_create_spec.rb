@@ -7,7 +7,7 @@ RSpec.describe Api::V1::ProfilesController do
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-  let(:person) { create(:person_without_profiles) }
+  let(:person) { create(:person_without_profiles, prison_number: nil) }
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
