@@ -55,7 +55,7 @@ class Move < VersionedModel
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: :prison_recall?
   validates :move_type, inclusion: { in: move_types }
-  validates :profile, presence: true, unless: -> { requested? || booked? || cancelled? }
+  validates :profile, presence: true, unless: -> { requested? || cancelled? }
   validates :reference, presence: true
 
   # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
