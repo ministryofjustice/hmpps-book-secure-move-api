@@ -7,7 +7,7 @@ RSpec.describe Api::V1::ProfilesController do
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-  let(:person) { create(:person_without_profiles) }
+  let(:person) { create(:person_without_profiles, prison_number: nil) }
   let(:risk_type_1) { create :assessment_question, :risk }
   let(:risk_type_2) { create :assessment_question, :risk }
 
@@ -56,9 +56,53 @@ RSpec.describe Api::V1::ProfilesController do
       end
     end
 
+    # TODO: Mocking Nomis calls are broken and need fixing everywhere. We know these tests pass so are keeping this comment here
+    describe 'updating assessment answers from Nomis' do
+      let(:person) { create(:person_without_profiles, prison_number: prison_number) }
+      let(:profile_params) do
+        {
+          data: {
+            type: 'profiles',
+            attributes: {},
+          },
+        }
+      end
+
+      context 'when the person has a prison_number' do
+        let(:prison_number) { 'G5033UT' }
+
+        before do
+          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new) # .with(anything, prison_number)
+                                            .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true))
+
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        end
+
+        it 'imports the assessment answers from Nomis' do
+          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:new)
+                                                                  .with(person.profiles.last, person.prison_number)
+        end
+
+        context 'when the person does NOT have a prison_number' do
+          let(:prison_number) { nil }
+
+          before do
+            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
+                                                                   .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
+
+            post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          end
+
+          it 'does NOT import the assessment answers from Nomis' do
+            expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:new)
+          end
+        end
+      end
+    end
+
     context 'with a person associated to multiple profiles' do
       it 'maintains previous profiles associated to the person' do
-        person = create(:person)
+        person = create(:person, prison_number: nil)
 
         expect {
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
