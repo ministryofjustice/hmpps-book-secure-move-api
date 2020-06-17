@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe JourneyEvents::LocationValidator do
+RSpec.describe LocationValidator do
   subject(:target) do
     # anonymous class to test validation against
     Class.new {
       include ActiveModel::Validations
       attr_accessor :location
-      validates_with JourneyEvents::LocationValidator, locations: [:location]
+      validates_with LocationValidator, locations: [:location]
 
       def self.name
         'TestValidationClass'
@@ -28,7 +28,7 @@ RSpec.describe JourneyEvents::LocationValidator do
     let(:location_id) { 'nowhere' }
 
     it 'is not valid' do
-      expect(target.valid?).to be false
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
       expect(target.errors.full_messages).to match_array('Location was not found')
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe JourneyEvents::LocationValidator do
     let(:location_id) { nil }
 
     it 'is not valid' do
-      expect(target.valid?).to be false
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
       expect(target.errors.full_messages).to match_array('Location is missing')
     end
   end

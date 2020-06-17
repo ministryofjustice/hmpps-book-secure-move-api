@@ -1266,7 +1266,7 @@
   post:
     summary: 'Cancels a journey'
     description: |
-      Cancelling a journey will change the `in_progress` journey state to `cancelled`.
+      Cancelling a journey will change the journey state from `in_progress` to `cancelled`.
 
       Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
       complete or cancel the move.
@@ -1334,7 +1334,7 @@
   post:
     summary: 'Completes a journey'
     description: |
-      Completing a journey will change the `in_progres` journey state to `completed`.
+      Completing a journey will change the journey state from `in_progress` to `completed`.
 
       Journey events _do not_ alter the parent move associated with the journey: additional API calls may be necessary to
       complete or cancel the move.
