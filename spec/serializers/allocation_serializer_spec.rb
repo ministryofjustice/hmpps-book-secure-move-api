@@ -126,8 +126,8 @@ RSpec.describe AllocationSerializer do
       expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
     end
 
-    it 'contains an included move and person' do
-      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people moves locations locations genders ethnicities])
+    it 'contains an included move and profile' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people profiles moves locations locations genders ethnicities])
     end
   end
 
