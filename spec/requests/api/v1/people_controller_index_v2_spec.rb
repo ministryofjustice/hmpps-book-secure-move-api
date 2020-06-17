@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::PeopleController do
+RSpec.describe Api::V1::PeopleController do
   let(:supplier) { create(:supplier) }
   let!(:application) { create(:application, owner_id: supplier.id) }
   let!(:access_token) { create(:access_token, application: application).token }
@@ -10,14 +10,22 @@ RSpec.describe Api::V2::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
-  describe 'GET /v2/people' do
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
+
+  describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2 }
     let(:params) { {} }
 
     context 'when successful' do
       context 'when there are no params' do
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         it_behaves_like 'an endpoint that responds with success 200'
 
@@ -49,7 +57,7 @@ RSpec.describe Api::V2::PeopleController do
         end
         let(:params) { { filter: filters } }
 
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         it 'returns the correct number of people' do
           expect(response_json['data'].size).to eq(1)
@@ -75,7 +83,7 @@ RSpec.describe Api::V2::PeopleController do
         end
         let(:params) { { filter: filters } }
 
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         it 'returns the correct number of people' do
           expect(response_json['data'].size).to eq(1)
@@ -96,7 +104,7 @@ RSpec.describe Api::V2::PeopleController do
         end
         let(:params) { { filter: filters } }
 
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         it 'returns the correct number of people' do
           expect(response_json['data'].size).to eq(2)
@@ -116,14 +124,14 @@ RSpec.describe Api::V2::PeopleController do
             total_pages: 2,
             total_objects: 6,
             links: {
-              first: '/api/v2/people?page=1',
-              last: '/api/v2/people?page=2',
-              next: '/api/v2/people?page=2',
+              first: '/api/people?page=1',
+              last: '/api/people?page=2',
+              next: '/api/people?page=2',
             },
           }
         end
 
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         it_behaves_like 'an endpoint that paginates resources'
       end
@@ -131,7 +139,7 @@ RSpec.describe Api::V2::PeopleController do
       describe 'included relationships' do
         let!(:people) { create_list :person, 2 }
 
-        before { get '/api/v2/people', params: params, headers: headers }
+        before { get '/api/people', params: params, headers: headers }
 
         context 'when the include query param is empty' do
           let(:params) { { include: [] } }
@@ -176,7 +184,7 @@ RSpec.describe Api::V2::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before { get '/api/v2/people', headers: headers }
+      before { get '/api/people', headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -184,7 +192,7 @@ RSpec.describe Api::V2::PeopleController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { get '/api/v2/people', headers: headers }
+      before { get '/api/people', headers: headers }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end

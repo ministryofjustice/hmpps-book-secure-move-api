@@ -2,11 +2,18 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::PeopleController do # TODO: eventually this will be Api::PeopleController
+RSpec.describe Api::V1::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type, 'Accept': 'application/json; version=1' }.merge('Authorization' => "Bearer #{access_token}") }
+
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
 
   describe 'POST /people' do
     let(:schema) { load_yaml_schema('post_people_responses.yaml', version: 'v2') }
@@ -78,7 +85,7 @@ RSpec.describe Api::V1::PeopleController do # TODO: eventually this will be Api:
       []
     end
 
-    context 'with valid params'  do
+    context 'with valid params' do
       before { post '/api/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 201'

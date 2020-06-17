@@ -2,13 +2,20 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::PeopleController do
+RSpec.describe Api::V1::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
-  describe 'PATCH /api/v2/people' do
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
+
+  describe 'PATCH /api/people' do
     let(:schema) { load_yaml_schema('patch_people_responses.yaml', version: 'v2') }
 
     let(:person) { create :person }
@@ -128,7 +135,7 @@ RSpec.describe Api::V2::PeopleController do
     describe 'webhook and email notifications' do
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
+        patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json
       end
 
       it 'calls the notifier when updating a person' do
@@ -137,7 +144,7 @@ RSpec.describe Api::V2::PeopleController do
     end
 
     context 'with a bad request' do
-      before { patch "/api/v2/people/#{person.id}", params: {}, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
@@ -147,7 +154,7 @@ RSpec.describe Api::V2::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': content_type } }
       let(:detail_401) { 'Token expired or invalid' }
 
-      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -155,7 +162,7 @@ RSpec.describe Api::V2::PeopleController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
