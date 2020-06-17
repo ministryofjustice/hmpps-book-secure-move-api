@@ -25,7 +25,7 @@ module StateMachineable
 
   def restore_state
     state = read_attribute(state_attribute)
-    state_machine.restore!(state.to_sym)
+    state_machine.restore!(state.to_sym) if state.present?
   end
 
   def state_machine
