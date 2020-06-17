@@ -13,7 +13,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :allocations, only: %i[create index show] do
         member do
-          post 'events', controller: 'allocation_events' # TODO: delete this route once the front end is updated
           post 'cancel', controller: 'allocation_events'
         end
       end
