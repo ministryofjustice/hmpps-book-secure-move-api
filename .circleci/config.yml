@@ -73,7 +73,6 @@ aliases:
           - master
           - dev-auth-from-docs
           - /.*-deploydev/
-          - /.*-deployuat/
   - &only_deploy_tags
     filters:
       tags:
