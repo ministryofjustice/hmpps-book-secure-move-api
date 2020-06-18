@@ -35,28 +35,29 @@ RSpec.describe People::ImportFromNomis do
     context 'when the Person does NOT exist in the database' do
       let(:expected_attributes) do
         {
-           "criminal_records_office" => nil,
-           "date_of_birth" => Fri, 15 Oct 1965,
-           "ethnicity_id" => nil,
-           "first_names" => "AVEILKE",
-           "gender_additional_information" => nil,
-           "gender_id" => nil,
-           "id" => "84cf1cc3-fd2f-4c7c-92cf-769257e11155",
-           "last_name" => "ABBELLA",
-           "last_synced_with_nomis" => 2020-06-18 16:13:22.772685000 +0100,
-           "latest_nomis_booking_id" => nil,
-           "nomis_prison_number" => prison_number,
-           "police_national_computer" => nil,
-           "prison_number" => "G3239GV",
+          'criminal_records_office' => '018053/82G',
+          'police_national_computer' => '82/18053V',
+          'nomis_prison_number' => prison_number,
+          'prison_number' => prison_number,
+          'latest_nomis_booking_id' => 20_305,
+          'date_of_birth' => Date.parse('15 Oct 1965'),
+          'ethnicity_id' => ethnicity.id,
+          'first_names' => 'AVEILKE',
+          'gender_additional_information' => nil,
+          'gender_id' => gender.id,
+          'last_name' => 'ABBELLA',
+          'last_synced_with_nomis' => be_within(4.seconds).of(Time.zone.now),
         }
       end
+      let!(:gender) {  create(:gender, nomis_code: 'M') }
+      let!(:ethnicity) { create(:ethnicity, title: 'White: Eng./Welsh/Scot./N.Irish/British') }
 
       it 'creates a Person with the correct attributes' do
         import.call
 
         person = Person.find_by(prison_number: prison_number)
 
-        expect(person.attributes).to eq(expected_attributes)
+        expect(person.attributes).to include(expected_attributes)
       end
 
       it 'creates a new Person' do

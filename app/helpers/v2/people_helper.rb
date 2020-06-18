@@ -1,7 +1,7 @@
 module V2
   module PeopleHelper
     def index_and_render
-      ImportFromNomis.new(prison_number).call if filter_params[:prison_number].present?
+      # ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
 
       people = V2::People::Finder.new(filter_params).call
 
@@ -66,6 +66,10 @@ module V2
 
     def supported_relationships
       ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+    end
+
+    def prison_numbers
+      @prison_numbers ||= filter_params[:prison_number]&.split(',')
     end
   end
 end

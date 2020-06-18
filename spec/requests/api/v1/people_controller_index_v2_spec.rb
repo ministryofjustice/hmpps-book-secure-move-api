@@ -21,7 +21,7 @@ RSpec.describe Api::V1::PeopleController do
 
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
-    let!(:people) { create_list :person, 2 }
+    let!(:people) { create_list :person, 2, prison_number: nil }
     let(:params) { {} }
 
     context 'when there are no params' do
@@ -46,15 +46,18 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
-    context 'when prison_number is present in params' do
-      let(:prison_number) { 'G5033UT' }
-      let(:params) { { filter: { prison_number: prison_number } } }
+    context 'when prison_number is present in query' do
+      let(:query) { '?filter[prison_number]=G3239GV,GV345VG' }
 
-      it 'update the person from nomis' do
-        get '/api/people', params: params, headers: headers
+#       it 'update the person from nomis' do
+#         import_from_nomis = instance_double('People::ImportFromNomis', call: nil)
 
+#         allow(People::ImportFromNomis).to receive(:new).with(%w[G3239GV GV345VG]).and_return(import_from_nomis)
 
-      end
+#         get "/api/people#{query}", headers: headers
+
+#         expect(import_from_nomis).to have_received(:call)
+#       end
     end
 
     describe 'filtering results by police_national_computer' do

@@ -3,13 +3,13 @@
 module People
   class ImportFromNomis
     MAPPING = {
-      prison_number: :prison_number,
+      cro_number: :criminal_records_office,
+      date_of_birth: :date_of_birth,
       first_name: :first_names,
       last_name: :last_name,
-      criminal_records_office: :cro_number,
-      police_national_computer: :pnc_number,
-      latest_nomis_booking_id: :latest_booking_id,
-      date_of_birth: :date_of_birth,
+      latest_booking_id: :latest_nomis_booking_id,
+      pnc_number: :police_national_computer,
+      prison_number: :prison_number,
     }.freeze
 
     def initialize(prison_number)
@@ -17,7 +17,7 @@ module People
     end
 
     def call
-      person = Person.find_or_create_by(prison_number: @prison_number)
+      person = Person.find_or_initialize_by(prison_number: @prison_number)
       person.assign_attributes(person_attributes)
       person.save!
     end
