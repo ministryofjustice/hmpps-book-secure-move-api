@@ -49,15 +49,15 @@ RSpec.describe Api::V1::PeopleController do
     context 'when prison_number is present in query' do
       let(:query) { '?filter[prison_number]=G3239GV,GV345VG' }
 
-#       it 'update the person from nomis' do
-#         import_from_nomis = instance_double('People::ImportFromNomis', call: nil)
+      #       it 'update the person from nomis' do
+      #         import_from_nomis = instance_double('People::ImportFromNomis', call: nil)
 
-#         allow(People::ImportFromNomis).to receive(:new).with(%w[G3239GV GV345VG]).and_return(import_from_nomis)
+      #         allow(People::ImportFromNomis).to receive(:new).with(%w[G3239GV GV345VG]).and_return(import_from_nomis)
 
-#         get "/api/people#{query}", headers: headers
+      #         get "/api/people#{query}", headers: headers
 
-#         expect(import_from_nomis).to have_received(:call)
-#       end
+      #         expect(import_from_nomis).to have_received(:call)
+      #       end
     end
 
     describe 'filtering results by police_national_computer' do
