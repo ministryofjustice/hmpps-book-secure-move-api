@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module People
+  #TODO: rename class, since this is misleading: it is not importing anything fron NOMIS.
   class Importer
     NOMIS_IDENTIFIER_MAPPING = {
       'police_national_computer' => :pnc_number,
