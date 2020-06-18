@@ -1,9 +1,9 @@
 module V2
   module PeopleHelper
     def index_and_render
-      # WIP!!!
+      ImportFromNomis.new(prison_number).call if filter_params[:prison_number].present?
 
-      people = ::V2::People::Finder.new(filter_params).call
+      people = V2::People::Finder.new(filter_params).call
 
       paginate people, include: included_relationships, each_serializer: ::V2::PersonSerializer
     end
