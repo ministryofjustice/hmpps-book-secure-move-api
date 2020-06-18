@@ -1,12 +1,7 @@
 module V2
   module PeopleHelper
     def index_and_render
-      # TODO something like this:
-      # people_from_nomis = NomisClient::People.get(prison_numbers).index_by { |p| p.fetch(:prison_number) }
-      #
-      # people_from_nomis.each do |person|
-      #   create_or_update_person(person)
-      # end
+      # WIP!!!
 
       people = ::V2::People::Finder.new(filter_params).call
 
