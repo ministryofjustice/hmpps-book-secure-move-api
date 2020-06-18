@@ -25,5 +25,6 @@ namespace :auth do
     puts "client_id: #{application.uid}"
     puts "client_secret: #{application.plaintext_secret}"
     puts "supplier: #{supplier}"
+    puts "supplier_id: #{application.owner_id}"
   end
 end
