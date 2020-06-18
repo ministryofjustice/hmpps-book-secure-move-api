@@ -16,11 +16,11 @@ module StateMachineable
   end
 
   def initialize_state
-    state = read_attribute(state_attribute)
+    state = self[state_attribute]
     if state.present?
       state_machine.restore!(state.to_sym)
     else
-      write_attribute(state_attribute, state_machine.current)
+      self[state_attribute] = state_machine.current
     end
   end
 

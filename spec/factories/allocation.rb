@@ -13,7 +13,7 @@ FactoryBot.define do
     complete_in_full { false }
 
     # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
-    after(:build) { |allocation| allocation.initialize_state }
+    after(:build, &:initialize_state)
 
     trait :unfilled do
       status { 'unfilled' }
