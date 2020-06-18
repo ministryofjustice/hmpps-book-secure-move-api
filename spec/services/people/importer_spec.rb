@@ -39,6 +39,7 @@ RSpec.describe People::Importer do
         'gender_id' => gender.id,
         'ethnicity_id' => ethnicity.id,
         'last_synced_with_nomis' => be_within(2.seconds).of(now),
+        'latest_nomis_booking_id' => 1_093_139,
       }
     end
     let(:expected_profile_attributes) do

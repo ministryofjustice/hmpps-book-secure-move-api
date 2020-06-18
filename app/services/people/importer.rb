@@ -33,6 +33,7 @@ module People
         prison_number: prison_number,
         criminal_records_office: criminal_records_office,
         last_synced_with_nomis: last_synced_with_nomis,
+        latest_nomis_booking_id: latest_nomis_booking_id,
       )
     end
 
