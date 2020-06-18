@@ -87,20 +87,25 @@ RSpec.describe Api::V1::PeopleController do
     end
 
     context 'with valid params' do
-      before { patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
     it 'returns the correct data' do
-      patch "/api/v2/people/#{person.id}", params: person_params, headers: headers, as: :json
+      patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json
 
       expect(response_json).to include_json(data: expected_data.merge(id: person.id))
     end
 
+    # TODO: Remove me when v1 is dead
+    it 'raises not found when v1 is in the path' do
+      expect { patch "/api/v1/people/#{person.id}", params: {}, headers: headers, as: :json }.to raise_error(ActionController::RoutingError, 'Not Found')
+    end
+
     describe 'include query param' do
       before do
-        patch "/api/v2/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json
+        patch "/api/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json
       end
 
       context 'when including multiple relationships' do
