@@ -41,7 +41,6 @@ gem 'rails', '~> 6.0.3'
 gem 'redis', '~> 4.1', '>= 4.1.4'
 gem 'sentry-raven'
 gem 'sidekiq'
-gem 'tty-prompt'
 gem 'validate_url', '~> 1.0.8'
 
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests
