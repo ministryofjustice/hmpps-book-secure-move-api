@@ -61,22 +61,30 @@ aliases:
           - /.*-deploydev/
   - &only_create_uat
     filters:
+      tags:
+        only:
+          - /^uat-v*/
       branches:
         only:
-          - /.*-deployuat/
+          - /.*_uat/
   - &only_for_deployment
     filters:
       tags:
-        only: /^v.*/
+        only:
+          - /^v.*/
+          - /^uat-v*/
       branches:
         only:
           - master
-          - dev-auth-from-docs
+          - dev-  auth-from-docs
           - /.*-deploydev/
+          - /.*_uat/
   - &only_deploy_tags
     filters:
       tags:
-        only: /^v.*/
+        only:
+          - /^v.*/
+          - /^uat-v*/
       branches:
         ignore: /.*/
 
@@ -393,21 +401,18 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
-      - hold_build:
-          <<: *all_tags
-          type: approval
+      - build_image:
+          <<: *only_for_deployment
           requires:
             - api_docs
             - rspec_tests
             - linters
-      - build_image:
-          requires:
-            - hold_build
       - deploy_dev:
+          <<: *only_master_and_create_dev
           requires:
             - build_image
       - hold_uat:
-          <<: *all_tags
+          <<: *only_create_uat
           type: approval
           requires:
             - build_image
