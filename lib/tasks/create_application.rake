@@ -19,6 +19,7 @@ namespace :auth do
     supplier_id = suppliers[supplier]
 
     application.owner_id = supplier_id if supplier_id.present?
+    application.save!
 
     puts "Created OAuth2 client with (name: #{application.name})"
     puts "client_id: #{application.uid}"
