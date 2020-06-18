@@ -2,30 +2,33 @@
 
 module People
   class Updater < People::Crud
-    attr_accessor :id, :params, :profile, :person
+    attr_reader :person
 
-    def initialize(id, params)
-      self.id = id
-      super(params)
+    def initialize(person, params)
+      @person = person
+      @profile = person.latest_profile
+      @params = params
     end
 
     def call
-      self.person = Person.find(id)
-      update(person)
+      Profile.transaction do
+        update_person
+        update_profile
+      end
     end
 
   private
 
-    def update(person)
-      Profile.transaction do
-        update_profile(person.latest_profile)
-      end
+    attr_reader :params, :profile
+
+    def update_person
+      person.update!(
+        person_params.merge(person_relationships).merge(person_identifiers),
+      )
     end
 
-    def update_profile(profile)
-      profile.update!(
-        profile_params.merge(relationships).merge(assessment_answers).merge(profile_identifiers),
-      )
+    def update_profile
+      profile.update!(profile_assessment_answers)
     end
   end
 end

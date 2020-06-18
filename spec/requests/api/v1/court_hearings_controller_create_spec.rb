@@ -37,8 +37,8 @@ RSpec.describe Api::V1::CourtHearingsController do
     end
 
     it 'creates a court_hearing' do
-      expect { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }.
-        to change(CourtHearing, :count).by(1)
+      expect { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }
+        .to change(CourtHearing, :count).by(1)
     end
 
     context 'when a move relationship is passed' do

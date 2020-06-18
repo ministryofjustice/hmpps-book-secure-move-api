@@ -4,7 +4,7 @@
 # pick it up automatically.
 ---
 :verbose: false
-:concurrency: 10
+:concurrency: <%= ENV['SIDEKIQ_PROCESSES'] || ENV['RAILS_MAX_THREADS'] || 3 %>
 :timeout: 25
 
 :queues:

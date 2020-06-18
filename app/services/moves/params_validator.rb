@@ -12,7 +12,7 @@ module Moves
       record.errors.add attr, 'is not a valid date.'
     end
 
-    validates :move_type, inclusion: { in: Move::move_types }, allow_nil: true
+    validates :move_type, inclusion: { in: Move.move_types }, allow_nil: true
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, allow_nil: true
     validates :sort_direction, inclusion: %w[asc desc], allow_nil: true
     validates :sort_by,

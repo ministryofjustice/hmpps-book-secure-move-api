@@ -4,19 +4,21 @@ RSpec.describe CourtHearings::CreateInNomis do
   context 'when court hearing are valid' do
     subject(:create_hearing_in_nomis) { described_class.call(move, court_hearings) }
 
-    let(:move) {
-      create(:move,
-             from_location: create(:location, nomis_agency_id: from_nomis_agency_id),
-             to_location: create(:location, nomis_agency_id: to_nomis_agency_id))
-    }
+    let(:move) do
+      create(
+        :move,
+        from_location: create(:location, nomis_agency_id: from_nomis_agency_id),
+        to_location: create(:location, nomis_agency_id: to_nomis_agency_id),
+      )
+    end
 
-    let(:court_hearings) {
+    let(:court_hearings) do
       [
         create(:court_hearing, nomis_case_id: nomis_case_id, move: move, start_time: hearing_date_time, comments: comments),
       ]
-    }
+    end
 
-    let(:nomis_case_id) { 1111111 }
+    let(:nomis_case_id) { 1_111_111 }
     let(:from_nomis_agency_id) { 'LEI' }
     let(:to_nomis_agency_id) { 'LEEDCC' }
     let(:hearing_date_time) { Time.parse('2020-04-15T17:36:02+01:00') }
@@ -26,23 +28,28 @@ RSpec.describe CourtHearings::CreateInNomis do
     before do
       allow(NomisClient::CourtHearings).to receive(:post)
                                               .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
-      move.profile.update(latest_nomis_booking_id: booking_id)
+      move.profile.person.update(latest_nomis_booking_id: booking_id)
     end
 
     context 'when Nomis return 201 success' do
       let(:nomis_response_status) { 201 }
+      let(:nomis_client_args) do
+        [
+          booking_id: booking_id,
+          court_case_id: nomis_case_id,
+          body_params: {
+            'fromPrisonLocation': from_nomis_agency_id,
+            'toCourtLocation': to_nomis_agency_id,
+            'courtHearingDateTime': '2020-04-15T17:36:02',
+            'comments': comments,
+          },
+        ]
+      end
 
       it 'creates the court hearings in Nomis' do
         create_hearing_in_nomis
 
-        expect(NomisClient::CourtHearings).to have_received(:post).with(
-          booking_id: booking_id,
-          court_case_id: nomis_case_id,
-          body_params: {
-              'fromPrisonLocation': from_nomis_agency_id, 'toCourtLocation': to_nomis_agency_id,
-              'courtHearingDateTime': '2020-04-15T17:36:02', 'comments': comments
-          },
-        )
+        expect(NomisClient::CourtHearings).to have_received(:post).with(*nomis_client_args)
       end
 
       it 'updates the nomis_hearing_id and saved_to_nomis' do

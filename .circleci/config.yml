@@ -14,34 +14,34 @@ aliases:
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: 'API is being prepared for release :building_construction:'
-      title_link: 'https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md'
+      title: "API is being prepared for release :building_construction:"
+      title_link: "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
       message: A new release was created by ${CIRCLE_USERNAME}
       footer: Click the title to view the changes
       include_project_field: false
       include_job_number_field: false
       include_visit_job_action: false
-      color: '#1d70b8'
+      color: "#1d70b8"
       mentions: here
   - &notify_slack_of_approval
     slack/approval:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      message: 'API release *requires your approval* before it can be deployed :eyes:'
+      message: "API release *requires your approval* before it can be deployed :eyes:"
       include_project_field: false
       include_job_number_field: false
-      color: '#912b88'
+      color: "#912b88"
       mentions: $BUILD_NOTIFICATIONS_MENTION_ID
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: 'API has been deployed :rocket:'
+      title: "API has been deployed :rocket:"
       title_link: https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases
       message: This release was successfully deployed to production
       footer: Click the title to view the release notes
       include_project_field: false
       include_job_number_field: false
       include_visit_job_action: false
-      color: '#28a197'
+      color: "#28a197"
       mentions: here
   - &all_tags
     filters:
@@ -50,13 +50,24 @@ aliases:
   - &only_master
     filters:
       branches:
-        only: master
+        only:
+          - master
   - &only_master_and_create_dev
     filters:
       branches:
         only:
-        - master
-        - dev-auth-from-docs
+          - master
+          - dev-auth-from-docs
+          - /.*-deploydev/
+  - &only_for_deployment
+    filters:
+      tags:
+        only: /^v.*/
+      branches:
+        only:
+          - master
+          - dev-auth-from-docs
+          - /.*-deploydev/
   - &only_deploy_tags
     filters:
       tags:
@@ -64,10 +75,68 @@ aliases:
       branches:
         ignore: /.*/
 
+# Not so keen on using references, but keeping them for now in case they have DRYness benefits.
+# Likely to flatten then into the respective commands section.
 references:
-  app_containers: &app_containers
+  _save-cache: &save-cache
+    save_cache:
+      key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+      paths:
+        - vendor/bundle
+  _restore-cache: &restore-cache
+    restore_cache:
+      keys:
+        - v2-dependencies-{{ checksum "Gemfile.lock" }}
+        - v2-dependencies-
+  _install-dependencies: &install-dependencies
+    run:
+      name: Install dependencies
+      command: |
+        bundler_version=$(cat Gemfile.lock | tail -1 | tr -d " ")
+        gem install bundler -v $bundler_version
+        bundle config --local path vendor/bundle
+        bundle check || bundle install --jobs=4 --retry=3
+  _wait-for-db: &wait-for-db
+    run:
+      name: Wait for DB
+      command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  _create-db: &create-db
+    run:
+      name: Database setup
+      command: bundle exec rake db:create
+  _api_docs: &api_docs
+    run:
+      name: Generate API Docs
+      command: |
+        TESTS=$(circleci tests glob "spec/requests/**/*_rswag_spec.rb" | circleci tests split )
+        bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
+  _rspec: &rspec
+    run:
+      name: Run rspec tests
+      command: |
+        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split )
+        echo ${TESTS}
+        bundle exec rspec ${TESTS}
+        #COVERAGE=1 bundle exec rspec
+  _rubocop: &rubocop
+    run:
+      name: Run rubocop
+      command: bundle exec rubocop
+  _attach-tmp-workspace: &attach-tmp-workspace
+    attach_workspace:
+      at: .
+
+executors:
+  cloud-platform-executor:
     docker:
-      - image: circleci/ruby:2.6.2-node-browsers
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
+          REPO_NAME: hmpps-book-secure-move-api
+
+  test-executor:
+    docker:
+      - image: circleci/ruby:2.7.0
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -80,88 +149,68 @@ references:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
-  cloud_container: &cloud_container
-    docker:
-      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
-        environment:
-          GITHUB_TEAM_NAME_SLUG: book-a-secure-move
 
 commands:
-  prepare_tests:
+  build-base:
     description: "Checkout app code and fetch dependencies for running tests"
     steps:
-      - checkout
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
 
-      - run:
-          name: Force Bundler
-          command: |
-            sudo gem update --system
-            gem install bundler:2.1.4
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
-            - v1-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
-            yarn install
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-      # Database setup
-      - run: bundle exec rake db:create
-
-  build_for_k8s:
-    description: "Builds a Docker image for staging/production and pushes to ECR"
-    parameters:
-      env:
-        type: string
-      notify_slack:
-        type: string
-        default: ""
+  seed-database:
+    description: "Create and seed the Database"
     steps:
-      - checkout
-      - when:
-          condition: <<parameters.notify_slack>>
-          steps:
-            - *notify_slack_on_release_start
-      - attach_workspace:
-          at: .
+      - *create-db
 
-      - setup_remote_docker:
-          docker_layer_caching: true
-
+  build_docker_image:
+    description: "Builds a Docker image"
+    steps:
       - run:
-          name: build docker image
+          name: Build docker image
           command: |
-            export BUILD_DATE=$(date -Is) >> $BASH_ENV
-            source $BASH_ENV
+            BUILD_DATE=$(date -Is)
 
-            docker build \
+            DOCKER_BUILDKIT=1 docker build \
               --label build.git.sha=${CIRCLE_SHA1} \
               --label build.git.branch=${CIRCLE_BRANCH} \
               --label build.date=${BUILD_DATE} \
               --build-arg APP_BUILD_DATE=${BUILD_DATE} \
               --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
               --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-              -t app .
-
+              -t ci .
       - run:
-          name: push app image
+          name: Login to ECR
           command: |
-            login="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
-            ${login}
-
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          name: Tag push with Git SHA
+          command: |
+            docker tag ci "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+      - run:
+          name: check image
+          command: docker images
 
-            docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
-            docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:<< parameters.env >>.latest"
+  retag_docker_image:
+    description: "Re-tag an image for deployment."
+    parameters:
+      env:
+        type: string
+    steps:
+      - run:
+          name: Login to ECR
+          command: |
+            LOGIN_COMMAND="$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)"
+            ${LOGIN_COMMAND}
+      - run:
+          name: Retag image
+          command: |
+            MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
+            --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
+            aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
+            --image-manifest "${MANIFEST}"
 
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
@@ -182,7 +231,16 @@ commands:
           command: |
             setup-kube-auth
             kubectl config use-context << parameters.env >>
-
+      - run:
+          name: run db migrations
+          command: |
+            set -o errexit
+            sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
+            kubectl wait --for=condition=complete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+            exit_code=$?
+            kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+            kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+            exit ${exit_code}
       - deploy:
           name: rolling update image to << parameters.env >>
           command: |
@@ -211,88 +269,93 @@ commands:
 
 jobs:
   notify_of_approval:
-    <<: *app_containers
+    executor: cloud-platform-executor
     steps:
       - *notify_slack_of_approval
 
-  test:
-    <<: *app_containers
+  setup_test_environment:
+    executor: test-executor
     steps:
-      - prepare_tests
-
-      - run:
-          name: rubocop
-          command: bundle exec rubocop
-
-      - run:
-          name: run tests
-          command: COVERAGE=1 bundle exec rspec
-
-      - *notify_slack_on_failure
+      - checkout
+      - setup_remote_docker
+      - build-base
+      - seed-database
 
   api_docs:
-    <<: *app_containers
+    executor: test-executor
+    parallelism: 1
     steps:
-      - prepare_tests
-
-      - run:
-          name: generate swagger documentation
-          command: bundle exec rspec spec/swagger spec/requests --format Rswag::Specs::SwaggerFormatter --order defined
-
+      - checkout
+      - *attach-tmp-workspace
+      - build-base
+      - *api_docs
       - persist_to_workspace:
           root: .
           paths:
             - swagger/v1/swagger.yaml
-            - node_modules/*
-
+            - swagger/v2/swagger.yaml
       - *notify_slack_on_failure
 
-  build_dev:
-    <<: *cloud_container
+  rspec_tests:
+    executor: test-executor
+    parallelism: 4
     steps:
-      - build_for_k8s:
-          env: "dev"
+      - checkout
+      - build-base
+      - *wait-for-db
+      - *create-db
+      - *attach-tmp-workspace
+      - *rspec
+
+  linters:
+    executor: test-executor
+    steps:
+      - checkout
+      - build-base
+      - *attach-tmp-workspace
+      - *rubocop
+
+  build_image:
+    executor: cloud-platform-executor
+    steps:
+      - checkout
+      - *attach-tmp-workspace
+      - setup_remote_docker
+      - build_docker_image
 
   deploy_dev:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "dev"
       - deploy_to_k8s:
           env: "dev"
 
-  build_staging:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "staging"
-
   deploy_staging:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "staging"
       - deploy_to_k8s:
           env: "staging"
-
-  build_preprod:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "preprod"
 
   deploy_preprod:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "preprod"
       - deploy_to_k8s:
           env: "preprod"
 
-  build_production:
-    <<: *cloud_container
-    steps:
-      - build_for_k8s:
-          env: "production"
-          notify_slack: "true"
-
   deploy_production:
-    <<: *cloud_container
+    executor: cloud-platform-executor
     steps:
+      - setup_remote_docker
+      - retag_docker_image:
+          env: "production"
       - deploy_to_k8s:
           env: "production"
           notify_slack: "true"
@@ -302,52 +365,47 @@ workflows:
 
   test-build-deploy:
     jobs:
-      - test:
+      - setup_test_environment:
           <<: *all_tags
       - api_docs:
           <<: *all_tags
-      - build_dev:
-          <<: *only_master_and_create_dev
+          requires:
+            - setup_test_environment
+      - rspec_tests:
+          <<: *all_tags
+          requires:
+            - setup_test_environment
+      - linters:
+          <<: *all_tags
+          requires:
+            - setup_test_environment
+      - build_image:
+          <<: *only_for_deployment
           requires:
             - api_docs
+            - rspec_tests
+            - linters
       - deploy_dev:
           <<: *only_master_and_create_dev
           requires:
-            - test
-            - build_dev
-      - build_staging:
-          <<: *only_master
-          requires:
-            - api_docs
+            - build_image
       - deploy_staging:
           <<: *only_master
           requires:
-            - test
-            - build_staging
-      - build_preprod:
-          <<: *only_deploy_tags
-          requires:
-            - api_docs
+            - build_image
       - deploy_preprod:
           <<: *only_deploy_tags
           requires:
-            - test
-            - build_preprod
-      - build_production:
-          <<: *only_deploy_tags
-          requires:
-            - api_docs
+            - build_image
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - test
-            - build_production
+            - build_image
       - notify_of_approval:
           <<: *only_deploy_tags
           requires:
-            - test
-            - build_production
+            - build_image
       - deploy_production:
           <<: *only_deploy_tags
           requires:

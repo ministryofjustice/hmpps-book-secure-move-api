@@ -12,6 +12,9 @@ RSpec.describe People::Creator do
         first_names: 'Bob',
         last_name: 'Roberts',
         date_of_birth: Date.civil(1980, 1, 1),
+        criminal_records_office: nil,
+        prison_number: nil,
+        police_national_computer: nil,
       },
     }
   end
@@ -34,8 +37,8 @@ RSpec.describe People::Creator do
       expect(new_profile).to be_present
     end
 
-    it 'sets the correct Profile attibutes' do
-      expect(new_profile.attributes.with_indifferent_access).to include(params[:attributes])
+    it 'sets the correct Person attibutes' do
+      expect(new_person.attributes.with_indifferent_access).to include(params[:attributes])
     end
 
     it 'creates a new Person' do
@@ -85,31 +88,44 @@ RSpec.describe People::Creator do
       expect(creator.profile).to be_persisted
     end
 
-    it 'sets the correct Profile ethnicity' do
-      expect(new_profile.ethnicity_id).to eql ethnicity.id
+    it 'sets the correct Person ethnicity' do
+      expect(new_person.ethnicity_id).to eql ethnicity.id
     end
 
-    it 'sets the correct Profile gender' do
-      expect(new_profile.gender_id).to eql gender.id
+    it 'sets the correct Person gender' do
+      expect(new_person.gender_id).to eql gender.id
     end
   end
 
-  context 'with missing required attributes' do
+  context 'with identifiers' do
     let(:params) do
       {
         type: 'people',
-        attributes: { first_names: 'Bob' },
+        attributes: {
+          first_names: 'Bob',
+          last_name: 'Roberts',
+          date_of_birth: Date.civil(1980, 1, 1),
+          identifiers: [
+            { identifier_type: 'police_national_computer', value: 'ABC123' },
+            { identifier_type: 'prison_number', value: 'XYZ987' },
+          ],
+        },
       }
     end
 
-    it 'raises an error' do
-      expect { creator.call }.to raise_error(ActiveRecord::RecordInvalid)
-    end
+    let!(:result) { creator.call }
 
-    it 'makes validation errors available via exception' do
-      creator.call
-    rescue ActiveRecord::RecordInvalid => e
-      expect(e.record.errors.messages).to include(last_name: ["can't be blank"])
+    it 'sets the identifiers for the Person' do
+      identifiers = new_person
+        .attributes
+        .with_indifferent_access
+        .slice(*Person::IDENTIFIER_TYPES)
+
+      expect(identifiers).to eq(
+        'criminal_records_office' => nil,
+        'police_national_computer' => 'ABC123',
+        'prison_number' => 'XYZ987',
+      )
     end
   end
 end

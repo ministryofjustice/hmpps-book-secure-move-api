@@ -1,0 +1,25 @@
+PostMoveReject:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: approves
+      enum:
+      - approves
+      description: The type of this object - always `approves`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      - date
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        date:
+          type: string
+          format: date
+          example: '2020-05-17'
+          description: Date on which the move is scheduled

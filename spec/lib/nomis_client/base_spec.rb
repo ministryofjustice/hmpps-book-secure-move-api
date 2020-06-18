@@ -6,11 +6,13 @@ RSpec.describe NomisClient::Base do
   let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
   let(:token) do
-    instance_double('OAuth2::AccessToken',
-                    get: oauth2_response,
-                    post: oauth2_response,
-                    expires?: true,
-                    expires_at: token_expires_at)
+    instance_double(
+      'OAuth2::AccessToken',
+      get: oauth2_response,
+      post: oauth2_response,
+      expires?: true,
+      expires_at: token_expires_at,
+    )
   end
   let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
 
@@ -140,12 +142,14 @@ RSpec.describe NomisClient::Base do
 
   describe '.post' do
     let(:response) do
-      described_class.post(api_endpoint,
-                           body: { offenderNos: %w[G3239GV] }.to_json,
-                           headers: {
-                             'Accept': 'application/json',
-                             'Content-Type': 'application/json',
-                           })
+      described_class.post(
+        api_endpoint,
+        body: { offenderNos: %w[G3239GV] }.to_json,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      )
     end
     let(:api_endpoint) { '/prisoners' }
 

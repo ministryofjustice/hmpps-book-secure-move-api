@@ -1,18 +1,24 @@
 # frozen_string_literal: true
 
 class Person < VersionedModel
-  has_many :profiles, dependent: :destroy
+  IDENTIFIER_TYPES = %i[
+    police_national_computer criminal_records_office prison_number
+  ].freeze
 
+  has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
+  belongs_to :ethnicity, optional: true
+  belongs_to :gender, optional: true
 
   has_one_attached :image
 
+  scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
+
+  validates :last_name, presence: true
+  validates :first_names, presence: true
+
   def latest_profile
     profiles.order(:updated_at).last
-  end
-
-  def latest_nomis_booking_id
-    latest_profile.latest_nomis_booking_id
   end
 
   def attach_image(image_blob)

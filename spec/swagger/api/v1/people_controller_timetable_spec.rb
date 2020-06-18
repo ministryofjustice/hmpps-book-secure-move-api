@@ -4,7 +4,7 @@ RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, t
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:booking_id) { '1200738' }
-  let(:person) { create(:profile, :nomis_synced, latest_nomis_booking_id: booking_id).person }
+  let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: booking_id) }
   let(:person_id) { person.id }
   let(:'filter[date_to]') { Time.zone.now.to_date.iso8601 }
   let(:'filter[date_from]') { Time.zone.now.to_date.iso8601 }
@@ -70,13 +70,13 @@ RSpec.describe Api::V1::PeopleController, :with_client_authentication, :rswag, t
           location = create(:location)
 
           activity = Activity.new.build_from_nomis(
-            'eventId' => 401732488,
+            'eventId' => 401_732_488,
             'startTime' => '2020-04-22T08:30:00',
             'eventTypeDesc' => 'Prison Activities',
             'locationCode' => location.nomis_agency_id,
           )
           court_hearing = NomisCourtHearing.new.build_from_nomis(
-            'id' => 330253339,
+            'id' => 330_253_339,
             'dateTime' => '2020-04-22T08:30:00',
             'location' => { 'agencyId' => location.nomis_agency_id },
           )

@@ -1,4 +1,23 @@
-FROM ruby:2.6.2-stretch
+FROM ruby:2.7.0-alpine as build-stage
+
+ENV RAILS_ENV=production
+ENV RACK_ENV=production
+
+ENV BUNDLE_WITHOUT="development:test"
+ENV BUNDLE_FROZEN="true"
+
+WORKDIR /app
+RUN apk --update --no-cache add git build-base postgresql-dev
+
+COPY . /app
+RUN gem update bundler --no-document
+RUN bundle install --jobs 4 --retry 3 \
+     && rm -rf /usr/local/bundle/cache/*.gem \
+     && find /usr/local/bundle/gems/ -name "*.c" -delete \
+     && find /usr/local/bundle/gems/ -name "*.o" -delete
+
+############### End of Build step ###############
+FROM ruby:2.7.0-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE ${APP_BUILD_DATE}
@@ -9,41 +28,23 @@ ENV APP_BUILD_TAG ${APP_BUILD_TAG}
 ARG APP_GIT_COMMIT
 ENV APP_GIT_COMMIT ${APP_GIT_COMMIT}
 
+ENV APPUID 1000
+
 ENV RAILS_ENV production
+ENV RACK_ENV production
+
 ENV PUMA_PORT 3000
 EXPOSE $PUMA_PORT
 
+RUN addgroup -g $APPUID -S appgroup && \
+    adduser -u $APPUID -S appuser -G appgroup -h /app
+
+RUN apk add --update --no-cache tzdata postgresql-dev
+
 WORKDIR /app
-
-# ugrade bundler to 2.1.4
-RUN gem update bundler --no-document
-
-COPY . /app
-
-RUN bundle install --verbose --without="development test" --jobs 4 --retry 3
-
-RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
-   && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-   && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-   && apt-get update \
-   && apt-get install -y nodejs yarn \
-   && apt-get clean
-
-RUN yarn install
-
-# Have to set SECRET_KEY_BASE here to arbitrary string, otherwise task doesn't run
-RUN SECRET_KEY_BASE=valuenotactuallyused bundle exec rails assets:precompile
-
-# Run the application as user 1000
-# directories/files need to be chowned otherwise we get Errno::EACCES
-
-ENV APPUID 1000
-
-RUN mkdir -p /home/appuser && \
-  useradd appuser -u $APPUID --user-group --home /home/appuser && \
-  chown -R appuser:appuser /app && \
-  chown -R appuser:appuser /home/appuser
+COPY --chown=appuser:appgroup --from=build-stage /app /app
+COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
 
 USER $APPUID
+CMD ["./run.sh"]
 
-ENTRYPOINT ["./run.sh"]

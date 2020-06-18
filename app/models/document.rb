@@ -8,6 +8,7 @@ class Document < ApplicationRecord
   before_validation :validate_file_presence
 
   belongs_to :move, optional: true
+  belongs_to :documentable, polymorphic: true, optional: true
 
 private
 

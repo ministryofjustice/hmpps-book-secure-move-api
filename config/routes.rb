@@ -6,16 +6,15 @@ Rails.application.routes.draw do
     mount Rswag::Api::Engine => '/api-docs'
   end
 
-  get "/docs/*id" => 'pages#show', as: :page, format: false
-  get 'docs/', to: 'pages#show', id: 'overview'
-
   get '/health', to: 'status#health', format: :json
   get '/ping', to: 'status#ping', format: :json
 
   namespace :api do
     namespace :v1 do
       resources :allocations, only: %i[create index show] do
-        resources :events, only: %i[create], controller: 'allocation_events'
+        member do
+          post 'cancel', controller: 'allocation_events'
+        end
       end
       resources :court_hearings, only: %i[create]
       resources :documents, only: %i[create]
@@ -23,11 +22,31 @@ Rails.application.routes.draw do
         get 'images', to: 'people#image'
         get 'court_cases', to: 'people#court_cases'
         get 'timetable', to: 'people#timetable'
+
+        resources :profiles, only: %i[create update]
       end
-      resources :moves, only: %i[index show create destroy update] do
+      resources :moves, only: %i[index show create update] do
         resources :documents, only: %i[create destroy]
-        resources :events, only: %i[create], controller: 'move_events'
-        resources :journeys, only: %i[index show create update]
+        resources :journeys, only: %i[index show create update] do
+          member do
+            post 'cancel', controller: 'journey_events'
+            post 'complete', controller: 'journey_events'
+            post 'lockouts', controller: 'journey_events'
+            post 'lodgings', controller: 'journey_events'
+            post 'reject', controller: 'journey_events'
+            post 'start', controller: 'journey_events'
+            post 'uncancel', controller: 'journey_events'
+            post 'uncomplete', controller: 'journey_events'
+          end
+        end
+        member do
+          post 'cancel', controller: 'move_events'
+          post 'complete', controller: 'move_events'
+          post 'lockouts', controller: 'move_events'
+          post 'redirects', controller: 'move_events'
+          post 'approve', controller: 'move_events'
+          post 'reject', controller: 'move_events'
+        end
       end
       namespace :reference do
         resources :allocation_complex_cases, only: :index
@@ -41,6 +60,10 @@ Rails.application.routes.draw do
         resources :regions, only: :index
         resources :suppliers, only: %i[index show]
       end
+    end
+
+    namespace :v2 do
+      resources :people, only: %i[index create update]
     end
   end
 end

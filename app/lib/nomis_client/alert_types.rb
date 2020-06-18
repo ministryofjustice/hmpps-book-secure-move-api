@@ -10,7 +10,7 @@ module NomisClient
       end
 
       def as_hash
-        get.map { |alert_type| [alert_type[:code], alert_type] }.to_h.with_indifferent_access
+        get.index_by { |alert_type| alert_type[:code] }.with_indifferent_access
       end
 
       def fetch_response

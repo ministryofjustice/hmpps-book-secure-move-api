@@ -112,6 +112,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'returns the correct data' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
+
         expect(response_json).to include_json(data: expected_data.merge(id: Person.last&.id))
       end
 
@@ -121,9 +122,9 @@ RSpec.describe Api::V1::PeopleController do
       end
 
       it 'creates a new person' do
-        expect do
+        expect {
           post '/api/v1/people', params: person_params, headers: headers, as: :json
-        end.to change(Person, :count).by(1)
+        }.to change(Person, :count).by(1)
       end
 
       describe 'webhook and email notifications' do
@@ -143,7 +144,7 @@ RSpec.describe Api::V1::PeopleController do
 
       it 'updates an existing person' do
         post '/api/v1/people', params: person_params, headers: headers, as: :json
-        expect(Person.last.reload.latest_profile.gender_additional_information).to eq gender_additional_information
+        expect(Person.last.reload.gender_additional_information).to eq gender_additional_information
       end
     end
 

@@ -11,8 +11,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
       parameter name: :Authorization,
                 in: :header,
                 schema: {
-                    type: 'string',
-                    default: 'Bearer <your-client-token>',
+                  type: 'string',
+                  default: 'Bearer <your-client-token>',
                 },
                 required: true,
                 description: <<~DESCRIPTION
@@ -24,8 +24,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: 'header',
                 description: 'Accepted request content type',
                 schema: {
-                    type: 'string',
-                    default: 'application/vnd.api+json',
+                  type: 'string',
+                  default: 'application/vnd.api+json',
                 },
                 required: true
 
@@ -33,7 +33,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
                 in: :path,
                 description: 'The ID of the person',
                 schema: {
-                    type: :string,
+                  type: :string,
                 },
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
@@ -46,8 +46,8 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
 
       response '200', 'success' do
         let(:person_id) { person.id }
-        let(:person) { create(:profile, :nomis_synced).person }
-        let(:court_cases_from_nomis) {
+        let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
+        let(:court_cases_from_nomis) do
           court_case = CourtCase.new.build_from_nomis(
             'id' => '1495077',
             'caseSeq' => 1,
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::PeopleController, :rswag, :with_client_authentication, t
           )
 
           [court_case]
-        }
+        end
 
         before do
           allow(People::RetrieveCourtCases).to receive(:call).with(person, nil).and_return(OpenStruct.new(success?: true, court_cases: court_cases_from_nomis))

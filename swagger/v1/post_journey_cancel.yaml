@@ -1,0 +1,21 @@
+PostJourneyCancel:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: cancels
+      enum:
+      - cancels
+      description: The type of this object - always `cancels`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        notes:
+          $ref: notes_attribute.yaml#/Notes

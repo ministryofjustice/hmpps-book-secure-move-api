@@ -5,32 +5,134 @@ require 'rails_helper'
 RSpec.describe MoveEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
-  let(:params) { { attributes: { event_name: event_name, timestamp: timestamp, notes: notes } } }
-  let(:event_name) { 'redirect' }
+  let(:attributes) { { timestamp: timestamp } }
+  let(:params) { { type: type, attributes: attributes } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
-  let(:notes) { 'foo bar' }
+  let(:type) { 'redirects' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
   end
 
-  describe 'event_name' do
+  describe 'cancellation_reason' do
+    let(:attributes) { { timestamp: timestamp, cancellation_reason: cancellation_reason } }
+    let(:cancellation_reason) { 'supplier_declined_to_move' }
+    let(:type) { 'cancel' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
     context 'when invalid' do
-      let(:event_name) { 'foo' }
+      let(:cancellation_reason) { 'foo-bar' }
 
       it { is_expected.not_to be_valid }
     end
 
     context 'when nil' do
-      let(:event_name) { nil }
+      let(:cancellation_reason) { nil }
 
       it { is_expected.not_to be_valid }
     end
 
     context 'when missing' do
-      before { params[:attributes].delete(:event_name) }
+      before { attributes.delete(:cancellation_reason) }
 
       it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'rejection_reason' do
+    let(:attributes) { { timestamp: timestamp, rejection_reason: rejection_reason } }
+    let(:rejection_reason) { 'no_transport_available' }
+    let(:type) { 'reject' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid' do
+      let(:rejection_reason) { 'foo-bar' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:rejection_reason) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { attributes.delete(:rejection_reason) }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'date' do
+    let(:attributes) { { timestamp: timestamp, date: date } }
+    let(:date) { '2020-06-10' }
+    let(:type) { 'approve' }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid' do
+      let(:date) { 'foo' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:date) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { attributes.delete(:date) }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'type' do
+    context 'when invalid' do
+      let(:type) { 'foo-bar' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:type) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { params.delete(:type) }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'with acceptable plural actions' do
+      let(:type) { 'completes' }
+
+      it 'converts to singular action' do
+        expect(params_validator.type).to eq('complete')
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'with expected plural actions' do
+      let(:type) { 'lockouts' }
+
+      it 'remains as a plural action' do
+        expect(params_validator.type).to eq('lockouts')
+      end
     end
   end
 
@@ -53,6 +155,4 @@ RSpec.describe MoveEvents::ParamsValidator do
       it { is_expected.not_to be_valid }
     end
   end
-
-  # NB: there are no validations for notes
 end

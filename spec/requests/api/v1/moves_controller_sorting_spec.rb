@@ -16,10 +16,10 @@ RSpec.describe Api::V1::MovesController do
     let(:location3) { create :location, title: 'LOCATION3' }
     let(:location4) { create :location, title: 'location4' }
 
-    let(:profile1) { create :profile, last_name: 'PROFILE1' }
-    let(:profile2) { create :profile, last_name: 'profile2' }
-    let(:profile3) { create :profile, last_name: 'PROFILE3' }
-    let(:profile4) { create :profile, last_name: 'profile4' }
+    let(:profile1) { create :profile, person: create(:person, last_name: 'PROFILE1') }
+    let(:profile2) { create :profile, person: create(:person, last_name: 'profile2') }
+    let(:profile3) { create :profile, person: create(:person, last_name: 'PROFILE3') }
+    let(:profile4) { create :profile, person: create(:person, last_name: 'profile4') }
 
     let!(:move1) { create :move, profile: profile1, to_location: location1 }
     let!(:move2) { create :move, :prison_transfer, profile: profile2, to_location: location2 }
@@ -38,10 +38,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { by: 'rabbits' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_by',
                  'detail' => 'Validation failed: Sort by is not included in the list' }]
-            }
+            end
           end
         end
 
@@ -49,10 +49,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { by: 'created_at', direction: 'rabbits' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_direction',
                  'detail' => 'Validation failed: Sort direction is not included in the list' }]
-            }
+            end
           end
         end
 
@@ -60,10 +60,10 @@ RSpec.describe Api::V1::MovesController do
           let(:sort_params) { { direction: 'asc' } }
 
           it_behaves_like 'an endpoint that responds with error 422' do
-            let(:errors_422) {
+            let(:errors_422) do
               [{ 'title' => 'Invalid sort_by',
                  'detail' => "Validation failed: Sort by can't be blank" }]
-            }
+            end
           end
         end
       end
@@ -198,12 +198,17 @@ RSpec.describe Api::V1::MovesController do
 
         context 'when name' do
           let(:object_name) { 'person' }
-          let(:last_names) { object_ids.map { |person_id| Person.find(person_id).latest_profile.last_name } }
+          let(:move_data) do
+            Move.all
+              .sort_by { |move| move.profile.person.last_name }
+              .map { |move| move.profile.person }
+          end
+          let(:last_names) { object_ids.map { |person_id| Person.find(person_id).last_name } }
 
           context 'with default direction' do
             let(:sort_params) { { by: 'name' } }
 
-            it 'sorts by to last_name (ascending, case sensitive)' do
+            it 'sorts by last_name (ascending, case sensitive)' do
               expect(last_names).to eq(%w[PROFILE1 PROFILE3 profile2 profile4])
             end
           end

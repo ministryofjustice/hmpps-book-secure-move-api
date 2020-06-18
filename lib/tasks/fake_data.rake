@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'fake_data/journeys'
+
 namespace :fake_data do
   desc 'create fake people'
   task create_people: :environment do
@@ -7,50 +9,66 @@ namespace :fake_data do
     ethnicities = Ethnicity.all.to_a
     genders = Gender.all.to_a
     50.times do
-      person = Person.create!
-      person.profiles << Profile.new(
+      person = Person.create!(
         first_names: Faker::Name.first_name,
         last_name: Faker::Name.last_name,
         date_of_birth: Faker::Date.between(from: 80.years.ago, to: 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
+        criminal_records_office: criminal_records_office,
+        prison_number: prison_number,
+        police_national_computer: police_national_computer,
+      )
+      person.profiles << Profile.new(
         assessment_answers: fake_assessment_answers,
-        profile_identifiers: fake_profile_identifiers,
       )
     end
   end
 
   ASSESSMENT_ANSWERS = [
-    { category: :risk, title: 'Violent',
+    { category: :risk,
+      title: 'Violent',
       comments: ['Karate black belt', 'Unstable temper', 'Assaulted prison officer'] },
-    { category: :risk, title: 'Escape',
+    { category: :risk,
+      title: 'Escape',
       comments: ['Large poster in cell', 'Climber', 'Former miner'] },
-    { category: :risk, title: 'Must be held separately',
+    { category: :risk,
+      title: 'Must be held separately',
       comments: ['Threat to other prisoners', 'Infectious skin disorder', 'Incitement to riot'] },
-    { category: :risk, title: 'Self harm',
+    { category: :risk,
+      title: 'Self harm',
       comments: ['Attempted suicide'] },
-    { category: :risk, title: 'Concealed items',
+    { category: :risk,
+      title: 'Concealed items',
       comments: ['Rock hammer found in cell', 'Penknife found in trouser pockets'] },
-    { category: :risk, title: 'Any other risks',
+    { category: :risk,
+      title: 'Any other risks',
       comments: ['Train spotter', ''] },
-    { category: :health, title: 'Special diet or allergy',
+    { category: :health,
+      title: 'Special diet or allergy',
       comments: ['Gluten allergy', 'Lactose intolerant', 'Vegan'] },
-    { category: :health, title: 'Health issue',
+    { category: :health,
+      title: 'Health issue',
       comments: ['Heart condition', 'Broken arm', 'Flu', 'Keeps complaining of headaches'] },
-    { category: :health, title: 'Medication',
+    { category: :health,
+      title: 'Medication',
       comments: ['Anti-biotics taken three-times daily', 'Heart medication needed twice daily'] },
     { category: :health, title: 'Wheelchair user', comments: [''] },
     { category: :health, title: 'Pregnant', comments: [''] },
-    { category: :health, title: 'Any other requirements',
+    { category: :health,
+      title: 'Any other requirements',
       comments: ['Unable to use stairs', 'Claustophobic', 'Agrophobic'] },
-    { category: :court, title: 'Solicitor or other legal representation',
+    { category: :court,
+      title: 'Solicitor or other legal representation',
       comments: [''] },
-    { category: :court, title: 'Sign or other language interpreter',
+    { category: :court,
+      title: 'Sign or other language interpreter',
       comments: ['Only speaks Welsh', 'Only speaks French or Spanish', 'Partially Deaf'] },
-    { category: :court, title: 'Any other information',
+    { category: :court,
+      title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
-
+  # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
       fake_assessment_answer(assessment_answer)
@@ -71,13 +89,20 @@ namespace :fake_data do
     }
   end
 
-  def fake_profile_identifiers
-    IDENTIFIER_TYPES.sample(2).map do |identifier_type|
-      {
-        identifier_type: identifier_type[:id],
-        value: rand(1_000_000).to_s,
-      }
-    end
+  def prison_number
+    sprintf('D%04dZZ', seq)
+  end
+
+  def police_national_computer
+    sprintf('AB/%07d', seq)
+  end
+
+  def criminal_records_office
+    sprintf('CRO/%05d', seq)
+  end
+
+  def seq
+    Time.zone.now.to_i
   end
 
   def fake_complex_case_answers
@@ -90,6 +115,7 @@ namespace :fake_data do
       }
     end
   end
+  # rubocop:enable all
 
   desc 'create fake prisons'
   task create_prisons: :environment do
@@ -145,40 +171,39 @@ namespace :fake_data do
     end
   end
 
-  desc 'create identifier types'
-  task create_identifier_types: :environment do
-    puts 'create_identifier_types...'
-    IDENTIFIER_TYPES.each do |attributes|
-      IdentifierType.create!(attributes)
-    end
-  end
-
   desc 'create fake moves'
   task create_moves: :environment do
     puts 'create_moves...'
-    people = Person.all
+    profiles = Profile.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
+    file = StringIO.new(File.read('spec/fixtures/file-sample_100kB.doc'))
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time
       time = time.change(hour: [9, 12, 14].sample)
-      person = people.sample
+      profile = profiles.sample
       from_location = prisons.sample
       to_location = courts.sample
       nomis_event_ids = []
       nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
-      unless Move.find_by(date: date, person: person, from_location: from_location, to_location: to_location)
-        Move.create!(
-          date: date,
-          time_due: time,
-          person: person,
-          from_location: from_location,
-          to_location: to_location,
-          status: %w[requested completed cancelled].sample,
-          nomis_event_ids: nomis_event_ids,
-        )
-      end
+      next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
+
+      move = Move.create!(
+        date: date,
+        date_from: date,
+        time_due: time,
+        profile: profile,
+        from_location: from_location,
+        to_location: to_location,
+        status: %w[proposed requested booked completed].sample,
+        nomis_event_ids: nomis_event_ids,
+      )
+      document = Document.new(move: move)
+      document.file.attach(io: file, filename: 'file-sample_100kB.doc')
+      document.save!
+    ensure
+      file.rewind
     end
   end
 
@@ -194,10 +219,21 @@ namespace :fake_data do
         to_location: prisons.sample,
         prisoner_category: Allocation.prisoner_categories.values.sample,
         sentence_length: Allocation.sentence_lengths.values.sample,
-        moves_count: Faker::Number.digit,
+        moves_count: Faker::Number.non_zero_digit,
         complete_in_full: Faker::Boolean.boolean,
         complex_cases: fake_complex_case_answers,
       )
+    end
+  end
+
+  desc 'create fake journeys with associated events'
+  task create_journeys: :environment do
+    puts 'create_journeys...'
+    Move
+        .left_outer_joins(:journeys).where(journeys: { move_id: nil })
+        .where(status: %w[completed booked requested])
+        .find_each do |move|
+      Tasks::FakeData::Journeys.new(move).call
     end
   end
 
@@ -205,7 +241,7 @@ namespace :fake_data do
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Journey, Move, Document, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -215,7 +251,6 @@ namespace :fake_data do
   task recreate_all: :environment do
     if Rails.env.development? || Rails.env.test?
       Rake::Task['fake_data:drop_all'].invoke
-      Rake::Task['fake_data:create_identifier_types'].invoke
       Rake::Task['fake_data:create_ethnicities'].invoke
       Rake::Task['fake_data:create_genders'].invoke
       Rake::Task['fake_data:create_assessment_questions'].invoke
@@ -224,6 +259,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_courts'].invoke
       Rake::Task['fake_data:create_moves'].invoke
       Rake::Task['fake_data:create_allocations'].invoke
+      Rake::Task['fake_data:create_journeys'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
@@ -252,7 +288,8 @@ namespace :fake_data do
   ETHNICITIES = [
     { key: 'A1', title: 'Asian or Asian British (Indian)', description: 'A1 - Asian or Asian British (Indian)' },
     { key: 'A2', title: 'Asian or Asian British (Pakistani)', description: 'A2 - Asian or Asian British (Pakistani)' },
-    { key: 'A3', title: 'Asian or Asian British (Bangladeshi)',
+    { key: 'A3',
+      title: 'Asian or Asian British (Bangladeshi)',
       description: 'A3 - Asian or Asian British (Bangladeshi)' },
     { key: 'A9', title: 'Asian or Asian British (Other)', description: 'A9 - Asian or Asian British (Other)' },
     { key: 'B1', title: 'Black (Caribbean)', description: 'B1 - Black (Caribbean)' },
@@ -267,12 +304,6 @@ namespace :fake_data do
     { key: 'W1', title: 'White (British)', description: 'W1 - White (British)' },
     { key: 'W2', title: 'White (Irish)', description: 'W2 - White (Irish)' },
     { key: 'W9', title: 'White (Any other White background)', description: 'W9 - White (Any other White background)' },
-  ].freeze
-
-  IDENTIFIER_TYPES = [
-    { id: 'police_national_computer', title: 'PNC ID', description: 'Police National Computer ID used by Police' },
-    { id: 'prison_number', title: 'Prisoner No', description: 'Prisoner ID used in NOMIS and other systems' },
-    { id: 'criminal_records_office', title: 'CRO No', description: 'Criminal Records Office ID used by Police' },
   ].freeze
 
   TOWN_NAMES = [

@@ -19,16 +19,18 @@ module NomisClient
 
         NomisClient::Base.post(court_hearings_path, body: body_params.to_json)
       rescue OAuth2::Error => e
-        Raven.capture_message('CourtHearings:CreateInNomis Error!',
-                              extra: {
-                                  court_cases_route: court_hearings_path,
-                                  body_params: body_params,
-                                  nomis_response: {
-                                      status: e.response.status,
-                                      body: e.response.body,
-                                  },
-                              },
-                              level: 'error')
+        Raven.capture_message(
+          'CourtHearings:CreateInNomis Error!',
+          extra: {
+            court_cases_route: court_hearings_path,
+            body_params: body_params,
+            nomis_response: {
+              status: e.response.status,
+              body: e.response.body,
+            },
+          },
+          level: 'error',
+        )
 
         e.response
       end

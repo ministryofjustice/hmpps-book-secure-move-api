@@ -3,93 +3,90 @@
 module Api
   module V1
     class MoveEventsController < ApiController
-      before_action :validate_params, :validate_required_idempotency_key
+      before_action :validate_required_idempotency_key
+      include Moves::Eventable
 
-      PERMITTED_EVENT_PARAMS = [
-          :type,
-          attributes: %i[timestamp event_name notes],
-          relationships: { to_location: {} },
-      ].freeze
+      CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
+      COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
+      LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
+      REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
+      APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
+      REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook]].freeze
 
-      def create
-        # NB: this is a *temporary implementation* to immediately address the needs of P4-1355 and allow the frontend to
-        # update the destination of a move. They will do this by POSTing a redirect event to this endpoint. For now, we
-        # will simply update the move's to_location. In the future (P4-1180) we will have a funky immutable event log.
+      def cancel
+        validate_params!(cancel_params)
+        process_event(move, Event::CANCEL, cancel_params)
+        render status: :no_content
+      end
 
-        case event_name
-        when 'redirect'
-          # NB: rather than update immediately, we need to detect whether the location has actually changed (or not) to
-          # prevent triggering duplicate webhook/email notifications
-          move.to_location = to_location
-          if move.to_location_id_changed?
-            move.save!
-            Notifier.prepare_notifications(topic: move, action_name: 'update')
-          end
-          render json: fake_event_object, status: :created
-        else
-          render status: :bad_request, json: {
-            errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
-          }
-        end
+      def complete
+        validate_params!(complete_params)
+        process_event(move, Event::COMPLETE, complete_params)
+        render status: :no_content
+      end
+
+      def lockouts
+        validate_params!(lockout_params, require_from_location: true)
+        process_event(move, Event::LOCKOUT, lockout_params)
+        render status: :no_content
+      end
+
+      def redirects
+        validate_params!(redirect_params, require_to_location: true)
+        process_event(move, Event::REDIRECT, redirect_params)
+        render status: :no_content
+      end
+
+      def approve
+        validate_params!(approve_params)
+        process_event(move, Event::APPROVE, approve_params)
+        render status: :no_content
+      end
+
+      def reject
+        validate_params!(reject_params)
+        process_event(move, Event::REJECT, reject_params)
+        render status: :no_content
       end
 
     private
 
-      def validate_params
-        MoveEvents::ParamsValidator.new(event_params).tap do |validator|
-          if validator.invalid?
-            render status: :bad_request, json: {
-              errors: validator.errors.map { |field, message| { title: field, detail: message } },
-            }
-          end
+      def validate_params!(event_params, require_from_location: false, require_to_location: false)
+        MoveEvents::ParamsValidator.new(event_params).validate!
+        if require_from_location
+          Location.find(params.require(:data).require(:relationships).require(:from_location).require(:data).require(:id))
+        end
+        if require_to_location
+          Location.find(params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id))
         end
       end
 
-      def event_params
-        @event_params ||= params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
+      def cancel_params
+        @cancel_params ||= params.require(:data).permit(CANCEL_PARAMS).to_h
       end
 
-      def event_name
-        @event_name ||= event_params.dig(:attributes, :event_name)
+      def complete_params
+        @complete_params ||= params.require(:data).permit(COMPLETE_PARAMS).to_h
       end
 
-      def timestamp
-        @timestamp ||= Time.zone.parse(event_params.dig(:attributes, :timestamp))
+      def lockout_params
+        @lockout_params ||= params.require(:data).permit(LOCKOUT_PARAMS).to_h
       end
 
-      def notes
-        @notes ||= event_params.dig(:attributes, :notes)
+      def redirect_params
+        @redirect_params ||= params.require(:data).permit(REDIRECT_PARAMS).to_h
       end
 
-      def to_location
-        @to_location ||= Location.find(event_params.dig(:relationships, :to_location, :data, :id))
+      def approve_params
+        @approve_params ||= params.require(:data).permit(APPROVE_PARAMS).to_h
+      end
+
+      def reject_params
+        @reject_params ||= params.require(:data).permit(REJECT_PARAMS).to_h
       end
 
       def move
-        @move ||= Move.accessible_by(current_ability).find(params.require(:move_id))
-      end
-
-      def fake_event_object
-        # NB: this is a temporarily implementation to simulate the creation of a new event
-        {
-          data: {
-            id: SecureRandom.uuid,
-            type: 'events',
-            attributes: {
-              event_name: event_name,
-              timestamp: timestamp,
-              notes: notes,
-            },
-            relationships: {
-              to_location: {
-                data: {
-                  type: 'locations',
-                  id: to_location.id,
-                },
-              },
-            },
-          },
-        }
+        @move ||= Move.accessible_by(current_ability).find(params.require(:id))
       end
     end
   end

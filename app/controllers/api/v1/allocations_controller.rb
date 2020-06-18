@@ -6,10 +6,10 @@ module Api
       after_action :send_move_notifications, only: :create
 
       def index
-        allocations_params = Allocations::ParamsValidator.new(filter_params)
+        allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
         if allocations_params.valid?
-          allocations = Allocations::Finder.new(filter_params).call
-          paginate allocations, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+          allocations = Allocations::Finder.new(filter_params, sort_params).call
+          paginate allocations, include: included_relationships
         else
           render_allocation({ error: allocations_params.errors }, :bad_request)
         end
@@ -29,18 +29,23 @@ module Api
 
     private
 
-      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations].freeze
+      PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
+      PERMITTED_SORT_PARAMS = %i[by direction].freeze
 
       PERMITTED_ALLOCATION_PARAMS = [
         :type,
-        attributes: %i[date prisoner_category sentence_length moves_count complete_in_full other_criteria],
+        attributes: %i[date prisoner_category sentence_length moves_count complete_in_full other_criteria requested_by],
         relationships: {},
       ].freeze
 
       PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
+      def sort_params
+        @sort_params ||= params.fetch(:sort, {}).permit(PERMITTED_SORT_PARAMS).to_h
+      end
+
       def filter_params
-        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+        @filter_params ||= params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
       def allocation_params
@@ -52,7 +57,7 @@ module Api
       end
 
       def render_allocation(allocation, status)
-        render json: allocation, status: status, include: AllocationSerializer::INCLUDED_ATTRIBUTES
+        render json: allocation, status: status, include: included_relationships
       end
 
       def find_allocation
@@ -70,6 +75,14 @@ module Api
         creator.allocation.moves.each do |move|
           Notifier.prepare_notifications(topic: move, action_name: 'create')
         end
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call || AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        AllocationSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

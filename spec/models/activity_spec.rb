@@ -8,9 +8,9 @@ RSpec.describe Activity do
 
     let(:nomis_scheduled_event) do
       {
-        'bookingId' => 771697,
+        'bookingId' => 771_697,
         'eventClass' => 'INT_MOV',
-        'eventId' => 401732488,
+        'eventId' => 401_732_488,
         'eventStatus' => 'SCH',
         'eventType' => 'PRISON_ACT',
         'eventTypeDesc' => 'Prison Activities',
@@ -20,7 +20,7 @@ RSpec.describe Activity do
         'startTime' => '2020-04-22T08:30:00',
         'endTime' => '2020-04-22T11:45:00',
         'eventLocation' => 'CONTRACTS',
-        'eventLocationId' => 76748,
+        'eventLocationId' => 76_748,
         'eventSource' => 'PA',
         'eventSourceCode' => 'CCONT1',
         'eventSourceDesc' => 'CAT C CONTRACTS 1',
@@ -31,11 +31,11 @@ RSpec.describe Activity do
     end
     let(:expected_attributes) do
       {
-        id:         nomis_scheduled_event['eventId'],
+        id: nomis_scheduled_event['eventId'],
         start_time: Time.parse(nomis_scheduled_event['startTime']),
-        type:       'Prison Activities',
-        reason:     nomis_scheduled_event['eventTypeDesc'],
-        agency_id:  nomis_scheduled_event['locationCode'],
+        type: 'Prison Activities',
+        reason: nomis_scheduled_event['eventTypeDesc'],
+        agency_id: nomis_scheduled_event['locationCode'],
       }
     end
 

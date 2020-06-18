@@ -29,7 +29,7 @@ RSpec.describe Api::V1::PeopleController do
   end
 
   context 'when person is present' do
-    let(:person) { create(:profile, :nomis_synced, latest_nomis_booking_id: booking_id).person }
+    let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: booking_id) }
     let(:nomis_success) { true }
 
     let(:nomis_court_hearings_struct) do
@@ -52,7 +52,7 @@ RSpec.describe Api::V1::PeopleController do
       let(:nomis_activities) do
         [
           Activity.new.build_from_nomis(
-            'eventId' => 401732488,
+            'eventId' => 401_732_488,
             'startTime' => '2020-04-22T08:30:00',
             'eventTypeDesc' => 'Prison Activities',
             'locationCode' => 'PEI',
@@ -62,7 +62,7 @@ RSpec.describe Api::V1::PeopleController do
       let(:nomis_court_hearings) do
         [
           NomisCourtHearing.new.build_from_nomis(
-            'id' => 330253339,
+            'id' => 330_253_339,
             'dateTime' => '2017-01-27T10:00:00',
             'location' => { 'agencyId' => 'PEI' },
           ),

@@ -18,7 +18,7 @@ RSpec.describe Api::V1::PeopleController do
   context 'when person ID is valid' do
     subject(:get_image) { get "/api/v1/people/#{person.id}/images", params: { access_token: token.token } }
 
-    let!(:person) { create(:profile, :nomis_synced).person }
+    let!(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
     let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
 
     context 'when there is an image associated with the person in NOMIS' do

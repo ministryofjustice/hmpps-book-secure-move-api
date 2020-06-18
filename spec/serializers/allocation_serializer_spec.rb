@@ -5,16 +5,15 @@ require 'rails_helper'
 RSpec.describe AllocationSerializer do
   subject(:serializer) { described_class.new(allocation) }
 
-
   let(:complex_case) { create(:allocation_complex_case) }
-  let(:complex_case_answer_attributes) {
+  let(:complex_case_answer_attributes) do
     {
-    key: complex_case.key,
-    title: complex_case.title,
-    answer: true,
-    allocation_complex_case_id: complex_case.id,
-  }
-  }
+      key: complex_case.key,
+      title: complex_case.title,
+      answer: true,
+      allocation_complex_case_id: complex_case.id,
+    }
+  end
   let(:complex_case_answer) { Allocation::ComplexCaseAnswer.new(complex_case_answer_attributes) }
   let(:allocation) { create(:allocation, complex_cases: [complex_case_answer]) }
   let(:result) do
@@ -60,6 +59,10 @@ RSpec.describe AllocationSerializer do
 
     it 'contains a other_criteria attribute' do
       expect(attributes[:other_criteria]).to eql allocation.other_criteria
+    end
+
+    it 'contains a requested_by attribute' do
+      expect(attributes[:requested_by]).to eql allocation.requested_by
     end
 
     it 'contains a status attribute' do
@@ -113,32 +116,30 @@ RSpec.describe AllocationSerializer do
   end
 
   describe 'moves' do
-    context 'with a move' do
-      let(:adapter_options) {
-        { include: AllocationSerializer::INCLUDED_ATTRIBUTES }
-      }
-      let(:allocation) { create(:allocation, :with_moves) }
-      let(:move) { allocation.moves.first }
+    let(:adapter_options) do
+      { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS }
+    end
+    let(:allocation) { create(:allocation, :with_moves) }
+    let(:move) { allocation.moves.first }
 
-      it 'contains a moves relationship' do
-        expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
-      end
-
-      it 'contains an included move and person' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[people moves locations locations])
-      end
+    it 'contains a moves relationship' do
+      expect(result_data[:relationships][:moves][:data]).to contain_exactly(id: move.id, type: 'moves')
     end
 
-    context 'without a move' do
-      let(:adapter_options) { { include: AllocationSerializer::INCLUDED_ATTRIBUTES } }
+    it 'contains an included move and profile' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[people profiles moves locations locations genders ethnicities])
+    end
+  end
 
-      it 'contains empty moves' do
-        expect(result_data[:relationships][:moves][:data]).to be_empty
-      end
+  context 'without a move' do
+    let(:adapter_options) { { include: AllocationSerializer::SUPPORTED_RELATIONSHIPS } }
 
-      it 'does not contain an included allocation' do
-        expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
-      end
+    it 'contains empty moves' do
+      expect(result_data[:relationships][:moves][:data]).to be_empty
+    end
+
+    it 'does not contain an included allocation' do
+      expect(result[:included].map { |r| r[:type] }).to match_array(%w[locations locations])
     end
   end
 end

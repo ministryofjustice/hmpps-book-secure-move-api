@@ -3,76 +3,51 @@
 module Api
   module V1
     class AllocationEventsController < ApiController
-      before_action :validate_params, only: :create
-      after_action :send_move_notifications, only: :create
+      include Moves::Eventable
 
-      def create
-        case event_name
-        when 'cancel'
-          allocation.cancel
+      def cancel
+        validate_params!(cancel_params)
 
-          allocation.save!
-          render json: fake_event_object, status: :created
-        else
-          render status: :bad_request, json: {
-            errors: [{ title: 'invalid event_name', detail: "#{event_name} is not supported" }],
-          }
+        allocation.transaction do
+          allocation.cancel(cancellation_details)
+          process_event(allocation.moves, Event::CANCEL, cancel_move_params)
         end
+
+        render status: :no_content
       end
 
     private
 
-      PERMITTED_EVENT_PARAMS = [
+      PERMITTED_CANCEL_PARAMS = [
         :type,
-        attributes: %i[timestamp event_name],
+        attributes: %i[timestamp cancellation_reason cancellation_reason_comment],
       ].freeze
 
-      def validate_params
-        AllocationEvents::ParamsValidator.new(event_params).validate!(action_name.to_sym)
+      def validate_params!(event_params)
+        AllocationEvents::ParamsValidator.new(event_params).validate!(:cancel)
       end
 
-      def event_params
-        params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
+      def cancel_params
+        @cancel_params ||= params.require(:data).permit(PERMITTED_CANCEL_PARAMS).to_h
       end
 
-      def allocation
-        @allocation ||= Allocation.find(params.require(:allocation_id))
-      end
-
-      def send_move_notifications
-        allocation.moves.each do |move|
-          Notifier.prepare_notifications(topic: move, action_name: 'update_status')
+      def cancel_move_params
+        cancel_params.tap do |params|
+          # NB: we should always provide the reason other for the cancelled underlying moves regardless
+          # of the reason chosen for cancelling the allocation
+          params[:attributes][:cancellation_reason] = Move::CANCELLATION_REASON_OTHER
         end
       end
 
-      def event_name
-        @event_name ||= event_params.dig(:attributes, :event_name)
-      end
-
-      def timestamp
-        @timestamp ||= Time.zone.parse(event_params.dig(:attributes, :timestamp))
-      end
-
-      def fake_event_object
-        # NB: this is a temporarily implementation to simulate the creation of a new event
+      def cancellation_details
         {
-          data: {
-            id: SecureRandom.uuid,
-            type: 'events',
-            attributes: {
-              event_name: event_name,
-              timestamp: timestamp,
-            },
-            relationships: {
-              allocation: {
-                data: {
-                  type: 'allocations',
-                  id: allocation.id,
-                },
-              },
-            },
-          },
+          reason: cancel_params.dig(:attributes, :cancellation_reason),
+          comment: cancel_params.dig(:attributes, :cancellation_reason_comment),
         }
+      end
+
+      def allocation
+        @allocation ||= Allocation.find(params.require(:id))
       end
     end
   end

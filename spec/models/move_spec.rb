@@ -9,7 +9,7 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
-  it { is_expected.to have_many(:events) }
+  it { is_expected.to have_many(:move_events) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
@@ -37,6 +37,26 @@ RSpec.describe Move do
     end
   end
 
+  describe 'rejection_reason' do
+    context 'when the move is not rejected' do
+      let(:move) { build(:move, status: 'requested') }
+
+      it { expect(move).to validate_absence_of(:rejection_reason) }
+    end
+
+    context 'when the move is rejected' do
+      let(:move) { build(:move, status: 'cancelled', cancellation_reason: 'rejected') }
+
+      it {
+        expect(move).to validate_inclusion_of(:rejection_reason)
+          .in_array(%w[
+            no_space_at_receiving_prison
+            no_transport_available
+          ])
+      }
+    end
+  end
+
   it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
@@ -57,6 +77,12 @@ RSpec.describe Move do
 
   it 'does NOT validates presence of `profile` if `status` is requested' do
     expect(build(:move, status: :requested)).not_to(
+      validate_presence_of(:profile),
+    )
+  end
+
+  it 'validates presence of `profile` if `status` is booked' do
+    expect(build(:move, status: :booked)).to(
       validate_presence_of(:profile),
     )
   end
@@ -137,9 +163,10 @@ RSpec.describe Move do
   end
 
   context 'without automatic reference generation' do
-    # rubocop:disable RSpec/AnyInstance
-    before { allow_any_instance_of(described_class).to receive(:set_reference).and_return(nil) }
-    # rubocop:enable RSpec/AnyInstance
+    before do
+      service = instance_double('Moves::ReferenceGenerator', call: nil)
+      allow(Moves::ReferenceGenerator).to receive(:new).and_return(service)
+    end
 
     it { is_expected.to validate_presence_of(:reference) }
   end
@@ -277,6 +304,22 @@ RSpec.describe Move do
     end
   end
 
+  describe '#rejected?' do
+    subject { move.rejected? }
+
+    context 'with cancellation_reason of rejected' do
+      let(:move) { build :move, cancellation_reason: 'rejected' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'with cancellation_reason not rejected' do
+      let(:move) { build :move, cancellation_reason: 'other' }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#current?' do
     subject { move.current? }
 
@@ -341,37 +384,130 @@ RSpec.describe Move do
     end
   end
 
-  describe '#cancel' do
-    let(:move) { build(:move) }
+  describe '#rebook' do
+    let!(:original_move) { create(:move, :proposed, :with_allocation, :with_date_to) }
 
-    it 'sets the default cancellation_reason attribute to other' do
-      move.cancel
+    context 'when not yet rebooked' do
+      it 'creates a new move' do
+        expect { original_move.rebook }.to change(described_class, :count).by(1)
+      end
 
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
+      it 'copies the original move from location' do
+        expect(original_move.rebook.from_location_id).to eq(original_move.from_location_id)
+      end
+
+      it 'copies the original move to location' do
+        expect(original_move.rebook.to_location_id).to eq(original_move.to_location_id)
+      end
+
+      it 'copies the original move profile' do
+        expect(original_move.rebook.profile_id).to eq(original_move.profile_id)
+      end
+
+      it 'copies the original move allocation' do
+        expect(original_move.rebook.allocation_id).to eq(original_move.allocation_id)
+      end
+
+      it 'sets the move status to proposed' do
+        expect(original_move.rebook.status).to eq('proposed')
+      end
+
+      it 'sets the move date to 7 days in the future if present' do
+        expect(original_move.rebook.date).to eq(original_move.date + 7.days)
+      end
+
+      it 'sets the move date to nil if not present' do
+        original_move.date = nil
+        expect(original_move.rebook.date).to be_nil
+      end
+
+      it 'sets the move from date to 7 days in the future if present' do
+        expect(original_move.rebook.date_from).to eq(original_move.date_from + 7.days)
+      end
+
+      it 'sets the move date from to nil if not present' do
+        original_move.date_from = nil
+        expect(original_move.rebook.date_from).to be_nil
+      end
+
+      it 'sets the move to date to 7 days in the future if present' do
+        expect(original_move.rebook.date_to).to eq(original_move.date_to + 7.days)
+      end
+
+      it 'sets the move to date to nil if not present' do
+        original_move.date_to = nil
+        expect(original_move.rebook.date_to).to be_nil
+      end
+
+      it 'relates the new move to the original move' do
+        expect(original_move.rebook.original_move).to eq(original_move)
+      end
     end
 
-    it 'does not set the default cancellation_reason_comment attribute' do
-      move.cancel
+    context 'when previously rebooked' do
+      it 'does not create a new move' do
+        original_move.rebook
+        expect { original_move.rebook }.not_to change(described_class, :count)
+      end
 
-      expect(move.cancellation_reason_comment).to be_nil
+      it 'returns the previously rebooked move' do
+        rebooked_before = original_move.rebook
+        expect(original_move.rebook).to eq(rebooked_before)
+      end
+    end
+  end
+
+  describe '#documents' do
+    let(:move) { create(:move) }
+
+    context 'when documents are associated with a Move via the move_id' do
+      let!(:document) { create(:document, move: move) }
+
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
     end
 
-    it 'sets the cancellation_reason attribute' do
-      move.cancel(reason: described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+    context "when documents are associated with a move's profile via documentable_id" do
+      let!(:document) { create(:document, documentable: move.profile) }
 
-      expect(move.cancellation_reason).to eq(described_class::CANCELLATION_REASON_MADE_IN_ERROR)
+      it 'returns the correct documents' do
+        expect(move.documents).to eq([document])
+      end
     end
 
-    it 'sets the cancellation_reason_comment' do
-      move.cancel(comment: 'some comment')
+    context 'when documents not associated to a profile or move' do
+      let!(:document) { create(:document, documentable: nil) }
+      let(:move) { create(:move, profile: nil) }
 
-      expect(move.cancellation_reason_comment).to eq('some comment')
+      it 'returns no documents' do
+        expect(move.documents).to be_empty
+      end
+    end
+  end
+
+  describe '.unfilled?' do
+    it 'returns true if there are no profiles linked to a move' do
+      create_list(:move, 2, profile: nil)
+
+      expect(described_class).to be_unfilled
     end
 
-    it 'sets the status to cancelled' do
-      move.cancel
+    it 'returns true if not all moves have profiles linked' do
+      create(:move, profile: nil)
+      create(:move)
 
-      expect(move.status).to eq('cancelled')
+      expect(described_class).to be_unfilled
+    end
+
+    it 'returns false if all moves are associated to a profile' do
+      create_list(:move, 2)
+
+      expect(described_class).not_to be_unfilled
+    end
+
+    it 'returns true if no moves are present' do
+      expect(described_class).to be_unfilled
     end
   end
 

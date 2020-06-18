@@ -2,29 +2,29 @@
 
 module People
   class Creator < People::Crud
-    attr_accessor :params, :profile
+    attr_reader :person, :profile
 
     def call
-      create_profile
-    end
-
-    def person
-      profile&.person
+      Profile.transaction do
+        create_person!
+        create_profile!
+      end
     end
 
   private
 
-    def create_profile
-      Profile.transaction do
-        self.profile = Profile.new(
-          profile_params
-            .merge(person: Person.new)
-            .merge(relationships)
-            .merge(assessment_answers)
-            .merge(profile_identifiers),
-        )
-        profile.save!
-      end
+    def create_person!
+      @person = Person.new(
+        person_params
+          .merge(person_relationships)
+          .merge(person_identifiers),
+      )
+      @person.save!
+    end
+
+    def create_profile!
+      @profile = Profile.new(profile_assessment_answers.merge(person: person))
+      @profile.save!
     end
   end
 end

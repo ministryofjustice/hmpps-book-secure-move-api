@@ -9,27 +9,40 @@ module People
     end
 
     ATTRIBUTES = %i[first_names last_name date_of_birth gender_additional_information].freeze
-    PROFILE_ASSOCIATIONS = %i[gender ethnicity].freeze
+    PERSON_ASSOCIATIONS = %i[gender ethnicity].freeze
 
-  private
+  protected
 
-    def relationships
-      (params[:relationships] || {}).slice(*PROFILE_ASSOCIATIONS).map do |attribute, value|
+    def person_relationships
+      (params[:relationships] || {}).slice(*PERSON_ASSOCIATIONS).map { |attribute, value|
         ["#{attribute}_id", value[:data][:id]]
-      end.to_h
+      }.to_h
     end
 
-    def assessment_answers
+    def profile_assessment_answers
       params[:attributes].slice(:assessment_answers)
     end
 
-    def profile_identifiers
-      value = params[:attributes][:identifiers]
-      value ? { profile_identifiers: value } : {}
+    def person_identifiers
+      if identifiers
+        attributes = identifiers.each_with_object({}) do |identifier, acc|
+          acc[identifier[:identifier_type].to_sym] = identifier[:value]
+        end
+
+        attributes.slice(*Person::IDENTIFIER_TYPES)
+      else
+        {}
+      end
     end
 
-    def profile_params
+    def person_params
       params[:attributes].slice(*ATTRIBUTES)
+    end
+
+  private
+
+    def identifiers
+      @identifiers ||= params.dig(:attributes, :identifiers)
     end
   end
 end

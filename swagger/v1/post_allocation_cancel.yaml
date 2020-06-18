@@ -1,0 +1,36 @@
+PostAllocationCancel:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    type:
+      type: string
+      example: cancels
+      enum:
+      - cancels
+      description: The type of this object - always `cancels`
+    attributes:
+      type: object
+      required:
+      - timestamp
+      - cancellation_reason
+      properties:
+        timestamp:
+          $ref: timestamp_attribute.yaml#/Timestamp
+        cancellation_reason:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - made_in_error
+            - supplier_declined_to_move
+            - lack_of_space_at_receiving_establishment
+            - sending_establishment_failed_to_fill_allocation
+            - other
+          description: Reason the allocation has been cancelled
+        cancellation_reason_comment:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: In case 'other' is chosen as cancellation_reason, further details can be specified

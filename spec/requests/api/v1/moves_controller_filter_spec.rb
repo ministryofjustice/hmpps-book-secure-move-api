@@ -21,6 +21,7 @@ RSpec.describe Api::V1::MovesController do
     it 'contains all the expected moves' do
       expect(ids).to match_array(expected_moves.pluck(:id))
     end
+
     it 'does not contain any unexpected moves' do
       # NB: this is a necessary test to catch a dodgy test which has unexpected moves in the expected moves
       expect(ids & unexpected_moves.pluck(:id)).to be_empty
@@ -90,9 +91,9 @@ RSpec.describe Api::V1::MovesController do
         let(:filter_params) { { filter: { created_at_from: 'rabbit' } } }
         let(:errors_422) do
           [{
-             'title' => 'Invalid created_at_from',
-             'detail' => 'Validation failed: Created at from is not a valid date.',
-           }]
+            'title' => 'Invalid created_at_from',
+            'detail' => 'Validation failed: Created at from is not a valid date.',
+          }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -102,9 +103,9 @@ RSpec.describe Api::V1::MovesController do
         let(:filter_params) { { filter: { created_at_to: 'rabbit' } } }
         let(:errors_422) do
           [{
-               'title' => 'Invalid created_at_to',
-               'detail' => 'Validation failed: Created at to is not a valid date.',
-           }]
+            'title' => 'Invalid created_at_to',
+            'detail' => 'Validation failed: Created at to is not a valid date.',
+          }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -137,6 +138,52 @@ RSpec.describe Api::V1::MovesController do
         let(:move_type) { 'prison_recall' }
         let(:expected_moves) { prison_recall_moves }
         let(:unexpected_moves) { court_appearance_moves + prison_transfer_moves }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+    end
+
+    describe 'by has_relationship_to_allocation' do
+      let(:filter_params) { { filter: { has_relationship_to_allocation: filter_value } } }
+      let(:move_with_allocation) { create(:move, :with_allocation) }
+      let(:move_without_allocation) { create(:move) }
+
+      context 'when set to true' do
+        let(:expected_moves) { Move.where(id: move_with_allocation.id) }
+        let(:unexpected_moves) { Move.where(id: move_without_allocation.id) }
+        let(:filter_value) { true }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to false' do
+        let(:expected_moves) { Move.where(id: move_without_allocation.id) }
+        let(:unexpected_moves) { Move.where(id: move_with_allocation.id) }
+        let(:filter_value) { false }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to incorrect type' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_value) { 'some-value' }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when set to empty value' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_value) { nil }
+
+        it_behaves_like 'it returns the correct moves'
+      end
+
+      context 'when filter not set' do
+        let(:expected_moves) { Move.where(id: [move_without_allocation.id, move_with_allocation.id]) }
+        let(:unexpected_moves) { Move.none }
+        let(:filter_params) { {} }
 
         it_behaves_like 'it returns the correct moves'
       end

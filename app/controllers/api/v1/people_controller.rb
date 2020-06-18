@@ -13,7 +13,7 @@ module Api
 
         people = People::Finder.new(filter_params).call
 
-        paginate people, include: PersonSerializer::INCLUDED_DETAIL
+        paginate people, include: included_relationships
       end
 
       def create
@@ -38,7 +38,7 @@ module Api
         if success
           render json: Image.new(person.id, url_for(person.image))
         else
-          raise ActiveRecord::RecordNotFound.new('Image not found')
+          raise ActiveRecord::RecordNotFound, 'Image not found'
         end
       end
 
@@ -88,9 +88,20 @@ module Api
         :last_name,
         :date_of_birth,
         :gender_additional_information,
-        assessment_answers: [%i[key date expiry_data category title comments assessment_question_id
-                                nomis_alert_type nomis_alert_type_description nomis_alert_code nomis_alert_description
-                                created_at expires_at imported_from_nomis]],
+        assessment_answers: [%i[key
+                                date
+                                expiry_data
+                                category
+                                title
+                                comments
+                                assessment_question_id
+                                nomis_alert_type
+                                nomis_alert_type_description
+                                nomis_alert_code
+                                nomis_alert_description
+                                created_at
+                                expires_at
+                                imported_from_nomis]],
         identifiers: [%i[value identifier_type]],
       ].freeze
       PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
@@ -100,15 +111,15 @@ module Api
       end
 
       def updater
-        @updater ||= People::Updater.new(params[:id], person_params)
+        @updater ||= People::Updater.new(person, person_params)
       end
 
       def person
-        @person ||= Person.find(params[:person_id])
+        @person ||= Person.find(params[:person_id] || params[:id])
       end
 
       def render_person(person, status)
-        render json: person, status: status, include: PersonSerializer::INCLUDED_DETAIL
+        render json: person, status: status, include: included_relationships
       end
 
       def person_params
@@ -132,16 +143,25 @@ module Api
       def validate_timetable_filter_params
         People::ParamsValidator.new(timetable_filter_params).tap do |validator|
           if validator.invalid?
-            render status: :bad_request, json: {
-              errors: validator.errors.map { |field, message| { title: field, detail: message } },
-            }
+            render status: :bad_request,
+                   json: {
+                     errors: validator.errors.map { |field, message| { title: field, detail: message } },
+                   }
           end
         end
       end
 
       def validate_nomis_profile
-        profile_validator = People::NomisProfileValidator.new(person.latest_profile)
+        profile_validator = People::NomisPersonValidator.new(person)
         profile_validator.validate!
+      end
+
+      def included_relationships
+        IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
+      end
+
+      def supported_relationships
+        PersonSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

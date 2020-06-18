@@ -22,35 +22,35 @@ RSpec.describe Api::V1::JourneysController do
 
     context 'when successful' do
       let(:schema) { load_yaml_schema('get_journey_responses.yaml') }
-      let(:data) {
+      let(:data) do
         {
-            "id": journey.id,
-            "type": 'journeys',
-            "attributes": {
-                "billable": false,
-                "state": 'in_progress',
-                "timestamp": '2020-05-04T09:00:00+01:00',
-                "vehicle": {
-                  "id": '12345678ABC',
-                  "registration": 'AB12 CDE',
-                },
+          "id": journey.id,
+          "type": 'journeys',
+          "attributes": {
+            "billable": false,
+            "state": 'proposed',
+            "timestamp": '2020-05-04T09:00:00+01:00',
+            "vehicle": {
+              "id": '12345678ABC',
+              "registration": 'AB12 CDE',
             },
-            "relationships": {
-                "from_location": {
-                    "data": {
-                        "id": locations.first.id,
-                        "type": 'locations',
-                    },
-                },
-                "to_location": {
-                    "data": {
-                        "id": locations.last.id,
-                        "type": 'locations',
-                    },
-                },
+          },
+          "relationships": {
+            "from_location": {
+              "data": {
+                "id": locations.first.id,
+                "type": 'locations',
+              },
             },
+            "to_location": {
+              "data": {
+                "id": locations.last.id,
+                "type": 'locations',
+              },
+            },
+          },
         }
-      }
+      end
 
       it_behaves_like 'an endpoint that responds with success 200'
 

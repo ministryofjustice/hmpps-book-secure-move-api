@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Types
-  class JSONB < ActiveRecord::Type::Value
+  class Jsonb < ActiveRecord::Type::Value
     def initialize(concrete_class)
       @concrete_class = concrete_class
     end
@@ -15,7 +15,7 @@ module Types
     end
 
     def deserialize(value)
-      if String === value
+      if value.is_a?(String)
         decoded = begin
                     ::ActiveSupport::JSON.decode(value)
                   rescue StandardError

@@ -3,17 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Allocations::Creator do
-  subject(:creator) {
+  subject(:creator) do
     described_class.new(
       allocation_params: allocation_params,
       complex_case_params: complex_case_params,
     )
-  }
+  end
 
   let!(:complex_case1) { create(:allocation_complex_case) }
   let!(:complex_case2) { create(:allocation_complex_case, :self_harm) }
 
-  let(:complex_case_params) {
+  let(:complex_case_params) do
     [
       {
         key: complex_case1.key,
@@ -28,7 +28,7 @@ RSpec.describe Allocations::Creator do
         allocation_complex_case_id: complex_case2.id,
       },
     ]
-  }
+  end
 
   let!(:from_location) { create(:location) }
   let!(:to_location) { create(:location) }

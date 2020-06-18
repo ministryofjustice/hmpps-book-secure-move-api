@@ -7,14 +7,14 @@ module Api
       after_action :create_event, only: %i[create update]
 
       PERMITTED_NEW_JOURNEY_PARAMS = [
-          :type,
-          attributes: [:timestamp, :billable, vehicle: {}],
-          relationships: [from_location: {}, to_location: {}, supplier: {}],
+        :type,
+        attributes: [:timestamp, :billable, vehicle: {}],
+        relationships: [from_location: {}, to_location: {}, supplier: {}],
       ].freeze
 
       PERMITTED_UPDATE_JOURNEY_PARAMS = [
-          :type,
-          attributes: [:timestamp, :billable, vehicle: {}],
+        :type,
+        attributes: [:timestamp, :billable, vehicle: {}],
       ].freeze
 
       def index
@@ -78,9 +78,10 @@ module Api
 
       def new_journey_attributes
         @new_journey_attributes ||= new_journey_params.to_h[:attributes].tap do |attribs|
+          timestamp = attribs.delete(:timestamp) # throw the timestamp away as we are using client_timestamp instead
           attribs.merge!(
             move: move,
-            client_timestamp: Time.zone.parse(attribs.delete(:timestamp)),
+            client_timestamp: Time.zone.parse(timestamp),
             from_location: find_location(new_journey_params.require(:relationships).require(:from_location).require(:data).require(:id)),
             to_location: find_location(new_journey_params.require(:relationships).require(:to_location).require(:data).require(:id)),
             supplier: supplier,
@@ -93,7 +94,7 @@ module Api
         location = Location.find_or_initialize_by(id: location_id)
         unless location.persisted?
           location.errors.add(:location, "reference was not found id=#{location_id}")
-          raise ActiveModel::ValidationError.new(location)
+          raise ActiveModel::ValidationError, location
         end
         location
       end
@@ -103,7 +104,7 @@ module Api
         supplier = Supplier.find_by(id: supplier_id) || current_user.owner
         if supplier.nil? || (current_user.owner.present? && supplier != current_user.owner)
           supplier.errors.add(:supplier, "reference is not valid for this account or not found id=#{supplier_id}")
-          raise ActiveModel::ValidationError.new(supplier)
+          raise ActiveModel::ValidationError, supplier
         end
         supplier
       end
@@ -125,11 +126,13 @@ module Api
 
       def create_event
         # Logs the event for posterity and the immutable event log
-        Event.create!(
+        journey.events.create!(
           event_name: action_name,
-          eventable: journey,
           client_timestamp: Time.zone.parse(data_params.dig(:attributes, :timestamp)),
-          details: { data: data_params, supplier_id: supplier.id },
+          details: {
+            data_params: data_params,
+            supplier_id: supplier.id,
+          },
         )
       end
     end

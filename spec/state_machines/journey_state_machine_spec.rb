@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe JourneyStateMachine do
   let(:machine) { described_class.new(target) }
   let(:target) { Struct.new(:state).new(initial_state) } # NB: the target is not updated until an event fires
-  let(:initial_state) { :in_progress }
+  let(:initial_state) { :proposed }
 
   before { machine.restore!(initial_state) }
 
@@ -19,9 +19,27 @@ RSpec.describe JourneyStateMachine do
     end
   end
 
-  it { is_expected.to respond_to(:cancel, :uncancel, :complete, :uncomplete, :restore!, :current) }
+  it { is_expected.to respond_to(:start, :reject, :cancel, :uncancel, :complete, :uncomplete, :restore!, :current) }
+
+  context 'when in the proposed state' do
+    it_behaves_like 'state_machine target state', :proposed
+
+    context 'when the start event is fired' do
+      before { machine.start }
+
+      it_behaves_like 'state_machine target state', :in_progress
+    end
+
+    context 'when the reject event is fired' do
+      before { machine.reject }
+
+      it_behaves_like 'state_machine target state', :rejected
+    end
+  end
 
   context 'when in the in_progress state' do
+    let(:initial_state) { :in_progress }
+
     it_behaves_like 'state_machine target state', :in_progress
 
     context 'when the complete event is fired' do

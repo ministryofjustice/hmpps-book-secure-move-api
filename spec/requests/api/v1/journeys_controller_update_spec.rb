@@ -22,7 +22,7 @@ RSpec.describe Api::V1::JourneysController do
     let(:timestamp) { '2020-05-04T12:12:12+01:00' }
     let(:billable) { true }
 
-    let(:journey_params) {
+    let(:journey_params) do
       {
         data: {
           "type": 'journeys',
@@ -33,7 +33,7 @@ RSpec.describe Api::V1::JourneysController do
           },
         },
       }
-    }
+    end
 
     before do
       patch "/api/v1/moves/#{move_id}/journeys/#{journey_id}", params: journey_params, headers: headers, as: :json
@@ -52,7 +52,7 @@ RSpec.describe Api::V1::JourneysController do
             "type": 'journeys',
             "attributes": {
               "billable": billable,
-               "vehicle": { "id": '9876', "registration": 'XYZ' },
+              "vehicle": { "id": '9876', "registration": 'XYZ' },
             },
           })
         end
@@ -70,7 +70,7 @@ RSpec.describe Api::V1::JourneysController do
         end
 
         context 'when attempting to update the from_location or to_location' do
-          let(:journey_params) {
+          let(:journey_params) do
             {
               data: {
                 "type": 'journeys',
@@ -95,7 +95,7 @@ RSpec.describe Api::V1::JourneysController do
                 },
               },
             }
-          }
+          end
 
           it 'does not update from_location' do
             expect(journey.from_location.id).to eql(from_location_id)
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::JourneysController do
       end
 
       context 'when only updating billable' do
-        let(:journey_params) {
+        let(:journey_params) do
           {
             data: {
               "type": 'journeys',
@@ -118,7 +118,7 @@ RSpec.describe Api::V1::JourneysController do
               },
             },
           }
-        }
+        end
 
         it 'updates the underlying journey billable' do
           expect(journey.billable).to be true
@@ -130,7 +130,7 @@ RSpec.describe Api::V1::JourneysController do
       end
 
       context 'when only updating the vehicle' do
-        let(:journey_params) {
+        let(:journey_params) do
           {
             data: {
               "type": 'journeys',
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::JourneysController do
               },
             },
           }
-        }
+        end
 
         it 'does not update the underlying journey billable' do
           expect(journey.billable).to be false
@@ -151,7 +151,6 @@ RSpec.describe Api::V1::JourneysController do
         end
       end
     end
-
 
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
@@ -166,10 +165,10 @@ RSpec.describe Api::V1::JourneysController do
         let(:timestamp) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid timestamp',
                'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }]
-          }
+          end
         end
       end
 
@@ -177,10 +176,10 @@ RSpec.describe Api::V1::JourneysController do
         let(:billable) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) {
+          let(:errors_422) do
             [{ 'title' => 'Invalid billable',
                'detail' => 'Validation failed: Billable is not included in the list' }]
-          }
+          end
         end
       end
 
