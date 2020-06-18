@@ -12,20 +12,16 @@ module StateMachineable
 
   def reload(options = nil)
     # Override to ensure state machine state is correctly restored. Unfortunately there's not a callback for this.
-    super.tap { restore_state }
+    super.tap { initialize_state }
   end
 
   def initialize_state
-    if read_attribute(state_attribute).blank?
-      write_attribute(state_attribute, state_machine.current)
-    else
-      restore_state
-    end
-  end
-
-  def restore_state
     state = read_attribute(state_attribute)
-    state_machine.restore!(state.to_sym) if state.present?
+    if state.present?
+      state_machine.restore!(state.to_sym)
+    else
+      write_attribute(state_attribute, state_machine.current)
+    end
   end
 
   def state_machine

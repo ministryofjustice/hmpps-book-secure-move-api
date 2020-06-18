@@ -12,8 +12,8 @@ FactoryBot.define do
     moves_count { Faker::Number.non_zero_digit }
     complete_in_full { false }
 
-    # NB we need to restore_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
-    after(:build) { |allocation| allocation.restore_state }
+    # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
+    after(:build) { |allocation| allocation.initialize_state }
 
     trait :unfilled do
       status { 'unfilled' }
