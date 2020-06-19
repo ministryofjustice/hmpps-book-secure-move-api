@@ -18,7 +18,7 @@ class Allocation < VersionedModel
     long: 'more_than_16',
   }
 
-  enum status: {
+  enum states: {
     unfilled: ALLOCATION_STATUS_UNFILLED,
     filled: ALLOCATION_STATUS_FILLED,
     cancelled: ALLOCATION_STATUS_CANCELLED,
@@ -37,7 +37,7 @@ class Allocation < VersionedModel
   has_many :moves, inverse_of: :allocation, dependent: :destroy, autosave: true
   has_many :events, as: :eventable, dependent: :destroy
 
-  validates :status, presence: true
+  validates :status, presence: true, inclusion: { in: states }
 
   validates :from_location, presence: true
   validates :to_location, presence: true
@@ -55,7 +55,7 @@ class Allocation < VersionedModel
 
   has_state_machine AllocationStateMachine, on: :status
 
-  delegate :fill, :unfill, to: :state_machine
+  delegate :fill, :unfill, :filled?, :unfilled?, :cancelled?, to: :state_machine
 
   def cancel(reason: CANCELLATION_REASON_OTHER, comment: 'Allocation was cancelled')
     assign_attributes(

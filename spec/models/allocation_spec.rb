@@ -18,7 +18,7 @@ RSpec.describe Allocation do
   it { is_expected.to define_enum_for(:sentence_length).backed_by_column_of_type(:string) }
 
   it { is_expected.to validate_presence_of(:status) }
-  it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:string) }
+  it { is_expected.to validate_inclusion_of(:status).in_array(%w[unfilled filled cancelled]) }
 
   it { is_expected.to validate_presence_of(:moves_count) }
   it { is_expected.to validate_numericality_of(:moves_count) }
