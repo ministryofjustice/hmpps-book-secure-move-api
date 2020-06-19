@@ -275,13 +275,12 @@ jobs:
   notify_of_approval:
     executor: basic-executor
     steps:
-      - *notify_slack_on_release_start
+      - *notify_slack_of_approval
 
   notify_of_release:
     executor: basic-executor
     steps:
-      - *notify_slack_of_approval
-
+      - *notify_slack_on_release_start
 
   setup_test_environment:
     executor: test-executor
