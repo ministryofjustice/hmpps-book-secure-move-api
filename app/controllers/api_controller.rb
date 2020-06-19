@@ -17,8 +17,6 @@ class ApiController < ApplicationController
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
-
-  # TODO: change this behaviour
   rescue_from Idempotence::ConflictError, with: :render_conflict_error
   rescue_from Idempotence::KeyRequiredError, with: :render_bad_request_error
 
@@ -34,6 +32,20 @@ class ApiController < ApplicationController
 
 private
 
+  def idempotent_action
+    store = Idempotence::Store.new(request)
+
+    cached_response = store.get
+
+    if cached_response.present?
+      render status: cached_response['status'], body: cached_response['body'], content_type: cached_response['content_type']
+    else
+      yield
+      store.set(status: response.status, body: response.body, content_type: response.content_type)
+    end
+  end
+
+
   # NB: for new controllers
   def validate_required_idempotency_key
     idempotence_validator.call(request.headers['IDEMPOTENCY_KEY'], required: true)
@@ -41,7 +53,7 @@ private
 
   # NB: for legacy controllers
   def validate_optional_idempotency_key
-    idempotence_validator.call(prequest.headers['IDEMPOTENCY_KEY'], required: false)
+    idempotence_validator.call(request.headers['IDEMPOTENCY_KEY'], required: false)
   end
 
   def idempotence_validator

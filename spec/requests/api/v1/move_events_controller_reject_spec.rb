@@ -11,7 +11,7 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:supplier) { create(:supplier) }
     let(:application) { create(:application, owner_id: supplier.id) }
     let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': '1234' } }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     let(:move) { create(:move) }
@@ -32,11 +32,30 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/reject", params: reject_params, headers: headers, as: :json
+      # post "/api/v1/moves/#{move_id}/reject", params: reject_params, headers: headers, as: :json
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 204'
+
+
+      it 'foo' do
+        puts "IN TEST---"
+
+        puts "FIRST POST"
+        post "/api/v1/moves/#{move_id}/reject", params: reject_params, headers: headers, as: :json
+        puts "TEST1 response.status: #{response.status}"
+        puts "TEST1 response.body: #{response.body}"
+        puts "TEST1 response.headers: #{response.headers}"
+        puts "TEST1 response.content_type: #{response.content_type}"
+
+        puts "\nSECOND POST"
+        post "/api/v1/moves/#{move_id}/reject", params: reject_params, headers: headers, as: :json
+        puts "TEST2 response.status: #{response.status}"
+        puts "TEST2 response.body: #{response.body}"
+        puts "TEST2 response.headers: #{response.headers}"
+        puts "TEST2 response.content_type: #{response.content_type}"
+      end
 
       it 'updates the move status' do
         expect(move.reload.status).to eql('cancelled')

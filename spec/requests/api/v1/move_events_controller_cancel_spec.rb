@@ -11,7 +11,7 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:supplier) { create(:supplier) }
     let(:application) { create(:application, owner_id: supplier.id) }
     let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': '1234' } }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     let(:move) { create(:move) }
