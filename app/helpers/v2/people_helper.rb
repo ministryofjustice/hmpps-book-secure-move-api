@@ -1,7 +1,7 @@
 module V2
   module PeopleHelper
     def index_and_render
-      # ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
+      ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
 
       people = V2::People::Finder.new(filter_params).call
 
@@ -69,7 +69,7 @@ module V2
     end
 
     def prison_numbers
-      @prison_numbers ||= filter_params[:prison_number]&.split(',')
+      filter_params[:prison_number]&.split(',')
     end
   end
 end
