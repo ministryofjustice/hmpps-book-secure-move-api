@@ -18,6 +18,8 @@ module EventLog
         when Event::APPROVE
           move.status = Move::MOVE_STATUS_REQUESTED
           move.date = event.date
+        when Event::ACCEPT
+          move.status = Move::MOVE_STATUS_BOOKED
         when Event::REJECT
           move.status = Move::MOVE_STATUS_CANCELLED
           move.rejection_reason = event.rejection_reason
