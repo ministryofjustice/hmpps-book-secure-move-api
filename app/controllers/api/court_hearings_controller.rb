@@ -1,51 +1,49 @@
 module Api
-  module V1
-    class CourtHearingsController < ApiController
-      def create
-        court_hearing = CourtHearing.create!(court_hearings_attributes)
+  class CourtHearingsController < ApiController
+    def create
+      court_hearing = CourtHearing.create!(court_hearings_attributes)
 
-        if should_save_in_nomis?
-          CourtHearings::CreateInNomis.call(move, move.court_hearings)
-          Rails.logger.info("Saved to nomis #{court_hearing.attributes.to_json}")
-        else
-          Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
-        end
-
-        render json: court_hearing, status: :created
+      if should_save_in_nomis?
+        CourtHearings::CreateInNomis.call(move, move.court_hearings)
+        Rails.logger.info("Saved to nomis #{court_hearing.attributes.to_json}")
+      else
+        Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
       end
 
-    private
+      render json: court_hearing, status: :created
+    end
 
-      def court_hearings_attributes
-        court_hearings_params.merge(move: move)
-      end
+  private
 
-      def court_hearings_params
-        params.require(:data).require(:attributes).permit(
-          :start_time,
-          :case_start_date,
-          :case_number,
-          :nomis_case_id,
-          :case_type,
-          :comments,
-        )
-      end
+    def court_hearings_attributes
+      court_hearings_params.merge(move: move)
+    end
 
-      def move
-        @move ||= begin
-                    id = params.require(:data).dig(:relationships, :move, :data, :id)
+    def court_hearings_params
+      params.require(:data).require(:attributes).permit(
+        :start_time,
+        :case_start_date,
+        :case_number,
+        :nomis_case_id,
+        :case_type,
+        :comments,
+      )
+    end
 
-                    return if id.blank?
+    def move
+      @move ||= begin
+                  id = params.require(:data).dig(:relationships, :move, :data, :id)
 
-                    Move.find(id)
-                  end
-      end
+                  return if id.blank?
 
-      def should_save_in_nomis?
-        save_to_nomis = params.fetch('do_not_save_to_nomis', 'false') != 'true'
+                  Move.find(id)
+                end
+    end
 
-        move && save_to_nomis
-      end
+    def should_save_in_nomis?
+      save_to_nomis = params.fetch('do_not_save_to_nomis', 'false') != 'true'
+
+      move && save_to_nomis
     end
   end
 end
