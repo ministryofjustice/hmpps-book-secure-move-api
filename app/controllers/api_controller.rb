@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  before_action :extend_versioned_controller_actions
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
+  before_action :restrict_request_api_version
+  before_action :extend_versioned_controller_actions
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
   before_action :validate_include_params
@@ -60,7 +61,15 @@ private
   def restrict_request_content_type
     return if request.content_type == restricted_request_content_type || valid_empty_request?
 
-    render_invalid_media_type_error
+    render_invalid_media_type_error('Invalid Media Type', "Content-Type must be #{restricted_request_content_type}")
+  end
+
+  def restrict_request_api_version
+    version_supported = %w[1 2]
+
+    return if version_supported.include?(api_version) || api_version.nil?
+
+    render_invalid_media_type_error('Invalid Api Version', "The Api versions supported are: #{version_supported}")
   end
 
   def set_content_type
@@ -93,11 +102,11 @@ private
     )
   end
 
-  def render_invalid_media_type_error
+  def render_invalid_media_type_error(title, detail)
     render(
       json: { errors: [{
-        title: 'Invalid Media Type',
-        detail: "Content-Type must be #{restricted_request_content_type}",
+        title: title,
+        detail: detail,
       }] },
       status: :unsupported_media_type,
     )
@@ -203,11 +212,12 @@ private
 
   def api_version
     res = request.headers['Accept'].match(REGEXP_API_VERSION)
-    res&.[](:version) || '1'
+    res&.[](:version)
   end
 
   def extend_versioned_controller_actions
-    version = "Api::V#{api_version}"
+    default_version = '1'
+    version = "Api::V#{api_version || default_version}"
 
     actions_module = "#{controller_name.capitalize}Actions"
 
