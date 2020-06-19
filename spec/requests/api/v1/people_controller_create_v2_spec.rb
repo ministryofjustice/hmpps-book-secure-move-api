@@ -85,18 +85,22 @@ RSpec.describe Api::V1::PeopleController do
       []
     end
 
+    it 'returns the correct data' do
+      post '/api/people', params: person_params, headers: headers, as: :json
+
+      expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
+    end
+
+    it 'returns the correct data' do
+      post '/api/people', params: person_params, headers: headers, as: :json
+
+      expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
+    end
+
     context 'with valid params' do
       before { post '/api/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 201'
-    end
-
-    context 'when version V2' do
-      it 'returns the correct data' do
-        post '/api/people', params: person_params, headers: headers, as: :json
-
-        expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
-      end
     end
 
     describe 'include query param' do

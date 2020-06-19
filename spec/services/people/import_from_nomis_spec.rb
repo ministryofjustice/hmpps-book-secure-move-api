@@ -1,6 +1,4 @@
 RSpec.describe People::ImportFromNomis do
-  # {:prison_number=>"G5033UT", :latest_booking_id=>1059832, :last_name=>"SMITH", :first_name=>"DELBERT", :middle_names=>"JOHN", :date_of_birth=>"1958-04-07", :aliases=>nil, :pnc_number=>"73/9524M", :cro_number=>"9524/73C", :gender=>"M", :ethnicity=>nil, :nationalities=>"British"}
-
   context 'when the person is present in NOMIS', with_nomis_client_authentication: true do
     subject(:import) { described_class.new(prison_number) }
 
