@@ -8,7 +8,7 @@ module MoveEvents
 
     attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason
 
-    validates :type, presence: true, inclusion: { in: %w[cancel complete lockouts redirects approve reject] }
+    validates :type, presence: true, inclusion: { in: %w[cancel complete lockouts redirects approve reject accepts] }
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, if: -> { type == 'cancel' }
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }, if: -> { type == 'reject' }
 

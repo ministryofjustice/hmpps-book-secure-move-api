@@ -4,12 +4,20 @@ module Api
   class MoveEventsController < ApiController
     include Moves::Eventable
 
+    ACCEPT_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
     COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
     REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
     APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
     REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook]].freeze
+
+    def accept
+      validate_params!(accept_params)
+      MoveEvents::ParamsValidator.new(accept_params).validate!
+      process_event(move, Event::ACCEPT, accept_params)
+      render status: :no_content
+    end
 
     def cancel
       validate_params!(cancel_params)
@@ -57,6 +65,10 @@ module Api
       if require_to_location
         Location.find(params.require(:data).require(:relationships).require(:to_location).require(:data).require(:id))
       end
+    end
+
+    def accept_params
+      @accept_params ||= params.require(:data).permit(ACCEPT_PARAMS).to_h
     end
 
     def cancel_params

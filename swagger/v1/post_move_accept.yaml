@@ -1,4 +1,4 @@
-PostMoveApprove:
+PostMoveAccept:
   type: object
   required:
   - type
@@ -18,8 +18,3 @@ PostMoveApprove:
       properties:
         timestamp:
           $ref: timestamp_attribute.yaml#/Timestamp
-        date:
-          type: string
-          format: date
-          example: '2020-05-17'
-          description: Date on which the move is scheduled

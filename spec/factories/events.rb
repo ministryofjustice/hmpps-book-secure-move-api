@@ -57,6 +57,10 @@ FactoryBot.define do
       event_name { 'reject' }
     end
 
+    trait :accept do
+      event_name { 'accept' }
+    end
+
     trait :start do
       event_name { 'start' }
     end
