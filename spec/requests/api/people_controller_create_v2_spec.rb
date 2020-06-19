@@ -182,5 +182,21 @@ RSpec.describe Api::PeopleController do
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
+
+    context 'with an invalid api version header' do
+      let(:headers_with_wrong_version) { headers.merge('Accept': 'application/json; version=9') }
+
+      before { post '/api/people', params: person_params, headers: headers_with_wrong_version, as: :json }
+
+      it 'returns 415 errors message' do
+        expect(response).to have_http_status(:unsupported_media_type)
+        expect(response_json).to include_json(errors: [
+          {
+            'title' => 'Invalid Api Version',
+            'detail' => 'The Api versions supported are: ["1", "2"]',
+          },
+        ])
+      end
+    end
   end
 end
