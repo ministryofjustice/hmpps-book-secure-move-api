@@ -415,7 +415,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 6.0.3)
   rails-erd
-  routing-filter
+  routing-filter (~> 0.6.3)
   rspec-json_expectations
   rspec-rails
   rswag-api
