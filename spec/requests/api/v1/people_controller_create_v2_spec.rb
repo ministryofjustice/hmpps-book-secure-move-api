@@ -99,7 +99,6 @@ RSpec.describe Api::V1::PeopleController do
       end
     end
 
-
     describe 'include query param' do
       before do
         post "/api/people#{query_params}", params: person_params, headers: headers, as: :json
@@ -133,7 +132,6 @@ RSpec.describe Api::V1::PeopleController do
         end
       end
     end
-
 
     it 'creates a new person' do
       expect {

@@ -4,11 +4,6 @@ module RoutingFilter
     HEADER_VERSION_REGEX = %r{.*version=(?<version>\d+)}.freeze
     PATH_VERSION_REGEX = %r{\A\/api(\/(?<version>v1))\/.+\Z}.freeze
 
-    # When we receive a request to recognise a route, remove the version to match
-    # our non-versioned path
-    #
-    # This is for backwards compatibility with an old way of supporting versioning in paths.
-    #
     def around_recognize(path, env)
       raise ActionController::RoutingError, 'Not Found' if raise_not_found_error?(path, env)
 
@@ -29,7 +24,7 @@ module RoutingFilter
     end
 
     def add_version!(result)
-      path, options = result
+      path, _options = result
 
       path.gsub!('/api/', '/api/v1/')
     end
