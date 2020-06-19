@@ -6,7 +6,14 @@ RSpec.describe Api::V1::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
 
   describe 'POST /people' do
     let(:schema) { load_yaml_schema('post_people_responses.yaml') }
