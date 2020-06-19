@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get '/health', to: 'status#health', format: :json
   get '/ping', to: 'status#ping', format: :json
 
-  namespace :api, module: 'api/v1' do
+  namespace :api do
     filter :versioned_path
 
     resources :allocations, only: %i[create index show] do
