@@ -98,11 +98,6 @@ RSpec.describe Api::V1::PeopleController do
       expect(response_json).to include_json(data: expected_data.merge(id: person.id))
     end
 
-    # TODO: Remove me when v1 is dead
-    it 'raises not found when v1 is in the path' do
-      expect { patch "/api/v1/people/#{person.id}", params: {}, headers: headers, as: :json }.to raise_error(ActionController::RoutingError, 'Not Found')
-    end
-
     describe 'include query param' do
       before do
         patch "/api/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json

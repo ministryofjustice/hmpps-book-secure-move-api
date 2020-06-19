@@ -5,9 +5,8 @@ module RoutingFilter
     PATH_VERSION_REGEX = %r{\A\/api(\/(?<version>v1))\/.+\Z}.freeze
 
     def around_recognize(path, env)
-      raise ActionController::RoutingError, 'Not Found' if raise_not_found_error?(path, env)
-
       remove_version!(path)
+
       yield
     end
 
