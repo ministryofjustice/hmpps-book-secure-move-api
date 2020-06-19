@@ -31,7 +31,6 @@ module People
         gender: gender,
         ethnicity: ethnicity,
         police_national_computer: police_national_computer,
-        nomis_prison_number: prison_number,
         prison_number: prison_number,
         criminal_records_office: criminal_records_office,
         last_synced_with_nomis: last_synced_with_nomis,
