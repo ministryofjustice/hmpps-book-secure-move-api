@@ -1,9 +1,9 @@
 Person:
   type: object
   required:
-  - id
-  - type
-  - attributes
+    - id
+    - type
+    - attributes
   properties:
     id:
       type: string
@@ -14,13 +14,13 @@ Person:
       type: string
       example: people
       enum:
-      - people
+        - people
       description: The type of this object - always `people`
     attributes:
       type: object
       required:
-      - first_names
-      - last_name
+        - first_names
+        - last_name
       properties:
         first_names:
           type: string
@@ -33,32 +33,39 @@ Person:
         date_of_birth:
           type: string
           format: date
-          example: '1965-10-24'
+          example: "1965-10-24"
           description: Person's date of birth in ISO 8601 format
         gender_additional_information:
           oneOf:
-          - type: string
-          - type: 'null'
-          description: Supporting information for detainees of certain genders to
+            - type: string
+            - type: "null"
+          description:
+            Supporting information for detainees of certain genders to
             capture any relevant transport information
         prison_number:
-          type: string
-          example: D00001dZZ
-          description: The person identifier used in Nomis
+          oneof:
+            - type: string
+              example: D00001dZZ
+              description: The person identifier used in Nomis
+            - type: "null"
         criminal_records_office:
-          type: string
-          example: CRO0105d
-          description: The criminal record office identifier
+          oneof:
+            - type: string
+              example: CRO0105d
+              description: The criminal record office identifier
+            - type: "null"
         police_national_computer:
-          type: string
-          example: AB/00001d
-          description: The person identifier used by the Police
+          oneof:
+            - type: string
+              example: AB/00001d
+              description: The person identifier used by the Police
+            - type: "null"
     relationships:
       type: object
       properties:
         gender:
-          $ref: '../v1/gender_reference.yaml#/GenderReference'
+          $ref: "../v1/gender_reference.yaml#/GenderReference"
           description: Person's gender
         ethnicity:
-          $ref: '../v1/ethnicity_reference.yaml#/EthnicityReference'
+          $ref: "../v1/ethnicity_reference.yaml#/EthnicityReference"
           description: Person's ethnicity

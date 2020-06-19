@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_133540) do
+ActiveRecord::Schema.define(version: 2020_06_17_155359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
     t.text "other_criteria"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status"
+    t.string "status", null: false
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"

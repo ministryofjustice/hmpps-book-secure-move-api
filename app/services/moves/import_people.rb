@@ -24,7 +24,7 @@ module Moves
       new_person_count = 0
       changed_profile_count = 0
       people.each do |offender_no, person_data|
-        profile = People::Importer.new(person_data).call
+        profile = People::BuildPersonAndProfileV1.new(person_data).call
 
         new_person_count += 1 if profile.new_record?
 
