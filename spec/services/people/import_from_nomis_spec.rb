@@ -63,7 +63,4 @@ RSpec.describe People::ImportFromNomis do
       end
     end
   end
-
-  context 'when the person is not present' do
-  end
 end
