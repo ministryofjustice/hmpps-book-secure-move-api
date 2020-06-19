@@ -127,6 +127,10 @@ references:
       at: .
 
 executors:
+  basic-executor:
+    docker:
+      - image: cimg/base:2020.06
+
   cloud-platform-executor:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
@@ -198,14 +202,7 @@ commands:
     parameters:
       env:
         type: string
-      notify_slack:
-        type: string
-        default: ""
     steps:
-      - when:
-          condition: <<parameters.notify_slack>>
-          steps:
-            - *notify_slack_on_release_start
       - run:
           name: Login to ECR
           command: |
@@ -276,9 +273,15 @@ commands:
 
 jobs:
   notify_of_approval:
-    executor: cloud-platform-executor
+    executor: basic-executor
+    steps:
+      - *notify_slack_on_release_start
+
+  notify_of_release:
+    executor: basic-executor
     steps:
       - *notify_slack_of_approval
+
 
   setup_test_environment:
     executor: test-executor
@@ -354,7 +357,6 @@ jobs:
       - setup_remote_docker
       - retag_docker_image:
           env: "preprod"
-          notify_slack: "true"
       - deploy_to_k8s:
           env: "preprod"
 
@@ -373,6 +375,8 @@ workflows:
 
   test-build-deploy:
     jobs:
+      - notify_of_release:
+          <<: *only_for_deployment
       - setup_test_environment:
           <<: *all_tags
       - api_docs:
