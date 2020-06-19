@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
+  DEFAULT_API_VERSION = '1'
+
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :restrict_request_api_version
@@ -216,8 +218,7 @@ private
   end
 
   def extend_versioned_controller_actions
-    default_version = '1'
-    version = "Api::V#{api_version || default_version}"
+    version = "Api::V#{api_version || DEFAULT_API_VERSION}"
 
     actions_module = "#{controller_name.capitalize}Actions"
 
