@@ -7,29 +7,15 @@ module Api
       before_action :validate_nomis_profile, only: %i[court_cases image timetable]
 
       def index
-        prison_number = filter_params[:prison_number]
-
-        import_person_from_nomis(prison_number) if prison_number
-
-        people = People::Finder.new(filter_params).call
-
-        paginate people, include: included_relationships
+        index_and_render
       end
 
       def create
-        creator.call
-        # NB: to reduce duplicate notifications, we DO NOT currently notify on creating a person/profile, only when
-        # updating. This logic may change as the calls to the API get more streamlined - in which case we probably will
-        # need to call the notifier here.
-        render_person(creator.person, 201)
+        create_and_render
       end
 
       def update
-        updater.call
-        # NB: it is known and currently accepted that raising notifications on the patch-people endpoint will lead to
-        # duplicate move notifications (see P4-1357)
-        Notifier.prepare_notifications(topic: updater.person, action_name: 'update')
-        render_person(updater.person, 200)
+        update_and_render
       end
 
       def image
@@ -71,63 +57,10 @@ module Api
         { errors: [error.json_api_error] }
       end
 
-      def import_person_from_nomis(prison_number)
-        # This prevents us from blaming the current user/application for the NOMIS sync
-        PaperTrail.request(whodunnit: nil) do
-          Moves::ImportPeople.new([prison_number]).call
-        end
-      rescue StandardError => e
-        Raven.capture_exception(e)
-      end
-
       PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
       PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
-      PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
-      PERSON_ATTRIBUTES = [
-        :first_names,
-        :last_name,
-        :date_of_birth,
-        :gender_additional_information,
-        assessment_answers: [%i[key
-                                date
-                                expiry_data
-                                category
-                                title
-                                comments
-                                assessment_question_id
-                                nomis_alert_type
-                                nomis_alert_type_description
-                                nomis_alert_code
-                                nomis_alert_description
-                                created_at
-                                expires_at
-                                imported_from_nomis]],
-        identifiers: [%i[value identifier_type]],
-      ].freeze
-      PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
-
-      def creator
-        @creator ||= People::Creator.new(person_params)
-      end
-
-      def updater
-        @updater ||= People::Updater.new(person, person_params)
-      end
-
       def person
         @person ||= Person.find(params[:person_id] || params[:id])
-      end
-
-      def render_person(person, status)
-        render json: person, status: status, include: included_relationships
-      end
-
-      def person_params
-        params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h
-      end
-
-      def filter_params
-        params.require(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
       end
 
       def court_case_filter_params
@@ -154,14 +87,6 @@ module Api
       def validate_nomis_profile
         profile_validator = People::NomisPersonValidator.new(person)
         profile_validator.validate!
-      end
-
-      def included_relationships
-        IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
-      end
-
-      def supported_relationships
-        PersonSerializer::SUPPORTED_RELATIONSHIPS
       end
     end
   end

@@ -38,9 +38,9 @@ gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.6'
 gem 'rails', '~> 6.0.3'
+gem 'routing-filter', '~> 0.6.3'
 gem 'sentry-raven'
 gem 'sidekiq'
-gem 'tty-prompt'
 gem 'validate_url', '~> 1.0.8'
 
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests

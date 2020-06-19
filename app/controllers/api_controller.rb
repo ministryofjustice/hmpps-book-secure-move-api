@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
+  before_action :extend_versioned_controller_actions
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :set_content_type
@@ -8,6 +9,7 @@ class ApiController < ApplicationController
   before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
+  REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}.freeze
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
@@ -197,5 +199,20 @@ private
 
   def supported_relationships
     []
+  end
+
+  def api_version
+    res = request.headers['Accept'].match(REGEXP_API_VERSION)
+    res&.[](:version) || '1'
+  end
+
+  def extend_versioned_controller_actions
+    version = "Api::V#{api_version}"
+
+    actions_module = "#{controller_name.capitalize}Actions"
+
+    if version.constantize.const_defined?(actions_module)
+      extend "#{version}::#{actions_module}".constantize
+    end
   end
 end

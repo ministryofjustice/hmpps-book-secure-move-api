@@ -18,6 +18,6 @@ class NotificationSerializer < ActiveModel::Serializer
   end
 
   def move_url
-    api_v1_move_url(object.topic.id)
+    api_move_url(object.topic.id)
   end
 end

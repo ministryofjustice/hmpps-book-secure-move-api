@@ -8,7 +8,7 @@ FactoryBot.define do
     vehicle { { id: '12345678ABC', registration: 'AB12 CDE' } }
 
     # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
-    after(:build) { |object| object.send(:initialize_state) }
+    after(:build, &:initialize_state)
 
     # Journey statuses
     trait :proposed do

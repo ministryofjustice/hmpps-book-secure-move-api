@@ -2,11 +2,18 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::PeopleController do
+RSpec.describe Api::V1::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { create(:access_token).token }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
 
   describe 'POST /people' do
     let(:schema) { load_yaml_schema('post_people_responses.yaml', version: 'v2') }
@@ -78,21 +85,21 @@ RSpec.describe Api::V2::PeopleController do
       []
     end
 
-    context 'with valid params' do
-      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
-
-      it_behaves_like 'an endpoint that responds with success 201'
-    end
-
     it 'returns the correct data' do
-      post '/api/v2/people', params: person_params, headers: headers, as: :json
+      post '/api/people', params: person_params, headers: headers, as: :json
 
       expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
     end
 
+    context 'with valid params' do
+      before { post '/api/people', params: person_params, headers: headers, as: :json }
+
+      it_behaves_like 'an endpoint that responds with success 201'
+    end
+
     describe 'include query param' do
       before do
-        post "/api/v2/people#{query_params}", params: person_params, headers: headers, as: :json
+        post "/api/people#{query_params}", params: person_params, headers: headers, as: :json
       end
 
       context 'when including multiple relationships' do
@@ -126,7 +133,7 @@ RSpec.describe Api::V2::PeopleController do
 
     it 'creates a new person' do
       expect {
-        post '/api/v2/people', params: person_params, headers: headers, as: :json
+        post '/api/people', params: person_params, headers: headers, as: :json
       }.to change(Person, :count).by(1)
     end
 
@@ -135,7 +142,7 @@ RSpec.describe Api::V2::PeopleController do
       # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        post '/api/v2/people', params: person_params, headers: headers, as: :json
+        post '/api/people', params: person_params, headers: headers, as: :json
       end
 
       it 'does NOT call the notifier when creating a person' do
@@ -147,13 +154,13 @@ RSpec.describe Api::V2::PeopleController do
       let(:ethnicity_id) { 999 }
       let(:detail_404) { "Couldn't find Ethnicity with 'id'=999" }
 
-      before { post '/api/v2/people#', params: person_params, headers: headers, as: :json }
+      before { post '/api/people#', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with a bad request' do
-      before { post '/api/v2/people', params: {}, headers: headers, as: :json }
+      before { post '/api/people', params: {}, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
@@ -163,7 +170,7 @@ RSpec.describe Api::V2::PeopleController do
       let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
       let(:content_type) { ApiController::CONTENT_TYPE }
 
-      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+      before { post '/api/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 401'
     end
@@ -171,7 +178,7 @@ RSpec.describe Api::V2::PeopleController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { post '/api/v2/people', params: person_params, headers: headers, as: :json }
+      before { post '/api/people', params: person_params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
