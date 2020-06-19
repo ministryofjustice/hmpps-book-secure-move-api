@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 module People
-  # TODO: rename class, since this is misleading: it is not importing anything fron NOMIS.
-  class Importer
+  # This class is "Legacy Code", only relevant to endpoint V1.
+  # Its functionality have been refactored into:
+  #   - People::Importer
+  #   - Profile::ImportAlertsAndPersonalCareNeeds
+  # Those are relevant to version >= V2
+  #
+  class BuildPersonAndProfileV1
     NOMIS_IDENTIFIER_MAPPING = {
       'police_national_computer' => :pnc_number,
       'prison_number' => :prison_number,

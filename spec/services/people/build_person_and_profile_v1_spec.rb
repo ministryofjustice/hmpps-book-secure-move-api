@@ -1,4 +1,4 @@
-RSpec.describe People::Importer do
+RSpec.describe People::BuildPersonAndProfileV1 do
   subject(:service) { described_class.new(nomis_attributes) }
 
   let(:nomis_attributes) do
