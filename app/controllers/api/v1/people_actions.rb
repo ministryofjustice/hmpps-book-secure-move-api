@@ -1,5 +1,5 @@
-module V1
-  module PeopleHelper
+module Api::V1
+  module PeopleActions
     PERSON_ATTRIBUTES = [
       :first_names,
       :last_name,

@@ -207,11 +207,12 @@ private
   end
 
   def extend_versioned_controller_helper
-    version = "V#{api_version}"
-    helper_module = "#{controller_name.capitalize}Helper"
+    version = "Api::V#{api_version}"
 
-    if version.constantize.const_defined?(helper_module)
-      extend "#{version}::#{helper_module}".constantize
+    actions_module = "#{controller_name.capitalize}Actions"
+
+    if version.constantize.const_defined?(actions_module)
+      extend "#{version}::#{actions_module}".constantize
     end
   end
 end
