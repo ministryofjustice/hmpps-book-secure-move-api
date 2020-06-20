@@ -111,8 +111,6 @@ RSpec.describe Api::ProfilesController do
       end
 
       it 'updates the profiles documents' do
-        expect(profile.documents).to match_array(before_documents)
-
         patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
 
         expect(profile.reload.documents).to match_array(after_documents)
