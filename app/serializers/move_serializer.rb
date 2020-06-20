@@ -58,4 +58,8 @@ class MoveSerializer < ActiveModel::Serializer
       Person.find(object.person_id)
     end
   end
+
+  def documents
+    object&.profile&.documents
+  end
 end

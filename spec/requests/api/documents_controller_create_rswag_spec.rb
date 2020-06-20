@@ -101,12 +101,7 @@ RSpec.describe Api::DocumentsController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'creates a document' do
-        expect(move.documents.count).to eq(1)
         expect(move.profile.documents.count).to eq(1)
-      end
-
-      it 'enables accessing a document on the move and the profile' do
-        expect(move.profile.documents).to match_array(move.documents)
       end
 
       it 'attaches a file to the document' do

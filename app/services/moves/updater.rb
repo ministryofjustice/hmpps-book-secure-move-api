@@ -45,8 +45,6 @@ module Moves
     def attributes
       attributes = move_params.fetch(:attributes, {})
 
-      attributes[:documents] = Document.where(id: document_ids) unless document_attributes.nil?
-
       # TODO: to be removed once move profile migration complete
       if person_attributes.present? && profile_attributes.nil?
         person = Person.find_by(id: person_attributes.dig(:data, :id))
@@ -54,6 +52,9 @@ module Moves
       end
 
       attributes[:profile] = Profile.find_by(id: profile_attributes.dig(:data, :id)) if profile_attributes.present?
+
+      profile = attributes[:profile] || move.profile
+      profile.documents = Document.where(id: document_ids) unless document_attributes.nil?
 
       attributes
     end
