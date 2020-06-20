@@ -1,9 +1,9 @@
 Document:
   type: object
   required:
-  - id
-  - type
-  - attributes
+    - id
+    - type
+    - attributes
   properties:
     id:
       type: string
@@ -14,15 +14,15 @@ Document:
       type: string
       example: documents
       enum:
-      - documents
+        - documents
       description: The type of this object - always `documents`
     attributes:
       type: object
       required:
-      - url
-      - filename
-      - filesize
-      - content_type
+        - url
+        - filename
+        - filesize
+        - content_type
       properties:
         url:
           type: string
@@ -34,7 +34,7 @@ Document:
           description: The name of the uploaded file
         filesize:
           type: number
-          example: '12345678'
+          example: "12345678"
           description: The size of the uploaded file in bytes
         content_type:
           type: string
