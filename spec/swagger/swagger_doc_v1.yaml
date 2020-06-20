@@ -64,8 +64,6 @@
       :$ref: "../v1/move.yaml#/Move"
     :MoveReference:
       :$ref: "../v1/move_reference.yaml#/MoveReference"
-    :Nationality:
-      :$ref: "../v1/nationality.yaml#/Nationality"
     :Pagination:
       :$ref: "../v1/pagination.yaml#/Pagination"
     :PaginationLinks:
@@ -2379,34 +2377,6 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_location_responses.yaml#/415"
-  "/reference/nationalities":
-    get:
-      summary: Returns a list of nationalities
-      tags:
-      - Nationalities
-      consumes:
-      - application/vnd.api+json
-      parameters:
-      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
-      responses:
-        '200':
-          description: success
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/get_nationalities_responses.yaml#/200"
-        '401':
-          description: unauthorized
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/get_nationalities_responses.yaml#/401"
-        '415':
-          description: invalid media type
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/get_nationalities_responses.yaml#/415"
   "/reference/regions":
     get:
       summary: Returns a list of regions (location groups)
