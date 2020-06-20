@@ -457,35 +457,6 @@ RSpec.describe Move do
     end
   end
 
-  describe '#documents' do
-    let(:move) { create(:move) }
-
-    context 'when documents are associated with a Move via the move_id' do
-      let!(:document) { create(:document, move: move) }
-
-      it 'returns the correct documents' do
-        expect(move.documents).to eq([document])
-      end
-    end
-
-    context "when documents are associated with a move's profile via documentable_id" do
-      let!(:document) { create(:document, documentable: move.profile) }
-
-      it 'returns the correct documents' do
-        expect(move.documents).to eq([document])
-      end
-    end
-
-    context 'when documents not associated to a profile or move' do
-      let!(:document) { create(:document, documentable: nil) }
-      let(:move) { create(:move, profile: nil) }
-
-      it 'returns no documents' do
-        expect(move.documents).to be_empty
-      end
-    end
-  end
-
   describe '.unfilled?' do
     it 'returns true if there are no profiles linked to a move' do
       create_list(:move, 2, profile: nil)

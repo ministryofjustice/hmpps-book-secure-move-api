@@ -17,8 +17,8 @@ RSpec.describe Api::MovesController do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, suppliers: [supplier] }
-    let(:profile) { create(:profile) }
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents, profile: profile }
+    let(:profile) { create(:profile, documents: before_documents) }
+    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -129,7 +129,7 @@ RSpec.describe Api::MovesController do
           expect(response_json).to eq resource_to_json
         end
 
-        context 'when changing a moves documents', :skip_before do
+        context 'when changing a moves profile documents', :skip_before do
           let(:after_documents) { create_list(:document, 2) }
           let(:move_params) do
             documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
@@ -150,10 +150,10 @@ RSpec.describe Api::MovesController do
             }
           end
 
-          it 'updates the moves documents' do
-            expect(move.reload.documents).to match_array(before_documents)
+          it 'updates the moves profile documents' do
+            expect(move.profile.documents).to match_array(before_documents)
             do_patch
-            expect(move.reload.documents).to match_array(after_documents)
+            expect(move.reload.profile.documents).to match_array(after_documents)
           end
 
           it 'does not affect other relationships' do
@@ -177,10 +177,10 @@ RSpec.describe Api::MovesController do
               }
             end
 
-            it 'updates the moves documents' do
-              expect(move.reload.documents).to match_array(before_documents)
+            it 'updates the moves profile documents' do
+              expect(move.profile.documents).to match_array(before_documents)
               do_patch
-              expect(move.reload.documents).to match_array(after_documents)
+              expect(move.reload.profile.documents).to match_array(after_documents)
             end
 
             it 'does not affect other relationships' do
@@ -205,9 +205,9 @@ RSpec.describe Api::MovesController do
             end
 
             it 'removes the documents from the move' do
-              expect(move.reload.documents).to match_array(before_documents)
+              expect(move.profile.documents).to match_array(before_documents)
               do_patch
-              expect(move.reload.documents).to match_array([])
+              expect(move.reload.profile.documents).to match_array([])
             end
           end
 
@@ -220,9 +220,9 @@ RSpec.describe Api::MovesController do
             end
 
             it 'does not remove documents from the move' do
-              expect(move.reload.documents).to match_array(before_documents)
+              expect(move.profile.documents).to match_array(before_documents)
               do_patch
-              expect(move.reload.documents).to match_array(before_documents)
+              expect(move.reload.profile.documents).to match_array(before_documents)
             end
           end
         end
@@ -470,8 +470,7 @@ RSpec.describe Api::MovesController do
               class_double(
                 Faraday,
                 headers: {},
-                post:
-                                  instance_double(Faraday::Response, success?: true, status: 202),
+                post: instance_double(Faraday::Response, success?: true, status: 202),
               )
             end
             let(:move_params) do

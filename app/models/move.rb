@@ -45,8 +45,7 @@ class Move < VersionedModel
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
   belongs_to :original_move, class_name: 'Move', optional: true
-  # using https://github.com/jhawthorn/discard for documents, so only include the non-soft-deleted documents here
-  has_many :documents, -> { kept }, dependent: :destroy, inverse_of: :move
+
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
   has_many :journeys, -> { default_order }, dependent: :restrict_with_exception, inverse_of: :move
   has_many :court_hearings, dependent: :restrict_with_exception
@@ -135,12 +134,6 @@ class Move < VersionedModel
 
   def person
     raise 'Attempt to Access to person!!!'
-  end
-
-  def documents
-    # We need to make sure that we're returning Documents that are either for the current
-    # moves profile or the current move to support backwards compatibility.
-    Document.kept.where(move_id: id).or(Document.where(documentable: profile).where.not(documentable: nil))
   end
 
 private
