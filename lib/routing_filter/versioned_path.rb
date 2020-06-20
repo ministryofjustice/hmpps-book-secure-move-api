@@ -2,7 +2,7 @@
 module RoutingFilter
   class VersionedPath < Filter
     def around_recognize(path, _env)
-      remove_version!(path) unless path.include?('swagger')
+      remove_version!(path) unless path.start_with?('/api-docs/')
 
       yield
     end
