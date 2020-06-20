@@ -9,15 +9,29 @@ RSpec.describe ProfileSerializer do
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys }
 
-  it 'contains type property' do
-    expect(result[:data][:type]).to eql 'profiles'
+  let(:expected_document) do
+    {
+      data: {
+        id: profile.id,
+        type: 'profiles',
+        attributes: { assessment_answers: [] },
+        relationships: {
+          person: {
+            data: { id: profile.person.id, type: 'people' },
+          },
+          documents: {
+            data: [],
+          },
+        },
+      },
+    }
   end
 
-  it 'contains id property' do
-    expect(result[:data][:id]).to eql profile.id
+  it 'returns the expected serialized `Profile`' do
+    expect(result).to eq(expected_document)
   end
 
-  describe '#assessment_answers' do
+  context 'with assessment_answers' do
     let(:risk_alert_type) { create :assessment_question, :risk }
     let(:health_alert_type) { create :assessment_question, :health }
 
@@ -40,17 +54,35 @@ RSpec.describe ProfileSerializer do
     let(:profile) { create(:profile, assessment_answers: [risk_alert, health_alert]) }
 
     it 'contains an `assessment_answers` nested collection' do
-      expect(result[:data][:attributes][:assessment_answers].map do |alert|
-        alert[:title]
-      end).to match_array [risk_alert_type.title, health_alert_type.title]
+      assessment_answers = result[:data][:attributes][:assessment_answers].map { |alert| alert[:title] }
+
+      expect(assessment_answers).to match_array [risk_alert_type.title, health_alert_type.title]
+    end
+  end
+
+  describe 'with supported includes' do
+    let(:profile) { create(:profile, documents: [create(:document)]) }
+    let(:adapter_options) { { include: 'documents,person' } }
+
+    let(:expected_document) do
+      {
+        data: {
+          id: profile.id,
+          type: 'profiles',
+          attributes: { assessment_answers: [] },
+          relationships: {
+            person: {
+              data: { id: profile.person.id, type: 'people' },
+            },
+            documents: { data: [{ id: profile.documents.first.id, type: 'documents' }] },
+          },
+        },
+        included: [{ id: profile.person.id, type: 'people' }, { id: profile.documents.first.id, type: 'documents' }],
+      }
     end
 
-    context 'with empty assessment_answers' do
-      let(:profile) { create :profile }
-
-      it 'contains an `assessment_answers` nested collection' do
-        expect(result[:data][:attributes][:assessment_answers]).to be_empty
-      end
+    it 'returns the expected serialized `Profile`' do
+      expect(result).to include_json(expected_document)
     end
   end
 end

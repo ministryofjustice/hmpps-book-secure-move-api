@@ -38,7 +38,8 @@ RSpec.describe Api::ProfilesController do
         },
       }
     end
-    let(:profile) { create(:profile) }
+    let(:profile) { create(:profile, documents: before_documents) }
+    let(:before_documents) { create_list(:document, 2) }
 
     context 'with no pre-existing assessment_answers on profile' do
       before do
@@ -94,6 +95,74 @@ RSpec.describe Api::ProfilesController do
 
       it 'returns the correct data' do
         expect(response_json['data']).to include_json(expected_data)
+      end
+    end
+
+    context 'when updating Profile documents' do
+      let(:after_documents) { create_list(:document, 2) }
+      let(:profile_params) do
+        documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
+        {
+          data: {
+            type: 'profiles',
+            relationships: { documents: { data: documents } },
+          },
+        }
+      end
+
+      it 'updates the profiles documents' do
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+
+        expect(profile.reload.documents).to match_array(after_documents)
+      end
+
+      it 'does not affect other relationships' do
+        expect { patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+          .not_to change { profile.reload.person }
+      end
+
+      it 'returns the updated documents in the response body' do
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+
+        expect(
+          response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
+        ).to match_array(after_documents.pluck(:id))
+      end
+
+      context 'when documents is an empty array' do
+        let(:profile_params) do
+          {
+            data: {
+              type: 'profiles',
+              relationships: { documents: { data: [] } },
+            },
+          }
+        end
+
+        it 'removes the documents from the move' do
+          expect(profile.documents).to match_array(before_documents)
+
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+
+          expect(profile.reload.documents).to match_array([])
+        end
+      end
+
+      context 'when documents are nil' do
+        let(:profile_params) do
+          {
+            type: 'profiles',
+            relationships: { documents: { data: nil } },
+          }
+        end
+
+        it 'does not remove documents from the profile' do
+          expect(profile.documents).to match_array(before_documents)
+
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+
+          expect(profile.reload.documents).to match_array(before_documents)
+        end
       end
     end
 

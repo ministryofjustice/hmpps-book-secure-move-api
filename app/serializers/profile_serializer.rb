@@ -6,6 +6,7 @@ class ProfileSerializer < ActiveModel::Serializer
   )
 
   belongs_to :person, serializer: PersonSerializer
+  has_many :documents, serializer: DocumentSerializer
 
-  SUPPORTED_RELATIONSHIPS = %w[person].freeze
+  SUPPORTED_RELATIONSHIPS = %w[documents person].freeze
 end

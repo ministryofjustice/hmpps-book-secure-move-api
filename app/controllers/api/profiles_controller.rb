@@ -2,7 +2,6 @@
 
 module Api
   class ProfilesController < ApiController
-    # TODO: add validation for assessment answers
     def create
       profile = person.profiles.create(profile_attributes)
 
@@ -43,10 +42,25 @@ module Api
           ],
         ],
       ],
+      relationships: {},
     ].freeze
 
     def profile_attributes
-      profile_params[:attributes]
+      profile_attributes = profile_params.fetch(:attributes, {})
+      profile_attributes[:documents] = documents unless document_attributes.nil?
+      profile_attributes
+    end
+
+    def documents
+      Document.where(id: document_ids)
+    end
+
+    def document_ids
+      @document_ids ||= document_attributes&.map { |doc| doc[:id] }
+    end
+
+    def document_attributes
+      @document_attributes ||= profile_params.dig(:relationships, :documents, :data)
     end
 
     def profile_params
