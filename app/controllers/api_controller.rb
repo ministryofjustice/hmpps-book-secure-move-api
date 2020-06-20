@@ -213,7 +213,7 @@ private
   end
 
   def api_version
-    res = request.headers['Accept'].match(REGEXP_API_VERSION)
+    res = request.headers['Accept']&.match(REGEXP_API_VERSION)
     res&.[](:version)
   end
 
