@@ -1,0 +1,213 @@
+---
+:basePath: "/api/v2"
+:openapi: 3.0.1
+:info:
+  :title: PECS4 API V2 Docs
+  :version: v2
+  :description: Book A Secure Move supplier and frontend API.
+:consumes:
+- application/vnd.api+json
+:servers:
+- :url: http://localhost:3000/api/v2
+  :description: Local development (localhost)
+- :url: https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  :description: Dev API
+- :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  :description: Staging API
+- :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  :description: PreProd API
+- :url: https://api.bookasecuremove.service.justice.gov.uk/api/v2
+  :description: Production API
+:security:
+- :oauth2: []
+:components:
+  :securitySchemes:
+    :oauth2:
+      :type: :oauth2
+      :flows:
+        :clientCredentials:
+          :authorizationUrl: "/oauth/authorize"
+          :tokenUrl: "/oauth/token/"
+          :scopes: {}
+  :schemas:
+    :Ethnicity:
+      :$ref: "../v1/ethnicity.yaml#/Ethnicity"
+    :Gender:
+      :$ref: "../v1/gender.yaml#/Gender"
+    :Person:
+      :$ref: "../v2/person.yaml#/Person"
+    :Profile:
+      :$ref: "../v1/profile.yaml#/Profile"
+:paths:
+  "/people":
+    get:
+      deprecated: true
+      summary: "[DO NOT USE] Returns a list of people"
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      - name: filter[police_national_computer]
+        in: query
+        description: Filters results to only include people identified by that police_national_computer.
+          Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office]
+          are supported.
+        schema:
+          type: string
+          example: 07/1435713R
+        format: string
+        required: false
+      - name: filter[criminal_records_office]
+        in: query
+        description: Filters results to only include people identified by their
+          criminal_records_office. Either filter[police_national_computer], filter[prison_number]
+          or filter[criminal_records_office] are supported.
+        schema:
+          type: string
+          example: 610592/05U
+        format: string
+        required: false
+      - name: filter[prison_number]
+        in: query
+        description: Filters results to only include people identified by that prison_number.
+          Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office]
+          are supported.
+        schema:
+          type: string
+          example: G1234UT
+        format: string
+        required: false
+      - "$ref": "../v1/pagination_parameters.yaml#/Page"
+      - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.yaml#/200
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.yaml#/401
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": get_people_responses.yaml#/415
+    post:
+      deprecated: true
+      summary: "[DO NOT USE] Creates a new person and their associated profile"
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: body
+        in: body
+        required: true
+        description: The person object to be created
+        schema:
+          "$ref": person.yaml#/Person
+      responses:
+        '201':
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/201
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": post_people_responses.yaml#/422
+  "/people/{person_id}":
+    patch:
+      deprecated: true
+      summary: "[DO NOT USE] Updates an existing person."
+      tags:
+      - People
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - name: person_id
+        in: path
+        required: true
+        description: The ID of the person
+        schema:
+          type: string
+        format: uuid
+        example: 00525ecb-7316-492a-aae2-f69334b2a155
+      - name: body
+        in: body
+        required: true
+        description: The person object to be updated
+        schema:
+          "$ref": person.yaml#/Person
+      responses:
+        '200':
+          description: updated
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/200
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/400
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/401
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/404
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/415
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": patch_people_responses.yaml#/422
