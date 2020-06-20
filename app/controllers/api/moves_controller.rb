@@ -19,6 +19,8 @@ module Api
 
     def create
       move = Move.new(new_move_attributes)
+      move.profile.documents = profile_documents
+
       authorize!(:create, move)
       move.save!
 
@@ -73,6 +75,12 @@ module Api
       relationships: {},
     ].freeze
 
+    def profile_documents
+      ids = (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
+
+      Document.where(id: ids)
+    end
+
     def filter_params
       params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
     end
@@ -90,7 +98,6 @@ module Api
         profile: profile_or_person_latest_profile,
         from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
         to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
-        documents: Document.where(id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }),
         court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
         prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
       )
