@@ -88,7 +88,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'associates the documents with the newly created move' do
-        expect(move.documents).to eq([document])
+        expect(move.profile.documents).to eq([document])
       end
 
       it 'associates a reason with the newly created move' do
