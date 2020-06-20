@@ -31,59 +31,59 @@
           :scopes: {}
   :schemas:
     :Allocation:
-      :$ref: allocation.yaml#/Allocation
+      :$ref: "../v1/allocation.yaml#/Allocation"
     :AllocationReference:
-      :$ref: allocation_reference.yaml#/AllocationReference
+      :$ref: "../v1/allocation_reference.yaml#/AllocationReference"
     :AllocationComplexCase:
-      :$ref: allocation_complex_case.yaml#/AllocationComplexCase
+      :$ref: "../v1/allocation_complex_case.yaml#/AllocationComplexCase"
     :AllocationComplexCaseAnswer:
-      :$ref: allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer
+      :$ref: "../v1/allocation_complex_case_answer.yaml#/AllocationComplexCaseAnswer"
     :AssessmentAnswer:
-      :$ref: assessment_answer.yaml#/AssessmentAnswer
+      :$ref: "../v1/assessment_answer.yaml#/AssessmentAnswer"
     :AssessmentQuestion:
-      :$ref: assessment_question.yaml#/AssessmentQuestion
+      :$ref: "../v1/assessment_question.yaml#/AssessmentQuestion"
     :CourtCase:
-      :$ref: court_case.yaml#/CourtCase
+      :$ref: "../v1/court_case.yaml#/CourtCase"
     :CourtHearing:
-      :$ref: court_hearing.yaml#/CourtHearing
+      :$ref: "../v1/court_hearing.yaml#/CourtHearing"
     :CourtHearingReference:
-      :$ref: court_hearing_reference.yaml#/CourtHearingReference
+      :$ref: "../v1/court_hearing_reference.yaml#/CourtHearingReference"
     :Document:
-      :$ref: document.yaml#/Document
+      :$ref: "../v1/document.yaml#/Document"
     :Ethnicity:
-      :$ref: ethnicity.yaml#/Ethnicity
+      :$ref: "../v1/ethnicity.yaml#/Ethnicity"
     :Gender:
-      :$ref: gender.yaml#/Gender
+      :$ref: "../v1/gender.yaml#/Gender"
     :Journey:
-      :$ref: get_journey.yaml#/GetJourney
+      :$ref: "../v1/get_journey.yaml#/GetJourney"
     :Location:
-      :$ref: location.yaml#/Location
+      :$ref: "../v1/location.yaml#/Location"
     :LocationReference:
-      :$ref: location_reference.yaml#/LocationReference
+      :$ref: "../v1/location_reference.yaml#/LocationReference"
     :Move:
-      :$ref: move.yaml#/Move
+      :$ref: "../v1/move.yaml#/Move"
     :MoveReference:
-      :$ref: move_reference.yaml#/MoveReference
+      :$ref: "../v1/move_reference.yaml#/MoveReference"
     :Nationality:
-      :$ref: nationality.yaml#/Nationality
+      :$ref: "../v1/nationality.yaml#/Nationality"
     :Pagination:
-      :$ref: pagination.yaml#/Pagination
+      :$ref: "../v1/pagination.yaml#/Pagination"
     :PaginationLinks:
-      :$ref: pagination_links.yaml#/PaginationLinks
+      :$ref: "../v1/pagination_links.yaml#/PaginationLinks"
     :Person:
-      :$ref: person.yaml#/Person
+      :$ref: "../v1/person.yaml#/Person"
     :PersonReference:
-      :$ref: person_reference.yaml#/PersonReference
+      :$ref: "../v1/person_reference.yaml#/PersonReference"
     :PrisonTransferReason:
-      :$ref: prison_transfer_reason.yaml#/PrisonTransferReason
+      :$ref: "../v1/prison_transfer_reason.yaml#/PrisonTransferReason"
     :ProfileIdentifier:
-      :$ref: profile_identifier.yaml#/ProfileIdentifier
+      :$ref: "../v1/profile_identifier.yaml#/ProfileIdentifier"
     :Region:
-      :$ref: region.yaml#/Region
+      :$ref: "../v1/region.yaml#/Region"
     :Supplier:
-      :$ref: supplier.yaml#/Supplier
+      :$ref: "../v1/supplier.yaml#/Supplier"
     :TimetableEntry:
-      :$ref: timetable_entry.yaml#/TimetableEntry
+      :$ref: "../v1/timetable_entry.yaml#/TimetableEntry"
 :paths:
   "/allocations":
     get:
@@ -93,7 +93,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: filter[date_from]
         in: query
         description: Filters results to only include allocations on and after the
@@ -181,27 +181,27 @@
           enum:
           - asc
           - desc
-      - "$ref": pagination_parameters.yaml#/Page
-      - "$ref": pagination_parameters.yaml#/PerPage
+      - "$ref": "../v1/pagination_parameters.yaml#/Page"
+      - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocations_responses.yaml#/200
+                "$ref": "../v1/get_allocations_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocations_responses.yaml#/401
+                "$ref": "../v1/get_allocations_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocations_responses.yaml#/415
+                "$ref": "../v1/get_allocations_responses.yaml#/415"
     post:
       summary: Creates a new allocation
       tags:
@@ -214,44 +214,44 @@
         required: true
         description: The allocation object to be created
         schema:
-          "$ref": allocation.yaml#/Allocation
+          "$ref": "../v1/allocation.yaml#/Allocation"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/201
+                "$ref": "../v1/post_allocations_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/400
+                "$ref": "../v1/post_allocations_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/401
+                "$ref": "../v1/post_allocations_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/404
+                "$ref": "../v1/post_allocations_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/415
+                "$ref": "../v1/post_allocations_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_allocations_responses.yaml#/422
+                "$ref": "../v1/post_allocations_responses.yaml#/422"
   "/allocations/{allocation_id}/cancel":
     post:
       summary: Cancels an allocation and all associated moves
@@ -263,9 +263,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": allocation_id_parameter.yaml#/AllocationId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/allocation_id_parameter.yaml#/AllocationId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -274,7 +274,7 @@
 
           '
         schema:
-          "$ref": post_allocation_cancel.yaml#/PostAllocationCancel
+          "$ref": "../v1/post_allocation_cancel.yaml#/PostAllocationCancel"
       responses:
         '204':
           description: no content
@@ -284,37 +284,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -323,7 +323,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: filter[date_from]
         in: query
         description: Filters results to only include moves on and after the given
@@ -450,27 +450,27 @@
           enum:
           - asc
           - desc
-      - "$ref": pagination_parameters.yaml#/Page
-      - "$ref": pagination_parameters.yaml#/PerPage
+      - "$ref": "../v1/pagination_parameters.yaml#/Page"
+      - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_moves_responses.yaml#/200
+                "$ref": "../v1/get_moves_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_moves_responses.yaml#/401
+                "$ref": "../v1/get_moves_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_moves_responses.yaml#/415
+                "$ref": "../v1/get_moves_responses.yaml#/415"
     post:
       summary: Creates a new move
       tags:
@@ -483,44 +483,44 @@
         required: true
         description: The move object to be created
         schema:
-          "$ref": move.yaml#/Move
+          "$ref": "../v1/move.yaml#/Move"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/201
+                "$ref": "../v1/post_moves_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/400
+                "$ref": "../v1/post_moves_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/401
+                "$ref": "../v1/post_moves_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/404
+                "$ref": "../v1/post_moves_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/415
+                "$ref": "../v1/post_moves_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_moves_responses.yaml#/422
+                "$ref": "../v1/post_moves_responses.yaml#/422"
   "/moves/{move_id}":
     patch:
       summary: Updates a move. Aliased as PUT /moves/{move_id}.
@@ -529,50 +529,50 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
       - name: body
         in: body
         required: true
         description: The move object to be modified
         schema:
-          "$ref": move.yaml#/Move
+          "$ref": "../v1/move.yaml#/Move"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/200
+                "$ref": "../v1/put_move_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/400
+                "$ref": "../v1/put_move_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/401
+                "$ref": "../v1/put_move_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/404
+                "$ref": "../v1/put_move_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/415
+                "$ref": "../v1/put_move_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_move_responses.yaml#/422
+                "$ref": "../v1/put_move_responses.yaml#/422"
   "/moves/{move_id}/cancel":
     post:
       summary: Cancels a move
@@ -586,9 +586,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -599,7 +599,7 @@
           It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or
           cancel existing journeys.
         schema:
-          "$ref": post_move_cancel.yaml#/PostMoveCancel
+          "$ref": "../v1/post_move_cancel.yaml#/PostMoveCancel"
       responses:
         '204':
           description: no content
@@ -609,37 +609,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/accept":
     post:
       summary: Accepts a move
@@ -652,9 +652,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -663,7 +663,7 @@
 
           Accepting a move will change the move status from `requested` to `booked`.
         schema:
-          "$ref": post_move_accept.yaml#/PostMoveAccept
+          "$ref": "../v1/post_move_accept.yaml#/PostMoveAccept"
       responses:
         '204':
           description: no content
@@ -673,37 +673,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/approve":
     post:
       summary: Approves a move
@@ -716,9 +716,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -727,7 +727,7 @@
 
           Approving a move will change the move status to `requested` and update with the provided move date.
         schema:
-          "$ref": post_move_approve.yaml#/PostMoveApprove
+          "$ref": "../v1/post_move_approve.yaml#/PostMoveApprove"
       responses:
         '204':
           description: no content
@@ -737,37 +737,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/reject":
     post:
       summary: Rejects a move
@@ -781,9 +781,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -792,7 +792,7 @@
 
           Rejecting a move will change the move status to `cancelled`, the move cancellation reason to `rejected` and update with the provided rejection reason.
         schema:
-          "$ref": post_move_reject.yaml#/PostMoveReject
+          "$ref": "../v1/post_move_reject.yaml#/PostMoveReject"
       responses:
         '204':
           description: no content
@@ -802,37 +802,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/complete":
     post:
       summary: Completes a move
@@ -846,9 +846,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -859,7 +859,7 @@
           It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or
           cancel existing journeys.
         schema:
-          "$ref": post_move_complete.yaml#/PostMoveComplete
+          "$ref": "../v1/post_move_complete.yaml#/PostMoveComplete"
       responses:
         '204':
           description: no content
@@ -869,37 +869,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/lockouts":
     post:
       summary: Records a lockout against a move
@@ -913,9 +913,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -926,7 +926,7 @@
           It _does not_ alter the journeys associated with the move: additional API calls will be necessary to complete or
           cancel existing journeys.
         schema:
-          "$ref": post_move_lockout.yaml#/PostMoveLockout
+          "$ref": "../v1/post_move_lockout.yaml#/PostMoveLockout"
       responses:
         '204':
           description: no content
@@ -936,37 +936,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/redirects":
     post:
       summary: Redirects a move
@@ -980,9 +980,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -994,7 +994,7 @@
           create new journeys. The new destination must be specified via a `to_location` relationship. Optionally,
           `notes` may be provided to assist with auditing.
         schema:
-          "$ref": post_move_redirect.yaml#/PostMoveRedirect
+          "$ref": "../v1/post_move_redirect.yaml#/PostMoveRedirect"
       responses:
         '204':
           description: no content
@@ -1004,37 +1004,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/documents":
     post:
       summary: Creates a new document
@@ -1043,50 +1043,50 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
       - name: body
         in: body
         required: true
         description: The document object to be created
         schema:
-          "$ref": document.yaml#/Document
+          "$ref": "../v1/document.yaml#/Document"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/201
+                "$ref": "../v1/post_documents_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/400
+                "$ref": "../v1/post_documents_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/401
+                "$ref": "../v1/post_documents_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/404
+                "$ref": "../v1/post_documents_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/415
+                "$ref": "../v1/post_documents_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_documents_responses.yaml#/422
+                "$ref": "../v1/post_documents_responses.yaml#/422"
   "/moves/{move_id}/journeys":
     get:
       summary: Gets a list of journeys
@@ -1098,54 +1098,54 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
-      - "$ref": pagination_parameters.yaml#/Page
-      - "$ref": pagination_parameters.yaml#/PerPage
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      - "$ref": "../v1/pagination_parameters.yaml#/Page"
+      - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_journeys_responses.yaml#/200
+                "$ref": "../v1/get_journeys_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
     post:
       summary: Creates a new journey
       description: |
@@ -1157,9 +1157,9 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1168,50 +1168,50 @@
           can also be specified if required (otherwise the supplier will be taken
           from the logged-in account).
         schema:
-          "$ref": post_journey.yaml#/PostJourney
+          "$ref": "../v1/post_journey.yaml#/PostJourney"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_journeys_responses.yaml#/201
+                "$ref": "../v1/post_journeys_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}":
     get:
       summary: Gets a journey
@@ -1223,53 +1223,53 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_journey_responses.yaml#/200
+                "$ref": "../v1/get_journey_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
     patch:
       summary: Updates a journey's metadata
       description: |
@@ -1281,60 +1281,60 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
         description: The journey object to be updated. It must specify `timestamp`,
           `billable`; it must not specify locations or `state`.
         schema:
-          "$ref": patch_journey.yaml#/PatchJourney
+          "$ref": "../v1/patch_journey.yaml#/PatchJourney"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_journey_responses.yaml#/200
+                "$ref": "../v1/get_journey_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/cancel":
     post:
       summary: Cancels a journey
@@ -1348,10 +1348,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1362,7 +1362,7 @@
           cancelled. Cancelling a journey will change the journey state to `cancelled`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_cancel.yaml#/PostJourneyCancel
+          "$ref": "../v1/post_journey_cancel.yaml#/PostJourneyCancel"
       responses:
         '204':
           description: no content
@@ -1372,37 +1372,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/complete":
     post:
       summary: Completes a journey
@@ -1416,10 +1416,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1430,7 +1430,7 @@
           completed. Completing a journey will change the journey state to `completed`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_complete.yaml#/PostJourneyComplete
+          "$ref": "../v1/post_journey_complete.yaml#/PostJourneyComplete"
       responses:
         '204':
           description: no content
@@ -1440,37 +1440,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/lockouts":
     post:
       summary: Records a lockout against a journey
@@ -1482,10 +1482,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1495,7 +1495,7 @@
           A lockout is recorded by POSTing a `lockouts` event. Recording a lockout _does not_ change a journey's state.
           Additional API calls will be necessary to complete or cancel existing journeys or create new journeys.
         schema:
-          "$ref": post_journey_lockout.yaml#/PostJourneyLockout
+          "$ref": "../v1/post_journey_lockout.yaml#/PostJourneyLockout"
       responses:
         '204':
           description: no content
@@ -1505,37 +1505,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/lodgings":
     post:
       summary: Records a lodging against a journey
@@ -1548,10 +1548,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1561,7 +1561,7 @@
           A lodging is recorded by POSTing a `lodgings` event. Recording a lodging _does not_ change a journey's state.
           Additional API calls may be necessary to complete or cancel existing journeys or create new journeys.
         schema:
-          "$ref": post_journey_lodging.yaml#/PostJourneyLodging
+          "$ref": "../v1/post_journey_lodging.yaml#/PostJourneyLodging"
       responses:
         '204':
           description: no content
@@ -1571,37 +1571,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/reject":
     post:
       summary: Rejects a proposed journey
@@ -1615,10 +1615,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1629,7 +1629,7 @@
           rejected. Rejecting a journey will change the journey state to `rejected`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_reject.yaml#/PostJourneyReject
+          "$ref": "../v1/post_journey_reject.yaml#/PostJourneyReject"
       responses:
         '204':
           description: no content
@@ -1639,37 +1639,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/start":
     post:
       summary: Starts a proposed journey
@@ -1683,10 +1683,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1697,7 +1697,7 @@
           started. Starting a journey will change the journey state to `in_progress`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_start.yaml#/PostJourneyStart
+          "$ref": "../v1/post_journey_start.yaml#/PostJourneyStart"
       responses:
         '204':
           description: no content
@@ -1707,37 +1707,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/uncancel":
     post:
       summary: Uncancels a journey
@@ -1751,10 +1751,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1765,7 +1765,7 @@
           uncancelled. Uncancelling a journey will revert the journey state back to `in_progress`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_uncancel.yaml#/PostJourneyUncancel
+          "$ref": "../v1/post_journey_uncancel.yaml#/PostJourneyUncancel"
       responses:
         '204':
           description: no content
@@ -1775,37 +1775,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/moves/{move_id}/journeys/{journey_id}/uncomplete":
     post:
       summary: Uncompletes a journey
@@ -1819,10 +1819,10 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": move_id_parameter.yaml#/MoveId
-      - "$ref": journey_id_parameter.yaml#/JourneyId
-      - "$ref": idempotency_key_parameter.yaml#/IdempotencyKey
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+      - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
+      - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: body
         in: body
         required: true
@@ -1833,7 +1833,7 @@
           uncompleted. Uncompleting a journey will revert the journey state back to `in_progress`. It _does not_ alter the move
           associated with the journey: additional API calls will be necessary to complete or cancel the move.
         schema:
-          "$ref": post_journey_uncomplete.yaml#/PostJourneyUncomplete
+          "$ref": "../v1/post_journey_uncomplete.yaml#/PostJourneyUncomplete"
       responses:
         '204':
           description: no content
@@ -1843,37 +1843,37 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/400
+                "$ref": "../v1/error_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/401
+                "$ref": "../v1/error_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/404
+                "$ref": "../v1/error_responses.yaml#/404"
         '409':
           description: conflict
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/409
+                "$ref": "../v1/error_responses.yaml#/409"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/415
+                "$ref": "../v1/error_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": error_responses.yaml#/422
+                "$ref": "../v1/error_responses.yaml#/422"
   "/people":
     get:
       summary: Returns a list of people
@@ -1882,7 +1882,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: filter[police_national_computer]
         in: query
         description: Filters results to only include people identified by that police_national_computer.
@@ -1903,27 +1903,27 @@
           example: G1234UT
         format: string
         required: false
-      - "$ref": pagination_parameters.yaml#/Page
-      - "$ref": pagination_parameters.yaml#/PerPage
+      - "$ref": "../v1/pagination_parameters.yaml#/Page"
+      - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_people_responses.yaml#/200
+                "$ref": "../v1/get_people_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_people_responses.yaml#/401
+                "$ref": "../v1/get_people_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_people_responses.yaml#/415
+                "$ref": "../v1/get_people_responses.yaml#/415"
     post:
       summary: Creates a new person and their associated profile
       tags:
@@ -1936,44 +1936,44 @@
         required: true
         description: The person object to be created
         schema:
-          "$ref": person.yaml#/Person
+          "$ref": "../v1/person.yaml#/Person"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/201
+                "$ref": "../v1/post_people_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/400
+                "$ref": "../v1/post_people_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/401
+                "$ref": "../v1/post_people_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/404
+                "$ref": "../v1/post_people_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/415
+                "$ref": "../v1/post_people_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/422
+                "$ref": "../v1/post_people_responses.yaml#/422"
   "/people/{person_id}":
     patch:
       summary: Updates an existing person and their associated profile. Aliased
@@ -1996,44 +1996,44 @@
         required: true
         description: The person object to be updated
         schema:
-          "$ref": person.yaml#/Person
+          "$ref": "../v1/person.yaml#/Person"
       responses:
         '200':
           description: updated
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/200
+                "$ref": "../v1/put_people_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/400
+                "$ref": "../v1/put_people_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/401
+                "$ref": "../v1/put_people_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/404
+                "$ref": "../v1/put_people_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/415
+                "$ref": "../v1/put_people_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": put_people_responses.yaml#/422
+                "$ref": "../v1/put_people_responses.yaml#/422"
   "/people/{person_id}/profiles":
     post:
       summary: Creates a new profile
@@ -2060,44 +2060,44 @@
         required: true
         description: The profile object to be created
         schema:
-          "$ref": profile.yaml#/Profile
+          "$ref": "../v1/profile.yaml#/Profile"
       responses:
         '201':
           description: created
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/201
+                "$ref": "../v1/post_profiles_responses.yaml#/201"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/400
+                "$ref": "../v1/post_profiles_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/401
+                "$ref": "../v1/post_profiles_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/404
+                "$ref": "../v1/post_profiles_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/415
+                "$ref": "../v1/post_profiles_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_profiles_responses.yaml#/422
+                "$ref": "../v1/post_profiles_responses.yaml#/422"
   "/people/{person_id}/profiles/{profile_id}":
     patch:
       summary: Updates a profile
@@ -2127,44 +2127,44 @@
         required: true
         description: The profile object to be modified
         schema:
-          "$ref": profile.yaml#/Profile
+          "$ref": "../v1/profile.yaml#/Profile"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/200
+                "$ref": "../v1/patch_profiles_responses.yaml#/200"
         '400':
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/400
+                "$ref": "../v1/patch_profiles_responses.yaml#/400"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/401
+                "$ref": "../v1/patch_profiles_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/404
+                "$ref": "../v1/patch_profiles_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/415
+                "$ref": "../v1/patch_profiles_responses.yaml#/415"
         '422':
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_profiles_responses.yaml#/422
+                "$ref": "../v1/patch_profiles_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases
@@ -2173,26 +2173,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocation_complex_cases_responses.yaml#/200
+                "$ref": "../v1/get_allocation_complex_cases_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocation_complex_cases_responses.yaml#/401
+                "$ref": "../v1/get_allocation_complex_cases_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_allocation_complex_cases_responses.yaml#/415
+                "$ref": "../v1/get_allocation_complex_cases_responses.yaml#/415"
   "/reference/assessment_questions":
     get:
       summary: Returns a list of assessment questions, optionally filtered by category
@@ -2201,7 +2201,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: filter[category]
         in: query
         description: Filters results to only include move detail types for the given
@@ -2218,19 +2218,19 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_assessment_questions_responses.yaml#/200
+                "$ref": "../v1/get_assessment_questions_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_assessment_questions_responses.yaml#/401
+                "$ref": "../v1/get_assessment_questions_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_assessment_questions_responses.yaml#/415
+                "$ref": "../v1/get_assessment_questions_responses.yaml#/415"
   "/reference/ethnicities":
     get:
       summary: Returns a list of ethnicities
@@ -2239,26 +2239,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_ethnicities_responses.yaml#/200
+                "$ref": "../v1/get_ethnicities_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_ethnicities_responses.yaml#/401
+                "$ref": "../v1/get_ethnicities_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_ethnicities_responses.yaml#/415
+                "$ref": "../v1/get_ethnicities_responses.yaml#/415"
   "/reference/genders":
     get:
       summary: Returns a list of genders
@@ -2267,26 +2267,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_genders_responses.yaml#/200
+                "$ref": "../v1/get_genders_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_genders_responses.yaml#/401
+                "$ref": "../v1/get_genders_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_genders_responses.yaml#/415
+                "$ref": "../v1/get_genders_responses.yaml#/415"
   "/reference/locations":
     get:
       summary: Returns a list of locations, optionally filtered by type or NOMIS
@@ -2296,7 +2296,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: filter[location_type]
         in: query
         description: Filters results by location type, e.g. court or prison
@@ -2324,19 +2324,19 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_locations_responses.yaml#/200
+                "$ref": "../v1/get_locations_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_locations_responses.yaml#/401
+                "$ref": "../v1/get_locations_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_locations_responses.yaml#/415
+                "$ref": "../v1/get_locations_responses.yaml#/415"
   "/reference/locations/{location_id}":
     get:
       summary: Returns the details of a location
@@ -2345,7 +2345,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: location_id
         in: path
         required: true
@@ -2360,25 +2360,25 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_location_responses.yaml#/200
+                "$ref": "../v1/get_location_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_location_responses.yaml#/401
+                "$ref": "../v1/get_location_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_location_responses.yaml#/404
+                "$ref": "../v1/get_location_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_location_responses.yaml#/415
+                "$ref": "../v1/get_location_responses.yaml#/415"
   "/reference/nationalities":
     get:
       summary: Returns a list of nationalities
@@ -2387,26 +2387,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_nationalities_responses.yaml#/200
+                "$ref": "../v1/get_nationalities_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_nationalities_responses.yaml#/401
+                "$ref": "../v1/get_nationalities_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_nationalities_responses.yaml#/415
+                "$ref": "../v1/get_nationalities_responses.yaml#/415"
   "/reference/regions":
     get:
       summary: Returns a list of regions (location groups)
@@ -2416,26 +2416,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_regions_responses.yaml#/200
+                "$ref": "../v1/get_regions_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_regions_responses.yaml#/401
+                "$ref": "../v1/get_regions_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_regions_responses.yaml#/415
+                "$ref": "../v1/get_regions_responses.yaml#/415"
   "/reference/suppliers":
     get:
       summary: Returns the list of suppliers
@@ -2444,26 +2444,26 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         '200':
           description: success
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_suppliers_responses.yaml#/200
+                "$ref": "../v1/get_suppliers_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_suppliers_responses.yaml#/401
+                "$ref": "../v1/get_suppliers_responses.yaml#/401"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_suppliers_responses.yaml#/415
+                "$ref": "../v1/get_suppliers_responses.yaml#/415"
   "/reference/suppliers/{supplier_key}":
     get:
       summary: Returns the details of a supplier
@@ -2472,7 +2472,7 @@
       consumes:
       - application/vnd.api+json
       parameters:
-      - "$ref": content_type_parameter.yaml#/ContentType
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       - name: supplier_key
         in: path
         required: true
@@ -2486,22 +2486,22 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_supplier_responses.yaml#/200
+                "$ref": "../v1/get_supplier_responses.yaml#/200"
         '401':
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_supplier_responses.yaml#/401
+                "$ref": "../v1/get_supplier_responses.yaml#/401"
         '404':
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_supplier_responses.yaml#/404
+                "$ref": "../v1/get_supplier_responses.yaml#/404"
         '415':
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_supplier_responses.yaml#/415
+                "$ref": "../v1/get_supplier_responses.yaml#/415"

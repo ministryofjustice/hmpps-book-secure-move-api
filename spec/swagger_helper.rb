@@ -26,9 +26,13 @@ RSpec.configure do |config|
   swagger_doc_v1 = YAML.load_file('spec/swagger/swagger_doc_v1.yaml')
   swagger_doc_v2 = YAML.load_file('spec/swagger/swagger_doc_v2.yaml')
 
+  swagger_doc_v2_integration = swagger_doc_v1.deep_dup
+
+  swagger_doc_v2_integration.deep_merge!(swagger_doc_v2)
+
   config.swagger_docs = {
     'v1/swagger.yaml' => swagger_doc_v1,
-    'v2/swagger.yaml' => swagger_doc_v2,
+    'v2/swagger.yaml' => swagger_doc_v2_integration,
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
