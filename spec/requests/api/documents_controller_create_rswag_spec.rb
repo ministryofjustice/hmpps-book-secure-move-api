@@ -6,7 +6,6 @@ RSpec.describe Api::DocumentsController do
   let(:content_type) { 'multipart/form-data' }
   let(:response_json) { JSON.parse(response.body) }
 
-  # rubocop thinks this context is empty IMHO because it doesn't understand rswag
   context 'with swagger generation', :with_client_authentication, :rswag do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
 
@@ -69,95 +68,6 @@ RSpec.describe Api::DocumentsController do
           end
         end
       end
-    end
-  end
-
-  describe 'POST /moves/:move_id/documents' do
-    let(:schema) { load_yaml_schema('post_documents_responses.yaml') }
-    let(:move) { create(:move) }
-    let(:access_token) { create(:access_token).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-
-    let(:file) do
-      Rack::Test::UploadedFile.new(
-        Rails.root.join('spec/fixtures/file-sample_100kB.doc'),
-        'application/msword',
-      )
-    end
-
-    before do
-      post "/api/v1/moves/#{move.id}/documents", params: { data: data }, headers: headers
-    end
-
-    context 'when successful' do
-      let(:data) do
-        {
-          attributes: {
-            file: file,
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with success 201'
-
-      it 'creates a document' do
-        expect(move.profile.documents.count).to eq(1)
-      end
-
-      it 'attaches a file to the document' do
-        expect(move.profile.documents.last.file).to be_attached
-      end
-
-      it 'adds the right file to the document' do
-        expect(move.profile.documents.last.file.filename).to eq 'file-sample_100kB.doc'
-      end
-    end
-
-    context "with a supplier without access to the move's location" do
-      let(:supplier) { create(:supplier) }
-      let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
-
-      let(:data) do
-        {
-          attributes: {
-            file: file,
-          },
-        }
-      end
-      let(:detail_404) { "Couldn't find Move with 'id'=#{move.id}" }
-
-      it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with a bad request' do
-      let(:data) do
-        {
-          attributes: {
-            file: nil,
-          },
-        }
-      end
-      let(:errors_422) do
-        [
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => "File can't be blank",
-            'source' => { 'pointer' => '/data/attributes/file' },
-            'code' => "can't be blank",
-          },
-        ]
-      end
-
-      it_behaves_like 'an endpoint that responds with error 422'
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:data) { {} }
-      let(:detail_401) { 'Token expired or invalid' }
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-
-      it_behaves_like 'an endpoint that responds with error 401'
     end
   end
 end
