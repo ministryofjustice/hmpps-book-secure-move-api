@@ -13,7 +13,7 @@ RSpec.describe Api::ProfilesController do
   describe 'PATCH /v1/people/:id/profiles' do
     let(:schema) { load_yaml_schema('patch_profiles_responses.yaml', version: 'v1') }
 
-    let(:profile_params) do
+    let(:params) do
       {
         data: {
           type: 'profiles',
@@ -38,11 +38,12 @@ RSpec.describe Api::ProfilesController do
         },
       }
     end
-    let(:profile) { create(:profile) }
+    let(:profile) { create(:profile, documents: before_documents) }
+    let(:before_documents) { create_list(:document, 2) }
 
     context 'with no pre-existing assessment_answers on profile' do
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -58,7 +59,7 @@ RSpec.describe Api::ProfilesController do
 
     context 'with pre-existing assessment_answers on profile' do
       let(:profile) { create(:profile, assessment_answers: [{ title: risk_type_1.title, assessment_question_id: risk_type_1.id }]) }
-      let(:profile_params) do
+      let(:params) do
         {
           data: {
             type: 'profiles',
@@ -83,7 +84,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -97,8 +98,78 @@ RSpec.describe Api::ProfilesController do
       end
     end
 
+    context 'when updating Profile documents' do
+      let(:after_documents) { create_list(:document, 2) }
+      let(:params) do
+        documents = after_documents.map { |d| { id: d.id, type: 'documents' } }
+        {
+          data: {
+            type: 'profiles',
+            relationships: { documents: { data: documents } },
+          },
+        }
+      end
+
+      it 'updates the profiles documents' do
+        expect(profile.documents).to match_array(before_documents)
+
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
+
+        expect(profile.reload.documents).to match_array(after_documents)
+      end
+
+      it 'does not affect other relationships' do
+        expect { patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json }
+          .not_to change { profile.reload.person }
+      end
+
+      it 'returns the updated documents in the response body' do
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
+
+        expect(
+          response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
+        ).to match_array(after_documents.pluck(:id))
+      end
+
+      context 'when documents is an empty array' do
+        let(:params) do
+          {
+            data: {
+              type: 'profiles',
+              relationships: { documents: { data: [] } },
+            },
+          }
+        end
+
+        it 'removes the documents from the move' do
+          expect(profile.documents).to match_array(before_documents)
+
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
+
+          expect(profile.reload.documents).to match_array([])
+        end
+      end
+
+      context 'when documents are nil' do
+        let(:params) do
+          {
+            type: 'profiles',
+            relationships: { documents: { data: nil } },
+          }
+        end
+
+        it 'does not remove documents from the profile' do
+          expect(profile.documents).to match_array(before_documents)
+
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
+
+          expect(profile.reload.documents).to match_array(before_documents)
+        end
+      end
+    end
+
     context 'with included relationships' do
-      let(:profile_params) do
+      let(:params) do
         {
           include: include_params,
           data: {
@@ -114,7 +185,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -157,10 +228,10 @@ RSpec.describe Api::ProfilesController do
 
     context 'with a bad request' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
-      let(:profile_params) { nil }
+      let(:params) { nil }
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with error 400'
@@ -171,7 +242,7 @@ RSpec.describe Api::ProfilesController do
       let(:detail_401) { 'Token expired or invalid' }
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: params, headers: headers, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with error 401'
@@ -181,13 +252,13 @@ RSpec.describe Api::ProfilesController do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
 
-      before { patch "/api/v1/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/#{profile.person.id}/profiles/foo-bar", params: params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'when the person_id is not found' do
-      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: params, headers: headers, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 
@@ -197,7 +268,7 @@ RSpec.describe Api::ProfilesController do
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
-      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: params, headers: headers, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 415'
     end
