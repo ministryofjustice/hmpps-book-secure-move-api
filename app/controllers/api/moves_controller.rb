@@ -19,10 +19,8 @@ module Api
 
     def create
       move = Move.new(new_move_attributes)
+      move.profile.documents = profile_documents
 
-      move.profile.documents = Document.where(
-        id: (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] },
-      )
       authorize!(:create, move)
       move.save!
 
@@ -76,6 +74,12 @@ module Api
                      date_to],
       relationships: {},
     ].freeze
+
+    def profile_documents
+      ids = (new_move_params.dig(:relationships, :documents, :data) || []).map { |doc| doc[:id] }
+
+      Document.where(id: ids)
+    end
 
     def filter_params
       params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
