@@ -28,7 +28,7 @@ RSpec.configure do |config|
 
   config.swagger_docs = {
     'v1/swagger.yaml' => swagger_doc_v1,
-    'v2/swagger.yaml' => swagger_doc_v2
+    'v2/swagger.yaml' => swagger_doc_v2,
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
