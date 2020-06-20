@@ -15,12 +15,6 @@ module Api
       Document.create!(file: nil)
     end
 
-    def destroy
-      document = Document.find(params[:id])
-      document.discard
-      render json: document, status: :ok
-    end
-
   private
 
     def document_attributes
