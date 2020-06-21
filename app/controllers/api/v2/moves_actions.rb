@@ -24,7 +24,7 @@ module Api::V2
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
+      raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
 
       updater.call
 
@@ -91,7 +91,11 @@ module Api::V2
     end
 
     def render_move(move, status)
-      render json: move, status: status, include: included_relationships, fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      render serializer: ::V2::MoveSerializer,
+             json: move,
+             status: status,
+             include: included_relationships,
+             fields: ::V2::MoveSerializer::INCLUDED_FIELDS
     end
 
     def move

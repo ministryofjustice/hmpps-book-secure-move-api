@@ -13,7 +13,7 @@ RSpec.describe Api::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+    JSON.parse(ActionController::Base.render(json: move, serializer: V2::MoveSerializer))
   end
 
   let(:headers) do
@@ -35,6 +35,7 @@ RSpec.describe Api::MovesController do
       }
     end
 
+    let(:profile) { create(:profile) }
     let(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
     let(:to_location) { create :location, :court }
     let(:reason) { create(:prison_transfer_reason) }
@@ -43,6 +44,7 @@ RSpec.describe Api::MovesController do
         type: 'moves',
         attributes: move_attributes,
         relationships: {
+          profile: { data: { type: 'profiles', id: profile.id } },
           from_location: { data: { type: 'locations', id: from_location.id } },
           to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : { data: nil },
           prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
@@ -72,7 +74,7 @@ RSpec.describe Api::MovesController do
       expect(move.prison_transfer_reason).to eq(reason)
     end
 
-    it 'returns the correct data' do
+    it 'returns serialized data' do
       do_post
 
       expect(response_json).to eq resource_to_json
@@ -90,61 +92,60 @@ RSpec.describe Api::MovesController do
       expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
     end
 
-    context 'when the supplier has a webhook subscription', :skip_before do
+    context 'when the supplier has a webhook subscription' do
+      before do
+        create(:notification_type, :webhook)
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+      end
+
       let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
-      let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-      let(:notification) { subscription.notifications.last }
+
       let(:faraday_client) do
         class_double(
           Faraday,
           headers: {},
-          post:
-          instance_double(Faraday::Response, success?: true, status: 202),
+          post: instance_double(Faraday::Response, success?: true, status: 202),
         )
       end
 
-      before do
-        allow(Faraday).to receive(:new).and_return(faraday_client)
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-          post '/api/moves', params: { data: data }, headers: headers, as: :json
-        end
+      let(:expected_notification_attributes) do
+        {
+          'event_type' => 'create_move',
+          'topic_id' => move.id,
+          'topic_type' => 'Move',
+          'delivery_attempts' => 1,
+          'delivery_attempted_at' => be_within(5.seconds).of(Time.zone.now),
+          'delivered_at' => be_within(5.seconds).of(Time.zone.now),
+          'discarded_at' => nil,
+          'response_id' => nil,
+          'notification_type_id' => 'webhook',
+        }
       end
 
-      describe 'notification record' do
-        let(:expected_notification_attributes) do
-          {
-            'delivered_at' => be_present,
-            'topic' => move,
-            'notification_type' => notification_type_webhook,
-            'event_type' => 'create_move',
-            'response_id' => be_nil,
-          }
-        end
-
-        it 'creates the correct notification' do
+      it 'creates the correct notification' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           do_post
-          actual_notifcation_attributes = notification.attributes.slice(
-            'delivered_at',
-            'topic',
-            'notification_type',
-            'event_type',
-            'response_id',
-          )
-
-          expect(expected_notification_attributes).to eq(actual_notifcation_attributes)
         end
 
-        it { expect(delivered_at).not_to be_nil }
-        it { expect(topic).to eql(move) }
-        it { expect(notification_type).to eql(notification_type_webhook) }
-        it { expect(event_type).to eql('create_move') }
-        it { expect(response_id).to be_nil }
+        expect(subscription.notifications.last.attributes).to include_json(expected_notification_attributes)
       end
     end
 
-    context 'when the supplier has an email subscription', :skip_before do
+    context 'when the supplier has an email subscription' do
       let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-      let!(:notification_type_email) { create(:notification_type, :email) }
+      let(:expected_notification_attributes) do
+        {
+          'event_type' => 'create_move',
+          'topic_id' => move.id,
+          'topic_type' => 'Move',
+          'delivery_attempts' => 0,
+          'delivery_attempted_at' => nil,
+          'delivered_at' => nil,
+          'discarded_at' => nil,
+          'response_id' => nil,
+          'notification_type_id' => 'email',
+        }
+      end
       let(:notification) { subscription.notifications.last }
       let(:notify_response) do
         instance_double(
@@ -159,19 +160,15 @@ RSpec.describe Api::MovesController do
       end
       let(:response_id) { SecureRandom.uuid }
 
-      before do
+      it 'creates the correct notification' do
+        create(:notification_type, :email)
         allow(MoveMailer).to receive(:notify).and_return(notify_response)
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-          post '/api/moves', params: { data: data }, headers: headers, as: :json
-        end
-      end
 
-      describe 'notification record' do
-        it { expect(notification.delivered_at).not_to be_nil }
-        it { expect(notification.topic).to eql(move) }
-        it { expect(notification.notification_type).to eql(notification_type_email) }
-        it { expect(notification.event_type).to eql('create_move') }
-        it { expect(notification.response_id).to eql(response_id) }
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          do_post
+        end
+
+        expect(subscription.notifications.last.attributes).to include_json(expected_notification_attributes)
       end
     end
 
@@ -182,20 +179,23 @@ RSpec.describe Api::MovesController do
           type: 'moves',
           attributes: move_attributes.merge(move_type: nil),
           relationships: {
-            person: { data: { type: 'people', id: person.id } },
+            profile: { data: { type: 'profiles', id: profile.id } },
             from_location: { data: { type: 'locations', id: from_location.id } },
           },
         }
       end
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
 
-      it 'creates a move', skip_before: true do
-        expect { post '/api/moves', params: { data: data }, headers: headers, as: :json }
-          .to change(Move, :count).by(1)
+      it 'creates a move' do
+        expect { do_post } .to change(Move, :count).by(1)
       end
 
       it 'sets the move_type to `prison_recall`' do
+        do_post
+
         expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
       end
     end
@@ -203,10 +203,12 @@ RSpec.describe Api::MovesController do
     context 'with a proposed move' do
       let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'proposed') }
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
     end
 
-    context 'when a court hearing relationship is passed', skip_before: true do
+    context 'when a court hearing relationship is passed' do
       let(:court_hearing) { create(:court_hearing) }
 
       let(:data) do
@@ -220,7 +222,7 @@ RSpec.describe Api::MovesController do
             move_type: nil,
           },
           relationships: {
-            person: { data: { type: 'people', id: person.id } },
+            profile: { data: { type: 'profiles', id: profile.id } },
             from_location: { data: { type: 'locations', id: from_location.id } },
             to_location: { data: { type: 'locations', id: to_location.id } },
             court_hearings: { data: [{ type: 'court_hearings', id: court_hearing.id }] },
@@ -228,15 +230,16 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      it 'returns the hearing in the json body' do
-        post '/api/moves', params: { data: data }, headers: headers, as: :json
+      it 'associates the court hearing with the `Move`' do
+        do_post
 
-        court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
-        expect(court_hearings_response.count).to be 1
+        expect(Move.last.court_hearings).to eq([court_hearing])
       end
     end
 
     context 'with explicit move_agreed and move_agreed_by' do
+      before { do_post }
+
       let(:date_from) { Date.yesterday }
       let(:date_to) { Date.tomorrow }
       let(:move_attributes) do
@@ -314,17 +317,9 @@ RSpec.describe Api::MovesController do
 
         expect(response_json.dig('data', 'relationships', 'profile', 'data')).to eq(expected_response)
       end
-
-      it 'returns the profile person in the response' do
-        do_post
-
-        expected_response = { 'type' => 'people', 'id' => profile.person.id }
-
-        expect(response_json.dig('data', 'relationships', 'person', 'data')).to eq(expected_response)
-      end
     end
 
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
+    context 'when not authorized', :with_invalid_auth_headers do
       let(:headers) { {} }
       let(:detail_401) { 'Token expired or invalid' }
 
@@ -363,18 +358,8 @@ RSpec.describe Api::MovesController do
 
       let(:errors_422) do
         [
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => "Date can't be blank",
-            'source' => { 'pointer' => '/data/attributes/date' },
-            'code' => 'blank',
-          },
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => 'Status is not included in the list',
-            'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'inclusion',
-          },
+          { 'title' => 'Unprocessable entity', 'detail' => "Date can't be blank", 'source' => { 'pointer' => '/data/attributes/date' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable entity', 'detail' => 'Status is not included in the list', 'source' => { 'pointer' => '/data/attributes/status' }, 'code' => 'inclusion' },
         ]
       end
 
@@ -383,44 +368,34 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'with a duplicate move', :skip_before do
-      let(:profile) { create(:profile) }
-      let(:person) { profile.person }
-      let(:move_attributes) do
-        attributes_for(:move).merge(
-          date: old_move.date,
-          person: profile.person,
-          from_location: from_location,
-          to_location: to_location,
-        )
-      end
+    context 'when a move is a duplicate' do
+      let(:move_attributes) { attributes_for(:move).merge(date: move.date) }
 
-      before do
-        post '/api/moves', params: { data: data }, headers: headers, as: :json
-      end
+      context 'when there are cancelled duplicates' do
+        let!(:move) { create(:move, :cancelled, profile: profile, from_location: from_location, to_location: to_location) }
 
-      context 'when there are multiple cancelled duplicates' do
-        let!(:old_move) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
-        let!(:old_move2) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location, date: old_move.date) }
-
-        it_behaves_like 'an endpoint that responds with success 201'
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { do_post }
+        end
       end
 
       context 'when duplicate is active' do
-        let!(:old_move) { create(:move, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, profile: profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
             {
-              title: 'Unprocessable entity',
-              detail: 'Date has already been taken',
-              source: { 'pointer' => '/data/attributes/date' },
-              code: 'taken',
-              meta: { 'existing_id' => old_move.id },
-            }.stringify_keys,
+              'title' => 'Unprocessable entity',
+              'detail' => 'Date has already been taken',
+              'source' => { 'pointer' => '/data/attributes/date' },
+              'code' => 'taken',
+              'meta' => { 'existing_id' => move.id },
+            },
           ]
         end
 
-        it_behaves_like 'an endpoint that responds with error 422'
+        it_behaves_like 'an endpoint that responds with error 422' do
+          before { do_post }
+        end
       end
     end
   end
