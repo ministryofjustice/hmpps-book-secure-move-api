@@ -7,13 +7,21 @@ RSpec.describe Api::MovesController do
 
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
-  let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
-  end
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
   let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
-  let(:token) { create(:access_token) }
+  let(:access_token) { create(:access_token).token }
   let(:supplier) { create(:supplier) }
+
+  let(:resource_to_json) do
+    JSON.parse(ActionController::Base.render(json: move.reload, serializer: V2::MoveSerializer))
+  end
+
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
 
   describe 'PATCH /moves' do
     let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
@@ -29,7 +37,7 @@ RSpec.describe Api::MovesController do
         attributes: {
           status: 'requested',
           additional_information: 'some more info',
-          cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
+          cancellation_reason: nil,
           cancellation_reason_comment: nil,
           move_type: 'court_appearance',
           move_agreed: true,
@@ -483,9 +491,9 @@ RSpec.describe Api::MovesController do
         before { do_patch }
       end
     end
-  end
 
-  def do_patch
-    patch "/api/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+    def do_patch
+      patch "/api/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+    end
   end
 end

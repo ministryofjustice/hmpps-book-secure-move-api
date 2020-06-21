@@ -344,9 +344,21 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when supplying a reference to a missing relationship' do
-      let(:from_location) { build(:location) }
-      let(:detail_404) { "Couldn't find Location without an ID" }
+    context 'when supplying a reference to a non-existent relationship' do
+      let(:data) do
+        {
+          type: 'moves',
+          attributes: move_attributes,
+          relationships: {
+            profile: { data: { type: 'profiles', id: profile.id } },
+            from_location: { data: { type: 'locations', id: 'foo' } },
+            to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : nil,
+            prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
+          },
+        }
+      end
+
+      let(:detail_404) {  "Couldn't find Location with 'id'=foo" }
 
       it_behaves_like 'an endpoint that responds with error 404' do
         before { do_post }
