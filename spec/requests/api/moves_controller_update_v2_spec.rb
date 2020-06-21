@@ -7,7 +7,7 @@ RSpec.describe Api::MovesController do
 
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
-  let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
+  let(:schema) { load_yaml_schema('patch_move_responses.yaml', version: 'v2') }
   let(:access_token) { create(:access_token).token }
   let(:supplier) { create(:supplier) }
 
@@ -57,7 +57,7 @@ RSpec.describe Api::MovesController do
         'date_to' => date_to,
         'move_agreed' => true,
         'move_agreed_by' => 'Fred Bloggs',
-        'move_type' => 'prison_recall',
+        'move_type' => 'court_appearance',
         'status' => 'requested',
       }
     end
@@ -222,7 +222,6 @@ RSpec.describe Api::MovesController do
 
       context 'when the supplier has a webhook subscription' do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
-        let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
         let(:faraday_client) do
           class_double(
@@ -232,23 +231,34 @@ RSpec.describe Api::MovesController do
           )
         end
 
-        before do
+        let(:expected_notification) do
+          {
+            'subscription_id' => subscription.id,
+            'event_type' => 'update_move_status',
+            'topic_id' => move.id,
+            'topic_type' => 'Move',
+            'delivery_attempts' => 1,
+            'delivery_attempted_at' => be_within(5.seconds).of(Time.zone.now),
+            'delivered_at' => be_within(5.seconds).of(Time.zone.now),
+            'discarded_at' => nil,
+            'response_id' => nil,
+            'notification_type_id' => 'webhook',
+          }
+        end
+
+        it 'generates the correct notification' do
+          create(:notification_type, :webhook)
           allow(Faraday).to receive(:new).and_return(faraday_client)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
             do_patch
           end
-        end
 
-        it { expect(notification.delivered_at).not_to be_nil }
-        it { expect(notification.topic).to eql(move) }
-        it { expect(notification.notification_type).to eql(notification_type_webhook) }
-        it { expect(notification.event_type).to eql('update_move_status') }
-        it { expect(notification.response_id).to be_nil }
+          expect(notification.attributes).to include_json(expected_notification)
+        end
       end
 
       context 'when the supplier has an email subscription' do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-        let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
         let(:notify_response) do
           instance_double(
@@ -263,18 +273,30 @@ RSpec.describe Api::MovesController do
         end
         let(:response_id) { SecureRandom.uuid }
 
-        before do
-          allow(MoveMailer).to receive(:notify).and_return(notify_response)
-          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-            do_patch
-          end
+        let(:expected_notification) do
+          {
+            'subscription_id' => subscription.id,
+            'event_type' => 'update_move_status',
+            'topic_id' => move.id,
+            'topic_type' => 'Move',
+            'delivery_attempts' => 0,
+            'delivery_attempted_at' => nil,
+            'delivered_at' => nil,
+            'discarded_at' => nil,
+            'response_id' => nil,
+            'notification_type_id' => 'email',
+          }
         end
 
-        it { expect(notification.delivered_at).not_to be_nil }
-        it { expect(notification.topic).to eql(move) }
-        it { expect(notification.notification_type).to eql(notification_type_email) }
-        it { expect(notification.event_type).to eql('update_move_status') }
-        it { expect(notification.response_id).to eql(response_id) }
+        it 'generates the correct notification' do
+          create(:notification_type, :email)
+          allow(MoveMailer).to receive(:notify).and_return(notify_response)
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+            do_patch
+          end
+
+          expect(notification.attributes).to include_json(expected_notification)
+        end
       end
     end
 

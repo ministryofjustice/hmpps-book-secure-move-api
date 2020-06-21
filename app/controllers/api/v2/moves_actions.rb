@@ -27,10 +27,10 @@ module Api::V2
       raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
 
       @move.assign_attributes(move_attributes)
+      action_name = @move.status_changed? ? 'update_status' : 'update'
       @move.save!
       @move.allocation&.refresh_status_and_moves_count!
 
-      action_name = @move.status_changed? ? 'update_status' : 'update'
       Notifier.prepare_notifications(topic: @move, action_name: action_name)
 
       render_move(@move, :ok)
@@ -63,22 +63,22 @@ module Api::V2
 
     def move_attributes
       move_params[:attributes].tap do |attributes|
-        attributes[:profile] = profile unless profile.nil?
-        attributes[:from_location] = from_location unless from_location.nil?
-        attributes[:to_location] = to_location unless to_location.nil?
-        attributes[:court_hearings] = court_hearings unless court_hearings.nil?
-        attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason.nil?
+        attributes[:profile] = profile unless profile_attributes.nil?
+        attributes[:from_location] = from_location unless from_location_attributes.nil?
+        attributes[:to_location] = to_location unless to_location_attributes.nil?
+        attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
+        attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
       end
     end
 
     def profile
-      profile_id = move_params.dig(:relationships, :profile, :data, :id)
+      profile_id = profile_attributes.dig(:data, :id)
 
       Profile.find(profile_id) if profile_id
     end
 
     def from_location
-      location_id = move_params.dig(:relationships, :from_location, :data, :id)
+      location_id = from_location_attributes.dig(:data, :id)
 
       Location.find(location_id) if location_id
     end
@@ -90,16 +90,36 @@ module Api::V2
     end
 
     def court_hearings
-      court_hearing_ids = move_params.dig(:relationships, :court_hearings, :data)
+      court_hearing_ids = court_hearing_attributes.dig(:data)
       court_hearing_ids = court_hearing_ids&.map { |court_hearing| court_hearing[:id] }
 
       CourtHearing.where(id: court_hearing_ids) unless court_hearing_ids.nil?
     end
 
     def prison_transfer_reason
-      prison_transfer_reason_id = move_params.dig(:relationships, :prison_transfer_reason, :data, :id)
+      prison_transfer_reason_id = prison_transfer_reason_attributes.dig(:data, :id)
 
       PrisonTransferReason.find_by(id: prison_transfer_reason_id) if prison_transfer_reason_id
+    end
+
+    def profile_attributes
+      move_params.dig(:relationships, :profile)
+    end
+
+    def from_location_attributes
+      move_params.dig(:relationships, :from_location)
+    end
+
+    def to_location_attributes
+      move_params.dig(:relationships, :to_location)
+    end
+
+    def court_hearing_attributes
+      move_params.dig(:relationships, :court_hearings)
+    end
+
+    def prison_transfer_reason_attributes
+      move_params.dig(:relationships, :prison_transfer_reason)
     end
 
     def render_move(move, status)
