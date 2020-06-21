@@ -12,7 +12,6 @@ RSpec.shared_examples 'an endpoint that responds with error 422' do
   it 'returns a valid 422 JSON response' do
     # validates against draft V4 of the spec. Doesn't need strict = true - it actually breaks some things
     # https://github.com/ruby-json-schema/json-schema/issues/139
-
     expect(JSON::Validator.validate!(schema, response_json, strict: false, fragment: '#/422')).to be true
   end
 

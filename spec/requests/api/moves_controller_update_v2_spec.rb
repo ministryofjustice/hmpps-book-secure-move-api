@@ -65,18 +65,8 @@ RSpec.describe Api::MovesController do
     it 'updates the specified attributes of a `Move`' do
       do_patch
 
-      actual_attributes = move.reload.attributes.slice(
-        'additional_information',
-        'cancellation_reason',
-        'cancellation_reason_comment',
-        'date_from',
-        'date_to',
-        'move_agreed',
-        'move_agreed_by',
-        'move_type',
-        'status',
-      )
-      expect(actual_attributes).to eq(expected_attributes)
+      actual_attributes = move.reload.attributes
+      expect(actual_attributes).to include(expected_attributes)
     end
 
     it 'returns serialized data' do
