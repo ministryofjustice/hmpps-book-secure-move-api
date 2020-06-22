@@ -227,6 +227,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[date_from]
           in: query
@@ -389,6 +390,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: body
           in: body
           required: true
@@ -440,6 +442,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - name: body
           in: body
@@ -489,6 +492,7 @@
       tags:
         - Moves
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: Authorization
           in: header
           schema:
