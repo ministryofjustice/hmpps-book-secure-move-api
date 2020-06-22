@@ -55,13 +55,21 @@ RSpec.describe Api::PeopleController do
 
       before do
         allow(People::Finder).to receive(:new).and_return(people_finder)
-        allow(Moves::ImportPeople).to receive(:new).with([prison_number])
+        allow(Moves::ImportPeople).to receive(:new).with([prison_number.upcase])
           .and_return(instance_double('Moves::ImportPeople', call: nil))
         get '/api/v1/people', headers: headers, params: params
       end
 
       it 'requests data from NOMIS' do
         expect(response).to have_http_status(:ok)
+      end
+
+      context 'when the prison_number is downcased' do
+        let(:params) { { filter: { prison_number: prison_number.downcase }, access_token: token.token } }
+
+        it 'requests data from NOMIS' do
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
 

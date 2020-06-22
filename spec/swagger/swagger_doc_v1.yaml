@@ -92,6 +92,7 @@
         - application/vnd.api+json
       parameters:
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: filter[date_from]
           in: query
           description:
@@ -264,6 +265,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/allocation_id_parameter.yaml#/AllocationId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -325,6 +327,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[date_from]
           in: query
@@ -487,6 +490,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: body
           in: body
           required: true
@@ -538,6 +542,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - name: body
           in: body
@@ -595,6 +600,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -662,6 +668,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -726,6 +733,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -791,6 +799,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -856,6 +865,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -923,6 +933,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -990,6 +1001,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -1053,6 +1065,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - name: body
           in: body
@@ -1108,6 +1121,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -1167,6 +1181,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -1235,6 +1250,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1293,6 +1309,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1361,6 +1378,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1429,6 +1447,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1495,6 +1514,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1562,6 +1582,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1629,6 +1650,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1697,6 +1719,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1765,6 +1788,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1833,6 +1857,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
@@ -1896,6 +1921,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[police_national_computer]
           in: query
@@ -1947,6 +1973,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: body
           in: body
           required: true
@@ -1999,6 +2026,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: person_id
           in: path
           required: true
@@ -2063,6 +2091,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: person_id
           in: path
           required: true
@@ -2122,6 +2151,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: person_id
           in: path
           required: true
@@ -2189,6 +2219,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         "200":
@@ -2256,6 +2287,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         "200":
@@ -2313,6 +2345,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[location_type]
           in: query
@@ -2362,6 +2395,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: location_id
           in: path
@@ -2405,6 +2439,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
       responses:
         "200":
@@ -2461,6 +2496,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: supplier_key
           in: path

@@ -69,7 +69,7 @@ module Api::V2
     end
 
     def prison_numbers
-      filter_params[:prison_number]&.split(',')
+      filter_params[:prison_number]&.split(',')&.map(&:upcase)
     end
   end
 end
