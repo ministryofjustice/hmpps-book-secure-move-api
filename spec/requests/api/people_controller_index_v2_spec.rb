@@ -51,7 +51,7 @@ RSpec.describe Api::PeopleController do
 
       before { allow(People::ImportFromNomis).to receive(:new).and_return(import_from_nomis) }
 
-      it 'update the person from nomis' do
+      it 'updates the person from nomis' do
         get "/api/people#{query}", headers: headers
 
         expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
@@ -61,7 +61,7 @@ RSpec.describe Api::PeopleController do
       context 'when the prison_number is downcased' do
         let(:query) { '?filter[prison_number]=g3239gv,gv345vg' }
 
-        it 'update the person from nomis' do
+        it 'updates the person from nomis' do
           get "/api/people#{query}", headers: headers
 
           expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
