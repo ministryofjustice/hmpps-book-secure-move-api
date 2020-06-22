@@ -8,21 +8,6 @@
     Book A Secure Move supplier and frontend API.
 
     This api requires an Accept header with a version in, for example:
-
-:parameters:
-  Accept:
-    description: |
-      Accepted response content type 
-
-      We may support many different Media Types in the Accept
-      header. You don't have to supply the media type but you _must_ require a version.
-
-      We currently only support version 1 and 2.
-    name: Accept
-    type: string
-    in: header
-    required: true
-    example: application/vnd.api+json; version=2
 :consumes:
   - application/vnd.api+json
 :produces:
@@ -130,6 +115,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: body
           in: body
           required: true
@@ -181,6 +167,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - name: person_id
           in: path
           required: true

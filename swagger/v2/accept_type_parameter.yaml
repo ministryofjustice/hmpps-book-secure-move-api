@@ -1,12 +1,11 @@
 Accept:
   name: Accept
   description: |
-    Accepted response content type 
+    Accepted response content type.
 
-    We may support many different Media Types in the Accept
-    header. You don't have to supply the media type but you _must_ require a version.
+    We currently support `application/vnd.api+json` and `version` 1 and 2.
 
-    We currently only support version 1 and 2.
+    You don't have to supply the media type. `version` _must_ be provided.
   in: header
   required: true
   schema:
