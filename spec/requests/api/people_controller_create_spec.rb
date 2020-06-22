@@ -10,7 +10,7 @@ RSpec.describe Api::PeopleController do
   let(:headers) do
     {
       'CONTENT_TYPE': content_type,
-      'Accept': 'application/json',
+      'Accept': 'application/vnd.api+json',
       'Authorization' => "Bearer #{access_token}",
     }
   end

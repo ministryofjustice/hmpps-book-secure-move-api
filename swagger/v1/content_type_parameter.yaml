@@ -5,5 +5,4 @@ ContentType:
   required: true
   schema:
     type: string
-    default: application/vnd.api+json
     example: application/vnd.api+json

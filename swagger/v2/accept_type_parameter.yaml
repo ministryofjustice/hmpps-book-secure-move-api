@@ -1,0 +1,13 @@
+Accept:
+  name: Accept
+  description: |
+    Accepted response content type.
+
+    We currently support `application/vnd.api+json` and `version` 1 and 2.
+
+    You don't have to supply the media type. `version` _must_ be provided.
+  in: header
+  required: true
+  schema:
+    type: string
+    example: application/vnd.api+json; version=2

@@ -60,4 +60,4 @@
     errors:
       type: array
       items:
-        $ref: "../errors.yaml#/UnprocessableEntity"
+        $ref: "../v1/errors.yaml#/UnprocessableEntity"
