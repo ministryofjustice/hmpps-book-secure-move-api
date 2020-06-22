@@ -66,11 +66,7 @@ RSpec.describe Api::MovesController do
       let(:move) { create(:move, :cancelled) }
       let!(:moves) { [move] }
       let(:from_location_id) { move.from_location_id }
-      let(:filters) do
-        {
-          from_location_id: from_location_id,
-        }
-      end
+      let(:filters) { { from_location_id: from_location_id } }
       let(:params) { { filter: filters } }
       let(:expected_move) do
         {
@@ -97,11 +93,7 @@ RSpec.describe Api::MovesController do
       let(:move) { create(:move, :booked) }
       let!(:moves) { [move] }
       let(:from_location_id) { move.from_location_id }
-      let(:filters) do
-        {
-          from_location_id: from_location_id,
-        }
-      end
+      let(:filters) { { from_location_id: from_location_id } }
       let(:params) { { filter: filters } }
 
       it 'returns the correct attributes values for moves' do
@@ -133,7 +125,7 @@ RSpec.describe Api::MovesController do
       it_behaves_like 'an endpoint that paginates resources'
     end
 
-    describe 'validating dates before running queries' do
+    context 'when date_from is invalid' do
       let(:from_location) { moves.first.from_location }
       let(:filters) do
         {
@@ -212,8 +204,8 @@ RSpec.describe Api::MovesController do
     end
   end
 
-  context 'when not authorized', :skip_before, :with_invalid_auth_headers do
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  context 'when not authorized' do
+    let(:headers) { {} }
     let(:detail_401) { 'Token expired or invalid' }
 
     before { do_get }
