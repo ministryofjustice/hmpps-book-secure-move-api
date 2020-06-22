@@ -93,7 +93,7 @@ module Api::V2
       court_hearing_ids = court_hearing_attributes.dig(:data)
       court_hearing_ids = court_hearing_ids&.map { |court_hearing| court_hearing[:id] }
 
-      CourtHearing.where(id: court_hearing_ids) unless court_hearing_ids.nil?
+      CourtHearing.where(id: court_hearing_ids) if court_hearing_ids
     end
 
     def prison_transfer_reason
