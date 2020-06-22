@@ -23,7 +23,7 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/BadRequest
+        $ref: "../v1/errors.yaml#/BadRequest"
 "401":
   type: object
   required:
@@ -32,7 +32,7 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/NotAuthorisedError
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"
 "404":
   type: object
   required:
@@ -41,7 +41,7 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/ResourceNotFound
+        $ref: "../v1/errors.yaml#/ResourceNotFound"
 "415":
   type: object
   required:
@@ -50,7 +50,7 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/UnsupportedMediaType
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
 "422":
   type: object
   required:
@@ -59,4 +59,4 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/UnprocessableEntity
+        $ref: "../v1/errors.yaml#/UnprocessableEntity"

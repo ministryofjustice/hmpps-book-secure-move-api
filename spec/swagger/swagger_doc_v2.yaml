@@ -110,22 +110,21 @@
           content:
             "application/vnd.api+json; version=2":
               schema:
-                "$ref": get_people_responses.yaml#/200
+                "$ref": "../v2/get_people_responses.yaml#/200"
         "401":
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_people_responses.yaml#/401
+                "$ref": "../v2/get_people_responses.yaml#/401"
         "415":
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": get_people_responses.yaml#/415
+                "$ref": "../v2/get_people_responses.yaml#/415"
     post:
-      deprecated: true
-      summary: "[DO NOT USE] Creates a new person and their associated profile"
+      summary: "Creates a new person and their associated profile"
       tags:
         - People
       consumes:
@@ -143,41 +142,40 @@
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/201
+                "$ref": "../v2/post_people_responses.yaml#/201"
         "400":
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/400
+                "$ref": "../v2/post_people_responses.yaml#/400"
         "401":
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/401
+                "$ref": "../v2/post_people_responses.yaml#/401"
         "404":
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/404
+                "$ref": "../v2/post_people_responses.yaml#/404"
         "415":
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/415
+                "$ref": "../v2/post_people_responses.yaml#/415"
         "422":
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": post_people_responses.yaml#/422
+                "$ref": "../v2/post_people_responses.yaml#/422"
   "/people/{person_id}":
     patch:
-      deprecated: true
-      summary: "[DO NOT USE] Updates an existing person."
+      summary: "Updates an existing person."
       tags:
         - People
       consumes:
@@ -196,41 +194,357 @@
           required: true
           description: The person object to be updated
           schema:
-            "$ref": person.yaml#/Person
+            "$ref": "../v2/person.yaml#/Person"
       responses:
         "200":
           description: updated
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/200
+                "$ref": "../v2/patch_people_responses.yaml#/200"
         "400":
           description: bad request
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/400
+                "$ref": "../v2/patch_people_responses.yaml#/400"
         "401":
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/401
+                "$ref": "../v2/patch_people_responses.yaml#/401"
         "404":
           description: resource not found
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/404
+                "$ref": "../v2/patch_people_responses.yaml#/404"
         "415":
           description: invalid media type
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/415
+                "$ref": "../v2/patch_people_responses.yaml#/415"
         "422":
           description: unprocessable entity
           content:
             application/vnd.api+json:
               schema:
-                "$ref": patch_people_responses.yaml#/422
+                "$ref": "../v2/patch_people_responses.yaml#/422"
+  "/moves":
+    get:
+      summary: Returns a list of moves
+      tags:
+        - Moves
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: filter[date_from]
+          in: query
+          description:
+            Filters results to only include moves on and after the given
+            date, e.g. `2019-05-02`
+          schema:
+            type: string
+            example: "2019-05-09"
+          format: date
+        - name: filter[date_to]
+          in: query
+          description:
+            Filters results to only include moves up to and including the
+            given date, e.g. `2019-05-09`
+          schema:
+            type: string
+            example: "2019-05-09"
+          format: date
+        - name: filter[created_at_from]
+          in: query
+          description:
+            Filters results to only include moves created on or after the
+            given date, e.g. `2019-05-02`
+          schema:
+            type: string
+            example: "2019-05-09"
+          format: date
+        - name: filter[created_at_to]
+          in: query
+          description:
+            Filters results to only include moves created on or before
+            the given date, e.g. `2019-05-09`
+          schema:
+            type: string
+            example: "2019-05-09"
+          format: date
+        - name: filter[status]
+          in: query
+          explode: false
+          description: Filters results to only include moves with the given statuses
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - proposed
+                - requested
+                - booked
+                - cancelled
+                - completed
+        - name: filter[move_type]
+          in: query
+          explode: false
+          description: Filters results to only include moves with the given move_types
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - court_appearance
+                - prison_recall
+                - prison_transfer
+        - name: filter[cancellation_reason]
+          in: query
+          explode: false
+          description: Filters results to only include moves with the given cancellation_reasons
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - made_in_error
+                - supplier_declined_to_move
+                - rejected
+                - other
+        - name: filter[from_location_id]
+          description:
+            Filters results to only include moves from the given location
+            UUIDs
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: filter[to_location_id]
+          description:
+            Filters results to only include moves to the given location
+            UUIDs
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: filter[has_relationship_to_allocation]
+          in: query
+          explode: false
+          description:
+            Filters results to either exclude or include moves associated
+            to an allocation optionally
+          schema:
+            type: boolean
+            example: true
+        - name: sort[by]
+          description: field to sort results by
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - name
+              - from_location
+              - to_location
+              - prison_transfer_reason
+              - created_at
+              - date
+              - date_from
+        - name: sort[direction]
+          description: direction to sort by
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        - "$ref": "../v1/pagination_parameters.yaml#/Page"
+        - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_moves_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_moves_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_moves_responses.yaml#/415"
+    post:
+      summary: Creates a new move
+      tags:
+        - Moves
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The move object to be created
+          schema:
+            "$ref": "../v2/move.yaml#/Move"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_moves_responses.yaml#/422"
+  "/moves/{move_id}":
+    patch:
+      summary: Updates a move. Aliased as PUT /moves/{move_id}.
+      tags:
+        - Moves
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+        - name: body
+          in: body
+          required: true
+          description: The move object to be modified
+          schema:
+            "$ref": "../v2/move.yaml#/Move"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/put_move_responses.yaml#/422"
+    get:
+      summary: Returns the details of a move
+      tags:
+        - Moves
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+            default: Bearer <your-client-token>
+          required: true
+        - name: Content-Type
+          in: header
+          description: Accepted request content type
+          schema:
+            type: string
+            default: application/vnd.api+json
+          required: true
+        - name: move_id
+          in: path
+          description: The ID of the move
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+          required: true
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_move_responses.yaml#/200"
+        "401":
+          description: unauthorised
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid content type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
