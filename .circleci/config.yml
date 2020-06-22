@@ -127,6 +127,10 @@ references:
       at: .
 
 executors:
+  basic-executor:
+    docker:
+      - image: cimg/base:2020.06
+
   cloud-platform-executor:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
@@ -269,9 +273,14 @@ commands:
 
 jobs:
   notify_of_approval:
-    executor: cloud-platform-executor
+    executor: basic-executor
     steps:
       - *notify_slack_of_approval
+
+  notify_of_release:
+    executor: basic-executor
+    steps:
+      - *notify_slack_on_release_start
 
   setup_test_environment:
     executor: test-executor
@@ -374,6 +383,8 @@ workflows:
 
   test-build-deploy:
     jobs:
+      - notify_of_release:
+          <<: *only_deploy_tags
       - setup_test_environment:
           <<: *all_tags
       - api_docs:
