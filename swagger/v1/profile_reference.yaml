@@ -4,7 +4,10 @@ ProfileReference:
     - data
   properties:
     data:
-      type: object
+      oneOf:
+        - type: object
+        - type: array
+        - type: "null"
       required:
         - type
         - id
