@@ -25,7 +25,7 @@ module Api::V1
     PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
 
     def index_and_render
-      prison_number = filter_params[:prison_number].upcase
+      prison_number = filter_params[:prison_number]&.upcase
 
       import_person_from_nomis(prison_number) if prison_number
 
