@@ -4,19 +4,39 @@
 :info:
   :title: PECS4 API V2 Docs
   :version: v2
-  :description: Book A Secure Move supplier and frontend API.
+  :description: |
+    Book A Secure Move supplier and frontend API.
+
+    This api requires an Accept header with a version in, for example:
+
+:parameters:
+  Accept:
+    description: |
+      Accepted response content type 
+
+      We may support many different Media Types in the Accept
+      header. You don't have to supply the media type but you _must_ require a version.
+
+      We currently only support version 1 and 2.
+    name: Accept
+    type: string
+    in: header
+    required: true
+    example: application/vnd.api+json; version=2
 :consumes:
   - application/vnd.api+json
+:produces:
+  - application/vnd.api+json; version=2
 :servers:
-  - :url: http://localhost:3000/api/v2
+  - :url: http://localhost:3000/api
     :description: Local development (localhost)
-  - :url: https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  - :url: https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api
     :description: Dev API
-  - :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  - :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api
     :description: Staging API
-  - :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v2
+  - :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api
     :description: PreProd API
-  - :url: https://api.bookasecuremove.service.justice.gov.uk/api/v2
+  - :url: https://api.bookasecuremove.service.justice.gov.uk/api
     :description: Production API
 :security:
   - :oauth2: []
@@ -41,13 +61,13 @@
 :paths:
   "/people":
     get:
-      deprecated: true
-      summary: "[DO NOT USE] Returns a list of people"
+      summary: "Returns a list of people"
       tags:
         - People
       consumes:
         - application/vnd.api+json
       parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[police_national_computer]
           in: query
@@ -88,7 +108,7 @@
         "200":
           description: success
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json; version=2":
               schema:
                 "$ref": get_people_responses.yaml#/200
         "401":
