@@ -1306,6 +1306,19 @@
             from the logged-in account).
           schema:
             "$ref": "../v1/post_journey.yaml#/PostJourney"
+        - name: include
+          description: Returns a specific list of related resources to the journey
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - from_location
+              - to_location
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "201":
           description: created
@@ -1366,6 +1379,19 @@
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: include
+          description: Returns a specific list of related resources to the journey
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - from_location
+              - to_location
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "200":
           description: success
@@ -1433,6 +1459,19 @@
             `billable`; it must not specify locations or `state`.
           schema:
             "$ref": "../v1/patch_journey.yaml#/PatchJourney"
+        - name: include
+          description: Returns a specific list of related resources to the journey
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - from_location
+              - to_location
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "200":
           description: success
