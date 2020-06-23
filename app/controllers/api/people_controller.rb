@@ -4,6 +4,8 @@ module Api
   class PeopleController < ApiController
     before_action :validate_timetable_filter_params, only: [:timetable]
     before_action :validate_nomis_profile, only: %i[court_cases image timetable]
+    before_action :validate_other_include_params, only: %i[court_cases timetable]
+    before_action :validate_include_params, except: %i[court_cases timetable]
 
     def index
       index_and_render
@@ -31,7 +33,7 @@ module Api
       response = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
       if response.success?
-        render json: response.court_cases, each_serializer: CourtCaseSerializer, include: :location
+        render json: response.court_cases, each_serializer: CourtCaseSerializer, include: other_included_relationships
       else
         render json: json_api_errors_for(response.error)
       end
@@ -44,7 +46,7 @@ module Api
       response = People::RetrieveTimetable.call(person, start_date, end_date)
 
       if response.success?
-        render json: response.content, each_serializer: TimetableSerializer, include: :location
+        render json: response.content, each_serializer: TimetableSerializer, include: other_included_relationships
       else
         render json: json_api_errors_for(response.error)
       end
@@ -58,6 +60,8 @@ module Api
 
     PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
     PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
+    OTHER_SUPPORTED_RELATIONSHIPS = %w[location].freeze
+
     def person
       @person ||= Person.find(params[:person_id] || params[:id])
     end
@@ -86,6 +90,18 @@ module Api
     def validate_nomis_profile
       profile_validator = People::NomisPersonValidator.new(person)
       profile_validator.validate!
+    end
+
+    def other_included_relationships
+      # Custom included relationships to avoid the people actions relationships
+      @other_included_relationships ||= IncludeParamHandler.new(params).call || OTHER_SUPPORTED_RELATIONSHIPS
+    end
+
+    def validate_other_include_params
+      # Custom validation for includes to avoid the default validation shared in API controller
+      IncludeParamsValidator
+        .new(other_included_relationships, OTHER_SUPPORTED_RELATIONSHIPS)
+        .fully_validate!
     end
   end
 end
