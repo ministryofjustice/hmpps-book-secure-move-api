@@ -21,29 +21,37 @@ RSpec.describe ApiController, type: :request do
     it_behaves_like 'an endpoint that responds with success 200'
   end
 
-  class Model
-    include ActiveModel::Model
+  let(:model_class) do
+    # anonymous class to test validation against
+    Class.new do
+      include ActiveModel::Model
 
-    attr_accessor :name, :status, :email
+      attr_accessor :name, :status, :email
 
-    validates :name, presence: true
-    validates :status, inclusion: { in: %w[requested accepted] }
-    validates :email, presence: true
-    validates :email, format: { with: /\A\S+@.+\.\S+\z/ }
+      validates :name, presence: true
+      validates :status, inclusion: { in: %w[requested accepted] }
+      validates :email, presence: true
+      validates :email, format: { with: /\A\S+@.+\.\S+\z/ }
 
-    validate :name_is_unique
+      validate :name_is_unique
 
-    def existing_id
-      1
-    end
+      def self.name
+        'Model'
+      end
 
-    def name_is_unique
-      errors.add(:name, :taken)
+      def existing_id
+        1
+      end
+
+      def name_is_unique
+        errors.add(:name, :taken)
+      end
     end
   end
 
+
   describe '#validation_errors' do
-    let(:model) { Model.new }
+    let(:model) { model_class.new }
 
     let(:errors) do
       [

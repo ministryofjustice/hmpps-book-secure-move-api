@@ -14,6 +14,7 @@ RSpec.describe Api::V1::MoveEventsController do
     let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': '1234' } }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
+    let(:mock_redis) { MockRedis.new }
     let(:move) { create(:move) }
     let(:move_id) { move.id }
     let(:reject_params) do
@@ -32,6 +33,7 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
+      allow(Redis).to receive(:new) { mock_redis }
       # post "/api/v1/moves/#{move_id}/reject", params: reject_params, headers: headers, as: :json
     end
 

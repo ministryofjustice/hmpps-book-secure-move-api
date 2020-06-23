@@ -5,8 +5,6 @@ module Api
     class MoveEventsController < ApiController
       # before_action :validate_required_idempotency_key
 
-      # before_action :before_request
-      # after_action :after_request
       around_action :idempotent_action
 
       include Moves::Eventable
