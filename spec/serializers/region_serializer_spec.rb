@@ -7,46 +7,50 @@ RSpec.describe RegionSerializer do
 
   let(:region) { create(:region) }
   let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer).to_json).deep_symbolize_keys
+    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
   end
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
+  let(:adapter_options) { {} }
 
-  it 'contains a type property' do
-    expect(result_data[:type]).to eql 'regions'
-  end
+  context 'with no options' do
+    it 'contains a type property' do
+      expect(result_data[:type]).to eql 'regions'
+    end
 
-  it 'contains an id property' do
-    expect(result_data[:id]).to eql region.id
-  end
+    it 'contains an id property' do
+      expect(result_data[:id]).to eql region.id
+    end
 
-  it 'contains a key attribute' do
-    expect(attributes[:key]).to eql region.key
-  end
+    it 'contains a key attribute' do
+      expect(attributes[:key]).to eql region.key
+    end
 
-  it 'contains a name attribute' do
-    expect(attributes[:name]).to eql region.name
-  end
+    it 'contains a name attribute' do
+      expect(attributes[:name]).to eql region.name
+    end
 
-  it 'contains a created_at attribute' do
-    expect(attributes[:created_at]).to eql region.created_at.iso8601
-  end
+    it 'contains a created_at attribute' do
+      expect(attributes[:created_at]).to eql region.created_at.iso8601
+    end
 
-  it 'contains an updated_at attribute' do
-    expect(attributes[:updated_at]).to eql region.updated_at.iso8601
+    it 'contains an updated_at attribute' do
+      expect(attributes[:updated_at]).to eql region.updated_at.iso8601
+    end
   end
 
   describe 'locations' do
     context 'with locations' do
       let(:location) { create(:location) }
       let(:region) { create(:region, locations: [location]) }
+      let(:adapter_options) { { include: 'locations' } }
 
       it 'contains a locations relationship' do
         expect(result_data[:relationships][:locations][:data]).to contain_exactly(id: location.id, type: 'locations')
       end
 
-      it 'does not contain an included location' do
-        expect(result[:included]).to be_nil
+      it 'contain an included location' do
+        expect(result[:included].map { |r| r[:type] }).to match_array('locations')
       end
     end
 

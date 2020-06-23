@@ -2441,6 +2441,16 @@
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: include
+          description: Returns a specific list of related resources to the region
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - locations
+          example: locations
       responses:
         "200":
           description: success
