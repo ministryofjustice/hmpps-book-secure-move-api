@@ -87,6 +87,18 @@
             example: G1234UT
           format: string
           required: false
+        - name: include
+          description: Returns a specific list of related resources to the person
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - gender
+              - ethnicity
+              - profiles
+          example: gender
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -122,6 +134,18 @@
           description: The person object to be created
           schema:
             "$ref": person.yaml#/Person
+        - name: include
+          description: Returns a specific list of related resources to the person
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - gender
+              - ethnicity
+              - profiles
+          example: gender
       responses:
         "201":
           description: created
@@ -182,6 +206,18 @@
           description: The person object to be updated
           schema:
             "$ref": "../v2/person.yaml#/Person"
+        - name: include
+          description: Returns a specific list of related resources to the person
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - gender
+              - ethnicity
+              - profiles
+          example: gender
       responses:
         "200":
           description: updated
@@ -362,6 +398,28 @@
             enum:
               - asc
               - desc
+        - name: include
+          description: Returns a specific list of related resources to the move
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - allocation
+              - court_hearings
+              - documents
+              - from_location
+              - to_location
+              - original_move
+              - prison_transfer_reason
+              - profile
+              - profile.person
+              - profile.person.ethnicity
+              - profile.person.gender
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -397,6 +455,28 @@
           description: The move object to be created
           schema:
             "$ref": "../v2/move.yaml#/Move"
+        - name: include
+          description: Returns a specific list of related resources to the move
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - allocation
+              - court_hearings
+              - documents
+              - from_location
+              - to_location
+              - original_move
+              - prison_transfer_reason
+              - profile
+              - profile.person
+              - profile.person.ethnicity
+              - profile.person.gender
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "201":
           description: created
@@ -450,6 +530,28 @@
           description: The move object to be modified
           schema:
             "$ref": "../v2/move.yaml#/Move"
+        - name: include
+          description: Returns a specific list of related resources to the move
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - allocation
+              - court_hearings
+              - documents
+              - from_location
+              - to_location
+              - original_move
+              - prison_transfer_reason
+              - profile
+              - profile.person
+              - profile.person.ethnicity
+              - profile.person.gender
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "200":
           description: success
@@ -514,6 +616,28 @@
           format: uuid
           example: 00525ecb-7316-492a-aae2-f69334b2a155
           required: true
+        - name: include
+          description: Returns a specific list of related resources to the move
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - allocation
+              - court_hearings
+              - documents
+              - from_location
+              - to_location
+              - original_move
+              - prison_transfer_reason
+              - profile
+              - profile.person
+              - profile.person.ethnicity
+              - profile.person.gender
+              - from_location.suppliers
+              - to_location.suppliers
+          example: from_location
       responses:
         "200":
           description: success
