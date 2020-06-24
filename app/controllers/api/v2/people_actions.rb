@@ -68,6 +68,11 @@ module Api::V2
       ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
     end
 
+    def other_included_relationships
+      # Custom included relationships to avoid the people actions relationships
+      @other_included_relationships ||= IncludeParamHandler.new(params).call
+    end
+
     def prison_numbers
       filter_params[:prison_number]&.split(',')&.map(&:upcase)
     end
