@@ -76,10 +76,6 @@ module Api
       end
     end
 
-    def included_relationships
-      IncludeParamHandler.new(params).call || AllocationSerializer::SUPPORTED_RELATIONSHIPS
-    end
-
     def supported_relationships
       AllocationSerializer::SUPPORTED_RELATIONSHIPS
     end
