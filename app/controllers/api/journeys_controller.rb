@@ -21,21 +21,29 @@ module Api
     end
 
     def show
-      render json: journey, status: :ok
+      render_journey(journey, :ok)
     end
 
     def create
       authorize!(:create, journey)
       journey.save!
-      render json: journey, status: :created
+      render_journey(journey, :created)
     end
 
     def update
       journey.update!(update_journey_attributes)
-      render json: journey, status: :ok
+      render_journey(journey, :ok)
     end
 
   private
+
+    def render_journey(journey, status)
+      render json: journey, status: status, include: included_relationships
+    end
+
+    def supported_relationships
+      JourneySerializer::SUPPORTED_RELATIONSHIPS
+    end
 
     def move
       @move ||= Move.accessible_by(current_ability).find(params.require(:move_id))

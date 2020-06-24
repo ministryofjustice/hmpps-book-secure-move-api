@@ -1,0 +1,14 @@
+JourneyIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the journey
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - from_location
+      - to_location
+      - from_location.suppliers
+      - to_location.suppliers
+  example: from_location

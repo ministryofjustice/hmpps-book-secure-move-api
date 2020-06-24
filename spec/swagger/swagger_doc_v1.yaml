@@ -183,6 +183,7 @@
             enum:
               - asc
               - desc
+        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -217,6 +218,7 @@
           description: The allocation object to be created
           schema:
             "$ref": "../v1/allocation.yaml#/Allocation"
+        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
       responses:
         "201":
           description: created
@@ -462,6 +464,7 @@
             enum:
               - asc
               - desc
+        - "$ref": "../v1/move_include_parameter.yaml#/MoveIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -497,6 +500,7 @@
           description: The move object to be created
           schema:
             "$ref": "../v1/move.yaml#/Move"
+        - "$ref": "../v1/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "201":
           description: created
@@ -550,6 +554,7 @@
           description: The move object to be modified
           schema:
             "$ref": "../v1/move.yaml#/Move"
+        - "$ref": "../v1/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "200":
           description: success
@@ -1195,6 +1200,7 @@
             from the logged-in account).
           schema:
             "$ref": "../v1/post_journey.yaml#/PostJourney"
+        - "$ref": "../v1/journey_include_parameter.yaml#/JourneyIncludeParameter"
       responses:
         "201":
           description: created
@@ -1255,6 +1261,7 @@
         - "$ref": "../v1/journey_id_parameter.yaml#/JourneyId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/journey_include_parameter.yaml#/JourneyIncludeParameter"
       responses:
         "200":
           description: success
@@ -1322,6 +1329,7 @@
             `billable`; it must not specify locations or `state`.
           schema:
             "$ref": "../v1/patch_journey.yaml#/PatchJourney"
+        - "$ref": "../v1/journey_include_parameter.yaml#/JourneyIncludeParameter"
       responses:
         "200":
           description: success
@@ -1945,6 +1953,7 @@
             example: G1234UT
           format: string
           required: false
+        - "$ref": "../v1/person_include_parameter.yaml#/PersonIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -1980,6 +1989,7 @@
           description: The person object to be created
           schema:
             "$ref": "../v1/person.yaml#/Person"
+        - "$ref": "../v1/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "201":
           description: created
@@ -2041,6 +2051,7 @@
           description: The person object to be updated
           schema:
             "$ref": "../v1/person.yaml#/Person"
+        - "$ref": "../v1/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "200":
           description: updated
@@ -2106,6 +2117,7 @@
           description: The profile object to be created
           schema:
             "$ref": "../v1/profile.yaml#/Profile"
+        - "$ref": "../v1/profile_include_parameter.yaml#/ProfileIncludeParameter"
       responses:
         "201":
           description: created
@@ -2174,6 +2186,7 @@
           description: The profile object to be modified
           schema:
             "$ref": "../v1/profile.yaml#/Profile"
+        - "$ref": "../v1/profile_include_parameter.yaml#/ProfileIncludeParameter"
       responses:
         "200":
           description: success
@@ -2368,6 +2381,7 @@
             type: string
           format: uuid
           example: 950ef512-a25f-46d7-8ced-7ad09510659b
+        - "$ref": "../v1/location_include_parameter.yaml#/LocationIncludeParameter"
       responses:
         "200":
           description: success
@@ -2405,6 +2419,7 @@
             type: string
           format: uuid
           example: 00525ecb-7316-492a-aae2-f69334b2a155
+        - "$ref": "../v1/location_include_parameter.yaml#/LocationIncludeParameter"
       responses:
         "200":
           description: success
