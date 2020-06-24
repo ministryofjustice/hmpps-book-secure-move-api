@@ -48,6 +48,21 @@ RSpec.describe Api::PeopleController do
           expect(People::RetrieveCourtCases).to have_received(:call).with(person, 'active' => 'true')
         end
       end
+
+      context 'when we pass an include in the query params' do
+        it 'includes location in the response' do
+          create(:location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT')
+          get "/api/v1/people/#{person.id}/court_cases?include=location", params: { access_token: token.token }
+
+          expect(response_json['included'].first['type']).to eq('locations')
+        end
+
+        it 'throws an error if query param invalid ' do
+          get "/api/v1/people/#{person.id}/court_cases?include=foo.bar", params: { access_token: token.token }
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
     end
 
     context 'when person does not exist' do
