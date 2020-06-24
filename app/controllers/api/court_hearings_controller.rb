@@ -3,9 +3,12 @@ module Api
     def create
       court_hearing = CourtHearing.create!(court_hearings_attributes)
 
+      Rails.logger.info("Created a court hearing #{court_hearing.attributes.to_json}")
+
       if should_save_in_nomis?
-        CourtHearings::CreateInNomis.call(move, move.court_hearings)
-        Rails.logger.info("Saved to nomis #{court_hearing.attributes.to_json}")
+        log_attributes = CourtHearings::CreateInNomis.call(move, move.court_hearings)
+
+        Rails.logger.info("Tried to save a court hearing to nomis #{log_attributes.to_json}")
       else
         Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
       end
