@@ -7,24 +7,24 @@ namespace :auth do
 
     puts "What's the application's name?"
     name = STDIN.gets.chomp
-
     application = Doorkeeper::Application.new(name: name)
 
-    suppliers = Supplier.all.each_with_object({}) { |supplier, accumulator|
-      accumulator[supplier.name.downcase] = supplier.id
-    }.merge('none' => nil)
 
-    puts "Which application owner should your tokens be associated with? #{suppliers.keys}"
-    supplier = STDIN.gets.chomp
-    supplier_id = suppliers[supplier]
+    keys = Supplier.pluck(:key).sort + ['none']
+    puts "Which application owner should your tokens be associated with? #{keys}"
 
-    application.owner_id = supplier_id if supplier_id.present?
+    supplier_key = STDIN.gets.chomp
+    abort("Error: unknown supplier, quitting.") unless keys.include?(supplier_key)
+
+    supplier = supplier_key == 'none' ? nil : Supplier.find_by(key: supplier_key)
+    
+    application.owner = supplier if supplier.present?
     application.save!
 
     puts "Created OAuth2 client with (name: #{application.name})"
     puts "client_id: #{application.uid}"
     puts "client_secret: #{application.plaintext_secret}"
-    puts "supplier: #{supplier}"
-    puts "supplier_id: #{application.owner_id}"
+    puts "supplier: #{supplier_key}"
+    puts "supplier_id: #{supplier&.id}"
   end
 end
