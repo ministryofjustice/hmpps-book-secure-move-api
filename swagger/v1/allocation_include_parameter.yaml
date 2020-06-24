@@ -1,0 +1,19 @@
+AllocationIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the allocation
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - from_location
+      - to_location
+      - moves.person
+      - moves.person.gender
+      - moves.person.ethnicity
+      - moves.profile
+      - moves.profile.person
+      - moves.profile.person.ethnicity
+      - moves.profile.person.gender
+  example: from_location

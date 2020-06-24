@@ -87,6 +87,7 @@
             example: G1234UT
           format: string
           required: false
+        - "$ref": "../v2/person_include_parameter.yaml#/PersonIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -122,6 +123,7 @@
           description: The person object to be created
           schema:
             "$ref": person.yaml#/Person
+        - "$ref": "../v2/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "201":
           description: created
@@ -182,6 +184,7 @@
           description: The person object to be updated
           schema:
             "$ref": "../v2/person.yaml#/Person"
+        - "$ref": "../v2/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "200":
           description: updated
@@ -362,6 +365,7 @@
             enum:
               - asc
               - desc
+        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -397,6 +401,7 @@
           description: The move object to be created
           schema:
             "$ref": "../v2/move.yaml#/Move"
+        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "201":
           description: created
@@ -450,6 +455,7 @@
           description: The move object to be modified
           schema:
             "$ref": "../v2/move.yaml#/Move"
+        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "200":
           description: success
@@ -514,6 +520,7 @@
           format: uuid
           example: 00525ecb-7316-492a-aae2-f69334b2a155
           required: true
+        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "200":
           description: success

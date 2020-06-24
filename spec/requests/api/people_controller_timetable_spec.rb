@@ -89,6 +89,21 @@ RSpec.describe Api::PeopleController do
 
         expect(People::RetrieveCourtHearings).to have_received(:call).with(an_instance_of(Person), date_from, date_to)
       end
+
+      context 'when we pass an include in the query params' do
+        it 'includes location in the response' do
+          create(:location)
+          get "/api/v1/people/#{person.id}/timetable?include=location", params: params
+
+          expect(response_json['included'].first['type']).to eq('locations')
+        end
+
+        it 'throws an error if query param invalid ' do
+          get "/api/v1/people/#{person.id}/timetable?include=foo.bar", params: params
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
     end
 
     context 'when person does not exist' do
