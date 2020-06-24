@@ -103,7 +103,7 @@ module Api
 
       def find_supplier(supplier_id)
         # NB: finds the supplier specified by id or uses the current_user's supplier account. Will raise an exception if not found or not accessible
-        supplier = Supplier.find_by(id: supplier_id || current_user.owner_id) || current_user.owner
+        supplier = Supplier.find_by(id: supplier_id) || current_user.owner
         if supplier.nil? || (current_user.owner.present? && supplier != current_user.owner)
           supplier.errors.add(:supplier, "reference is not valid for this account or not found id=#{supplier_id}")
           raise ActiveModel::ValidationError, supplier

@@ -3,18 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MoveEventsController do
-  let(:response_json) { JSON.parse(response.body) }
-
   describe 'POST /moves/:move_id/approve' do
+    include_context 'with supplier with access token'
+    include_context 'with mock redis'
+
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
-
-    let(:supplier) { create(:supplier) }
-    let(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': '1234' } }
-    let(:content_type) { ApiController::CONTENT_TYPE }
-
-    let(:move) { create(:move, :proposed) }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, :proposed, from_location: from_location) }
     let(:approved_date) { move.date + 1.day }
     let(:move_id) { move.id }
     let(:approve_params) do

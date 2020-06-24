@@ -3,8 +3,8 @@
 RSpec.shared_examples 'an endpoint that responds with error 409' do
   let(:errors_409) do
     [{
-        'title' => 'Idempotency Conflict Error',
-        'detail' => detail_409,
+      'title' => 'Idempotency Conflict Error',
+      'detail' => detail_409,
     }]
   end
 

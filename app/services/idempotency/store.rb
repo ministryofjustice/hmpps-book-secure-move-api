@@ -10,7 +10,7 @@ module Idempotency
     # *  re-using the idempotency key with a different request will raise a conflict error, for 12 hours
 
     CACHE_RESPONSE_TTL = 600 # 10 minutes
-    CONFLICT_TTL = 43200 # 12 hours
+    CONFLICT_TTL = 43_200 # 12 hours
 
     attr_reader :idempotency_key, :conflict_key, :cache_response_key
 
@@ -20,7 +20,6 @@ module Idempotency
       @cache_response_key = "resp|#{idempotency_key}|#{request_hash(request)}"
     end
 
-
     def get
       # Return the cached response if it matches the idempotency key and request
       cached_response = redis.hgetall(cache_response_key)
@@ -29,7 +28,7 @@ module Idempotency
 
       # Otherwise, raise a conflict error of the idempotency key exists, or return nil if not
       conflict = redis.get(conflict_key)
-      raise ConflictError.new(idempotency_key) unless conflict.nil?
+      raise ConflictError, idempotency_key unless conflict.nil?
     end
 
     def set(response)
@@ -41,7 +40,7 @@ module Idempotency
       redis.set(conflict_key, '1', ex: CONFLICT_TTL)
     end
 
-    private
+  private
 
     def redis_url
       @redis_url ||= ENV.fetch('REDIS_URL', nil)

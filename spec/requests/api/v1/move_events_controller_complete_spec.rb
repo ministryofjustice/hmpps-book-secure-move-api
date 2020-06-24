@@ -3,22 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::MoveEventsController do
-  let(:response_json) { JSON.parse(response.body) }
-
   describe 'POST /moves/:move_id/complete' do
-    let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
+    include_context 'with supplier with access token'
+    include_context 'with mock redis'
 
-    let(:supplier) { create(:supplier) }
-    let(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': current_idempotency_key } }
-    let(:content_type) { ApiController::CONTENT_TYPE }
-    let(:previous_idempotency_key) { '1234' }
-    let(:current_idempotency_key) { '5678' }
-    let(:mock_redis) { MockRedis.new }
-    let(:move) { create(:move) }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, from_location: from_location) }
     let(:move_id) { move.id }
-    let(:new_location) { create(:location) }
+
     let(:complete_params) do
       {
         data: {
@@ -33,9 +27,6 @@ RSpec.describe Api::V1::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      allow(Redis).to receive(:new) { mock_redis }
-      allow(ENV).to receive(:fetch).with('REDIS_URL', nil).and_return('http://some.where')
-      mock_redis.set(previous_idempotency_key, 'T')
       post "/api/v1/moves/#{move_id}/complete", params: complete_params, headers: headers, as: :json
     end
 
@@ -71,33 +62,6 @@ RSpec.describe Api::V1::MoveEventsController do
       let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with a reference to a missing relationship' do
-      let(:new_location) { build(:location) }
-      let(:detail_404) { "Couldn't find Location without an ID" }
-
-      it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with a non-idempotent request' do
-      let(:current_idempotency_key) { previous_idempotency_key }
-      let(:detail_409) { 'Idempotence::ConflictError: conflicting idempotency key: 1234' }
-
-      it_behaves_like 'an endpoint that responds with error 409'
-    end
-
-    context 'with a blank idempotency_key' do
-      let(:current_idempotency_key) { nil }
-
-      it_behaves_like 'an endpoint that responds with error 400' do
-        let(:errors_400) do
-          [{
-            'title' => 'Bad request',
-            'detail' => 'idempotency key is required',
-          }]
-        end
-      end
     end
 
     context 'with an invalid CONTENT_TYPE header' do

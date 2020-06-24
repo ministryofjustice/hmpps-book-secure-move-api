@@ -160,8 +160,8 @@ private
   def render_conflict_error(exception)
     render(
       json: { errors: [{
-           title: 'Idempotency Conflict Error',
-           detail: "#{exception.exception.class}: #{exception.message}",
+        title: 'Idempotency Conflict Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
       }] },
       status: :conflict,
     )
