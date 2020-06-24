@@ -9,15 +9,14 @@ namespace :auth do
     name = STDIN.gets.chomp
     application = Doorkeeper::Application.new(name: name)
 
-
-    keys = Supplier.pluck(:key).sort + ['none']
+    keys = Supplier.pluck(:key).sort + %w[none]
     puts "Which application owner should your tokens be associated with? #{keys}"
 
     supplier_key = STDIN.gets.chomp
-    abort("Error: unknown supplier, quitting.") unless keys.include?(supplier_key)
+    abort('Error: unknown supplier, quitting.') unless keys.include?(supplier_key)
 
     supplier = supplier_key == 'none' ? nil : Supplier.find_by(key: supplier_key)
-    
+
     application.owner = supplier if supplier.present?
     application.save!
 
