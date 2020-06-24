@@ -12,7 +12,7 @@ module Idempotency
 
     def initialize(headers)
       # NB: we need to do a case-insensitive match for IDEMPOTENCY_KEY; rails does not do this automatically if the key contains an underscore
-      @idempotency_key = headers.find{ |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }&.last
+      @idempotency_key = headers.find { |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }&.last
     end
   end
 end

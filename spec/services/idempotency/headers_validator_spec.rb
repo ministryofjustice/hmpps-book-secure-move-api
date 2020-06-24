@@ -14,13 +14,19 @@ RSpec.describe Idempotency::HeadersValidator do
   end
 
   describe 'key' do
-    context 'when invalid' do
-      let(:key_name) { 'foo-bar' }
+    context 'when missing' do
+      let(:key_name) { 'missing' }
 
       it { is_expected.not_to be_valid }
     end
 
-    context 'when mixed case' do
+    context 'when lower case' do
+      let(:key_name) { 'idempotency_key' }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when mixed case with a hyphen' do
       let(:key_name) { 'Idempotency-Key' }
 
       it { is_expected.to be_valid }

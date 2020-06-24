@@ -16,12 +16,16 @@ module Idempotency
 
     def initialize(request)
       # NB: we need to do a case-insensitive match for IDEMPOTENCY_KEY; rails does not do this automatically if the key contains an underscore
-      @idempotency_key = request.headers.find{ |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }.last
-      @conflict_key = "conf|#{idempotency_key}"
-      @cache_response_key = "resp|#{idempotency_key}|#{request_hash(request)}"
+      @idempotency_key = request.headers.find { |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }&.last
+      if @idempotency_key.present?
+        @conflict_key = "conf|#{idempotency_key}"
+        @cache_response_key = "resp|#{idempotency_key}|#{request_hash(request)}"
+      end
     end
 
     def get
+      return if @idempotency_key.blank?
+
       # Return the cached response if it matches the idempotency key and request
       cached_response = redis.hgetall(cache_response_key)
 
@@ -33,6 +37,8 @@ module Idempotency
     end
 
     def set(response)
+      return if @idempotency_key.blank?
+
       # cache the response for a short time
       redis.hmset(cache_response_key, *response)
       redis.expire cache_response_key, CACHE_RESPONSE_TTL
