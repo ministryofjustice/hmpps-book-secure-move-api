@@ -15,7 +15,8 @@ module Idempotency
     attr_reader :idempotency_key, :conflict_key, :cache_response_key
 
     def initialize(request)
-      @idempotency_key = request.headers['IDEMPOTENCY_KEY']
+      # NB: we need to do a case-insensitive match for IDEMPOTENCY_KEY; rails does not do this automatically if the key contains an underscore
+      @idempotency_key = request.headers.find{ |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }.last
       @conflict_key = "conf|#{idempotency_key}"
       @cache_response_key = "resp|#{idempotency_key}|#{request_hash(request)}"
     end

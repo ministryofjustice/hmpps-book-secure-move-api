@@ -46,7 +46,7 @@ private
 
   # NB: for new controllers
   def validate_required_idempotency_key
-    Idempotency::ParamsValidator.new(request.headers['IDEMPOTENCY_KEY']).validate!
+    Idempotency::HeadersValidator.new(request.headers).validate!
   end
 
   def authentication_enabled?
