@@ -21,7 +21,7 @@ module Api
       success = People::RetrieveImage.call(person)
 
       if success
-        render json: Image.new(person.id, url_for(person.image))
+        render json: Image.new(person.id, person.image.service_url)
       else
         raise ActiveRecord::RecordNotFound, 'Image not found'
       end
