@@ -17,8 +17,7 @@ class ApiController < ApplicationController
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
-  rescue_from Idempotence::ConflictError, with: :render_conflict_error
-  rescue_from Idempotence::KeyRequiredError, with: :render_bad_request_error
+  rescue_from Idempotency::ConflictError, with: :render_conflict_error
 
   def current_user
     doorkeeper_token&.application
@@ -33,31 +32,21 @@ class ApiController < ApplicationController
 private
 
   def idempotent_action
-    store = Idempotence::Store.new(request)
+    Idempotency::Store.new(request).tap do |stored_response|
+      cached_response = stored_response.get
 
-    cached_response = store.get
-
-    if cached_response.present?
-      render status: cached_response['status'], body: cached_response['body'], content_type: cached_response['content_type']
-    else
-      yield
-      store.set(status: response.status, body: response.body, content_type: response.content_type)
+      if cached_response.present?
+        render status: cached_response['status'], body: cached_response['body'], content_type: cached_response['content_type']
+      else
+        yield
+        stored_response.set(status: response.status, body: response.body, content_type: response.content_type)
+      end
     end
   end
 
-
   # NB: for new controllers
   def validate_required_idempotency_key
-    idempotence_validator.call(request.headers['IDEMPOTENCY_KEY'], required: true)
-  end
-
-  # NB: for legacy controllers
-  def validate_optional_idempotency_key
-    idempotence_validator.call(request.headers['IDEMPOTENCY_KEY'], required: false)
-  end
-
-  def idempotence_validator
-    @idempotence_validator ||= Idempotence::Validator.new
+    Idempotency::ParamsValidator.new(request.headers['IDEMPOTENCY_KEY']).validate!
   end
 
   def authentication_enabled?

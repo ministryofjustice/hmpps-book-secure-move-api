@@ -6,21 +6,6 @@ RSpec.describe ApiController, type: :request do
   subject(:api_controller) { described_class.new }
 
   let!(:token) { create(:access_token) }
-
-  context 'when with empty body accepts requests with no Content-Type' do
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-    let(:content_type) { ApiController::CONTENT_TYPE }
-    let(:api_endpoint) { '/api/v1/reference/genders' }
-    let(:response_json) { JSON.parse(response.body) }
-    let(:schema) { load_yaml_schema('get_genders_responses.yaml') }
-
-    before do
-      get api_endpoint, headers: headers
-    end
-
-    it_behaves_like 'an endpoint that responds with success 200'
-  end
-
   let(:model_class) do
     # anonymous class to test validation against
     Class.new do
@@ -49,6 +34,19 @@ RSpec.describe ApiController, type: :request do
     end
   end
 
+  context 'when with empty body accepts requests with no Content-Type' do
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
+    let(:content_type) { ApiController::CONTENT_TYPE }
+    let(:api_endpoint) { '/api/v1/reference/genders' }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:schema) { load_yaml_schema('get_genders_responses.yaml') }
+
+    before do
+      get api_endpoint, headers: headers
+    end
+
+    it_behaves_like 'an endpoint that responds with success 200'
+  end
 
   describe '#validation_errors' do
     let(:model) { model_class.new }

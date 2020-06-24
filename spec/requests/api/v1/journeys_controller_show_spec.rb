@@ -3,14 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::JourneysController do
-  let(:response_json) { JSON.parse(response.body) }
-
   describe 'GET /moves/:move_id/journeys/:journey_id' do
-    let(:supplier) { create(:supplier) }
-    let(:application) { create(:application, owner: supplier) }
-    let(:access_token) { create(:access_token, application: application).token }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
-    let(:content_type) { ApiController::CONTENT_TYPE }
+    include_context 'with supplier with access token'
+    include_context 'with mock redis'
+
+    let(:response_json) { JSON.parse(response.body) }
+
+    # let(:supplier) { create(:supplier) }
+    # let(:application) { create(:application, owner: supplier) }
+    # let(:access_token) { create(:access_token, application: application).token }
+    # let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}", 'IDEMPOTENCY_KEY': SecureRandom.uuid } }
+    # let(:content_type) { ApiController::CONTENT_TYPE }
 
     let(:locations) { create_list(:location, 2, suppliers: [supplier]) }
     let(:move) { create(:move, from_location: locations.first, to_location: locations.last) }

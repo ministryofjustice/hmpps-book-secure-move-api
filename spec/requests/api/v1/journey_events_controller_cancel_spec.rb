@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::V1::JourneyEventsController do
   describe 'POST /moves/:move_id/journeys/:journey_id/cancel' do
     include_context 'with supplier with access token'
+    include_context 'with mock redis'
+
     let(:move) { create(:move) }
     let(:move_id) { move.id }
     let(:journey) { create(:journey, initial_journey_state, move: move) }

@@ -4,24 +4,28 @@ require 'rails_helper'
 
 RSpec.describe ApiController, type: :request do
   include_context 'with supplier with access token'
+  include_context 'with undefine mock controller'
+
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('error_responses.yaml') }
   let(:detail_401) { 'Token expired or invalid' }
 
-  before do
-    described_class.class_eval do
+  let(:create_mock_controller) do
+    class MockController < ApiController
       def custom
         render json: { hello: 'world' }, status: :ok
       end
     end
     Rails.application.routes.draw do
-      get '/custom', to: 'api#custom'
+      get '/custom', to: 'mock#custom'
     end
-    get '/custom', headers: headers
   end
 
-  after do
-    Rails.application.reload_routes!
+  around do |example|
+    create_mock_controller
+    get '/custom', headers: headers
+    example.run
+    undefine_mock_controller # NB: it is necessary to undefine the mock controller
   end
 
   context 'with valid authentication' do

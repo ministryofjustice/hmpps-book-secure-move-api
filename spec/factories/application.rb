@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :application, class: 'Doorkeeper::Application' do
     sequence(:name) { |n| "test#{n}" }
+    association(:owner)
   end
 end
