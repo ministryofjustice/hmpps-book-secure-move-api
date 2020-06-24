@@ -1,50 +1,50 @@
-'201':
+"201":
   type: object
   required:
-  - data
+    - data
   properties:
     data:
       $ref: document.yaml#/Document
-'400':
+"400":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/BadRequest
-'401':
+"401":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/NotAuthorisedError
-'404':
+"404":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/ResourceNotFound
-'415':
+"415":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/UnsupportedMediaType
-'422':
+"422":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array

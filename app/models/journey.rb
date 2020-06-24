@@ -18,6 +18,8 @@
 # The supplier is paid for only the first journey A-->B but not B-->C.
 #
 class Journey < ApplicationRecord
+  include StateMachineable
+
   belongs_to :move
   belongs_to :supplier
   belongs_to :from_location, class_name: 'Location'
@@ -43,6 +45,8 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
+  has_state_machine JourneyStateMachine
+
   delegate :start,
            :reject,
            :complete,
@@ -55,27 +59,4 @@ class Journey < ApplicationRecord
            :cancelled?,
            :rejected?,
            to: :state_machine
-
-  after_initialize :initialize_state # NB there is an equivalent after(:build) callback used by FactoryBot in the journeys factory
-
-  def reload(options = nil)
-    # special (necessary) hack so that when reloading a record the state machine is correctly synchronised
-    super
-    state_machine.restore!(state.to_sym)
-    self
-  end
-
-private
-
-  def state_machine
-    @state_machine ||= JourneyStateMachine.new(self)
-  end
-
-  def initialize_state
-    if state.present?
-      state_machine.restore!(state.to_sym)
-    else
-      self.state = state_machine.current
-    end
-  end
 end

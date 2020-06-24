@@ -244,6 +244,7 @@ geoamey:
   - WMP5
   - WMP7
   - WMP8
+  - WNI
   - WTI
   - WWM1
   - WWM2
@@ -252,6 +253,7 @@ geoamey:
   - WWM5
   - WWM6
   - WWM7
+  - WYI
   - WYP1
   - WYP2
   - WYP3
@@ -342,4 +344,3 @@ serco:
   - WRI
   - WSI
   - WWI
-  - WYI

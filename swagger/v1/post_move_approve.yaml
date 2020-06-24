@@ -1,4 +1,4 @@
-PostMoveReject:
+PostMoveApprove:
   type: object
   required:
   - type

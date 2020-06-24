@@ -6,8 +6,9 @@ RSpec.describe Moves::Updater do
   subject(:updater) { described_class.new(move, move_params) }
 
   let(:before_documents) { create_list(:document, 2) }
-  let!(:from_location) { create :location }
-  let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, documents: before_documents }
+  let!(:from_location) { create(:location) }
+  let!(:move) { create(:move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile) }
+  let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
   let(:status) { 'requested' }
@@ -262,7 +263,7 @@ RSpec.describe Moves::Updater do
 
         it 'updates documents association to new documents' do
           updater.call
-          expect(updater.move.documents).to match_array(after_documents)
+          expect(updater.move.profile.documents).to match_array(after_documents)
         end
       end
 
@@ -276,7 +277,7 @@ RSpec.describe Moves::Updater do
 
         it 'unsets associated documents' do
           updater.call
-          expect(updater.move.documents).to be_empty
+          expect(updater.move.profile.documents).to be_empty
         end
       end
 
@@ -290,14 +291,14 @@ RSpec.describe Moves::Updater do
 
         it 'does nothing to existing documents' do
           updater.call
-          expect(updater.move.documents).to match_array(before_documents)
+          expect(updater.move.profile.documents).to match_array(before_documents)
         end
       end
 
       context 'with no document relationship' do
         it 'does nothing to existing documents' do
           updater.call
-          expect(updater.move.documents).to match_array(before_documents)
+          expect(updater.move.profile.documents).to match_array(before_documents)
         end
       end
     end

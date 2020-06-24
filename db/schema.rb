@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_133540) do
+ActiveRecord::Schema.define(version: 2020_06_17_155359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
     t.text "other_criteria"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status"
+    t.string "status", null: false
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
@@ -210,10 +210,10 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
     t.text "cancellation_reason_comment"
     t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
-    t.boolean "move_agreed"
-    t.string "move_agreed_by"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
+    t.boolean "move_agreed"
+    t.string "move_agreed_by"
     t.date "date_from"
     t.date "date_to"
     t.uuid "allocation_id"
@@ -348,8 +348,8 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
 
   create_table "profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
-    t.string "last_name", default: ""
-    t.string "first_names", default: ""
+    t.string "last_name"
+    t.string "first_names"
     t.date "date_of_birth"
     t.string "aliases", default: [], array: true
     t.uuid "gender_id"
@@ -422,7 +422,7 @@ ActiveRecord::Schema.define(version: 2020_06_12_133540) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "moves", column: "original_move_id"
-  add_foreign_key "moves", "people"
+  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
