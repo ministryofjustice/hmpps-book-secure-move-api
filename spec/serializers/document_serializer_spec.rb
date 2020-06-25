@@ -8,10 +8,7 @@ RSpec.describe DocumentSerializer do
   let(:document) { create :document }
   let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
 
-  before do
-    # This is needed because of use of #service_url, since these tests do not run the controllers.
-    ActiveStorage::Current.host = 'http://example.com'
-  end
+  before { ActiveStorage::Current.host = 'http://example.com' }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'documents'
