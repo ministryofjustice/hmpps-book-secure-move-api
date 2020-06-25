@@ -6,9 +6,6 @@ RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
   let(:response_json) { JSON.parse(response.body) }
-  let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
-  end
 
   describe 'POST /moves' do
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
@@ -95,8 +92,13 @@ RSpec.describe Api::MovesController do
         expect(move.prison_transfer_reason).to eq(reason)
       end
 
-      it 'returns the correct data' do
-        expect(response_json).to eq resource_to_json
+      context 'when it includes all supported relationship' do
+        it 'returns the correct data' do
+          ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
+          expected_response_json = JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+
+          expect(response_json).to eq expected_response_json
+        end
       end
 
       it 'does not provide a default value for move_agreed' do

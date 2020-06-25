@@ -10,6 +10,7 @@ class ApiController < ApplicationController
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
   before_action :validate_include_params
+  before_action :set_active_storage_host
 
   CONTENT_TYPE = 'application/vnd.api+json'
   REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}.freeze
@@ -225,5 +226,11 @@ private
     if version.constantize.const_defined?(actions_module)
       extend "#{version}::#{actions_module}".constantize
     end
+  end
+
+  def set_active_storage_host
+    # This is required to access S3 URLs with #service_url, which returns a url that expires in 5 Minutes
+    # In contrast, url_for returns permanent URL, which for privacy/security reasons, we do not want to use.
+    ActiveStorage::Current.host = request.base_url
   end
 end
