@@ -92,11 +92,6 @@ module Api
       profile_validator.validate!
     end
 
-    def other_included_relationships
-      # Custom included relationships to avoid the people actions relationships
-      @other_included_relationships ||= IncludeParamHandler.new(params).call || OTHER_SUPPORTED_RELATIONSHIPS
-    end
-
     def validate_other_include_params
       # Custom validation for includes to avoid the default validation shared in API controller
       IncludeParamsValidator
