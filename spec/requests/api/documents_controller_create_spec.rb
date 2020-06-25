@@ -32,7 +32,7 @@ RSpec.describe Api::DocumentsController do
       {
         type: 'documents',
         attributes:
-           { url: a_string_starting_with('http://www.example.com/rails/active_storage/disk'), # "http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhlV0oxYXprNFkyUmtZV1UxTm1SNWFXWjZaelV3Wm01NU4zRXpiZ1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpV1dGMGRHRmphRzFsYm5RN0lHWnBiR1Z1WVcxbFBTSm1hV3hsTFhOaGJYQnNaVjh4TURCclFpNWtiMk1pT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJacGJHVXRjMkZ0Y0d4bFh6RXdNR3RDTG1Sdll3WTdCbFE2RVdOdmJuUmxiblJmZEhsd1pTSVhZWEJ3YkdsallYUnBiMjR2YlhOM2IzSmsiLCJleHAiOiIyMDIwLTA2LTI1VDEzOjE3OjIzWiIsInB1ciI6ImJsb2Jfa2V5In19--2b4628c3ac424585800cf86fbd36496820cbd54e/file-sample_100kB.doc?content_type=application%2Fmsword&disposition=attachment%3B+filename%3D%22file-sample_100kB.doc%22%3B+filename%2A%3DUTF-8%27%27file-sample_100kB.doc",
+           { url: a_string_starting_with('http://www.example.com/rails/active_storage/disk'),
              filename: 'file-sample_100kB.doc',
              filesize: 100_352,
              content_type: 'application/msword' },
