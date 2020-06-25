@@ -7,8 +7,8 @@ RSpec.describe Allocations::Finder do
 
   let!(:from_location) { create :location }
   let!(:to_location) { create :location }
-
   let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
+
   let(:filter_params) { {} }
   let(:sort_params) { {} }
   let(:search_params) { {} }
@@ -212,10 +212,26 @@ RSpec.describe Allocations::Finder do
     let!(:profile) { create :profile, person: person }
     let!(:move) { create :move, profile: profile, allocation: allocation }
 
+    context 'with blank location' do
+      let(:search_params) { { location: '' } }
+
+      it 'ignores the search params and returns filtered allocations' do
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
+      end
+    end
+
     context 'when by location' do
       let(:search_params) { { location: 'fOrD' } }
 
       it 'returns allocations including either from location name or to location name' do
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
+      end
+    end
+
+    context 'with blank person' do
+      let(:search_params) { { person: '' } }
+
+      it 'ignores the search params and returns filtered allocations' do
         expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
       end
     end

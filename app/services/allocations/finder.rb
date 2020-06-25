@@ -44,17 +44,17 @@ module Allocations
     end
 
     def apply_location_search(scope)
-      return scope unless search_params.key?(:location)
+      return scope unless search = search_params[:location].presence
 
-      scope.where(from_location_id: Location.search_by_title(search_params[:location])).or(
-        scope.where(to_location_id: Location.search_by_title(search_params[:location])),
+      scope.where(from_location_id: Location.search_by_title(search)).or(
+        scope.where(to_location_id: Location.search_by_title(search)),
       )
     end
 
     def apply_person_search(scope)
-      return scope unless search_params.key?(:person)
+      return scope unless search = search_params[:person].presence
 
-      scope.joins(moves: { profile: :person }).where('people.id' => Person.search_by_last_name(search_params[:person]))
+      scope.includes(moves: { profile: :person }).where('people.id' => Person.search_by_last_name(search))
     end
 
     def apply_filters(scope)
