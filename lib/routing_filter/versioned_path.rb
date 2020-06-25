@@ -8,21 +8,13 @@ module RoutingFilter
     end
 
     def around_generate(_params)
-      yield.tap do |result|
-        add_version!(result)
-      end
+      yield
     end
 
   private
 
     def remove_version!(path)
       path.gsub!('/v1', '')
-    end
-
-    def add_version!(result)
-      path, _options = result
-
-      path.gsub!('/api/', '/api/v1/')
     end
   end
 end

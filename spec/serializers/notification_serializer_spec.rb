@@ -12,7 +12,7 @@ RSpec.describe NotificationSerializer do
   end
 
   describe '#move_url' do
-    it { expect(serializer.move_url).to eql "http://localhost:4000/api/v1/moves/#{notification.topic.id}" }
+    it { expect(serializer.move_url).to eql "http://localhost:4000/api/moves/#{notification.topic.id}" }
   end
 
   describe 'json rendering' do
@@ -37,7 +37,7 @@ RSpec.describe NotificationSerializer do
                 "type": 'moves',
               },
               "links": {
-                "self": "http://localhost:4000/api/v1/moves/#{notification.topic.id}",
+                "self": "http://localhost:4000/api/moves/#{notification.topic.id}",
               },
             },
           },
@@ -66,7 +66,7 @@ RSpec.describe NotificationSerializer do
     end
 
     it 'contains a move relationship links' do
-      expect(result[:data][:relationships][:move][:links]).to eql(self: "http://localhost:4000/api/v1/moves/#{notification.topic.id}")
+      expect(result[:data][:relationships][:move][:links]).to eql(self: "http://localhost:4000/api/moves/#{notification.topic.id}")
     end
 
     it 'renders the correct json' do
