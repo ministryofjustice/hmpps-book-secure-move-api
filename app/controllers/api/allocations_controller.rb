@@ -7,7 +7,7 @@ module Api
     def index
       allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
       if allocations_params.valid?
-        allocations = Allocations::Finder.new(filter_params, sort_params).call
+        allocations = Allocations::Finder.new(filters: filter_params, ordering: sort_params, search: search_params).call
         paginate allocations, include: included_relationships
       else
         render_allocation({ error: allocations_params.errors }, :bad_request)
@@ -30,6 +30,7 @@ module Api
 
     PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
     PERMITTED_SORT_PARAMS = %i[by direction].freeze
+    PERMITTED_SEARCH_PARAMS = %i[location person].freeze
 
     PERMITTED_ALLOCATION_PARAMS = [
       :type,
@@ -45,6 +46,10 @@ module Api
 
     def filter_params
       @filter_params ||= params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+    end
+
+    def search_params
+      params.fetch(:search, {}).permit(PERMITTED_SEARCH_PARAMS).to_h
     end
 
     def allocation_params

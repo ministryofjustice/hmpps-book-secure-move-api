@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Allocations::Finder do
-  subject(:allocation_finder) { described_class.new(filter_params, sort_params) }
+  subject(:allocation_finder) { described_class.new(filters: filter_params, ordering: sort_params, search: search_params) }
 
   let!(:from_location) { create :location }
   let!(:to_location) { create :location }
@@ -11,6 +11,7 @@ RSpec.describe Allocations::Finder do
   let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
   let(:filter_params) { {} }
   let(:sort_params) { {} }
+  let(:search_params) { {} }
 
   describe 'filtering' do
     context 'with matching date range' do
@@ -199,6 +200,48 @@ RSpec.describe Allocations::Finder do
 
       it 'orders by allocation date' do
         expect(allocation_finder.call).to eq([allocation3, allocation2, allocation])
+      end
+    end
+  end
+
+  describe 'searching' do
+    let!(:from_location) { create :location, title: 'HMP Bedford' }
+    let!(:to_location) { create :location, title: 'HMP Bradford' }
+    let!(:other_allocation) { create :allocation, from_location: from_location }
+    let!(:person) { create :person, last_name: 'Kray' }
+    let!(:profile) { create :profile, person: person }
+    let!(:move) { create :move, profile: profile, allocation: allocation }
+
+    context 'when by location' do
+      let(:search_params) { { location: 'fOrD' } }
+
+      it 'returns allocations including either from location name or to location name' do
+        expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
+      end
+    end
+
+    context 'when by person' do
+      let(:search_params) { { person: 'Ray' } }
+
+      it 'returns allocations including person last name' do
+        expect(allocation_finder.call).to contain_exactly(allocation)
+      end
+    end
+
+    context 'when by person and location' do
+      let(:search_params) { { person: 'Ray', location: 'fOrD' } }
+
+      it 'returns allocations matching both location and person search' do
+        expect(allocation_finder.call).to contain_exactly(allocation)
+      end
+    end
+
+    context 'when in combination with filters' do
+      let(:search_params) { { location: 'fOrD' } }
+      let(:filter_params) { { to_locations: [to_location.id] } }
+
+      it 'returns allocations matching both search and filter criteria' do
+        expect(allocation_finder.call).to contain_exactly(allocation)
       end
     end
   end

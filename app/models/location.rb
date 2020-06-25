@@ -34,6 +34,7 @@ class Location < ApplicationRecord
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
 
   scope :prisons, -> { where(location_type: LOCATION_TYPE_PRISON) }
+  scope :search_by_title, ->(search) { select(:id).where('title ILIKE :search', search: "%#{search}%") }
 
   def prison?
     location_type.to_s == LOCATION_TYPE_PRISON

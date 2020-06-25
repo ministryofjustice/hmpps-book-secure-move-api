@@ -2,13 +2,14 @@
 
 module Allocations
   class Finder
-    attr_reader :filter_params
+    attr_reader :filter_params, :search_params
 
-    def initialize(filter_params, order_params)
-      @filter_params = filter_params
-      @order_by = (order_params[:by] || 'date').to_sym
-      @order_direction = if order_params[:by]
-                           (order_params[:direction] || 'asc').to_sym
+    def initialize(filters: {}, ordering: {}, search: {})
+      @search_params = search
+      @filter_params = filters
+      @order_by = (ordering[:by] || 'date').to_sym
+      @order_direction = if ordering[:by]
+                           (ordering[:direction] || 'asc').to_sym
                          else
                            # default if no 'by' parameter is date descending
                            :desc
@@ -17,6 +18,7 @@ module Allocations
 
     def call
       scope = apply_filters(Allocation)
+      scope = apply_search(scope)
       apply_ordering(scope)
     end
 
@@ -35,8 +37,24 @@ module Allocations
       end
     end
 
-    def split_params(name)
-      filter_params[name]&.split(',')
+    def apply_search(scope)
+      scope = apply_location_search(scope)
+      scope = apply_person_search(scope)
+      scope
+    end
+
+    def apply_location_search(scope)
+      return scope unless search_params.key?(:location)
+
+      scope.where(from_location_id: Location.search_by_title(search_params[:location])).or(
+        scope.where(to_location_id: Location.search_by_title(search_params[:location])),
+      )
+    end
+
+    def apply_person_search(scope)
+      return scope unless search_params.key?(:person)
+
+      scope.joins(moves: { profile: :person }).where('people.id' => Person.search_by_last_name(search_params[:person]))
     end
 
     def apply_filters(scope)
@@ -51,6 +69,10 @@ module Allocations
       scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
       scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
       scope
+    end
+
+    def split_params(name)
+      filter_params[name]&.split(',')
     end
 
     def apply_location_filters(scope)

@@ -13,6 +13,7 @@ class Person < VersionedModel
   has_one_attached :image
 
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
+  scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
 
   validates :last_name, presence: true
   validates :first_names, presence: true
