@@ -7,9 +7,8 @@ RSpec.describe Api::MoveEventsController do
     include_context 'with supplier with access token'
     include_context 'with mock redis'
 
-    let(:response_json) { JSON.parse(response.body) }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, :proposed, from_location: from_location) }
+    let(:move) { create(:move, :requested, from_location: from_location) }
     let(:move_id) { move.id }
 
     before do
