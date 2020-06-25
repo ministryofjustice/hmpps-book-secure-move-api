@@ -1,0 +1,26 @@
+MoveIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the move
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - allocation
+      - court_hearings
+      - documents
+      - from_location
+      - to_location
+      - original_move
+      - prison_transfer_reason
+      - person
+      - profile
+      - from_location.suppliers
+      - to_location.suppliers
+      - person.gender
+      - person.ethnicity
+      - profile.person
+      - profile.person.gender
+      - profile.person.ethnicity
+  example: from_location
