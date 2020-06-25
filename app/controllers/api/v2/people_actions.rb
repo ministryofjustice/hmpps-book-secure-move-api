@@ -69,8 +69,7 @@ module Api::V2
     end
 
     def other_included_relationships
-      # Custom included relationships to avoid the people actions relationships
-      @other_included_relationships ||= IncludeParamHandler.new(params).call
+      included_relationships
     end
 
     def prison_numbers
