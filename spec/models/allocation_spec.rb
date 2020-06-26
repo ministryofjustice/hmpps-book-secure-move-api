@@ -16,6 +16,8 @@ RSpec.describe Allocation do
   it { is_expected.to define_enum_for(:prisoner_category).backed_by_column_of_type(:string) }
   it { is_expected.to allow_value(nil).for(:sentence_length) }
   it { is_expected.to define_enum_for(:sentence_length).backed_by_column_of_type(:string) }
+  it { is_expected.to allow_value(nil).for(:estate) }
+  it { is_expected.to define_enum_for(:estate).backed_by_column_of_type(:string) }
 
   it { is_expected.to validate_presence_of(:status) }
   it { is_expected.to validate_inclusion_of(:status).in_array(%w[unfilled filled cancelled]) }

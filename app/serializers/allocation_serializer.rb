@@ -5,6 +5,7 @@ class AllocationSerializer < ActiveModel::Serializer
              :date,
              :prisoner_category,
              :sentence_length,
+             :estate,
              :complex_cases,
              :complete_in_full,
              :requested_by,

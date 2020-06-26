@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(version: 2020_06_30_071352) do
     t.string "prisoner_category"
     t.string "sentence_length"
     t.jsonb "complex_cases"
-    t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
     t.datetime "created_at", null: false
@@ -59,6 +58,8 @@ ActiveRecord::Schema.define(version: 2020_06_30_071352) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
+    t.integer "moves_count", null: false
+    t.string "estate"
     t.index ["date"], name: "index_allocations_on_date"
   end
 

@@ -49,6 +49,10 @@ RSpec.describe AllocationSerializer do
       expect(attributes[:sentence_length]).to eql allocation.sentence_length
     end
 
+    it 'contains an estate attribute' do
+      expect(attributes[:estate]).to eql allocation.estate
+    end
+
     it 'contains a complex_cases attribute' do
       expect(attributes[:complex_cases].first).to match complex_case_answer_attributes
     end

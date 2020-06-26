@@ -33,6 +33,8 @@ Allocation:
             - b
             - c
             - d
+            - open
+            - closed
           - type: 'null'
           example: b
           description: Indicates the prisoner category
@@ -46,6 +48,19 @@ Allocation:
           example: short
           description: Indicates the sentence length - short is 16 months or less,
             long is over 16 months
+        estate:
+          oneOf:
+          - type: string
+            enum:
+            - adult_female
+            - adult_male
+            - juvenile_female
+            - juvenile_male
+            - young_offender_female
+            - young_offender_male
+          - type: 'null'
+          example: adult_male
+          description: Indicates the prison estate type
         complex_cases:
           oneOf:
           - type: array

@@ -47,6 +47,7 @@ RSpec.describe Api::AllocationsController do
         moves_count: moves_count,
         prisoner_category: :b,
         sentence_length: :short,
+        estate: :adult_male,
         other_criteria: 'curly hair',
         requested_by: 'Iama Requestor',
         complete_in_full: true,
