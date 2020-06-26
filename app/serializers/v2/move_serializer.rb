@@ -29,6 +29,7 @@ module V2
     belongs_to :original_move, serializer: MoveSerializer
 
     SUPPORTED_RELATIONSHIPS = %w[
+      profile.documents
       profile.person.ethnicity
       profile.person.gender
       from_location
