@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Idempotency::Store do
-  include_context 'with mock redis'
-
   subject(:store) { described_class.new(idempotency_key, request_hash) }
 
   let(:idempotency_key) { SecureRandom.uuid }
@@ -14,53 +12,55 @@ RSpec.describe Idempotency::Store do
   let(:request_post) { 'foo: bar' }
   let(:conflict_key) { "conf|#{idempotency_key}" }
   let(:cache_response_key) { "resp|#{idempotency_key}|#{request_hash}" }
+  let(:response) { { a: 1, b: 2 } }
 
-  describe 'set' do
+  describe 'write' do
     before do
-      store.set(a: 1, b: 2)
+      store.write(response)
     end
 
-    it 'sets a conflict key' do
-      expect(mock_redis.get("conf|#{idempotency_key}")).to eql '1'
+    it 'writes a conflict key' do
+      expect(Rails.cache.read("conf|#{idempotency_key}")).to be 1
     end
 
-    it 'sets a cached response' do
-      expect(mock_redis.hgetall(cache_response_key)).to eql({ 'a' => '1', 'b' => '2' })
+    it 'writes a cached response' do
+      expect(Rails.cache.read(cache_response_key)).to eql(response)
     end
 
     context 'when the IDEMPOTENCY_KEY is missing' do
       let(:idempotency_key) { nil }
 
-      it 'does not set any redis keys' do
-        expect(mock_redis.keys).to be_empty
+      it 'does not write any cache keys' do
+        # NB the only way to inspect a MemoryStore cache's keys
+        expect(Rails.cache.instance_variable_get(:@data).keys).to be_empty
       end
     end
   end
 
-  describe 'get' do
+  describe 'read' do
     context 'when cached response exists' do
       before do
-        mock_redis.hmset(cache_response_key, :a, 1, :b, 2)
+        Rails.cache.write(cache_response_key, response, expiry: 10.seconds)
       end
 
       it 'returns the cached response' do
-        expect(store.get).to eql({ 'a' => '1', 'b' => '2' })
+        expect(store.read).to eql(response)
       end
     end
 
     context 'when the conflict key exists' do
       before do
-        mock_redis.set(conflict_key, 1)
+        Rails.cache.write(conflict_key, 1, expiry: 10.seconds)
       end
 
       it 'raises a conflict error' do
-        expect { store.get }.to raise_error(Idempotency::ConflictError)
+        expect { store.read }.to raise_error(Idempotency::ConflictError)
       end
     end
 
     context 'when neither a cached response or conflict key exist' do
       it 'returns nil' do
-        expect(store.get).to be_nil
+        expect(store.read).to be_nil
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Idempotency::Store do
       let(:idempotency_key) { nil }
 
       it 'returns nil' do
-        expect(store.get).to be_nil
+        expect(store.read).to be_nil
       end
     end
   end

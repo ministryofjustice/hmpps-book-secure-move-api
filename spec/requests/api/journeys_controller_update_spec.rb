@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Api::JourneysController do
   describe 'PATCH /moves/:move_id/journeys/:journey_id' do
     include_context 'with supplier with access token'
-    include_context 'with mock redis'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }

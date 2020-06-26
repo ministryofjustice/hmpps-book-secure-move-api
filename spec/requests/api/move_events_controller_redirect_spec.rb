@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/redirects' do
     include_context 'with supplier with access token'
-    include_context 'with mock redis'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }

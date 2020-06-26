@@ -24,4 +24,9 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  config.before do
+    # clear cache between each test
+    Rails.cache.clear
+  end
 end

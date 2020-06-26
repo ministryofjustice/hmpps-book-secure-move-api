@@ -4,7 +4,6 @@ require 'rails_helper'
 require 'digest'
 
 RSpec.describe ApiController, type: :request do
-  include_context 'with mock redis'
   include_context 'with undefine mock controller'
 
   let(:idempotency_key1) { '11111111-1111-1111-1111-111111111111' }
@@ -78,7 +77,7 @@ RSpec.describe ApiController, type: :request do
 
     it 'returns a valid JSON response' do
       expect(response_json['errors'].first).to eql({
-        'detail' => 'Idempotency::ConflictError: conflicting idempotency key: 11111111-1111-1111-1111-111111111111',
+        'detail' => 'Idempotency::ConflictError: Conflicting idempotency key: 11111111-1111-1111-1111-111111111111',
         'title' => 'Idempotency Conflict Error',
       })
     end

@@ -22,7 +22,6 @@ class ApiController < ApplicationController
   rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
-  rescue_from Idempotency::ConflictError, with: :render_conflict_error
 
   def current_user
     doorkeeper_token&.application
@@ -149,16 +148,6 @@ private
         detail: "#{exception.exception.class}: #{exception.message}",
       }] },
       status: :service_unavailable,
-    )
-  end
-
-  def render_conflict_error(exception)
-    render(
-      json: { errors: [{
-        title: 'Idempotency Conflict Error',
-        detail: "#{exception.exception.class}: #{exception.message}",
-      }] },
-      status: :conflict,
     )
   end
 

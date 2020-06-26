@@ -25,6 +25,7 @@ gem 'doorkeeper'
 gem 'faraday'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
+gem 'hiredis', '~> 0.6.3'
 # static page serving for extra API documentation
 gem 'json-schema'
 gem 'kaminari'
@@ -38,7 +39,7 @@ gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'
 gem 'puma', '~> 3.12.6'
 gem 'rails', '~> 6.0.3'
-gem 'redis', '~> 4.1', '>= 4.1.4'
+gem 'redis', '~> 4.2', '>= 4.2.1'
 gem 'routing-filter', '~> 0.6.3'
 gem 'sentry-raven'
 gem 'sidekiq'
@@ -82,6 +83,5 @@ end
 
 group :test do
   gem 'climate_control'
-  gem 'mock_redis'
   gem 'simplecov', require: false
 end
