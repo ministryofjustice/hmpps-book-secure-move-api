@@ -43,6 +43,8 @@
       :$ref: "../v2/person.yaml#/Person"
     :Profile:
       :$ref: "../v1/profile.yaml#/Profile"
+    :Move:
+      :$ref: "../v2/move.yaml#/Move"
 :paths:
   "/people":
     get:
