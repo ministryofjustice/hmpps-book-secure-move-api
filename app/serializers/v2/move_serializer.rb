@@ -36,7 +36,6 @@ module V2
       from_location.suppliers
       to_location
       to_location.suppliers
-      documents
       prison_transfer_reason
       court_hearings
       allocation
