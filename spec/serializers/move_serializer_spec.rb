@@ -271,4 +271,14 @@ RSpec.describe MoveSerializer do
       end
     end
   end
+
+  describe 'documents' do
+    let(:adapter_options) { { include: ['profile.documents'] } }
+    let(:move) { create(:move, profile: create(:profile, :with_documents)) }
+
+    it 'contains included documents relationships' do
+      expect(result[:included].map { |r| r[:type] })
+        .to match_array(%w[profiles documents])
+    end
+  end
 end
