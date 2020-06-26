@@ -9,18 +9,15 @@ module Idempotency
     # *  re-using the idempotency key with the same request after 10 mins to 12 hours will raise a conflict error
     # *  re-using the idempotency key with a different request will raise a conflict error, for 12 hours
 
-    CACHE_RESPONSE_TTL = 600 # 10 minutes
-    CONFLICT_TTL = 43_200 # 12 hours
+    CACHE_RESPONSE_TTL = 10.minutes.to_i
+    CONFLICT_TTL = 12.hours.to_i
 
     attr_reader :idempotency_key, :conflict_key, :cache_response_key
 
-    def initialize(request)
-      # NB: we need to do a case-insensitive match for IDEMPOTENCY_KEY; rails does not do this automatically if the key contains an underscore
-      @idempotency_key = request.headers.find { |key, _v| key =~ /\AIDEMPOTENCY[\_\-]KEY\Z/i }&.last
-      if @idempotency_key.present?
-        @conflict_key = "conf|#{idempotency_key}"
-        @cache_response_key = "resp|#{idempotency_key}|#{request_hash(request)}"
-      end
+    def initialize(idempotency_key, request_hash)
+      @idempotency_key = idempotency_key
+      @conflict_key = "conf|#{idempotency_key}"
+      @cache_response_key = "resp|#{idempotency_key}|#{request_hash}"
     end
 
     def get
@@ -57,8 +54,8 @@ module Idempotency
       @redis ||= Redis.new(url: redis_url)
     end
 
-    def request_hash(request)
-      Digest::MD5.base64digest("#{request.method}|#{request.path}|#{request.raw_post}")
-    end
+    # def request_hash(request)
+    #   Digest::MD5.base64digest("#{request.method}|#{request.path}|#{request.raw_post}")
+    # end
   end
 end

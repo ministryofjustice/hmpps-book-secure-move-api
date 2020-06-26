@@ -36,24 +36,6 @@ class ApiController < ApplicationController
 
 private
 
-  def idempotent_action
-    Idempotency::Store.new(request).tap do |stored_response|
-      cached_response = stored_response.get
-
-      if cached_response.present?
-        render status: cached_response['status'], body: cached_response['body'], content_type: cached_response['content_type']
-      else
-        yield
-        stored_response.set(status: response.status, body: response.body, content_type: response.content_type)
-      end
-    end
-  end
-
-  # NB: for new controllers
-  def validate_required_idempotency_key
-    Idempotency::HeadersValidator.new(request.headers).validate!
-  end
-
   def authentication_enabled?
     return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
 

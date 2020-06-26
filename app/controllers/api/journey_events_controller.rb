@@ -3,8 +3,7 @@
 module Api
   class JourneyEventsController < ApiController
     include Journeys::Eventable
-    before_action :validate_required_idempotency_key
-    around_action :idempotent_action
+    include Idempotentable
 
     STANDARD_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze

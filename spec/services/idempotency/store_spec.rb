@@ -5,20 +5,15 @@ require 'rails_helper'
 RSpec.describe Idempotency::Store do
   include_context 'with mock redis'
 
-  subject(:store) { described_class.new(request) }
+  subject(:store) { described_class.new(idempotency_key, request_hash) }
 
-  let(:request) do
-    ActionDispatch::TestRequest.create(
-      'IDEMPOTENCY_KEY' => idempotency_key,
-      'REQUEST_METHOD' => request_method,
-      'PATH_INFO' => path,
-    )
-  end
   let(:idempotency_key) { SecureRandom.uuid }
-  let(:path) { '/foo/bar' }
+  let(:request_hash) { Digest::MD5.base64digest("#{request_method}|#{request_path}|#{request_post}") }
   let(:request_method) { 'POST' }
+  let(:request_path) { '/foo/bar' }
+  let(:request_post) { 'foo: bar' }
   let(:conflict_key) { "conf|#{idempotency_key}" }
-  let(:cache_response_key) { "resp|#{idempotency_key}|#{Digest::MD5.base64digest("#{request.method}|#{request.path}|#{request.raw_post}")}" }
+  let(:cache_response_key) { "resp|#{idempotency_key}|#{request_hash}" }
 
   describe 'set' do
     before do
@@ -33,8 +28,8 @@ RSpec.describe Idempotency::Store do
       expect(mock_redis.hgetall(cache_response_key)).to eql({ 'a' => '1', 'b' => '2' })
     end
 
-    context 'when the IDEMPOTENCY_KEY is missing from the request' do
-      let(:request) { ActionDispatch::TestRequest.create }
+    context 'when the IDEMPOTENCY_KEY is missing' do
+      let(:idempotency_key) { nil }
 
       it 'does not set any redis keys' do
         expect(mock_redis.keys).to be_empty
@@ -69,8 +64,8 @@ RSpec.describe Idempotency::Store do
       end
     end
 
-    context 'when the IDEMPOTENCY_KEY is missing from the request' do
-      let(:request) { ActionDispatch::TestRequest.create }
+    context 'when the IDEMPOTENCY_KEY is missing' do
+      let(:idempotency_key) { nil }
 
       it 'returns nil' do
         expect(store.get).to be_nil

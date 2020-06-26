@@ -15,8 +15,7 @@ RSpec.describe ApiController, type: :request do
 
   let(:create_mock_controller) do
     class MockController < ApiController
-      before_action :validate_required_idempotency_key
-      around_action :idempotent_action
+      include Idempotentable
 
       def authentication_enabled?
         false # NB: disable authentication to simplify tests (it is tested elsewhere)
@@ -39,8 +38,8 @@ RSpec.describe ApiController, type: :request do
 
   context 'with two identical requests with the same idempotency key' do
     before do
-      post '/custom', params: params1, headers: { IDEMPOTENCY_KEY: idempotency_key1 }, as: :json
-      post '/custom', params: params1, headers: { IDEMPOTENCY_KEY: idempotency_key1 }, as: :json
+      post '/custom', params: params1, headers: { 'IDEMPOTENCY-KEY': idempotency_key1 }, as: :json
+      post '/custom', params: params1, headers: { 'IDEMPOTENCY-KEY': idempotency_key1 }, as: :json
     end
 
     it 'returns a success code' do
@@ -54,8 +53,8 @@ RSpec.describe ApiController, type: :request do
 
   context 'with two different requests with different idempotency keys' do
     before do
-      post '/custom', params: params1, headers: { IDEMPOTENCY_KEY: idempotency_key1 }, as: :json
-      post '/custom', params: params2, headers: { IDEMPOTENCY_KEY: idempotency_key2 }, as: :json
+      post '/custom', params: params1, headers: { 'IDEMPOTENCY-KEY': idempotency_key1 }, as: :json
+      post '/custom', params: params2, headers: { 'IDEMPOTENCY-KEY': idempotency_key2 }, as: :json
     end
 
     it 'returns a success code' do
@@ -69,8 +68,8 @@ RSpec.describe ApiController, type: :request do
 
   context 'with two different requests with the same idempotency key' do
     before do
-      post '/custom', params: params1, headers: { IDEMPOTENCY_KEY: idempotency_key1 }, as: :json
-      post '/custom', params: params2, headers: { IDEMPOTENCY_KEY: idempotency_key1 }, as: :json
+      post '/custom', params: params1, headers: { 'IDEMPOTENCY-KEY': idempotency_key1 }, as: :json
+      post '/custom', params: params2, headers: { 'IDEMPOTENCY-KEY': idempotency_key1 }, as: :json
     end
 
     it 'returns a conflict error' do
@@ -104,7 +103,7 @@ RSpec.describe ApiController, type: :request do
 
   context 'with an invalid idempotency key' do
     before do
-      post '/custom', params: params1, headers: { IDEMPOTENCY_KEY: 'foo bar' }, as: :json
+      post '/custom', params: params1, headers: { 'IDEMPOTENCY-KEY': 'foo bar' }, as: :json
     end
 
     it 'returns a bad request error' do
