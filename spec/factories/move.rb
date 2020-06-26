@@ -91,6 +91,16 @@ FactoryBot.define do
     trait :with_date_to do
       date_to { date + 3.days }
     end
+
+    trait :with_original_move do
+      association(:original_move, factory: :move)
+    end
+
+    trait :with_court_hearings do
+      after(:create) do |move|
+        create_list(:court_hearing, 1, move: move)
+      end
+    end
   end
 
   factory :from_court_to_prison, class: 'Move' do
