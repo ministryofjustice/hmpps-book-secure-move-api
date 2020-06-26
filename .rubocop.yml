@@ -30,7 +30,7 @@ Metrics/BlockLength:
     - "spec/**/*"
 
 RSpec/ExampleLength:
-  Max: 10
+  Max: 15
 
 RSpec/NestedGroups:
   Max: 6

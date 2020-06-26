@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Allocations::Creator do
-  subject(:creator) do
+  subject(:call_creator) { creator.call }
+
+  let(:creator) do
     described_class.new(
       allocation_params: allocation_params,
       complex_case_params: complex_case_params,
@@ -33,15 +35,18 @@ RSpec.describe Allocations::Creator do
   let!(:from_location) { create(:location) }
   let!(:to_location) { create(:location) }
   let(:date) { Date.today }
+  let(:moves_count) { 2 }
+  let(:requested_by) { 'Iama Requestor' }
   let(:allocation_params) do
     {
       type: 'allocations',
       attributes: {
         date: date,
-        moves_count: 2,
+        moves_count: moves_count,
         prisoner_category: :b,
         sentence_length: :short,
         other_criteria: 'curly hair',
+        requested_by: requested_by,
         complete_in_full: true,
         complex_cases: complex_case_params,
       },
@@ -52,35 +57,34 @@ RSpec.describe Allocations::Creator do
     }
   end
 
-  before do
-    next if RSpec.current_example.metadata[:skip_before]
-
-    creator.call
-  end
-
   context 'with valid params' do
     it 'creates an allocation' do
+      call_creator
       expect(creator.allocation).to be_persisted
     end
 
     it 'sets the correct attributes to an allocation' do
+      call_creator
       expect(creator.allocation).to have_attributes(
+        status: 'unfilled',
         date: date,
         moves_count: 2,
         prisoner_category: 'b',
         sentence_length: 'short',
         other_criteria: 'curly hair',
+        requested_by: 'Iama Requestor',
         complete_in_full: true,
         to_location: to_location,
         from_location: from_location,
       )
     end
 
-    it 'creates associates moves to the same number as `moves_count`', :skip_before do
-      expect { creator.call }.to change(Move, :count).by(2)
+    it 'creates the same number of associated moves as `moves_count`' do
+      expect { call_creator }.to change(Move, :count).by(2)
     end
 
     it 'sets the correct attributes to associated moves' do
+      call_creator
       expect(creator.allocation.moves.first).to have_attributes(
         date: date,
         to_location: to_location,
@@ -90,10 +94,12 @@ RSpec.describe Allocations::Creator do
     end
 
     it 'sets the correct number of complex_cases' do
+      call_creator
       expect(creator.allocation.complex_cases.size).to eq(2)
     end
 
     it 'sets the correct attributes for complex case answers' do
+      call_creator
       expect(creator.allocation.complex_cases.first).to have_attributes(
         key: complex_case1.key,
         title: complex_case1.title,
@@ -106,7 +112,17 @@ RSpec.describe Allocations::Creator do
       let(:complex_case_params) { nil }
 
       it 'creates an allocation without complex cases' do
+        call_creator
         expect(creator.allocation.complex_cases).to be_empty
+      end
+    end
+
+    context 'with nil requested_by attribute' do
+      let(:requested_by) { nil }
+
+      it 'creates an allocation without requested_by' do
+        call_creator
+        expect(creator.allocation.requested_by).to be_nil
       end
     end
   end
@@ -115,10 +131,32 @@ RSpec.describe Allocations::Creator do
     context 'with a missing location' do
       let(:from_location) { nil }
 
-      it 'raises an error', :skip_before do
-        expect { creator.call }.to raise_error(
+      it 'raises an error' do
+        expect { call_creator }.to raise_error(
           ActiveRecord::RecordNotFound,
           "Couldn't find Location without an ID",
+        )
+      end
+    end
+
+    context 'with incorrect moves_count type' do
+      let(:moves_count) { '27.5' }
+
+      it 'raises an error' do
+        expect { call_creator }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          'Validation failed: Moves count must be an integer',
+        )
+      end
+    end
+
+    context 'with zero moves_count' do
+      let(:moves_count) { 0 }
+
+      it 'raises an error' do
+        expect { call_creator }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          'Validation failed: Moves count must be greater than 0',
         )
       end
     end
@@ -126,18 +164,18 @@ RSpec.describe Allocations::Creator do
     context 'with missing params' do
       let(:date) { nil }
 
-      it 'raises an error', :skip_before do
-        expect { creator.call }.to raise_error(ActiveRecord::RecordInvalid)
+      it 'raises an error' do
+        expect { call_creator }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
-      it 'makes the allocation validation errors available via exception', :skip_before do
-        creator.call
+      it 'makes the allocation validation errors available via exception' do
+        call_creator
       rescue ActiveRecord::RecordInvalid => e
         expect(e.record.errors.messages).to include(date: ["can't be blank"])
       end
 
-      it 'does not attempt to create a move', :skip_before do
-        creator.call
+      it 'does not attempt to create a move' do
+        call_creator
       rescue ActiveRecord::RecordInvalid => e
         expect(e.record.moves).to be_empty
       end
