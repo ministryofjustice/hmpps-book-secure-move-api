@@ -22,6 +22,7 @@ gem 'cancancan'
 # explicit soft-deletes
 gem 'discard'
 gem 'doorkeeper'
+gem 'elastic-apm'
 gem 'faraday'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
