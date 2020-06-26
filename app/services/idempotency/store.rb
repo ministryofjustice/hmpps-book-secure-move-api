@@ -27,7 +27,7 @@ module Idempotency
       cached_response = Rails.cache.read(cache_response_key)
       return cached_response if cached_response.present?
 
-      # Otherwise, raise a conflict error of the idempotency key exists, or return nil if not
+      # Otherwise, raise a conflict error if the idempotency key exists, or return nil if not
       conflict = Rails.cache.read(conflict_key)
       raise ConflictError, idempotency_key unless conflict.nil?
     end

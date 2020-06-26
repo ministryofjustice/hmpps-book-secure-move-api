@@ -16,6 +16,9 @@ RSpec.describe ApiController, type: :request do
     class MockController < ApiController
       include Idempotentable
 
+      before_action :validate_idempotency_key
+      around_action :idempotent_action
+
       def authentication_enabled?
         false # NB: disable authentication to simplify tests (it is tested elsewhere)
       end

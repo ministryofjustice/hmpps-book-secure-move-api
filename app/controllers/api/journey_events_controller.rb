@@ -5,6 +5,9 @@ module Api
     include Journeys::Eventable
     include Idempotentable
 
+    before_action :validate_idempotency_key
+    around_action :idempotent_action
+
     STANDARD_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
     LODGING_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze

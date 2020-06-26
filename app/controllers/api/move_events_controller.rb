@@ -5,6 +5,9 @@ module Api
     include Moves::Eventable
     include Idempotentable
 
+    before_action :validate_idempotency_key
+    around_action :idempotent_action
+
     ACCEPT_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
     COMPLETE_PARAMS = [:type, attributes: %i[timestamp notes]].freeze

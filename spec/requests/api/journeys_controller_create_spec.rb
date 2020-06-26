@@ -76,7 +76,6 @@ RSpec.describe Api::JourneysController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'returns the correct data' do
-        puts response.body
         expect(response_json).to include_json(data: data)
       end
     end
