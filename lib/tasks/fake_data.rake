@@ -196,7 +196,7 @@ namespace :fake_data do
         profile: profile,
         from_location: from_location,
         to_location: to_location,
-        status: %w[proposed requested booked completed].sample,
+        status: %w[proposed requested booked in_transit completed].sample,
         nomis_event_ids: nomis_event_ids,
       )
       document = Document.new(move: move)
