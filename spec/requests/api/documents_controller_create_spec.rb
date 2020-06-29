@@ -17,7 +17,6 @@ RSpec.describe Api::DocumentsController do
 
   describe 'POST /people' do
     let(:file) { fixture_file_upload('file-sample_100kB.doc', 'application/msword') }
-
     let(:document_params) do
       {
         data: {
