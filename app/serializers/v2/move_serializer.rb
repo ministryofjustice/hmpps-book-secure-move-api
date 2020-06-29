@@ -29,13 +29,13 @@ module V2
     belongs_to :original_move, serializer: MoveSerializer
 
     SUPPORTED_RELATIONSHIPS = %w[
+      profile.documents
       profile.person.ethnicity
       profile.person.gender
       from_location
       from_location.suppliers
       to_location
       to_location.suppliers
-      documents
       prison_transfer_reason
       court_hearings
       allocation

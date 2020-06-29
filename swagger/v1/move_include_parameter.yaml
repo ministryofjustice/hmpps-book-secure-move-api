@@ -14,12 +14,13 @@ MoveIncludeParameter:
       - to_location
       - original_move
       - prison_transfer_reason
-      - person
-      - profile
       - from_location.suppliers
       - to_location.suppliers
+      - person
       - person.gender
       - person.ethnicity
+      - profile
+      - profile.documents
       - profile.person
       - profile.person.gender
       - profile.person.ethnicity
