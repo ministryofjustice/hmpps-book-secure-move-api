@@ -6,9 +6,10 @@ module MoveEvents
 
     ACCEPTABLE_PLURAL_VERBS = %w[cancels completes approves rejects].freeze
 
-    attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason
+    attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location, :to_location
 
-    validates :type, presence: true, inclusion: { in: %w[cancel complete lockouts redirects approve reject accepts] }
+    # TODO: if/when pluralising types, existing move event records will need migrating
+    validates :type, presence: true, inclusion: { in: %w[accepts approve cancel complete lockouts redirects reject starts] }
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, if: -> { type == 'cancel' }
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }, if: -> { type == 'reject' }
 
@@ -27,13 +28,17 @@ module MoveEvents
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
     end
 
+    validates_with LocationValidator, locations: [:from_location], if: -> { type == 'lockouts' }
+    validates_with LocationValidator, locations: [:to_location], if: -> { type == 'redirects' }
+
     def initialize(params)
       @timestamp = params.dig(:attributes, :timestamp)
       @type = params[:type]
       @date = params.dig(:attributes, :date)
       @cancellation_reason = params.dig(:attributes, :cancellation_reason)
       @rejection_reason = params.dig(:attributes, :rejection_reason)
-
+      @from_location = params.dig(:relationships, :from_location, :data, :id)
+      @to_location = params.dig(:relationships, :to_location, :data, :id)
       singularize_acceptable_plural_types
     end
 

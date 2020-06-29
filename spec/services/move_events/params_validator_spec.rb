@@ -8,7 +8,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   let(:attributes) { { timestamp: timestamp } }
   let(:params) { { type: type, attributes: attributes } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
-  let(:type) { 'redirects' }
+  let(:type) { 'accepts' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
