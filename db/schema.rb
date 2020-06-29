@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_06_24_052847) do
     t.decimal "version", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name", "version"], name: "index_frameworks_on_name_and_version", unique: true
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

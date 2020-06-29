@@ -30,7 +30,7 @@ module Frameworks
         question.options << option['value']
 
         build_followup_questions(
-          followups: option['followup'].presence || [],
+          followups: option.fetch('followup', []),
           value: option['value'],
         )
 

@@ -6,5 +6,7 @@ class CreateFrameworks < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
+
+    add_index :frameworks, [:name, :version], unique: true
   end
 end
