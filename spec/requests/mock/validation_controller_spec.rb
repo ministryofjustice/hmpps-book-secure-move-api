@@ -45,11 +45,13 @@ RSpec.describe Mock::ValidationController, type: :request do
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('get_genders_responses.yaml') }
 
-    before do
+    around do |example|
       Rails.application.routes.draw { get '/mock/data', to: 'mock/validation#data' }
-
-      get '/mock/data', headers: headers
+      example.run
+      Rails.application.reload_routes!
     end
+
+    before { get '/mock/data', headers: headers }
 
     it_behaves_like 'an endpoint that responds with success 200'
   end

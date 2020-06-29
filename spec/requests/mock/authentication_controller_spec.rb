@@ -18,10 +18,13 @@ RSpec.describe Mock::AuthenticationController, type: :request do
   let(:schema) { load_yaml_schema('error_responses.yaml') }
   let(:detail_401) { 'Token expired or invalid' }
 
-  before do
-    Rails.application.routes.draw { get '/mock/secure', to: 'mock/authentication#secure' }
-    get '/mock/secure', headers: headers
+  around do |example|
+    Rails.application.routes.draw { get '/mock/secure', to: 'mock/authentication#secure'  }
+    example.run
+    Rails.application.reload_routes!
   end
+
+  before { get '/mock/secure', headers: headers }
 
   context 'with valid authentication' do
     it 'returns a success code' do

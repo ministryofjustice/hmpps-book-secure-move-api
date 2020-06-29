@@ -28,8 +28,10 @@ RSpec.describe Mock::IdempotentController, type: :request do
   let(:params2) { { data: 'two' } }
   let(:response_json) { JSON.parse(response.body) }
 
-  before do
+  around do |example|
     Rails.application.routes.draw { post '/mock/event', to: 'mock/idempotent#event' }
+    example.run
+    Rails.application.reload_routes!
   end
 
   context 'with two identical requests with the same idempotency key' do
