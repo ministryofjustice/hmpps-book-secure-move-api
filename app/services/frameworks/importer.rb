@@ -1,11 +1,10 @@
 module Frameworks
   class Importer
-    attr_reader :filepath, :version, :questions
+    attr_reader :filepath, :version
 
     def initialize(filepath:, version:)
       @filepath = filepath
       @version = version
-      @questions = {}
     end
 
     def call
@@ -14,8 +13,9 @@ module Frameworks
       ActiveRecord::Base.transaction do
         Dir.glob("#{filepath}/**") do |framework|
           if File.directory?(framework)
-            build_manifests(framework)
-            build_questions(framework)
+            questions = {}
+            build_manifests(framework, questions)
+            build_questions(framework, questions)
 
             basename = File.basename(framework)
             Framework.create!(name: basename, version: version, framework_questions: questions.values)
@@ -24,13 +24,13 @@ module Frameworks
       end
     end
 
-    def build_manifests(framework)
+    def build_manifests(framework, questions)
       Dir.glob("#{framework}/manifests/*.yml") do |manifest|
         questions.merge!(Frameworks::Section.new(filepath: manifest).call)
       end
     end
 
-    def build_questions(framework)
+    def build_questions(framework, questions)
       Dir.glob("#{framework}/questions/*.yml") do |question|
         questions.merge!(Frameworks::Question.new(filepath: question, questions: questions).call)
       end

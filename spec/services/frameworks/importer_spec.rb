@@ -7,7 +7,7 @@ RSpec.describe Frameworks::Importer do
     let(:filepath) { Rails.root.join('spec/fixtures/files/frameworks/') }
 
     context 'when creating frameworks' do
-      it 'persists multilpe frameworks' do
+      it 'persists multiple frameworks' do
         described_class.new(filepath: filepath, version: 0.1).call
 
         expect(Framework.count).to eq(2)
@@ -41,7 +41,7 @@ RSpec.describe Frameworks::Importer do
           'medication-while-moving',
           'regular-medication',
           'sensitive-medication',
-          'wheelchair-user',
+          'wheelchair-users',
         )
       end
 

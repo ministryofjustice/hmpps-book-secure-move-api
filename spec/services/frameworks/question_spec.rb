@@ -7,9 +7,7 @@ RSpec.describe Frameworks::Question do
     let(:fixture_path) { 'spec/fixtures/files/frameworks/person-escort-record-1/questions' }
 
     it 'sets a question as required if required validation available' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-details-information.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-details-information')
       described_class.new(filepath: filepath, questions: { 'medical-details-information' => question }).call
 
@@ -17,9 +15,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'sets the type on a question' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-details-information.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-details-information')
       described_class.new(filepath: filepath, questions: { 'medical-details-information' => question }).call
 
@@ -27,9 +23,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'sets the options on a question' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/regular-medication.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'regular-medication.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'regular-medication')
       described_class.new(filepath: filepath, questions: { 'regular-medication' => question }).call
 
@@ -37,9 +31,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'does not set the options on a question if type does not permit it' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-details-information.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-details-information')
       described_class.new(filepath: filepath, questions: { 'medical-details-information' => question }).call
 
@@ -47,9 +39,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'allows folllowup comments to be set on a question' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-professional-referral.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
 
@@ -57,9 +47,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'allows folllowup comments to be required on an option' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-professional-referral.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
 
@@ -67,7 +55,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'sets dependent questions values' do
-      filepath = Rails.root.join("#{fixture_path}/sensitive-medication.yml")
+      filepath = Rails.root.join(fixture_path, 'sensitive-medication.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'sensitive-medication')
       dependent_question = FrameworkQuestion.new(section: 'health', key: 'medication-while-moving')
       questions = {
@@ -81,7 +69,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'sets dependent questions parents' do
-      filepath = Rails.root.join("#{fixture_path}/sensitive-medication.yml")
+      filepath = Rails.root.join(fixture_path, 'sensitive-medication.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'sensitive-medication')
       dependent_question = FrameworkQuestion.new(section: 'health', key: 'medication-while-moving')
       questions = {
@@ -95,9 +83,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'adds question to set of questions if it did not exist before' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/sensitive-medication.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'sensitive-medication.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'sensitive-medication')
       questions = { 'sensitive-medication' => question }
 
@@ -106,9 +92,7 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'adds dependent question to set of questions if it did not exist before' do
-      filepath = Rails.root.join(
-        "#{fixture_path}/medical-details-information.yml",
-      )
+      filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
 
       questions = described_class.new(filepath: filepath, questions: {}).call
       expect(questions['medical-details-information']).to be_a(FrameworkQuestion)

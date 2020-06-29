@@ -4,4 +4,4 @@ steps:
     name: Physical health issues
     slug: physical-health-issues
     questions:
-      - wheelchair-user
+      - wheelchair-users
