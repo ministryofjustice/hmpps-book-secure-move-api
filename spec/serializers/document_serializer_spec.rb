@@ -8,6 +8,8 @@ RSpec.describe DocumentSerializer do
   let(:document) { create :document }
   let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
 
+  before { ActiveStorage::Current.host = 'http://example.com' }
+
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'documents'
   end
