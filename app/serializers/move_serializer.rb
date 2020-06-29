@@ -29,8 +29,8 @@ class MoveSerializer < ActiveModel::Serializer
   belongs_to :allocation, serializer: AllocationSerializer
   belongs_to :original_move, serializer: MoveSerializer
 
-  # TODO: Remove support for person on a Move
   SUPPORTED_RELATIONSHIPS = %w[
+    profile.documents
     person.ethnicity
     person.gender
     profile.person.ethnicity
