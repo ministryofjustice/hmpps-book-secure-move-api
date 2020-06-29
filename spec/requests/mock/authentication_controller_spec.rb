@@ -2,30 +2,25 @@
 
 require 'rails_helper'
 
-RSpec.describe ApiController, type: :request do
+module Mock
+  # NB: the mock class name must be unique in test suite
+  class AuthenticationController < ApiController
+    def secure
+      render json: { hello: 'world' }, status: :ok
+    end
+  end
+end
+
+RSpec.describe Mock::AuthenticationController, type: :request do
   include_context 'with supplier with access token'
-  include_context 'with undefine mock controller'
 
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('error_responses.yaml') }
   let(:detail_401) { 'Token expired or invalid' }
 
-  let(:create_mock_controller) do
-    class MockController < ApiController
-      def custom
-        render json: { hello: 'world' }, status: :ok
-      end
-    end
-    Rails.application.routes.draw do
-      get '/custom', to: 'mock#custom'
-    end
-  end
-
-  around do |example|
-    create_mock_controller
-    get '/custom', headers: headers
-    example.run
-    undefine_mock_controller # NB: it is necessary to undefine the mock controller
+  before do
+    Rails.application.routes.draw { get '/mock/secure', to: 'mock/authentication#secure' }
+    get '/mock/secure', headers: headers
   end
 
   context 'with valid authentication' do
