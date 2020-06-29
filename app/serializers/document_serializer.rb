@@ -7,7 +7,7 @@ class DocumentSerializer < ActiveModel::Serializer
   attributes :id, :url, :filename, :filesize, :content_type
 
   def url
-    url_for(object.file)
+    object.file.service_url
   end
 
   def filename

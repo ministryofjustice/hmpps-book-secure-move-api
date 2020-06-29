@@ -1,65 +1,15 @@
 require 'csv'
 require 'json'
+require 'aws-sdk-s3'
+
 namespace :journeys do
-  desc 'Exports a CSV report of all journeys'
-  task csv_report: :environment do
-    puts 'exporting journeys_report.csv...'
-
-    CSV.open('journeys_report.csv', 'w') do |csv|
-      csv << ['SUPPLIER', 'DATE', 'MOVE REFERENCE', 'MOVE FROM', 'MOVE TO', 'MOVE EVENTS', 'TIMESTAMP', 'JOURNEY FROM (title)', 'JOURNEY FROM (nomis id)', 'JOURNEY TO (title)', 'JOURNEY TO (nomis id)', 'JOURNEY EVENTS', 'VEHICLE', 'BILLABLE']
-
-      current_reference = nil
-      Journey
-          .joins(:move).includes(:move)
-          .joins(:supplier).includes(:supplier)
-          .joins(:from_location).includes(:from_location)
-          .joins(:to_location).includes(:to_location)
-          .order('suppliers.key ASC, moves.date ASC, moves.reference ASC, journeys.client_timestamp ASC')
-          .each do |journey| # NB: cannot do find_each because we need to order
-        csv << if current_reference != journey.move.reference
-                 # new move
-                 [journey.supplier.key,
-                  journey.move.date,
-                  journey.move.reference,
-                  journey.move.from_location.title,
-                  journey.move.to_location&.title,
-                  journey.move.move_events.map { |event| "#{event.event_name}: #{event.notes}" }.join('; '),
-                  journey.client_timestamp.strftime('%d/%m %H:%M:%S'),
-                  journey.from_location.title,
-                  journey.from_location.nomis_agency_id,
-                  journey.to_location.title,
-                  journey.to_location.nomis_agency_id,
-                  journey.events.map { |event| "#{event.event_name}: #{event.notes}" }.join('; '),
-                  journey.vehicle['registration'],
-                  journey.billable]
-               else
-                 # journey within current move
-                 [nil,
-                  nil,
-                  nil,
-                  nil,
-                  nil,
-                  nil,
-                  journey.client_timestamp.strftime('%d/%m %H:%M:%S'),
-                  journey.from_location.title,
-                  journey.from_location.nomis_agency_id,
-                  journey.to_location.title,
-                  journey.to_location.nomis_agency_id,
-                  journey.events.map { |event| "#{event.event_name}: #{event.notes}" }.join('; '),
-                  journey.vehicle['registration'],
-                  journey.billable]
-               end
-        current_reference = journey.move.reference
-      end
-    end
-  end
-
   desc 'Exports a JSON report of all journeys'
   task json_report: :environment do
-    puts 'exporting journeys_report.json...'
+    timestamp = DateTime.now.utc.to_i
 
-    suppliers = []
     Supplier.order(:key).each do |supplier|
+      filename = "#{supplier.key}-#{timestamp}.json"
+      puts "Generating #{filename}..."
       moves = []
       Move
           .where("ID in (select move_id from journeys WHERE supplier_id = '#{supplier.id}')")
@@ -92,29 +42,37 @@ namespace :journeys do
           }
         end
         moves << {
+          supplier: supplier.key,
           reference: move.reference,
           date: move.date,
           from: move.from_location.title,
           to: move.to_location&.title,
           events: move.move_events.default_order.map do |move_event|
-            {
-              timestamp: move_event.client_timestamp.strftime('%d/%m %H:%M:%S'),
-              event: move_event.event_name,
-              notes: move_event.notes,
-              from_location: move_event.from_location&.title,
-              to_location: move_event.to_location&.title,
-            }
-          end,
+                    {
+                      timestamp: move_event.client_timestamp.strftime('%d/%m %H:%M:%S'),
+                      event: move_event.event_name,
+                      notes: move_event.notes,
+                      from_location: move_event.from_location&.title,
+                      to_location: move_event.to_location&.title,
+                    }
+                  end,
           journeys: journeys,
         }
       end
-      suppliers << {
-        supplier: supplier.key,
-        moves: moves,
-      }
-    end
-    File.open('journeys_report.json', 'w') do |file|
-      file.write(JSON.pretty_generate({ data: suppliers }))
+
+      File.open(filename, 'w') do |file|
+        file.write(JSON.pretty_generate({ moves: moves })) # maybe change to .to_json for production
+      end
+
+      puts "Exporting #{filename} to S3..."
+      bucket_name = ENV['S3_REPORTING_BUCKET_NAME']
+      if bucket_name.present?
+        s3 = Aws::S3::Resource.new
+        obj = s3.bucket(bucket_name).object(filename)
+        obj.upload_file(filename)
+      else
+        puts 'S3_REPORTING_BUCKET_NAME not defined, skipping upload.'
+      end
     end
   end
 end
