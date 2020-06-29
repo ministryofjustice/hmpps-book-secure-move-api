@@ -17,7 +17,7 @@ RSpec.describe Frameworks::Importer do
         described_class.new(filepath: filepath, version: 0.1).call
 
         expect(Framework.find_by(name: 'person-escort-record-1')).to have_attributes(
-          version: 0.1,
+          version: '0.1',
         )
       end
 
