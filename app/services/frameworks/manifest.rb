@@ -1,5 +1,5 @@
 module Frameworks
-  class Section
+  class Manifest
     attr_reader :source, :questions, :filepath, :dependencies
 
     def initialize(filepath:)

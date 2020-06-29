@@ -26,13 +26,13 @@ module Frameworks
 
     def build_manifests(framework, questions)
       Dir.glob("#{framework}/manifests/*.yml") do |manifest|
-        questions.merge!(Frameworks::Section.new(filepath: manifest).call)
+        questions.merge!(Frameworks::Manifest.new(filepath: manifest).call)
       end
     end
 
     def build_questions(framework, questions)
       Dir.glob("#{framework}/questions/*.yml") do |question|
-        questions.merge!(Frameworks::Question.new(filepath: question, questions: questions).call)
+        questions.merge!(Frameworks::Question.new(filepath: question, questions: questions.dup).call)
       end
     end
   end

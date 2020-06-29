@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Frameworks::Section do
+RSpec.describe Frameworks::Manifest do
   describe '#call' do
     let(:framework_path) { 'spec/fixtures/files/frameworks' }
 
