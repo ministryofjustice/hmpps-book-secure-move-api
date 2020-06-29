@@ -14,9 +14,9 @@ module Frameworks
 
     def call
       question.question_type = source['type']
-      build_options(source['options'] || [])
-
       question.required = true if required?(source['validations'])
+      build_options(source.fetch('options', []))
+
       questions
     end
 
@@ -29,7 +29,7 @@ module Frameworks
       options.each do |option|
         question.options << option['value']
 
-        build_followup_question(
+        build_followup_questions(
           followups: option['followup'].presence || [],
           value: option['value'],
         )
@@ -48,7 +48,7 @@ module Frameworks
       end
     end
 
-    def build_followup_question(followups:, value:)
+    def build_followup_questions(followups:, value:)
       followups.each do |followup|
         questions[followup] = questions[followup] || FrameworkQuestion.new(key: followup)
         questions[followup].section = question.section
