@@ -201,7 +201,7 @@ RSpec.describe Api::MovesController do
           let(:move_data) do
             Move.all
               .sort_by { |move| move.person.last_name }
-              .map { |move| move.person }
+              .map(&:person)
           end
           let(:last_names) { object_ids.map { |person_id| Person.find(person_id).last_name } }
 
