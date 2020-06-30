@@ -379,46 +379,5 @@ RSpec.describe Api::MovesController do
 
       it_behaves_like 'an endpoint that responds with error 422'
     end
-
-    context 'with a duplicate move', :skip_before do
-      let(:profile) { create(:profile) }
-      let(:person) { profile.person }
-      let(:move_attributes) do
-        attributes_for(:move).merge(
-          date: old_move.date,
-          person: profile.person,
-          from_location: from_location,
-          to_location: to_location,
-        )
-      end
-
-      before do
-        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-      end
-
-      context 'when there are multiple cancelled duplicates' do
-        let!(:old_move) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
-        let!(:old_move2) { create(:move, :cancelled, profile: person.latest_profile, from_location: from_location, to_location: to_location, date: old_move.date) }
-
-        it_behaves_like 'an endpoint that responds with success 201'
-      end
-
-      context 'when duplicate is active' do
-        let!(:old_move) { create(:move, profile: person.latest_profile, from_location: from_location, to_location: to_location) }
-        let(:errors_422) do
-          [
-            {
-              title: 'Unprocessable entity',
-              detail: 'Date has already been taken',
-              source: { 'pointer' => '/data/attributes/date' },
-              code: 'taken',
-              meta: { 'existing_id' => old_move.id },
-            }.stringify_keys,
-          ]
-        end
-
-        it_behaves_like 'an endpoint that responds with error 422'
-      end
-    end
   end
 end

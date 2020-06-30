@@ -4,6 +4,7 @@ class Move < VersionedModel
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
+  MOVE_STATUS_IN_TRANSIT = 'in_transit'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'
 
@@ -17,6 +18,7 @@ class Move < VersionedModel
     proposed: MOVE_STATUS_PROPOSED,
     requested: MOVE_STATUS_REQUESTED,
     booked: MOVE_STATUS_BOOKED,
+    in_transit: MOVE_STATUS_IN_TRANSIT,
     completed: MOVE_STATUS_COMPLETED,
     cancelled: MOVE_STATUS_CANCELLED,
   }
@@ -42,6 +44,8 @@ class Move < VersionedModel
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true
+  has_one :person, through: :profile
+
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
   belongs_to :original_move, class_name: 'Move', optional: true
@@ -60,7 +64,7 @@ class Move < VersionedModel
   # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
   # except that we need to allow multiple cancelled moves
   validates :date,
-            uniqueness: { scope: %i[status profile_id from_location_id to_location_id] },
+            uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
             unless: -> { proposed? || cancelled? || profile_id.blank? }
   validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
@@ -132,8 +136,8 @@ class Move < VersionedModel
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
   end
 
-  def person
-    raise 'Attempt to Access to person!!!'
+  def person_id
+    person&.id
   end
 
 private

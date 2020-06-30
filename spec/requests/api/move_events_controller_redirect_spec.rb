@@ -52,19 +52,6 @@ RSpec.describe Api::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'with a missing to_location relationship' do
-      let(:redirect_params) { { data: { type: 'redirects', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
-
-      it_behaves_like 'an endpoint that responds with error 400' do
-        let(:errors_400) do
-          [{
-            'title' => 'Bad request',
-            'detail' => 'param is missing or the value is empty: relationships',
-          }]
-        end
-      end
-    end
-
     context 'when not authorized' do
       let(:access_token) { 'foo-bar' }
       let(:detail_401) { 'Token expired or invalid' }
@@ -79,22 +66,6 @@ RSpec.describe Api::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
-    context 'with a non-existent to_location' do
-      let(:redirect_params) do
-        {
-          data: {
-            type: 'redirects',
-            attributes: { timestamp: '2020-04-23T18:25:43.511Z' },
-            relationships: { to_location: { data: { type: 'locations', id: 'atlantis' } } },
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with error 404' do
-        let(:detail_404) { "Couldn't find Location with 'id'=atlantis" }
-      end
-    end
-
     context 'with an invalid CONTENT_TYPE header' do
       let(:content_type) { 'application/xml' }
 
@@ -103,10 +74,21 @@ RSpec.describe Api::MoveEventsController do
 
     context 'with validation errors' do
       context 'with a bad timestamp' do
-        let(:redirect_params) { { data: { type: 'redirects', attributes: { timestamp: 'Foo-Bar' } } } }
+        let(:redirect_params) do
+          { data: { type: 'redirects',
+                    attributes: { timestamp: 'Foo-Bar' },
+                    relationships: {
+                      to_location: { data: { type: 'locations', id: new_location.id } },
+                    } } }
+        end
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) { [{ 'title' => 'Invalid timestamp', 'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }] }
+          let(:errors_422) do
+            [{
+              'title' => 'Invalid timestamp',
+              'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time',
+            }]
+          end
         end
       end
 
@@ -114,7 +96,33 @@ RSpec.describe Api::MoveEventsController do
         let(:redirect_params) { { data: { type: 'Foo-bar', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) { [{ 'title' => 'Invalid type', 'detail' => 'Validation failed: Type is not included in the list' }] }
+          let(:errors_422) do
+            [{
+              'title' => 'Invalid type',
+              'detail' => 'Validation failed: Type is not included in the list',
+            }]
+          end
+        end
+      end
+
+      context 'with a non-existent to_location' do
+        let(:redirect_params) do
+          {
+            data: {
+              type: 'redirects',
+              attributes: { timestamp: '2020-04-23T18:25:43.511Z' },
+              relationships: { to_location: { data: { type: 'locations', id: 'atlantis' } } },
+            },
+          }
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Invalid to_location',
+              'detail' => 'Validation failed: To location was not found',
+            }]
+          end
         end
       end
     end

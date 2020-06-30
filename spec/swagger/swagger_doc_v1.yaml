@@ -391,6 +391,7 @@
                 - proposed
                 - requested
                 - booked
+                - in_transit
                 - cancelled
                 - completed
         - name: filter[move_type]
@@ -1034,6 +1035,72 @@
             `notes` may be provided to assist with auditing.
           schema:
             "$ref": "../v1/post_move_redirect.yaml#/PostMoveRedirect"
+      responses:
+        "204":
+          description: no content
+          content:
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "409":
+          description: conflict
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/409"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/422"
+  "/moves/{move_id}/start":
+    post:
+      summary: Starts a move
+      description:
+        "Starting a move will change the move status from `booked`
+        to `in_transit`.
+
+        "
+      tags:
+        - Moves
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
+        - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: body
+          in: body
+          required: true
+          description: |
+            ### Starting a Move
+
+            Starting a move will change the move status from `booked` to `in_transit`.
+          schema:
+            "$ref": "../v1/post_move_start.yaml#/PostMoveStart"
       responses:
         "204":
           description: no content

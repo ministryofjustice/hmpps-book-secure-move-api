@@ -41,9 +41,9 @@ private
 
   def should_email?(move)
     # NB: only email for:
-    #   * move.status must be Requested, Booked or Cancelled (not Proposed or Completed) moves, AND
+    #   * move.status must be :requested, :booked, :in_transit or :cancelled (not :proposed or :completed), AND
     #   * move must be current (i.e. move.date is not in the past OR move.to_date is not in the past)
-    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_BOOKED, Move::MOVE_STATUS_CANCELLED].include?(move.status) && move.current?
+    [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_BOOKED, Move::MOVE_STATUS_IN_TRANSIT, Move::MOVE_STATUS_CANCELLED].include?(move.status) && move.current?
   end
 
   def event_type(action_name)
