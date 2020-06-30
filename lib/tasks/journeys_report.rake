@@ -44,18 +44,23 @@ namespace :journeys do
         moves << {
           supplier: supplier.key,
           reference: move.reference,
+          request_date: move.created_at,
           date: move.date,
-          from: move.from_location.title,
-          to: move.to_location&.title,
+          from: move.from_location.key,
+          to: move.to_location&.key,
+          person_id: move.profile.id,
+          dob: move.profile.person.date_of_birth,
+          age: ((move.date.to_date - move.profile.person.date_of_birth.to_date) / 365.25).to_i,
+          # age: move.date.year - move.profile.person.date_of_birth.year - ((move.date.month > move.profile.person.date_of_birth.month || (move.date.month == move.profile.person.date_of_birth.month && move.date.day >= move.profile.person.date_of_birth.day)) ? 0 : 1),
           events: move.move_events.default_order.map do |move_event|
-                    {
-                      timestamp: move_event.client_timestamp.strftime('%d/%m %H:%M:%S'),
-                      event: move_event.event_name,
-                      notes: move_event.notes,
-                      from_location: move_event.from_location&.title,
-                      to_location: move_event.to_location&.title,
-                    }
-                  end,
+            {
+              timestamp: move_event.client_timestamp.strftime('%d/%m %H:%M:%S'),
+              event: move_event.event_name,
+              notes: move_event.notes,
+              from_location: move_event.from_location&.title,
+              to_location: move_event.to_location&.title,
+            }
+          end,
           journeys: journeys,
         }
       end
