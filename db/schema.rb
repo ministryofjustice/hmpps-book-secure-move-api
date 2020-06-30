@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 2020_06_30_071352) do
 
   create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_question_id", null: false
-    t.string "key", null: false
+    t.string "flag_type", null: false
     t.string "name", null: false
     t.string "question_value", null: false
     t.datetime "created_at", precision: 6, null: false
