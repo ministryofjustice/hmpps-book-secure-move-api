@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Api::MoveEventsController do
-  let(:response_json) { JSON.parse(response.body) }
-
   describe 'POST /moves/:move_id/accept' do
     include_context 'with supplier with access token'
-    let(:move) { create(:move, :requested) }
+
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, :requested, from_location: from_location) }
     let(:move_id) { move.id }
 
     before do

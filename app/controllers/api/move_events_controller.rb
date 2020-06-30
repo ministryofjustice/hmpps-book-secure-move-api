@@ -3,6 +3,10 @@
 module Api
   class MoveEventsController < ApiController
     include Moves::Eventable
+    include Idempotentable
+
+    before_action :validate_idempotency_key
+    around_action :idempotent_action
 
     APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
     CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze

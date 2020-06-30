@@ -48,4 +48,6 @@ Rails.application.configure do
   routes.default_url_options[:host] = 'localhost:4000'
 
   config.active_job.queue_adapter   = :test
+
+  config.cache_store = :memory_store
 end

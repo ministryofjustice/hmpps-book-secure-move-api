@@ -43,7 +43,7 @@ Conflict:
       example: Conflict
     detail:
       type: string
-      example: Duplicate idempotency key
+      example: Conflicting idempotency key 1234
 UnsupportedMediaType:
   type: object
   properties:

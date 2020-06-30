@@ -46,8 +46,9 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # NB we are using a Redis-backed cache. Using FileStore, MemoryStore (or NullStore) will not work in production because
+  # the cache must be shared accross multiple instances.
+  config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL', "redis://localhost:6379/1") }
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque

@@ -2,7 +2,11 @@
 
 module Api
   class JourneysController < ApiController
+    include Idempotentable
+
     before_action :validate_params, only: %i[create update]
+    before_action :validate_idempotency_key, only: %i[create update]
+    around_action :idempotent_action, only: %i[create update]
     after_action :create_event, only: %i[create update]
 
     PERMITTED_NEW_JOURNEY_PARAMS = [

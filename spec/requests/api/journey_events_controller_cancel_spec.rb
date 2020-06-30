@@ -5,9 +5,11 @@ require 'rails_helper'
 RSpec.describe Api::JourneyEventsController do
   describe 'POST /moves/:move_id/journeys/:journey_id/cancel' do
     include_context 'with supplier with access token'
-    let(:move) { create(:move) }
+
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, from_location: from_location) }
     let(:move_id) { move.id }
-    let(:journey) { create(:journey, initial_journey_state, move: move) }
+    let(:journey) { create(:journey, initial_journey_state, move: move, supplier: supplier) }
     let(:journey_id) { journey.id }
     let(:initial_journey_state) { :in_progress }
 

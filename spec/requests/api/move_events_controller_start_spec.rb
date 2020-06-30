@@ -7,7 +7,9 @@ RSpec.describe Api::MoveEventsController do
 
   describe 'POST /moves/:move_id/start' do
     include_context 'with supplier with access token'
-    let(:move) { create(:move, :booked) }
+
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, :booked, from_location: from_location) }
     let(:move_id) { move.id }
 
     before do
