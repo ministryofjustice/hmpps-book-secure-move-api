@@ -19,7 +19,7 @@ RSpec.describe Mock::AuthenticationController, type: :request do
   let(:detail_401) { 'Token expired or invalid' }
 
   around do |example|
-    Rails.application.routes.draw { get '/mock/secure', to: 'mock/authentication#secure'  }
+    Rails.application.routes.draw { get '/mock/secure', to: 'mock/authentication#secure' }
     example.run
     Rails.application.reload_routes!
   end
