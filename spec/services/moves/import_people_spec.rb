@@ -5,26 +5,35 @@ require 'rails_helper'
 RSpec.describe Moves::ImportPeople do
   subject(:importer) { described_class.new(input_data) }
 
-  let(:input_data) do
-    [nomis_prison_number_one]
-  end
-
-  let(:nomis_prison_number_one) { 'G3239GV' }
-  let(:nomis_prison_number_two) { 'G7157AB' }
+  let(:input_data) { [nomis_prison_number] }
+  let(:nomis_prison_number) { 'G3239GV' }
 
   let(:alerts_response) do
-    [{ offender_no: nomis_prison_number_one, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: nomis_prison_number_two, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: nomis_prison_number_two, alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
+    [
+      {
+        offender_no: nomis_prison_number,
+        alert_code: 'ACCU9',
+        alert_type: 'MATSTAT',
+      },
+    ]
   end
   let(:prison_numbers_response) do
-    [{ prison_number: nomis_prison_number_one, first_name: 'Bob', last_name: 'Beep' },
-     { prison_number: nomis_prison_number_two, first_name: 'Bob', last_name: 'Boop' }]
+    [
+      {
+        prison_number: nomis_prison_number,
+        first_name: 'Bob',
+        last_name: 'Beep',
+      },
+    ]
   end
   let(:personal_care_needs_response) do
-    [{ offender_no: nomis_prison_number_one, problem_type: 'FOO', problem_code: 'AA' },
-     { offender_no: nomis_prison_number_two, problem_type: 'FOO', problem_code: 'BAC' },
-     { offender_no: nomis_prison_number_two, problem_type: 'FOO', problem_code: 'TTG' }]
+    [
+      {
+        offender_no: nomis_prison_number,
+        problem_type: 'FOO',
+        problem_code: 'AA',
+      },
+    ]
   end
 
   before do
@@ -36,9 +45,10 @@ RSpec.describe Moves::ImportPeople do
     create(:assessment_question, :alerts_fallback)
   end
 
-  context 'with one existing record' do
-    let!(:prisoner_one) { create(:person, nomis_prison_number: nomis_prison_number_one, prison_number: nomis_prison_number_one) }
-    let!(:prisoner_two) { create(:person, nomis_prison_number: nomis_prison_number_two, prison_number: nomis_prison_number_two) }
+  context 'with an existing record' do
+    before do
+      create(:person, nomis_prison_number: nomis_prison_number, prison_number: nomis_prison_number)
+    end
 
     it 'keeps people the same' do
       expect { importer.call }.not_to change(Person, :count)
@@ -51,11 +61,11 @@ RSpec.describe Moves::ImportPeople do
 
   context 'with no existing records' do
     it 'creates new `Person` records' do
-      expect { importer.call }.to change(Person, :count).by(2)
+      expect { importer.call }.to change(Person, :count).by(1)
     end
 
     it 'creates new `Profile` records' do
-      expect { importer.call }.to change(Profile, :count).by(2)
+      expect { importer.call }.to change(Profile, :count).by(1)
     end
 
     it 'populates assessment answers' do
@@ -71,11 +81,11 @@ RSpec.describe Moves::ImportPeople do
       let(:personal_care_needs_response) { [] }
 
       it 'creates new `Person` records' do
-        expect { importer.call }.to change(Person, :count).by(2)
+        expect { importer.call }.to change(Person, :count).by(1)
       end
 
       it 'creates new `Profile` records' do
-        expect { importer.call }.to change(Profile, :count).by(2)
+        expect { importer.call }.to change(Profile, :count).by(1)
       end
 
       it 'does not populate assessment answers' do
