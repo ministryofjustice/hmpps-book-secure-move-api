@@ -159,7 +159,7 @@ RSpec.describe Move do
   context 'when a Move for a Person has already been created' do
     let(:move) { create(:move) }
 
-    let(:profile_for_new_move) { create(:profile, person: move.profile.person) }
+    let(:profile_for_new_move) { create(:profile, person: move.person) }
 
     context 'when creating a new Move with the same from_location, to_location and date' do
       it 'returns a validation error on date' do
