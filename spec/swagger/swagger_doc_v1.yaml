@@ -1088,7 +1088,7 @@
       consumes:
         - application/vnd.api+json
       parameters:
-        - "$ref": "../v2/accept_type_parameter.yaml#/Start"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
         - "$ref": "../v1/idempotency_key_parameter.yaml#/IdempotencyKey"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
@@ -1100,7 +1100,7 @@
 
             Starting a move will change the move status from `booked` to `in_transit`.
           schema:
-            "$ref": "../v1/post_move_accept.yaml#/PostMoveStart"
+            "$ref": "../v1/post_move_start.yaml#/PostMoveStart"
       responses:
         "204":
           description: no content
