@@ -63,7 +63,7 @@ RSpec.describe Moves::ImportPeople do
 
       assessment_answers = Person.last.profiles.first.assessment_answers
 
-      expect(assessment_answers.count).to eq(2)
+      expect(assessment_answers).to be_present
     end
 
     context 'with no alerts or personal care needs' do
