@@ -110,19 +110,6 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a missing to_location relationship' do
-        let(:redirect_params) { { data: { type: 'redirects', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
-
-        it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) do
-            [{
-              'title' => 'Invalid to_location',
-              'detail' => 'Validation failed: To location is missing',
-            }]
-          end
-        end
-      end
-
       context 'with a non-existent to_location' do
         let(:redirect_params) do
           {

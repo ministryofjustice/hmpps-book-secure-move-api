@@ -10,11 +10,11 @@ module Api
     REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
     REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook]].freeze
 
-    STANDARD_PARAMS = [:type, attributes: %i[timestamp notes]].freeze # for accept, complete and start move events
+    COMMON_PARAMS = [:type, attributes: %i[timestamp notes]].freeze # for accept, complete and start move events
 
     def accept
-      MoveEvents::ParamsValidator.new(standard_params).validate!
-      process_event(move, Event::ACCEPT, standard_params)
+      MoveEvents::ParamsValidator.new(common_params).validate!
+      process_event(move, Event::ACCEPT, common_params)
       render status: :no_content
     end
 
@@ -31,8 +31,8 @@ module Api
     end
 
     def complete
-      MoveEvents::ParamsValidator.new(standard_params).validate!
-      process_event(move, Event::COMPLETE, standard_params)
+      MoveEvents::ParamsValidator.new(common_params).validate!
+      process_event(move, Event::COMPLETE, common_params)
       render status: :no_content
     end
 
@@ -55,8 +55,8 @@ module Api
     end
 
     def start
-      MoveEvents::ParamsValidator.new(standard_params).validate!
-      process_event(move, Event::START, standard_params)
+      MoveEvents::ParamsValidator.new(common_params).validate!
+      process_event(move, Event::START, common_params)
       render status: :no_content
     end
 
@@ -82,8 +82,8 @@ module Api
       @reject_params ||= params.require(:data).permit(REJECT_PARAMS).to_h
     end
 
-    def standard_params
-      @standard_params ||= params.require(:data).permit(STANDARD_PARAMS).to_h
+    def common_params
+      @common_params ||= params.require(:data).permit(COMMON_PARAMS).to_h
     end
 
     def move

@@ -110,19 +110,6 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a missing from_location' do
-        let(:lockout_params) { { data: { type: 'lockouts', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
-
-        it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) do
-            [{
-              'title' => 'Invalid from_location',
-              'detail' => 'Validation failed: From location is missing',
-            }]
-          end
-        end
-      end
-
       context 'with a non-existent from_location' do
         let(:lockout_params) do
           {

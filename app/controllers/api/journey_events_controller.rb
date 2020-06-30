@@ -4,19 +4,19 @@ module Api
   class JourneyEventsController < ApiController
     include Journeys::Eventable
 
-    STANDARD_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
+    COMMON_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
     LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
     LODGING_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
 
     def cancel
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::CANCEL, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::CANCEL, common_params)
       render status: :no_content
     end
 
     def complete
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::COMPLETE, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::COMPLETE, common_params)
       render status: :no_content
     end
 
@@ -33,26 +33,26 @@ module Api
     end
 
     def reject
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::REJECT, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::REJECT, common_params)
       render status: :no_content
     end
 
     def start
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::START, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::START, common_params)
       render status: :no_content
     end
 
     def uncancel
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::UNCANCEL, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::UNCANCEL, common_params)
       render status: :no_content
     end
 
     def uncomplete
-      JourneyEvents::ParamsValidator.new(standard_params).validate!
-      process_event(journey, Event::UNCOMPLETE, standard_params)
+      JourneyEvents::ParamsValidator.new(common_params).validate!
+      process_event(journey, Event::UNCOMPLETE, common_params)
       render status: :no_content
     end
 
@@ -66,8 +66,8 @@ module Api
       @lodging_params ||= params.require(:data).permit(LODGING_PARAMS).to_h
     end
 
-    def standard_params
-      @standard_params ||= params.require(:data).permit(STANDARD_PARAMS).to_h
+    def common_params
+      @common_params ||= params.require(:data).permit(COMMON_PARAMS).to_h
     end
 
     def journey

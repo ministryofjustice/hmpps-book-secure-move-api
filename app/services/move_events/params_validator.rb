@@ -4,11 +4,15 @@ module MoveEvents
   class ParamsValidator
     include ActiveModel::Validations
 
+    # NB: for historical reasons the move events endpoint supports a mixture of plural and singular types (e.g. `complete` and `completes`).
+    # Going forwards, types should always be plural to conform to JSON:API. For now, we need to support both: the client should send a
+    # `type=completes` but we must accept and process a `type=complete`. This is handled by the singularize_acceptable_plural_types
+    # method and the list in ACCEPTABLE_PLURAL_VERBS.
+    # TODO: in the future when pluralising types, existing move event records will need updating from singular types to plural types.
     ACCEPTABLE_PLURAL_VERBS = %w[cancels completes approves rejects].freeze
 
     attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location, :to_location
 
-    # TODO: if/when pluralising types, existing move event records will need migrating
     validates :type, presence: true, inclusion: { in: %w[accepts approve cancel complete lockouts redirects reject starts] }
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, if: -> { type == 'cancel' }
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }, if: -> { type == 'reject' }
