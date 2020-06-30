@@ -391,7 +391,7 @@ RSpec.describe Api::MovesController do
         end
       end
 
-      context 'when duplicate is active' do
+      context 'when the Move has been already created' do
         let!(:move) { create(:move, profile: profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
