@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.0.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.0.4) (2020-06-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.0.3...v2.0.4)
+
+**Merged pull requests:**
+
+- \[P4-1823\] Handle profiles with no assessment answers in importer [\#656](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/656) ([willfish](https://github.com/willfish))
+- Default to APM off for new devs [\#652](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/652) ([willfish](https://github.com/willfish))
+- \[P4-1768\] Moves report task [\#649](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/649) ([mafonso](https://github.com/mafonso))
+- Enable APM on config [\#647](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/647) ([mafonso](https://github.com/mafonso))
+- Tidy up document swagger [\#646](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/646) ([willfish](https://github.com/willfish))
+- \[P4-1813\] Adds support for profile.documents in MoveSerializer [\#644](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/644) ([willfish](https://github.com/willfish))
+- Update CHANGELOG.md v2.0.3 [\#643](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/643) ([martyn-w](https://github.com/martyn-w))
+- Add support for URLs which expires after 5 min, for images and docs. [\#636](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/636) ([alexdesi](https://github.com/alexdesi))
+
 ## [v2.0.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.0.3) (2020-06-25)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.0.2...v2.0.3)
@@ -113,14 +128,12 @@
 - Removes dead references [\#573](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/573) ([willfish](https://github.com/willfish))
 - BugFix: "ArgumentError: you can't define an already defined column 'l… [\#572](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/572) ([alexdesi](https://github.com/alexdesi))
 - \[P4-1500\] Adds rake task for moving a Document to a Profile [\#571](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/571) ([willfish](https://github.com/willfish))
-- P4 1480 journey events [\#570](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/570) ([martyn-w](https://github.com/martyn-w))
 - Run api\_jobs non-concurrently [\#569](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/569) ([mafonso](https://github.com/mafonso))
 - Reinstate default includes for GET allocations endpoint [\#567](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/567) ([smoothcontract](https://github.com/smoothcontract))
 - \[P4-1665\] Removes references to Profile fields [\#565](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/565) ([willfish](https://github.com/willfish))
 - Update CHANGELOG.md [\#559](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/559) ([martyn-w](https://github.com/martyn-w))
 - \[P4-586\] Run migrations out of band [\#557](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/557) ([mafonso](https://github.com/mafonso))
 - P4-1432 Allow relationships to be surfaced in Serializers even if missing [\#551](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/551) ([cwrw](https://github.com/cwrw))
-- \[P4-1631\] Streamline Pipeline "Part II - One image to deploy them all"  [\#544](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/544) ([mafonso](https://github.com/mafonso))
 - P4-1585 add booked move status [\#516](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/516) ([martyn-w](https://github.com/martyn-w))
 
 ## [v1.10.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.7) (2020-06-11)
@@ -129,6 +142,7 @@
 
 **Merged pull requests:**
 
+- P4 1480 journey events [\#570](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/570) ([martyn-w](https://github.com/martyn-w))
 - HOTFIX: ignore nil profiles when fetching documents [\#566](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/566) ([cwrw](https://github.com/cwrw))
 - Add redis addon for heroku review apps [\#564](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/564) ([smoothcontract](https://github.com/smoothcontract))
 - Always return minimum set of relationships for allocation endpoint - … [\#563](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/563) ([smoothcontract](https://github.com/smoothcontract))
@@ -151,6 +165,7 @@
 - P4-1496 Add PATCH endpoint for Profile V2 [\#548](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/548) ([cwrw](https://github.com/cwrw))
 - Adds support for allocation.moves.person.{gender,ethnicity} [\#547](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/547) ([willfish](https://github.com/willfish))
 - tweak connection pool and sidekiq concurrency [\#545](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/545) ([martyn-w](https://github.com/martyn-w))
+- \[P4-1631\] Streamline Pipeline "Part II - One image to deploy them all"  [\#544](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/544) ([mafonso](https://github.com/mafonso))
 - \[P4-1631\] Streamline Pipeline "Part I - Divide and Conquer" [\#543](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/543) ([mafonso](https://github.com/mafonso))
 - Add PUT /v2/people endpoint [\#542](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/542) ([alexdesi](https://github.com/alexdesi))
 - Bump websocket-extensions from 0.1.4 to 0.1.5 [\#540](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/540) ([dependabot[bot]](https://github.com/apps/dependabot))
