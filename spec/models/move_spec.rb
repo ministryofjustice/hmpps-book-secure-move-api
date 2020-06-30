@@ -99,12 +99,6 @@ RSpec.describe Move do
     )
   end
 
-  it 'validates uniqueness of `date` if `status` is NOT proposed or cancelled' do
-    expect(create(:move)).to(
-      validate_uniqueness_of(:date).scoped_to(:status, :profile_id, :from_location_id, :to_location_id),
-    )
-  end
-
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
     expect(build(:move, status: :cancelled)).not_to(
       validate_uniqueness_of(:date),
@@ -166,6 +160,47 @@ RSpec.describe Move do
     move.nomis_event_ids << 123_456
     move.save
     expect(move.nomis_event_ids).to eq([123_456])
+  end
+
+  context 'when a Move for a Person has already been created' do
+    let(:move) { create(:move) }
+
+    let(:profile_for_new_move) { create(:profile, person: move.person) }
+
+    context 'when creating a new Move with the same from_location, to_location and date' do
+      it 'returns a validation error on date' do
+        new_move = described_class.create(profile: profile_for_new_move,
+                                          from_location: move.from_location,
+                                          to_location: move.to_location,
+                                          date: move.date)
+
+        expect(new_move.errors[:date]).to eq(['has already been taken'])
+      end
+    end
+
+    context 'when creating a new Move in Proposed status' do
+      it 'returns a valid Move' do
+        new_move = described_class.create(profile: profile_for_new_move,
+                                          from_location: move.from_location,
+                                          to_location: move.to_location,
+                                          date: move.date,
+                                          status: Move::MOVE_STATUS_PROPOSED)
+
+        expect(new_move.errors[:date]).to be_empty
+      end
+    end
+
+    context 'when creating a new Move having to_location empty' do
+      it 'returns a validation error on date' do
+        new_move = described_class.create(profile: profile_for_new_move,
+                                          from_location: move.from_location,
+                                          to_location: nil,
+                                          date: move.date,
+                                          status: Move::MOVE_STATUS_PROPOSED)
+
+        expect(new_move.errors[:date]).to be_empty
+      end
+    end
   end
 
   context 'without automatic reference generation' do
