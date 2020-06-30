@@ -97,5 +97,27 @@ RSpec.describe Frameworks::Question do
       questions = described_class.new(filepath: filepath, questions: {}).call
       expect(questions['medical-details-information']).to be_a(FrameworkQuestion)
     end
+
+    it 'sets flags on question answers' do
+      filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
+      question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
+      questions = { 'medical-professional-referral' => question }
+      described_class.new(filepath: filepath, questions: questions).call
+
+      expect(question.flags.size).to eq(2)
+    end
+
+    it 'sets attributes on flag as well as question answer to conditionally surface the flag' do
+      filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
+      question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
+      questions = { 'medical-professional-referral' => question }
+      described_class.new(filepath: filepath, questions: questions).call
+
+      expect(question.flags.first).to have_attributes(
+        flag_type: 'alert',
+        name: 'Physical Health',
+        question_value: 'Yes',
+      )
+    end
   end
 end
