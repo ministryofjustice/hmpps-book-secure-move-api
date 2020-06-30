@@ -4,6 +4,7 @@ class Move < VersionedModel
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
+  MOVE_STATUS_IN_TRANSIT = 'in_transit'
   MOVE_STATUS_COMPLETED = 'completed'
   MOVE_STATUS_CANCELLED = 'cancelled'
 
@@ -17,6 +18,7 @@ class Move < VersionedModel
     proposed: MOVE_STATUS_PROPOSED,
     requested: MOVE_STATUS_REQUESTED,
     booked: MOVE_STATUS_BOOKED,
+    in_transit: MOVE_STATUS_IN_TRANSIT,
     completed: MOVE_STATUS_COMPLETED,
     cancelled: MOVE_STATUS_CANCELLED,
   }
