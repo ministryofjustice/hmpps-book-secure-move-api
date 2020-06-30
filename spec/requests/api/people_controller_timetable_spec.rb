@@ -153,7 +153,7 @@ RSpec.describe Api::PeopleController do
       let(:nomis_activities) { [] }
       let(:nomis_court_hearings) { [] }
 
-      let(:params) { { } }
+      let(:params) { {} }
 
       it 'returns an error' do
         get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params

@@ -12,6 +12,7 @@ RSpec.describe Api::PeopleController do
 
   context 'when person ID is NOT valid' do
     let(:id) { 'non-existent-id' }
+
     it 'not found 404' do
       get_image
 
