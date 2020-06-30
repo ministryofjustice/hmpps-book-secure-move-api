@@ -38,7 +38,7 @@ RSpec.describe Frameworks::Question do
       expect(question.options).to be_empty
     end
 
-    it 'allows folllowup comments to be set on a question' do
+    it 'allows followup comments to be set on a question' do
       filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
@@ -46,7 +46,7 @@ RSpec.describe Frameworks::Question do
       expect(question.followup_comment).to be_truthy
     end
 
-    it 'allows folllowup comments to be required on an option' do
+    it 'allows followup comments to be required on an option' do
       filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call

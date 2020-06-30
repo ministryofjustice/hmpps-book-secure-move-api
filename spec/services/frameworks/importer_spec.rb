@@ -8,13 +8,13 @@ RSpec.describe Frameworks::Importer do
 
     context 'when creating frameworks' do
       it 'persists multiple frameworks' do
-        described_class.new(filepath: filepath, version: 0.1).call
+        described_class.new(filepath: filepath, version: '0.1').call
 
         expect(Framework.count).to eq(2)
       end
 
       it 'persists the version of the framework' do
-        described_class.new(filepath: filepath, version: 0.1).call
+        described_class.new(filepath: filepath, version: '0.1').call
 
         expect(Framework.find_by(name: 'person-escort-record-1')).to have_attributes(
           version: '0.1',
@@ -22,12 +22,19 @@ RSpec.describe Frameworks::Importer do
       end
 
       it 'does not persist framework if no version provided' do
-        expect { described_class.new(filepath: filepath, version: nil).call }.not_to change { Framework }
+        expect { described_class.new(filepath: filepath, version: nil).call }.not_to change(Framework, :count).from(0)
       end
 
       it 'does not persist framework if no base filename provided' do
-        described_class.new(filepath: nil, version: 0.1).call
-        expect { described_class.new(filepath: nil, version: 0.1).call }.not_to change { Framework }
+        described_class.new(filepath: nil, version: '0.1').call
+        expect { described_class.new(filepath: nil, version: '0.1').call }.not_to change(Framework, :count).from(0)
+      end
+
+      it 'does not persist any framework records if they are invalid' do
+        filepath = Rails.root.join('spec/fixtures/files/invalid-framework/')
+        described_class.new(filepath: filepath, version: '0.1').call
+      rescue ActiveRecord::RecordInvalid
+        expect(Framework.count).to be_zero
       end
     end
 
