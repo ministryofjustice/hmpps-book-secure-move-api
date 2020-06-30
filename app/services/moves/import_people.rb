@@ -32,11 +32,13 @@ module Moves
 
         PersonalCareNeeds::Importer.new(profile: profile, personal_care_needs: personal_care_needs.fetch(offender_no, [])).call
 
-        if profile.changed?
-          changed_profile_count += 1
-          profile.save!
-        end
+        next unless profile.changed? || profile.person.changed?
+
+        changed_profile_count += 1
+        profile.person.save!
+        profile.save!
       end
+
       if new_person_count.positive? || changed_profile_count.positive?
         Rails.logger.info("[Moves::Importer] people new[#{new_person_count}] updated[#{changed_profile_count}]")
       end

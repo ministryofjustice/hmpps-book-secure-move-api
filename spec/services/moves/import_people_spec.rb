@@ -6,30 +6,25 @@ RSpec.describe Moves::ImportPeople do
   subject(:importer) { described_class.new(input_data) }
 
   let(:input_data) do
-    [prisoner_one.nomis_prison_number]
+    [nomis_prison_number_one]
   end
 
-  let!(:brixton_prison) { create(:location, nomis_agency_id: 'BXI', location_type: 'prison') }
-  let!(:wood_green_court) { create(:location, nomis_agency_id: 'WDGRCC', location_type: 'court') }
-  let!(:prisoner_one) { create(:person, :nomis_synced) }
-  let!(:prisoner_two) { create(:person, :nomis_synced) }
-  let!(:profile_one) { create(:profile, person: prisoner_one) }
-  let!(:profile_two) { create(:profile, person: prisoner_two) }
+  let(:nomis_prison_number_one) { 'G3239GV' }
+  let(:nomis_prison_number_two) { 'G7157AB' }
 
   let(:alerts_response) do
-    [{ offender_no: prisoner_one.nomis_prison_number, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: prisoner_two.nomis_prison_number, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
-     { offender_no: prisoner_two.nomis_prison_number, alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
+    [{ offender_no: nomis_prison_number_one, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: nomis_prison_number_two, alert_code: 'ACCU9', alert_type: 'MATSTAT' },
+     { offender_no: nomis_prison_number_two, alert_code: 'ACCU4', alert_type: 'MATSTAT' }]
   end
-  let(:offender_numbers_response) { [{ offender_no: 'G3239GV' }, { offender_no: 'G7157AB' }] }
   let(:prison_numbers_response) do
-    [{ prison_number: prisoner_one.nomis_prison_number, first_name: 'Bob' },
-     { prison_number: prisoner_two.nomis_prison_number, first_name: 'Bob' }]
+    [{ prison_number: nomis_prison_number_one, first_name: 'Bob', last_name: 'Beep' },
+     { prison_number: nomis_prison_number_two, first_name: 'Bob', last_name: 'Boop' }]
   end
   let(:personal_care_needs_response) do
-    [{ offender_no: prisoner_one.nomis_prison_number, problem_type: 'FOO', problem_code: 'AA' },
-     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'FOO', problem_code: 'BAC' },
-     { offender_no: prisoner_two.nomis_prison_number, problem_type: 'FOO', problem_code: 'TTG' }]
+    [{ offender_no: nomis_prison_number_one, problem_type: 'FOO', problem_code: 'AA' },
+     { offender_no: nomis_prison_number_two, problem_type: 'FOO', problem_code: 'BAC' },
+     { offender_no: nomis_prison_number_two, problem_type: 'FOO', problem_code: 'TTG' }]
   end
 
   before do
@@ -42,12 +37,54 @@ RSpec.describe Moves::ImportPeople do
   end
 
   context 'with one existing record' do
+    let!(:prisoner_one) { create(:person, nomis_prison_number: nomis_prison_number_one, prison_number: nomis_prison_number_one) }
+    let!(:prisoner_two) { create(:person, nomis_prison_number: nomis_prison_number_two, prison_number: nomis_prison_number_two) }
+
     it 'keeps people the same' do
       expect { importer.call }.not_to change(Person, :count)
     end
 
     it 'keeps profiles the same' do
       expect { importer.call }.not_to change(Profile, :count)
+    end
+  end
+
+  context 'with no existing records' do
+    it 'creates new `Person` records' do
+      expect { importer.call }.to change(Person, :count).by(2)
+    end
+
+    it 'creates new `Profile` records' do
+      expect { importer.call }.to change(Profile, :count).by(2)
+    end
+
+    it 'populates assessment answers' do
+      importer.call
+
+      assessment_answers = Person.last.profiles.first.assessment_answers
+
+      expect(assessment_answers.count).to eq(2)
+    end
+
+    context 'with no alerts or personal care needs' do
+      let(:alerts_response) { [] }
+      let(:personal_care_needs_response) { [] }
+
+      it 'creates new `Person` records' do
+        expect { importer.call }.to change(Person, :count).by(2)
+      end
+
+      it 'creates new `Profile` records' do
+        expect { importer.call }.to change(Profile, :count).by(2)
+      end
+
+      it 'does not populate assessment answers' do
+        importer.call
+
+        assessment_answers = Person.last.profiles.first.assessment_answers
+
+        expect(assessment_answers).to be_empty
+      end
     end
   end
 end
