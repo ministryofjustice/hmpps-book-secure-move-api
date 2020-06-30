@@ -8,7 +8,7 @@ RSpec.describe Api::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('patch_move_responses.yaml', version: 'v2') }
-  let(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:supplier) { create(:supplier) }
 
   let(:resource_to_json) do

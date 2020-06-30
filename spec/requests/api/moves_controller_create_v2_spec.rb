@@ -8,8 +8,7 @@ RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_moves_responses.yaml', version: 'v2') }
   let(:supplier) { create(:supplier) }
-  let(:application) { create(:application, owner_id: supplier.id) }
-  let(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   let(:resource_to_json) do
@@ -62,10 +61,15 @@ RSpec.describe Api::MovesController do
       expect { do_post } .to change(Move, :count).by(1)
     end
 
-    it 'audits the supplier' do
-      do_post
+    context 'with a real access token' do
+      let(:application) { create(:application, owner_id: supplier.id) }
+      let(:access_token) { create(:access_token, application: application).token }
 
-      expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      it 'audits the supplier' do
+        do_post
+
+        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      end
     end
 
     it 'associates a reason with the newly created move' do

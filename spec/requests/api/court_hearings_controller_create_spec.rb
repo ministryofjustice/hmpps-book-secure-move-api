@@ -24,9 +24,7 @@ RSpec.describe Api::CourtHearingsController do
       }
     end
 
-    let(:supplier) { create(:supplier) }
-    let(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
+    let(:access_token) { 'spoofed-token' }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 

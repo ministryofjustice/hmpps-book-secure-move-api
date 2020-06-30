@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  let(:supplier) { create(:supplier) }
-  let!(:application) { create(:application, owner_id: supplier.id) }
-  let(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: '1150262') }
   let(:nomis_court_hearings_struct) do
     OpenStruct.new(

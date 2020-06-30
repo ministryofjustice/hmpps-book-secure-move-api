@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::AllocationsController do
-  let(:supplier) { create(:supplier) }
-  let!(:application) { create(:application, owner_id: supplier.id) }
-  let!(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }

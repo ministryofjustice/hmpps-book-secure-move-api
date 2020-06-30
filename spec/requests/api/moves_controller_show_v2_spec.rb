@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MovesController do
   let(:supplier) { create(:supplier) }
-  let(:application) { create(:application, owner_id: supplier.id) }
-  let(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:schema) { load_yaml_schema('get_move_responses.yaml', version: 'v2') }

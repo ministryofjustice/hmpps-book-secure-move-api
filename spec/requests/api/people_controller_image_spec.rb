@@ -3,21 +3,23 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  let(:token) { create(:access_token) }
+  subject(:get_image) { get "/api/v1/people/#{id}/images", headers: headers }
+
+  let(:id) { person.id }
+  let(:access_token) { 'spoofed-token' }
+  let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+  let(:content_type) { ApiController::CONTENT_TYPE }
 
   context 'when person ID is NOT valid' do
+    let(:id) { 'non-existent-id' }
     it 'not found 404' do
-      id = 'non-existent-id'
-
-      get "/api/v1/people/#{id}/images", params: { access_token: token.token }
+      get_image
 
       expect(response).to have_http_status(:not_found)
     end
   end
 
   context 'when person ID is valid' do
-    subject(:get_image) { get "/api/v1/people/#{person.id}/images", params: { access_token: token.token } }
-
     let!(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
     let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
 
@@ -53,7 +55,7 @@ RSpec.describe Api::PeopleController do
       it 'return not found 404' do
         allow(NomisClient::Image).to receive(:get).and_return(nil)
 
-        get "/api/v1/people/#{person.id}/images", params: { access_token: token.token }
+        get_image
 
         expect(response).to have_http_status(:not_found)
       end

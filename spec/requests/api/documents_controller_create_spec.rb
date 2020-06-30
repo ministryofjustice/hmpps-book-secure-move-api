@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::DocumentsController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:content_type) { 'multipart/form-data' }
 
   let(:headers) do

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  let!(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }

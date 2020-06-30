@@ -37,8 +37,7 @@ RSpec.describe Api::MovesController do
       }
     end
     let(:supplier) { create(:supplier) }
-    let!(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
+    let(:access_token) { 'spoofed-token' }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -80,8 +79,13 @@ RSpec.describe Api::MovesController do
           .to change(Move, :count).by(1)
       end
 
-      it 'audits the supplier' do
-        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      context 'with a real access token' do
+        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:access_token) { create(:access_token, application: application).token }
+
+        it 'audits the supplier' do
+          expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+        end
       end
 
       it 'associates the documents with the newly created move' do

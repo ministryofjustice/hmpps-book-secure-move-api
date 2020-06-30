@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::LocationsController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:schema) { load_yaml_schema('get_locations_responses.yaml') }

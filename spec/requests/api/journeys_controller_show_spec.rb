@@ -65,6 +65,8 @@ RSpec.describe Api::JourneysController do
       end
 
       context "when attempting to access another supplier's journey" do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application: application).token }
         let(:journey) { create(:journey, move: move) } # another journey for a different supplier, same move
         let(:detail_401) { 'Not authorized' }
 
