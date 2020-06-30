@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
+  include ActiveStorage::SetCurrent # Sets host for service_url
+
   DEFAULT_API_VERSION = '1'
 
   before_action :doorkeeper_authorize!, if: :authentication_enabled?

@@ -276,6 +276,8 @@ RSpec.describe MoveSerializer do
     let(:adapter_options) { { include: ['profile.documents'] } }
     let(:move) { create(:move, profile: create(:profile, :with_documents)) }
 
+    before { ActiveStorage::Current.host = 'http://www.example.com' } # This is used in the serializer
+
     it 'contains included documents relationships' do
       expect(result[:included].map { |r| r[:type] })
         .to match_array(%w[profiles documents])
