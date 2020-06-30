@@ -1,0 +1,28 @@
+type: radio
+question: Has the detainee been referred to a medical professional?
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+    flags:
+      -
+        type: alert
+        label: Physical Health
+      -
+        type: information
+        label: Medication
+    followup_comment:
+      label: Please give details
+      validations:
+      -
+        type: 'required'
+        message: You must add more information
+  -
+    label: 'No'
+    value: 'No'
+    followup_comment:
+      label: Please give details
+validations:
+  -
+    type: 'required'
+    message: You must select an option
