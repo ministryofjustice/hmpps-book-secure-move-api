@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'with supplier with access token' do
+RSpec.shared_context 'with supplier with spoofed access token' do
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
   # NB: In real environments (i.e. not in request specs) some rack/rails magic will automatically convert the header
