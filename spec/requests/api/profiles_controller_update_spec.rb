@@ -233,17 +233,6 @@ RSpec.describe Api::ProfilesController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
-      let(:access_token) { 'foo-bar' }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
-      end
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'when the profile_id is not found' do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
@@ -259,14 +248,6 @@ RSpec.describe Api::ProfilesController do
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

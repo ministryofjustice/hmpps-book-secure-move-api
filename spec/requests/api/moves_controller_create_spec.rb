@@ -47,28 +47,6 @@ RSpec.describe Api::MovesController do
       post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
     end
 
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before do
-        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-      end
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before do
-        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-      end
-
-      it_behaves_like 'an endpoint that responds with error 415'
-    end
-
     context 'when successful' do
       let(:move) { Move.find_by(from_location_id: from_location.id) }
 

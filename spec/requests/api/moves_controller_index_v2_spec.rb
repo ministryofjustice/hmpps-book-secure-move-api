@@ -203,23 +203,6 @@ RSpec.describe Api::MovesController do
     end
   end
 
-  context 'when not authorized' do
-    let(:headers) { {} }
-    let(:detail_401) { 'Token expired or invalid' }
-
-    before { do_get }
-
-    it_behaves_like 'an endpoint that responds with error 401'
-  end
-
-  context 'with an invalid CONTENT_TYPE header' do
-    let(:content_type) { 'application/xml' }
-
-    before { do_get }
-
-    it_behaves_like 'an endpoint that responds with error 415'
-  end
-
   def do_get
     get '/api/moves', params: params, headers: headers
   end

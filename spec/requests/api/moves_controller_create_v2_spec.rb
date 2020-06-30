@@ -323,23 +323,6 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { {} }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401' do
-        before { do_post }
-      end
-    end
-
-    context 'when the CONTENT_TYPE header is invalid' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415' do
-        before { do_post }
-      end
-    end
-
     context 'when the params are not valid' do
       let(:data) { nil }
 

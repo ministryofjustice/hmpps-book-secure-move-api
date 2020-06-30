@@ -37,29 +37,6 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
       end
     end
 
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before do
-        get '/api/v1/reference/assessment_questions', params: params, headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-      let(:content_type) { 'application/xml' }
-
-      before do
-        get '/api/v1/reference/assessment_questions', params: params, headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with error 415'
-    end
-
     describe 'filtering' do
       let(:category_filter) { :health }
       let(:params) { { filter: { category: category_filter } } }

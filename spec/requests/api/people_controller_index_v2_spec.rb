@@ -199,22 +199,5 @@ RSpec.describe Api::PeopleController do
         end
       end
     end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before { get '/api/people', headers: headers }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { get '/api/people', headers: headers }
-
-      it_behaves_like 'an endpoint that responds with error 415'
-    end
   end
 end

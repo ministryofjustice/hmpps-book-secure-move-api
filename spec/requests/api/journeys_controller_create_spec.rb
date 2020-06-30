@@ -113,13 +113,6 @@ RSpec.describe Api::JourneysController do
         end
       end
 
-      context 'when not authorized' do
-        let(:access_token) { 'foo-bar' }
-        let(:detail_401) { 'Token expired or invalid' }
-
-        it_behaves_like 'an endpoint that responds with error 401'
-      end
-
       context 'when the move_id is not found' do
         let(:move_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
@@ -136,12 +129,6 @@ RSpec.describe Api::JourneysController do
                'detail' => 'Validation failed: Location reference was not found id=foo-bar' }]
           end
         end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it_behaves_like 'an endpoint that responds with error 415'
       end
     end
   end

@@ -79,20 +79,6 @@ RSpec.describe Api::AllocationsController do
       post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
     end
 
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
-    end
-
     context 'when successful' do
       let(:allocation) { Allocation.find_by(from_location_id: from_location.id) }
 
