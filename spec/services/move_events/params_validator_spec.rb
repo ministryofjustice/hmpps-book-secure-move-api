@@ -8,7 +8,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   let(:attributes) { { timestamp: timestamp } }
   let(:params) { { type: type, attributes: attributes } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
-  let(:type) { 'redirects' }
+  let(:type) { 'accepts' }
 
   context 'when valid' do
     it { is_expected.to be_valid }
@@ -151,6 +151,64 @@ RSpec.describe MoveEvents::ParamsValidator do
 
     context 'when missing' do
       before { params[:attributes].delete(:timestamp) }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'from_location' do
+    let(:params) { { type: type, attributes: attributes, relationships: relationships } }
+    let(:relationships) { { from_location: { data: { type: 'locations', id: location_id } } } }
+    let(:type) { 'lockouts' }
+    let(:location_id) { create(:location).id }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid' do
+      let(:location_id) { 'foo-bar' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:location_id) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { relationships.delete(:from_location) }
+
+      it { is_expected.not_to be_valid }
+    end
+  end
+
+  describe 'to_location' do
+    let(:params) { { type: type, attributes: attributes, relationships: relationships } }
+    let(:relationships) { { to_location: { data: { type: 'locations', id: location_id } } } }
+    let(:type) { 'redirects' }
+    let(:location_id) { create(:location).id }
+
+    context 'when valid' do
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid' do
+      let(:location_id) { 'foo-bar' }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when nil' do
+      let(:location_id) { nil }
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when missing' do
+      before { relationships.delete(:to_location) }
 
       it { is_expected.not_to be_valid }
     end
