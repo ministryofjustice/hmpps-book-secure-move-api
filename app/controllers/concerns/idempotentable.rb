@@ -2,8 +2,6 @@ module Idempotentable
   extend ActiveSupport::Concern
 
   included do
-    before_action :validate_idempotency_key
-    around_action :idempotent_action
     rescue_from Idempotency::ConflictError, with: :render_conflict_error
   end
 
