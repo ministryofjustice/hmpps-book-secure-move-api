@@ -135,7 +135,7 @@ class Move < VersionedModel
   end
 
   def person_id
-    attributes['person_id'] || person&.id
+    person&.id
   end
 
 private
