@@ -151,7 +151,6 @@ GEM
     govuk_notify_rails (2.1.2)
       notifications-ruby-client (~> 5.1)
       rails (>= 4.1.0)
-    hiredis (0.6.3)
     http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -418,7 +417,6 @@ DEPENDENCIES
   finite_machine
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
-  hiredis (~> 0.6.3)
   json-schema
   kaminari
   listen

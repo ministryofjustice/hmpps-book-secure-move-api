@@ -26,7 +26,6 @@ gem 'elastic-apm'
 gem 'faraday'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
-gem 'hiredis', '~> 0.6.3'
 # static page serving for extra API documentation
 gem 'json-schema'
 gem 'kaminari'
