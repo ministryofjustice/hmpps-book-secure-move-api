@@ -282,6 +282,7 @@
                 - proposed
                 - requested
                 - booked
+                - in_transit
                 - cancelled
                 - completed
         - name: filter[move_type]

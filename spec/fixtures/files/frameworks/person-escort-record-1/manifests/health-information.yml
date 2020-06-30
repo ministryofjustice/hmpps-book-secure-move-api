@@ -1,0 +1,36 @@
+name: Health
+steps:
+  -
+    name: Medical care
+    slug: medical-care
+    questions:
+      - sensitive-medication
+      - regular-medication
+      - medical-professional-referral
+    next_step:
+      -
+        question: sensitive-medication
+        value: 'Yes'
+        next_step: print-sensitive-medical-details
+      -
+        question: regular-medication
+        value: 'Yes'
+        next_step: medical-details
+      - confirmation-page
+  -
+    name: Print sensitive medical details
+    slug: print-sensitive-medical-details
+    next_step:
+      -
+        question: regular-medication
+        value: 'Yes'
+        next_step: medical-details
+      - confirmation-page
+  -
+    name: Medical details
+    slug: medical-details
+    questions:
+      - medical-details-information
+  -
+    name: Confirmation
+    slug: confirmation-page

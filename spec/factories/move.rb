@@ -44,6 +44,9 @@ FactoryBot.define do
     trait :booked do
       status { 'booked' }
     end
+    trait :in_transit do
+      status { 'in_transit' }
+    end
     trait :cancelled do
       status { 'cancelled' }
       cancellation_reason { 'other' }
