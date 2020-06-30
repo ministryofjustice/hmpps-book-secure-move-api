@@ -4,6 +4,13 @@ options:
   -
     label: 'Yes'
     value: 'Yes'
+    flags:
+      -
+        type: alert
+        label: Physical Health
+      -
+        type: information
+        label: Medication
     followup_comment:
       label: Please give details
       validations:

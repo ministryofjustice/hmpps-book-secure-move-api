@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_052847) do
+ActiveRecord::Schema.define(version: 2020_06_30_071352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -119,6 +119,16 @@ ActiveRecord::Schema.define(version: 2020_06_24_052847) do
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
+  end
+
+  create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_question_id", null: false
+    t.string "flag_type", null: false
+    t.string "name", null: false
+    t.string "question_value", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_question_id"], name: "index_flags_on_framework_question_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -435,6 +445,7 @@ ActiveRecord::Schema.define(version: 2020_06_24_052847) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
+  add_foreign_key "flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
