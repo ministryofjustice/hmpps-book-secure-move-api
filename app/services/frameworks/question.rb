@@ -38,6 +38,8 @@ module Frameworks
           followup_comment: option['followup_comment'],
           value: option['value'],
         )
+
+        build_flags(flags: option.fetch('flags', []), value: option['value'])
       end
     end
 
@@ -54,6 +56,16 @@ module Frameworks
         questions[followup].section = question.section
         questions[followup].dependent_value = value
         questions[followup].parent = question
+      end
+    end
+
+    def build_flags(flags:, value:)
+      flags.each do |flag|
+        question.flags.new(
+          flag_type: flag['type'],
+          name: flag['label'],
+          question_value: value,
+        )
       end
     end
 

@@ -86,5 +86,17 @@ RSpec.describe Frameworks::Importer do
         expect(question.dependents).to contain_exactly(FrameworkQuestion.find_by(key: 'medical-details-information'))
       end
     end
+
+    context 'when creating framework questions flags' do
+      it 'persists flags relative to a framework question' do
+        described_class.new(filepath: filepath, version: '0.1').call
+        framework_question = FrameworkQuestion.find_by(key: 'medical-professional-referral')
+
+        expect(framework_question.flags.pluck(:name)).to contain_exactly(
+          'Physical Health',
+          'Medication',
+        )
+      end
+    end
   end
 end
