@@ -26,6 +26,19 @@ Allocation:
           type: integer
           example: 5
           description: The number of prisoners to move in this allocation. This must be set when creating an allocation. When retrieving an allocation this will reflect the number of associated non-cancelled moves (i.e. cancelled moves are excluded from this count).
+        estate:
+          oneOf:
+          - type: string
+            enum:
+            - adult_female
+            - adult_male
+            - juvenile_female
+            - juvenile_male
+            - young_offender_female
+            - young_offender_male
+          - type: 'null'
+          example: adult_male
+          description: Indicates the prison estate type
         prisoner_category:
           oneOf:
           - type: string
@@ -44,23 +57,16 @@ Allocation:
             enum:
             - short
             - long
+            - other
           - type: 'null'
           example: short
           description: Indicates the sentence length - short is 16 months or less,
             long is over 16 months
-        estate:
+        sentence_length_comment:
           oneOf:
-          - type: string
-            enum:
-            - adult_female
-            - adult_male
-            - juvenile_female
-            - juvenile_male
-            - young_offender_female
-            - young_offender_male
-          - type: 'null'
-          example: adult_male
-          description: Indicates the prison estate type
+            - type: string
+            - type: 'null'
+          description: Optional description of sentence length (if 'other')
         complex_cases:
           oneOf:
           - type: array

@@ -45,9 +45,10 @@ RSpec.describe Api::AllocationsController do
       {
         date: Date.today,
         moves_count: moves_count,
-        prisoner_category: :b,
-        sentence_length: :short,
         estate: :adult_male,
+        prisoner_category: :b,
+        sentence_length: :other,
+        sentence_length_comment: '30 years',
         other_criteria: 'curly hair',
         requested_by: 'Iama Requestor',
         complete_in_full: true,

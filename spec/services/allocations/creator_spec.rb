@@ -43,9 +43,10 @@ RSpec.describe Allocations::Creator do
       attributes: {
         date: date,
         moves_count: moves_count,
-        prisoner_category: :b,
-        sentence_length: :short,
         estate: :adult_female,
+        prisoner_category: :b,
+        sentence_length: :other,
+        sentence_length_comment: '30 years',
         other_criteria: 'curly hair',
         requested_by: requested_by,
         complete_in_full: true,
@@ -71,7 +72,8 @@ RSpec.describe Allocations::Creator do
         date: date,
         moves_count: 2,
         prisoner_category: 'b',
-        sentence_length: 'short',
+        sentence_length: 'other',
+        sentence_length_comment: '30 years',
         estate: 'adult_female',
         other_criteria: 'curly hair',
         requested_by: 'Iama Requestor',
@@ -92,6 +94,7 @@ RSpec.describe Allocations::Creator do
         to_location: to_location,
         from_location: from_location,
         status: 'requested',
+        move_type: 'prison_transfer',
       )
     end
 

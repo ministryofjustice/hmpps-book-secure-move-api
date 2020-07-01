@@ -18,6 +18,7 @@ class Allocation < VersionedModel
   enum sentence_length: {
     short: '16_or_less',
     long: 'more_than_16',
+    other: 'other',
   }
 
   enum estate: {

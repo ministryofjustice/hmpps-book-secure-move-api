@@ -34,7 +34,7 @@ module Api
 
     PERMITTED_ALLOCATION_PARAMS = [
       :type,
-      attributes: %i[date prisoner_category sentence_length estate moves_count complete_in_full other_criteria requested_by],
+      attributes: %i[date estate prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
       relationships: {},
     ].freeze
 

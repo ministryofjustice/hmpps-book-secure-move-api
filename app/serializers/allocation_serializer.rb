@@ -3,9 +3,10 @@
 class AllocationSerializer < ActiveModel::Serializer
   attributes :moves_count,
              :date,
+             :estate,
              :prisoner_category,
              :sentence_length,
-             :estate,
+             :sentence_length_comment,
              :complex_cases,
              :complete_in_full,
              :requested_by,
