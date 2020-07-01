@@ -384,6 +384,57 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_court_hearing_responses.yaml#/422"
+  "/documents":
+    post:
+      summary: Creates a new document
+      tags:
+        - Documents
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The document object to be created
+          schema:
+            "$ref": "../v1/document.yaml#/Document"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/422"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -1192,59 +1243,6 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/422"
-  "/moves/{move_id}/documents":
-    post:
-      summary: Creates a new document
-      tags:
-        - Documents
-      consumes:
-        - application/vnd.api+json
-      parameters:
-        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
-        - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
-        - name: body
-          in: body
-          required: true
-          description: The document object to be created
-          schema:
-            "$ref": "../v1/document.yaml#/Document"
-      responses:
-        "201":
-          description: created
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/201"
-        "400":
-          description: bad request
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/400"
-        "401":
-          description: unauthorized
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/401"
-        "404":
-          description: resource not found
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/404"
-        "415":
-          description: invalid media type
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/415"
-        "422":
-          description: unprocessable entity
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/422"
   "/moves/{move_id}/journeys":
     get:
       summary: Gets a list of journeys
