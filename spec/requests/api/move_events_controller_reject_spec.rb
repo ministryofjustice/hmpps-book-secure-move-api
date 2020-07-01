@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/reject' do
-    include_context 'with supplier with access token'
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }

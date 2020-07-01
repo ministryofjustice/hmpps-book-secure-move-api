@@ -12,7 +12,7 @@ module Mock
 end
 
 RSpec.describe Mock::AuthenticationController, type: :request do
-  include_context 'with supplier with access token'
+  include_context 'with supplier with spoofed access token'
 
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('error_responses.yaml') }
