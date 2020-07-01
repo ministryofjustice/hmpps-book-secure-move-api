@@ -2219,6 +2219,53 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/put_people_responses.yaml#/422"
+  "/people/{person_id}/court_cases":
+    get:
+      summary: Returns a list of NOMIS court cases for a person
+      tags:
+        - PersonCourtCases
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/person_id_parameter.yaml#/PersonId"
+        - name: filter[active]
+          in: query
+          description:
+            Filters results to only include active court cases
+          schema:
+            type: boolean
+          example: true
+        - name: include
+          description: Returns a specific list of related resources to the court case
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - location
+          example: location
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/415"
   "/people/{person_id}/profiles":
     post:
       summary: Creates a new profile
@@ -2354,6 +2401,64 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/patch_profiles_responses.yaml#/422"
+  "/people/{person_id}/timetable":
+    get:
+      summary: Returns a list of NOMIS activities and court hearings for a person
+      tags:
+        - PersonTimetables
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/person_id_parameter.yaml#/PersonId"
+        - name: filter[date_from]
+          in: query
+          description:
+            Filters results to only include activities and court hearings on and after the
+            given date, e.g. `2019-05-02`
+          schema:
+            type: string
+          format: date
+          example: "2019-05-09"
+        - name: filter[date_to]
+          in: query
+          description:
+            Filters results to only include activities and court hearings up to and including
+            the given date, e.g. `2021-05-09`
+          schema:
+            type: string
+          format: date
+          example: "2021-05-09"
+        - name: include
+          description: Returns a specific list of related resources to the timetable entries
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - location
+          example: location
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/415"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases

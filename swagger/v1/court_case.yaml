@@ -31,7 +31,7 @@ CourtCase:
         nomis_case_status:
           type: string
           example: ACTIVE
-          description: The state of the nomis court case
+          description: The state of the NOMIS court case
         case_start_date:
           type: string
           example: '2020-01-01'
@@ -39,18 +39,15 @@ CourtCase:
         case_type:
           type: string
           example: Adult
-          description: The type of the nomis court case
+          description: The type of the NOMIS court case
         case_number:
           type: string
           example: T20167984
           description: The case number that uniquely identifies the court case. This
-            is a number that is part of the court system not nomis specific.
+            is a number that is part of the court system not NOMIS specific.
     relationships:
       type: object
-      attributes:
+      properties:
         location:
-          type: object
-          attributes:
-            data:
-              type: object
-              nullable: true
+          $ref: location_reference.yaml#/LocationReference
+          description: The location that the court case will occur
