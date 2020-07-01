@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::JourneysController do
   describe 'GET /moves/:move_id/journeys/:journey_id' do
-    include_context 'with supplier with access token'
+    include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:locations) { create_list(:location, 2, suppliers: [supplier]) }
@@ -57,14 +57,9 @@ RSpec.describe Api::JourneysController do
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
 
-      context 'when not authorized' do
-        let(:access_token) { 'foo-bar' }
-        let(:detail_401) { 'Token expired or invalid' }
-
-        it_behaves_like 'an endpoint that responds with error 401'
-      end
-
       context "when attempting to access another supplier's journey" do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application: application).token }
         let(:journey) { create(:journey, move: move) } # another journey for a different supplier, same move
         let(:detail_401) { 'Not authorized' }
 
@@ -76,12 +71,6 @@ RSpec.describe Api::JourneysController do
         let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id}" }
 
         it_behaves_like 'an endpoint that responds with error 404'
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it_behaves_like 'an endpoint that responds with error 415'
       end
     end
   end

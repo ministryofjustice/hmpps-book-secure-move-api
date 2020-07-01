@@ -31,12 +31,11 @@ class PrepareMoveNotificationsJob < ApplicationJob
 private
 
   def build_notification_id(subscription, type_id, topic, action_name)
-    { notification_id:
-          subscription.notifications.create!(
-            notification_type_id: type_id,
-            topic: topic,
-            event_type: event_type(action_name),
-          ).id }
+    subscription.notifications.create!(
+      notification_type_id: type_id,
+      topic: topic,
+      event_type: event_type(action_name),
+    ).id
   end
 
   def should_email?(move)

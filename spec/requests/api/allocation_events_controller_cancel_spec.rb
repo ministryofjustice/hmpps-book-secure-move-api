@@ -8,9 +8,7 @@ RSpec.describe Api::AllocationEventsController do
   describe 'POST /allocations/:id/cancel' do
     let(:schema) { load_yaml_schema('post_allocation_cancel_responses.yaml') }
 
-    let(:supplier) { create(:supplier) }
-    let(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
+    let(:access_token) { 'spoofed-token' }
     let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -81,24 +79,11 @@ RSpec.describe Api::AllocationEventsController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
-      let(:access_token) { 'foo-bar' }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'with a missing id' do
       let(:allocation_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Allocation with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'with validation errors' do

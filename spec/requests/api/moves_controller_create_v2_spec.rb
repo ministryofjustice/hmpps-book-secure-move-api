@@ -8,8 +8,7 @@ RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_moves_responses.yaml', version: 'v2') }
   let(:supplier) { create(:supplier) }
-  let(:application) { create(:application, owner_id: supplier.id) }
-  let(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   let(:resource_to_json) do
@@ -62,10 +61,15 @@ RSpec.describe Api::MovesController do
       expect { do_post } .to change(Move, :count).by(1)
     end
 
-    it 'audits the supplier' do
-      do_post
+    context 'with a real access token' do
+      let(:application) { create(:application, owner_id: supplier.id) }
+      let(:access_token) { create(:access_token, application: application).token }
 
-      expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      it 'audits the supplier' do
+        do_post
+
+        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      end
     end
 
     it 'associates a reason with the newly created move' do
@@ -316,23 +320,6 @@ RSpec.describe Api::MovesController do
         expected_response = { 'type' => 'profiles', 'id' => profile.id }
 
         expect(response_json.dig('data', 'relationships', 'profile', 'data')).to eq(expected_response)
-      end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { {} }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401' do
-        before { do_post }
-      end
-    end
-
-    context 'when the CONTENT_TYPE header is invalid' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415' do
-        before { do_post }
       end
     end
 

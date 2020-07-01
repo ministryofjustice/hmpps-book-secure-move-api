@@ -8,7 +8,7 @@ RSpec.describe Api::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('patch_move_responses.yaml', version: 'v2') }
-  let(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:supplier) { create(:supplier) }
 
   let(:resource_to_json) do
@@ -457,23 +457,6 @@ RSpec.describe Api::MovesController do
       let(:detail_404) { "Couldn't find Move with 'id'=foo" }
 
       it_behaves_like 'an endpoint that responds with error 404' do
-        before { do_patch }
-      end
-    end
-
-    context 'when the CONTENT_TYPE header is invalid' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415' do
-        before { do_patch }
-      end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:detail_401) { 'Token expired or invalid' }
-      let(:headers) { {} }
-
-      it_behaves_like 'an endpoint that responds with error 401' do
         before { do_patch }
       end
     end

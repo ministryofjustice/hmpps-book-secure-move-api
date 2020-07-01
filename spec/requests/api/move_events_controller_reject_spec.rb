@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/reject' do
-    include_context 'with supplier with access token'
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
@@ -68,24 +68,11 @@ RSpec.describe Api::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'when not authorized' do
-      let(:access_token) { 'foo-bar' }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'with a missing move_id' do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'with validation errors' do

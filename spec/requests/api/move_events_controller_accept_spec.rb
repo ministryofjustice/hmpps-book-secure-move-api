@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/accept' do
-    include_context 'with supplier with access token'
+    include_context 'with supplier with spoofed access token'
 
     let(:from_location) { create(:location, suppliers: [supplier]) }
     let(:move) { create(:move, :requested, from_location: from_location) }

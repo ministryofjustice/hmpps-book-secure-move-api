@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::AssessmentQuestionsController do
   let(:response_json) { JSON.parse(response.body) }
-  let!(:token) { create(:access_token) }
+  let(:access_token) { 'spoofed-token' }
 
   describe 'GET /api/v1/reference/assessment_questions' do
     let(:schema) { load_yaml_schema('get_assessment_questions_responses.yaml') }
@@ -26,7 +26,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => "Bearer #{token.token}" }
+      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => "Bearer #{access_token}" }
     end
 
     context 'when successful' do
@@ -35,29 +35,6 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
       it 'returns the correct data' do
         expect(response_json).to include_json(data: data)
       end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before do
-        get '/api/v1/reference/assessment_questions', params: params, headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-      let(:content_type) { 'application/xml' }
-
-      before do
-        get '/api/v1/reference/assessment_questions', params: params, headers: headers
-      end
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     describe 'filtering' do

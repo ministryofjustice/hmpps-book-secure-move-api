@@ -50,4 +50,10 @@ Rails.application.configure do
   config.active_job.queue_adapter   = :test
 
   config.cache_store = :memory_store
+
+  require 'active_record/connection_adapters/postgresql_adapter'
+
+  # Disable logs for test suite schema to speed up test suite (with slightly reduced resilience)
+  # See: https://edgeapi.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/PostgreSQLAdapter.html#method-c-create_unlogged_tables
+  ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.create_unlogged_tables = true
 end
