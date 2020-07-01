@@ -2683,7 +2683,6 @@
       summary: Returns a list of regions (location groups)
       tags:
         - Regions
-        - Locations
       consumes:
         - application/vnd.api+json
       parameters:
