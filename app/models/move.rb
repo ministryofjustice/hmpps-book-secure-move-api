@@ -133,12 +133,6 @@ class Move < VersionedModel
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
   end
 
-  def person_id
-    person&.id
-
-    profile.person
-  end
-
 private
 
   def date_to_after_date_from
@@ -175,16 +169,14 @@ private
   end
 
   def validate_move_uniqueness
-    person_id = profile.person_id
-
     existing_moves = Move.joins(:profile)
-                         .where('profiles.person_id = ?', person_id)
-                         .where(
-                           status: status,
-                           from_location_id: from_location_id,
-                           to_location_id: to_location_id,
-                           date: date,
-                         ).count
+      .where('profiles.person_id = ?', profile.person_id)
+      .where(
+        status: status,
+        from_location_id: from_location_id,
+        to_location_id: to_location_id,
+        date: date,
+      ).count
 
     errors.add(:date, :taken) if existing_moves.positive?
   end
