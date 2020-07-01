@@ -27,6 +27,7 @@ class Move < VersionedModel
     court_appearance: 'court_appearance',
     prison_recall: 'prison_recall',
     prison_transfer: 'prison_transfer',
+    police_transfer: 'police_transfer',
   }
 
   CANCELLATION_REASONS = [
@@ -150,22 +151,36 @@ private
   def set_move_type
     return if move_type.present?
 
-    self.move_type =
-      if to_location.nil?
-        'prison_recall'
-      elsif to_location_is_court?
-        'court_appearance'
-      else
-        'prison_transfer'
-      end
+    self.move_type = if is_a_prison_recall?
+                       'prison_recall'
+                     elsif is_a_court_appearance?
+                       'court_appearance'
+                     elsif is_a_police_tranfer?
+                       'police_transfer'
+                     elsif is_a_prison_transfer?
+                       'prison_transfer'
+                     end
   end
 
   def ensure_event_nomis_ids_uniqueness
     nomis_event_ids.uniq!
   end
 
-  def to_location_is_court?
-    to_location&.location_type == 'court'
+  def is_a_police_tranfer?
+    to_location&.location_type == Location::LOCATION_TYPE_POLICE and
+      (from_location&.location_type == Location::LOCATION_TYPE_POLICE)
+  end
+
+  def is_a_prison_recall?
+    to_location.nil?
+  end
+
+  def is_a_court_appearance?
+    to_location&.location_type == Location::LOCATION_TYPE_COURT
+  end
+
+  def is_a_prison_transfer?
+    to_location&.location_type == Location::LOCATION_TYPE_PRISON
   end
 
   def validate_move_uniqueness

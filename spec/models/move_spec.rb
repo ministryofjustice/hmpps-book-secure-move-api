@@ -15,6 +15,8 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
+  # it { is_expected.to validate_inclusion_of(:move_type).in_array(['court_appearance', 'prison_recall', 'prison_transfer']) }
+
   describe 'cancellation_reason' do
     context 'when the move is not cancelled' do
       let(:move) { build(:move, status: 'requested') }
@@ -255,7 +257,7 @@ RSpec.describe Move do
 
     before { move.valid? }
 
-    context 'with no `to_location`' do
+    context 'when to_location is empty' do
       let(:to_location) { nil }
 
       it 'sets the move type to `prison_recall` at validation time' do
@@ -263,7 +265,7 @@ RSpec.describe Move do
       end
     end
 
-    context 'with a court for it\'s `to_location`' do
+    context 'when to_location is a Court' do
       let(:to_location) { build :location, :court }
 
       it 'sets the move type to `court_appearance` at validation time' do
@@ -271,11 +273,20 @@ RSpec.describe Move do
       end
     end
 
-    context 'with a prison for it\'s `to_location`' do
+    context 'when to_location is a Prison' do
       let(:to_location) { build :location }
 
       it 'sets the move type to `prison_transfer` at validation time' do
         expect(move.move_type).to eq 'prison_transfer'
+      end
+    end
+
+    context 'when both to_location and from_location are police locations' do
+      let(:to_location) { build :location, :police }
+      let(:from_location) { build :location, :police }
+
+      it 'set move_type to police_transfer' do
+        expect(move.move_type).to eq 'police_transfer'
       end
     end
   end
