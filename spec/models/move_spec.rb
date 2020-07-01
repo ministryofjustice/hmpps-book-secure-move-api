@@ -118,9 +118,9 @@ RSpec.describe Move do
   end
 
   it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    expect(build(:move, status: :requested, profile: nil)).not_to(
-      validate_uniqueness_of(:date),
-    )
+    create(:move, status: :requested, profile: nil)
+
+    expect(build(:move, status: :requested, profile: nil)).to be_valid
   end
 
   it 'validates presence of `date` if `status` is NOT proposed' do
