@@ -61,11 +61,8 @@ class Move < VersionedModel
   validates :profile, presence: true, unless: -> { requested? || cancelled? }
   validates :reference, presence: true
 
-  # we need to avoid creating/updating a move with the same profile/date/from/to if there is already one in the same state
-  # except that we need to allow multiple cancelled moves
-  validates :date,
-            uniqueness: { scope: %i[status person_id from_location_id to_location_id] },
-            unless: -> { proposed? || cancelled? || profile_id.blank? }
+  validate :validate_move_uniqueness, unless: -> { proposed? || cancelled? || profile_id.nil? }
+
   validates :date, presence: true, unless: -> { proposed? || cancelled? }
   validates :date_from, presence: true, if: :proposed?
   validates :status, inclusion: { in: statuses }
@@ -136,10 +133,6 @@ class Move < VersionedModel
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
   end
 
-  def person_id
-    person&.id
-  end
-
 private
 
   def date_to_after_date_from
@@ -173,5 +166,19 @@ private
 
   def to_location_is_court?
     to_location&.location_type == 'court'
+  end
+
+  def validate_move_uniqueness
+    existing_moves = Move.joins(:profile)
+      .where('profiles.person_id = ?', profile.person_id)
+      .where(
+        status: status,
+        from_location_id: from_location_id,
+        to_location_id: to_location_id,
+        date: date,
+      )
+      .where.not(id: id) # When updating an existing move, don't consider self a duplicate
+
+    errors.add(:date, :taken) if existing_moves.any?
   end
 end
