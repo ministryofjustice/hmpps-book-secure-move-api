@@ -376,6 +376,14 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.index ["prison_number"], name: "index_people_on_prison_number"
   end
 
+  create_table "person_escort_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.string "state", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
+  end
+
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
@@ -466,6 +474,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "person_escort_records", "frameworks"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
 end
