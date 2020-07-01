@@ -176,8 +176,9 @@ private
         from_location_id: from_location_id,
         to_location_id: to_location_id,
         date: date,
-      ).count
+      )
+      .where.not(id: id) # When updating an existing move, don't consider self a duplicate
 
-    errors.add(:date, :taken) if existing_moves.positive?
+    errors.add(:date, :taken) if existing_moves.any?
   end
 end
