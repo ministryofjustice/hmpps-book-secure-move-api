@@ -16,7 +16,6 @@ RSpec.describe Api::PeopleController do
 
   let(:params) do
     {
-      access_token: access_token,
       filter: {
         date_from: date_from.iso8601,
         date_to: date_to.iso8601,

@@ -52,40 +52,11 @@ RSpec.describe Api::MoveEventsController do
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
-    context 'with a missing to_location relationship' do
-      let(:redirect_params) { { data: { type: 'redirects', attributes: { timestamp: '2020-04-23T18:25:43.511Z' } } } }
-
-      it_behaves_like 'an endpoint that responds with error 400' do
-        let(:errors_400) do
-          [{
-            'title' => 'Bad request',
-            'detail' => 'param is missing or the value is empty: relationships',
-          }]
-        end
-      end
-    end
-
     context 'with a missing move_id' do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
-    end
-
-    context 'with a non-existent to_location' do
-      let(:redirect_params) do
-        {
-          data: {
-            type: 'redirects',
-            attributes: { timestamp: '2020-04-23T18:25:43.511Z' },
-            relationships: { to_location: { data: { type: 'locations', id: 'atlantis' } } },
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with error 404' do
-        let(:detail_404) { "Couldn't find Location with 'id'=atlantis" }
-      end
     end
 
     context 'with validation errors' do

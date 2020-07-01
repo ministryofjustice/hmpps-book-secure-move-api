@@ -36,6 +36,8 @@ RSpec.describe Api::JourneysController do
     end
 
     context 'when successful' do
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application: application).token }
       let(:schema) { load_yaml_schema('get_journey_responses.yaml') }
 
       context 'when updating all attributes' do
