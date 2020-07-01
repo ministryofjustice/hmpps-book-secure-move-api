@@ -11,11 +11,23 @@ class Allocation < VersionedModel
     b: 'B',
     c: 'C',
     d: 'D',
+    open: 'Open',
+    closed: 'Closed',
   }
 
   enum sentence_length: {
     short: '16_or_less',
     long: 'more_than_16',
+    other: 'other',
+  }
+
+  enum estate: {
+    adult_female: 'Adult Female',
+    adult_male: 'Adult Male',
+    juvenile_female: 'Juvenile Female',
+    juvenile_male: 'Juvenile Male',
+    young_offender_female: 'Young Offender Female',
+    young_offender_male: 'Young Offender Male',
   }
 
   enum states: {
@@ -44,6 +56,7 @@ class Allocation < VersionedModel
 
   validates :prisoner_category, inclusion: { in: prisoner_categories }, allow_nil: true
   validates :sentence_length, inclusion: { in: sentence_lengths }, allow_nil: true
+  validates :estate, inclusion: { in: estates }, allow_nil: true
 
   validates :moves_count, presence: true, numericality: { only_integer: true, greater_than: 0 }, on: :create
   validates :date, presence: true

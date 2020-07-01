@@ -321,11 +321,15 @@ RSpec.describe Api::MovesController do
           end
         end
 
-        it { expect(notification.delivered_at).not_to be_nil }
-        it { expect(notification.topic).to eql(move) }
-        it { expect(notification.notification_type).to eql(notification_type_webhook) }
-        it { expect(notification.event_type).to eql('update_move') }
-        it { expect(notification.response_id).to be_nil }
+        it 'has correct attributes' do
+          expect(notification).to have_attributes(
+            delivered_at: a_value,
+            topic: move,
+            notification_type: notification_type_webhook,
+            event_type: 'update_move',
+            response_id: nil,
+          )
+        end
       end
 
       context 'when the supplier has an email subscription' do

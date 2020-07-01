@@ -46,4 +46,9 @@ namespace :data_maintenance do
   task fix_move_agreed_for_non_prison_transfers: :environment do
     Move.where(move_agreed: false).where.not(move_type: 'prison_transfer').update_all(move_agreed: nil)
   end
+
+  desc 'fix nil estate for all existing production allocations data'
+  task fix_nil_allocations_estate: :environment do
+    Allocation.where(estate: nil).update_all(estate: :adult_male)
+  end
 end

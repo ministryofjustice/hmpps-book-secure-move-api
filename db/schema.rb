@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_071352) do
+ActiveRecord::Schema.define(version: 2020_07_01_123259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(version: 2020_06_30_071352) do
     t.string "prisoner_category"
     t.string "sentence_length"
     t.jsonb "complex_cases"
-    t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
     t.datetime "created_at", null: false
@@ -59,6 +58,9 @@ ActiveRecord::Schema.define(version: 2020_06_30_071352) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
+    t.integer "moves_count", null: false
+    t.string "estate"
+    t.text "sentence_length_comment"
     t.index ["date"], name: "index_allocations_on_date"
   end
 

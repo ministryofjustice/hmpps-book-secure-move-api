@@ -14,6 +14,8 @@ RSpec.describe Api::AllocationsController do
   end
 
   describe 'POST /allocations' do
+    subject(:post_allocations) { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
+
     let(:schema) { load_yaml_schema('post_allocations_responses.yaml') }
 
     let(:complex_case1_attributes) do
@@ -43,8 +45,10 @@ RSpec.describe Api::AllocationsController do
       {
         date: Date.today,
         moves_count: moves_count,
+        estate: :adult_male,
         prisoner_category: :b,
-        sentence_length: :short,
+        sentence_length: :other,
+        sentence_length_comment: '30 years',
         other_criteria: 'curly hair',
         requested_by: 'Iama Requestor',
         complete_in_full: true,
@@ -73,25 +77,17 @@ RSpec.describe Api::AllocationsController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
-
-      post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
-    end
-
     context 'when successful' do
-      let(:allocation) { Allocation.find_by(from_location_id: from_location.id) }
+      before { post_allocations }
 
       it_behaves_like 'an endpoint that responds with success 201'
+    end
 
-      it 'creates a allocation', skip_before: true do
-        expect { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
-          .to change(Allocation, :count).by(1)
-      end
+    describe 'creating allocations' do
+      let(:allocation) { Allocation.find_by(from_location_id: from_location.id) }
 
-      it 'creates multiple moves', skip_before: true do
-        expect { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
-          .to change(Move, :count).by(2)
+      it 'creates an allocation' do
+        expect { post_allocations }.to change(Allocation, :count).by(1)
       end
 
       context 'with a real access token' do
@@ -99,51 +95,17 @@ RSpec.describe Api::AllocationsController do
         let(:access_token) { create(:access_token, application: application).token }
 
         it 'audits the supplier' do
+          post_allocations
           expect(allocation.versions.map(&:whodunnit)).to eq([supplier.id])
         end
       end
 
       it 'returns the correct data' do
+        post_allocations
         expect(response_json).to include_json resource_to_json
       end
 
-      it 'sets the correct number of complex_cases' do
-        expect(response_json.dig('data', 'attributes', 'complex_cases').size).to match complex_cases_attributes.size
-      end
-
-      it 'sets the correct complex_cases attributes' do
-        expect(response_json.dig('data', 'attributes', 'complex_cases').first).to match complex_case1_attributes.stringify_keys
-      end
-
-      it 'sets the correct status' do
-        expect(response_json.dig('data', 'attributes', 'status')).to eq(Allocation::ALLOCATION_STATUS_UNFILLED)
-      end
-
-      context 'when omitting requested_by attribute' do
-        let(:allocation_attributes) { attributes_for(:allocation).except(:requested_by) }
-
-        it 'creates an allocation without requested_by' do
-          expect(allocation.requested_by).to be_nil
-        end
-      end
-
-      context 'when specifying nil complex_cases attribute' do
-        let(:complex_cases_attributes) { nil }
-
-        it 'creates an allocation without complex cases' do
-          expect(allocation.complex_cases).to be_empty
-        end
-      end
-
-      context 'when omitting complex_cases attribute' do
-        let(:allocation_attributes) { attributes_for(:allocation).except(:complex_cases) }
-
-        it 'creates an allocation without complex cases' do
-          expect(allocation.complex_cases).to be_empty
-        end
-      end
-
-      context 'when the supplier has a webhook subscription', :skip_before do
+      context 'when the supplier has a webhook subscription' do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
@@ -159,7 +121,7 @@ RSpec.describe Api::AllocationsController do
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
+            post_allocations
           end
         end
 
@@ -170,11 +132,15 @@ RSpec.describe Api::AllocationsController do
         describe 'notification record' do
           let(:moves_count) { 1 }
 
-          it { expect(notification.delivered_at).not_to be_nil }
-          it { expect(notification.topic).to eql(allocation.moves.last) }
-          it { expect(notification.notification_type).to eql(notification_type_webhook) }
-          it { expect(notification.event_type).to eql('create_move') }
-          it { expect(notification.response_id).to be_nil }
+          it 'has correct attributes' do
+            expect(notification).to have_attributes(
+              delivered_at: a_value,
+              topic: allocation.moves.last,
+              notification_type: notification_type_webhook,
+              event_type: 'create_move',
+              response_id: nil,
+            )
+          end
         end
       end
 
@@ -198,7 +164,7 @@ RSpec.describe Api::AllocationsController do
         before do
           allow(MoveMailer).to receive(:notify).and_return(notify_response)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
+            post_allocations
           end
         end
 
@@ -209,11 +175,15 @@ RSpec.describe Api::AllocationsController do
         describe 'notification record' do
           let(:moves_count) { 1 }
 
-          it { expect(notification.delivered_at).not_to be_nil }
-          it { expect(notification.topic).to eql(allocation.moves.last) }
-          it { expect(notification.notification_type).to eql(notification_type_email) }
-          it { expect(notification.event_type).to eql('create_move') }
-          it { expect(notification.response_id).to eql(response_id) }
+          it 'has correct attributes' do
+            expect(notification).to have_attributes(
+              delivered_at: a_value,
+              topic: allocation.moves.last,
+              notification_type: notification_type_email,
+              event_type: 'create_move',
+              response_id: response_id,
+            )
+          end
         end
       end
     end
@@ -221,12 +191,16 @@ RSpec.describe Api::AllocationsController do
     context 'with a bad request' do
       let(:data) { nil }
 
+      before { post_allocations }
+
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
     context 'with a reference to a missing relationship' do
       let(:from_location) { Location.new }
       let(:detail_404) { "Couldn't find Location without an ID" }
+
+      before { post_allocations }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
@@ -245,74 +219,7 @@ RSpec.describe Api::AllocationsController do
         ]
       end
 
-      it_behaves_like 'an endpoint that responds with error 422'
-
-      it 'does not create associated moves' do
-        expect { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
-          .not_to change(Move, :count)
-      end
-
-      context 'when the supplier has a webhook subscription', :skip_before do
-        let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
-        let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-
-        before do
-          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
-          end
-        end
-
-        it 'does not enqueue notifications' do
-          expect(subscription.notifications.count).to be_zero
-        end
-      end
-
-      context 'when the supplier has an email subscription', :skip_before do
-        let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-        let!(:notification_type_email) { create(:notification_type, :email) }
-
-        before do
-          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-            post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json
-          end
-        end
-
-        it 'does not enqueue notifications' do
-          expect(subscription.notifications.count).to be_zero
-        end
-      end
-    end
-
-    context 'with incorrect moves_count type' do
-      let(:moves_count) { '27.5' }
-
-      let(:errors_422) do
-        [
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => 'Moves count must be an integer',
-            'source' => { 'pointer' => '/data/attributes/moves_count' },
-            'code' => 'not_an_integer',
-          },
-        ]
-      end
-
-      it_behaves_like 'an endpoint that responds with error 422'
-    end
-
-    context 'with zero moves_count' do
-      let(:moves_count) { 0 }
-
-      let(:errors_422) do
-        [
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => 'Moves count must be greater than 0',
-            'source' => { 'pointer' => '/data/attributes/moves_count' },
-            'code' => 'greater_than',
-          },
-        ]
-      end
+      before { post_allocations }
 
       it_behaves_like 'an endpoint that responds with error 422'
     end
