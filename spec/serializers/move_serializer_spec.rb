@@ -60,7 +60,7 @@ RSpec.describe MoveSerializer do
     let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
     it 'contains a person' do
-      expect(result_data[:relationships][:person]).to eq(data: { id: move.person.id, type: 'people' })
+      expect(result_data[:relationships][:person]).to eq(data: { id: move.profile.person.id, type: 'people' })
     end
 
     it 'contains an included person' do
@@ -74,7 +74,7 @@ RSpec.describe MoveSerializer do
       let(:adapter_options) { { include: 'person', fields: MoveSerializer::INCLUDED_FIELDS } }
 
       let(:expected_json) do
-        person = move.person
+        person = move.profile.person
         [
           {
             id: person.id,
