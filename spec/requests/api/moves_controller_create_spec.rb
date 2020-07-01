@@ -37,8 +37,7 @@ RSpec.describe Api::MovesController do
       }
     end
     let(:supplier) { create(:supplier) }
-    let!(:application) { create(:application, owner_id: supplier.id) }
-    let(:access_token) { create(:access_token, application: application).token }
+    let(:access_token) { 'spoofed-token' }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -46,28 +45,6 @@ RSpec.describe Api::MovesController do
       next if RSpec.current_example.metadata[:skip_before]
 
       post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-    end
-
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before do
-        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-      end
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before do
-        post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-      end
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
 
     context 'when successful' do
@@ -80,8 +57,13 @@ RSpec.describe Api::MovesController do
           .to change(Move, :count).by(1)
       end
 
-      it 'audits the supplier' do
-        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      context 'with a real access token' do
+        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:access_token) { create(:access_token, application: application).token }
+
+        it 'audits the supplier' do
+          expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+        end
       end
 
       it 'associates the documents with the newly created move' do

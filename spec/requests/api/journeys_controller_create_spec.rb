@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
-    include_context 'with supplier with access token'
+    include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
@@ -45,6 +45,8 @@ RSpec.describe Api::JourneysController do
     end
 
     context 'when successful' do
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application: application).token }
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
       let(:data) do
         {
@@ -111,13 +113,6 @@ RSpec.describe Api::JourneysController do
         end
       end
 
-      context 'when not authorized' do
-        let(:access_token) { 'foo-bar' }
-        let(:detail_401) { 'Token expired or invalid' }
-
-        it_behaves_like 'an endpoint that responds with error 401'
-      end
-
       context 'when the move_id is not found' do
         let(:move_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
@@ -134,12 +129,6 @@ RSpec.describe Api::JourneysController do
                'detail' => 'Validation failed: Location reference was not found id=foo-bar' }]
           end
         end
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it_behaves_like 'an endpoint that responds with error 415'
       end
     end
   end

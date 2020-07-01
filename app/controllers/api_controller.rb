@@ -26,12 +26,12 @@ class ApiController < ApplicationController
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
 
   def current_user
+    return Doorkeeper::Application.new unless authentication_enabled?
+
     doorkeeper_token&.application
   end
 
   def user_for_paper_trail
-    return unless authentication_enabled?
-
     current_user.owner_id
   end
 
@@ -41,6 +41,8 @@ private
     return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
 
     return false if Rails.env.production? && ENV['HEROKU_DISABLE_AUTH'] =~ /true/i
+
+    return false if Rails.env.test? && request.headers['Authorization'] =~ /spoofed/i
 
     true
   end

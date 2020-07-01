@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::AllocationsController do
-  let(:supplier) { create(:supplier) }
-  let!(:application) { create(:application, owner_id: supplier.id) }
-  let!(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -172,23 +170,6 @@ RSpec.describe Api::AllocationsController do
           expect(returned_types).to be_nil
         end
       end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before { get_allocations }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { get_allocations }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

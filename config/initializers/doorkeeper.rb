@@ -126,7 +126,8 @@ Doorkeeper.configure do
   # If you wish to use bcrypt for application secret hashing, uncomment
   # this line instead:
   #
-  hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt'
+  # BCrypt is very secure but is slow by design. We don't want to slow down the test suite needlessly.
+  hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt' unless Rails.env.test?
 
   # When the above option is enabled,
   # and a hashed token or secret is not found,

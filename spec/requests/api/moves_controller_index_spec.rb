@@ -6,8 +6,7 @@ RSpec.describe Api::MovesController do
   subject(:get_moves) { get '/api/v1/moves', params: params, headers: headers }
 
   let(:supplier) { create(:supplier) }
-  let!(:application) { create(:application, owner_id: supplier.id) }
-  let!(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -241,23 +240,6 @@ RSpec.describe Api::MovesController do
           expect(person_id).to eq(person.id)
         end
       end
-    end
-
-    context 'when not authorized', :skip_before, :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before { get_moves }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { get_moves }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

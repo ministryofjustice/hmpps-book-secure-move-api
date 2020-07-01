@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  let(:token) { create(:access_token) }
+  let(:access_token) { 'spoofed-token' }
+  let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
+  let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:booking_id) { '1150262' }
 
@@ -25,7 +27,7 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'returns success' do
-        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/court_cases", headers: headers
 
         expect(response_json['data'][0]['id']).to eq('1495077')
       end
@@ -33,7 +35,7 @@ RSpec.describe Api::PeopleController do
       it 'includes location in the response' do
         create :location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT'
 
-        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/court_cases", headers: headers
 
         expect(response_json['included']).to be_a_kind_of Array
         expect(response_json['included'].first['type']).to eq 'locations'
@@ -43,7 +45,7 @@ RSpec.describe Api::PeopleController do
         let(:query) { '?filter[active]=true' }
 
         it 'passes the filter to the RetrieveCourtCases service' do
-          get "/api/v1/people/#{person.id}/court_cases#{query}", params: { access_token: token.token }
+          get "/api/v1/people/#{person.id}/court_cases#{query}", headers: headers
 
           expect(People::RetrieveCourtCases).to have_received(:call).with(person, 'active' => 'true')
         end
@@ -52,13 +54,13 @@ RSpec.describe Api::PeopleController do
       context 'when we pass an include in the query params' do
         it 'includes location in the response' do
           create(:location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT')
-          get "/api/v1/people/#{person.id}/court_cases?include=location", params: { access_token: token.token }
+          get "/api/v1/people/#{person.id}/court_cases?include=location", headers: headers
 
           expect(response_json['included'].first['type']).to eq('locations')
         end
 
         it 'throws an error if query param invalid ' do
-          get "/api/v1/people/#{person.id}/court_cases?include=foo.bar", params: { access_token: token.token }
+          get "/api/v1/people/#{person.id}/court_cases?include=foo.bar", headers: headers
 
           expect(response).to have_http_status(:bad_request)
         end
@@ -69,7 +71,7 @@ RSpec.describe Api::PeopleController do
       let(:person_id) { 'non-existent-person' }
 
       it 'returns success' do
-        get "/api/v1/people/#{person_id}/court_cases", params: { access_token: token.token }
+        get "/api/v1/people/#{person_id}/court_cases", headers: headers
 
         expect(response_json['errors'][0]['title']).to eq('Resource not found')
       end
@@ -81,7 +83,7 @@ RSpec.describe Api::PeopleController do
       it 'returns 422 bad request' do
         person.update(latest_nomis_booking_id: booking_id)
 
-        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/court_cases", headers: headers
 
         expect(response_json['errors'][0]['detail']).to eq("Validation failed: Latest nomis booking can't be blank")
         expect(response).to have_http_status(:unprocessable_entity)
@@ -96,7 +98,7 @@ RSpec.describe Api::PeopleController do
       it 'return 404 not found' do
         allow(People::RetrieveCourtCases).to receive(:call).and_return(court_cases_from_nomis)
 
-        get "/api/v1/people/#{person.id}/court_cases", params: { access_token: token.token }
+        get "/api/v1/people/#{person.id}/court_cases", headers: headers
 
         expect(response_json['errors']).to be_a_kind_of Array
       end

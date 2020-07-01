@@ -4,7 +4,7 @@
 class NotifyWebhookJob < ApplicationJob
   queue_as :notifications
 
-  def perform(notification_id:)
+  def perform(notification_id)
     notification = Notification.webhooks.kept.includes(:subscription).find(notification_id)
     subscription = notification.subscription
     return unless subscription.enabled?

@@ -48,15 +48,9 @@ RSpec.describe Api::MovesController do
       do_patch
     end
 
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
     context 'when authorized' do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
-      let(:token) { create(:access_token) }
+      let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+      let(:access_token) { 'spoofed-token' }
 
       context 'with an existing requested move', :skip_before do
         before do
@@ -682,12 +676,6 @@ RSpec.describe Api::MovesController do
         let(:detail_404) { "Couldn't find Move with 'id'=null" }
 
         it_behaves_like 'an endpoint that responds with error 404'
-      end
-
-      context 'with an invalid CONTENT_TYPE header' do
-        let(:content_type) { 'application/xml' }
-
-        it_behaves_like 'an endpoint that responds with error 415'
       end
 
       context 'with validation errors' do

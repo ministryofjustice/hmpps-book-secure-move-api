@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MovesController do
   let(:supplier) { create(:supplier) }
-  let(:application) { create(:application, owner_id: supplier.id) }
-  let(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:schema) { load_yaml_schema('get_move_responses.yaml', version: 'v2') }
@@ -92,23 +91,6 @@ RSpec.describe Api::MovesController do
           expect(response_json).to include(expected_error)
         end
       end
-    end
-
-    context 'when not authorized' do
-      let(:headers) { {} }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before { do_get }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { do_get }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 

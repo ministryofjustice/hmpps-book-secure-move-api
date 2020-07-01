@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::Reference::RegionsController do
-  let!(:access_token) { create(:access_token).token }
+  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
@@ -101,20 +101,6 @@ RSpec.describe Api::Reference::RegionsController do
       it 'has correct relationships for each location' do
         expect(response_json).to include_json(data: expected_relationships)
       end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:content_type) { ApiController::CONTENT_TYPE }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end

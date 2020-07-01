@@ -4,9 +4,7 @@ require 'rails_helper'
 
 # TODO: this class will be renamed to Api::PeopleController
 RSpec.describe Api::PeopleController do
-  let(:supplier) { create(:supplier) }
-  let!(:application) { create(:application, owner_id: supplier.id) }
-  let!(:access_token) { create(:access_token, application: application).token }
+  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -200,23 +198,6 @@ RSpec.describe Api::PeopleController do
           expect(response_error['detail']).to include('["non-existent-relationship"] is not supported.')
         end
       end
-    end
-
-    context 'when not authorized', :with_invalid_auth_headers do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-      let(:detail_401) { 'Token expired or invalid' }
-
-      before { get '/api/people', headers: headers }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
-
-    context 'with an invalid CONTENT_TYPE header' do
-      let(:content_type) { 'application/xml' }
-
-      before { get '/api/people', headers: headers }
-
-      it_behaves_like 'an endpoint that responds with error 415'
     end
   end
 end
