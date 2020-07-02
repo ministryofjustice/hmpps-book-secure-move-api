@@ -17,13 +17,12 @@ module People
     end
 
     def call
-      @prison_numbers.each do |prison_number|
+      people_from_nomis.each do |nomis_person|
+        prison_number = nomis_person[:prison_number]
         person = Person.find_or_initialize_by(prison_number: prison_number)
-        nomis_person = nomis_person(prison_number)
 
-        next unless nomis_person
-
-        person.assign_attributes(person_attributes(nomis_person))
+        attributes = person_attributes(nomis_person)
+        person.assign_attributes(attributes)
         person.save!
       end
     end
@@ -46,14 +45,10 @@ module People
       )
     end
 
-    def nomis_person(prison_number)
-      people_from_nomis.find do |nomis_person|
-        nomis_person[:prison_number] == prison_number
-      end
-    end
-
     def people_from_nomis
-      @people_from_nomis ||= NomisClient::People.get(@prison_numbers)
+      NomisClient::People.get(@prison_numbers).select do |nomis_person|
+        @prison_numbers.include?(nomis_person[:prison_number])
+      end
     end
 
     def gender(nomis_person)
