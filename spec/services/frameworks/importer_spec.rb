@@ -36,6 +36,13 @@ RSpec.describe Frameworks::Importer do
       rescue ActiveRecord::RecordInvalid
         expect(Framework.count).to be_zero
       end
+
+      it 'does not attempt to persist framework if it already exists' do
+        filepath = Rails.root.join('spec/fixtures/files/frameworks/')
+        described_class.new(filepath: filepath, version: '0.1').call
+
+        expect { described_class.new(filepath: filepath, version: '0.1').call }.not_to change(Framework, :count).from(2)
+      end
     end
 
     context 'when creating framework questions' do
