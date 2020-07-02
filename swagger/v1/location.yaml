@@ -42,12 +42,14 @@ Location:
           example: BAI
           description: The NOMIS `agency_id`, for prisons this is a 3-letter code
         disabled_at:
-          type: String
-          format: date-time
+          oneOf:
+          - type: string
+            format: date-time
+          - type: 'null'
           example: '2017-07-21T17:32:28Z'
           description: The date-time at which a value was disabled, in ISO-8601 format,
             or null if it is enabled
         can_upload_documents:
-          type: Boolean
+          type: boolean
           example: true
           description: A flag to indicate whether this location allows document uploads
