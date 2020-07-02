@@ -33,7 +33,6 @@ RSpec.describe Api::JourneyEventsController do
       it_behaves_like 'an endpoint that responds with success 204'
 
       it 'rejects the journey' do
-        puts response.body
         expect(journey.reload).to be_rejected
       end
     end
