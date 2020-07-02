@@ -10,9 +10,18 @@
 '400':
   type: object
   required:
-    - errors
+  - errors
   properties:
     errors:
       type: array
       items:
         $ref: errors.yaml#/BadRequest
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotAuthorisedError
