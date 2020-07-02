@@ -16,6 +16,7 @@ spec:
         - name: app
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/book-a-secure-move/hmpps-book-secure-move-api:__ENV__.latest
           command: ["bundle", "exec", "rake", "db:migrate"]
+          imagePullPolicy: Always
           env:
             - name: SECRET_KEY_BASE
               valueFrom:
