@@ -170,7 +170,7 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { move_type: 'prison_transfer,prison_recall,police_transfer' } }
 
         it 'returns moves matching status' do
-          expect(results).to match_array [prison_recall_move, prison_transfer_move,police_transfer_move]
+          expect(results).to match_array [prison_recall_move, prison_transfer_move, police_transfer_move]
         end
       end
 

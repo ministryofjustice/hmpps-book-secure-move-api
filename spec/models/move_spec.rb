@@ -15,8 +15,6 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
 
-  # it { is_expected.to validate_inclusion_of(:move_type).in_array(['court_appearance', 'prison_recall', 'prison_transfer']) }
-
   describe 'cancellation_reason' do
     context 'when the move is not cancelled' do
       let(:move) { build(:move, status: 'requested') }
