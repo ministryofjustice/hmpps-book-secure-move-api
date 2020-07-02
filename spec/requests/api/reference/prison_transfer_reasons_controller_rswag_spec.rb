@@ -11,8 +11,8 @@ RSpec.describe Api::Reference::PrisonTransferReasonsController, :rswag, :with_cl
 
   path '/reference/prison_transfer_reasons' do
     let(:"Content-Type") { content_type }
-    get 'Returns all reasons' do
-      tags 'Reasons'
+    get 'Returns all prison transfer reasons' do
+      tags 'PrisonTransferReasons'
       produces 'application/vnd.api+json'
 
       parameter name: :Authorization,
