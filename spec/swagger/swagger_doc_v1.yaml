@@ -517,6 +517,7 @@
               type: string
               enum:
                 - court_appearance
+                - police_transfer
                 - prison_recall
                 - prison_transfer
         - name: filter[cancellation_reason]

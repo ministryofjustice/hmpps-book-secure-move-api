@@ -43,6 +43,7 @@ Move:
           - court_appearance
           - prison_recall
           - prison_transfer
+          - police_transfer
           description: Indicates the type of move, e.g. prison transfer or court appearance
         move_agreed:
           oneOf:

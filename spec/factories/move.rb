@@ -20,12 +20,14 @@ FactoryBot.define do
       association(:from_location, :police, factory: :location)
       association(:to_location, :court, factory: :location)
     end
+
     trait :prison_recall do
       # NB: Police --> Prison
       move_type { 'prison_recall' }
       association(:from_location, :police, factory: :location)
       to_location { nil } # NB: to_location is always nil for a prison_recall
     end
+
     trait :prison_transfer do
       # NB: believed to be Prison 1 --> Prison 2
       move_type { 'prison_transfer' }
@@ -34,24 +36,33 @@ FactoryBot.define do
       association(:prison_transfer_reason)
     end
 
+    trait :police_transfer do
+      move_type { 'police_transfer' }
+    end
+
     # Move statuses
     trait :proposed do
       status { 'proposed' }
     end
+
     trait :requested do
       status { 'requested' }
     end
+
     trait :booked do
       status { 'booked' }
     end
+
     trait :in_transit do
       status { 'in_transit' }
     end
+
     trait :cancelled do
       status { 'cancelled' }
       cancellation_reason { 'other' }
       cancellation_reason_comment { 'some other reason' }
     end
+
     trait :completed do
       status { 'completed' }
     end
@@ -62,16 +73,19 @@ FactoryBot.define do
       cancellation_reason { 'made_in_error' }
       cancellation_reason_comment { 'the move was made in error' }
     end
+
     trait :cancelled_supplier_declined_to_move do
       status { 'cancelled' }
       cancellation_reason { 'supplier_declined_to_move' }
       cancellation_reason_comment { 'the supplier declined to move' }
     end
+
     trait :cancelled_rejected do
       status { 'cancelled' }
       cancellation_reason { 'rejected' }
       cancellation_reason_comment { 'the proposed move was rejected' }
     end
+
     trait :cancelled_other do
       status { 'cancelled' }
       cancellation_reason { 'other' }
