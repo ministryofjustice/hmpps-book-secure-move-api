@@ -19,10 +19,7 @@ module People
     def call
       @prison_numbers.each do |prison_number|
         person = Person.find_or_initialize_by(prison_number: prison_number)
-
-        nomis_person = people_from_nomis.find do |nomis_person|
-          nomis_person[:prison_number] == prison_number
-        end
+        nomis_person = nomis_person(prison_number)
 
         next unless nomis_person
 
@@ -47,6 +44,12 @@ module People
         gender: gender(nomis_person),
         ethnicity: ethnicity(nomis_person),
       )
+    end
+
+    def nomis_person(prison_number)
+      people_from_nomis.find do |nomis_person|
+        nomis_person[:prison_number] == prison_number
+      end
     end
 
     def people_from_nomis
