@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_01_123259) do
+ActiveRecord::Schema.define(version: 2020_07_02_083741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.string "prisoner_category"
     t.string "sentence_length"
     t.jsonb "complex_cases"
+    t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
     t.datetime "created_at", null: false
@@ -58,7 +59,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
-    t.integer "moves_count", null: false
     t.string "estate"
     t.text "sentence_length_comment"
     t.index ["date"], name: "index_allocations_on_date"
@@ -234,7 +234,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -461,7 +460,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "moves", column: "original_move_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
