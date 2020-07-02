@@ -1,6 +1,6 @@
 RSpec.describe People::ImportFromNomis do
   context 'when the person is present in NOMIS', with_nomis_client_authentication: true do
-    subject(:import) { described_class.new(prison_number) }
+    subject(:import) { described_class.new([prison_number, non_existent_prison_number]) }
 
     let(:response_status) { '200' }
     let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
@@ -8,6 +8,7 @@ RSpec.describe People::ImportFromNomis do
     let(:prison_number) do
       JSON.parse(response_body).first['offenderNo'] # G3239GV
     end
+    let(:non_existent_prison_number) { 'foo' }
 
     context 'when the Person exists in the database' do
       before do
