@@ -283,7 +283,7 @@ RSpec.describe Move do
       let(:to_location) { build :location, :police }
       let(:from_location) { build :location, :police }
 
-      it 'set move_type to police_transfer' do
+      it 'sets move_type to `police_transfer`' do
         expect(move.move_type).to eq 'police_transfer'
       end
     end
