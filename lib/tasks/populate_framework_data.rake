@@ -5,6 +5,9 @@ namespace :frameworks do
       abort('No filepath or version provided')
     end
 
-    Frameworks::Importer.new(filepath: filepath, version: version).call
+    framework_importer = Frameworks::Importer.new(filepath: filepath, version: version)
+    framework_importer.call
+
+    print("Errors: #{framework_importer.errors}\n") if framework_importer.errors.any?
   end
 end
