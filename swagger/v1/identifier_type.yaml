@@ -38,7 +38,7 @@ IdentifierType:
             - type: "null"
           description: The human readable description for this identifier type (optional)
         disabled_at:
-          type: String
+          type: string
           format: date-time
           example: "2017-07-21T17:32:28Z"
           description:

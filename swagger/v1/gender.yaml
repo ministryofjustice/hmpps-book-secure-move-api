@@ -35,7 +35,7 @@ Gender:
           - type: 'null'
           description: The human readable description for this gender (optional)
         disabled_at:
-          type: String
+          type: string
           format: date-time
           example: '2017-07-21T17:32:28Z'
           description: The date-time at which a value was disabled, in ISO-8601 format,
