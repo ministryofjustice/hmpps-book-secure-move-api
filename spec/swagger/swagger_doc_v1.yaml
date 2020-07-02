@@ -341,6 +341,17 @@
       consumes:
         - application/vnd.api+json
       parameters:
+        - name: do_not_save_to_nomis
+          in: query
+          description: Restrict creating the court hearing in Nomis as well as Book A Secure Move
+          schema:
+            type: boolean
+            default: 'false'
+            example: 'true'
+            enum:
+              - true
+              - false
+          required: false
         - name: body
           in: body
           required: true
@@ -2219,9 +2230,9 @@
                 "$ref": "../v1/put_people_responses.yaml#/422"
   "/people/{person_id}/court_cases":
     get:
-      summary: Returns a list of NOMIS court cases for a person
+      summary: Retrieves the active court cases related to a person. It filters out the non-active court cases.
       tags:
-        - PersonCourtCases
+        - People
       consumes:
         - application/vnd.api+json
       parameters:
@@ -2235,6 +2246,10 @@
           schema:
             type: boolean
           example: true
+          enum:
+            - true
+            - false
+          required: false
         - name: include
           description: Returns a specific list of related resources to the court case
           in: query
@@ -2252,18 +2267,18 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_court_cases_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/400"
         "401":
           description: unauthorized
           content:
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_court_cases_responses.yaml#/401"
-        "415":
-          description: invalid media type
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/get_court_cases_responses.yaml#/415"
   "/people/{person_id}/profiles":
     post:
       summary: Creates a new profile
@@ -2401,9 +2416,9 @@
                 "$ref": "../v1/patch_profiles_responses.yaml#/422"
   "/people/{person_id}/timetable":
     get:
-      summary: Returns a list of NOMIS activities and court hearings for a person
+      summary: Returns timetable entries for a date range which defaults to today
       tags:
-        - PersonTimetables
+        - People
       consumes:
         - application/vnd.api+json
       parameters:
@@ -2413,21 +2428,21 @@
         - name: filter[date_from]
           in: query
           description:
-            Filters results to only include activities and court hearings on and after the
-            given date, e.g. `2019-05-02`
+            Filter timetable entries that start on and not before this date. Defaults to today
           schema:
             type: string
           format: date
           example: "2019-05-09"
+          required: true
         - name: filter[date_to]
           in: query
           description:
-            Filters results to only include activities and court hearings up to and including
-            the given date, e.g. `2021-05-09`
+            Filter timetable entries that start up to and including this date. Defaults to today
           schema:
             type: string
           format: date
           example: "2021-05-09"
+          required: true
         - name: include
           description: Returns a specific list of related resources to the timetable entries
           in: query
@@ -2451,6 +2466,12 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_timetable_responses.yaml#/401"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/400"
         "415":
           description: invalid media type
           content:
@@ -2678,6 +2699,35 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_location_responses.yaml#/415"
+  "/reference/prison_transfer_reasons":
+    get:
+      summary: Returns a list of prison transfer reasons
+      tags:
+        - PrisonTransferReasons
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/415"
   "/reference/regions":
     get:
       summary: Returns a list of regions (location groups)

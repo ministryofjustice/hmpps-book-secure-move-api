@@ -35,12 +35,6 @@ Person:
           format: date
           example: '1965-10-24'
           description: Person's date of birth in ISO 8601 format
-        image_url:
-          type: string
-          format: uri
-          example: http://localhost:3000/api/v1/people/88089bbd-8719-4192-b309-f9db9105d3e1/image.jpg
-          description: URI pointing to the image of the person
-          readOnly: true
         assessment_answers:
           type: array
           items:
