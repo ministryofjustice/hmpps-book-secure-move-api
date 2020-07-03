@@ -18,15 +18,18 @@ class FrameworkResponse < VersionedModel
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
   has_and_belongs_to_many :flags, join_table: 'framework_responses_flags'
 
+  validates :value_text, absence: true, if: -> { json? || array? }
+  validates :value_json, absence: true, if: -> { (string? || text?) && value_json != '{}' }
+
   def value
-    json? ? value_json : value_text
+    json? || array? ? value_json : value_text
   end
 
   def value=(answer)
-    if json?
-      value_json = answer
+    if json? || array?
+      self.value_json = answer
     else
-      value_text = answer
+      self.value_text = answer
     end
   end
 end
