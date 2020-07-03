@@ -7,15 +7,6 @@ ruby File.read('.ruby-version')
 
 gem 'active_model_serializers', '~> 0.10.0'
 
-# don't enable this in dev/test - the insights envs are staging/preprod/prod
-group :production do
-  # usage docs for application_insights gem at
-  # https://github.com/microsoft/ApplicationInsights-Ruby
-  # Gem to add insights automatically to a Rack application
-  # enhanced to support a RequestTracker with an ignore list
-  gem 'appinsights', github: 'ministryofjustice/appinsights'
-end
-
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
