@@ -165,6 +165,13 @@ ActiveRecord::Schema.define(version: 2020_07_03_053232) do
     t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
+  create_table "framework_responses_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "flag_id"
+    t.bigint "framework_response_id"
+    t.index ["flag_id"], name: "index_framework_responses_flags_on_flag_id"
+    t.index ["framework_response_id"], name: "index_framework_responses_flags_on_framework_response_id"
+  end
+
   create_table "frameworks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "version", null: false

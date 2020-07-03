@@ -3,7 +3,7 @@
 class FrameworkResponse < VersionedModel
   enum value_type: {
     string: 'string',
-    list: 'list',
+    array: 'array',
     text: 'text',
     json: 'json',
   }
@@ -16,5 +16,17 @@ class FrameworkResponse < VersionedModel
                         foreign_key: 'parent_id'
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
-  has_and_belongs_to_many :flags, optional: true
+  has_and_belongs_to_many :flags, join_table: 'framework_responses_flags'
+
+  def value
+    json? ? value_json : value_text
+  end
+
+  def value=(answer)
+    if json?
+      value_json = answer
+    else
+      value_text = answer
+    end
+  end
 end
