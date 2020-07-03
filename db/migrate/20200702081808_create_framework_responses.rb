@@ -4,7 +4,7 @@ class CreateFrameworkResponses < ActiveRecord::Migration[6.0]
       t.references :person_escort_record, type: :uuid, null: false, index: true, foreign_key: true
       t.references :framework_question, type: :uuid, null: false, index: true, foreign_key: true
       t.text :value_text
-      t.jsonb :value_json, null: false, default: '{}'
+      t.jsonb :value_json
       t.string "value_type", null: false
       t.references :parent, type: :uuid, index: true
 

@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(version: 2020_07_03_053232) do
     t.uuid "person_escort_record_id", null: false
     t.uuid "framework_question_id", null: false
     t.text "value_text"
-    t.jsonb "value_json", default: "{}", null: false
+    t.jsonb "value_json"
     t.string "value_type", null: false
     t.uuid "parent_id"
     t.datetime "created_at", precision: 6, null: false

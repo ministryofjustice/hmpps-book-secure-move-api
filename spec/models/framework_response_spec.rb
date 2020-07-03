@@ -91,7 +91,7 @@ RSpec.describe FrameworkResponse do
     it 'returns an empty response value if type is json and its set as empty' do
       response = create(:framework_response, value_type: 'json', value: {})
 
-      expect(response.value).to be_empty
+      expect(response.value).to eq('{}')
     end
 
     it 'returns an empty response value if type is array and its set as empty' do
@@ -109,7 +109,7 @@ RSpec.describe FrameworkResponse do
     it 'returns an empty response value if type is array and its empty' do
       response = create(:framework_response, value_type: 'array')
 
-      expect(response.value).to eq('{}')
+      expect(response.value).to be_empty
     end
   end
 end
