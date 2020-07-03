@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'rack/test'
 
-RSpec.feature 'dashboard outgoing moves' do
-  scenario 'as a police user I want to view the outgoing moves today' do
+RSpec.describe 'dashboard outgoing moves' do
+  include Rack::Test::Methods
+
+  let(:app) { Application.new }
+
+  it 'as a police user I want to view the outgoing moves today' do
 
     puts "HELLO"
+    byebug
+    get '/'
 
     # given_I_am_a_police_user
     # given there are two moves in the system for today

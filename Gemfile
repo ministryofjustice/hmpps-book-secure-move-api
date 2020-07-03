@@ -83,5 +83,6 @@ end
 
 group :test do
   gem 'climate_control'
+  gem 'rack-test', '~> 1.1.0'
   gem 'simplecov', require: false
 end
