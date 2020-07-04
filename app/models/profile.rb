@@ -6,6 +6,7 @@ class Profile < VersionedModel
   belongs_to :person
 
   has_one :move, dependent: :nullify
+  has_one :person_escort_record
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
 
