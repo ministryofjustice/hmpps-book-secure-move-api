@@ -13,4 +13,5 @@ RSpec.describe FrameworkQuestion do
 
   it { is_expected.to have_many(:dependents) }
   it { is_expected.to have_many(:flags) }
+  it { is_expected.to have_many(:framework_responses) }
 end
