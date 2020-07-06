@@ -8,7 +8,10 @@ FactoryBot.define do
 
   factory :object_response, parent: :framework_response, class: 'FrameworkResponse::Object' do
     type { 'object' }
-    value { { 'option' => 'Yes', 'details' => 'some comment' } }
+    trait :details do
+      association(:framework_question, followup_comment: true)
+      value { { 'option' => 'Yes', 'details' => 'some comment' } }
+    end
   end
 
   factory :collection_response, parent: :framework_response, class: 'FrameworkResponse::Collection' do
