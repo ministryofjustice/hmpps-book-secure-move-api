@@ -43,10 +43,6 @@ Rails.application.configure do
 
   # set to :info so that logging for synchroniser shows up in staging/preprod/production
   #
-  config.log_level = :info
-
-  # Prepend all log lines with the following tags.
-  config.log_tags = [:request_id]
 
   # NB we are using a Redis-backed cache. Using FileStore, MemoryStore (or NullStore) will not work in production because
   # the cache must be shared accross multiple instances.
@@ -74,21 +70,17 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
+  # We only want lograge enabled in production
+  config.lograge.enabled = true
+  config.log_level = :info
   config.log_formatter = LogFormatter::Json.new
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.logger    = logger
   end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # We only want lograge enabled in production
-  config.lograge.enabled = true
 end
