@@ -68,8 +68,8 @@ namespace :journeys do
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
           person_id: move.profile.person_id,
-          gender: move.profile.person.gender.key,
-          dob: move.profile.person.date_of_birth,
+          gender: move.person.gender&.key,
+          dob: move.person.date_of_birth,
           age: ((move.date.to_date - move.profile.person.date_of_birth.to_date) / 365.25).to_i,
           events: move.move_events.default_order.map do |move_event|
             {
