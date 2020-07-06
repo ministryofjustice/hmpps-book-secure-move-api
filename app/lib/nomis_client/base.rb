@@ -4,22 +4,21 @@ module NomisClient
   class Base
     NOMIS_TIMEOUT = 10 # in seconds
     FIXTURE_DIRECTORY = Rails.root.join 'db/fixtures/nomis'
-    MAX_RETRIES = 2
 
     class << self
       def get(path, params = {})
         token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
       rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-        Rails.logger.info "Nomis Connection Error: #{e.message}"
-        raise e, 'Nomis Connection Error'
+        Rails.logger.warn "Nomis Connection Error: #{e.message}"
+        raise e
       end
 
       def post(path, params = {})
         params = update_json_headers(params)
         token.post("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
       rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-        Rails.logger.info "Nomis Connection Error: #{e.message}"
-        raise e, 'Nomis Connection Error'
+        Rails.logger.warn "Nomis Connection Error: #{e.message}"
+        raise e
       end
 
     private

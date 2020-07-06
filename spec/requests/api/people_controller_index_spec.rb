@@ -74,7 +74,7 @@ RSpec.describe Api::PeopleController do
         end
       end
 
-      context 'when Nomis does not reply in less than 10 secs' do
+      context 'when Nomis times out' do
         it 'returns 503 - gateway timeout error' do
           allow(NomisClient::People).to receive(:get).and_raise(Faraday::TimeoutError)
 
