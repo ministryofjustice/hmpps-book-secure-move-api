@@ -16,7 +16,11 @@ FactoryBot.define do
 
   factory :collection_response, parent: :framework_response, class: 'FrameworkResponse::Collection' do
     type { 'collection' }
-    value { [{ 'option' => 'Level 1', 'details' => 'some comment' }, { 'option' => 'Level 2', 'details' => 'another comment' }] }
+    value { [{ 'name' => 'Foo bar' }, { 'name' => 'Bar baz' }] }
+    trait :details do
+      association(:framework_question, followup_comment: true)
+      value { [{ 'option' => 'Level 1', 'details' => 'some comment' }, { 'option' => 'Level 2', 'details' => 'another comment' }] }
+    end
   end
 
   factory :string_response, parent: :framework_response, class: 'FrameworkResponse::String' do

@@ -9,9 +9,4 @@ class FrameworkResponse < VersionedModel
                         foreign_key: 'parent_id'
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
-
-  def self.find_sti_class(type_name)
-    type_name = self.name
-    super
-  end
 end
