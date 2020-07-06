@@ -35,15 +35,27 @@ RSpec.describe Locations::Importer do
         location_type: 'STC',
         can_upload_documents: true,
       },
+      {
+        nomis_agency_id: 'HOSP1',
+        key: 'arkham',
+        title: 'Arkham Asylum',
+        location_type: 'HSHOSP',
+        can_upload_documents: false,
+      },
+      { nomis_agency_id: 'FOO1',
+        key: 'bar',
+        title: "Don't import me",
+        location_type: 'FOO',
+        can_upload_documents: false },
     ]
   end
 
   context 'with no existing records' do
     it 'creates all the input items' do
-      expect { importer.call }.to change(Location, :count).by(4)
+      expect { importer.call }.to change(Location, :count).by(6)
     end
 
-    it 'creates call the locations' do
+    it 'creates all the locations' do
       importer.call
 
       input_data.each do |data|
@@ -58,7 +70,7 @@ RSpec.describe Locations::Importer do
     end
 
     it 'creates only the missing items' do
-      expect { importer.call }.to change(Location, :count).by(3)
+      expect { importer.call }.to change(Location, :count).by(5)
     end
   end
 

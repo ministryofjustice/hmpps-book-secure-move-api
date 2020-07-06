@@ -32,5 +32,12 @@ FactoryBot.define do
       location_type { Location::LOCATION_TYPE_POLICE }
       nomis_agency_id { 'GUIPS' }
     end
+
+    trait :hospital do
+      sequence(:key) { |x| "secure_hospital_#{x}" }
+      title { "#{Faker::Address.city} Secure Hospital" }
+      location_type { Location::LOCATION_TYPE_HIGH_SECURITY_HOSPITAL }
+      nomis_agency_id { 'GUISH' }
+    end
   end
 end
