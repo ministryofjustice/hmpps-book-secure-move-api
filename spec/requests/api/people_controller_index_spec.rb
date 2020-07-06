@@ -53,22 +53,34 @@ RSpec.describe Api::PeopleController do
       let(:params) { { filter: { prison_number: prison_number } } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
 
-      before do
-        allow(People::Finder).to receive(:new).and_return(people_finder)
-        allow(Moves::ImportPeople).to receive(:new).with([prison_number.upcase])
-          .and_return(instance_double('Moves::ImportPeople', call: nil))
-        get_people
-      end
-
-      it 'requests data from NOMIS' do
-        expect(response).to have_http_status(:ok)
-      end
-
-      context 'when the prison_number is downcased' do
-        let(:params) { { filter: { prison_number: prison_number.downcase } } }
+      context 'when Nomis replies with success' do
+        before do
+          allow(People::Finder).to receive(:new).and_return(people_finder)
+          allow(Moves::ImportPeople).to receive(:new).with([prison_number.upcase])
+                                            .and_return(instance_double('Moves::ImportPeople', call: nil))
+          get_people
+        end
 
         it 'requests data from NOMIS' do
           expect(response).to have_http_status(:ok)
+        end
+
+        context 'when the prison_number is downcased' do
+          let(:params) { { filter: { prison_number: prison_number.downcase } } }
+
+          it 'requests data from NOMIS' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+
+      context 'when Nomis does not reply in less than 10 secs' do
+        it 'returns 503 - gateway timeout error' do
+          allow(NomisClient::People).to receive(:get).and_raise(Faraday::TimeoutError)
+
+          get_people
+
+          expect(response).to have_http_status(:gateway_timeout)
         end
       end
     end
