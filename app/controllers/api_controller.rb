@@ -238,7 +238,8 @@ private
     payload[:request_id] = request.request_id
     payload[:idempotency_key] = request.headers['Idempotency-Key']
     payload[:client_id] = current_user&.uid
+    payload[:client_name] = current_user&.name
     payload[:supplier_name] = current_user&.owner&.name || 'none'
-    payload[:api_version] = api_version
+    payload[:api_version] = api_version || DEFAULT_API_VERSION
   end
 end
