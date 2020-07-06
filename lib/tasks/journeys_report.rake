@@ -67,10 +67,10 @@ namespace :journeys do
           date: move.date,
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
-          person_id: move.profile.person_id,
-          gender: move.person.gender&.key,
+          person_id: move.profile&.person_id,
+          gender: move.person.gender&.keys,
           dob: move.person.date_of_birth,
-          age: ((move.date.to_date - move.profile.person.date_of_birth.to_date) / 365.25).to_i,
+          age: ((move.date.to_date - move.person.date_of_birth.to_date) / 365.25).to_i,
           events: move.move_events.default_order.map do |move_event|
             {
               timestamp: move_event.client_timestamp.iso8601,
