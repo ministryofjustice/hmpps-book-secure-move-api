@@ -77,13 +77,13 @@ RSpec.describe FrameworkResponse::Object do
     it 'returns response value if details supplied but empty' do
       response = create(:object_response, :details, value: {})
 
-      expect(response.value.as_json).to eq('option' => nil, 'details' => nil)
+      expect(response.value.as_json).to be_empty
     end
 
     it 'returns response value if details supplied but nil' do
       response = create(:object_response, :details, value: nil)
 
-      expect(response.value.as_json).to eq('option' => nil, 'details' => nil)
+      expect(response.value.as_json).to be_empty
     end
   end
 

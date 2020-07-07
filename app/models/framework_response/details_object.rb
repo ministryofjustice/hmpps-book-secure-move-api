@@ -20,6 +20,8 @@ class FrameworkResponse
     end
 
     def as_json(_options = {})
+      return {} unless option.present? || details.present?
+
       {
         option: option,
         details: details,

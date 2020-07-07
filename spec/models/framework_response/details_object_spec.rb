@@ -49,14 +49,10 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
       expect(details_object.as_json).to eq(attributes)
     end
 
-    it 'returns a hash of nil values of nothing passed in' do
-      attributes = {
-        option: nil,
-        details: nil,
-      }
+    it 'returns a empty hash if nothing passed in' do
       details_object = described_class.new(attributes: {})
 
-      expect(details_object.as_json).to eq(attributes)
+      expect(details_object.as_json).to be_empty
     end
   end
 end

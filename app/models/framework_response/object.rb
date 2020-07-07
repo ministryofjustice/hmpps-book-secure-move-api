@@ -40,7 +40,7 @@ class FrameworkResponse
     end
 
     def validate_presence
-      errors.add(:value_json, :blank) if value.values.empty?
+      errors.add(:value_json, :blank) if value.blank?
     end
 
     def validate_details_object
