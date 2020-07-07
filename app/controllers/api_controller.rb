@@ -21,9 +21,12 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
-  rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
+
+  # Nomis connection errors:
+  rescue_from Faraday::ConnectionFailed, with: :render_connection_error
+  rescue_from Faraday::TimeoutError, with: :render_timeout_error
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -152,6 +155,16 @@ private
         detail: "#{exception.exception.class}: #{exception.message}",
       }] },
       status: :service_unavailable,
+    )
+  end
+
+  def render_timeout_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Timeout Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :gateway_timeout,
     )
   end
 
