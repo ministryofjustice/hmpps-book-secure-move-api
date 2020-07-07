@@ -15,7 +15,14 @@ RSpec.describe FrameworkResponse::Array do
     expect(response).to validate_presence_of(:value_json).on(:update)
   end
 
-  it 'does not validates value json inclusion if no options present on question' do
+  it 'does not validate value json presence when a record is updated if question required but dependent' do
+    question = create(:framework_question, required: true)
+    response = create(:array_response, value: nil, framework_question: question, parent: create(:string_response))
+
+    expect(response).not_to validate_presence_of(:value_json).on(:update)
+  end
+
+  it 'does not validate value json inclusion if no options present on question' do
     question = create(:framework_question, required: true, options: [])
     response = create(:array_response, value: ['Some value'], framework_question: question)
 
@@ -42,6 +49,26 @@ RSpec.describe FrameworkResponse::Array do
       response = create(:array_response, value: nil)
 
       expect(response.value).to be_empty
+    end
+  end
+
+  describe '#option_selected?' do
+    it 'returns true if option matches any option selected' do
+      response = create(
+        :array_response,
+        value: ['Level 1', 'Level 2'],
+      )
+
+      expect(response.option_selected?('Level 2')).to be(true)
+    end
+
+    it 'returns false if option does not match any option selected' do
+      response = create(
+        :array_response,
+        value: ['Level 1', 'Level 2'],
+      )
+
+      expect(response.option_selected?('Level 3')).to be(false)
     end
   end
 end

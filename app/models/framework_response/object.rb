@@ -1,7 +1,7 @@
 class FrameworkResponse
   class Object < FrameworkResponse
     validates :value_text, absence: true
-    validate :validate_presence, on: :update, if: -> { framework_question.required }
+    validate :validate_presence, on: :update, if: -> { framework_question.required && parent.nil? }
     validate :validate_details_object, on: :update, if: -> { response_details? }
 
     def self.sti_name
@@ -21,6 +21,10 @@ class FrameworkResponse
         end
     end
 
+    def option_selected?(option)
+      value['option'] == option
+    end
+
   private
 
     def details_object(attributes:)
@@ -36,7 +40,7 @@ class FrameworkResponse
     end
 
     def validate_presence
-      errors.add(:value_json, :presence) if value.values.empty?
+      errors.add(:value_json, :blank) if value.values.empty?
     end
 
     def validate_details_object

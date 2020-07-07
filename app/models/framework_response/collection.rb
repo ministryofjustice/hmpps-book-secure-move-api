@@ -1,7 +1,7 @@
 class FrameworkResponse
   class Collection < FrameworkResponse
     validates :value_text, absence: true
-    validate :validate_presence, on: :update, if: -> { framework_question.required }
+    validate :validate_presence, on: :update, if: -> { framework_question.required && parent.nil? }
     validate :validate_details_collection, on: :update, if: -> { response_details? }
 
     def self.sti_name
@@ -21,6 +21,10 @@ class FrameworkResponse
         end
     end
 
+    def option_selected?(option)
+      value.map { |v| v['option'] }.include?(option)
+    end
+
   private
 
     def details_collection(collection)
@@ -32,7 +36,7 @@ class FrameworkResponse
     end
 
     def validate_presence
-      errors.add(:value_json, :presence) if value.empty?
+      errors.add(:value_json, :blank) if value.empty?
     end
 
     def validate_details_collection

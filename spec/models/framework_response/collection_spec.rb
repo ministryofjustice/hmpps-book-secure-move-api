@@ -14,6 +14,13 @@ RSpec.describe FrameworkResponse::Collection do
     expect(response).not_to be_valid
   end
 
+  it 'does not validate presence of value when a record is updated if question is required but dependent' do
+    question = create(:framework_question, required: true, options: [])
+    response = create(:collection_response, value: nil, framework_question: question, parent: create(:string_response))
+
+    expect(response).to be_valid
+  end
+
   it 'does not validate presence of value when a record is updated if question is not required' do
     question = create(:framework_question, options: [])
     response = create(:collection_response, value: nil, framework_question: question)
@@ -78,6 +85,20 @@ RSpec.describe FrameworkResponse::Collection do
       response = create(:collection_response, :details, value: nil)
 
       expect(response.value.as_json).to be_empty
+    end
+  end
+
+  describe '#option_selected?' do
+    it 'returns true if option matches any option selected' do
+      response = create(:collection_response, :details)
+
+      expect(response.option_selected?('Level 1')).to be(true)
+    end
+
+    it 'returns false if option does not match any option selected' do
+      response = create(:collection_response, :details)
+
+      expect(response.option_selected?('Level 3')).to be(false)
     end
   end
 end

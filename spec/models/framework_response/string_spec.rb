@@ -15,6 +15,13 @@ RSpec.describe FrameworkResponse::String do
     expect(response).to validate_presence_of(:value_text).on(:update)
   end
 
+  it 'does not validate value text presence when a record is updated if question required and dependent' do
+    question = create(:framework_question, required: true)
+    response = create(:string_response, value: nil, framework_question: question, parent: create(:string_response))
+
+    expect(response).not_to validate_presence_of(:value_text).on(:update)
+  end
+
   it 'does not validates value text inclusion if no options present on question' do
     question = create(:framework_question, required: true, options: [])
     response = create(:string_response, value: 'Some value', framework_question: question)
@@ -33,6 +40,20 @@ RSpec.describe FrameworkResponse::String do
       response = create(:string_response, value: nil)
 
       expect(response.value).to be_nil
+    end
+  end
+
+  describe '#option_selected?' do
+    it 'returns true if option matches any option selected' do
+      response = create(:string_response)
+
+      expect(response.option_selected?('Yes')).to be(true)
+    end
+
+    it 'returns false if option does not match any option selected' do
+      response = create(:string_response)
+
+      expect(response.option_selected?('No')).to be(false)
     end
   end
 end

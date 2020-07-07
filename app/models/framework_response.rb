@@ -9,6 +9,11 @@ class FrameworkResponse < VersionedModel
                         foreign_key: 'parent_id'
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
+  validates_each :value, on: :update do |record, _attr, _value|
+    if record.parent&.option_selected?(record.framework_question.dependent_value) && record.framework_question.required
+      record.errors.add(:value, :blank)
+    end
+  end
 
   def self.find_sti_class(type_name)
     case type_name
