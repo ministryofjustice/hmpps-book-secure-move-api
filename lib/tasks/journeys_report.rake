@@ -37,7 +37,7 @@ namespace :journeys do
           .where("ID in (select move_id from journeys WHERE supplier_id = '#{supplier.id}')")
           .where("moves.updated_at > '#{last_report_date}'")
           .where("moves.updated_at <= '#{Time.at(timestamp).utc}'")
-          .order('moves.date ASC, moves.reference ASC').each do |move|
+          .order('moves.date ASC, moves.reference ASC').find_each(batch_size: 100) do |move|
         journeys = []
         Journey.where(move: move).default_order.each do |journey|
           journeys << {
@@ -59,6 +59,7 @@ namespace :journeys do
             end,
           }
         end
+        person = move.profile.present? ? move.profile.person : nil
         moves << {
           id: move.id,
           supplier: supplier.key,
@@ -67,10 +68,10 @@ namespace :journeys do
           date: move.date,
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
-          person_id: move.profile.person_id,
-          gender: move.person.gender&.key,
-          dob: move.person.date_of_birth,
-          age: ((move.date.to_date - move.profile.person.date_of_birth.to_date) / 365.25).to_i,
+          person_id: person&.id,
+          gender: person&.gender&.key,
+          dob: person&.date_of_birth,
+          age: person.present? && person.date_of_birth.present? ? ((move.date.to_date - person.date_of_birth&.to_date) / 365.25).to_i : nil,
           events: move.move_events.default_order.map do |move_event|
             {
               timestamp: move_event.client_timestamp.iso8601,
