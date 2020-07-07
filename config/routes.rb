@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       resources :locations, only: %i[index show]
       resources :nationalities, only: :index
       resources :prison_transfer_reasons, only: %i[index]
-      resources :regions, only: :index
+      resources :regions, only: %i[index show]
       resources :suppliers, only: %i[index show]
     end
   end

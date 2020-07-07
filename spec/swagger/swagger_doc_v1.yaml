@@ -2739,16 +2739,7 @@
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
-        - name: include
-          description: Returns a specific list of related resources to the region
-          in: query
-          style: form
-          explode: false
-          schema:
-            type: string
-            enum:
-              - locations
-          example: locations
+        - "$ref": "../v1/region_include_parameter.yaml#/RegionIncludeParameter"
       responses:
         "200":
           description: success
@@ -2768,6 +2759,50 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_regions_responses.yaml#/415"
+  "/reference/regions/{region_id}":
+    get:
+      summary: Returns details of a single region (location group)
+      tags:
+        - Regions
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/region_include_parameter.yaml#/RegionIncludeParameter"
+        - name: region_id
+          in: path
+          required: true
+          description: The ID of the region
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/415"
   "/reference/suppliers":
     get:
       summary: Returns the list of suppliers
