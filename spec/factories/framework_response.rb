@@ -7,7 +7,6 @@ FactoryBot.define do
   end
 
   factory :object_response, parent: :framework_response, class: 'FrameworkResponse::Object' do
-    type { 'object' }
     trait :details do
       association(:framework_question, followup_comment: true)
       value { { 'option' => 'Yes', 'details' => 'some comment' } }
@@ -15,7 +14,6 @@ FactoryBot.define do
   end
 
   factory :collection_response, parent: :framework_response, class: 'FrameworkResponse::Collection' do
-    type { 'collection' }
     value { [{ 'name' => 'Foo bar' }, { 'name' => 'Bar baz' }] }
     trait :details do
       association(:framework_question, followup_comment: true)
@@ -24,13 +22,11 @@ FactoryBot.define do
   end
 
   factory :string_response, parent: :framework_response, class: 'FrameworkResponse::String' do
-    type { 'string' }
     value { 'Yes' }
   end
 
   factory :array_response, parent: :framework_response, class: 'FrameworkResponse::Array' do
     association(:framework_question, options: ['Level 1', 'Level 2'])
-    type { 'array' }
     value { ['Level 1'] }
   end
 end
