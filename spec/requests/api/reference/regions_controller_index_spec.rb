@@ -4,9 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::RegionsController do
   let(:access_token) { 'spoofed-token' }
+  let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
   let(:response_json) { JSON.parse(response.body) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
 
   describe 'GET /api/v1/reference/regions' do
     let(:schema) { load_yaml_schema('get_regions_responses.yaml') }
