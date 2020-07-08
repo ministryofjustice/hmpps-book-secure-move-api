@@ -15,6 +15,7 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
+      move.assign_attributes(supplier: SupplierChooser.new(supplier, move).call)
       authorize!(:create, move)
       move.save!
 
