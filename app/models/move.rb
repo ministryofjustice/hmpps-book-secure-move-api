@@ -44,6 +44,7 @@ class Move < VersionedModel
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
   ].freeze
 
+  belongs_to :supplier, optional: true
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true
