@@ -12,7 +12,7 @@ class FrameworkResponse
         if response_details
           details_collection(raw_value).to_a
         else
-          self.value_json = raw_value.presence || []
+          raw_value.presence || []
         end
     end
 

@@ -11,28 +11,28 @@ RSpec.describe FrameworkResponse::Object do
     question = create(:framework_question, required: true, options: [])
     response = create(:object_response, value: nil, framework_question: question)
 
-    expect(response).not_to be_valid
+    expect(response).to validate_presence_of(:value)
   end
 
   it 'does not validate presence of value when a record is updated if question is required and dependent' do
     question = create(:framework_question, required: true, options: [])
     response = create(:object_response, value: nil, framework_question: question, parent: create(:string_response))
 
-    expect(response).to be_valid
+    expect(response).not_to validate_presence_of(:value)
   end
 
   it 'does not validate presence of value when a record is updated if question is not required' do
     question = create(:framework_question, options: [])
     response = create(:object_response, value: nil, framework_question: question)
 
-    expect(response).to be_valid
+    expect(response).not_to validate_presence_of(:value)
   end
 
   it 'validates presence of value when a record is updated if question and details are required' do
     question = create(:framework_question, required: true, options: [], followup_comment: true)
     response = create(:object_response, value: nil, framework_question: question)
 
-    expect(response).not_to be_valid
+    expect(response).to validate_presence_of(:value)
   end
 
   it 'validates details object' do

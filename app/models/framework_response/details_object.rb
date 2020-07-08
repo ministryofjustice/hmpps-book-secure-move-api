@@ -3,7 +3,8 @@
 class FrameworkResponse
   class DetailsObject
     include ActiveModel::Validations
-    attr_reader :question_options, :details_options, :option, :details
+
+    attr_accessor :question_options, :details_options, :option, :details
 
     validates :option, presence: true
     validates :option, inclusion: { in: :question_options }, if: :question_options
