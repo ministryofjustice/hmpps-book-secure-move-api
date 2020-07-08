@@ -6,10 +6,10 @@ PostMoveAccept:
   properties:
     type:
       type: string
-      example: approves
+      example: accepts
       enum:
-      - approves
-      description: The type of this object - always `approves`
+      - accepts
+      description: The type of this object - always `accepts`
     attributes:
       type: object
       required:
