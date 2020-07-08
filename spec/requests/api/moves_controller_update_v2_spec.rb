@@ -202,7 +202,7 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      it 'does not affect from_location' do
+      it 'does not affect both from_location and to_location' do
         do_patch
 
         move.reload
