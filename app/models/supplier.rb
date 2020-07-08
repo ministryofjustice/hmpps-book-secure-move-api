@@ -3,6 +3,7 @@
 class Supplier < ApplicationRecord
   has_and_belongs_to_many :locations
   has_many :subscriptions, dependent: :destroy
+  has_many :moves, dependent: :restrict_with_exception
 
   # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :name, :key, presence: true, uniqueness: true

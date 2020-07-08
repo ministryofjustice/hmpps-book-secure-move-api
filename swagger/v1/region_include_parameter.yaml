@@ -1,0 +1,11 @@
+RegionIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the region
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - locations
+    example: locations

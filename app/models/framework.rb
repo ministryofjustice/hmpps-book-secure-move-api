@@ -6,4 +6,5 @@ class Framework < ApplicationRecord
   validates :name, uniqueness: { scope: :version }
 
   has_many :framework_questions
+  has_many :person_escort_records
 end

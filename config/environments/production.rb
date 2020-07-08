@@ -1,3 +1,5 @@
+require 'log_formatter/json'
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -41,14 +43,10 @@ Rails.application.configure do
 
   # set to :info so that logging for synchroniser shows up in staging/preprod/production
   #
-  config.log_level = :info
-
-  # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
 
   # NB we are using a Redis-backed cache. Using FileStore, MemoryStore (or NullStore) will not work in production because
   # the cache must be shared accross multiple instances.
-  config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL', "redis://localhost:6379/1") }
+  config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1') }
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
@@ -61,10 +59,10 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # config.action_mailer.default_url_options[:host] = ENV["SERVER_FQDN"]
- 
+
   # Default host for url generation
-  routes.default_url_options[:host] = ENV["SERVER_FQDN"]
-  
+  routes.default_url_options[:host] = ENV['SERVER_FQDN']
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -72,22 +70,17 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  # We only want lograge enabled in production
+  config.lograge.enabled = true
+  config.log_level = :info
+  config.log_formatter = LogFormatter::Json.new
 
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.logger    = logger
   end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # We only want lograge enabled in production
-  config.lograge.enabled = true
 end

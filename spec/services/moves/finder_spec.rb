@@ -156,6 +156,7 @@ RSpec.describe Moves::Finder do
       let!(:court_appearance_move) { create :move, :court_appearance }
       let!(:prison_recall_move) { create :move, :prison_recall }
       let!(:prison_transfer_move) { create :move, :prison_transfer }
+      let!(:police_transfer_move) { create :move, move_type: :police_transfer }
 
       context 'with matching move_type' do
         let(:filter_params) { { move_type: 'court_appearance' } }
@@ -166,10 +167,10 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with multiple move_types' do
-        let(:filter_params) { { move_type: 'prison_transfer,prison_recall' } }
+        let(:filter_params) { { move_type: 'prison_transfer,prison_recall,police_transfer' } }
 
         it 'returns moves matching status' do
-          expect(results).to match_array [prison_recall_move, prison_transfer_move]
+          expect(results).to match_array [prison_recall_move, prison_transfer_move, police_transfer_move]
         end
       end
 

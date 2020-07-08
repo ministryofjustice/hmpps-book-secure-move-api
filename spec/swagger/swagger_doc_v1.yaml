@@ -333,6 +333,119 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/422"
+  "/court_hearings":
+    post:
+      summary: Creates a new court hearing
+      tags:
+        - CourtHearings
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: do_not_save_to_nomis
+          in: query
+          description: Restrict creating the court hearing in Nomis as well as Book A Secure Move
+          schema:
+            type: boolean
+            default: 'false'
+            example: 'true'
+            enum:
+              - true
+              - false
+          required: false
+        - name: body
+          in: body
+          required: true
+          description: The court hearing object to be created
+          schema:
+            "$ref": "../v1/court_hearing.yaml#/CourtHearing"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_court_hearing_responses.yaml#/422"
+  "/documents":
+    post:
+      summary: Creates a new document
+      tags:
+        - Documents
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The document object to be created
+          schema:
+            "$ref": "../v1/document.yaml#/Document"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_documents_responses.yaml#/422"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -404,6 +517,7 @@
               type: string
               enum:
                 - court_appearance
+                - police_transfer
                 - prison_recall
                 - prison_transfer
         - name: filter[cancellation_reason]
@@ -1141,59 +1255,6 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/422"
-  "/moves/{move_id}/documents":
-    post:
-      summary: Creates a new document
-      tags:
-        - Documents
-      consumes:
-        - application/vnd.api+json
-      parameters:
-        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
-        - "$ref": "../v1/move_id_parameter.yaml#/MoveId"
-        - name: body
-          in: body
-          required: true
-          description: The document object to be created
-          schema:
-            "$ref": "../v1/document.yaml#/Document"
-      responses:
-        "201":
-          description: created
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/201"
-        "400":
-          description: bad request
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/400"
-        "401":
-          description: unauthorized
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/401"
-        "404":
-          description: resource not found
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/404"
-        "415":
-          description: invalid media type
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/415"
-        "422":
-          description: unprocessable entity
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/post_documents_responses.yaml#/422"
   "/moves/{move_id}/journeys":
     get:
       summary: Gets a list of journeys
@@ -2168,6 +2229,57 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/put_people_responses.yaml#/422"
+  "/people/{person_id}/court_cases":
+    get:
+      summary: Retrieves the active court cases related to a person. It filters out the non-active court cases.
+      tags:
+        - People
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/person_id_parameter.yaml#/PersonId"
+        - name: filter[active]
+          in: query
+          description:
+            Filters results to only include active court cases
+          schema:
+            type: boolean
+          example: true
+          enum:
+            - true
+            - false
+          required: false
+        - name: include
+          description: Returns a specific list of related resources to the court case
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - location
+          example: location
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_court_cases_responses.yaml#/401"
   "/people/{person_id}/profiles":
     post:
       summary: Creates a new profile
@@ -2303,6 +2415,70 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/patch_profiles_responses.yaml#/422"
+  "/people/{person_id}/timetable":
+    get:
+      summary: Returns timetable entries for a date range which defaults to today
+      tags:
+        - People
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/person_id_parameter.yaml#/PersonId"
+        - name: filter[date_from]
+          in: query
+          description:
+            Filter timetable entries that start on and not before this date. Defaults to today
+          schema:
+            type: string
+          format: date
+          example: "2019-05-09"
+          required: true
+        - name: filter[date_to]
+          in: query
+          description:
+            Filter timetable entries that start up to and including this date. Defaults to today
+          schema:
+            type: string
+          format: date
+          example: "2021-05-09"
+          required: true
+        - name: include
+          description: Returns a specific list of related resources to the timetable entries
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - location
+          example: location
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/401"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/400"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_timetable_responses.yaml#/415"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases
@@ -2524,27 +2700,46 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_location_responses.yaml#/415"
-  "/reference/regions":
+  "/reference/prison_transfer_reasons":
     get:
-      summary: Returns a list of regions (location groups)
+      summary: Returns a list of prison transfer reasons
       tags:
-        - Regions
-        - Locations
+        - PrisonTransferReasons
       consumes:
         - application/vnd.api+json
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
-        - name: include
-          description: Returns a specific list of related resources to the region
-          in: query
-          style: form
-          explode: false
-          schema:
-            type: string
-            enum:
-              - locations
-          example: locations
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_prison_transfer_reasons_responses.yaml#/415"
+  "/reference/regions":
+    get:
+      summary: Returns a list of regions (location groups)
+      tags:
+        - Regions
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/region_include_parameter.yaml#/RegionIncludeParameter"
       responses:
         "200":
           description: success
@@ -2564,6 +2759,50 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_regions_responses.yaml#/415"
+  "/reference/regions/{region_id}":
+    get:
+      summary: Returns details of a single region (location group)
+      tags:
+        - Regions
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/region_include_parameter.yaml#/RegionIncludeParameter"
+        - name: region_id
+          in: path
+          required: true
+          description: The ID of the region
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_region_responses.yaml#/415"
   "/reference/suppliers":
     get:
       summary: Returns the list of suppliers

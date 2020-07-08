@@ -129,6 +129,7 @@ namespace :fake_data do
         key: title.parameterize(separator: '_'),
         title: title,
         location_type: :prison,
+        nomis_agency_id: "#{title.split.map { |i| i[0, 2] }.join.upcase}P",
         suppliers: [suppliers.sample],
       )
     end
@@ -142,6 +143,7 @@ namespace :fake_data do
       Location.create!(
         key: title.parameterize(separator: '_'),
         title: title,
+        nomis_agency_id: "#{title.split.map { |i| i[0, 2] }.join.upcase}T",
         location_type: :court,
       )
     end

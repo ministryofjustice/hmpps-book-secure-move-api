@@ -7,6 +7,11 @@ module Api
         render json: Region.all.includes(locations: :suppliers), include: included_relationships
       end
 
+      def show
+        region = Region.find(params[:id])
+        render json: region, include: included_relationships
+      end
+
     private
 
       def supported_relationships

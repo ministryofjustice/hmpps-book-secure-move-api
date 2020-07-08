@@ -27,7 +27,10 @@ class Move < VersionedModel
     court_appearance: 'court_appearance',
     prison_recall: 'prison_recall',
     prison_transfer: 'prison_transfer',
+    police_transfer: 'police_transfer',
   }
+
+  self.ignored_columns = %w[person_id]
 
   CANCELLATION_REASONS = [
     CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
@@ -41,6 +44,7 @@ class Move < VersionedModel
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
   ].freeze
 
+  belongs_to :supplier, optional: true
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true
@@ -150,22 +154,33 @@ private
   def set_move_type
     return if move_type.present?
 
-    self.move_type =
-      if to_location.nil?
-        'prison_recall'
-      elsif to_location_is_court?
-        'court_appearance'
-      else
-        'prison_transfer'
-      end
+    # TODO: The order is not important, here.
+    #       Remove this from the model when we migrate to mandatory move_type under v2
+    self.move_type = if is_a_prison_recall?
+                       'prison_recall'
+                     elsif is_a_court_appearance?
+                       'court_appearance'
+                     elsif is_a_police_tranfer?
+                       'police_transfer'
+                     else
+                       'prison_transfer'
+                     end
   end
 
   def ensure_event_nomis_ids_uniqueness
     nomis_event_ids.uniq!
   end
 
-  def to_location_is_court?
-    to_location&.location_type == 'court'
+  def is_a_police_tranfer?
+    to_location&.police? && from_location&.police?
+  end
+
+  def is_a_prison_recall?
+    to_location.nil?
+  end
+
+  def is_a_court_appearance?
+    to_location&.court?
   end
 
   def validate_move_uniqueness

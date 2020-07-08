@@ -53,5 +53,10 @@
     "agencyId":"SCH1",
     "description":"An example SCH",
     "agencyType":"SCH"
+  },
+  {
+    "agencyId":"DRP1",
+    "description":"An example DRP",
+    "agencyType":"DRRPROV"
   }
 ]

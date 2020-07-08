@@ -74,8 +74,6 @@ module Api::V1
       PaperTrail.request(whodunnit: nil) do
         Moves::ImportPeople.new([prison_number]).call
       end
-    rescue StandardError => e
-      Raven.capture_exception(e)
     end
 
     def supported_relationships

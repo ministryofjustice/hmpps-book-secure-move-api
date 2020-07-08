@@ -50,15 +50,6 @@ class MoveSerializer < ActiveModel::Serializer
     allocation: %i[to_location from_location moves_count created_at],
   }.freeze
 
-  def person
-    # TODO: Remove the support for person id in future
-    if object.profile_id
-      object&.profile&.person
-    elsif object.person_id
-      Person.find(object.person_id)
-    end
-  end
-
   def documents
     object&.profile&.documents
   end

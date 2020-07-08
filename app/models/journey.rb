@@ -20,7 +20,7 @@
 class Journey < ApplicationRecord
   include StateMachineable
 
-  belongs_to :move
+  belongs_to :move, touch: true
   belongs_to :supplier
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'

@@ -21,9 +21,12 @@ class ApiController < ApplicationController
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
   rescue_from ActiveRecord::ReadOnlyRecord, with: :render_resource_readonly_error
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
-  rescue_from Faraday::ConnectionFailed, Faraday::TimeoutError, with: :render_connection_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
+
+  # Nomis connection errors:
+  rescue_from Faraday::ConnectionFailed, with: :render_connection_error
+  rescue_from Faraday::TimeoutError, with: :render_timeout_error
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -155,6 +158,16 @@ private
     )
   end
 
+  def render_timeout_error(exception)
+    render(
+      json: { errors: [{
+        title: 'Timeout Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :gateway_timeout,
+    )
+  end
+
   def validation_errors(record)
     errors = record.errors
     errors.keys.flat_map do |field|
@@ -229,5 +242,17 @@ private
     if version.constantize.const_defined?(actions_module)
       extend "#{version}::#{actions_module}".constantize
     end
+  end
+
+  def append_info_to_payload(payload)
+    super
+
+    payload[:remote_ip] = request.remote_ip
+    payload[:request_id] = request.request_id
+    payload[:idempotency_key] = request.headers['Idempotency-Key']
+    payload[:client_id] = current_user&.uid
+    payload[:client_name] = current_user&.name
+    payload[:supplier_name] = current_user&.owner&.name || 'none'
+    payload[:api_version] = api_version || DEFAULT_API_VERSION
   end
 end

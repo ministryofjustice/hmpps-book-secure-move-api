@@ -102,42 +102,6 @@ RSpec.describe NomisClient::Base do
         expect(client_credentials).to have_received(:get_token).twice
       end
     end
-
-    context 'when the endpoint raises a ConnectionFailed' do
-      let(:token_expires_at) { 1.hour.from_now.to_i }
-      let(:response_body) { '' }
-      let(:response_status) { 200 }
-
-      before do
-        allow(token).to receive(:get).and_raise(Faraday::ConnectionFailed, 'connection failed')
-      end
-
-      it 'is called MAX_RETRIES + 1 times' do
-        expect {
-          described_class.get(api_endpoint)
-        }.to raise_exception(Faraday::ConnectionFailed)
-
-        expect(token).to have_received(:get).exactly(3).times
-      end
-    end
-
-    context 'when the endpoint raises a TimeoutError' do
-      let(:token_expires_at) { 1.hour.from_now.to_i }
-      let(:response_body) { '' }
-      let(:response_status) { 200 }
-
-      before do
-        allow(token).to receive(:get).and_raise(Faraday::TimeoutError)
-      end
-
-      it 'is called MAX_RETRIES + 1 times' do
-        expect {
-          described_class.get(api_endpoint)
-        }.to raise_exception(Faraday::TimeoutError)
-
-        expect(token).to have_received(:get).exactly(3).times
-      end
-    end
   end
 
   describe '.post' do
@@ -226,42 +190,6 @@ RSpec.describe NomisClient::Base do
         described_class.post(api_endpoint)
 
         expect(client_credentials).to have_received(:get_token).twice
-      end
-    end
-
-    context 'when the endpoint raises a ConnectionFailed' do
-      let(:token_expires_at) { 1.hour.from_now.to_i }
-      let(:response_body) { '' }
-      let(:response_status) { 200 }
-
-      before do
-        allow(token).to receive(:post).and_raise(Faraday::ConnectionFailed, 'connection failed')
-      end
-
-      it 'is called MAX_RETRIES times' do
-        expect {
-          described_class.post(api_endpoint)
-        }.to raise_exception(Faraday::ConnectionFailed)
-
-        expect(token).to have_received(:post).exactly(3).times
-      end
-    end
-
-    context 'when the endpoint raises a TimeoutError' do
-      let(:token_expires_at) { 1.hour.from_now.to_i }
-      let(:response_body) { '' }
-      let(:response_status) { 200 }
-
-      before do
-        allow(token).to receive(:post).and_raise(Faraday::TimeoutError)
-      end
-
-      it 'is called MAX_RETRIES times' do
-        expect {
-          described_class.post('/example')
-        }.to raise_exception(Faraday::TimeoutError)
-
-        expect(token).to have_received(:post).exactly(3).times
       end
     end
   end

@@ -34,6 +34,16 @@ Location:
           - court
           - police
           - prison
+          - secure_training_centre
+          - secure_childrens_home
+          - youth_offending_institute
+          - approved_premises
+          - probation_office
+          - community_rehabilitation_company
+          - foreign_national_prison
+          - voluntary_hostel
+          - high_security_hospital
+          - immigration_detention_centre
           example: court
           description: Location type indicates whether this a prison, police station,
             court etc.
@@ -42,12 +52,14 @@ Location:
           example: BAI
           description: The NOMIS `agency_id`, for prisons this is a 3-letter code
         disabled_at:
-          type: String
-          format: date-time
+          oneOf:
+          - type: string
+            format: date-time
+          - type: 'null'
           example: '2017-07-21T17:32:28Z'
           description: The date-time at which a value was disabled, in ISO-8601 format,
             or null if it is enabled
         can_upload_documents:
-          type: Boolean
+          type: boolean
           example: true
           description: A flag to indicate whether this location allows document uploads
