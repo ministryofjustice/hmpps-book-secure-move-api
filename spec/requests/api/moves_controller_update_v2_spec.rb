@@ -24,8 +24,15 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
+    let!(:move) do
+      create :move, :proposed,
+             move_type: 'prison_recall',
+             from_location: from_location,
+             # to_location: to_location,
+             profile: profile
+    end
     let(:from_location) { create :location, suppliers: [supplier] }
+    let(:to_location) { nil }
     let(:move_id) { move.id }
     let(:profile) { create(:profile) }
     let(:date_from) { Date.yesterday }
@@ -181,6 +188,35 @@ RSpec.describe Api::MovesController do
 
           expect(move.reload.profile).to be_nil
         end
+      end
+    end
+
+    context 'when trying to update from_location and to_location' do
+      let(:new_from_location) { create :location }
+      let(:new_to_location) { create :location }
+
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: {
+            from_location: { data: { type: 'locations', id: new_from_location.id } },
+            to_location: { data: { type: 'locations', id: new_to_location.id } },
+          },
+        }
+      end
+
+      it 'does not affect from_location' do
+        do_patch
+
+        move.reload
+
+        expect { do_patch }.not_to change {
+          [move.reload.from_location,
+           move.reload.to_location]
+        }
       end
     end
 
