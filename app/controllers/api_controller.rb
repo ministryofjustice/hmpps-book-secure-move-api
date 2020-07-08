@@ -34,6 +34,10 @@ class ApiController < ApplicationController
     doorkeeper_token&.application
   end
 
+  def doorkeeper_application_owner
+    current_user&.owner
+  end
+
   def user_for_paper_trail
     current_user.owner_id
   end
@@ -252,11 +256,8 @@ private
     payload[:idempotency_key] = request.headers['Idempotency-Key']
     payload[:client_id] = current_user&.uid
     payload[:client_name] = current_user&.name
-    payload[:supplier_name] = supplier&.name || 'none'
+    payload[:supplier_name] = doorkeeper_application_owner&.name || 'none'
     payload[:api_version] = api_version || DEFAULT_API_VERSION
   end
-
-  def supplier
-    current_user&.owner
-  end
 end
+

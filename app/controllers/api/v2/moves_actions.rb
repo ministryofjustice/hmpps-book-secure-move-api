@@ -15,7 +15,7 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
-      move.assign_attributes(supplier: SupplierChooser.new(supplier, move).call)
+      move.assign_attributes(supplier: SupplierChooser.new(doorkeeper_application_owner, move).call)
       authorize!(:create, move)
       move.save!
 
@@ -147,3 +147,4 @@ module Api::V2
     end
   end
 end
+

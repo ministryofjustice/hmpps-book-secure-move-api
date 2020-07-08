@@ -80,7 +80,7 @@ RSpec.describe Api::MovesController do
       it 'sets the application owner as the supplier on the move' do
         do_post
 
-        expect(move.supplier).to eq(application.supplier)
+        expect(move.supplier).to eq(application.owner)
       end
     end
 
@@ -415,3 +415,4 @@ RSpec.describe Api::MovesController do
     post '/api/moves', params: { data: data }, headers: headers, as: :json
   end
 end
+
