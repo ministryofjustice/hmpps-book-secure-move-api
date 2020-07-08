@@ -260,4 +260,3 @@ private
     payload[:api_version] = api_version || DEFAULT_API_VERSION
   end
 end
-

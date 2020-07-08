@@ -415,4 +415,3 @@ RSpec.describe Api::MovesController do
     post '/api/moves', params: { data: data }, headers: headers, as: :json
   end
 end
-

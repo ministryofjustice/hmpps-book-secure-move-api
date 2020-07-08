@@ -147,4 +147,3 @@ module Api::V2
     end
   end
 end
-
