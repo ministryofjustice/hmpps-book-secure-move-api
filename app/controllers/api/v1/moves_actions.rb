@@ -14,6 +14,7 @@ module Api::V1
 
     def create_and_render
       move = Move.new(new_move_attributes)
+      move.assign_attributes(supplier: SupplierChooser.new(supplier, move).call)
       move.profile.documents = profile_documents
 
       authorize!(:create, move)

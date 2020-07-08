@@ -57,12 +57,20 @@ RSpec.describe Api::MovesController do
           .to change(Move, :count).by(1)
       end
 
+      it 'sets the from_location supplier as the supplier on the move' do
+        expect(move.supplier).to eq(move.from_location.suppliers.first)
+      end
+
       context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
 
         it 'audits the supplier' do
           expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+        end
+
+        it 'sets the application owner as the supplier on the move' do
+          expect(move.supplier).to eq(supplier)
         end
       end
 
@@ -100,7 +108,7 @@ RSpec.describe Api::MovesController do
             Faraday,
             headers: {},
             post:
-                        instance_double(Faraday::Response, success?: true, status: 202),
+            instance_double(Faraday::Response, success?: true, status: 202),
           )
         end
 
