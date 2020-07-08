@@ -10,4 +10,3 @@ class V2::ProfileSerializer < ActiveModel::Serializer
 
   SUPPORTED_RELATIONSHIPS = %w[documents person].freeze
 end
-

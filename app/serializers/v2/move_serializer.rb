@@ -47,4 +47,3 @@ module V2
     }.freeze
   end
 end
-
