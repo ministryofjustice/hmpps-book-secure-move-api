@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_01_123259) do
+ActiveRecord::Schema.define(version: 2020_07_03_053232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -148,6 +148,21 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
+  end
+
+  create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "person_escort_record_id", null: false
+    t.uuid "framework_question_id", null: false
+    t.text "value_text"
+    t.jsonb "value_json"
+    t.string "type", null: false
+    t.uuid "parent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
+    t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
+    t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
+    t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
   create_table "frameworks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -376,6 +391,16 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.index ["prison_number"], name: "index_people_on_prison_number"
   end
 
+  create_table "person_escort_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.uuid "profile_id", null: false
+    t.string "state", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
+    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id"
+  end
+
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
@@ -449,6 +474,8 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "documents", "moves"
   add_foreign_key "flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
+  add_foreign_key "framework_responses", "framework_questions"
+  add_foreign_key "framework_responses", "person_escort_records"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"
@@ -466,6 +493,8 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "person_escort_records", "frameworks"
+  add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
 end
