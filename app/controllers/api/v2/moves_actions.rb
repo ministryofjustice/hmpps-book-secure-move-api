@@ -26,7 +26,7 @@ module Api::V2
     def update_and_render
       raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
 
-      @move.assign_attributes(update_move_attributes)
+      @move.assign_attributes(common_move_attributes)
       action_name = @move.status_changed? ? 'update_status' : 'update'
       @move.save!
       @move.allocation&.refresh_status_and_moves_count!
@@ -62,13 +62,13 @@ module Api::V2
     end
 
     def move_attributes
-      update_move_attributes.tap do |attributes|
+      common_move_attributes.tap do |attributes|
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
       end
     end
 
-    def update_move_attributes
+    def common_move_attributes
       move_params[:attributes].tap do |attributes|
         attributes[:profile] = profile unless profile_attributes.nil?
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
