@@ -24,15 +24,9 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) do
-      create :move, :proposed,
-             move_type: 'prison_recall',
-             from_location: from_location,
-             # to_location: to_location,
-             profile: profile
-    end
+    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
+
     let(:from_location) { create :location, suppliers: [supplier] }
-    let(:to_location) { nil }
     let(:move_id) { move.id }
     let(:profile) { create(:profile) }
     let(:date_from) { Date.yesterday }

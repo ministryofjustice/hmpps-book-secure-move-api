@@ -25,18 +25,13 @@ module Api::V2
 
     def update_and_render
       raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
-      q
+
       @move.assign_attributes(update_move_attributes)
-
-      def notify
-        if @move.valid?
-          action_name = @move.status_changed? ? 'update_status' : 'update'
-          Notifier.prepare_notifications(topic: @move, action_name: action_name)
-        end
-      end
-
+      action_name = @move.status_changed? ? 'update_status' : 'update'
       @move.save!
       @move.allocation&.refresh_status_and_moves_count!
+
+      Notifier.prepare_notifications(topic: @move, action_name: action_name)
 
       render_move(@move, :ok)
     end
@@ -67,12 +62,9 @@ module Api::V2
     end
 
     def move_attributes
-      move_params[:attributes].tap do |attributes|
-        attributes[:profile] = profile unless profile_attributes.nil?
+      update_move_attributes.tap do |attributes|
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
-        attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
-        attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
       end
     end
 
