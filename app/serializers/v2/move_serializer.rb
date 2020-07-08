@@ -18,7 +18,7 @@ module V2
                :time_due,
                :updated_at
 
-    has_one :profile, serializer: ProfileSerializer
+    has_one :profile, serializer: V2::ProfileSerializer
     has_one :from_location, serializer: LocationSerializer
     has_one :to_location, serializer: LocationSerializer
     has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
@@ -47,3 +47,4 @@ module V2
     }.freeze
   end
 end
+
