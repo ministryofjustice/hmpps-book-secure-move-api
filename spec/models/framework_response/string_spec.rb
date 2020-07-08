@@ -12,7 +12,7 @@ RSpec.describe FrameworkResponse::String do
     question = create(:framework_question, required: true)
     response = create(:string_response, value: nil, framework_question: question)
 
-    expect(response).to validate_presence_of(:value_text).on(:update)
+    expect(response).to validate_presence_of(:value).on(:update)
   end
 
   it 'does not validate value text presence when a record is updated if question required and dependent' do

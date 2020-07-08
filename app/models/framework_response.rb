@@ -10,23 +10,14 @@ class FrameworkResponse < VersionedModel
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
   validates_each :value, on: :update do |record, _attr, value|
-    if value.blank? && record.parent&.option_selected?(record.framework_question.dependent_value) && record.framework_question.required
-      record.errors.add(:value, :blank)
-    end
+    record.errors.add(:value, :blank) if requires_value?(value, record)
   end
 
-  def self.find_sti_class(type_name)
-    case type_name
-    when 'object'
-      type_name = 'FrameworkResponse::Object'
-    when 'string'
-      type_name = 'FrameworkResponse::String'
-    when 'array'
-      type_name = 'FrameworkResponse::Array'
-    when 'collection'
-      type_name = 'FrameworkResponse::Collection'
-    end
+  def self.requires_value?(value, record)
+    return false if value.present? || !record.framework_question.required
 
-    super
+    return true if record.parent.blank?
+
+    record.parent.option_selected?(record.framework_question.dependent_value)
   end
 end

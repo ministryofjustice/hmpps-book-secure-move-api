@@ -1,23 +1,18 @@
 class FrameworkResponse
   class Collection < FrameworkResponse
     validates :value_text, absence: true
-    validate :validate_presence, on: :update, if: -> { framework_question.required && parent.nil? }
-    validate :validate_details_collection, on: :update, if: -> { response_details? }
-
-    def self.sti_name
-      'collection'
-    end
+    validate :validate_details_collection, on: :update, if: -> { response_details }
 
     def value
       value_json.presence || []
     end
 
-    def value=(answer)
+    def value=(raw_value)
       self.value_json =
-        if response_details?
-          details_collection(answer).to_a
+        if response_details
+          details_collection(raw_value).to_a
         else
-          self.value_json = answer.presence || []
+          self.value_json = raw_value.presence || []
         end
     end
 
@@ -35,17 +30,12 @@ class FrameworkResponse
       )
     end
 
-    def validate_presence
-      errors.add(:value_json, :blank) if value.empty?
-    end
-
     def validate_details_collection
-      # TODO: Add proper validation messages
-      errors.add(:value, 'Details collection is invalid') if details_collection(value).invalid?
+      errors.add(:value, :invalid) if details_collection(value).invalid?
     end
 
-    def response_details?
-      framework_question.followup_comment
+    def response_details
+      @response_details ||= framework_question.followup_comment
     end
   end
 end

@@ -8,11 +8,11 @@ RSpec.describe FrameworkResponse::Array do
   it { is_expected.to validate_absence_of(:value_text) }
   it { is_expected.to validate_inclusion_of(:value_json).in_array(['Level 1', 'Level 2']) }
 
-  it 'validates value json presence when a record is updated if question required' do
+  it 'validates value presence when a record is updated if question required' do
     question = create(:framework_question, required: true)
     response = create(:array_response, value: nil, framework_question: question)
 
-    expect(response).to validate_presence_of(:value_json).on(:update)
+    expect(response).to validate_presence_of(:value).on(:update)
   end
 
   it 'does not validate value json presence when a record is updated if question required but dependent' do

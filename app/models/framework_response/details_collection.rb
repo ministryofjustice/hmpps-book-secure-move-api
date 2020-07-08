@@ -25,9 +25,7 @@ class FrameworkResponse
   private
 
     def details_objects
-      collection.each do |item|
-        return errors.add(:collection, 'One or more details objects invalid') if item.invalid?
-      end
+      errors.add(:collection, :invalid) if collection.any?(&:invalid?)
     end
   end
 end
