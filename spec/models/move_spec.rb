@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Move do
+  it { is_expected.to belong_to(:supplier).optional }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
   it { is_expected.to belong_to(:profile).optional }

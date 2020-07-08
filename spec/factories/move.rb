@@ -13,6 +13,9 @@ FactoryBot.define do
     sequence(:created_at) { |n| Time.now - n.minutes }
     sequence(:date_from) { |n| Date.today - n.days }
 
+    trait :with_supplier do
+      association(:supplier)
+    end
     # Move types
     trait :court_appearance do
       # NB: Police / Prison / STC / SCH, YOI --> Court
