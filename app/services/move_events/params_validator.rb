@@ -11,7 +11,7 @@ module MoveEvents
     # TODO: in the future when pluralising types, existing move event records will need updating from singular types to plural types.
     ACCEPTABLE_PLURAL_VERBS = %w[cancels completes approves rejects].freeze
 
-    attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location, :to_location
+    attr_reader :move, :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location_id, :to_location_id
 
     validates :type, presence: true, inclusion: { in: %w[accepts approve cancel complete lockouts redirects reject starts] }
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, if: -> { type == 'cancel' }
@@ -32,17 +32,21 @@ module MoveEvents
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
     end
 
-    validates_with LocationValidator, locations: [:from_location], if: -> { type == 'lockouts' }
-    validates_with LocationValidator, locations: [:to_location], if: -> { type == 'redirects' }
+    validates_with LocationValidator, locations: [:from_location_id], if: -> { type == 'lockouts' }
+    validates_with LocationValidator, locations: [:to_location_id], if: -> { type == 'redirects' }
+    validates_with Moves::MoveTypeValidator, if: -> { type == 'redirects' }
 
-    def initialize(params)
+    delegate :move_type, :from_location, to: :move
+
+    def initialize(move, params)
+      @move = move
       @timestamp = params.dig(:attributes, :timestamp)
       @type = params[:type]
       @date = params.dig(:attributes, :date)
       @cancellation_reason = params.dig(:attributes, :cancellation_reason)
       @rejection_reason = params.dig(:attributes, :rejection_reason)
-      @from_location = params.dig(:relationships, :from_location, :data, :id)
-      @to_location = params.dig(:relationships, :to_location, :data, :id)
+      @from_location_id = params.dig(:relationships, :from_location, :data, :id)
+      @to_location_id = params.dig(:relationships, :to_location, :data, :id)
       singularize_acceptable_plural_types
     end
 
