@@ -54,7 +54,8 @@ namespace :journeys do
           id: move.id,
           supplier: supplier.key,
           reference: move.reference,
-          notification_date: move.created_at.to_date, # TODO: use notifications table
+          notification_date: move.created_at, # TODO: use notifications table
+          updated_at: move.updated_at,
           move_date: move.date,
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
