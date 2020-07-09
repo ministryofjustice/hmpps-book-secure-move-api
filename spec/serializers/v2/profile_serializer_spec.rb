@@ -63,6 +63,17 @@ RSpec.describe V2::ProfileSerializer do
   describe 'with supported includes' do
     let(:profile) { create(:profile, documents: [create(:document)]) }
     let(:adapter_options) { { include: 'documents,person' } }
+    let(:serialized_person) do
+      serializer = V2::PersonSerializer.new(profile.person)
+
+      JSON.parse(ActiveModelSerializers::Adapter.create(serializer, {}).to_json).deep_symbolize_keys
+    end
+
+    let(:serialized_document) do
+      serializer = DocumentSerializer.new(profile.documents.first)
+
+      JSON.parse(ActiveModelSerializers::Adapter.create(serializer, {}).to_json).deep_symbolize_keys
+    end
 
     let(:expected_document) do
       {
@@ -77,7 +88,7 @@ RSpec.describe V2::ProfileSerializer do
             documents: { data: [{ id: profile.documents.first.id, type: 'documents' }] },
           },
         },
-        included: [{ id: profile.person.id, type: 'people' }, { id: profile.documents.first.id, type: 'documents' }],
+        included: [serialized_person[:data], serialized_document[:data]],
       }
     end
 
@@ -88,3 +99,4 @@ RSpec.describe V2::ProfileSerializer do
     end
   end
 end
+
