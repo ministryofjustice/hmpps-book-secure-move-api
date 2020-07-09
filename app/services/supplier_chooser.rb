@@ -1,7 +1,7 @@
 class SupplierChooser
-  def initialize(doorkeeper_application_owner, move)
+  def initialize(doorkeeper_application_owner, from_location)
     @doorkeeper_application_owner = doorkeeper_application_owner
-    @move = move
+    @from_location = from_location
   end
 
   def call
@@ -9,6 +9,6 @@ class SupplierChooser
 
     # TODO: Replace with the frontend supplied supplier
     #       There can only ever be one supplier per location, currently
-    @move.from_location.suppliers.first
+    @from_location.suppliers.first
   end
 end

@@ -1,9 +1,7 @@
 RSpec.describe SupplierChooser do
-  subject(:service) { described_class.new(doorkeeper_application_owner, move) }
+  subject(:service) { described_class.new(doorkeeper_application_owner, from_location) }
 
-  let(:move) { instance_double('Move', from_location: from_location) }
-  let(:from_location) { instance_double('Location', suppliers: suppliers) }
-  let(:suppliers) { [supplier_one, supplier_two] }
+  let(:from_location) { instance_double('Location', suppliers: [supplier_one, supplier_two]) }
   let(:supplier_one) { instance_double('Supplier') }
   let(:supplier_two) { instance_double('Supplier') }
 
