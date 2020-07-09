@@ -87,7 +87,13 @@ RSpec.describe Api::MovesController do
           ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
           expected_response_json = JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
 
-          expect(response_json).to eq expected_response_json
+          # Now, URL is a S3 url (not activestorage) hence it changes everytime we call the endpoint
+          # The following updates the URL matcher for all the documents
+          expected_response_json['included']
+              .select { |e| e['type'] == 'documents' }
+              .each { |e| e['attributes']['url'] = start_with('http://www.example.com/') }
+
+          expect(response_json).to include_json(expected_response_json)
         end
       end
 
