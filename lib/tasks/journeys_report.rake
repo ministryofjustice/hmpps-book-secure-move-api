@@ -7,6 +7,7 @@ namespace :journeys do
   task json_report: :environment do
     date = ENV['REPORT_DATE'] || Date.yesterday.to_s
     report_date = Date.parse(date).strftime('%Y/%m/%d')
+    report_prefix = Date.parse(date).strftime('%Y-%m-%d')
     bucket_name = ENV['S3_REPORTING_BUCKET_NAME'] || raise('S3_REPORTING_BUCKET_NAME not defined')
 
     puts report_date
@@ -20,7 +21,7 @@ namespace :journeys do
     end
 
     Supplier.order(:key).each do |supplier|
-      filename = "#{supplier.key}.json"
+      filename = "#{report_prefix}-#{supplier.key}.json"
       print "Generating #{filename}..."
       moves = []
       # Only include moves with journeys on them.
