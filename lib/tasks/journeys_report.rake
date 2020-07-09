@@ -2,20 +2,14 @@ require 'csv'
 require 'json'
 require 'aws-sdk-s3'
 
-def get_last_run(bucket_name)
-  s3 = Aws::S3::Resource.new
-  # Amazon S3 lists objects in alphabetical order
-  objects = s3.bucket(bucket_name).objects().collect(&:key)
-  timestamp = objects.any? ? objects.last.split('/').first : '0'
-  DateTime.strptime(timestamp, '%s')
-end
-
 namespace :journeys do
   desc 'Exports a JSON report of all journeys'
   task json_report: :environment do
-    timestamp = DateTime.now.utc.to_i
+    date = ENV['REPORT_DATE'] || Date.yesterday.to_s
+    report_date = Date.parse(date).strftime('%Y/%m/%d')
     bucket_name = ENV['S3_REPORTING_BUCKET_NAME'] || raise('S3_REPORTING_BUCKET_NAME not defined')
 
+    puts report_date
     if Rails.env.development?
       Aws.config.update(
         endpoint: 'http://localhost:4572',
@@ -25,19 +19,14 @@ namespace :journeys do
       )
     end
 
-    last_report_date = get_last_run(bucket_name)
-    puts last_report_date
-
     Supplier.order(:key).each do |supplier|
-      filename = "#{supplier.key}-#{timestamp}.json"
-      puts "Generating #{filename}..."
+      filename = "#{supplier.key}.json"
+      print "Generating #{filename}..."
       moves = []
       # Only include moves with journeys on them.
       Move
           .where("ID in (select move_id from journeys WHERE supplier_id = '#{supplier.id}')")
-          .where("moves.updated_at > '#{last_report_date}'")
-          .where("moves.updated_at <= '#{Time.at(timestamp).utc}'")
-          .order('moves.date ASC, moves.reference ASC').find_each(batch_size: 100) do |move|
+          .where("moves.updated_at::date = date '#{report_date}'").find_each(batch_size: 100) do |move|
         journeys = []
         Journey.where(move: move).default_order.each do |journey|
           journeys << {
@@ -64,8 +53,8 @@ namespace :journeys do
           id: move.id,
           supplier: supplier.key,
           reference: move.reference,
-          created_date: move.created_at.to_date,
-          date: move.date,
+          notification_date: move.created_at.to_date, # TODO: use notifications table
+          move_date: move.date,
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
           person_id: person&.id,
@@ -84,16 +73,18 @@ namespace :journeys do
           journeys: journeys,
         }
       end
+      puts 'done.'
 
       File.open(filename, 'w') do |file|
         file.write(JSON.pretty_generate({ moves: moves })) # maybe change to .to_json for production
       end
 
       if bucket_name.present?
-        puts "Exporting #{filename} to S3..."
+        print "Exporting #{report_date}/#{filename} to S3..."
         s3 = Aws::S3::Resource.new
-        obj = s3.bucket(bucket_name).object("#{timestamp}/#{filename}")
+        obj = s3.bucket(bucket_name).object("#{report_date}/#{filename}")
         obj.upload_file(filename)
+        puts 'done.'
       else
         puts 'S3_REPORTING_BUCKET_NAME not defined, skipping upload.'
       end
