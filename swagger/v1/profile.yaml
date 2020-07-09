@@ -18,8 +18,6 @@ Profile:
       description: The type of this object - always `profiles`
     attributes:
       type: object
-      required:
-        - assessment_answers
       properties:
         assessment_answers:
           type: array
