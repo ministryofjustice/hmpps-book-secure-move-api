@@ -99,4 +99,3 @@ RSpec.describe V2::ProfileSerializer do
     end
   end
 end
-
