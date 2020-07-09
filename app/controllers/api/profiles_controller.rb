@@ -5,7 +5,7 @@ module Api
     def create
       profile = person.profiles.create(profile_attributes)
 
-      if person.prison_number.present?
+      if person.prison_number.present? && profile_attributes[:assessment_answers].blank?
         Profiles::ImportAlertsAndPersonalCareNeeds.new(profile, person.prison_number).call
       end
 
@@ -16,6 +16,7 @@ module Api
       profile = person.profiles.find(params.require(:id))
 
       profile.update!(profile_attributes)
+
       render_profile(profile, :ok)
     end
 
