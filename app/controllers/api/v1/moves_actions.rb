@@ -78,13 +78,18 @@ module Api::V1
     end
 
     def new_move_attributes
-      new_move_params[:attributes].merge(
-        profile: profile_or_person_latest_profile,
-        from_location: Location.find(new_move_params.dig(:relationships, :from_location, :data, :id)),
-        to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
-        court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
-        prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
-      )
+      new_move_params[:attributes].tap do |attributes|
+        from_location = Location.find(new_move_params.dig(:relationships, :from_location, :data, :id))
+
+        attributes.merge!(
+          profile: profile_or_person_latest_profile,
+          from_location: from_location,
+          to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
+          court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
+          prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
+          supplier: SupplierChooser.new(doorkeeper_application_owner, from_location).call,
+        )
+      end
     end
 
     def profile_or_person_latest_profile
