@@ -18,7 +18,7 @@ RSpec.describe Api::MovesController do
         move_type: 'court_appearance' }
     end
 
-    let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
+    let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
@@ -265,7 +265,9 @@ RSpec.describe Api::MovesController do
       end
 
       context 'with explicit `move_type`' do
-        let(:move_attributes) { attributes_for(:move, move_type: 'prison_recall') }
+        let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
+        let(:from_location) { create :location, :police, suppliers: [supplier] }
+        let(:to_location) { nil }
 
         it_behaves_like 'an endpoint that responds with success 201'
 
@@ -274,8 +276,8 @@ RSpec.describe Api::MovesController do
             .to change(Move, :count).by(1)
         end
 
-        it 'sets the move_type to `prison_recall`' do
-          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        it 'sets the move_type to `video_remand_hearing`' do
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand_hearing'
         end
       end
 

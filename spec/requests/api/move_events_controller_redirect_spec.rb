@@ -46,6 +46,14 @@ RSpec.describe Api::MoveEventsController do
       end
     end
 
+    context 'with a video remand hearing' do
+      let(:move) { create(:move, :video_remand_hearing) }
+
+      it 'populates the move to_location' do
+        expect { move.reload }.to change(move, :to_location).from(nil).to(new_location)
+      end
+    end
+
     context 'with a bad request' do
       let(:redirect_params) { nil }
 
@@ -92,7 +100,7 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a non-existent to_location' do
+      context 'with a non-existent to_location_id' do
         let(:redirect_params) do
           {
             data: {
@@ -106,7 +114,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Invalid to_location',
+              'title' => 'Invalid to_location_id',
               'detail' => 'Validation failed: To location was not found',
             }]
           end
