@@ -10,27 +10,28 @@ RSpec.describe DocumentSerializer do
 
   before { ActiveStorage::Current.host = 'http://example.com' }
 
-  it 'contains a `type` property' do
-    expect(result.dig(:data, :type)).to eql 'documents'
+  it 'contains a type property' do
+    expect(result[:data][:type]).to eql 'documents'
   end
 
   it 'contains and `id` property' do
-    expect(result.dig(:data, :id)).to eql document.id
+    expect(result[:data][:id]).to eql document.id
   end
 
   it 'contains a `filename` attribute' do
-    expect(result.dig(:data, :attributes, :filename).to_s).to eql 'file-sample_100kB.doc'
+    expect(result[:data][:attributes][:filename].to_s).to eql 'file-sample_100kB.doc'
   end
 
   it 'contains a `filesize` attribute' do
-    expect(result.dig(:data, :attributes, :filesize)).to be 100_352
+    expect(result[:data][:attributes][:filesize]).to be 100_352
   end
 
   it 'contains a `content_type` attribute' do
-    expect(result.dig(:data, :attributes, :content_type)).to eql 'application/msword'
+    expect(result[:data][:attributes][:content_type]).to eql 'application/msword'
   end
 
   it 'contains a `url` attribute' do
-    expect(result.dig(:data, :attributes, :url)).to start_with('http://example.com')
+    expect(result[:data][:attributes][:url]).to start_with('http://example.com')
   end
 end
+
