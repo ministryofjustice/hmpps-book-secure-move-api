@@ -34,4 +34,3 @@ RSpec.describe DocumentSerializer do
     expect(result[:data][:attributes][:url]).to start_with('http://example.com')
   end
 end
-
