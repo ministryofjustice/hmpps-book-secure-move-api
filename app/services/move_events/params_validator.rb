@@ -36,7 +36,7 @@ module MoveEvents
     validates_with LocationValidator, locations: [:to_location_id], if: -> { type == 'redirects' }
     validates_with Moves::MoveTypeValidator, if: -> { type == 'redirects' }
 
-    delegate :move_type, to: :move
+    delegate :move_type, :from_location, to: :move
 
     def initialize(move, params)
       @move = move

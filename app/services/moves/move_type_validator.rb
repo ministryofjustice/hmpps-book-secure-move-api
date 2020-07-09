@@ -6,13 +6,13 @@ module Moves
 
     def validate(record)
       @record = record
-      return unless record.move_type.present?
+      return if record.move_type.blank?
 
       # Apply more complex validation rules for specific move types
       validate_police_from_location if includes? %w[video_remand_hearing]
     end
 
-    private
+  private
 
     def includes?(move_types)
       move_types.include?(record.move_type.to_s)
