@@ -2285,7 +2285,7 @@
       summary: Creates a new profile
       description: "This creates a new profile for a person.<br>
         Note: this endpoint retrieves Assessment Answers from Nomis:<br>
-        If the `assessment_answers` param is not present AND the person's profile has a `prison_number`
+        If the `assessment_answers` param is not present AND the person has a `prison_number`
         THEN the new profile will be updated with Alerts and Personal Care from NOMIS.
         "
       tags:
