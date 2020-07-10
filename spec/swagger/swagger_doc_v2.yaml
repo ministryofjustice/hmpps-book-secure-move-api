@@ -111,6 +111,12 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/get_people_responses.yaml#/415"
+        "504":
+          description: Nomis Timeout error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_people_responses.yaml#/504"
     post:
       summary: "Creates a new person and their associated profile"
       tags:
