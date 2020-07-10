@@ -384,10 +384,10 @@ jobs:
       - run:
           name: Build manifest
           command: |
-            TO_DELETE=$(aws ecr describe-images --region=eu-west-2 --repository-name  \
-              book-a-secure-move/hmpps-book-secure-move-api --query 'imageDetails[]' --output json |\
+            TO_DELETE=$(aws ecr describe-images --region=eu-west-2 \
+              --repository-name book-a-secure-move/hmpps-book-secure-move-api \
+              --query 'imageDetails[]' --output json |\
               jq 'sort_by(.imagePushedAt)|map(select(any(.imageTags[]? ; contains("latest"))|not))|map({imageDigest})|.[:100]')
-
             echo $TO_DELETE | jq 'length'
 workflows:
   version: 2
