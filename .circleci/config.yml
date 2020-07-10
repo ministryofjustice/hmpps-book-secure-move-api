@@ -446,9 +446,8 @@ workflows:
           requires:
             - hold_production
   ecr-cleanup:
+    jobs: [ecr-cleanup]
     triggers:
       - schedule:
           <<: *only_master_and_create_dev
-          cron: "10 * * * *"
-    jobs:
-      - ecr-cleanup
+          cron: "20 * * * *"
