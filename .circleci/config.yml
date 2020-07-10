@@ -446,9 +446,3 @@ workflows:
           <<: *only_deploy_tags
           requires:
             - hold_production
-  ecr-cleanup:
-    jobs: [ecr-cleanup]
-    triggers:
-      - schedule:
-          cron: "40 * * * *"
-          <<: *only_master_and_create_dev
