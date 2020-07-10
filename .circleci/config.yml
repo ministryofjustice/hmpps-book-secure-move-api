@@ -450,5 +450,5 @@ workflows:
     jobs: [ecr-cleanup]
     triggers:
       - schedule:
-          cron: "20 * * * *"
+          cron: "40 * * * *"
           <<: *only_master_and_create_dev
