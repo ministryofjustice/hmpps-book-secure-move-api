@@ -8,14 +8,16 @@ ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
 RUN apk --update --no-cache add git build-base postgresql-dev
-
-COPY . /app
 RUN gem update bundler --no-document
+
+# NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
+COPY Gemfile Gemfile.lock .ruby-version /app/
 RUN bundle install --jobs 4 --retry 3 \
      && rm -rf /usr/local/bundle/cache/*.gem \
      && find /usr/local/bundle/gems/ -name "*.c" -delete \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
+COPY . /app
 ############### End of Build step ###############
 FROM ruby:2.7.0-alpine
 
