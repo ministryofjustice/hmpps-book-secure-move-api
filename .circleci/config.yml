@@ -379,7 +379,8 @@ jobs:
           notify_slack: "true"
 
   ecr-cleanup:
-    executor: cloud-platform-executor
+    docker:
+      - image: cimg/base:2020.06
     steps:
       - run:
           name: Build manifest
@@ -449,5 +450,5 @@ workflows:
     jobs: [ecr-cleanup]
     triggers:
       - schedule:
-          <<: *only_master_and_create_dev
           cron: "20 * * * *"
+          <<: *only_master_and_create_dev
