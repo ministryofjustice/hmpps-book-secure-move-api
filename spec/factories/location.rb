@@ -14,9 +14,7 @@ FactoryBot.define do
     end
 
     trait :prison do
-      title { "HMP #{Faker::Address.city}" }
-      location_type { Location::LOCATION_TYPE_PRISON }
-      nomis_agency_id { 'PEI' }
+      # This is already the default
     end
 
     trait :court do

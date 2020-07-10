@@ -30,7 +30,8 @@ RSpec.describe Api::PeopleController do
 
   context 'when not including the include query param' do
     it 'returns no included relationships' do
-      create(:location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT')
+      create(:location, :court, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court')
+
       get "/api/v1/people/#{person.id}/court_cases", params: {}, headers: headers
 
       expect(response_json).not_to include('included')

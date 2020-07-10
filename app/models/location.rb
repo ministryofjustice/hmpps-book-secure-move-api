@@ -15,6 +15,22 @@ class Location < ApplicationRecord
   LOCATION_TYPE_HIGH_SECURITY_HOSPITAL = 'high_security_hospital'
   LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE = 'immigration_detention_centre'
 
+  enum location_type: {
+    court: LOCATION_TYPE_COURT,
+    police: LOCATION_TYPE_POLICE,
+    prison: LOCATION_TYPE_PRISON,
+    secure_training_center: LOCATION_TYPE_SECURE_TRAINING_CENTER,
+    secure_childrens_home: LOCATION_TYPE_SECURE_CHILDRENS_HOME,
+    youth_offending_institute: LOCATION_TYPE_YOUTH_OFFENDNG_INSTITUTE,
+    approved_premises: LOCATION_TYPE_APPROVED_PREMISES,
+    probation_office: LOCATION_TYPE_PROBATION_OFFICE,
+    community_rehabilitation_company: LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY,
+    foreign_national_prison: LOCATION_TYPE_FOREIGN_NATIONAL_PRISON,
+    voluntary_hostel: LOCATION_TYPE_VOLUNTARY_HOSTEL,
+    high_security_hospital: LOCATION_TYPE_HIGH_SECURITY_HOSPITAL,
+    immigration_detention_centre: LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE,
+  }
+
   NOMIS_AGENCY_TYPES = {
     'INST' => LOCATION_TYPE_PRISON,
     'CRT' => LOCATION_TYPE_COURT,
@@ -41,24 +57,9 @@ class Location < ApplicationRecord
 
   validates :key, presence: true
   validates :title, presence: true
-  validates :location_type, presence: true
+  validates :location_type, presence: true, inclusion: { in: location_types }
 
   scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
-
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
-
-  scope :prisons, -> { where(location_type: LOCATION_TYPE_PRISON) }
   scope :search_by_title, ->(search) { select(:id).where('title ILIKE :search', search: "%#{search}%") }
-
-  def prison?
-    location_type.to_s == LOCATION_TYPE_PRISON
-  end
-
-  def police?
-    location_type.to_s == LOCATION_TYPE_POLICE
-  end
-
-  def court?
-    location_type.to_s == LOCATION_TYPE_COURT
-  end
 end
