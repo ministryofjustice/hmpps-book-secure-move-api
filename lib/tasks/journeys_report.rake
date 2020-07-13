@@ -32,7 +32,7 @@ namespace :journeys do
         Journey.where(move: move).default_order.each do |journey|
           journeys << {
             id: journey.id,
-            supplier: supplier.name,
+            supplier: supplier.key,
             timestamp: journey.client_timestamp.iso8601,
             from: journey.from_location.nomis_agency_id,
             to: journey.to_location.nomis_agency_id,
@@ -50,11 +50,12 @@ namespace :journeys do
           }
         end
         person = move.profile.present? ? move.profile.person : nil
+        move_notification = move.notifications.webhooks.where(event_type: 'create_move').order(:delivered_at).first
         moves << {
           id: move.id,
           supplier: supplier.key,
           reference: move.reference,
-          notification_date: move.created_at, # TODO: use notifications table
+          notified_at: move_notification&.delivered_at,
           updated_at: move.updated_at,
           move_date: move.date,
           from: move.from_location.nomis_agency_id,
