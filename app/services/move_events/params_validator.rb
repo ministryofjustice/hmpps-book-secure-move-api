@@ -36,6 +36,7 @@ module MoveEvents
     validates_with LocationValidator, locations: [:to_location_id], if: -> { type == 'redirects' }
     validates_with Moves::MoveTypeValidator, if: -> { type == 'redirects' }
 
+    # These attributes are validated against the existing move - i.e. before applying this event
     delegate :move_type, :from_location, to: :move
 
     def initialize(move, params)
@@ -48,6 +49,11 @@ module MoveEvents
       @from_location_id = params.dig(:relationships, :from_location, :data, :id)
       @to_location_id = params.dig(:relationships, :to_location, :data, :id)
       singularize_acceptable_plural_types
+    end
+
+    def to_location
+      # Determine the new Location defined by passed param to validate against existing move_type and from_location attributes
+      @to_location ||= Location.find_by(id: to_location_id)
     end
 
   private

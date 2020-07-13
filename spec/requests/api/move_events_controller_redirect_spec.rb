@@ -54,6 +54,15 @@ RSpec.describe Api::MoveEventsController do
       end
     end
 
+    context 'with a hospital move' do
+      let(:move) { create(:move, :hospital) }
+      let(:new_location) { create(:location, :hospital) }
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
+      end
+    end
+
     context 'with a bad request' do
       let(:redirect_params) { nil }
 

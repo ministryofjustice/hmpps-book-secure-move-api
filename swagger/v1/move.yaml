@@ -44,6 +44,7 @@ Move:
           - prison_transfer
           - police_transfer
           - video_remand_hearing
+          - hospital
           description: Indicates the type of move, e.g. prison transfer or court appearance
         move_agreed:
           oneOf:
