@@ -90,6 +90,11 @@ RSpec.describe Api::AllocationsController do
         expect { post_allocations }.to change(Allocation, :count).by(1)
       end
 
+      it 'sets the from_location supplier as the supplier on the move' do
+        post_allocations
+        expect(allocation.moves.pluck(:supplier_id)).to contain_exactly(from_location.suppliers.first.id)
+      end
+
       context 'with a real access token' do
         let(:application) { create(:application, owner_id: supplier.id) }
         let(:access_token) { create(:access_token, application: application).token }
@@ -97,6 +102,11 @@ RSpec.describe Api::AllocationsController do
         it 'audits the supplier' do
           post_allocations
           expect(allocation.versions.map(&:whodunnit)).to eq([supplier.id])
+        end
+
+        it 'sets the application owner as the supplier on allocation moves' do
+          post_allocations
+          expect(allocation.moves.pluck(:supplier_id)).to contain_exactly(supplier.id)
         end
       end
 
