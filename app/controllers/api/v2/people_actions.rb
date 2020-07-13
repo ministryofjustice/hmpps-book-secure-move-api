@@ -56,8 +56,8 @@ module Api::V2
       # Patch relationships to new relationship when the resource is supplied and the id references a resource that exists
       #
       # Do not patch the relationship if the resource is not supplied
-      attributes[:ethnicity] = ethnicity unless ethnicity_params.nil?
-      attributes[:gender] = gender unless gender_params.nil?
+      attributes[:ethnicity] = ethnicity if ethnicity_params
+      attributes[:gender] = gender if gender_params
 
       attributes
     end
