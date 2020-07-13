@@ -15,8 +15,9 @@ class FrameworkQuestion < VersionedModel
   belongs_to :framework
   has_many :dependents, class_name: 'FrameworkQuestion',
                         foreign_key: 'parent_id'
-
   belongs_to :parent, class_name: 'FrameworkQuestion', optional: true
+
+
   has_many :flags
   has_many :framework_responses
 end
