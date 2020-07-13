@@ -14,7 +14,7 @@ module Frameworks
 
     def call
       question.question_type = source['type']
-      question.required = true if required?(source['validations'])
+      question.required = true if required?(source.fetch('validations', []))
       build_options(source.fetch('options', []))
 
       questions
