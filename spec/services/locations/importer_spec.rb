@@ -42,20 +42,31 @@ RSpec.describe Locations::Importer do
         location_type: :high_security_hospital,
         can_upload_documents: false,
       },
+      { nomis_agency_id: 'FOO1',
+        key: 'bar',
+        title: "Don't import me",
+        location_type: 'FOO',
+        can_upload_documents: false },
     ]
   end
 
   context 'with no existing records' do
-    it 'creates all the input items' do
+    it 'creates all the supported input items' do
       expect { importer.call }.to change(Location, :count).by(5)
     end
 
-    it 'creates all the locations' do
+    it 'creates all the known location types' do
       importer.call
 
-      input_data.each do |data|
+      input_data[0..4].each do |data|
         expect(Location.find_by(data)).to be_present
       end
+    end
+
+    it 'does not import unknown location types' do
+      importer.call
+
+      expect(Location.find_by(input_data.last)).not_to be_present
     end
   end
 
