@@ -34,7 +34,7 @@ class FrameworkQuestion < VersionedModel
     response
   end
 
-  private
+private
 
   def build_response(question, person_escort_record)
     klass =
