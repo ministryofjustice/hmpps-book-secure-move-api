@@ -32,7 +32,7 @@ RSpec.describe Locations::Importer do
         nomis_agency_id: 'STC1',
         key: 'stc_one',
         title: 'A Test STC',
-        location_type: :secure_training_center,
+        location_type: :secure_training_centre,
         can_upload_documents: true,
       },
       {
