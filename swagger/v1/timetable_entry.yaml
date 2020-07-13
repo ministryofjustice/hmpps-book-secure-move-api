@@ -1,7 +1,6 @@
 TimetableEntry:
   type: object
   required:
-    - id
     - type
     - attributes
   properties:
