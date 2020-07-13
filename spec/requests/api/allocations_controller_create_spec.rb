@@ -92,7 +92,7 @@ RSpec.describe Api::AllocationsController do
 
       it 'sets the from_location supplier as the supplier on the move' do
         post_allocations
-        expect(allocation.moves.pluck(:supplier_id)).to contain_exactly(from_location.suppliers.first.id)
+        expect(allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(from_location.suppliers.first.id)
       end
 
       context 'with a real access token' do
@@ -106,7 +106,7 @@ RSpec.describe Api::AllocationsController do
 
         it 'sets the application owner as the supplier on allocation moves' do
           post_allocations
-          expect(allocation.moves.pluck(:supplier_id)).to contain_exactly(supplier.id)
+          expect(allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(supplier.id)
         end
       end
 
