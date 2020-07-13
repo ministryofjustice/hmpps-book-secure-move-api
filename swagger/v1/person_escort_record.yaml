@@ -1,0 +1,62 @@
+PersonEscortRecord:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: person_escort_records
+      enum:
+      - person_escort_records
+      description: The type of this object - always `person_escort_records`
+    attributes:
+      type: object
+      required:
+      - version
+      - status
+      properties:
+        status:
+          example: in_progress
+          type: string
+          enum:
+            - in_progress
+            - completed
+            - confirmed
+          description: Determines the current status of the `person_escort_record`
+        version:
+          type: string
+          example: '0.1'
+          description: Determines the version of framework questions of the `person_escort_record`
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the person_escort_record was last created or updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the person_escort_record was created
+          readOnly: true
+    relationships:
+      type: object
+      required:
+        - profile
+        - framework
+        - responses
+      properties:
+        profile:
+          $ref: profile_reference.yaml#/ProfileReference
+          description: The profile of the person being moved
+        framework:
+          $ref: framework_reference.yaml#/FrameworkReference
+          description: The framework associated with this person_escort_record
+        responses:
+          $ref: framework_response_reference.yaml#/FrameworkResponseReference
+          description: The framework response associated with this person_escort_record
