@@ -1,15 +1,9 @@
 Profile:
   type: object
   required:
-    - id
     - type
     - attributes
   properties:
-    id:
-      type: string
-      format: uuid
-      example: 88089bbd-8719-4192-b309-f9db9105d3e1
-      description: The unique identifier (UUID) of this object
     type:
       type: string
       example: profiles
@@ -29,9 +23,6 @@ Profile:
     relationships:
       type: object
       properties:
-        person:
-          $ref: person_reference.yaml#/PersonReference
-          description: The person being moved
         documents:
           $ref: document_reference.yaml#/DocumentReference
           description: The documents associated with this Move
