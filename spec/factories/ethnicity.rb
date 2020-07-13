@@ -13,5 +13,12 @@ FactoryBot.define do
       title { 'Asian or Asian British (Indian)' }
       description { 'A1 - Asian or Asian British (Indian)' }
     end
+
+    trait :b2 do
+      key { 'b2' }
+      nomis_code { 'B2' }
+      title { 'Black/Black British: African' }
+      description { 'B2 - Black/Black British: African' }
+    end
   end
 end
