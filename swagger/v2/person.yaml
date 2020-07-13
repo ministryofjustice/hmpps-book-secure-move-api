@@ -16,6 +16,11 @@ Person:
         - first_names
         - last_name
       properties:
+        id:
+          type: string
+          format: uuid
+          example: 88089bbd-8719-4192-b309-f9db9105d3e1
+          description: The unique identifier (UUID) of this object
         first_names:
           type: string
           example: Bob

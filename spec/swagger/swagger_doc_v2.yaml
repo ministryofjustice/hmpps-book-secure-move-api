@@ -7,7 +7,10 @@
   :description: |
     Book A Secure Move supplier and frontend API.
 
-    This api requires an Accept header with a version in, for example:
+    Ids in this api are typically not required in the request body where they
+    are specifiable in the path.
+
+    Ids always come back for resources in responses.
 :consumes:
   - application/vnd.api+json
 :produces:

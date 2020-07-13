@@ -3,7 +3,6 @@ CourtHearing:
     in an includes or GET /court_hearings/:id response
   type: object
   required:
-  - id
   - type
   - attributes
   properties:
