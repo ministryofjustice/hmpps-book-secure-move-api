@@ -52,6 +52,9 @@ Rails.application.routes.draw do
         post 'start', controller: 'move_events'
       end
     end
+
+    resources :person_escort_records, only: %i[create]
+
     namespace :reference do
       resources :allocation_complex_cases, only: :index
       resources :assessment_questions, only: :index
