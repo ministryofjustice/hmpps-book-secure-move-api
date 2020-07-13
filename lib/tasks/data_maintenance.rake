@@ -21,7 +21,7 @@ namespace :data_maintenance do
 
   desc 'cancel all NOMIS synched moves from prisons'
   task cancel_synched_prison_moves: :environment do
-    Location.prisons.each do |prison|
+    Location.prison.each do |prison|
       from_moves = prison.moves_from.requested.select(&:from_nomis?).each do |move|
         move.update!(
           status: Move::MOVE_STATUS_CANCELLED,
