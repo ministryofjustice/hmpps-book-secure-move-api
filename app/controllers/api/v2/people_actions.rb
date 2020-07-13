@@ -47,16 +47,38 @@ module Api::V2
     end
 
     def person_attributes
-      person_params[:attributes].merge(ethnicity: ethnicity, gender: gender)
+      attributes = {}
+      attributes.merge!(person_params.fetch(:attributes, {}))
+
+      # Relationships are indicated in json:api via the relationships.<relationship_type> key
+      #
+      # Patch relationships to nil when the resource is supplied but it's data component is nil
+      # Patch relationships to new relationship when the resource is supplied and the id references a resource that exists
+      #
+      # Do not patch the relationship if the resource is not supplied
+      attributes[:ethnicity] = ethnicity unless ethnicity_params.nil?
+      attributes[:gender] = gender unless gender_params.nil?
+
+      attributes
+    end
+
+    def ethnicity_params
+      params.require(:data).dig(:relationships, :ethnicity)
     end
 
     def ethnicity
-      ethnicity_id = params.require(:data).dig(:relationships, :ethnicity, :data, :id)
+      ethnicity_id = ethnicity_params.dig(:data, :id)
+
       Ethnicity.find(ethnicity_id) if ethnicity_id
     end
 
+    def gender_params
+      params.require(:data).dig(:relationships, :gender)
+    end
+
     def gender
-      gender_id = params.require(:data).dig(:relationships, :gender, :data, :id)
+      gender_id = gender_params.dig(:data, :id)
+
       Gender.find(gender_id) if gender_id
     end
 
