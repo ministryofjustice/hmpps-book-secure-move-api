@@ -1,52 +1,52 @@
-'201':
+"201":
   type: object
   required:
-  - data
+    - data
   properties:
     data:
       $ref: ../v2/person.yaml#/Person
-'400':
+"400":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
-        $ref: '../v1/errors.yaml#/BadRequest'
-'401':
+        $ref: "../v1/errors.yaml#/BadRequest"
+"401":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
-        $ref: '../v1/errors.yaml#/NotAuthorisedError'
-'404':
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"
+"404":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
-        $ref: '../v1/errors.yaml#/ResourceNotFound'
-'415':
+        $ref: "../v1/errors.yaml#/ResourceNotFound"
+"415":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
-        $ref: '../v1/errors.yaml#/UnsupportedMediaType'
-'422':
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
+"422":
   type: object
   required:
-  - errors
+    - errors
   properties:
     errors:
       type: array
       items:
-        $ref: '../v1/errors.yaml#/UnprocessableEntity'
+        $ref: "../v1/errors.yaml#/UnprocessableEntity"
