@@ -61,6 +61,8 @@ namespace :journeys do
           from: move.from_location.nomis_agency_id,
           to: move.to_location&.nomis_agency_id,
           person_id: person&.id,
+          pnc_number: person&.police_national_computer,
+          prison_id: person&.nomis_prison_number,
           gender: person&.gender&.key,
           dob: person&.date_of_birth,
           age: person.present? && person.date_of_birth.present? ? ((move.date.to_date - person.date_of_birth&.to_date) / 365.25).to_i : nil,
