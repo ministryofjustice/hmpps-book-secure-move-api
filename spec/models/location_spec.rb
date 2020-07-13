@@ -9,6 +9,7 @@ RSpec.describe Location do
 
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_presence_of(:location_type) }
+  it { is_expected.to define_enum_for(:location_type).backed_by_column_of_type(:string) }
 
   context 'when location is a prison' do
     subject(:location) { build :location }
