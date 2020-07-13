@@ -118,7 +118,7 @@
               schema:
                 "$ref": "../v2/get_people_responses.yaml#/504"
     post:
-      summary: "Creates a new person and their associated profile"
+      summary: "Creates a new person"
       tags:
         - People
       consumes:
@@ -130,7 +130,7 @@
           required: true
           description: The person object to be created
           schema:
-            "$ref": person.yaml#/Person
+            "$ref": "../v2/person.yaml#/Person"
         - "$ref": "../v2/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "201":
