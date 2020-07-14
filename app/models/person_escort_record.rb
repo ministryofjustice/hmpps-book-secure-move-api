@@ -27,8 +27,11 @@ class PersonEscortRecord < VersionedModel
     ActiveRecord::Base.transaction do
       save!
 
-      framework_questions.includes(:parent, :dependents).where(framework_question_parents: { parent_id: nil }).find_each do |question|
-        response = question.build_responses(person_escort_record: self)
+      questions = framework_questions.includes(:dependents).index_by(&:id)
+      questions.values.each do |question|
+        next unless question.parent_id.nil?
+
+        response = question.build_responses(person_escort_record: self, questions: questions)
         framework_responses.build(response.slice(:type, :framework_question_id, :dependents))
       end
 
