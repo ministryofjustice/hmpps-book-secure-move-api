@@ -35,7 +35,8 @@ RSpec.describe Api::MovesController do
     end
 
     let(:profile) { create(:profile) }
-    let(:from_location) { create :location, suppliers: [supplier] }
+    let(:another_supplier) { create(:supplier) }
+    let(:from_location) { create :location, suppliers: [another_supplier] }
     let(:to_location) { create :location, :court }
     let(:reason) { create(:prison_transfer_reason) }
     let(:data) do
@@ -114,7 +115,7 @@ RSpec.describe Api::MovesController do
         allow(Faraday).to receive(:new).and_return(faraday_client)
       end
 
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+      let!(:subscription) { create(:subscription, :no_email_address, supplier: another_supplier) }
 
       let(:faraday_client) do
         class_double(
@@ -148,7 +149,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when the supplier has an email subscription' do
-      let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+      let!(:subscription) { create(:subscription, :no_callback_url, supplier: another_supplier) }
       let(:expected_notification_attributes) do
         {
           'event_type' => 'create_move',
