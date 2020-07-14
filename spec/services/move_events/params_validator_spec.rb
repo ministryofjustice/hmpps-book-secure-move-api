@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe MoveEvents::ParamsValidator do
-  subject(:params_validator) { described_class.new(move, params) }
+  subject(:params_validator) { described_class.new(params) }
 
   let(:move) { nil }
   let(:attributes) { { timestamp: timestamp } }
@@ -213,43 +213,6 @@ RSpec.describe MoveEvents::ParamsValidator do
       before { relationships.delete(:to_location) }
 
       it { is_expected.not_to be_valid }
-    end
-  end
-
-  describe 'move_type' do
-    let(:move) { build(:move, :prison_recall) }
-
-    it 'delegates to the existing move type for the associated move' do
-      expect(params_validator.move_type).to eq('prison_recall')
-    end
-  end
-
-  describe 'from_location' do
-    let(:move) { build(:move, :prison_recall) }
-
-    it 'delegates to the existing from location for the associated move' do
-      expect(params_validator.from_location).to eq(move.from_location)
-    end
-  end
-
-  describe 'to_location' do
-    let(:move) { build(:move, :prison_recall) }
-    let(:params) { { type: type, attributes: attributes, relationships: relationships } }
-    let(:relationships) { { to_location: { data: { type: 'locations', id: location_id } } } }
-    let(:type) { 'redirects' }
-    let(:location) { create(:location) }
-    let(:location_id) { location.id }
-
-    it 'returns the Location instance specified by to_location_id param (new to_location)' do
-      expect(params_validator.to_location).to eq(location)
-    end
-
-    context 'when not found' do
-      let(:location_id) { 'meh' }
-
-      it 'returns nil' do
-        expect(params_validator.to_location).to be_nil
-      end
     end
   end
 end

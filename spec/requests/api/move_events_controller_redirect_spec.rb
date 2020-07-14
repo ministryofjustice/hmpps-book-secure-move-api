@@ -129,6 +129,19 @@ RSpec.describe Api::MoveEventsController do
           end
         end
       end
+
+      context 'with a redirection to an invalid location for the move type' do
+        let(:move) { create(:move, :hospital) }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location must be a high security hospital location for hospital move',
+            }]
+          end
+        end
+      end
     end
   end
 end
