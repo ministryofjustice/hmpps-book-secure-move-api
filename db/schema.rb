@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_08_110909) do
+ActiveRecord::Schema.define(version: 2020_07_13_092251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2020_07_08_110909) do
     t.string "requested_by"
     t.string "estate"
     t.text "sentence_length_comment"
+    t.text "estate_comment"
     t.index ["date"], name: "index_allocations_on_date"
   end
 

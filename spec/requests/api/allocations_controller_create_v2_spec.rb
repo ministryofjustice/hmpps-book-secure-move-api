@@ -12,6 +12,8 @@ RSpec.describe Api::AllocationsController do
       {
         date: Date.today,
         moves_count: moves_count,
+        estate: :other_estate,
+        estate_comment: 'Another estate description',
         prisoner_category: :b,
         sentence_length: :short,
         other_criteria: 'curly hair',
