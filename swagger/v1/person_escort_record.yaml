@@ -20,7 +20,6 @@ PersonEscortRecord:
       type: object
       required:
       - version
-      - status
       properties:
         status:
           example: in_progress

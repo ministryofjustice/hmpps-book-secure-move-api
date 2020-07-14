@@ -16,19 +16,17 @@ group :production do
   gem 'appinsights', github: 'ministryofjustice/appinsights'
 end
 
+gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
-# explicit soft-deletes
 gem 'discard'
 gem 'doorkeeper'
 gem 'elastic-apm'
 gem 'faraday'
 gem 'finite_machine'
 gem 'govuk_notify_rails', '~> 2.1.2'
-# static page serving for extra API documentation
-gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
 gem 'json-schema'
 gem 'kaminari'
 gem 'net-http-persistent'

@@ -6,8 +6,10 @@ FrameworkResponseReference:
     data:
       oneOf:
       - type: object
+        description:  single object returned if resource is associated to only one framework_response
       - type: 'null'
       - type: array
+        description:  Multiple objects returned if resource is associated to multiple framework_responses
       required:
         - type
         - id

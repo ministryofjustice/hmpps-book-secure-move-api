@@ -3,11 +3,8 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   belongs_to :framework, record_type: :framework
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
 
-  attributes :version, :status
-
-  def status
-    object.state
-  end
+  attribute :version
+  attribute :state, key: :status
 
   def version
     object.framework.version

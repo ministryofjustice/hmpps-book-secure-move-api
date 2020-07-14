@@ -36,12 +36,10 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
 
     context 'when successful' do
-      let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
       let(:schema) { load_yaml_schema('post_person_escort_record_responses.yaml') }
       let(:data) do
         {
-          "id": PersonEscortRecord.first&.id,
+          "id": PersonEscortRecord.last.id,
           "type": 'person_escort_records',
           "attributes": {
             "version": framework_version,
@@ -63,7 +61,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             "responses": {
               "data": [
                 {
-                  "id": FrameworkResponse.first&.id,
+                  "id": FrameworkResponse.last.id,
                   "type": 'framework_responses',
                 },
               ],

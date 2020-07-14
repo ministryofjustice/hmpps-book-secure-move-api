@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_07_13_092251) do
-=======
-ActiveRecord::Schema.define(version: 2020_07_10_061513) do
->>>>>>> P4-1761 Add uniq index on profile
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"

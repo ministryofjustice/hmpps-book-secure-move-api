@@ -71,9 +71,7 @@ RSpec.describe PersonEscortRecord do
       create(:framework_question, :checkbox, framework: framework)
       person_escort_record = described_class.save_with_responses!(profile_id: profile.id)
 
-      responses = person_escort_record.framework_responses
-
-      expect(responses.count).to eq(2)
+      expect(person_escort_record.framework_responses.count).to eq(2)
     end
 
     it 'sets correct response for framework questions' do
@@ -82,9 +80,7 @@ RSpec.describe PersonEscortRecord do
       checkbox_question = create(:framework_question, :checkbox, framework: framework)
       person_escort_record = described_class.save_with_responses!(profile_id: profile.id)
 
-      response = person_escort_record.framework_responses.first
-
-      expect(response).to have_attributes(
+      expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: checkbox_question.id,
         type: 'FrameworkResponse::Array',
       )
@@ -96,9 +92,7 @@ RSpec.describe PersonEscortRecord do
       create(:framework_question, :checkbox, framework: framework)
       person_escort_record = described_class.save_with_responses!(profile_id: profile.id)
 
-      questions = person_escort_record.framework_questions
-
-      expect(questions.count).to eq(1)
+      expect(person_escort_record.framework_questions.count).to eq(1)
     end
   end
 
@@ -109,7 +103,7 @@ RSpec.describe PersonEscortRecord do
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
 
-      expect { person_escort_record.build_responses! }.to change(described_class, :count).from(0).to(1)
+      expect { person_escort_record.build_responses! }.to change(described_class, :count).by(1)
     end
 
     it 'creates responses for a question' do
@@ -133,7 +127,7 @@ RSpec.describe PersonEscortRecord do
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
 
-      expect { person_escort_record.build_responses! }.to change(FrameworkResponse, :count).from(0).to(2)
+      expect { person_escort_record.build_responses! }.to change(FrameworkResponse, :count).by(2)
     end
 
     it 'creates responses for dependent questions' do
@@ -162,7 +156,7 @@ RSpec.describe PersonEscortRecord do
       person_escort_record.build_responses!
       dependent_responses = FrameworkResponse.find_by(framework_question: parent_question, person_escort_record: person_escort_record).dependents
 
-      expect(dependent_responses.size).to eq(2)
+      expect(dependent_responses.count).to eq(2)
     end
 
     it 'creates responses for deeply nested dependent questions' do
@@ -193,7 +187,7 @@ RSpec.describe PersonEscortRecord do
       person_escort_record.build_responses!
       dependent_responses = FrameworkResponse.find_by(framework_question: child_question, person_escort_record: person_escort_record).dependents
 
-      expect(dependent_responses.size).to eq(2)
+      expect(dependent_responses.count).to eq(2)
     end
 
     it 'returns person_escort_record valildation error if record is not valid' do
