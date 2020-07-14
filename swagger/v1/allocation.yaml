@@ -1,7 +1,6 @@
 Allocation:
   type: object
   required:
-  - id
   - type
   - attributes
   properties:
@@ -36,9 +35,15 @@ Allocation:
             - juvenile_male
             - young_offender_female
             - young_offender_male
+            - other_estate
           - type: 'null'
           example: adult_male
           description: Indicates the prison estate type
+        estate_comment:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: Optional description of estate type (if 'other_estate')
         prisoner_category:
           oneOf:
           - type: string

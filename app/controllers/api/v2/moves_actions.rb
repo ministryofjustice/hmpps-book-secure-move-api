@@ -26,7 +26,7 @@ module Api::V2
     def update_and_render
       raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
 
-      @move.assign_attributes(move_attributes)
+      @move.assign_attributes(common_move_attributes)
       action_name = @move.status_changed? ? 'update_status' : 'update'
       @move.save!
       @move.allocation&.refresh_status_and_moves_count!
@@ -62,10 +62,16 @@ module Api::V2
     end
 
     def move_attributes
-      move_params[:attributes].tap do |attributes|
-        attributes[:profile] = profile unless profile_attributes.nil?
+      common_move_attributes.tap do |attributes|
+        attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
+      end
+    end
+
+    def common_move_attributes
+      move_params[:attributes].tap do |attributes|
+        attributes[:profile] = profile unless profile_attributes.nil?
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
         attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
       end
@@ -78,9 +84,11 @@ module Api::V2
     end
 
     def from_location
-      location_id = from_location_attributes.dig(:data, :id)
-
-      Location.find(location_id) if location_id
+      @from_location ||=
+        begin
+          location_id = from_location_attributes.dig(:data, :id)
+          Location.find(location_id) if location_id
+        end
     end
 
     def to_location

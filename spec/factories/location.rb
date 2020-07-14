@@ -14,9 +14,7 @@ FactoryBot.define do
     end
 
     trait :prison do
-      title { "HMP #{Faker::Address.city}" }
-      location_type { Location::LOCATION_TYPE_PRISON }
-      nomis_agency_id { 'PEI' }
+      # This is already the default
     end
 
     trait :court do
@@ -38,6 +36,10 @@ FactoryBot.define do
       title { "#{Faker::Address.city} Secure Hospital" }
       location_type { Location::LOCATION_TYPE_HIGH_SECURITY_HOSPITAL }
       nomis_agency_id { 'GUISH' }
+    end
+
+    trait :with_suppliers do
+      suppliers { [create(:supplier)] }
     end
   end
 end

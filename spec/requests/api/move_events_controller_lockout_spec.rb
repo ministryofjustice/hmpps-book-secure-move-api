@@ -92,7 +92,7 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a non-existent from_location' do
+      context 'with a non-existent from_location_id' do
         let(:lockout_params) do
           {
             data: {
@@ -106,7 +106,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Invalid from_location',
+              'title' => 'Invalid from_location_id',
               'detail' => 'Validation failed: From location was not found',
             }]
           end

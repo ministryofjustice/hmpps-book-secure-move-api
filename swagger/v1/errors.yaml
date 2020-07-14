@@ -84,3 +84,15 @@ UnprocessableEntity:
         pointer:
           type: string
           example: /data/attributes/property
+NomisTimeoutError:
+  type: object
+  required:
+    - title
+    - detail
+  properties:
+    title:
+      type: string
+      example: Timeout Error
+    detail:
+      type: string
+      example: "Faraday::TimeoutError: Nomis Connection Error"

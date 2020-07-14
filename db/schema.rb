@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_08_110909) do
+ActiveRecord::Schema.define(version: 2020_07_13_092251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2020_07_08_110909) do
     t.string "prisoner_category"
     t.string "sentence_length"
     t.jsonb "complex_cases"
+    t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
     t.datetime "created_at", null: false
@@ -58,9 +59,9 @@ ActiveRecord::Schema.define(version: 2020_07_08_110909) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
-    t.integer "moves_count", null: false
     t.string "estate"
     t.text "sentence_length_comment"
+    t.text "estate_comment"
     t.index ["date"], name: "index_allocations_on_date"
   end
 
@@ -400,7 +401,7 @@ ActiveRecord::Schema.define(version: 2020_07_08_110909) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
-    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id"
+    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

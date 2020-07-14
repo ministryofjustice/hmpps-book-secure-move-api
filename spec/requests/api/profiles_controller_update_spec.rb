@@ -84,6 +84,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       before do
+        allow(Notifier).to receive(:prepare_notifications)
         patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
       end
 
@@ -95,6 +96,10 @@ RSpec.describe Api::ProfilesController do
 
       it 'returns the correct data' do
         expect(response_json['data']).to include_json(expected_data)
+      end
+
+      it 'calls the notifier' do
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: profile.person, action_name: 'update')
       end
     end
 

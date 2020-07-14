@@ -28,6 +28,7 @@ class Allocation < VersionedModel
     juvenile_male: 'Juvenile Male',
     young_offender_female: 'Young Offender Female',
     young_offender_male: 'Young Offender Male',
+    other_estate: 'Other',
   }
 
   enum states: {

@@ -22,7 +22,3 @@ options:
     value: 'No'
     followup_comment:
       label: Please give details
-validations:
-  -
-    type: 'required'
-    message: You must select an option

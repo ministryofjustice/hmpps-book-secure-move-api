@@ -29,4 +29,8 @@ RSpec.describe DocumentSerializer do
   it 'contains a `content_type` attribute' do
     expect(result[:data][:attributes][:content_type]).to eql 'application/msword'
   end
+
+  it 'contains a `url` attribute' do
+    expect(result[:data][:attributes][:url]).to start_with('http://example.com')
+  end
 end

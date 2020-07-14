@@ -35,7 +35,7 @@ RSpec.describe Api::MovesController do
     end
 
     let(:profile) { create(:profile) }
-    let(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
+    let(:from_location) { create :location, suppliers: [supplier] }
     let(:to_location) { create :location, :court }
     let(:reason) { create(:prison_transfer_reason) }
     let(:data) do
@@ -61,14 +61,26 @@ RSpec.describe Api::MovesController do
       expect { do_post } .to change(Move, :count).by(1)
     end
 
+    it 'sets the from_location supplier as the supplier on the move' do
+      do_post
+
+      expect(move.supplier).to eq(move.from_location.suppliers.first)
+    end
+
     context 'with a real access token' do
-      let(:application) { create(:application, owner_id: supplier.id) }
+      let(:application) { create(:application, owner: supplier) }
       let(:access_token) { create(:access_token, application: application).token }
 
       it 'audits the supplier' do
         do_post
 
         expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+      end
+
+      it 'sets the application owner as the supplier on the move' do
+        do_post
+
+        expect(move.supplier).to eq(application.owner)
       end
     end
 
@@ -276,7 +288,9 @@ RSpec.describe Api::MovesController do
     end
 
     context 'with explicit `move_type`' do
-      let(:move_attributes) { attributes_for(:move, move_type: 'prison_recall') }
+      let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
+      let(:from_location) { create :location, :police, suppliers: [supplier] }
+      let(:to_location) { nil }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -286,10 +300,10 @@ RSpec.describe Api::MovesController do
         expect { do_post }.to change(Move, :count).by(1)
       end
 
-      it 'sets the move_type to `prison_recall`' do
+      it 'sets the move_type to `video_remand_hearing`' do
         do_post
 
-        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand_hearing'
       end
     end
 

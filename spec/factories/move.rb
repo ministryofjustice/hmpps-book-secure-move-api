@@ -43,6 +43,12 @@ FactoryBot.define do
       move_type { 'police_transfer' }
     end
 
+    trait :video_remand_hearing do
+      move_type { 'video_remand_hearing' }
+      association(:from_location, :police, factory: :location)
+      to_location { nil } # NB: to_location is always nil for a video_remand_hearing
+    end
+
     # Move statuses
     trait :proposed do
       status { 'proposed' }

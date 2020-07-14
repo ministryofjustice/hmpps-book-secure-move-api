@@ -1,7 +1,6 @@
 Move:
   type: object
   required:
-    - id
     - type
     - attributes
   properties:
@@ -44,6 +43,7 @@ Move:
             - prison_recall
             - prison_transfer
             - police_transfer
+            - video_remand_hearing
           description: Indicates the type of move, e.g. prison transfer or court appearance
         move_agreed:
           oneOf:

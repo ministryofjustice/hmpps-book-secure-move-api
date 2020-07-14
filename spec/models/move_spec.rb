@@ -70,6 +70,27 @@ RSpec.describe Move do
     )
   end
 
+  context 'with video remand hearing `move_type`' do
+    let(:court) { build(:location, :court) }
+
+    it 'does NOT validate presence of `to_location`' do
+      expect(build(:move, move_type: 'video_remand_hearing')).not_to(
+        validate_presence_of(:to_location),
+      )
+    end
+
+    it 'validates `from_location` is a prison location' do
+      move = build(:move, :video_remand_hearing)
+      expect(move).to be_valid
+    end
+
+    it 'has an error if `from_location` is not a prison location' do
+      move = build(:move, :video_remand_hearing, from_location: court)
+      move.valid?
+      expect(move.errors[:from_location]).to match_array('must be a police location for video remand hearing')
+    end
+  end
+
   it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
     expect(build(:move, status: :proposed)).to(
       validate_presence_of(:profile),

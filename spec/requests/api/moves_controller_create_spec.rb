@@ -18,7 +18,7 @@ RSpec.describe Api::MovesController do
         move_type: 'court_appearance' }
     end
 
-    let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
+    let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
@@ -57,12 +57,20 @@ RSpec.describe Api::MovesController do
           .to change(Move, :count).by(1)
       end
 
+      it 'sets the from_location supplier as the supplier on the move' do
+        expect(move.supplier).to eq(move.from_location.suppliers.first)
+      end
+
       context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
 
         it 'audits the supplier' do
           expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+        end
+
+        it 'sets the application owner as the supplier on the move' do
+          expect(move.supplier).to eq(supplier)
         end
       end
 
@@ -79,7 +87,13 @@ RSpec.describe Api::MovesController do
           ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
           expected_response_json = JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
 
-          expect(response_json).to eq expected_response_json
+          # Now, URL is a S3 url (not activestorage) hence it changes everytime we call the endpoint
+          # The following updates the URL matcher for all the documents
+          expected_response_json['included']
+              .select { |e| e['type'] == 'documents' }
+              .each { |e| e['attributes']['url'] = start_with('http://www.example.com/') }
+
+          expect(response_json).to include_json(expected_response_json)
         end
       end
 
@@ -100,7 +114,7 @@ RSpec.describe Api::MovesController do
             Faraday,
             headers: {},
             post:
-                        instance_double(Faraday::Response, success?: true, status: 202),
+            instance_double(Faraday::Response, success?: true, status: 202),
           )
         end
 
@@ -251,7 +265,9 @@ RSpec.describe Api::MovesController do
       end
 
       context 'with explicit `move_type`' do
-        let(:move_attributes) { attributes_for(:move, move_type: 'prison_recall') }
+        let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
+        let(:from_location) { create :location, :police, suppliers: [supplier] }
+        let(:to_location) { nil }
 
         it_behaves_like 'an endpoint that responds with success 201'
 
@@ -260,8 +276,8 @@ RSpec.describe Api::MovesController do
             .to change(Move, :count).by(1)
         end
 
-        it 'sets the move_type to `prison_recall`' do
-          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        it 'sets the move_type to `video_remand_hearing`' do
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand_hearing'
         end
       end
 

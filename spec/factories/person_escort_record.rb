@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :person_escort_record do
     association(:framework)
     association(:profile)
-    state { 'not_started' }
+    state { 'in_progress' }
   end
 end
