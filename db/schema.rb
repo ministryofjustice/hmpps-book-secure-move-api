@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_092251) do
     t.uuid "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "responded", default: false, null: false
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
     t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"

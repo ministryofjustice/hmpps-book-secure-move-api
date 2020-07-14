@@ -2,6 +2,7 @@
 
 class FrameworkResponse < VersionedModel
   validates :type, presence: true
+  validates :responded, presence: true
 
   belongs_to :framework_question
   belongs_to :person_escort_record

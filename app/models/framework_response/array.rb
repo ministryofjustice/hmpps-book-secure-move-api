@@ -1,7 +1,7 @@
 class FrameworkResponse
   class Array < FrameworkResponse
     validates :value_text, absence: true
-    validates :value_json, on: :update, inclusion: { in: :question_options }, if: :question_options
+    validate :validate_question_options, on: :update
 
     def value
       value_json.presence || []
@@ -19,6 +19,14 @@ class FrameworkResponse
 
     def question_options
       @question_options ||= framework_question.options.presence
+    end
+
+    def validate_question_options
+      if (o = (value - question_options))
+        o.each do |option|
+          errors.add(:value, option + " is not a valid option")
+        end
+      end
     end
   end
 end
