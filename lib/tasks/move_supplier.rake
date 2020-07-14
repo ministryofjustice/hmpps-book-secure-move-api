@@ -10,11 +10,16 @@ namespace :move do
     moves_having_supplier = Move.where.not(supplier_id: nil).count
     moves_missing_supplier = Move.where.not(from_location: locations_with_supplier).where(supplier_id: nil).count
 
-    Move.where(from_location: locations_with_supplier).where(supplier_id: nil).in_batches(of: 200) do |batch|
-      supplier = batch.first.from_location.suppliers.first
+    locations_with_supplier.each do |from_location|
+      supplier = from_location.suppliers.first
 
-      total_updated += batch.update_all(supplier_id: supplier.id)
-      puts "#{total_updated}/#{total} moves populated..."
+      Move.where(from_location: from_location).where(supplier_id: nil).in_batches(of: 200) do |batch|
+        puts "Populating supplier #{supplier.name} for moves from #{from_location.title}"
+
+        total_updated += batch.update_all(supplier_id: supplier.id)
+        puts "#{total_updated}/#{total} moves populated..."
+        puts
+      end
     end
 
     puts "#{total} moves exist."
