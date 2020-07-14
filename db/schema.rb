@@ -401,7 +401,7 @@ ActiveRecord::Schema.define(version: 2020_07_13_092251) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
-    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id"
+    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
