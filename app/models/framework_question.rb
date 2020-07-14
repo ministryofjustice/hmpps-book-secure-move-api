@@ -20,14 +20,14 @@ class FrameworkQuestion < VersionedModel
   has_many :flags
   has_many :framework_responses
 
-  def build_responses(question: self, person_escort_record:)
+  def build_responses(question: self, person_escort_record:, questions:)
     response = build_response(question, person_escort_record)
-    return response unless question.dependents.any?
+    return response if question.dependents.empty?
 
-    question.dependents.find_each do |dependent_question|
-      dependent_response = build_responses(question: dependent_question, person_escort_record: person_escort_record)
+    question.dependents.each do |dependent_question|
+      # NB: to avoid extra queries use original set of questions
+      dependent_response = build_responses(question: questions[dependent_question.id], person_escort_record: person_escort_record, questions: questions)
       dependent_response_values = dependent_response.slice(:type, :framework_question_id, :dependents, :person_escort_record)
-
       response.dependents.build(dependent_response_values)
     end
 
