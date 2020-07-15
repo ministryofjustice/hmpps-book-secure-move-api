@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :framework_question do
     association(:framework)
     sequence(:key) { |x| "key-#{x}" }
-    section { 'risk' }
+    section { %w[offence-information health-information risk-information].sample }
     question_type { 'radio' }
     options { %w[Yes No] }
 

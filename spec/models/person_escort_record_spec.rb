@@ -190,7 +190,7 @@ RSpec.describe PersonEscortRecord do
       expect(dependent_responses.count).to eq(2)
     end
 
-    it 'returns person_escort_record valildation error if record is not valid' do
+    it 'returns person_escort_record validation error if record is not valid' do
       framework = create(:framework)
       create(:framework_question, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
@@ -214,6 +214,67 @@ RSpec.describe PersonEscortRecord do
       person_escort_record.build_responses!
     rescue ActiveRecord::RecordInvalid
       expect(FrameworkResponse.count).to be_zero
+    end
+  end
+
+  describe '#section_progress' do
+    it 'returns an empty hash if no responses present' do
+      person_escort_record = create(:person_escort_record)
+
+      expect(person_escort_record.section_progress).to be_empty
+    end
+
+    it 'returns all section values for framework questions' do
+      person_escort_record = create(:person_escort_record, :with_responses)
+      question_sections = person_escort_record.framework_questions.pluck(:section).uniq
+      progress_sections = person_escort_record.section_progress.map { |section| section[:key] }
+
+      expect(progress_sections).to match_array(question_sections)
+    end
+
+    it 'returns a section as `not_started` if all responded values are false' do
+      person_escort_record = create(:person_escort_record)
+      question = create(:framework_question, framework: person_escort_record.framework)
+      create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
+
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: question.section,
+          status: 'not_started',
+        },
+      )
+    end
+
+    it 'returns a section as `in_progress` if some responded values are true' do
+      person_escort_record = create(:person_escort_record)
+      question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
+      question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
+      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
+
+      create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record)
+
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'in_progress',
+        },
+      )
+    end
+
+    it 'returns a section as `completed` if all responded values are true' do
+      person_escort_record = create(:person_escort_record)
+      question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
+      question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
+      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
+
+      create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record, responded: true)
+
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'completed',
+        },
+      )
     end
   end
 end

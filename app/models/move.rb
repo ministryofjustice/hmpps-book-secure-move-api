@@ -89,7 +89,6 @@ class Move < VersionedModel
 
   delegate :suppliers, to: :from_location
 
-  scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   def rebooked
