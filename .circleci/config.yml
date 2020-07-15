@@ -390,7 +390,7 @@ jobs:
               jq 'sort_by(.imagePushedAt)|map(select(any(.imageTags[]? ; contains("latest"))|not))|map({imageDigest})|.[:100]')
             echo $TO_DELETE | jq 'length'
             echo "Images to delete:"
-            echo $TO_DELETE | jq
+            aws ecr describe-images --region=eu-west-2 --repository-name book-a-secure-move/hmpps-book-secure-move-api  --image-ids=$TO_DELETE --output json  | jq
 workflows:
   version: 2
 
@@ -451,5 +451,5 @@ workflows:
     jobs: [ecr-cleanup]
     triggers:
       - schedule:
-          cron: "30 * * * *"
+          cron: "50 * * * *"
           <<: *only_master_and_create_dev
