@@ -46,12 +46,12 @@ module Moves
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
+      scope = apply_filter(scope, :supplier_id)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
       scope = apply_filter(scope, :status)
       scope = apply_filter(scope, :move_type)
       scope = apply_filter(scope, :cancellation_reason)
-      scope = apply_supplier_filters(scope)
       scope
     end
 
@@ -78,12 +78,6 @@ module Moves
       scope
         .joins(:to_location)
         .where(locations: { location_type: filter_params[:location_type] })
-    end
-
-    def apply_supplier_filters(scope)
-      return scope unless filter_params.key?(:supplier_id)
-
-      scope.served_by(filter_params[:supplier_id])
     end
 
     def apply_allocation_relationship_filters(scope)
