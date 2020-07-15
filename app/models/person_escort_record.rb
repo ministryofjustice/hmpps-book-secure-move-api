@@ -47,8 +47,11 @@ class PersonEscortRecord < VersionedModel
   end
 
   def section_progress
-    sections_to_responded.each do |section, responses|
-      sections_to_responded[section] = set_progress(responses)
+    sections_to_responded.map do |section, responses|
+      {
+        key: section,
+        status: set_progress(responses),
+      }
     end
   end
 

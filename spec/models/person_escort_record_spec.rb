@@ -226,9 +226,10 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns all section values for framework questions' do
       person_escort_record = create(:person_escort_record, :with_responses)
-      sections = FrameworkQuestion.all.uniq.pluck(:section)
+      question_sections = person_escort_record.framework_questions.pluck(:section).uniq
+      progress_sections = person_escort_record.section_progress.map { |section| section[:key] }
 
-      expect(person_escort_record.section_progress.keys).to contain_exactly(*sections)
+      expect(progress_sections).to contain_exactly(*question_sections)
     end
 
     it 'returns a section as `not_started` if all responded values are false' do
@@ -236,7 +237,12 @@ RSpec.describe PersonEscortRecord do
       question = create(:framework_question, framework: person_escort_record.framework)
       create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
 
-      expect(person_escort_record.section_progress[question.section]).to eq('not_started')
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: question.section,
+          status: 'not_started',
+        },
+      )
     end
 
     it 'returns a section as `in_progress` if some responded values are true' do
@@ -247,7 +253,12 @@ RSpec.describe PersonEscortRecord do
 
       create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record)
 
-      expect(person_escort_record.section_progress['risk']).to eq('in_progress')
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'in_progress',
+        },
+      )
     end
 
     it 'returns a section as `completed` if all responded values are true' do
@@ -258,7 +269,12 @@ RSpec.describe PersonEscortRecord do
 
       create(:string_response, value: 'No', framework_question: question2, person_escort_record: person_escort_record)
 
-      expect(person_escort_record.section_progress['risk']).to eq('completed')
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'completed',
+        },
+      )
     end
   end
 end

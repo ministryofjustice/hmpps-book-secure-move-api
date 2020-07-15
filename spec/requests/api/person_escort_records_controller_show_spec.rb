@@ -22,34 +22,37 @@ RSpec.describe Api::PersonEscortRecordsController do
       let(:data) do
         {
           "id": person_escort_record.id,
-          "type": "person_escort_records",
+          "type": 'person_escort_records',
           "attributes": {
             "version": person_escort_record.framework.version,
-            "status": "in_progress",
+            "status": 'in_progress',
           },
           "meta": {
-            "section_progress" => {
-              "risk_information" => "completed",
-            },
+            'section_progress' => [
+              {
+                "key": 'risk-information',
+                "status": 'completed',
+              },
+            ],
           },
           "relationships": {
             "profile": {
               "data": {
                 "id": person_escort_record.profile.id,
-                "type": "profiles",
+                "type": 'profiles',
               },
             },
             "framework": {
               "data": {
                 "id": person_escort_record.framework.id,
-                "type": "frameworks",
+                "type": 'frameworks',
               },
             },
             "responses": {
               "data": [
                 {
                   "id": framework_response.id,
-                  "type": "framework_responses",
+                  "type": 'framework_responses',
                 },
               ],
             },

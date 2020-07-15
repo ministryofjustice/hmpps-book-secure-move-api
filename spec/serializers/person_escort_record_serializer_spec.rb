@@ -57,8 +57,9 @@ RSpec.describe PersonEscortRecordSerializer do
       question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
       create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
 
-      expect(result[:data][:meta][:section_progress]).to eq(
-        'risk_information' => 'not_started',
+      expect(result[:data][:meta][:section_progress]).to contain_exactly(
+        key: 'risk-information',
+        status: 'not_started',
       )
     end
 
