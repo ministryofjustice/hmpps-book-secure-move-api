@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.configure do |_config|
-  def validate_response(response, schema: nil, version: 'v1', strict: true, status: 200)
+  def validate_response(response, schema: nil, version: 'v2', strict: true, status: 200)
     # NB: there is no point validating the schema of the json response unless the status matches the expectation: an
     # error response will never validate against a success schema and the schema errors will confuse the issue.
 
@@ -25,7 +25,7 @@ RSpec.configure do |_config|
     else
       # The API returned an unexpected status (e.g. an error when success was expected, or success when an error was expected)
       # To facilitate test debugging, fail with the response details
-      raise "Unexpected API response (expected: #{status}, received: #{response.status}): #{response.body}"
+      raise "Unexpected API response (expected: #{status}, received: #{response.status}):\n\n#{response.body}"
     end
   end
 end
