@@ -8,6 +8,7 @@ RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
+  it { is_expected.to validate_presence_of(:type) }
 
   it 'validates string dependent responses' do
     question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
@@ -70,6 +71,54 @@ RSpec.describe FrameworkResponse do
     response = create(:string_response, value: nil, parent: create(:collection_response, :details), framework_question: question)
 
     expect(response).not_to validate_presence_of(:value).on(:update)
+  end
+
+  it 'sets the responded value to false if string value is empty' do
+    response = create(:string_response, value: nil)
+
+    expect(response.responded).to be(false)
+  end
+
+  it 'sets the responded value to false if object value is empty' do
+    response = create(:object_response, value: {})
+
+    expect(response.responded).to be(false)
+  end
+
+  it 'sets the responded value to false if collection value is empty' do
+    response = create(:collection_response, value: [])
+
+    expect(response.responded).to be(false)
+  end
+
+  it 'sets the responded value to false if array value is empty' do
+    response = create(:array_response, value: [])
+
+    expect(response.responded).to be(false)
+  end
+
+  it 'sets the responded value to true if string value is present' do
+    response = create(:string_response)
+
+    expect(response.responded).to be(true)
+  end
+
+  it 'sets the responded value to true if object value is present' do
+    response = create(:object_response, :details)
+
+    expect(response.responded).to be(true)
+  end
+
+  it 'sets the responded value to true if collection value is present' do
+    response = create(:collection_response)
+
+    expect(response.responded).to be(true)
+  end
+
+  it 'sets the responded value to true if array value is present' do
+    response = create(:array_response)
+
+    expect(response.responded).to be(true)
   end
 
   describe '.requires_value?' do
