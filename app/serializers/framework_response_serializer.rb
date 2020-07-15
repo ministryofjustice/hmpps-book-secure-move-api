@@ -20,6 +20,6 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
-    framework_question
+    question
   ].freeze
 end
