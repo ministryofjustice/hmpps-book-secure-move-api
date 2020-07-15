@@ -29,6 +29,7 @@ class Move < VersionedModel
     prison_transfer: 'prison_transfer',
     police_transfer: 'police_transfer',
     video_remand_hearing: 'video_remand_hearing',
+    hospital: 'hospital',
   }
 
   self.ignored_columns = %w[person_id]

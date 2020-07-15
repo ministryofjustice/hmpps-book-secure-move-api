@@ -54,6 +54,15 @@ RSpec.describe Api::MoveEventsController do
       end
     end
 
+    context 'with a hospital move' do
+      let(:move) { create(:move, :hospital) }
+      let(:new_location) { create(:location, :hospital) }
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
+      end
+    end
+
     context 'with a bad request' do
       let(:redirect_params) { nil }
 
@@ -116,6 +125,19 @@ RSpec.describe Api::MoveEventsController do
             [{
               'title' => 'Invalid to_location_id',
               'detail' => 'Validation failed: To location was not found',
+            }]
+          end
+        end
+      end
+
+      context 'with a redirection to an invalid location for the move type' do
+        let(:move) { create(:move, :hospital) }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location must be a high security hospital location for hospital move',
             }]
           end
         end

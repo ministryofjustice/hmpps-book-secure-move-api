@@ -287,7 +287,7 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'with explicit `move_type`' do
+    context 'with explicit video_remand_hearing `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
       let(:from_location) { create :location, :police, suppliers: [supplier] }
       let(:to_location) { nil }
@@ -304,6 +304,25 @@ RSpec.describe Api::MovesController do
         do_post
 
         expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand_hearing'
+      end
+    end
+
+    context 'with explicit hospital `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
+      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+
+      it 'creates a move' do
+        expect { do_post }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the move_type to `hospital`' do
+        do_post
+
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'hospital'
       end
     end
 

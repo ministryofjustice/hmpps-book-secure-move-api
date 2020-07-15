@@ -10,6 +10,7 @@ module Moves
 
       # Apply more complex validation rules for specific move types
       validate_police_from_location if includes? %w[video_remand_hearing]
+      validate_hospital_to_location if includes? %w[hospital]
     end
 
   private
@@ -23,7 +24,11 @@ module Moves
     end
 
     def validate_police_from_location
-      record.errors.add(:from_location, "must be a police location for #{human_move_type}") unless record.from_location&.police?
+      record.errors.add(:from_location, "must be a police location for #{human_move_type} move") unless record.from_location&.police?
+    end
+
+    def validate_hospital_to_location
+      record.errors.add(:to_location, "must be a high security hospital location for #{human_move_type} move") unless record.to_location&.high_security_hospital?
     end
   end
 end
