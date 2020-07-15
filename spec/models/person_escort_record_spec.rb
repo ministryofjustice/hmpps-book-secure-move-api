@@ -249,7 +249,7 @@ RSpec.describe PersonEscortRecord do
       person_escort_record = create(:person_escort_record)
       question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
       question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record)
+      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
 
       create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record)
 
@@ -265,9 +265,9 @@ RSpec.describe PersonEscortRecord do
       person_escort_record = create(:person_escort_record)
       question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
       question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record)
+      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
 
-      create(:string_response, value: 'No', framework_question: question2, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record, responded: true)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {

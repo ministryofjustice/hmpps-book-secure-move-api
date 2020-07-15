@@ -73,54 +73,6 @@ RSpec.describe FrameworkResponse do
     expect(response).not_to validate_presence_of(:value).on(:update)
   end
 
-  it 'sets the responded value to false if string value is empty' do
-    response = create(:string_response, value: nil)
-
-    expect(response.responded).to be(false)
-  end
-
-  it 'sets the responded value to false if object value is empty' do
-    response = create(:object_response, value: {})
-
-    expect(response.responded).to be(false)
-  end
-
-  it 'sets the responded value to false if collection value is empty' do
-    response = create(:collection_response, value: [])
-
-    expect(response.responded).to be(false)
-  end
-
-  it 'sets the responded value to false if array value is empty' do
-    response = create(:array_response, value: [])
-
-    expect(response.responded).to be(false)
-  end
-
-  it 'sets the responded value to true if string value is present' do
-    response = create(:string_response)
-
-    expect(response.responded).to be(true)
-  end
-
-  it 'sets the responded value to true if object value is present' do
-    response = create(:object_response, :details)
-
-    expect(response.responded).to be(true)
-  end
-
-  it 'sets the responded value to true if collection value is present' do
-    response = create(:collection_response)
-
-    expect(response.responded).to be(true)
-  end
-
-  it 'sets the responded value to true if array value is present' do
-    response = create(:array_response)
-
-    expect(response.responded).to be(true)
-  end
-
   describe '.requires_value?' do
     it 'returns false if value present' do
       question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
@@ -156,6 +108,34 @@ RSpec.describe FrameworkResponse do
       response = create(:string_response, value: nil, parent: parent_response, framework_question: question)
 
       expect(described_class.requires_value?(response.value, response)).to be(false)
+    end
+  end
+
+  describe '#responded' do
+    it 'sets the responded value to false on creation with empty value' do
+      response = create(:string_response, value: nil)
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to false on creation with value' do
+      response = create(:string_response, value: 'Yes')
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to true on update with empty value' do
+      response = create(:string_response, value: nil)
+      response.update(value: 'Yes')
+
+      expect(response.responded).to be(true)
+    end
+
+    it 'sets the responded value to update on update with value' do
+      response = create(:string_response, value: 'Yes')
+      response.update(value: nil)
+
+      expect(response.responded).to be(true)
     end
   end
 end

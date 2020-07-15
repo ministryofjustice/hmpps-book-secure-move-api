@@ -14,7 +14,7 @@ class FrameworkResponse < VersionedModel
     record.errors.add(:value, :blank) if requires_value?(value, record)
   end
 
-  after_validation :set_responded_value
+  after_validation :set_responded_value, on: :update
 
   def self.requires_value?(value, record)
     return false if value.present? || !record.framework_question.required
@@ -27,6 +27,6 @@ class FrameworkResponse < VersionedModel
 private
 
   def set_responded_value
-    self.responded = true if value_text.present? || value_json.present?
+    self.responded = true
   end
 end
