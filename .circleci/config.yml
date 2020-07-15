@@ -389,7 +389,6 @@ jobs:
               --query 'imageDetails[]' --output json |\
               jq 'sort_by(.imagePushedAt)|map(select(any(.imageTags[]? ; contains("latest"))|not))|map({imageDigest})|.[:100]')
             echo $TO_DELETE | jq 'length'
-          command: |
             echo "Images to delete:"
             echo $TO_DELETE | jq
 workflows:
