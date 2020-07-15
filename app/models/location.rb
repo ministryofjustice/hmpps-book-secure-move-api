@@ -62,4 +62,12 @@ class Location < ApplicationRecord
   scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
   scope :search_by_title, ->(search) { select(:id).where('title ILIKE :search', search: "%#{search}%") }
+
+  def detained?
+    prison? || secure_training_centre? || secure_childrens_home?
+  end
+
+  def not_detained?
+    !detained?
+  end
 end

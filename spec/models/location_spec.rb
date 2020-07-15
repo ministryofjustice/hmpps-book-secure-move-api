@@ -11,12 +11,14 @@ RSpec.describe Location do
   it { is_expected.to validate_presence_of(:location_type) }
   it { is_expected.to define_enum_for(:location_type).backed_by_column_of_type(:string) }
 
-  context 'when location is a prison' do
-    subject(:location) { build :location }
+  context 'when location is a court' do
+    subject(:location) { build :location, :court }
 
-    it { expect(location.prison?).to be true }
+    it { expect(location.prison?).to be false }
     it { expect(location.police?).to be false }
-    it { expect(location.court?).to be false }
+    it { expect(location.court?).to be true }
+    it { expect(location.detained?).to be false }
+    it { expect(location.not_detained?).to be true }
   end
 
   context 'when location is a police custody unit' do
@@ -25,14 +27,38 @@ RSpec.describe Location do
     it { expect(location.prison?).to be false }
     it { expect(location.police?).to be true }
     it { expect(location.court?).to be false }
+    it { expect(location.detained?).to be false }
+    it { expect(location.not_detained?).to be true }
   end
 
-  context 'when location is a court' do
-    subject(:location) { build :location, :court }
+  context 'when location is a prison' do
+    subject(:location) { build :location }
+
+    it { expect(location.prison?).to be true }
+    it { expect(location.police?).to be false }
+    it { expect(location.court?).to be false }
+    it { expect(location.detained?).to be true }
+    it { expect(location.not_detained?).to be false }
+  end
+
+  context 'when location is a secure childrens hospital' do
+    subject(:location) { build :location, :sch }
 
     it { expect(location.prison?).to be false }
     it { expect(location.police?).to be false }
-    it { expect(location.court?).to be true }
+    it { expect(location.court?).to be false }
+    it { expect(location.detained?).to be true }
+    it { expect(location.not_detained?).to be false }
+  end
+
+  context 'when location is a secure training centre' do
+    subject(:location) { build :location, :stc }
+
+    it { expect(location.prison?).to be false }
+    it { expect(location.police?).to be false }
+    it { expect(location.court?).to be false }
+    it { expect(location.detained?).to be true }
+    it { expect(location.not_detained?).to be false }
   end
 
   describe '#supplier' do
