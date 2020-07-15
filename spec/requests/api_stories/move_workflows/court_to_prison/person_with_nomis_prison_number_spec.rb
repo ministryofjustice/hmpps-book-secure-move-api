@@ -8,8 +8,8 @@ require 'rack/test'
 
 RSpec.describe 'court to prison move', type: :request do
   include Rack::Test::Methods
-  include_context 'Mock prison-api'
-  include_context 'Nomis alerts reference data'
+  include_context 'with mock prison-api'
+  include_context 'with Nomis alerts reference data'
 
   let(:prison_number) { 'G8133UA' }
   let(:prison) { create(:location, :prison) }
