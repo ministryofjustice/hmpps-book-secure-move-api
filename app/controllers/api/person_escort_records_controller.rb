@@ -14,7 +14,13 @@ module Api
         profile_id: new_person_escort_record_params.dig(:relationships, :profile, :data, :id),
       )
 
-      render json: person_escort_record, status: :created, include: included_relationships
+      render_person_escort_record(person_escort_record, :created)
+    end
+
+    def show
+      person_escort_record = PersonEscortRecord.find(params[:id])
+
+      render_person_escort_record(person_escort_record, :ok)
     end
 
   private
@@ -25,6 +31,10 @@ module Api
 
     def supported_relationships
       PersonEscortRecordSerializer::SUPPORTED_RELATIONSHIPS
+    end
+
+    def render_person_escort_record(person_escort_record, status)
+      render json: person_escort_record, status: status, include: included_relationships
     end
   end
 end

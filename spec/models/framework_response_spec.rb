@@ -8,6 +8,7 @@ RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
+  it { is_expected.to validate_presence_of(:type) }
 
   it 'validates string dependent responses' do
     question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
@@ -107,6 +108,34 @@ RSpec.describe FrameworkResponse do
       response = create(:string_response, value: nil, parent: parent_response, framework_question: question)
 
       expect(described_class.requires_value?(response.value, response)).to be(false)
+    end
+  end
+
+  describe '#responded' do
+    it 'sets the responded value to false on creation with empty value' do
+      response = create(:string_response, value: nil)
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to false on creation with value' do
+      response = create(:string_response, value: 'Yes')
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to true on update with empty value' do
+      response = create(:string_response, value: nil)
+      response.update(value: 'Yes')
+
+      expect(response.responded).to be(true)
+    end
+
+    it 'sets the responded value to update on update with value' do
+      response = create(:string_response, value: 'Yes')
+      response.update(value: nil)
+
+      expect(response.responded).to be(true)
     end
   end
 end
