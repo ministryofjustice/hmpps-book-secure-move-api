@@ -2,10 +2,14 @@
 
 RSpec.shared_context 'Mock prison-api' do
   before(:context) do
-    # Start up a local wiremock server unless there is a WIREMOCK_URL env var defined
-    unless ENV['WIREMOCK_URL'].present?
+    # Start up an internal wiremock server unless EXTERNAL_WIREMOCK=true
+    unless ENV.fetch('EXTERNAL_WIREMOCK', 'false') == 'true'
+      unless File.exist?('spec/wiremock/wiremock-standalone.jar')
+        fail 'Please use either an external wiremock or install wiremock with: $ rake wiremock:install'
+      end
+
       # start up a local wiremock server by running the jar
-      @my_server = ServiceMock::Server.new('standalone-2.27.0', 'spec/wiremock/')
+      @my_server = ServiceMock::Server.new('standalone', 'spec/wiremock/')
       @my_server.start do |server|
         server.port = 8888
         server.root_dir = 'prison-api'
@@ -31,10 +35,10 @@ RSpec.shared_context 'Mock prison-api' do
   end
 
   after(:context) do
-    unless ENV['WIREMOCK_URL'].present?
+    if @my_server.present?
       # shutdown wiremock server
       @my_server.stop # rescue nil # ignore errors if we can't send the stop the server message
       @my_server.process.stop
-      end
     end
+  end
 end

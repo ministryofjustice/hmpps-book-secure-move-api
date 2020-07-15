@@ -96,6 +96,11 @@ references:
         gem install bundler -v $bundler_version
         bundle config --local path vendor/bundle
         bundle check || bundle install --jobs=4 --retry=3
+  _install-wiremock: &install-wiremock
+    run:
+      name: Install wiremock
+      command: |
+        curl -o spec/wiremock/wiremock-standalone.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
   _wait-for-db: &wait-for-db
     run:
       name: Wait for DB
@@ -110,6 +115,11 @@ references:
       command: |
         TESTS=$(circleci tests glob "spec/{requests,swagger}/**/*_spec.rb" | grep -e rswag -e swagger | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
+  _run-wiremock: &run-wiremock
+    run:
+      name: Run prison-api wiremock
+      command: java -jar spec/wiremock/wiremock-standalone.jar --port 8888 --verbose --root-dir spec/wiremock/prison-api
+      background: true
   _rspec: &rspec
     run:
       name: Run rspec tests
@@ -148,7 +158,7 @@ executors:
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
           EXTERNAL_URL: mocked_in_tests
           ENCRYPTOR_SALT: "*\xDB\x9E\a\x1ES1\xB7\xE3\xB8{\xF9Fl\x8Fnn?\x83\xC6\xBBR\x9Eq\x0F\x01./U\x0E\xF1\xDE"
-          WIREMOCK_URL: "TODO-FIXME"
+          EXTERNAL_WIREMOCK: "true"
       - image: circleci/postgres:10-alpine-ram
         environment:
           POSTGRES_USER: postgres
@@ -161,6 +171,7 @@ commands:
     steps:
       - *restore-cache
       - *install-dependencies
+      - *install-wiremock
       - *save-cache
 
   seed-database:
@@ -312,6 +323,7 @@ jobs:
     steps:
       - checkout
       - build-base
+      - *run-wiremock
       - *wait-for-db
       - *create-db
       - *attach-tmp-workspace
