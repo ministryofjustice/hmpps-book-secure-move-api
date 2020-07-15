@@ -390,23 +390,23 @@ jobs:
       - run:
           name: Build manifest
           command: |
-            TO_DELETE=$(aws ecr describe-images --region=eu-west-2 \
+            TO_DELETE=$(aws ecr describe-images \
               --repository-name book-a-secure-move/hmpps-book-secure-move-api \
               --query 'imageDetails[]' --output json |\
               jq 'sort_by(.imagePushedAt)|map(select(any(.imageTags[]? ; contains("latest"))|not))|map({imageDigest})|.[:100]')
             echo "Tags to be deleted:"
-            aws ecr describe-images --region=eu-west-2 \
+            aws ecr describe-images  \
               --repository-name book-a-secure-move/hmpps-book-secure-move-api \
               --image-ids "${TO_DELETE}" --output json  | jq '.[][].imageTags[]'
             echo "Deleting:"
-            aws ecr batch-delete-image --region eu-west-2 \
+            aws ecr batch-delete-image \
             --repository-name book-a-secure-move/hmpps-book-secure-move-api \
             --image-ids ${TO_DELETE}
       - run:
           name: Confirm live latest images
           command: |
             echo "Images tagged latest left behind"
-            aws ecr describe-images --region=eu-west-2 \
+            aws ecr describe-images \
             --repository-name  book-a-secure-move/hmpps-book-secure-move-api \
             --query 'imageDetails[]' --output json | \
             jq 'map(select(any(.imageTags[]? ; contains("latest"))))|map(.imageTags)'
