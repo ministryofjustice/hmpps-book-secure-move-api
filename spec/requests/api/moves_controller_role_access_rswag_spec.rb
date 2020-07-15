@@ -23,18 +23,7 @@ RSpec.describe Api::MovesController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
 
-    # let!(:pentonville) { create :location, :with_moves, suppliers: [pentonville_supplier] }
-
     let!(:moves) { create_list(:move, 2, supplier: pentonville_supplier) }
-
-    # let!(:birmingham) do
-    #   create :location,
-    #          :with_moves,
-    #          key: 'hmp_birmingham',
-    #          title: 'HMP Birmingham',
-    #          nomis_agency_id: 'BMI',
-    #          suppliers: [birmingham_supplier]
-    # end
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
