@@ -8,10 +8,17 @@ RSpec.describe Api::MovesController do
   let(:alternative_supplier) { create :supplier }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
   let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
   let(:expected_moves) { nil }
   let(:unexpected_moves) { nil }
+
+  let(:headers) do
+    {
+      'CONTENT_TYPE': content_type,
+      'Accept': 'application/vnd.api+json; version=2',
+      'Authorization' => "Bearer #{access_token}",
+    }
+  end
 
   shared_examples 'an api that filters moves correctly' do
     let(:size) { response_json['data'].size }
@@ -27,7 +34,7 @@ RSpec.describe Api::MovesController do
     before do
       expected_moves # forces creation of expected and unexpected moves prior to querying data
       unexpected_moves
-      get '/api/v1/moves', params: filter_params, headers: headers
+      get '/api/moves', params: filter_params, headers: headers
     end
 
     describe 'by supplier_id' do
