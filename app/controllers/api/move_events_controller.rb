@@ -17,49 +17,49 @@ module Api
     COMMON_PARAMS = [:type, attributes: %i[timestamp notes]].freeze # for accept, complete and start move events
 
     def accept
-      MoveEvents::ParamsValidator.new(move, common_params).validate!
+      MoveEvents::ParamsValidator.new(common_params).validate!
       process_event(move, Event::ACCEPT, common_params)
       render status: :no_content
     end
 
     def approve
-      MoveEvents::ParamsValidator.new(move, approve_params).validate!
+      MoveEvents::ParamsValidator.new(approve_params).validate!
       process_event(move, Event::APPROVE, approve_params)
       render status: :no_content
     end
 
     def cancel
-      MoveEvents::ParamsValidator.new(move, cancel_params).validate!
+      MoveEvents::ParamsValidator.new(cancel_params).validate!
       process_event(move, Event::CANCEL, cancel_params)
       render status: :no_content
     end
 
     def complete
-      MoveEvents::ParamsValidator.new(move, common_params).validate!
+      MoveEvents::ParamsValidator.new(common_params).validate!
       process_event(move, Event::COMPLETE, common_params)
       render status: :no_content
     end
 
     def lockouts
-      MoveEvents::ParamsValidator.new(move, lockout_params).validate!
+      MoveEvents::ParamsValidator.new(lockout_params).validate!
       process_event(move, Event::LOCKOUT, lockout_params)
       render status: :no_content
     end
 
     def redirects
-      MoveEvents::ParamsValidator.new(move, redirect_params).validate!
+      MoveEvents::ParamsValidator.new(redirect_params).validate!
       process_event(move, Event::REDIRECT, redirect_params)
       render status: :no_content
     end
 
     def reject
-      MoveEvents::ParamsValidator.new(move, reject_params).validate!
+      MoveEvents::ParamsValidator.new(reject_params).validate!
       process_event(move, Event::REJECT, reject_params)
       render status: :no_content
     end
 
     def start
-      MoveEvents::ParamsValidator.new(move, common_params).validate!
+      MoveEvents::ParamsValidator.new(common_params).validate!
       process_event(move, Event::START, common_params)
       render status: :no_content
     end
