@@ -98,8 +98,10 @@ references:
         bundle check || bundle install --jobs=4 --retry=3
   _install-wiremock: &install-wiremock
     run:
-      name: Install wiremock
+      name: Install java and wiremock
       command: |
+        sudo apt-get update
+        sudo apt-get install default-jre
         curl -o spec/wiremock/wiremock-standalone.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
   _wait-for-db: &wait-for-db
     run:
