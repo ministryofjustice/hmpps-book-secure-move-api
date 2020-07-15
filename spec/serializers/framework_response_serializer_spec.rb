@@ -20,6 +20,10 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:value]).to eq(framework_response.value)
   end
 
+  it 'contains a `responded` attribute' do
+    expect(result[:data][:attributes][:responded]).to eq(framework_response.responded)
+  end
+
   it 'contains a `person_escort_record` relationship' do
     expect(result[:data][:relationships][:person_escort_record][:data]).to eq(
       id: framework_response.person_escort_record.id,
