@@ -6,6 +6,10 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   attribute :version
   attribute :state, key: :status
 
+  meta do
+    { section_progress: object.section_progress }
+  end
+
   def version
     object.framework.version
   end

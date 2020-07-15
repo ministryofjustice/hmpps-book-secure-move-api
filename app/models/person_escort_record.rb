@@ -1,8 +1,13 @@
 class PersonEscortRecord < VersionedModel
+  PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
+  PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
+  PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
+  PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
+
   enum states: {
-    in_progress: 'in_progress',
-    completed: 'completed',
-    confirmed: 'confirmed',
+    in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
+    completed: PERSON_ESCORT_RECORD_COMPLETED,
+    confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
   }
 
   validates :state, presence: true, inclusion: { in: states }
@@ -19,7 +24,7 @@ class PersonEscortRecord < VersionedModel
     framework = version.present? ? Framework.find_by!(version: version) : Framework.ordered_by_latest_version.first
 
     # TODO: add state machine
-    record = new(profile: profile, framework: framework, state: 'in_progress')
+    record = new(profile: profile, framework: framework, state: PERSON_ESCORT_RECORD_IN_PROGRESS)
     record.build_responses!
   end
 
@@ -39,5 +44,29 @@ class PersonEscortRecord < VersionedModel
     end
 
     self
+  end
+
+  def section_progress
+    sections_to_responded.map do |section, responses|
+      {
+        key: section,
+        status: set_progress(responses),
+      }
+    end
+  end
+
+private
+
+  def sections_to_responded
+    @sections_to_responded ||= framework_responses.joins(:framework_question).select('DISTINCT responded, framework_questions.section').group_by(&:section)
+  end
+
+  def set_progress(responses)
+    responded = responses.pluck(:responded)
+
+    return PERSON_ESCORT_RECORD_COMPLETED if responded.all?(true)
+    return PERSON_ESCORT_RECORD_NOT_STARTED if responded.all?(false)
+
+    PERSON_ESCORT_RECORD_IN_PROGRESS
   end
 end
