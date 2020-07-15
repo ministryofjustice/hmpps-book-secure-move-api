@@ -22,6 +22,9 @@ RSpec.describe V2::ProfileSerializer do
           documents: {
             data: [],
           },
+          person_escort_record: {
+            data: nil,
+          },
         },
       },
     }

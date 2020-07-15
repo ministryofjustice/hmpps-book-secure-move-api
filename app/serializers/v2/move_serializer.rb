@@ -32,6 +32,7 @@ module V2
       profile.documents
       profile.person.ethnicity
       profile.person.gender
+      profile.person_escort_record
       from_location
       from_location.suppliers
       to_location
