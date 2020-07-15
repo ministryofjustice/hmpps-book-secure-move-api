@@ -162,27 +162,6 @@ RSpec.describe Api::MovesController do
         expect(response_json).to eq resource_to_json
       end
     end
-
-    xcontext 'when supplier doesn\'t have rights to write the resource' do
-      let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
-
-      # let(:move) { create(:move, supplier: nil) }
-      let!(:person) { create(:person) }
-      let(:data) do
-        {
-          type: 'moves',
-          attributes: move_attributes,
-          relationships: {
-            person: { data: { type: 'people', id: person.id } },
-            from_location: { data: { type: 'locations', id: birmingham.id } },
-            to_location: { data: { type: 'locations', id: pentonville.id } },
-          },
-        }
-      end
-      let(:detail_401) { 'You are not authorized to access this page.' }
-
-      it_behaves_like 'an endpoint that responds with error 401'
-    end
   end
 
   describe 'PATCH /moves' do
