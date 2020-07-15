@@ -9,7 +9,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:profile) { create(:profile) }
     let(:profile_id) { profile.id }
-    let(:framework) { create(:framework, framework_questions: [build(:framework_question)]) }
+    let(:framework) { create(:framework, framework_questions: [build(:framework_question, section: 'risk-information')]) }
     let(:framework_version) { framework.version }
 
     let(:person_escort_record_params) do
@@ -44,6 +44,14 @@ RSpec.describe Api::PersonEscortRecordsController do
           "attributes": {
             "version": framework_version,
             "status": 'in_progress',
+          },
+          "meta": {
+            'section_progress' => [
+              {
+                "key": 'risk-information',
+                "status": 'not_started',
+              },
+            ],
           },
           "relationships": {
             "profile": {
