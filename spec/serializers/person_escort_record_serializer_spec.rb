@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe PersonEscortRecordSerializer do
   subject(:serializer) { described_class.new(person_escort_record) }
 
-  let(:person_escort_record) { create :person_escort_record }
+  let(:person_escort_record) { create(:person_escort_record) }
   let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
 
   it 'contains a `type` property' do
@@ -50,5 +50,22 @@ RSpec.describe PersonEscortRecordSerializer do
       id: response.id,
       type: 'framework_responses',
     )
+  end
+
+  describe 'meta' do
+    it 'includes section progress' do
+      question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
+      create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
+
+      expect(result[:data][:meta][:section_progress]).to eq(
+        'risk_information' => 'not_started',
+      )
+    end
+
+    context 'with no questions' do
+      it 'does not include includes section progress' do
+        expect(result[:data][:meta][:section_progress]).to be_empty
+      end
+    end
   end
 end
