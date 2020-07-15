@@ -190,7 +190,7 @@ RSpec.describe PersonEscortRecord do
       expect(dependent_responses.count).to eq(2)
     end
 
-    it 'returns person_escort_record valildation error if record is not valid' do
+    it 'returns person_escort_record validation error if record is not valid' do
       framework = create(:framework)
       create(:framework_question, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
@@ -229,7 +229,7 @@ RSpec.describe PersonEscortRecord do
       question_sections = person_escort_record.framework_questions.pluck(:section).uniq
       progress_sections = person_escort_record.section_progress.map { |section| section[:key] }
 
-      expect(progress_sections).to contain_exactly(*question_sections)
+      expect(progress_sections).to match_array(question_sections)
     end
 
     it 'returns a section as `not_started` if all responded values are false' do

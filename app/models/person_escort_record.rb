@@ -62,11 +62,11 @@ private
   end
 
   def set_progress(responses)
-    responded = responses.pluck(:responded).uniq
-    if responded.include?(true)
-      responded.include?(false) ? PERSON_ESCORT_RECORD_IN_PROGRESS : PERSON_ESCORT_RECORD_COMPLETED
-    else
-      PERSON_ESCORT_RECORD_NOT_STARTED
-    end
+    responded = responses.pluck(:responded)
+
+    return PERSON_ESCORT_RECORD_COMPLETED if responded.all?(true)
+    return PERSON_ESCORT_RECORD_NOT_STARTED if responded.all?(false)
+
+    PERSON_ESCORT_RECORD_IN_PROGRESS
   end
 end
