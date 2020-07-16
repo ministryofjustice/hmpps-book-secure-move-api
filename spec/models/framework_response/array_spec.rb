@@ -5,28 +5,100 @@ require 'rails_helper'
 RSpec.describe FrameworkResponse::Array do
   subject { create(:array_response) }
 
-  it { is_expected.to validate_absence_of(:value_text) }
-  it { is_expected.to validate_inclusion_of(:value_json).in_array(['Level 1', 'Level 2']) }
+  context 'with validations' do
+    it { is_expected.to validate_absence_of(:value_text) }
 
-  it 'validates value presence when a record is updated if question required' do
-    question = create(:framework_question, required: true)
-    response = create(:array_response, value: nil, framework_question: question)
+    it 'validates values included in options' do
+      question = create(:framework_question, :checkbox)
+      response = create(:array_response, value: ['Level 3', 'Level 4'], framework_question: question)
 
-    expect(response).to validate_presence_of(:value).on(:update)
-  end
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:value]).to eq(['Level 3, Level 4 are not a valid option'])
+    end
 
-  it 'does not validate value json presence when a record is updated if question required but dependent' do
-    question = create(:framework_question, required: true)
-    response = create(:array_response, value: nil, framework_question: question, parent: create(:string_response))
+    it 'does not validate values if value included in options' do
+      question = create(:framework_question, :checkbox)
+      response = create(:array_response, value: ['Level 1', 'Level 2'], framework_question: question)
 
-    expect(response).not_to validate_presence_of(:value_json).on(:update)
-  end
+      expect(response).to be_valid
+    end
 
-  it 'does not validate value json inclusion if no options present on question' do
-    question = create(:framework_question, required: true, options: [])
-    response = create(:array_response, value: ['Some value'], framework_question: question)
+    it 'validates correct type is passed in' do
+      question = create(:framework_question, :checkbox)
+      response = build(:array_response, value: { 'option' => 'Level 4' }, framework_question: question)
 
-    expect(response).not_to validate_inclusion_of(:value_text).in_array([])
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:value]).to eq(['is incorrect type'])
+    end
+
+    context 'when question required' do
+      it 'validates presence of value when value is empty' do
+        question = create(:framework_question, :checkbox, required: true)
+        response = create(:array_response, value: [], framework_question: question)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'validates presence of value when value is nil' do
+        question = create(:framework_question, :checkbox, required: true)
+        response = create(:array_response, value: nil, framework_question: question)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+    end
+
+    context 'when question not required' do
+      it 'does not validate presence of value when value is empty' do
+        question = create(:framework_question, :checkbox)
+        response = create(:array_response, value: [], framework_question: question)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is nil' do
+        question = create(:framework_question, :checkbox)
+        response = create(:array_response, value: nil, framework_question: question)
+
+        expect(response).to be_valid
+      end
+    end
+
+    context 'when dependent question' do
+      it 'does not validate presence of value if parent not answered' do
+        question = create(:framework_question, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: nil)
+        response = create(:array_response, value: nil, framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value if parent answered with different answer' do
+        question = create(:framework_question, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'No')
+        response = create(:array_response, value: nil, framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+
+      it 'validates presence of value if parent answered with dependent value' do
+        question = create(:framework_question, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'Yes')
+        response = create(:array_response, value: nil, framework_question: question, parent: parent_response)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'does not validate presence of value if parent answered with dependent value but question not required' do
+        question = create(:framework_question, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'Yes')
+        response = create(:array_response, value: nil, framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+    end
   end
 
   describe '#value' do
