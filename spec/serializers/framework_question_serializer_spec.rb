@@ -6,7 +6,8 @@ RSpec.describe FrameworkQuestionSerializer do
   subject(:serializer) { described_class.new(framework_question) }
 
   let(:framework_question) { create :framework_question }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
+  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:includes) { {} }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('framework_questions')
@@ -33,5 +34,23 @@ RSpec.describe FrameworkQuestionSerializer do
       id: framework_question.framework.id,
       type: 'frameworks',
     )
+  end
+
+  context 'with include options' do
+    let(:includes) { { framework: :name } }
+
+    let(:expected_json) do
+      [
+        {
+          id: framework_question.framework.id,
+          type: 'frameworks',
+          attributes: { name: framework_question.framework.name },
+        },
+      ]
+    end
+
+    it 'contains an included framework' do
+      expect(result[:included]).to include_json(expected_json)
+    end
   end
 end
