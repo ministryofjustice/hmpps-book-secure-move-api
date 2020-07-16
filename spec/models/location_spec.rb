@@ -14,9 +14,6 @@ RSpec.describe Location do
   context 'when location is a court' do
     subject(:location) { build :location, :court }
 
-    it { expect(location.prison?).to be false }
-    it { expect(location.police?).to be false }
-    it { expect(location.court?).to be true }
     it { expect(location.detained?).to be false }
     it { expect(location.not_detained?).to be true }
   end
@@ -24,9 +21,6 @@ RSpec.describe Location do
   context 'when location is a police custody unit' do
     subject(:location) { build :location, :police }
 
-    it { expect(location.prison?).to be false }
-    it { expect(location.police?).to be true }
-    it { expect(location.court?).to be false }
     it { expect(location.detained?).to be false }
     it { expect(location.not_detained?).to be true }
   end
@@ -34,9 +28,6 @@ RSpec.describe Location do
   context 'when location is a prison' do
     subject(:location) { build :location }
 
-    it { expect(location.prison?).to be true }
-    it { expect(location.police?).to be false }
-    it { expect(location.court?).to be false }
     it { expect(location.detained?).to be true }
     it { expect(location.not_detained?).to be false }
   end
@@ -44,9 +35,6 @@ RSpec.describe Location do
   context 'when location is a secure childrens hospital' do
     subject(:location) { build :location, :sch }
 
-    it { expect(location.prison?).to be false }
-    it { expect(location.police?).to be false }
-    it { expect(location.court?).to be false }
     it { expect(location.detained?).to be true }
     it { expect(location.not_detained?).to be false }
   end
@@ -54,9 +42,6 @@ RSpec.describe Location do
   context 'when location is a secure training centre' do
     subject(:location) { build :location, :stc }
 
-    it { expect(location.prison?).to be false }
-    it { expect(location.police?).to be false }
-    it { expect(location.court?).to be false }
     it { expect(location.detained?).to be true }
     it { expect(location.not_detained?).to be false }
   end
