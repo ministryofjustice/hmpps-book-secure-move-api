@@ -90,6 +90,13 @@ class Move < VersionedModel
 
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
+  attr_accessor :version
+
+  # TODO: Temporary method to apply correct validation rules when creating v2 move
+  def v2?
+    version == 2
+  end
+
   def rebooked
     self.class.find_by(original_move_id: id)
   end
@@ -146,7 +153,7 @@ private
   end
 
   def set_move_type
-    return if move_type.present?
+    return if move_type.present? || v2?
 
     # TODO: The order is not important, here.
     #       Remove this from the model when we migrate to mandatory move_type under v2

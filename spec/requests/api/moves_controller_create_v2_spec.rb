@@ -194,7 +194,7 @@ RSpec.describe Api::MovesController do
       let(:data) do
         {
           type: 'moves',
-          attributes: move_attributes.merge(move_type: nil),
+          attributes: move_attributes.merge(move_type: 'prison_recall'),
           relationships: {
             profile: { data: { type: 'profiles', id: profile.id } },
             from_location: { data: { type: 'locations', id: from_location.id } },
@@ -236,7 +236,7 @@ RSpec.describe Api::MovesController do
             time_due: Time.now,
             status: 'requested',
             additional_information: 'some more info',
-            move_type: nil,
+            move_type: 'court_appearance',
           },
           relationships: {
             profile: { data: { type: 'profiles', id: profile.id } },
@@ -266,6 +266,7 @@ RSpec.describe Api::MovesController do
           move_agreed_by: 'John Doe',
           date_from: date_from,
           date_to: date_to,
+          move_type: 'court_appearance',
         }
       end
 
@@ -417,9 +418,23 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      let(:detail_404) {  "Couldn't find Location with 'id'=foo" }
+      let(:detail_404) { "Couldn't find Location with 'id'=foo" }
 
       it_behaves_like 'an endpoint that responds with error 404' do
+        before { do_post }
+      end
+    end
+
+    context 'when omitting move_type attribute' do
+      let(:move_attributes) { attributes_for(:move).except(:move_type) }
+
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
         before { do_post }
       end
     end
