@@ -25,11 +25,13 @@ class Move < VersionedModel
 
   enum move_type: {
     court_appearance: 'court_appearance',
-    prison_recall: 'prison_recall',
-    prison_transfer: 'prison_transfer',
-    police_transfer: 'police_transfer',
-    video_remand_hearing: 'video_remand_hearing',
+    court_other: 'court_other',
     hospital: 'hospital',
+    police_transfer: 'police_transfer',
+    prison_recall: 'prison_recall',
+    prison_remand: 'prison_remand',
+    prison_transfer: 'prison_transfer',
+    video_remand_hearing: 'video_remand_hearing',
   }
 
   self.ignored_columns = %w[person_id]

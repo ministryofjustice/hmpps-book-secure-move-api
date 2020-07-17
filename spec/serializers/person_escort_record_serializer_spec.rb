@@ -6,7 +6,8 @@ RSpec.describe PersonEscortRecordSerializer do
   subject(:serializer) { described_class.new(person_escort_record) }
 
   let(:person_escort_record) { create(:person_escort_record) }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
+  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:includes) { {} }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('person_escort_records')
@@ -67,6 +68,33 @@ RSpec.describe PersonEscortRecordSerializer do
       it 'does not include includes section progress' do
         expect(result[:data][:meta][:section_progress]).to be_empty
       end
+    end
+  end
+
+  context 'with include options' do
+    let(:includes) { { responses: [:value, question: :key] } }
+    let(:framework_response) { build(:object_response) }
+    let(:person_escort_record) do
+      create(:person_escort_record, framework_responses: [framework_response])
+    end
+
+    let(:expected_json) do
+      [
+        {
+          id: framework_response.id,
+          type: 'framework_responses',
+          attributes: { value: framework_response.value },
+        },
+        {
+          id: framework_response.framework_question.id,
+          type: 'framework_questions',
+          attributes: { key: framework_response.framework_question.key },
+        },
+      ]
+    end
+
+    it 'contains an included responses and question' do
+      expect(result[:included]).to include_json(expected_json)
     end
   end
 end
