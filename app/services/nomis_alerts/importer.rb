@@ -117,7 +117,7 @@ module NomisAlerts
     }.freeze
 
     def initialize(alert_codes:)
-      self.alert_codes = alert_codes
+      @alert_codes = alert_codes
     end
 
     def call
@@ -128,21 +128,19 @@ module NomisAlerts
 
   private
 
-    def alert_types
-      @alert_types ||= NomisClient::AlertTypes.as_hash
+    def nomis_alert_types
+      @nomis_alert_types ||= NomisClient::AlertTypes.as_hash
     end
 
     def import_alert(alert)
       alert_type = alert_type_for(alert)
-      Rails.logger.info "Missing alert type #{alert[:parent_code]}" if alert_type.nil?
-      return if alert_type.nil?
 
-      record = NomisAlert.find_or_initialize_by(code: alert[:code], type_code: alert[:parent_code])
-      record.update!(
-        description: alert[:description],
-        type_description: alert_type[:description],
-        assessment_question: assessment_question_mapping(alert[:code]),
-      )
+      if alert_type_for(alert).nil?
+        Rails.logger.info "Missing alert type #{alert[:parent_code]}"
+        return
+      end
+
+      save_or_create_nomis_alert(alert, alert_type[:description])
     end
 
     def assessment_question_mapping(alert_code)
@@ -151,7 +149,20 @@ module NomisAlerts
     end
 
     def alert_type_for(alert)
-      alert_types[alert[:parent_code]]
+      nomis_alert_types[alert[:parent_code]]
+    end
+
+    def save_or_create_nomis_alert(alert, type_description)
+      code = alert[:code]
+      type_code = alert[:parent_code]
+      description = alert[:description]
+
+      nomis_alert = NomisAlert.find_or_initialize_by(code: code, type_code: type_code)
+      nomis_alert.update!(
+          description: description,
+          type_description: type_description,
+          assessment_question: assessment_question_mapping(code),
+          )
     end
   end
 end
