@@ -5,45 +5,123 @@ require 'rails_helper'
 RSpec.describe FrameworkResponse::Collection do
   subject { create(:collection_response) }
 
-  it { is_expected.to validate_absence_of(:value_text) }
+  context 'with validations' do
+    it { is_expected.to validate_absence_of(:value_text) }
 
-  it 'validates presence of value when a record is updated if question is required' do
-    question = create(:framework_question, required: true, options: [])
-    response = create(:collection_response, value: nil, framework_question: question)
+    it 'validates correct type is passed in' do
+      response = build(:collection_response, :details, value: { 'option' => 'Level 4' })
 
-    expect(response).to validate_presence_of(:value)
-  end
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:value]).to eq(['is incorrect type'])
+    end
 
-  it 'does not validate presence of value when a record is updated if question is required but dependent' do
-    question = create(:framework_question, required: true, options: [])
-    response = create(:collection_response, value: nil, framework_question: question, parent: create(:string_response))
+    it 'validates correct type nested in array is passed in' do
+      response = build(:collection_response, :details, value: ['option', 'Level 4'])
 
-    expect(response).not_to validate_presence_of(:value)
-  end
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:value]).to eq(['is incorrect type'])
+    end
 
-  it 'does not validate presence of value when a record is updated if question is not required' do
-    question = create(:framework_question, options: [])
-    response = create(:collection_response, value: nil, framework_question: question)
+    it 'validates details collection' do
+      question = create(
+        :framework_question,
+        :checkbox,
+        followup_comment: true,
+        followup_comment_options: %w[Yes],
+      )
+      response = create(:collection_response, :details, value: [{ 'option' => 'Yes' }], framework_question: question)
 
-    expect(response).not_to validate_presence_of(:value)
-  end
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:details]).to eq(["can't be blank"])
+    end
 
-  it 'validates presence of value when a record is updated if question and details are required' do
-    question = create(:framework_question, required: true, options: [], followup_comment: true)
-    response = create(:collection_response, value: nil, framework_question: question)
+    context 'when question required' do
+      it 'validates presence of value when value is empty' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true)
+        response = create(:collection_response, :details, value: [], framework_question: question)
 
-    expect(response).to validate_presence_of(:value)
-  end
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
 
-  it 'validates details collection' do
-    question = create(
-      :framework_question,
-      followup_comment: true,
-      followup_comment_options: %w[Yes],
-    )
-    response = create(:collection_response, :details, value: [{ 'option' => 'Yes' }], framework_question: question)
+      it 'validates presence of value when value is nil' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true)
+        response = create(:collection_response, :details, value: nil, framework_question: question)
 
-    expect(response).not_to be_valid
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'does not validate presence of value when value is provided' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true)
+        response = create(:collection_response, :details, value: [{ 'option': 'Level 1', details: 'some comment' }], framework_question: question)
+
+        expect(response).to be_valid
+      end
+    end
+
+    context 'when question not required' do
+      it 'does not validate presence of value when value is empty' do
+        response = create(:collection_response, :details, value: [])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is nil' do
+        response = create(:collection_response, :details, value: nil)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is provided' do
+        response = create(:collection_response, :details, value: [{ option: 'Level 2', details: 'some comment' }])
+
+        expect(response).to be_valid
+      end
+    end
+
+    context 'when dependent question' do
+      it 'does not validate presence of value if parent not answered' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: nil)
+        response = create(:collection_response, :details, value: [], framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value if parent answered with different answer' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'No')
+        response = create(:collection_response, :details, value: [], framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+
+      it 'validates presence of value if parent answered with dependent value' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'Yes')
+        response = create(:collection_response, :details, value: [], framework_question: question, parent: parent_response)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'does not validate presence of value if parent answered with dependent value but question not required' do
+        question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'Yes')
+        response = create(:collection_response, value: [], framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value of dependent response if supplied' do
+        question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Yes')
+        parent_response = create(:string_response, value: 'Yes')
+        response = create(:collection_response, value: [{ option: 'Level 2', details: 'some comment' }], framework_question: question, parent: parent_response)
+
+        expect(response).to be_valid
+      end
+    end
   end
 
   describe '#value' do
@@ -69,10 +147,16 @@ RSpec.describe FrameworkResponse::Collection do
     end
 
     it 'returns response value if details supplied' do
-      collection = [{ details: 'some comment', option: 'Level 1' }]
+      collection = [
+        { details: 'some comment', option: 'Level 1' },
+        { details: 'some comment', option: 'Level 2' },
+      ]
       response = create(:collection_response, :details, value: collection)
 
-      expect(response.value.as_json).to contain_exactly('details' => 'some comment', 'option' => 'Level 1')
+      expect(response.value.as_json).to contain_exactly(
+        { 'details' => 'some comment', 'option' => 'Level 1' },
+        { 'details' => 'some comment', 'option' => 'Level 2' },
+      )
     end
 
     it 'returns response value if details supplied but empty' do
