@@ -6,9 +6,9 @@ class FrameworkResponse
 
     attr_accessor :question_options, :details_options, :option, :details
 
-    validates :option, presence: true
-    validates :option, inclusion: { in: :question_options }, if: :question_options
-    validates :details, presence: true, if: :details_options
+    validates :option, presence: true, if: :details
+    validates :option, inclusion: { in: :question_options }, if: ->(object) { object.question_options && object.option.present? }
+    validates :details, presence: true, if: :included_in_detail_options
 
     def initialize(attributes: {}, question_options: [], details_options: [])
       @question_options = question_options.presence
@@ -27,6 +27,12 @@ class FrameworkResponse
         option: option,
         details: details,
       }
+    end
+
+  private
+
+    def included_in_detail_options
+      details_options && details_options.include?(option)
     end
   end
 end
