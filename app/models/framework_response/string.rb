@@ -1,7 +1,7 @@
 class FrameworkResponse
   class String < FrameworkResponse
     validates :value_json, absence: true
-    validates :value, inclusion: { in: :question_options }, if: ->(response) { response.question_options && response.value.present? }
+    validates :value, inclusion: { in: :question_options }, if: :question_options_and_value_present?
 
     def value
       value_text
@@ -16,7 +16,13 @@ class FrameworkResponse
     end
 
     def question_options
-      @question_options ||= framework_question.options.presence
+      @question_options ||= framework_question.options
+    end
+
+  private
+
+    def question_options_and_value_present?
+      question_options.any? && value.present?
     end
   end
 end

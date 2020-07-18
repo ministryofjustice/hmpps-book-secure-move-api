@@ -29,9 +29,7 @@ class FrameworkResponse
       return unless collection.any?(&:invalid?)
 
       collection.each do |detail_object|
-        detail_object.errors.each do |field, message|
-          errors.add(field, message)
-        end
+        errors.merge!(detail_object.errors)
       end
     end
 

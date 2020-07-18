@@ -13,7 +13,7 @@ RSpec.describe FrameworkResponse::Array do
       response = create(:array_response, value: ['Level 3', 'Level 4'], framework_question: question)
 
       expect(response).not_to be_valid
-      expect(response.errors.messages[:value]).to eq(['Level 3, Level 4 are not a valid option'])
+      expect(response.errors.messages[:value]).to eq(['Level 3, Level 4 are not valid options'])
     end
 
     it 'does not validate values if value included in options' do
@@ -25,7 +25,8 @@ RSpec.describe FrameworkResponse::Array do
 
     it 'validates correct type is passed in' do
       question = create(:framework_question, :checkbox)
-      response = build(:array_response, value: { 'option' => 'Level 4' }, framework_question: question)
+      response = create(:array_response, framework_question: question)
+      response.update(value: { 'option' => 'Level 4' })
 
       expect(response).not_to be_valid
       expect(response.errors.messages[:value]).to eq(['is incorrect type'])

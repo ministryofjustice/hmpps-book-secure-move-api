@@ -32,11 +32,11 @@ class FrameworkResponse
     end
 
     def validate_details_collection
+      return if errors.present?
+
       validated_collection = details_collection(value)
       if validated_collection.invalid?
-        validated_collection.errors.each do |field, message|
-          errors.add(field, message)
-        end
+        errors.merge!(validated_collection.errors)
       end
     end
 

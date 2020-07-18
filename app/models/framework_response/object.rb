@@ -38,11 +38,11 @@ class FrameworkResponse
     end
 
     def validate_details_object
+      return if errors.present?
+
       validated_object = details_object(attributes: value)
       if validated_object.invalid?
-        validated_object.errors.each do |field, message|
-          errors.add(field, message)
-        end
+        errors.merge!(validated_object.errors)
       end
     end
 

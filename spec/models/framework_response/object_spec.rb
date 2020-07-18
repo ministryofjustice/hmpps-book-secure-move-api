@@ -9,7 +9,8 @@ RSpec.describe FrameworkResponse::Object do
     it { is_expected.to validate_absence_of(:value_text) }
 
     it 'validates correct type is passed in' do
-      response = build(:object_response, :details, value: [{ 'option' => 'Level 4' }])
+      response = create(:object_response, :details)
+      response.update(value: ['Level 4'])
 
       expect(response).not_to be_valid
       expect(response.errors.messages[:value]).to eq(['is incorrect type'])

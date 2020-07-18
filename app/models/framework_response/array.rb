@@ -2,7 +2,7 @@ class FrameworkResponse
   class Array < FrameworkResponse
     validate :validate_array_type
     validates :value_text, absence: true
-    validate :validate_array_values, on: :update
+    validate :validate_value_inclusion, on: :update
 
     def value
       value_json.presence || []
@@ -18,9 +18,11 @@ class FrameworkResponse
 
   private
 
-    def validate_array_values
+    def validate_value_inclusion
+      return if errors.present?
+
       if (invalid_options = value - framework_question.options).any?
-        errors.add(:value, invalid_options.join(', ') + ' are not a valid option')
+        errors.add(:value, invalid_options.join(', ') + ' are not valid options')
       end
     end
 
