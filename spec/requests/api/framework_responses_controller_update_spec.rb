@@ -8,6 +8,7 @@ RSpec.describe Api::FrameworkResponsesController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_response) { create(:string_response) }
+    let!(:flag) { create(:flag, framework_question: framework_response.framework_question, question_value: 'No') }
     let(:framework_response_id) { framework_response.id }
     let(:value) { 'No' }
 
@@ -109,6 +110,25 @@ RSpec.describe Api::FrameworkResponsesController do
               "value": [{ option: 'Level 1' }],
               "value_type": 'collection',
               "responded": true,
+            },
+          })
+        end
+      end
+
+      context 'with flags' do
+        it 'attaches a flag and returns the correct data' do
+          expect(response_json).to include_json(data: {
+            "id": framework_response_id,
+            "type": 'framework_responses',
+            "relationships": {
+              "flags": {
+                "data": [
+                  {
+                    id: flag.id,
+                    type: 'flags',
+                  },
+                ],
+              },
             },
           })
         end

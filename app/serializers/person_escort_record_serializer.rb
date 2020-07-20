@@ -2,6 +2,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   belongs_to :profile, record_type: :profile
   belongs_to :framework, record_type: :framework
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
+  has_many :flags
 
   attribute :version
   attribute :state, key: :status
@@ -22,5 +23,6 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     framework
     profile.person
     responses.question
+    flags
   ].freeze
 end

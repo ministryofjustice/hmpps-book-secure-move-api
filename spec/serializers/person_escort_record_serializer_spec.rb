@@ -53,6 +53,20 @@ RSpec.describe PersonEscortRecordSerializer do
     )
   end
 
+  it 'contains an empty `flags` relationship if no flags present' do
+    expect(result[:data][:relationships][:flags][:data]).to be_empty
+  end
+
+  it 'contains a`flags` relationship with framework response flags' do
+    flag = create(:flag)
+    create(:string_response, person_escort_record: person_escort_record, flags: [flag])
+
+    expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+      id: flag.id,
+      type: 'flags',
+    )
+  end
+
   describe 'meta' do
     it 'includes section progress' do
       question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
