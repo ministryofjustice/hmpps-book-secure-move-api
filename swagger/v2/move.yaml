@@ -35,7 +35,7 @@ Move:
             - in_transit
             - cancelled
             - completed
-          description: Indicates the stage in it's lifecycle that this move is at
+          description: Indicates the stage in its lifecycle that this move is at
         move_type:
           type: string
           enum:

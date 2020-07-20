@@ -32,17 +32,7 @@ Move:
             - in_transit
             - cancelled
             - completed
-          description: Indicates the stage in it's lifecycle that this move is at
-        move_type:
-          type: string
-          enum:
-            - court_appearance
-            - prison_recall
-            - prison_transfer
-            - police_transfer
-            - video_remand_hearing
-            - hospital
-          description: Indicates the type of move, e.g. prison transfer or court appearance
+          description: Indicates the stage in its lifecycle that this move is at
         move_agreed:
           oneOf:
             - type: boolean
@@ -91,7 +81,7 @@ Move:
             - type: string
               format: date
             - type: "null"
-          example: "2020-05-17"
+          example: "2020-06-17"
           description: End date for potential move. Must be after date_from
         additional_information:
           oneOf:
@@ -123,15 +113,6 @@ Move:
         profile:
           $ref: "../v1/profile_reference.yaml#/ProfileReference"
           description: The profile of the person at a point in time for this move.
-        from_location:
-          $ref: "../v1/location_reference.yaml#/LocationReference"
-          description: The location that the person is being moved from
-        to_location:
-          $ref: "../v1/location_reference.yaml#/LocationReference"
-          description: The location that the person is being moved to
-        allocation:
-          $ref: "../v1/allocation_reference.yaml#/AllocationReference"
-          description: The allocation associated with this move
         court_hearing:
           $ref: "../v1/court_hearing_reference.yaml#/CourtHearingReference"
           description:
