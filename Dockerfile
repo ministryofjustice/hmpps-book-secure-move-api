@@ -17,7 +17,6 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.c" -delete \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
-COPY . /app
 ############### End of Build step ###############
 FROM ruby:2.7.0-alpine
 
@@ -44,9 +43,8 @@ RUN addgroup -g $APPUID -S appgroup && \
 RUN apk add --update --no-cache tzdata postgresql-dev
 
 WORKDIR /app
-COPY --chown=appuser:appgroup --from=build-stage /app /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
+COPY --chown=appuser:appgroup . /app
 
 USER $APPUID
 CMD ["./run.sh"]
-
