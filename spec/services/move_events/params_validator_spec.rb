@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe MoveEvents::ParamsValidator do
-  subject(:params_validator) { described_class.new(move, params) }
+  subject(:params_validator) { described_class.new(params) }
 
   let(:move) { nil }
   let(:attributes) { { timestamp: timestamp } }
@@ -157,7 +157,7 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
   end
 
-  describe 'from_location' do
+  describe 'from_location_id' do
     let(:params) { { type: type, attributes: attributes, relationships: relationships } }
     let(:relationships) { { from_location: { data: { type: 'locations', id: location_id } } } }
     let(:type) { 'lockouts' }
@@ -186,7 +186,7 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
   end
 
-  describe 'to_location' do
+  describe 'to_location_id' do
     let(:move) { build(:move, :prison_recall) }
     let(:params) { { type: type, attributes: attributes, relationships: relationships } }
     let(:relationships) { { to_location: { data: { type: 'locations', id: location_id } } } }

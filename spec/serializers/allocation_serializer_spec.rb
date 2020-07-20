@@ -45,6 +45,10 @@ RSpec.describe AllocationSerializer do
       expect(attributes[:estate]).to eql allocation.estate
     end
 
+    it 'contains an estate comment attribute' do
+      expect(attributes[:estate_comment]).to eql allocation.estate_comment
+    end
+
     it 'contains a prisoner_category attribute' do
       expect(attributes[:prisoner_category]).to eql allocation.prisoner_category
     end

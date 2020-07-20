@@ -34,7 +34,7 @@ module Api
 
     PERMITTED_ALLOCATION_PARAMS = [
       :type,
-      attributes: %i[date estate prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
+      attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
       relationships: {},
     ].freeze
 
@@ -70,6 +70,7 @@ module Api
 
     def creator
       @creator ||= Allocations::Creator.new(
+        doorkeeper_application_owner: doorkeeper_application_owner,
         allocation_params: allocation_params,
         complex_case_params: complex_case_params,
       )

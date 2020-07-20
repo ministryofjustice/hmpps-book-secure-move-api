@@ -35,7 +35,8 @@ RSpec.describe Api::MovesController do
     end
 
     let(:profile) { create(:profile) }
-    let(:from_location) { create :location, suppliers: [supplier] }
+    let(:another_supplier) { create(:supplier) }
+    let(:from_location) { create :location, suppliers: [another_supplier] }
     let(:to_location) { create :location, :court }
     let(:reason) { create(:prison_transfer_reason) }
     let(:data) do
@@ -114,7 +115,7 @@ RSpec.describe Api::MovesController do
         allow(Faraday).to receive(:new).and_return(faraday_client)
       end
 
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+      let!(:subscription) { create(:subscription, :no_email_address, supplier: another_supplier) }
 
       let(:faraday_client) do
         class_double(
@@ -148,7 +149,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when the supplier has an email subscription' do
-      let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+      let!(:subscription) { create(:subscription, :no_callback_url, supplier: another_supplier) }
       let(:expected_notification_attributes) do
         {
           'event_type' => 'create_move',
@@ -287,7 +288,64 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'with explicit `move_type`' do
+    context 'with explicit court_other `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'court_other') }
+      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+
+      it 'creates a move' do
+        expect { do_post }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the move_type to `court_other`' do
+        do_post
+
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'court_other'
+      end
+    end
+
+    context 'with explicit hospital `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
+      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+
+      it 'creates a move' do
+        expect { do_post }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the move_type to `hospital`' do
+        do_post
+
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'hospital'
+      end
+    end
+
+    context 'with explicit prison_remand `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'prison_remand') }
+      let(:to_location) { create :location, :stc, suppliers: [supplier] }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+
+      it 'creates a move' do
+        expect { do_post }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the move_type to `prison_remand`' do
+        do_post
+
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_remand'
+      end
+    end
+
+    context 'with explicit video_remand_hearing `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
       let(:from_location) { create :location, :police, suppliers: [supplier] }
       let(:to_location) { nil }

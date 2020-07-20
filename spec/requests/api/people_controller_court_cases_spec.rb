@@ -33,7 +33,7 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'includes location in the response' do
-        create :location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT'
+        create(:location, :court, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court')
 
         get "/api/v1/people/#{person.id}/court_cases", headers: headers
 
@@ -53,7 +53,8 @@ RSpec.describe Api::PeopleController do
 
       context 'when we pass an include in the query params' do
         it 'includes location in the response' do
-          create(:location, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court', location_type: 'CRT')
+          create(:location, :court, nomis_agency_id: 'SNARCC', title: 'Snaresbrook Crown Court')
+
           get "/api/v1/people/#{person.id}/court_cases?include=location", headers: headers
 
           expect(response_json['included'].first['type']).to eq('locations')

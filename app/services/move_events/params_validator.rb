@@ -11,7 +11,7 @@ module MoveEvents
     # TODO: in the future when pluralising types, existing move event records will need updating from singular types to plural types.
     ACCEPTABLE_PLURAL_VERBS = %w[cancels completes approves rejects].freeze
 
-    attr_reader :move, :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location_id, :to_location_id
+    attr_reader :timestamp, :type, :date, :cancellation_reason, :rejection_reason, :from_location_id, :to_location_id
 
     validates :type, presence: true, inclusion: { in: %w[accepts approve cancel complete lockouts redirects reject starts] }
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, if: -> { type == 'cancel' }
@@ -34,12 +34,8 @@ module MoveEvents
 
     validates_with LocationValidator, locations: [:from_location_id], if: -> { type == 'lockouts' }
     validates_with LocationValidator, locations: [:to_location_id], if: -> { type == 'redirects' }
-    validates_with Moves::MoveTypeValidator, if: -> { type == 'redirects' }
 
-    delegate :move_type, :from_location, to: :move
-
-    def initialize(move, params)
-      @move = move
+    def initialize(params)
       @timestamp = params.dig(:attributes, :timestamp)
       @type = params[:type]
       @date = params.dig(:attributes, :date)

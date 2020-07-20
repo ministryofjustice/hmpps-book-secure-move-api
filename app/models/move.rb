@@ -25,9 +25,12 @@ class Move < VersionedModel
 
   enum move_type: {
     court_appearance: 'court_appearance',
-    prison_recall: 'prison_recall',
-    prison_transfer: 'prison_transfer',
+    court_other: 'court_other',
+    hospital: 'hospital',
     police_transfer: 'police_transfer',
+    prison_recall: 'prison_recall',
+    prison_remand: 'prison_remand',
+    prison_transfer: 'prison_transfer',
     video_remand_hearing: 'video_remand_hearing',
   }
 
@@ -88,7 +91,6 @@ class Move < VersionedModel
 
   delegate :suppliers, to: :from_location
 
-  scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   def rebooked
