@@ -78,6 +78,7 @@ namespace :journeys do
           journeys: journeys,
         }
       end
+      print " #{moves.length} moves exported. "
       puts 'done.'
 
       File.open(filename, 'w') do |file|

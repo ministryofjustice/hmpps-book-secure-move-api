@@ -24,4 +24,5 @@ MoveIncludeParameter:
       - profile.person
       - profile.person.gender
       - profile.person.ethnicity
+      - profile.person_escort_record
   example: from_location
