@@ -517,7 +517,7 @@
           required: true
           description: The move object to be modified
           schema:
-            "$ref": "../v2/move.yaml#/Move"
+            "$ref": "../v2/patch_move.yaml#/Move"
         - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
       responses:
         "200":
