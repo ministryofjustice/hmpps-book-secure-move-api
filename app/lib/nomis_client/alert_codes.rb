@@ -4,8 +4,8 @@ module NomisClient
   class AlertCodes < NomisClient::Base
     class << self
       def get
-        fetch_response.parsed.map do |alert_type|
-          attributes_for(alert_type)
+        fetch_response.parsed.map do |alert_code|
+          attributes_for(alert_code)
         end
       end
 
@@ -16,14 +16,14 @@ module NomisClient
         )
       end
 
-      def attributes_for(alert_type)
+      def attributes_for(alert_code)
         {
-          parent_code: alert_type['parentCode'],
-          code: alert_type['code'],
-          description: alert_type['description'],
-          domain: alert_type['domain'],
-          parent_domain: alert_type['parentDomain'],
-          active_flag: alert_type['activeFlag'],
+          parent_code: alert_code['parentCode'],
+          code: alert_code['code'],
+          description: alert_code['description'],
+          domain: alert_code['domain'],
+          parent_domain: alert_code['parentDomain'],
+          active_flag: alert_code['activeFlag'],
         }
       end
     end
