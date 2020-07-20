@@ -5,6 +5,7 @@ class FrameworkResponse
     validate :validate_details_collection, on: :update, if: -> { response_details }
 
     def value
+      value_json.delete_if(&:empty?) if collection_type_valid?(value_json)
       value_json.presence || []
     end
 

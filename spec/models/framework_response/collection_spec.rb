@@ -53,9 +53,17 @@ RSpec.describe FrameworkResponse::Collection do
         expect(response.errors.messages[:value]).to eq(["can't be blank"])
       end
 
+      it 'validates presence of value when empty option and detail supplied' do
+        question = create(:framework_question, :checkbox, followup_comment: true, required: true)
+        response = create(:collection_response, :details, value: [{ details: nil, option: nil }], framework_question: question)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
       it 'does not validate presence of value when value is provided' do
         question = create(:framework_question, :checkbox, followup_comment: true, required: true)
-        response = create(:collection_response, :details, value: [{ 'option': 'Level 1', details: 'some comment' }], framework_question: question)
+        response = create(:collection_response, :details, value: [{ option: 'Level 1', details: 'some comment' }], framework_question: question)
 
         expect(response).to be_valid
       end
@@ -157,6 +165,19 @@ RSpec.describe FrameworkResponse::Collection do
       expect(response.value.as_json).to contain_exactly(
         { 'details' => 'some comment', 'option' => 'Level 1' },
         { 'details' => 'some comment', 'option' => 'Level 2' },
+      )
+    end
+
+    it 'removes empty hashes in response' do
+      collection = [
+        { details: 'some comment', option: 'Level 1' },
+        {},
+        { details: nil, option: nil },
+      ]
+      response = create(:collection_response, :details, value: collection)
+
+      expect(response.value.as_json).to contain_exactly(
+        { 'details' => 'some comment', 'option' => 'Level 1' },
       )
     end
 
