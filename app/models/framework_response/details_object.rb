@@ -25,7 +25,7 @@ class FrameworkResponse
 
       {
         option: option,
-        details: details,
+        details: details.to_s.presence,
       }
     end
 

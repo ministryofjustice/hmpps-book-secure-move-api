@@ -69,10 +69,30 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
       expect(details_object.as_json).to eq(attributes)
     end
 
-    it 'returns a empty hash if nothing passed in' do
+    it 'returns an empty hash if nothing passed in' do
       details_object = described_class.new(attributes: {})
 
       expect(details_object.as_json).to be_empty
+    end
+
+    it 'returns an empty hash if nil option and details passed in' do
+      attributes = {
+        option: nil,
+        details: nil,
+      }
+      details_object = described_class.new(attributes: attributes)
+
+      expect(details_object.as_json).to be_empty
+    end
+
+    it 'returns details as a string if different type passed in' do
+      attributes = {
+        option: nil,
+        details: ['Level 1', { "option": 'details' }],
+      }
+      details_object = described_class.new(attributes: attributes)
+
+      expect(details_object.as_json).to eq(details: '["Level 1", {:option=>"details"}]', option: nil)
     end
   end
 end
