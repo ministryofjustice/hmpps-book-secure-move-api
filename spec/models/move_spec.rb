@@ -344,23 +344,6 @@ RSpec.describe Move do
     end
   end
 
-  describe '#served_by' do
-    let(:supplier) { create :supplier }
-    let!(:location) { create :location, suppliers: [supplier] }
-    let!(:move_with_supplier) { create :move, from_location: location }
-    let!(:move_without_supplier) { create :move }
-
-    context 'when querying with supplier' do
-      it 'returns the right move' do
-        expect(described_class.served_by(supplier.id)).to include(move_with_supplier)
-      end
-
-      it 'does not return moves with no supplier' do
-        expect(described_class.served_by(supplier.id)).not_to include(move_without_supplier)
-      end
-    end
-  end
-
   describe '#rejected?' do
     subject { move.rejected? }
 
