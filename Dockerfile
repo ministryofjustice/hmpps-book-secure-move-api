@@ -8,9 +8,10 @@ ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
 RUN apk --update --no-cache add git build-base postgresql-dev
-
-COPY . /app
 RUN gem update bundler --no-document
+
+# NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
+COPY Gemfile Gemfile.lock .ruby-version /app/
 RUN bundle install --jobs 4 --retry 3 \
      && rm -rf /usr/local/bundle/cache/*.gem \
      && find /usr/local/bundle/gems/ -name "*.c" -delete \
@@ -42,9 +43,8 @@ RUN addgroup -g $APPUID -S appgroup && \
 RUN apk add --update --no-cache tzdata postgresql-dev
 
 WORKDIR /app
-COPY --chown=appuser:appgroup --from=build-stage /app /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
+COPY --chown=appuser:appgroup . /app
 
 USER $APPUID
 CMD ["./run.sh"]
-

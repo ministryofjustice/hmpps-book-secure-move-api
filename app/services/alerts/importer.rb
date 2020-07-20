@@ -41,6 +41,9 @@ module Alerts
       ).tap(&:set_timestamps)
     end
 
+    # Nomis alert exists with question - use question
+    # Nomis alert exists in db but don't have a question - use fallback question
+    # Nomis alert does not exist in db - use fallback question
     def find_assessment_question(alert)
       nomis_alert = NomisAlert.includes(:assessment_question).find_by(
         code: alert[:alert_code],
