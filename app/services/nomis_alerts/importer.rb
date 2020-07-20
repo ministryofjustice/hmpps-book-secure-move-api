@@ -177,7 +177,7 @@ module NomisAlerts
     def import_alert(alert)
       alert_type = alert_type_for(alert)
 
-      if alert_type_for(alert).nil?
+      if alert_type.nil?
         Rails.logger.info "Missing alert type #{alert[:parent_code]}"
         return
       end
