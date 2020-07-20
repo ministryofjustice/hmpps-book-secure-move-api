@@ -49,7 +49,7 @@ RSpec.describe FrameworkResponseSerializer do
 
     expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
       id: flag.id,
-      type: 'flags',
+      type: 'framework_flags',
     )
   end
 

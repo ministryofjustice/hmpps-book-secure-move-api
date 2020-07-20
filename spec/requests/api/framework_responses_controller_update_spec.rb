@@ -125,7 +125,7 @@ RSpec.describe Api::FrameworkResponsesController do
                 "data": [
                   {
                     id: flag.id,
-                    type: 'flags',
+                    type: 'framework_flags',
                   },
                 ],
               },

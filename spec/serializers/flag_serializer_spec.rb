@@ -10,7 +10,7 @@ RSpec.describe FlagSerializer do
   let(:includes) { {} }
 
   it 'contains a `type` property' do
-    expect(result[:data][:type]).to eq('flags')
+    expect(result[:data][:type]).to eq('framework_flags')
   end
 
   it 'contains an `id` property' do

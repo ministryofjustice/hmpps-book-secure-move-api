@@ -61,7 +61,7 @@ RSpec.describe Api::PersonEscortRecordsController do
               "data": [
                 {
                   "id": flag.id,
-                  "type": 'flags',
+                  "type": 'framework_flags',
                 },
               ],
             },

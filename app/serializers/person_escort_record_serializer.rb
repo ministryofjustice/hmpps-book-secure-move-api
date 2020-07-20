@@ -16,7 +16,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   def framework_responses
-    object.framework_responses.includes(framework_question: :framework)
+    object.framework_responses.includes(:flags, framework_question: :framework)
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
