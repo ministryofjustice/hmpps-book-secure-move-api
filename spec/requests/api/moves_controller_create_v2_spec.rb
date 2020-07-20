@@ -190,6 +190,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'without a `to_location`' do
+      let(:from_location) { create :location, :police, suppliers: [another_supplier] }
       let(:to_location) { nil }
       let(:data) do
         {
@@ -218,7 +219,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'with a proposed move' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'proposed') }
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'proposed') }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -440,7 +441,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when specifying invalid attributes' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'invalid') }
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'invalid') }
 
       let(:errors_422) do
         [
@@ -455,10 +456,10 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when a move is a duplicate' do
-      let(:move_attributes) { attributes_for(:move).merge(date: move.date) }
+      let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
       context 'when there are cancelled duplicates' do
-        let!(:move) { create(:move, :cancelled, profile: profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, :cancelled, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { do_post }
@@ -466,7 +467,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'when the Move has been already created' do
-        let!(:move) { create(:move, profile: profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
             {
