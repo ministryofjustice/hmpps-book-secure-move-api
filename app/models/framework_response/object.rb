@@ -1,5 +1,6 @@
 class FrameworkResponse
   class Object < FrameworkResponse
+    validate :validate_object_type
     validates :value_text, absence: true
     validate :validate_details_object, on: :update, if: -> { response_details }
 
@@ -23,6 +24,8 @@ class FrameworkResponse
   private
 
     def details_object(attributes:)
+      return attributes unless attributes.is_a?(::Hash)
+
       DetailsObject.new(
         attributes: attributes,
         question_options: framework_question.options,
@@ -35,8 +38,18 @@ class FrameworkResponse
     end
 
     def validate_details_object
-      # TODO: Add proper validation messages
-      errors.add(:value, :invalid) if details_object(attributes: value).invalid?
+      return if errors.present?
+
+      validated_object = details_object(attributes: value)
+      if validated_object.invalid?
+        errors.merge!(validated_object.errors)
+      end
+    end
+
+    def validate_object_type
+      unless value.is_a?(::Hash)
+        errors.add(:value, 'is incorrect type')
+      end
     end
   end
 end

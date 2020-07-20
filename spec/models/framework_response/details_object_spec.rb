@@ -3,39 +3,59 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkResponse::DetailsObject, type: :model do
-  it 'validates the presence of an option' do
-    attributes = { details: 'some comment' }
-    details_object = described_class.new(attributes: attributes)
+  context 'with validations' do
+    it 'ignores other keys passed in' do
+      attributes = { options: 'No', details: 'some comment' }
+      details_object = described_class.new(attributes: attributes, question_options: %w[No])
 
-    expect(details_object).to validate_presence_of(:option)
-  end
+      expect(details_object).not_to be_valid
+      expect(details_object.errors.messages[:option]).to eq(["can't be blank"])
+    end
 
-  it 'validates the inclusion of an option if question options are supplied' do
-    attributes = { option: 'Yes' }
-    details_object = described_class.new(attributes: attributes, question_options: %w[No])
+    it 'validates the presence of an option' do
+      attributes = { details: 'some comment' }
+      details_object = described_class.new(attributes: attributes)
 
-    expect(details_object).to validate_inclusion_of(:option).in_array(%w[No])
-  end
+      expect(details_object).not_to be_valid
+      expect(details_object.errors.messages[:option]).to eq(["can't be blank"])
+    end
 
-  it 'does not validate the inclusion of an option if no question options supplied' do
-    attributes = { option: 'Yes' }
-    details_object = described_class.new(attributes: attributes)
+    it 'validates values included in option if question options are supplied' do
+      attributes = { option: 'Yes' }
+      details_object = described_class.new(attributes: attributes, question_options: %w[No])
 
-    expect(details_object).not_to validate_inclusion_of(:option).in_array([])
-  end
+      expect(details_object).not_to be_valid
+      expect(details_object.errors.messages[:option]).to eq(['is not included in the list'])
+    end
 
-  it 'validates the presence of details if detail options are supplied' do
-    attributes = { option: 'No' }
-    details_object = described_class.new(attributes: attributes, details_options: %w[No])
+    it 'does not validate the inclusion of an option if no question options supplied' do
+      attributes = { option: 'Yes' }
+      details_object = described_class.new(attributes: attributes)
 
-    expect(details_object).to validate_presence_of(:details)
-  end
+      expect(details_object).to be_valid
+    end
 
-  it 'does not validate the presence of details if no detail options supplied' do
-    attributes = { option: 'No' }
-    details_object = described_class.new(attributes: attributes, question_options: %w[No])
+    it 'validates the presence of details if detail options are supplied' do
+      attributes = { option: 'No' }
+      details_object = described_class.new(attributes: attributes, details_options: %w[No])
 
-    expect(details_object).not_to validate_presence_of(:details)
+      expect(details_object).not_to be_valid
+      expect(details_object.errors.messages[:details]).to eq(["can't be blank"])
+    end
+
+    it 'does not validate the presence of details if no detail options supplied' do
+      attributes = { option: 'No' }
+      details_object = described_class.new(attributes: attributes, question_options: %w[No])
+
+      expect(details_object).to be_valid
+    end
+
+    it 'does not validate the presence of details if detail options supplied but option is answered different' do
+      attributes = { option: 'Yes' }
+      details_object = described_class.new(attributes: attributes, details_options: %w[No])
+
+      expect(details_object).to be_valid
+    end
   end
 
   describe '#as_json' do
@@ -49,10 +69,30 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
       expect(details_object.as_json).to eq(attributes)
     end
 
-    it 'returns a empty hash if nothing passed in' do
+    it 'returns an empty hash if nothing passed in' do
       details_object = described_class.new(attributes: {})
 
       expect(details_object.as_json).to be_empty
+    end
+
+    it 'returns an empty hash if nil option and details passed in' do
+      attributes = {
+        option: nil,
+        details: nil,
+      }
+      details_object = described_class.new(attributes: attributes)
+
+      expect(details_object.as_json).to be_empty
+    end
+
+    it 'returns details as a string if different type passed in' do
+      attributes = {
+        option: nil,
+        details: ['Level 1', { "option": 'details' }],
+      }
+      details_object = described_class.new(attributes: attributes)
+
+      expect(details_object.as_json).to eq(details: '["Level 1", {:option=>"details"}]', option: nil)
     end
   end
 end
