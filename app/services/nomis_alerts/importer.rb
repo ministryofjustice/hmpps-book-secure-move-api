@@ -6,7 +6,7 @@ module NomisAlerts
   class Importer
     attr_accessor :alert_codes
 
-    ALERT_MAPPINGS = {
+    ALERT_CODE_TO_ASSESSMENT_QUESTION_KEY_MAPPINGS = {
       'HA' => :self_harm,
       'HA1' => :self_harm,
       'HA2' => :self_harm,
@@ -163,8 +163,8 @@ module NomisAlerts
     end
 
     def call
-      alert_codes.each do |alert|
-        import_alert(alert)
+      alert_codes.each do |alert_code|
+        import_alert(alert_code)
       end
     end
 
@@ -186,7 +186,7 @@ module NomisAlerts
     end
 
     def assessment_question_mapping(alert_code)
-      key = ALERT_MAPPINGS[alert_code]
+      key = ALERT_CODE_TO_ASSESSMENT_QUESTION_KEY_MAPPINGS[alert_code]
 
       key ? AssessmentQuestion.find_by(key: key) : nil
     end
