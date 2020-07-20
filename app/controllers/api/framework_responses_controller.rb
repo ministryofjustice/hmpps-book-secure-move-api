@@ -8,19 +8,19 @@ module Api
     ].freeze
 
     def update
-      framework_response.update!(update_attributes)
+      framework_response.update_with_flags!(update_framework_response_attributes)
 
       render json: framework_response, status: :ok, include: included_relationships
     end
 
   private
 
-    def update_params
+    def update_framework_response_params
       params.require(:data).permit(PPERMITTED_PARAMS)
     end
 
-    def update_attributes
-      update_params.to_h[:attributes]
+    def update_framework_response_attributes
+      update_framework_response_params.to_h.dig(:attributes, :value)
     end
 
     def supported_relationships
