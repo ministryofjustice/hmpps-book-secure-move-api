@@ -10,6 +10,7 @@ class FrameworkResponse < VersionedModel
                         foreign_key: 'parent_id'
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
+  has_and_belongs_to_many :flags
   validates_each :value, on: :update do |record, _attr, value|
     record.errors.add(:value, :blank) if requires_value?(value, record)
   end

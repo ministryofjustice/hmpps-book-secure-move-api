@@ -13,4 +13,5 @@ class Flag < VersionedModel
   validates :question_value, presence: true
 
   belongs_to :framework_question
+  has_and_belongs_to_many :framework_responses
 end

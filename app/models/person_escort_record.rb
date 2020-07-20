@@ -15,6 +15,7 @@ class PersonEscortRecord < VersionedModel
 
   belongs_to :framework
   has_many :framework_questions, through: :framework
+  has_many :flags, through: :framework_responses
   belongs_to :profile
   validates :profile, uniqueness: true
 

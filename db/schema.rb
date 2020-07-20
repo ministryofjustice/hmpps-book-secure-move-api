@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_041742) do
+ActiveRecord::Schema.define(version: 2020_07_20_063205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -132,6 +132,13 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["framework_question_id"], name: "index_flags_on_framework_question_id"
+  end
+
+  create_table "flags_framework_responses", id: false, force: :cascade do |t|
+    t.uuid "framework_response_id", null: false
+    t.uuid "flag_id", null: false
+    t.index ["flag_id"], name: "index_flags_framework_responses_on_flag_id"
+    t.index ["framework_response_id"], name: "index_flags_framework_responses_on_framework_response_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
