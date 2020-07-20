@@ -1,4 +1,4 @@
-FlagReference:
+FrameworkFlagReference:
   type: object
   required:
     - data
@@ -6,20 +6,23 @@ FlagReference:
     data:
       oneOf:
       - type: object
-        description:  single object returned if resource is associated to only one flag
+        description:  single object returned if resource is associated to only one framework_flag
       - type: 'null'
       - type: array
-        description:  Multiple objects returned if resource is associated to multiple flags
+        description:  Multiple objects returned if resource is associated to multiple framework_flags
+      example:
+        - id: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+          type: framework_flags
       required:
         - type
         - id
       properties:
         type:
           type: string
-          example: flags
+          example: framework_flags
           enum:
-            - flags
-          description: The type of this object - always `flags`
+            - framework_flags
+          description: The type of this object - always `framework_flags`
         id:
           type: string
           format: uuid

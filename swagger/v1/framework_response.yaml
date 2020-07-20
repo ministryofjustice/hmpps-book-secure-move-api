@@ -54,3 +54,6 @@ FrameworkResponse:
         question:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
           description: The question this response is for
+        flags:
+          $ref: framework_flag_reference.yaml#/FrameworkFlagReference
+          description: The framework flags associated with this framework_response

@@ -1,0 +1,55 @@
+FrameworkQuestion:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: framework_questions
+      enum:
+      - framework_questions
+      description: The type of this object - always `framework_questions`
+    attributes:
+      type: object
+      required:
+      - key
+      - question_type
+      - options
+      properties:
+        key:
+          example: 'wheelchair-users'
+          type: string
+          description: the unique key for the question
+          readOnly: true
+        question_type:
+          type: string
+          example: 'checkbox'
+          enum:
+            - text
+            - textarea
+            - radio
+            - checkbox
+          description: Indicates the type of question
+          readOnly: true
+        options:
+          type: array
+          example: ['Yes', 'No']
+          items:
+            type: string
+            description: accepted options for a question
+          readOnly: true
+    relationships:
+      type: object
+      required:
+      - framework
+      properties:
+        framework:
+          $ref: framework_reference.yaml#/FrameworkReference
+          description: The framework associated with this question

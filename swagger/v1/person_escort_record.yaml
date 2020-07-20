@@ -85,5 +85,5 @@ PersonEscortRecord:
           $ref: framework_response_reference.yaml#/FrameworkResponseReference
           description: The framework response associated with this person_escort_record
         flags:
-          $ref: flag_reference.yaml#/FlagReference
-          description: The flags associated with this person_escort_record
+          $ref: framework_flag_reference.yaml#/FrameworkFlagReference
+          description: The framework flags associated with this person_escort_record
