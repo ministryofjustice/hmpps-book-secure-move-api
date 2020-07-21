@@ -273,16 +273,19 @@ commands:
 
 jobs:
   notify_of_approval:
+    resource_class: small
     executor: basic-executor
     steps:
       - *notify_slack_of_approval
 
   notify_of_release:
+    resource_class: small
     executor: basic-executor
     steps:
       - *notify_slack_on_release_start
 
   setup_test_environment:
+    resource_class: small
     executor: test-executor
     steps:
       - checkout
@@ -291,6 +294,7 @@ jobs:
       - seed-database
 
   api_docs:
+    resource_class: small
     executor: test-executor
     parallelism: 1
     steps:
@@ -317,6 +321,7 @@ jobs:
       - *rspec
 
   linters:
+    resource_class: small
     executor: test-executor
     steps:
       - checkout
@@ -333,6 +338,7 @@ jobs:
       - build_docker_image
 
   deploy_dev:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
@@ -342,6 +348,7 @@ jobs:
           env: "dev"
 
   deploy_uat:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
@@ -351,6 +358,7 @@ jobs:
           env: "uat"
 
   deploy_staging:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
@@ -360,6 +368,7 @@ jobs:
           env: "staging"
 
   deploy_preprod:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
@@ -369,6 +378,7 @@ jobs:
           env: "preprod"
 
   deploy_production:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
@@ -379,6 +389,7 @@ jobs:
           notify_slack: "true"
 
   ecr-cleanup:
+    resource_class: small
     executor: cloud-platform-executor
     steps:
       - run:
