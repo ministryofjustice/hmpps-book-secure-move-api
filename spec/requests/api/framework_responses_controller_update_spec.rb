@@ -115,6 +115,23 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
+      context 'when incorrect keys added to object response' do
+        let(:framework_response) { create(:object_response, :details) }
+        let(:value) { { option: 'Yes', detailss: 'Some details' } }
+
+        it 'returns the correct data' do
+          expect(response_json).to include_json(data: {
+            "id": framework_response_id,
+            "type": 'framework_responses',
+            "attributes": {
+              "value": { option: 'Yes' },
+              "value_type": 'object',
+              "responded": true,
+            },
+          })
+        end
+      end
+
       context 'with flags' do
         it 'attaches a flag and returns the correct data' do
           expect(response_json).to include_json(data: {

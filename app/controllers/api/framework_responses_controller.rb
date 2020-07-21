@@ -2,6 +2,8 @@
 
 module Api
   class FrameworkResponsesController < ApiController
+    # NB: permit multiple types of value attributes: array, array of objects,
+    # object with option details fields, and string
     PPERMITTED_PARAMS = [
       :type,
       attributes: [:value, { value: %i[option details] }, { value: [] }],
