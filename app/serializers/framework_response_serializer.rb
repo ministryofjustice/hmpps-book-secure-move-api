@@ -2,6 +2,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   type 'framework_responses'
   belongs_to :person_escort_record
   belongs_to :framework_question, key: :question
+  has_many :flags
 
   attributes :value, :value_type, :responded
 
@@ -21,5 +22,6 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
     question
+    flags
   ].freeze
 end

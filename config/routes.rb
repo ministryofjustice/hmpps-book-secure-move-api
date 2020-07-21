@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     end
 
     resources :person_escort_records, only: %i[create show]
+    resources :framework_responses, only: %i[update]
 
     namespace :reference do
       resources :allocation_complex_cases, only: :index

@@ -8,6 +8,7 @@ RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
+  it { is_expected.to have_and_belong_to_many(:flags) }
   it { is_expected.to validate_presence_of(:type) }
 
   context 'with validations' do
@@ -138,6 +139,93 @@ RSpec.describe FrameworkResponse do
       response.update(value: nil)
 
       expect(response.responded).to be(true)
+    end
+  end
+
+  describe '#update_with_flags!' do
+    it 'updates response value' do
+      response = create(:string_response, value: nil)
+      response.update_with_flags!('Yes')
+
+      expect(response.value).to eq('Yes')
+    end
+
+    it 'does not attach flags if no flags attached to question' do
+      create(:flag)
+      response = create(:string_response)
+      response.update_with_flags!('Yes')
+
+      expect(response.flags).to be_empty
+    end
+
+    it 'does not attach flags if answer supplied does not match flag' do
+      flag = create(:flag)
+      response = create(:string_response, value: nil, framework_question: flag.framework_question)
+      response.update_with_flags!('No')
+
+      expect(response.flags).to be_empty
+    end
+
+    it 'attaches flags if answer supplied matches flag for string' do
+      flag = create(:flag)
+      response = create(:string_response, value: nil, framework_question: flag.framework_question)
+      response.update_with_flags!('Yes')
+
+      expect(response.flags).to contain_exactly(flag)
+    end
+
+    it 'attaches flags if answer supplied matches flag for array' do
+      response = create(:array_response, value: nil)
+      flag = create(:flag, question_value: 'Level 1', framework_question: response.framework_question)
+      response.update_with_flags!(['Level 1', 'Level 2'])
+
+      expect(response.flags).to contain_exactly(flag)
+    end
+
+    it 'attaches flags if answer supplied matches flag for object' do
+      response = create(:object_response, :details, value: nil)
+      flag = create(:flag, question_value: 'Yes', framework_question: response.framework_question)
+      response.update_with_flags!({ option: 'Yes', details: 'something' })
+
+      expect(response.flags).to contain_exactly(flag)
+    end
+
+    it 'attaches flags if answer supplied matches flag for collection' do
+      response = create(:collection_response, :details, value: nil)
+      flag = create(:flag, question_value: 'Level 1', framework_question: response.framework_question)
+      response.update_with_flags!([{ option: 'Level 1', details: 'something' }])
+
+      expect(response.flags).to contain_exactly(flag)
+    end
+
+    it 'attaches multiple flags if answer supplied matches flag' do
+      framework_question = create(:framework_question)
+      flag1 = create(:flag, framework_question: framework_question)
+      flag2 = create(:flag, framework_question: framework_question)
+      response = create(:string_response, value: nil, framework_question: framework_question)
+      response.update_with_flags!('Yes')
+
+      expect(response.flags).to contain_exactly(flag1, flag2)
+    end
+
+    it 'detaches flag if answer changed' do
+      framework_question = create(:framework_question)
+      flag1 = create(:flag, framework_question: framework_question)
+      flag2 = create(:flag, framework_question: framework_question)
+      response = create(:string_response, framework_question: framework_question, flags: [flag1, flag2])
+      response.update_with_flags!('No')
+
+      expect(response.reload.flags).to be_empty
+    end
+
+    it 'attaches another flag if answer changed' do
+      framework_question = create(:framework_question)
+      flag1 = create(:flag, framework_question: framework_question)
+      flag2 = create(:flag, question_value: 'No', framework_question: framework_question)
+      response = create(:string_response, framework_question: framework_question, flags: [flag1])
+      response.update_with_flags!('No')
+
+      expect(response.flags).to contain_exactly(flag2)
     end
   end
 end

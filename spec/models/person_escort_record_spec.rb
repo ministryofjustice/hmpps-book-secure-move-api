@@ -7,6 +7,7 @@ RSpec.describe PersonEscortRecord do
   it { is_expected.to validate_inclusion_of(:state).in_array(%w[in_progress completed confirmed]) }
   it { is_expected.to have_many(:framework_responses) }
   it { is_expected.to have_many(:framework_questions).through(:framework) }
+  it { is_expected.to have_many(:flags).through(:framework_responses) }
   it { is_expected.to belong_to(:framework) }
   it { is_expected.to belong_to(:profile) }
 
