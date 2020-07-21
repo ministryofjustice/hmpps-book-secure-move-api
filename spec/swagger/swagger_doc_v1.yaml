@@ -2505,6 +2505,7 @@
         description: The person_escort_record object to be created
         schema:
           "$ref": "../v1/person_escort_record.yaml#/PersonEscortRecord"
+      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
       responses:
         '201':
           description: created
@@ -2542,6 +2543,50 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_person_escort_record_responses.yaml#/422"
+  "/person_escort_record/{person_escort_record_id}":
+    get:
+      summary: Gets a person_escort_record
+      description:
+        "This method gets the specified person_escort_record"
+      tags:
+        - PersonEscortRecord
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/person_escort_record_id_parameter.yaml#/PersonEscortRecordId"
+        - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_person_escort_record_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases

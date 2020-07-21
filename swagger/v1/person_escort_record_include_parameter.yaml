@@ -1,0 +1,15 @@
+PersonEscortRecordIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the person_escort_record
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - framework
+      - profile
+      - profile.person
+      - responses
+      - responses.question
+  example: framework

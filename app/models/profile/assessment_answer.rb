@@ -39,7 +39,7 @@ class Profile
       assessment_question_id.blank?
     end
 
-    def as_json
+    def as_json(_options = {})
       {
         title: title,
         comments: comments,

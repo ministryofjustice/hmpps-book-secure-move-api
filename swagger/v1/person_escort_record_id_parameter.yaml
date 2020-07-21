@@ -1,0 +1,9 @@
+PersonEscortRecordId:
+  name: person_escort_record_id
+  in: path
+  required: true
+  description: The ID of the person_escort_record
+  schema:
+    type: string
+    format: uuid
+  example: 5b61f755-0fd7-4a91-b7a3-a33d751f985f

@@ -3,7 +3,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   belongs_to :person_escort_record
   belongs_to :framework_question, key: :question
 
-  attributes :value, :value_type
+  attributes :value, :value_type, :responded
 
   def value_type
     case object.type
@@ -20,6 +20,6 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
-    framework_question
+    question
   ].freeze
 end

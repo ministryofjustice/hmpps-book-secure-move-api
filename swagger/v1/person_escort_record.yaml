@@ -43,6 +43,31 @@ PersonEscortRecord:
           format: date-time
           description: Timestamp of when the person_escort_record was created
           readOnly: true
+    meta:
+      readOnly: true
+      type: object
+      properties:
+        section_progress:
+          type: array
+          description: Determines the current progress of all responses in each `section` in the person_escort_record
+          items:
+            type: object
+            required:
+              - key
+              - status
+            properties:
+              key:
+                type: string
+                example: risk-information
+                description: identifier of section
+              status:
+                type: string
+                example: in_progress
+                enum:
+                  - not_started
+                  - in_progress
+                  - completed
+                description: status of progress of a section
     relationships:
       type: object
       required:
