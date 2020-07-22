@@ -47,7 +47,7 @@ RSpec.describe Api::MoveEventsController do
     end
 
     context 'with a video remand hearing' do
-      let(:move) { create(:move, :video_remand_hearing) }
+      let(:move) { create(:move, :video_remand) }
 
       it 'populates the move to_location' do
         expect { move.reload }.to change(move, :to_location).from(nil).to(new_location)

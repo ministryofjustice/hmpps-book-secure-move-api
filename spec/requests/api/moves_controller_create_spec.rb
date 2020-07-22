@@ -330,8 +330,8 @@ RSpec.describe Api::MovesController do
         end
       end
 
-      context 'with explicit video_remand_hearing `move_type`' do
-        let(:move_attributes) { attributes_for(:move, move_type: 'video_remand_hearing') }
+      context 'with explicit video_remand `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'video_remand') }
         let(:from_location) { create :location, :police, suppliers: [supplier] }
         let(:to_location) { nil }
 
@@ -343,9 +343,9 @@ RSpec.describe Api::MovesController do
           expect { post_moves }.to change(Move, :count).by(1)
         end
 
-        it 'sets the move_type to `video_remand_hearing`' do
+        it 'sets the move_type to `video_remand`' do
           post_moves
-          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand_hearing'
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand'
         end
       end
 
