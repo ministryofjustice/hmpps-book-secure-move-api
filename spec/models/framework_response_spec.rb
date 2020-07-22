@@ -370,7 +370,7 @@ RSpec.describe FrameworkResponse do
       it 'sets responded to false on dependent responses if value changed' do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
-        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, flags: [create(:flag)], responded: true)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
         parent_response.update_with_flags!([option: 'Level 2'])
 
         expect(child_response.reload.responded).to be(false)
@@ -379,8 +379,7 @@ RSpec.describe FrameworkResponse do
       it 'does not set responded to false on dependent responses if value not changed' do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
-        flag = create(:flag)
-        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, flags: [flag], responded: true)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
         parent_response.update_with_flags!([option: 'Level 1'])
 
         expect(child_response.reload.responded).to be(true)
