@@ -12,4 +12,5 @@ PersonEscortRecordIncludeParameter:
       - profile.person
       - responses
       - responses.question
+      - flags
   example: framework

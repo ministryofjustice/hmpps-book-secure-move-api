@@ -52,6 +52,14 @@
       :$ref: "../v1/document.yaml#/Document"
     :Ethnicity:
       :$ref: "../v1/ethnicity.yaml#/Ethnicity"
+    :Framework:
+      :$ref: "../v1/framework.yaml#/Framework"
+    :FrameworkFlag:
+      :$ref: "../v1/framework_flag.yaml#/FrameworkFlag"
+    :FrameworkQuestion:
+      :$ref: "../v1/framework_question.yaml#/FrameworkQuestion"
+    :FrameworkResponse:
+      :$ref: "../v1/framework_response.yaml#/FrameworkResponse"
     :Gender:
       :$ref: "../v1/gender.yaml#/Gender"
     :Journey:
@@ -448,6 +456,59 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_documents_responses.yaml#/422"
+  "/framework_responses/{framework_response_id}":
+    patch:
+      summary: Updates a framework response's value
+      tags:
+      - Framework Responses
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/framework_response_id_parameter.yaml#/FrameworkResponseId"
+      - "$ref": "../v1/framework_response_include_parameter.yaml#/FrameworkResponseIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The framework_response object to be modified
+        schema:
+          "$ref": "../v1/framework_response.yaml#/FrameworkResponse"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/200"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/401"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/422"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -2495,7 +2556,7 @@
     post:
       summary: Creates a new person escort record
       tags:
-      - PersonEscortRecord
+      - Person Escort Records
       consumes:
       - application/vnd.api+json
       parameters:
@@ -2543,13 +2604,13 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_person_escort_record_responses.yaml#/422"
-  "/person_escort_record/{person_escort_record_id}":
+  "/person_escort_records/{person_escort_record_id}":
     get:
       summary: Gets a person_escort_record
       description:
         "This method gets the specified person_escort_record"
       tags:
-        - PersonEscortRecord
+        - Person Escort Records
       consumes:
         - application/vnd.api+json
       parameters:

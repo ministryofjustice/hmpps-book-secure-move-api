@@ -74,6 +74,9 @@ RSpec.describe Api::PersonEscortRecordsController do
                 },
               ],
             },
+            "flags": {
+              "data": [],
+            },
           },
         }
       end
