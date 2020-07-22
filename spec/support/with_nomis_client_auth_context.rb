@@ -27,9 +27,18 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
   let(:response_status) { 200 }
   let(:response_body) { '{}' }
 
-  before { allow(OAuth2::Client).to receive(:new).and_return(oauth2_client) }
+  before do
+    # NB: the NomisClient uses class methods which persist for lifetime of the test suite and can cause problems; clearing
+    # these class instance variables before and after tests helps prevent cross-contamination
+    NomisClient::Base.instance_variable_set(:@client, nil)
+    NomisClient::Base.instance_variable_set(:@token, nil)
+
+    allow(OAuth2::Client).to receive(:new).and_return(oauth2_client)
+  end
 
   after do
+    # NB: the NomisClient uses class methods which persist for lifetime of the test suite and can cause problems; clearing
+    # these class instance variables before and after tests helps prevent cross-contamination
     NomisClient::Base.instance_variable_set(:@client, nil)
     NomisClient::Base.instance_variable_set(:@token, nil)
   end

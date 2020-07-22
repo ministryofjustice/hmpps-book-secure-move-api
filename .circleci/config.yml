@@ -100,6 +100,10 @@ references:
     run:
       name: Wait for DB
       command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  _wait-for-wiremock: &wait-for-wiremock
+    run:
+      name: Wait for wiremock
+      command: dockerize -wait tcp://localhost:8888 -timeout 1m
   _create-db: &create-db
     run:
       name: Database setup
@@ -110,6 +114,12 @@ references:
       command: |
         TESTS=$(circleci tests glob "spec/{requests,swagger}/**/*_spec.rb" | grep -e rswag -e swagger | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
+  _load_wiremock_mappings: &load_wiremock_mappings
+    run:
+      name: Load mappings into wiremock
+      command: |
+        echo "Loading wiremock mappings..."
+        find spec/wiremock/prison-api/mappings/*.json -exec curl --request POST --url http://localhost:8888/__admin/mappings/ --header 'content-type: application/json' --data-binary "@{}" \;
   _rspec: &rspec
     run:
       name: Run rspec tests
@@ -148,11 +158,14 @@ executors:
           DATABASE_URL: "postgres://postgres@localhost/hmpps-book-secure-move-api"
           EXTERNAL_URL: mocked_in_tests
           ENCRYPTOR_SALT: "2EREZ8Xub/vt0ya1ZM6YKUwIMN72MbmqeWMq7KS4BV8oSJJc27rDpZYmA6AQGYcS"
+          EXTERNAL_WIREMOCK: "true"
       - image: circleci/postgres:10-alpine-ram
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
+      - image: rodolpheche/wiremock:2.27.1-alpine
+        command: --port 8888
 
 commands:
   build-base:
@@ -318,6 +331,8 @@ jobs:
       - *wait-for-db
       - *create-db
       - *attach-tmp-workspace
+      - *wait-for-wiremock
+      - *load_wiremock_mappings
       - *rspec
 
   linters:

@@ -82,5 +82,7 @@ end
 
 group :test do
   gem 'climate_control'
+  gem 'rack-test', '~> 1.1.0'
+  gem 'service_mock', '~> 0.9' # wrapper for Wiremock
   gem 'simplecov', require: false
 end
