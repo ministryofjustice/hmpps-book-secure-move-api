@@ -96,17 +96,14 @@ references:
         gem install bundler -v $bundler_version
         bundle config --local path vendor/bundle
         bundle check || bundle install --jobs=4 --retry=3
-  _install-wiremock: &install-wiremock
-    run:
-      name: Install java and wiremock
-      command: |
-        sudo apt-get update
-        sudo apt-get install default-jre
-        curl -o spec/wiremock/wiremock-standalone.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
   _wait-for-db: &wait-for-db
     run:
       name: Wait for DB
       command: dockerize -wait tcp://localhost:5432 -timeout 1m
+  _wait-for-wiremock: &wait-for-wiremock
+    run:
+      name: Wait for wiremock
+      command: dockerize -wait tcp://localhost:8888 -timeout 1m
   _create-db: &create-db
     run:
       name: Database setup
@@ -117,11 +114,12 @@ references:
       command: |
         TESTS=$(circleci tests glob "spec/{requests,swagger}/**/*_spec.rb" | grep -e rswag -e swagger | circleci tests split )
         bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
-  _run-wiremock: &run-wiremock
+  _load_wiremock_mappings: &load_wiremock_mappings
     run:
-      name: Run prison-api wiremock
-      command: java -jar spec/wiremock/wiremock-standalone.jar --port 8888 --verbose --root-dir spec/wiremock/prison-api
-      background: true
+      name: Load mappings into wiremock
+      command: |
+        echo "Loading wiremock mappings..."
+        find spec/wiremock/prison-api/mappings/*.json -exec curl --request POST --url http://localhost:8888/__admin/mappings/ --header 'content-type: application/json' --data-binary "@{}" \;
   _rspec: &rspec
     run:
       name: Run rspec tests
@@ -166,6 +164,8 @@ executors:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
           LANG: C.utf8
+      - image: rodolpheche/wiremock:2.27.1-alpine
+        command: --port 8888
 
 commands:
   build-base:
@@ -173,7 +173,6 @@ commands:
     steps:
       - *restore-cache
       - *install-dependencies
-      - *install-wiremock
       - *save-cache
 
   seed-database:
@@ -325,10 +324,11 @@ jobs:
     steps:
       - checkout
       - build-base
-      - *run-wiremock
       - *wait-for-db
       - *create-db
       - *attach-tmp-workspace
+      - *wait-for-wiremock
+      - *load_wiremock_mappings
       - *rspec
 
   linters:
