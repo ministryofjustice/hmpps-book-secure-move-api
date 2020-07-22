@@ -31,7 +31,7 @@ class Move < VersionedModel
     prison_recall: 'prison_recall',
     prison_remand: 'prison_remand',
     prison_transfer: 'prison_transfer',
-    video_remand_hearing: 'video_remand_hearing',
+    video_remand: 'video_remand',
   }
 
   self.ignored_columns = %w[person_id]
@@ -64,7 +64,7 @@ class Move < VersionedModel
   has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
-  validates :to_location, presence: true, unless: -> { prison_recall? || video_remand_hearing? }
+  validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
   validates :move_type, inclusion: { in: move_types }
   validates_with Moves::MoveTypeValidator
 

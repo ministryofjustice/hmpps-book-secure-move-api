@@ -58,7 +58,7 @@ RSpec.describe Move do
     end
   end
 
-  it 'validates presence of `to_location` if `move_type` is NOT prison_recall or video_remand_hearing' do
+  it 'validates presence of `to_location` if `move_type` is NOT prison_recall or video_remand' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
     )
@@ -70,8 +70,8 @@ RSpec.describe Move do
     )
   end
 
-  it 'does NOT validate presence of `to_location` if `move_type` is video_remand_hearing' do
-    expect(build(:move, move_type: 'video_remand_hearing')).not_to(
+  it 'does NOT validate presence of `to_location` if `move_type` is video_remand' do
+    expect(build(:move, move_type: 'video_remand')).not_to(
       validate_presence_of(:to_location),
     )
   end
