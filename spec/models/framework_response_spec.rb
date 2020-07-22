@@ -227,5 +227,145 @@ RSpec.describe FrameworkResponse do
 
       expect(response.flags).to contain_exactly(flag2)
     end
+
+    context 'when dependent responses' do
+      it 'clears dependent responses if value changed' do
+        parent_response = create(:string_response)
+        child1_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
+        child2_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
+        create(:string_response, framework_question: child1_question, parent: parent_response)
+        create(:string_response, framework_question: child2_question, parent: parent_response)
+        parent_response.update_with_flags!('No')
+
+        parent_response.dependents.each do |child_response|
+          expect(child_response.reload.value).to be_nil
+        end
+      end
+
+      it 'does not clear value of current response' do
+        parent_response = create(:string_response)
+        child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
+        create(:string_response, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!('No')
+
+        expect(parent_response.reload.value).to eq('No')
+      end
+
+      it 'clears dependent responses if value changed on array' do
+        parent_response = create(:array_response)
+        child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:array_response, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!(['Level 2'])
+
+        expect(child_response.reload.value).to be_empty
+      end
+
+      it 'clears dependent responses if value changed on object' do
+        parent_response = create(:object_response, :details)
+        child_question = create(:framework_question, followup_comment: true, dependent_value: 'Yes', parent: parent_response.framework_question)
+        child_response = create(:object_response, :details, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!(option: 'No')
+
+        expect(child_response.reload.value).to be_empty
+      end
+
+      it 'clears dependent responses if value changed on collection' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!([option: 'Level 2'])
+
+        expect(child_response.reload.value).to be_empty
+      end
+
+      it 'does not clear dependent responses if value similar' do
+        parent_response = create(:string_response)
+        child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
+        child_response = create(:string_response, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!('Yes')
+
+        expect(child_response.reload.value).to eq('Yes')
+      end
+
+      it 'does not clear dependent responses if value similar on array' do
+        parent_response = create(:array_response)
+        child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:array_response, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!(['Level 1', 'Level 2'])
+
+        expect(child_response.reload.value).to eq(['Level 1'])
+      end
+
+      it 'does not clear dependent responses if value similar on object' do
+        parent_response = create(:object_response, :details)
+        child_question = create(:framework_question, followup_comment: true, dependent_value: 'Yes', parent: parent_response.framework_question)
+        child_response = create(:object_response, :details, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!(option: 'Yes')
+
+        expect(child_response.reload.value).to eq('option' => 'Yes', 'details' => 'some comment')
+      end
+
+      it 'does not clear dependent responses if value similar on collection' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response)
+        parent_response.update_with_flags!([{ option: 'Level 1' }, { option: 'Level 2' }])
+
+        expect(child_response.reload.value).to contain_exactly(
+          { 'option' => 'Level 1', 'details' => 'some comment' },
+          { 'option' => 'Level 2', 'details' => 'another comment' },
+        )
+      end
+
+      it 'clears all hierarchy of dependent responses' do
+        parent_response = create(:string_response)
+        child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
+        grand_child_question = create(:framework_question, dependent_value: 'Yes', parent: child_question)
+        child_response = create(:string_response, framework_question: child_question, parent: parent_response)
+        grand_child_response = create(:string_response, framework_question: grand_child_question, parent: child_response)
+        parent_response.update_with_flags!('No')
+
+        expect(grand_child_response.reload.value).to be_nil
+      end
+
+      it 'clears only relevant dependent responses according to dependent value' do
+        parent_response = create(:array_response)
+        child1_question = create(:framework_question, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child2_question = create(:framework_question, dependent_value: 'Level 2', parent: parent_response.framework_question)
+        create(:string_response, framework_question: child1_question, parent: parent_response)
+        child_response = create(:string_response, framework_question: child2_question, parent: parent_response)
+        parent_response.update_with_flags!(['Level 2'])
+
+        expect(child_response.reload.value).to eq('Yes')
+      end
+
+      it 'does not clear dependent values if record invalid' do
+        parent_response = create(:array_response)
+        child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:array_response, framework_question: child_question, parent: parent_response)
+
+        expect { parent_response.update_with_flags!('Level 2') }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(child_response.reload.value).to eq(['Level 1'])
+      end
+
+      it 'clears flags on dependent responses if value changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, flags: [create(:flag)])
+        parent_response.update_with_flags!([option: 'Level 2'])
+
+        expect(child_response.reload.flags).to be_empty
+      end
+
+      it 'does not clear flags on dependent responses if value not changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        flag = create(:flag)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, flags: [flag])
+        parent_response.update_with_flags!([option: 'Level 1'])
+
+        expect(child_response.reload.flags).to contain_exactly(flag)
+      end
+    end
   end
 end

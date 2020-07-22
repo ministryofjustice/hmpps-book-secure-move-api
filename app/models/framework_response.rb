@@ -26,8 +26,13 @@ class FrameworkResponse < VersionedModel
   end
 
   def update_with_flags!(value)
-    self.value = value
-    update!(flags: build_flags)
+    ActiveRecord::Base.transaction do
+      old_value = self.value
+      self.value = value
+
+      update!(flags: build_flags)
+      clear_dependent_values_and_flags!(old_value)
+    end
   end
 
 private
@@ -44,5 +49,34 @@ private
         arr << flag
       end
     end
+  end
+
+  def clear_dependent_values_and_flags!(old_value)
+    return unless (old_value != value) && dependents.any?
+
+    dependent_ids = dependents.includes(:framework_question).reject { |dependent| option_selected?(dependent.framework_question.dependent_value) }
+    return unless dependent_ids.any?
+
+    FrameworkResponse
+      .where("framework_responses.id IN (#{recursive_tree})", dependent_ids)
+      .update(value_json: nil, value_text: nil, flags: [])
+  end
+
+  def recursive_tree
+    <<-SQL
+      WITH RECURSIVE tree AS (
+        -- initial node
+        SELECT id, parent_id
+          FROM framework_responses
+          WHERE id IN (?) -- start from the root
+        UNION all
+        -- recursive descent
+        SELECT fr.id, fr.parent_id
+          FROM tree t
+          JOIN framework_responses fr ON fr.parent_id = t.id AND fr.parent_id != fr.id
+      )
+
+      SELECT id FROM tree
+    SQL
   end
 end
