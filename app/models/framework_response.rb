@@ -57,9 +57,11 @@ private
     dependent_ids = dependents.includes(:framework_question).reject { |dependent| option_selected?(dependent.framework_question.dependent_value) }
     return unless dependent_ids.any?
 
-    FrameworkResponse
+    dependent_tree = FrameworkResponse
       .where("framework_responses.id IN (#{recursive_tree})", dependent_ids)
-      .update(value_json: nil, value_text: nil, flags: [])
+
+    dependent_tree.joins(:flags).update(flags: [])
+    dependent_tree.update_all(value_json: nil, value_text: nil, responded: false)
   end
 
   def recursive_tree
