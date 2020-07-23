@@ -26,8 +26,13 @@ class FrameworkResponse < VersionedModel
   end
 
   def update_with_flags!(value)
-    self.value = value
-    update!(flags: build_flags)
+    ActiveRecord::Base.transaction do
+      old_value = self.value
+      self.value = value
+
+      update!(flags: build_flags)
+      clear_dependent_values_and_flags!(old_value)
+    end
   end
 
 private
@@ -44,5 +49,53 @@ private
         arr << flag
       end
     end
+  end
+
+  def clear_dependent_values_and_flags!(old_value)
+    return unless old_value != value
+
+    dependent_ids = dependents.includes(:framework_question).reject { |dependent| option_selected?(dependent.framework_question.dependent_value) }
+
+    update_dependent_responses!(dependent_ids)
+  end
+
+  def update_dependent_responses!(dependent_ids)
+    return unless dependent_ids.any?
+
+    descendants = descendants_tree(dependent_ids).includes(:framework_question, :flags).map do |descendant|
+      descendant.assign_attributes(
+        value: nil,
+        responded: false,
+        flags: [],
+      )
+
+      descendant
+    end
+
+    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
+  end
+
+  def descendants_tree(ids)
+    FrameworkResponse
+      .where("framework_responses.id IN (#{recursive_tree})", ids)
+  end
+
+  def recursive_tree
+    # build full descendants tree
+    <<-SQL
+      WITH RECURSIVE tree AS (
+        -- initial node
+        SELECT id, parent_id
+          FROM framework_responses
+          WHERE id IN (?) -- start from the root
+        UNION all
+        -- recursive descent
+        SELECT fr.id, fr.parent_id
+          FROM tree t
+          JOIN framework_responses fr ON fr.parent_id = t.id AND fr.parent_id != fr.id
+      )
+
+      SELECT id FROM tree
+    SQL
   end
 end
