@@ -9,16 +9,6 @@ RSpec.describe JourneyStateMachine do
 
   before { machine.restore!(initial_state) }
 
-  shared_examples 'state_machine target state' do |expected_state|
-    describe 'machine state' do
-      it { expect(machine.current).to eql expected_state }
-    end
-
-    describe 'target state' do
-      it { expect(target.state).to eql expected_state }
-    end
-  end
-
   it { is_expected.to respond_to(:start, :reject, :cancel, :uncancel, :complete, :uncomplete, :restore!, :current) }
 
   context 'when in the proposed state' do
