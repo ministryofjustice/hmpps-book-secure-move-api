@@ -233,12 +233,12 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:string_response)
         child1_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
         child2_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
-        create(:string_response, framework_question: child1_question, parent: parent_response)
-        create(:string_response, framework_question: child2_question, parent: parent_response)
+        child_response1 = create(:string_response, framework_question: child1_question, parent: parent_response)
+        child_response2 = create(:string_response, framework_question: child2_question, parent: parent_response)
         parent_response.update_with_flags!('No')
 
-        parent_response.dependents.each do |child_response|
-          expect(child_response.reload.value).to be_nil
+        [child_response1, child_response2].each do |response|
+          expect(response.reload.value).to be_nil
         end
       end
 
@@ -320,12 +320,16 @@ RSpec.describe FrameworkResponse do
       it 'clears all hierarchy of dependent responses' do
         parent_response = create(:string_response)
         child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
-        grand_child_question = create(:framework_question, dependent_value: 'Yes', parent: child_question)
+        grand_child_question1 = create(:framework_question, dependent_value: 'Yes', parent: child_question)
+        grand_child_question2 = create(:framework_question, dependent_value: 'No', parent: child_question)
         child_response = create(:string_response, framework_question: child_question, parent: parent_response)
-        grand_child_response = create(:string_response, framework_question: grand_child_question, parent: child_response)
+        grand_child_response1 = create(:string_response, framework_question: grand_child_question1, parent: child_response)
+        grand_child_response2 = create(:string_response, framework_question: grand_child_question2, parent: child_response)
         parent_response.update_with_flags!('No')
 
-        expect(grand_child_response.reload.value).to be_nil
+        [grand_child_response1, grand_child_response2].each do |response|
+          expect(response.reload.value).to be_nil
+        end
       end
 
       it 'clears only relevant dependent responses according to dependent value' do
