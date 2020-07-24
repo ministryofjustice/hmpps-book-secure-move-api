@@ -59,7 +59,7 @@ class PersonEscortRecord < VersionedModel
 private
 
   def sections_to_responded
-    @sections_to_responded ||= framework_responses.joins(:framework_question).select('DISTINCT responded, framework_questions.section').group_by(&:section)
+    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section').group_by(&:section)
   end
 
   def set_progress(responses)
@@ -69,5 +69,11 @@ private
     return PERSON_ESCORT_RECORD_NOT_STARTED if responded.all?(false)
 
     PERSON_ESCORT_RECORD_IN_PROGRESS
+  end
+
+  def required_responses
+    framework_responses.includes(:framework_question, :parent).select do |framework_response|
+      framework_response.parent ? framework_response.parent.option_selected?(framework_response.framework_question.dependent_value) : framework_response
+    end
   end
 end

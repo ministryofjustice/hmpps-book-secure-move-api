@@ -235,12 +235,12 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `not_started` if all responded values are false' do
       person_escort_record = create(:person_escort_record)
-      question = create(:framework_question, framework: person_escort_record.framework)
-      create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
-          key: question.section,
+          key: 'risk',
           status: 'not_started',
         },
       )
@@ -248,11 +248,28 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `in_progress` if some responded values are true' do
       person_escort_record = create(:person_escort_record)
-      question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
 
-      create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record)
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'in_progress',
+        },
+      )
+    end
+
+    it 'returns a section as `in_progress` if not all required dependent responses responded' do
+      person_escort_record = create(:person_escort_record)
+      # Non dependent Responses
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      # Dependent responses on parent_response
+      child_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
+      # Dependent responses on child_response
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -264,11 +281,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `completed` if all responded values are true' do
       person_escort_record = create(:person_escort_record)
-      question1 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      question2 = create(:framework_question, framework: person_escort_record.framework, section: 'risk')
-      create(:string_response, value: 'Yes', framework_question: question1, person_escort_record: person_escort_record, responded: true)
-
-      create(:string_response, value: nil, framework_question: question2, person_escort_record: person_escort_record, responded: true)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: true)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -277,5 +291,31 @@ RSpec.describe PersonEscortRecord do
         },
       )
     end
+
+    it 'returns a section as `completed` if all required dependent responses responded' do
+      person_escort_record = create(:person_escort_record)
+
+      # Non dependent Responses
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      # Dependent responses on parent_response
+      child_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
+      # Dependent responses on child_response
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
+
+      expect(person_escort_record.section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'completed',
+        },
+      )
+    end
+  end
+
+  def create_response(options = {})
+    question = create(:framework_question, framework: options[:person_escort_record].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
+    create(:string_response, value: options[:value], framework_question: question, person_escort_record: options[:person_escort_record], responded: options[:responded], parent: options[:parent])
   end
 end
