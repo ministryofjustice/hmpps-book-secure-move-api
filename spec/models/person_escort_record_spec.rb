@@ -391,6 +391,61 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
+  describe '#set_state' do
+    it 'sets state to `confirmed` if current state is `completed`' do
+      person_escort_record = create(:person_escort_record, :completed)
+      person_escort_record.set_state!('confirmed')
+
+      expect(person_escort_record).to be_confirmed
+    end
+
+    it 'sets `confirmed` timestamp to `confirmed_at`' do
+      confirmed_at_timstamp = Time.zone.now
+      person_escort_record = create(:person_escort_record, :completed)
+      allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
+      person_escort_record.set_state!('confirmed')
+
+      expect(person_escort_record.confirmed_at).to eq(confirmed_at_timstamp)
+    end
+
+    it 'sets state to `printed` if current state is `confirmed`' do
+      person_escort_record = create(:person_escort_record, :confirmed)
+      person_escort_record.set_state!('printed')
+
+      expect(person_escort_record).to be_printed
+    end
+
+    it 'sets `printed` timestamp to `printed_at`' do
+      printed_at_timstamp = Time.zone.now
+      person_escort_record = create(:person_escort_record, :confirmed)
+      allow(Time).to receive(:now).and_return(printed_at_timstamp)
+      person_escort_record.set_state!('printed')
+
+      expect(person_escort_record.printed_at).to eq(printed_at_timstamp)
+    end
+
+    it 'does not update state if state is wrong value' do
+      person_escort_record = create(:person_escort_record, :completed)
+      person_escort_record.set_state!('completed')
+
+      expect(person_escort_record).to be_completed
+    end
+
+    it 'does not update state if previous state not valid' do
+      person_escort_record = create(:person_escort_record, :in_progress)
+
+      expect { person_escort_record.set_state!('printed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:state]).to contain_exactly("can't update to 'printed' from 'in_progress'")
+    end
+
+    it 'does not update state if current state the same' do
+      person_escort_record = create(:person_escort_record, :confirmed)
+
+      expect { person_escort_record.set_state!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:state]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
+    end
+  end
+
   def create_response(options = {})
     question = create(:framework_question, framework: options[:person_escort_record].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
     create(:string_response, value: options[:value], framework_question: question, person_escort_record: options[:person_escort_record], responded: options[:responded], parent: options[:parent])
