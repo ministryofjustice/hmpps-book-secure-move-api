@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_20_063205) do
+ActiveRecord::Schema.define(version: 2020_07_24_071959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -408,6 +408,8 @@ ActiveRecord::Schema.define(version: 2020_07_20_063205) do
     t.string "state", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "confirmed_at"
+    t.datetime "printed_at"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end

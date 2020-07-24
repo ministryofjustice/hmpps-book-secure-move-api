@@ -44,6 +44,8 @@ RSpec.describe Api::PersonEscortRecordsController do
           "attributes": {
             "version": framework_version,
             "status": 'in_progress',
+            "confirmed_at": nil,
+            "printed_at": nil,
           },
           "meta": {
             'section_progress' => [

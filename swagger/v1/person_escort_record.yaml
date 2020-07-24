@@ -33,6 +33,18 @@ PersonEscortRecord:
           type: string
           example: '0.1'
           description: Determines the version of framework questions of the `person_escort_record`
+        confirmed_at:
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person_escort_record was confirmed
+        printed_at:
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person_escort_record was printed
         updated_at:
           type: string
           format: date-time

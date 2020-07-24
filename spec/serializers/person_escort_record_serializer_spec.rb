@@ -25,6 +25,14 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:attributes][:version]).to eq(person_escort_record.framework.version)
   end
 
+  it 'contains a `confirmed_at` attribute' do
+    expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
+  end
+
+  it 'contains a `printed_at` attribute' do
+    expect(result[:data][:attributes][:printed_at]).to eq(person_escort_record.printed_at)
+  end
+
   it 'contains a `profile` relationship' do
     expect(result[:data][:relationships][:profile][:data]).to eq(
       id: person_escort_record.profile.id,

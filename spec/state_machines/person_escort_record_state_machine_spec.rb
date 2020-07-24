@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PersonEscortRecordStateMachine do
   let(:machine) { described_class.new(target) }
-  let(:target) { Struct.new(:state).new(initial_state) }
+  let(:target) { Struct.new(:state, :confirmed_at, :printed_at).new(initial_state) }
   let(:initial_state) { :unstarted }
 
   before { machine.restore!(initial_state) }
@@ -51,21 +51,38 @@ RSpec.describe PersonEscortRecordStateMachine do
     end
 
     context 'when the confirm event is fired' do
-      before { machine.confirm }
+      let(:confirmed_at_timstamp) { Time.zone.now }
+
+      before do
+        allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
+        machine.confirm
+      end
 
       it_behaves_like 'state_machine target state', :confirmed
+
+      it 'sets the current timestamp to confirmed_at' do
+        expect(target.confirmed_at).to eq(confirmed_at_timstamp)
+      end
     end
   end
 
   context 'when in the confirmed state' do
     let(:initial_state) { :confirmed }
+    let(:printed_at_timstamp) { Time.zone.now }
 
     it_behaves_like 'state_machine target state', :confirmed
 
     context 'when the to_print event is fired' do
-      before { machine.to_print }
+      before do
+        allow(Time).to receive(:now).and_return(printed_at_timstamp)
+        machine.to_print
+      end
 
       it_behaves_like 'state_machine target state', :printed
+
+      it 'sets the current timestamp to printed_at' do
+        expect(target.printed_at).to eq(printed_at_timstamp)
+      end
     end
   end
 

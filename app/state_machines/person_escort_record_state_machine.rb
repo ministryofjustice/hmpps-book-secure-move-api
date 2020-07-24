@@ -11,4 +11,12 @@ class PersonEscortRecordStateMachine < FiniteMachine::Definition
   on_enter do |event|
     target.state = event.to
   end
+
+  on_after :confirm do
+    target.confirmed_at = Time.zone.now
+  end
+
+  on_after :to_print do
+    target.printed_at = Time.zone.now
+  end
 end
