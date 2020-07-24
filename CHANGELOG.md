@@ -1,12 +1,30 @@
 # Changelog
 
-## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+## [v2.2.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.2.1) (2020-07-23)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.2.0...HEAD)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.2.0...v2.2.1)
 
 **Merged pull requests:**
 
+- P4-1945 Clear dependent answers [\#736](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/736) ([cwrw](https://github.com/cwrw))
+- Rename video\_remand\_hearing to video\_remand [\#735](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/735) ([smoothcontract](https://github.com/smoothcontract))
+- Use `resource\_class: small` on ligther tasks [\#734](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/734) ([mafonso](https://github.com/mafonso))
+- Remove Elastic APM gem [\#733](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/733) ([mafonso](https://github.com/mafonso))
+- P4-1778 Add FrameworkResponse patch endpoint [\#732](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/732) ([cwrw](https://github.com/cwrw))
+- log number of moves exported [\#731](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/731) ([mafonso](https://github.com/mafonso))
+- Update Nomis alert mapping July 2020 + small refactor [\#729](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/729) ([alexdesi](https://github.com/alexdesi))
+- P4-1771 Extend PER validations [\#728](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/728) ([cwrw](https://github.com/cwrw))
+- Make fields not required for Patch /move [\#727](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/727) ([alexdesi](https://github.com/alexdesi))
+- Overriding existing method needs an argument [\#726](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/726) ([cwrw](https://github.com/cwrw))
+- Add support for prison\_recall and court\_other move types [\#725](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/725) ([smoothcontract](https://github.com/smoothcontract))
+- Expose PER in profile and update swagger docs [\#724](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/724) ([cwrw](https://github.com/cwrw))
+- \[P4-1898\] Removes unused code [\#723](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/723) ([willfish](https://github.com/willfish))
+- Changelog v2.2.0 [\#722](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/722) ([willfish](https://github.com/willfish))
 - Clean ECR images weekly [\#721](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/721) ([mafonso](https://github.com/mafonso))
+- P4 1842 investigate api testing [\#720](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/720) ([martyn-w](https://github.com/martyn-w))
+- P4-1791 GET /person\_escort\_records/{person\_escort\_record\_id} [\#718](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/718) ([cwrw](https://github.com/cwrw))
+- It change the logic of ability to manage a move. [\#715](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/715) ([alexdesi](https://github.com/alexdesi))
+- Small optimisation to dockerfile [\#700](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/700) ([martyn-w](https://github.com/martyn-w))
 
 ## [v2.2.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.2.0) (2020-07-15)
 
@@ -114,6 +132,7 @@
 - P4-1618 Remove default includes [\#633](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/633) ([cwrw](https://github.com/cwrw))
 - P4-1616 Support includes in all relevant controllers [\#632](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/632) ([cwrw](https://github.com/cwrw))
 - Set service\_urls\_expire\_in to 5 min [\#631](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/631) ([alexdesi](https://github.com/alexdesi))
+- add werrington to geo [\#628](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/628) ([martyn-w](https://github.com/martyn-w))
 
 ## [v2.0.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.0.2) (2020-06-23)
 
@@ -126,10 +145,6 @@
 ## [v2.0.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.0.1) (2020-06-23)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.0.0...v2.0.1)
-
-**Merged pull requests:**
-
-- add werrington to geo [\#628](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/628) ([martyn-w](https://github.com/martyn-w))
 
 ## [v2.0.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.0.0) (2020-06-23)
 
@@ -411,7 +426,6 @@
 - Update CHANGELOG.md [\#419](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/419) ([martyn-w](https://github.com/martyn-w))
 - P4-1392 Patch a moves document relationships [\#417](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/417) ([willfish](https://github.com/willfish))
 - Catch 500 error when latest\_nomis\_booking\_id is missing [\#413](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/413) ([alexdesi](https://github.com/alexdesi))
-- CourtHearings Post service: change error level + clean up [\#407](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/407) ([alexdesi](https://github.com/alexdesi))
 
 ## [v1.8.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.8.5) (2020-05-01)
 
@@ -434,6 +448,7 @@
 - P4-1428 Fix Heroku Review apps [\#411](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/411) ([smoothcontract](https://github.com/smoothcontract))
 - \[P4-1422\] Adds ability to control creation of a court hearing in Nomis [\#410](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/410) ([willfish](https://github.com/willfish))
 - \[P4-1413\] Adds swagger documentation for new timetable api [\#408](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/408) ([willfish](https://github.com/willfish))
+- CourtHearings Post service: change error level + clean up [\#407](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/407) ([alexdesi](https://github.com/alexdesi))
 
 ## [v1.8.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.8.3) (2020-04-29)
 
