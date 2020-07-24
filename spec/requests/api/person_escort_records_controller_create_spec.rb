@@ -43,7 +43,7 @@ RSpec.describe Api::PersonEscortRecordsController do
           "type": 'person_escort_records',
           "attributes": {
             "version": framework_version,
-            "status": 'in_progress',
+            "status": 'not_started',
             "confirmed_at": nil,
             "printed_at": nil,
           },

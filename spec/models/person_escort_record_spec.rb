@@ -70,11 +70,11 @@ RSpec.describe PersonEscortRecord do
       expect { described_class.save_with_responses!(profile_id: profile.id) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'sets initial state to in_progress' do
+    it 'sets initial state to unstarted' do
       profile = create(:profile)
       create(:framework)
 
-      expect(described_class.save_with_responses!(profile_id: profile.id).state).to eq('in_progress')
+      expect(described_class.save_with_responses!(profile_id: profile.id).state).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do

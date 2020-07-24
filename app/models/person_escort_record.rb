@@ -46,7 +46,7 @@ class PersonEscortRecord < VersionedModel
     framework = version.present? ? Framework.find_by!(version: version) : Framework.ordered_by_latest_version.first
 
     # TODO: add state machine
-    record = new(profile: profile, framework: framework, state: PERSON_ESCORT_RECORD_IN_PROGRESS)
+    record = new(profile: profile, framework: framework)
     record.build_responses!
   end
 
