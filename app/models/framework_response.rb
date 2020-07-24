@@ -32,7 +32,11 @@ class FrameworkResponse < VersionedModel
 
       update!(flags: build_flags)
       clear_dependent_values_and_flags!(old_value)
-      person_escort_record.update_state!
+
+      # lock the state update to avoid race condition on multiple response patches
+      person_escort_record.with_lock do
+        person_escort_record.update_state!
+      end
     end
   rescue FiniteMachine::InvalidStateError
     raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.state}"
