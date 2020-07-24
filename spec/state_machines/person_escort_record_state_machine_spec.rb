@@ -37,6 +37,12 @@ RSpec.describe PersonEscortRecordStateMachine do
 
       it_behaves_like 'state_machine target state', :completed
     end
+
+    context 'when the uncomplete event is fired' do
+      before { machine.uncomplete }
+
+      it_behaves_like 'state_machine target state', :in_progress
+    end
   end
 
   context 'when in the completed state' do
@@ -48,6 +54,12 @@ RSpec.describe PersonEscortRecordStateMachine do
       before { machine.uncomplete }
 
       it_behaves_like 'state_machine target state', :in_progress
+    end
+
+    context 'when the complete event is fired' do
+      before { machine.complete }
+
+      it_behaves_like 'state_machine target state', :completed
     end
 
     context 'when the confirm event is fired' do

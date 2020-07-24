@@ -363,9 +363,27 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record).to be_completed
     end
 
+    it 'sets state to `completed` from itself if response changed' do
+      person_escort_record = create(:person_escort_record, :completed)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_completed
+    end
+
     it 'sets state back to `in_progress` from `completed` if response cleared' do
       person_escort_record = create(:person_escort_record, :completed)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_in_progress
+    end
+
+    it 'sets state to `in_progress` from itself if response changed' do
+      person_escort_record = create(:person_escort_record, :in_progress)
+      create(:string_response, value: 'No', responded: true, person_escort_record: person_escort_record)
       create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
       person_escort_record.update_state!
 

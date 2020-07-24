@@ -1,8 +1,8 @@
 class PersonEscortRecordStateMachine < FiniteMachine::Definition
   initial :unstarted
 
-  event :complete, %i[unstarted in_progress] => :completed
-  event :uncomplete, %i[unstarted completed] => :in_progress
+  event :complete, %i[unstarted in_progress completed] => :completed
+  event :uncomplete, %i[unstarted in_progress completed] => :in_progress
   event :confirm, completed: :confirmed
   event :to_print, confirmed: :printed
 
