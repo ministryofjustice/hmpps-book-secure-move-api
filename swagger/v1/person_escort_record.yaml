@@ -22,7 +22,6 @@ PersonEscortRecord:
       - version
       properties:
         status:
-          example: in_progress
           type: string
           enum:
             - not_started
@@ -32,9 +31,10 @@ PersonEscortRecord:
           description: Determines the current status of the `person_escort_record`
         version:
           type: string
-          example: '0.1'
+          example: '1.0.1'
           description: Determines the version of framework questions of the `person_escort_record`
         confirmed_at:
+          example: "2020-07-24T17:29:26.338Z"
           oneOf:
           - type: 'null'
           - type: string
@@ -60,7 +60,7 @@ PersonEscortRecord:
                 description: identifier of section
               status:
                 type: string
-                example: in_progress
+                example: not_started
                 enum:
                   - not_started
                   - in_progress
