@@ -103,7 +103,7 @@ RSpec.describe FrameworkResponseSerializer do
         {
           id: framework_response.person_escort_record.id,
           type: 'person_escort_records',
-          attributes: { status: 'in_progress' },
+          attributes: { status: 'not_started' },
         },
         {
           id: framework_response.framework_question.id,

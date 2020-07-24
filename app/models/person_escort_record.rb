@@ -1,23 +1,44 @@
 class PersonEscortRecord < VersionedModel
+  include StateMachineable
+
   PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
   PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
   PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
   PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
+  PERSON_ESCORT_RECORD_PRINTED = 'printed'.freeze
 
   enum states: {
+    unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
     in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
     completed: PERSON_ESCORT_RECORD_COMPLETED,
     confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
+    printed: PERSON_ESCORT_RECORD_PRINTED,
   }
 
   validates :state, presence: true, inclusion: { in: states }
+  validates :profile, uniqueness: true
+  validates :confirmed_at, presence: { if: :confirmed? }
+  validates :printed_at, presence: { if: :printed? }
+
   has_many :framework_responses, dependent: :destroy
 
   belongs_to :framework
   has_many :framework_questions, through: :framework
   has_many :flags, through: :framework_responses
   belongs_to :profile
-  validates :profile, uniqueness: true
+
+  has_state_machine PersonEscortRecordStateMachine
+
+  delegate :complete,
+           :uncomplete,
+           :confirm,
+           :to_print,
+           :unstarted?,
+           :in_progress?,
+           :completed?,
+           :confirmed?,
+           :printed?,
+           to: :state_machine
 
   def self.save_with_responses!(profile_id:, version: nil)
     profile = Profile.find(profile_id)
@@ -48,7 +69,7 @@ class PersonEscortRecord < VersionedModel
   end
 
   def section_progress
-    sections_to_responded.map do |section, responses|
+    sections_to_responded.group_by(&:section).map do |section, responses|
       {
         key: section,
         status: set_progress(responses),
@@ -56,10 +77,21 @@ class PersonEscortRecord < VersionedModel
     end
   end
 
+  def update_state!
+    progress = set_progress(sections_to_responded)
+    if progress == PERSON_ESCORT_RECORD_IN_PROGRESS
+      state_machine.uncomplete!
+    elsif progress == PERSON_ESCORT_RECORD_COMPLETED
+      state_machine.complete!
+    end
+
+    save!
+  end
+
 private
 
   def sections_to_responded
-    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section').group_by(&:section)
+    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section')
   end
 
   def set_progress(responses)

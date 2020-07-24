@@ -3,8 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe PersonEscortRecord do
+  subject { create(:person_escort_record) }
+
   it { is_expected.to validate_presence_of(:state) }
-  it { is_expected.to validate_inclusion_of(:state).in_array(%w[in_progress completed confirmed]) }
+  it { is_expected.to validate_inclusion_of(:state).in_array(%w[unstarted in_progress completed confirmed printed]) }
   it { is_expected.to have_many(:framework_responses) }
   it { is_expected.to have_many(:framework_questions).through(:framework) }
   it { is_expected.to have_many(:flags).through(:framework_responses) }
@@ -14,6 +16,16 @@ RSpec.describe PersonEscortRecord do
   it 'validates uniqueness of profile' do
     person_escort_record = build(:person_escort_record)
     expect(person_escort_record).to validate_uniqueness_of(:profile)
+  end
+
+  it 'validates presence of confirmed_at if person_escort_record confirmed' do
+    person_escort_record = build(:person_escort_record, :confirmed)
+    expect(person_escort_record).to validate_presence_of(:confirmed_at)
+  end
+
+  it 'validates presence of printed_at if person_escort_record printed' do
+    person_escort_record = build(:person_escort_record, :printed)
+    expect(person_escort_record).to validate_presence_of(:printed_at)
   end
 
   describe '.save_with_responses!' do
@@ -311,6 +323,63 @@ RSpec.describe PersonEscortRecord do
           status: 'completed',
         },
       )
+    end
+  end
+
+  describe '#update_state!' do
+    it 'sets initial state to `unstarted`' do
+      person_escort_record = create(:person_escort_record)
+      create(:string_response, value: nil, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_unstarted
+    end
+
+    it 'sets state to `in_progress` if at least one response provided' do
+      person_escort_record = create(:person_escort_record)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_in_progress
+    end
+
+    it 'sets state to `completed` if all responses provided from `unstarted`' do
+      person_escort_record = create(:person_escort_record)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_completed
+    end
+
+    it 'sets state to `completed` if all responses provided from `in_progress`' do
+      person_escort_record = create(:person_escort_record, :in_progress)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_completed
+    end
+
+    it 'sets state back to `in_progress` from `completed` if response cleared' do
+      person_escort_record = create(:person_escort_record, :completed)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      person_escort_record.update_state!
+
+      expect(person_escort_record).to be_in_progress
+    end
+
+    it 'raises error if state is `confirmed`' do
+      person_escort_record = create(:person_escort_record, :confirmed)
+      expect { person_escort_record.update_state! }.to raise_error(FiniteMachine::InvalidStateError)
+    end
+
+    it 'raises error if state is `printed`' do
+      person_escort_record = create(:person_escort_record, :printed)
+      expect { person_escort_record.update_state! }.to raise_error(FiniteMachine::InvalidStateError)
     end
   end
 

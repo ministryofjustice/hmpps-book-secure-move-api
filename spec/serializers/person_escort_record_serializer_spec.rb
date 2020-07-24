@@ -18,7 +18,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a `status` attribute' do
-    expect(result[:data][:attributes][:status]).to eq('in_progress')
+    expect(result[:data][:attributes][:status]).to eq('not_started')
   end
 
   it 'contains a `version` attribute' do

@@ -4,8 +4,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
   has_many :flags
 
-  attributes :version, :confirmed_at, :printed_at
-  attribute :state, key: :status
+  attributes :version, :status, :confirmed_at, :printed_at
 
   meta do
     { section_progress: object.section_progress }
@@ -17,6 +16,14 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
 
   def framework_responses
     object.framework_responses.includes(:flags, framework_question: :framework)
+  end
+
+  def status
+    if object.state == 'unstarted'
+      'not_started'
+    else
+      object.state
+    end
   end
 
   SUPPORTED_RELATIONSHIPS = %w[

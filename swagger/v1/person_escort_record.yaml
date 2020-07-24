@@ -25,9 +25,11 @@ PersonEscortRecord:
           example: in_progress
           type: string
           enum:
+            - not_started
             - in_progress
             - completed
             - confirmed
+            - printed
           description: Determines the current status of the `person_escort_record`
         version:
           type: string
