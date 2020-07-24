@@ -32,7 +32,10 @@ class FrameworkResponse < VersionedModel
 
       update!(flags: build_flags)
       clear_dependent_values_and_flags!(old_value)
+      person_escort_record.update_state!
     end
+  rescue FiniteMachine::InvalidStateError
+    raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.state}"
   end
 
 private
