@@ -6,7 +6,7 @@ require 'rack/test'
 # WHEN the supplier wants to move the person from court to prison
 # THEN the supplier should call the api as outlined in the example below
 
-RSpec.describe 'court to prison move', type: :request do
+RSpec.describe 'court to prison move', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'
