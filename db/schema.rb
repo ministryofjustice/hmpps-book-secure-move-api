@@ -409,7 +409,6 @@ ActiveRecord::Schema.define(version: 2020_07_27_043305) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "confirmed_at"
-    t.datetime "printed_at"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end

@@ -29,7 +29,6 @@ PersonEscortRecord:
             - in_progress
             - completed
             - confirmed
-            - printed
           description: Determines the current status of the `person_escort_record`
         version:
           type: string
@@ -41,22 +40,7 @@ PersonEscortRecord:
           - type: string
             format: date-time
             description: Timestamp of when the person_escort_record was confirmed
-        printed_at:
-          oneOf:
-          - type: 'null'
-          - type: string
-            format: date-time
-            description: Timestamp of when the person_escort_record was printed
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp of when the person_escort_record was last created or updated
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp of when the person_escort_record was created
-          readOnly: true
+            readOnly: true
     meta:
       readOnly: true
       type: object

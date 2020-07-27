@@ -6,7 +6,7 @@ RSpec.describe PersonEscortRecord do
   subject { create(:person_escort_record) }
 
   it { is_expected.to validate_presence_of(:status) }
-  it { is_expected.to validate_inclusion_of(:status).in_array(%w[unstarted in_progress completed confirmed printed]) }
+  it { is_expected.to validate_inclusion_of(:status).in_array(%w[unstarted in_progress completed confirmed]) }
   it { is_expected.to have_many(:framework_responses) }
   it { is_expected.to have_many(:framework_questions).through(:framework) }
   it { is_expected.to have_many(:flags).through(:framework_responses) }
@@ -21,11 +21,6 @@ RSpec.describe PersonEscortRecord do
   it 'validates presence of confirmed_at if person_escort_record confirmed' do
     person_escort_record = build(:person_escort_record, :confirmed)
     expect(person_escort_record).to validate_presence_of(:confirmed_at)
-  end
-
-  it 'validates presence of printed_at if person_escort_record printed' do
-    person_escort_record = build(:person_escort_record, :printed)
-    expect(person_escort_record).to validate_presence_of(:printed_at)
   end
 
   describe '.save_with_responses!' do
@@ -392,11 +387,6 @@ RSpec.describe PersonEscortRecord do
 
     it 'raises error if status is `confirmed`' do
       person_escort_record = create(:person_escort_record, :confirmed)
-      expect { person_escort_record.update_status! }.to raise_error(FiniteMachine::InvalidStateError)
-    end
-
-    it 'raises error if status is `printed`' do
-      person_escort_record = create(:person_escort_record, :printed)
       expect { person_escort_record.update_status! }.to raise_error(FiniteMachine::InvalidStateError)
     end
   end

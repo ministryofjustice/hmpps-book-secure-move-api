@@ -32,10 +32,5 @@ FactoryBot.define do
       status { PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED }
       confirmed_at { Time.zone.now }
     end
-
-    trait :printed do
-      status { PersonEscortRecord::PERSON_ESCORT_RECORD_PRINTED }
-      printed_at { Time.zone.now }
-    end
   end
 end

@@ -5,20 +5,17 @@ class PersonEscortRecord < VersionedModel
   PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
   PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
   PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
-  PERSON_ESCORT_RECORD_PRINTED = 'printed'.freeze
 
   enum statuses: {
     unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
     in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
     completed: PERSON_ESCORT_RECORD_COMPLETED,
     confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
-    printed: PERSON_ESCORT_RECORD_PRINTED,
   }
 
   validates :status, presence: true, inclusion: { in: statuses }
   validates :profile, uniqueness: true
   validates :confirmed_at, presence: { if: :confirmed? }
-  validates :printed_at, presence: { if: :printed? }
 
   has_many :framework_responses, dependent: :destroy
 
@@ -32,12 +29,10 @@ class PersonEscortRecord < VersionedModel
   delegate :complete,
            :uncomplete,
            :confirm,
-           :to_print,
            :unstarted?,
            :in_progress?,
            :completed?,
            :confirmed?,
-           :printed?,
            to: :state_machine
 
   def self.save_with_responses!(profile_id:, version: nil)

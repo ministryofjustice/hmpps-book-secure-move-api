@@ -413,14 +413,6 @@ RSpec.describe FrameworkResponse do
         expect { response.update_with_flags!('No') }.to raise_error(ActiveRecord::ReadOnlyRecord)
         expect(response.reload.value).to eq('Yes')
       end
-
-      it 'does not allow updating responses if person_escort_record status is printed' do
-        person_escort_record = create(:person_escort_record, :printed, :with_responses)
-        response = person_escort_record.framework_responses.first
-
-        expect { response.update_with_flags!('No') }.to raise_error(ActiveRecord::ReadOnlyRecord)
-        expect(response.reload.value).to eq('Yes')
-      end
     end
   end
 end

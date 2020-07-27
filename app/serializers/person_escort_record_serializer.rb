@@ -4,7 +4,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
   has_many :flags
 
-  attributes :version, :status, :confirmed_at, :printed_at
+  attributes :version, :status, :confirmed_at
 
   meta do
     { section_progress: object.section_progress }
