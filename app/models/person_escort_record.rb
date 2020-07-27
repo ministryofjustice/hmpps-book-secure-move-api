@@ -26,8 +26,7 @@ class PersonEscortRecord < VersionedModel
 
   has_state_machine PersonEscortRecordStateMachine, on: :status
 
-  delegate :complete,
-           :uncomplete,
+  delegate :calculate,
            :confirm,
            :unstarted?,
            :in_progress?,
@@ -73,11 +72,7 @@ class PersonEscortRecord < VersionedModel
 
   def update_status!
     progress = set_progress(sections_to_responded)
-    if progress == PERSON_ESCORT_RECORD_IN_PROGRESS
-      state_machine.uncomplete!
-    elsif progress == PERSON_ESCORT_RECORD_COMPLETED
-      state_machine.complete!
-    end
+    state_machine.calculate!(progress)
 
     save!
   end

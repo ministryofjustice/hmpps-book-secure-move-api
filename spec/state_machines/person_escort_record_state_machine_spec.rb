@@ -9,19 +9,19 @@ RSpec.describe PersonEscortRecordStateMachine do
 
   before { machine.restore!(initial_status) }
 
-  it { is_expected.to respond_to(:complete, :uncomplete, :confirm) }
+  it { is_expected.to respond_to(:calculate, :confirm) }
 
   context 'when in the unstarted status' do
     it_behaves_like 'state_machine target status', :unstarted
 
-    context 'when the uncomplete event is fired' do
-      before { machine.uncomplete }
+    context 'when the calculate event is fired and it is in progress' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
     end
 
-    context 'when the complete event is fired' do
-      before { machine.complete }
+    context 'when the complete event is fired and it is completed' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
 
       it_behaves_like 'state_machine target status', :completed
     end
@@ -32,16 +32,16 @@ RSpec.describe PersonEscortRecordStateMachine do
 
     it_behaves_like 'state_machine target status', :in_progress
 
-    context 'when the complete event is fired' do
-      before { machine.complete }
-
-      it_behaves_like 'state_machine target status', :completed
-    end
-
-    context 'when the uncomplete event is fired' do
-      before { machine.uncomplete }
+    context 'when the calculate event is fired and it is in progress' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
+    end
+
+    context 'when the complete event is fired and it is completed' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
+
+      it_behaves_like 'state_machine target status', :completed
     end
   end
 
@@ -50,14 +50,14 @@ RSpec.describe PersonEscortRecordStateMachine do
 
     it_behaves_like 'state_machine target status', :completed
 
-    context 'when the uncomplete event is fired' do
-      before { machine.uncomplete }
+    context 'when the calculate event is fired and it is in progress' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
     end
 
-    context 'when the complete event is fired' do
-      before { machine.complete }
+    context 'when the complete event is fired and it is completed' do
+      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
 
       it_behaves_like 'state_machine target status', :completed
     end
