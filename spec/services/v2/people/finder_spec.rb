@@ -126,9 +126,9 @@ RSpec.describe V2::People::Finder do
     context 'with multiple matching filters' do
       let(:filter_params) do
         {
-          police_national_computer: 'AB/00006',
-          prison_number: 'D00007',
-          criminal_records_office: 'CR00006',
+          police_national_computer: 'ab/00006',
+          prison_number: 'd00007',
+          criminal_records_office: 'cr00006',
         }
       end
 

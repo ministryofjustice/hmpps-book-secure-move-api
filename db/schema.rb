@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_20_063205) do
+ActiveRecord::Schema.define(version: 2020_07_27_143634) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -382,10 +383,10 @@ ActiveRecord::Schema.define(version: 2020_07_20_063205) do
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "nomis_prison_number"
-    t.string "prison_number"
-    t.string "criminal_records_office"
-    t.string "police_national_computer"
+    t.citext "nomis_prison_number"
+    t.citext "prison_number"
+    t.citext "criminal_records_office"
+    t.citext "police_national_computer"
     t.string "first_names"
     t.string "last_name"
     t.date "date_of_birth"
