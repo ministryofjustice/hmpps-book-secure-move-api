@@ -4,8 +4,8 @@ module CourtHearings
       booking_id = move.person.latest_nomis_booking_id
 
       body_locations = {
-        "fromPrisonLocation": move.from_location.nomis_agency_id,
-        "toCourtLocation": move.to_location.nomis_agency_id,
+        fromPrisonLocation: move.from_location.nomis_agency_id,
+        toCourtLocation: move.to_location.nomis_agency_id,
       }
 
       log_attributes = []
@@ -15,13 +15,13 @@ module CourtHearings
           booking_id: booking_id,
           court_case_id: hearing.nomis_case_id,
           body_params: {
-            'courtHearingDateTime': hearing.start_time.to_s(:nomis),
-            'comments': hearing.comments,
+            courtHearingDateTime: hearing.start_time.to_s(:nomis),
+            comments: hearing.comments,
           }.merge(body_locations),
         }
         response = NomisClient::CourtHearings.post(body)
 
-        log_attributes << { response_sttus: response&.status, response_body: response&.body, request_body: body }
+        log_attributes << { response_status: response&.status, response_body: response&.body, request_params: body }
 
         next unless response&.status == 201
 
