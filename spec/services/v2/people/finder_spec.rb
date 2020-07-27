@@ -87,7 +87,7 @@ RSpec.describe V2::People::Finder do
 
     describe 'by prison_number' do
       context 'with matching prison_number' do
-        let(:filter_params) { { prison_number: 'D00006' } }
+        let(:filter_params) { { prison_number: 'd00006' } }
         let!(:person) { create(:person, prison_number: 'D00006') }
 
         it 'returns people matching prison_number' do

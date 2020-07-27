@@ -19,6 +19,14 @@ module V2
         filter_params[name]&.split(',')
       end
 
+      def split_and_upcase_params(name)
+        params = split_params(name)
+
+        return params&.map(&:upcase) if name == :prison_number
+
+        params
+      end
+
       def apply_filters(scope)
         scope = scope.includes(:profiles, :ethnicity, :gender)
         %i[police_national_computer criminal_records_office prison_number].each do |param|
@@ -29,7 +37,7 @@ module V2
       end
 
       def apply_filter(param, scope)
-        scope = scope.where(param => split_params(param)) if filter_params.key?(param)
+        scope = scope.where(param => split_and_upcase_params(param)) if filter_params.key?(param)
         scope
       end
     end
