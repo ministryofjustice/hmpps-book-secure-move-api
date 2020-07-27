@@ -9,7 +9,7 @@ class PersonEscortRecordStateMachine < FiniteMachine::Definition
   terminal :printed
 
   on_enter do |event|
-    target.state = event.to
+    target.status = event.to
   end
 
   on_after :confirm do

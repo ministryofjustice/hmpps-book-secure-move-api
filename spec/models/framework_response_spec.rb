@@ -390,15 +390,15 @@ RSpec.describe FrameworkResponse do
       end
     end
 
-    context 'with person_escort_record states' do
-      it 'does not change person escort record state if no answers provided invalid' do
+    context 'with person_escort_record status' do
+      it 'does not change person escort record status if no answers provided invalid' do
         response = create(:string_response, value: nil)
 
         expect { response.update_with_flags!(%w[Yes]) }.to raise_error(ActiveRecord::RecordInvalid)
         expect(response.person_escort_record).to be_unstarted
       end
 
-      it 'updates person escort record state if some answers provided' do
+      it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
         create(:string_response, value: nil, person_escort_record: response1.person_escort_record)
         response1.update_with_flags!('Yes')
@@ -406,7 +406,7 @@ RSpec.describe FrameworkResponse do
         expect(response1.person_escort_record).to be_in_progress
       end
 
-      it 'does not allow updating responses if person_escort_record state is confirmed' do
+      it 'does not allow updating responses if person_escort_record status is confirmed' do
         person_escort_record = create(:person_escort_record, :confirmed, :with_responses)
         response = person_escort_record.framework_responses.first
 
@@ -414,7 +414,7 @@ RSpec.describe FrameworkResponse do
         expect(response.reload.value).to eq('Yes')
       end
 
-      it 'does not allow updating responses if person_escort_record state is printed' do
+      it 'does not allow updating responses if person_escort_record status is printed' do
         person_escort_record = create(:person_escort_record, :printed, :with_responses)
         response = person_escort_record.framework_responses.first
 

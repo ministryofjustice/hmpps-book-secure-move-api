@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe PersonEscortRecord do
   subject { create(:person_escort_record) }
 
-  it { is_expected.to validate_presence_of(:state) }
-  it { is_expected.to validate_inclusion_of(:state).in_array(%w[unstarted in_progress completed confirmed printed]) }
+  it { is_expected.to validate_presence_of(:status) }
+  it { is_expected.to validate_inclusion_of(:status).in_array(%w[unstarted in_progress completed confirmed printed]) }
   it { is_expected.to have_many(:framework_responses) }
   it { is_expected.to have_many(:framework_questions).through(:framework) }
   it { is_expected.to have_many(:flags).through(:framework_responses) }
@@ -70,11 +70,11 @@ RSpec.describe PersonEscortRecord do
       expect { described_class.save_with_responses!(profile_id: profile.id) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'sets initial state to unstarted' do
+    it 'sets initial status to unstarted' do
       profile = create(:profile)
       create(:framework)
 
-      expect(described_class.save_with_responses!(profile_id: profile.id).state).to eq('unstarted')
+      expect(described_class.save_with_responses!(profile_id: profile.id).status).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do
@@ -207,7 +207,7 @@ RSpec.describe PersonEscortRecord do
       framework = create(:framework)
       create(:framework_question, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = build(:person_escort_record, framework: framework, state: 'some-status', profile: create(:profile))
+      person_escort_record = build(:person_escort_record, framework: framework, status: 'some-status', profile: create(:profile))
 
       expect { person_escort_record.build_responses! }.to raise_error(ActiveRecord::RecordInvalid)
     end
@@ -326,78 +326,78 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
-  describe '#update_state!' do
-    it 'sets initial state to `unstarted`' do
+  describe '#update_status!' do
+    it 'sets initial status to `unstarted`' do
       person_escort_record = create(:person_escort_record)
       create(:string_response, value: nil, person_escort_record: person_escort_record)
       create(:string_response, value: nil, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_unstarted
     end
 
-    it 'sets state to `in_progress` if at least one response provided' do
+    it 'sets status to `in_progress` if at least one response provided' do
       person_escort_record = create(:person_escort_record)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
       create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
     end
 
-    it 'sets state to `completed` if all responses provided from `unstarted`' do
+    it 'sets status to `completed` if all responses provided from `unstarted`' do
       person_escort_record = create(:person_escort_record)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
     end
 
-    it 'sets state to `completed` if all responses provided from `in_progress`' do
+    it 'sets status to `completed` if all responses provided from `in_progress`' do
       person_escort_record = create(:person_escort_record, :in_progress)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
     end
 
-    it 'sets state to `completed` from itself if response changed' do
+    it 'sets status to `completed` from itself if response changed' do
       person_escort_record = create(:person_escort_record, :completed)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
     end
 
-    it 'sets state back to `in_progress` from `completed` if response cleared' do
+    it 'sets status back to `in_progress` from `completed` if response cleared' do
       person_escort_record = create(:person_escort_record, :completed)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
       create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
     end
 
-    it 'sets state to `in_progress` from itself if response changed' do
+    it 'sets status to `in_progress` from itself if response changed' do
       person_escort_record = create(:person_escort_record, :in_progress)
       create(:string_response, value: 'No', responded: true, person_escort_record: person_escort_record)
       create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
-      person_escort_record.update_state!
+      person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
     end
 
-    it 'raises error if state is `confirmed`' do
+    it 'raises error if status is `confirmed`' do
       person_escort_record = create(:person_escort_record, :confirmed)
-      expect { person_escort_record.update_state! }.to raise_error(FiniteMachine::InvalidStateError)
+      expect { person_escort_record.update_status! }.to raise_error(FiniteMachine::InvalidStateError)
     end
 
-    it 'raises error if state is `printed`' do
+    it 'raises error if status is `printed`' do
       person_escort_record = create(:person_escort_record, :printed)
-      expect { person_escort_record.update_state! }.to raise_error(FiniteMachine::InvalidStateError)
+      expect { person_escort_record.update_status! }.to raise_error(FiniteMachine::InvalidStateError)
     end
   end
 

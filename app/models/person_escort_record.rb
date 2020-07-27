@@ -7,7 +7,7 @@ class PersonEscortRecord < VersionedModel
   PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
   PERSON_ESCORT_RECORD_PRINTED = 'printed'.freeze
 
-  enum states: {
+  enum statuses: {
     unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
     in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
     completed: PERSON_ESCORT_RECORD_COMPLETED,
@@ -15,7 +15,7 @@ class PersonEscortRecord < VersionedModel
     printed: PERSON_ESCORT_RECORD_PRINTED,
   }
 
-  validates :state, presence: true, inclusion: { in: states }
+  validates :status, presence: true, inclusion: { in: statuses }
   validates :profile, uniqueness: true
   validates :confirmed_at, presence: { if: :confirmed? }
   validates :printed_at, presence: { if: :printed? }
@@ -27,7 +27,7 @@ class PersonEscortRecord < VersionedModel
   has_many :flags, through: :framework_responses
   belongs_to :profile
 
-  has_state_machine PersonEscortRecordStateMachine
+  has_state_machine PersonEscortRecordStateMachine, on: :status
 
   delegate :complete,
            :uncomplete,
@@ -45,7 +45,6 @@ class PersonEscortRecord < VersionedModel
     # TODO: remove default framework, getting the last framework is temporary until versioning is finalised
     framework = version.present? ? Framework.find_by!(version: version) : Framework.ordered_by_latest_version.first
 
-    # TODO: add state machine
     record = new(profile: profile, framework: framework)
     record.build_responses!
   end
@@ -77,7 +76,7 @@ class PersonEscortRecord < VersionedModel
     end
   end
 
-  def update_state!
+  def update_status!
     progress = set_progress(sections_to_responded)
     if progress == PERSON_ESCORT_RECORD_IN_PROGRESS
       state_machine.uncomplete!

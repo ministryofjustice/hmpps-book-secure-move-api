@@ -9,16 +9,6 @@ RSpec.describe AllocationStateMachine do
 
   before { machine.restore!(initial_state) }
 
-  shared_examples 'state_machine target status' do |expected_status|
-    describe 'machine status' do
-      it { expect(machine.current).to eql expected_status }
-    end
-
-    describe 'target status' do
-      it { expect(target.status).to eql expected_status }
-    end
-  end
-
   it { is_expected.to respond_to(:fill, :unfill, :cancel) }
 
   context 'when in the unfilled status' do

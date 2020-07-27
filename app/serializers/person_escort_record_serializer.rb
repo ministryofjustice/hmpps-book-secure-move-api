@@ -19,10 +19,10 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   def status
-    if object.state == 'unstarted'
+    if object.status == 'unstarted'
       'not_started'
     else
-      object.state
+      object.status
     end
   end
 

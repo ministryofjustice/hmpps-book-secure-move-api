@@ -4,62 +4,62 @@ require 'rails_helper'
 
 RSpec.describe PersonEscortRecordStateMachine do
   let(:machine) { described_class.new(target) }
-  let(:target) { Struct.new(:state, :confirmed_at, :printed_at).new(initial_state) }
-  let(:initial_state) { :unstarted }
+  let(:target) { Struct.new(:status, :confirmed_at, :printed_at).new(initial_status) }
+  let(:initial_status) { :unstarted }
 
-  before { machine.restore!(initial_state) }
+  before { machine.restore!(initial_status) }
 
   it { is_expected.to respond_to(:complete, :uncomplete, :confirm, :to_print) }
 
-  context 'when in the unstarted state' do
-    it_behaves_like 'state_machine target state', :unstarted
+  context 'when in the unstarted status' do
+    it_behaves_like 'state_machine target status', :unstarted
 
     context 'when the uncomplete event is fired' do
       before { machine.uncomplete }
 
-      it_behaves_like 'state_machine target state', :in_progress
+      it_behaves_like 'state_machine target status', :in_progress
     end
 
     context 'when the complete event is fired' do
       before { machine.complete }
 
-      it_behaves_like 'state_machine target state', :completed
+      it_behaves_like 'state_machine target status', :completed
     end
   end
 
-  context 'when in the in_progress state' do
-    let(:initial_state) { :in_progress }
+  context 'when in the in_progress status' do
+    let(:initial_status) { :in_progress }
 
-    it_behaves_like 'state_machine target state', :in_progress
+    it_behaves_like 'state_machine target status', :in_progress
 
     context 'when the complete event is fired' do
       before { machine.complete }
 
-      it_behaves_like 'state_machine target state', :completed
+      it_behaves_like 'state_machine target status', :completed
     end
 
     context 'when the uncomplete event is fired' do
       before { machine.uncomplete }
 
-      it_behaves_like 'state_machine target state', :in_progress
+      it_behaves_like 'state_machine target status', :in_progress
     end
   end
 
-  context 'when in the completed state' do
-    let(:initial_state) { :completed }
+  context 'when in the completed status' do
+    let(:initial_status) { :completed }
 
-    it_behaves_like 'state_machine target state', :completed
+    it_behaves_like 'state_machine target status', :completed
 
     context 'when the uncomplete event is fired' do
       before { machine.uncomplete }
 
-      it_behaves_like 'state_machine target state', :in_progress
+      it_behaves_like 'state_machine target status', :in_progress
     end
 
     context 'when the complete event is fired' do
       before { machine.complete }
 
-      it_behaves_like 'state_machine target state', :completed
+      it_behaves_like 'state_machine target status', :completed
     end
 
     context 'when the confirm event is fired' do
@@ -70,7 +70,7 @@ RSpec.describe PersonEscortRecordStateMachine do
         machine.confirm
       end
 
-      it_behaves_like 'state_machine target state', :confirmed
+      it_behaves_like 'state_machine target status', :confirmed
 
       it 'sets the current timestamp to confirmed_at' do
         expect(target.confirmed_at).to eq(confirmed_at_timstamp)
@@ -78,11 +78,11 @@ RSpec.describe PersonEscortRecordStateMachine do
     end
   end
 
-  context 'when in the confirmed state' do
-    let(:initial_state) { :confirmed }
+  context 'when in the confirmed status' do
+    let(:initial_status) { :confirmed }
     let(:printed_at_timstamp) { Time.zone.now }
 
-    it_behaves_like 'state_machine target state', :confirmed
+    it_behaves_like 'state_machine target status', :confirmed
 
     context 'when the to_print event is fired' do
       before do
@@ -90,7 +90,7 @@ RSpec.describe PersonEscortRecordStateMachine do
         machine.to_print
       end
 
-      it_behaves_like 'state_machine target state', :printed
+      it_behaves_like 'state_machine target status', :printed
 
       it 'sets the current timestamp to printed_at' do
         expect(target.printed_at).to eq(printed_at_timstamp)
@@ -98,9 +98,9 @@ RSpec.describe PersonEscortRecordStateMachine do
     end
   end
 
-  context 'when in the printed state' do
-    let(:initial_state) { :printed }
+  context 'when in the printed status' do
+    let(:initial_status) { :printed }
 
-    it_behaves_like 'state_machine target state', :printed
+    it_behaves_like 'state_machine target status', :printed
   end
 end

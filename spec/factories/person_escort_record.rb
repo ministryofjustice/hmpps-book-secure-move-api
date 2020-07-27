@@ -21,20 +21,20 @@ FactoryBot.define do
     end
 
     trait :in_progress do
-      state { PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS }
+      status { PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS }
     end
 
     trait :completed do
-      state { PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED }
+      status { PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED }
     end
 
     trait :confirmed do
-      state { PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED }
+      status { PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED }
       confirmed_at { Time.zone.now }
     end
 
     trait :printed do
-      state { PersonEscortRecord::PERSON_ESCORT_RECORD_PRINTED }
+      status { PersonEscortRecord::PERSON_ESCORT_RECORD_PRINTED }
       printed_at { Time.zone.now }
     end
   end
