@@ -1,9 +1,9 @@
 class EnableCiText < ActiveRecord::Migration[6.0]
   def up
-    enable_extension('citext') unless extensions.include?('citext')
+    enable_extension('citext')
   end
 
   def down
-    disable_extension('citext') if extensions.include?('citext')
+    disable_extension('citext')
   end
 end
