@@ -51,7 +51,7 @@ RSpec.describe Api::PeopleController do
         [
           create(:person, prison_number: 'G3239GV'),
           create(:person, prison_number: 'GV345VG'),
-          create(:person, prison_number: 'flibble'),
+          create(:person, prison_number: 'FLIBBLE'),
         ]
       end
 
