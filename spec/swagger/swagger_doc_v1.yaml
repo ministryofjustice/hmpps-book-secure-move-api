@@ -491,6 +491,12 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/patch_framework_response_responses.yaml#/401"
+        '403':
+          description: forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/403"
         '404':
           description: resource not found
           content:

@@ -1,31 +1,45 @@
 class PersonEscortRecord < VersionedModel
+  include StateMachineable
+
   PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
   PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
   PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
   PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
 
-  enum states: {
+  enum statuses: {
+    unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
     in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
     completed: PERSON_ESCORT_RECORD_COMPLETED,
     confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
   }
 
-  validates :state, presence: true, inclusion: { in: states }
+  validates :status, presence: true, inclusion: { in: statuses }
+  validates :profile, uniqueness: true
+  validates :confirmed_at, presence: { if: :confirmed? }
+
   has_many :framework_responses, dependent: :destroy
 
   belongs_to :framework
   has_many :framework_questions, through: :framework
   has_many :flags, through: :framework_responses
   belongs_to :profile
-  validates :profile, uniqueness: true
+
+  has_state_machine PersonEscortRecordStateMachine, on: :status
+
+  delegate :calculate,
+           :confirm,
+           :unstarted?,
+           :in_progress?,
+           :completed?,
+           :confirmed?,
+           to: :state_machine
 
   def self.save_with_responses!(profile_id:, version: nil)
     profile = Profile.find(profile_id)
     # TODO: remove default framework, getting the last framework is temporary until versioning is finalised
     framework = version.present? ? Framework.find_by!(version: version) : Framework.ordered_by_latest_version.first
 
-    # TODO: add state machine
-    record = new(profile: profile, framework: framework, state: PERSON_ESCORT_RECORD_IN_PROGRESS)
+    record = new(profile: profile, framework: framework)
     record.build_responses!
   end
 
@@ -48,7 +62,7 @@ class PersonEscortRecord < VersionedModel
   end
 
   def section_progress
-    sections_to_responded.map do |section, responses|
+    sections_to_responded.group_by(&:section).map do |section, responses|
       {
         key: section,
         status: set_progress(responses),
@@ -56,10 +70,17 @@ class PersonEscortRecord < VersionedModel
     end
   end
 
+  def update_status!
+    progress = set_progress(sections_to_responded)
+    state_machine.calculate!(progress)
+
+    save!
+  end
+
 private
 
   def sections_to_responded
-    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section').group_by(&:section)
+    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section')
   end
 
   def set_progress(responses)
