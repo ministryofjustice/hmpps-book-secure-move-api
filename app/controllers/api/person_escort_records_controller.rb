@@ -25,7 +25,7 @@ module Api
     def update
       PersonEscortRecords::ParamsValidator.new(update_person_escort_record_attributes).validate!
       person_escort_record = PersonEscortRecord.find(params[:id])
-      person_escort_record.set_state!(update_person_escort_record_attributes)
+      person_escort_record.set_status!(update_person_escort_record_attributes)
 
       render_person_escort_record(person_escort_record, :ok)
     end

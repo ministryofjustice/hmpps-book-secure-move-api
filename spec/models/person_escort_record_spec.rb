@@ -391,10 +391,10 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
-  describe '#set_state' do
-    it 'sets state to `confirmed` if current state is `completed`' do
+  describe '#set_status' do
+    it 'sets status to `confirmed` if current status is `completed`' do
       person_escort_record = create(:person_escort_record, :completed)
-      person_escort_record.set_state!('confirmed')
+      person_escort_record.set_status!('confirmed')
 
       expect(person_escort_record).to be_confirmed
     end
@@ -403,14 +403,14 @@ RSpec.describe PersonEscortRecord do
       confirmed_at_timstamp = Time.zone.now
       person_escort_record = create(:person_escort_record, :completed)
       allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
-      person_escort_record.set_state!('confirmed')
+      person_escort_record.set_status!('confirmed')
 
       expect(person_escort_record.confirmed_at).to eq(confirmed_at_timstamp)
     end
 
-    it 'sets state to `printed` if current state is `confirmed`' do
+    it 'sets status to `printed` if current status is `confirmed`' do
       person_escort_record = create(:person_escort_record, :confirmed)
-      person_escort_record.set_state!('printed')
+      person_escort_record.set_status!('printed')
 
       expect(person_escort_record).to be_printed
     end
@@ -419,30 +419,30 @@ RSpec.describe PersonEscortRecord do
       printed_at_timstamp = Time.zone.now
       person_escort_record = create(:person_escort_record, :confirmed)
       allow(Time).to receive(:now).and_return(printed_at_timstamp)
-      person_escort_record.set_state!('printed')
+      person_escort_record.set_status!('printed')
 
       expect(person_escort_record.printed_at).to eq(printed_at_timstamp)
     end
 
-    it 'does not update state if state is wrong value' do
+    it 'does not update status if status is wrong value' do
       person_escort_record = create(:person_escort_record, :completed)
-      person_escort_record.set_state!('completed')
+      person_escort_record.set_status!('completed')
 
       expect(person_escort_record).to be_completed
     end
 
-    it 'does not update state if previous state not valid' do
+    it 'does not update status if previous status not valid' do
       person_escort_record = create(:person_escort_record, :in_progress)
 
-      expect { person_escort_record.set_state!('printed') }.to raise_error(ActiveModel::ValidationError)
-      expect(person_escort_record.errors.messages[:state]).to contain_exactly("can't update to 'printed' from 'in_progress'")
+      expect { person_escort_record.set_status!('printed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'printed' from 'in_progress'")
     end
 
-    it 'does not update state if current state the same' do
+    it 'does not update status if current status the same' do
       person_escort_record = create(:person_escort_record, :confirmed)
 
-      expect { person_escort_record.set_state!('confirmed') }.to raise_error(ActiveModel::ValidationError)
-      expect(person_escort_record.errors.messages[:state]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
+      expect { person_escort_record.set_status!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
     end
   end
 

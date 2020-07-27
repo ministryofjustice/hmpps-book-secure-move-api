@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe PersonEscortRecords::ParamsValidator do
-  it 'validates status if value is not in list states' do
+  it 'validates status if value is not in list statuses' do
     params_validator = described_class.new('in_progress')
 
     expect(params_validator).not_to be_valid

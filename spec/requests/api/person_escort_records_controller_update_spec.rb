@@ -89,8 +89,8 @@ RSpec.describe Api::PersonEscortRecordsController do
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
-            [{ 'title' => 'Invalid state',
-               'detail' => "Validation failed: State can't update to 'confirmed' from 'in_progress'" }]
+            [{ 'title' => 'Invalid status',
+               'detail' => "Validation failed: Status can't update to 'confirmed' from 'in_progress'" }]
           end
         end
       end
