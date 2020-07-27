@@ -18,11 +18,15 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a `status` attribute' do
-    expect(result[:data][:attributes][:status]).to eq('in_progress')
+    expect(result[:data][:attributes][:status]).to eq('not_started')
   end
 
   it 'contains a `version` attribute' do
     expect(result[:data][:attributes][:version]).to eq(person_escort_record.framework.version)
+  end
+
+  it 'contains a `confirmed_at` attribute' do
+    expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
   end
 
   it 'contains a `profile` relationship' do
