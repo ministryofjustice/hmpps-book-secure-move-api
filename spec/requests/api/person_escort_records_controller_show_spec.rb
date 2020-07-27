@@ -26,7 +26,7 @@ RSpec.describe Api::PersonEscortRecordsController do
           "type": 'person_escort_records',
           "attributes": {
             "version": person_escort_record.framework.version,
-            "status": 'in_progress',
+            "status": 'not_started',
           },
           "meta": {
             'section_progress' => [

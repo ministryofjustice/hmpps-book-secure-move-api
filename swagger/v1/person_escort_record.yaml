@@ -25,6 +25,7 @@ PersonEscortRecord:
           example: in_progress
           type: string
           enum:
+            - not_started
             - in_progress
             - completed
             - confirmed
@@ -33,16 +34,13 @@ PersonEscortRecord:
           type: string
           example: '0.1'
           description: Determines the version of framework questions of the `person_escort_record`
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp of when the person_escort_record was last created or updated
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp of when the person_escort_record was created
-          readOnly: true
+        confirmed_at:
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person_escort_record was confirmed
+            readOnly: true
     meta:
       readOnly: true
       type: object
