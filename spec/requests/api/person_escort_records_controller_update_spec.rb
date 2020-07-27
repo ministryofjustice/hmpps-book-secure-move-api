@@ -39,27 +39,6 @@ RSpec.describe Api::PersonEscortRecordsController do
               "status": 'confirmed',
               "version": person_escort_record.framework.version,
               "confirmed_at": person_escort_record.confirmed_at.iso8601,
-              "printed_at": nil,
-            },
-          })
-        end
-      end
-
-      context 'when status is printed' do
-        let(:person_escort_record) { create(:person_escort_record, :with_responses, :confirmed) }
-        let(:status) { 'printed' }
-
-        it_behaves_like 'an endpoint that responds with success 200'
-
-        it 'returns the correct data' do
-          expect(response_json).to include_json(data: {
-            "id": person_escort_record_id,
-            "type": 'person_escort_records',
-            "attributes": {
-              "status": 'printed',
-              "version": person_escort_record.framework.version,
-              "printed_at": person_escort_record.printed_at.iso8601,
-              "confirmed_at": person_escort_record.confirmed_at.iso8601,
             },
           })
         end

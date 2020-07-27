@@ -2666,7 +2666,7 @@
       - name: body
         in: body
         required: true
-        description: The `person_escort_record` object to be modified. Sets the current status of the `person_escort_record`, as first `confirmed` then `printed` after a `person_escort_record` is `completed`.
+        description: The `person_escort_record` object to be modified. Sets the current status of the `person_escort_record` as `confirmed` after a `person_escort_record` is `completed`.
         schema:
           "$ref": "../v1/patch_person_escort_record.yaml#/PatchPersonEscortRecord"
       responses:

@@ -26,5 +26,4 @@ PatchPersonEscortRecord:
           type: string
           enum:
             - confirmed
-            - printed
           description: Sets the current status of the `person_escort_record`

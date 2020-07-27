@@ -6,7 +6,7 @@ module PersonEscortRecords
 
     attr_reader :status
 
-    validates :status, inclusion: { in: [PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED, PersonEscortRecord::PERSON_ESCORT_RECORD_PRINTED] }
+    validates :status, inclusion: { in: [PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED] }
 
     def initialize(status)
       @status = status

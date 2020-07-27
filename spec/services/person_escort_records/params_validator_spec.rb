@@ -15,10 +15,4 @@ RSpec.describe PersonEscortRecords::ParamsValidator do
 
     expect(params_validator).to be_valid
   end
-
-  it 'does not validate status if value is printed' do
-    params_validator = described_class.new('printed')
-
-    expect(params_validator).to be_valid
-  end
 end

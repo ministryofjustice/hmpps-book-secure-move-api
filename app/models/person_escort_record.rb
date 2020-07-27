@@ -80,8 +80,6 @@ class PersonEscortRecord < VersionedModel
   def set_status!(new_status)
     if new_status == PERSON_ESCORT_RECORD_CONFIRMED
       state_machine.confirm!
-    elsif new_status == PERSON_ESCORT_RECORD_PRINTED
-      state_machine.to_print!
     end
 
     save!
