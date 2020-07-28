@@ -1,7 +1,8 @@
 module Allocations
   class CreateInNomis
     def self.call(move)
-      booking_id = move.person.latest_nomis_booking_id
+      booking_id = move.person&.latest_nomis_booking_id
+      return unless booking_id.present? && move.to_location.present?
 
       body = {
         booking_id: booking_id,

@@ -4,12 +4,15 @@ RSpec.describe Allocations::CreateInNomis do
   context 'when move is valid' do
     subject(:create_transfer_in_nomis) { described_class.call(move) }
 
+    let(:from_location) { create(:location, nomis_agency_id: from_nomis_agency_id) }
+    let(:to_location) { create(:location, nomis_agency_id: to_nomis_agency_id) }
     let(:move) do
       create(
         :move,
+        :prison_recall,
         date: move_date,
-        from_location: create(:location, nomis_agency_id: from_nomis_agency_id),
-        to_location: create(:location, nomis_agency_id: to_nomis_agency_id),
+        from_location: from_location,
+        to_location: to_location,
       )
     end
 
@@ -73,6 +76,24 @@ RSpec.describe Allocations::CreateInNomis do
         expect(create_transfer_in_nomis).to include(
           response_status: 400,
         )
+      end
+    end
+
+    context 'when latest_booking_id is missing' do
+      let(:nomis_response_status) { nil }
+      let(:booking_id) { nil }
+
+      it 'is nil' do
+        expect(create_transfer_in_nomis).to be_nil
+      end
+    end
+
+    context 'when to_location_id is missing' do
+      let(:nomis_response_status) { nil }
+      let(:to_location) { nil }
+
+      it 'is nil' do
+        expect(create_transfer_in_nomis).to be_nil
       end
     end
   end

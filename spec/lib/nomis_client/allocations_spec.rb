@@ -12,7 +12,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
     let(:response_status) { 201 }
     let(:response_body) { '{}' }
 
-    it 'creates prison-to-prison transfer in Nomis ' do
+    it 'creates prison-to-prison transfer in Nomis' do
       prison_transfer_post
 
       expect(token)
@@ -33,7 +33,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
           'Allocations::CreateInNomis Error!',
           extra: {
             body_params: {},
-            allocations_route: '/bookings/1111/prison-to-prison',
+            route: '/bookings/1111/prison-to-prison',
             nomis_response: { body: '{}', status: 500 },
           },
           level: 'error',

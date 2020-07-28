@@ -57,7 +57,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
           'CourtHearings::CreateInNomis Error!',
           extra: {
             body_params: {},
-            court_cases_route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
+            route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
             nomis_response: { body: '{}', status: 500 },
           },
           level: 'error',

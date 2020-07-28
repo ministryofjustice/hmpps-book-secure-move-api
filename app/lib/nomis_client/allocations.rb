@@ -8,18 +8,7 @@ module NomisClient
 
         NomisClient::Base.post(allocations_path, body: body_params.to_json)
       rescue OAuth2::Error => e
-        Raven.capture_message(
-          'Allocations::CreateInNomis Error!',
-          extra: {
-            allocations_route: allocations_path,
-            body_params: body_params,
-            nomis_response: {
-              status: e.response.status,
-              body: e.response.body,
-            },
-          },
-          level: 'error',
-        )
+        log_exception('Allocations::CreateInNomis Error!', allocations_path, body_params, e)
 
         e.response
       end
