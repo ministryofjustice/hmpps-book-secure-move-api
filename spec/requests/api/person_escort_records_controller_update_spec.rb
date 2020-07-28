@@ -6,6 +6,12 @@ RSpec.describe Api::PersonEscortRecordsController do
   describe 'PATCH /person_escort_records/:person_escort_record_id' do
     include_context 'with supplier with spoofed access token'
 
+    subject(:patch_person_escort_record) do
+      patch "/api/v1/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
+
+      person_escort_record.reload
+    end
+
     let(:schema) { load_yaml_schema('patch_person_escort_record_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
     let(:person_escort_record) { create(:person_escort_record, :with_responses, :completed) }
@@ -22,12 +28,9 @@ RSpec.describe Api::PersonEscortRecordsController do
       }
     end
 
-    before do
-      patch "/api/v1/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
-      person_escort_record.reload
-    end
-
     context 'when successful' do
+      before { patch_person_escort_record }
+
       context 'when status is confirmed' do
         it_behaves_like 'an endpoint that responds with success 200'
 
@@ -46,6 +49,8 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
 
     context 'when unsuccessful' do
+      before { patch_person_escort_record }
+
       context 'with a bad request' do
         let(:person_escort_record_params) { nil }
 
@@ -79,6 +84,68 @@ RSpec.describe Api::PersonEscortRecordsController do
         let(:detail_404) { "Couldn't find PersonEscortRecord with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404'
+      end
+    end
+
+    context 'with subscriptions' do
+      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:notification_type_email) { create(:notification_type, :email) }
+      let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+      let!(:move) { create(:move, profile: person_escort_record.profile, from_location: from_location) }
+      let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+      let(:notify_response) do
+        instance_double(
+          ActionMailer::MessageDelivery,
+          deliver_now!:
+          instance_double(
+            Mail::Message,
+            govuk_notify_response:
+            instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
+          ),
+        )
+      end
+
+      before do
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+        allow(MoveMailer).to receive(:notify).and_return(notify_response)
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+          patch_person_escort_record
+        end
+      end
+
+      it 'creates a webhook notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record.profile.move,
+          notification_type: notification_type_webhook,
+          event_type: 'update_move',
+        )
+      end
+
+      it 'creates an email notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record.profile.move,
+          notification_type: notification_type_email,
+          event_type: 'update_move',
+        )
+      end
+
+      context 'when request is unsuccessful' do
+        let(:status) { 'foo-bar' }
+
+        it 'does not create notifications' do
+          expect(subscription.notifications).to be_empty
+        end
       end
     end
   end

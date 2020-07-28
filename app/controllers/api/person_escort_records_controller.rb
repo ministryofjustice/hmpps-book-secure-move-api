@@ -2,6 +2,8 @@
 
 module Api
   class PersonEscortRecordsController < ApiController
+    after_action :send_notification, only: :update
+
     NEW_PERMITTED_PER_PARAMS = [
       :type,
       attributes: [:version],
@@ -57,6 +59,10 @@ module Api
 
     def render_person_escort_record(person_escort_record, status)
       render json: person_escort_record, status: status, include: included_relationships
+    end
+
+    def send_notification
+      Notifier.prepare_notifications(topic: person_escort_record, action_name: 'update')
     end
   end
 end
