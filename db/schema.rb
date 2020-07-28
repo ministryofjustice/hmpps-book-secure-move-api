@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_28_074625) do
+ActiveRecord::Schema.define(version: 2020_07_28_090010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -270,7 +270,6 @@ ActiveRecord::Schema.define(version: 2020_07_28_074625) do
     t.datetime "time_due"
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
-    t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"

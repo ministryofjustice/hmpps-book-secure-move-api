@@ -87,7 +87,6 @@ class Move < VersionedModel
 
   before_validation :set_reference
   before_validation :set_move_type
-  before_validation :ensure_event_nomis_ids_uniqueness
 
   delegate :suppliers, to: :from_location
 
@@ -117,14 +116,6 @@ class Move < VersionedModel
 
   def rejected?
     cancellation_reason == CANCELLATION_REASON_REJECTED
-  end
-
-  def nomis_event_id=(event_id)
-    nomis_event_ids << event_id
-  end
-
-  def from_nomis?
-    !nomis_event_ids.empty?
   end
 
   def existing
@@ -170,10 +161,6 @@ private
                      else
                        'prison_transfer'
                      end
-  end
-
-  def ensure_event_nomis_ids_uniqueness
-    nomis_event_ids.uniq!
   end
 
   def is_a_police_tranfer?

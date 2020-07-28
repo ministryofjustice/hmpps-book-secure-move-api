@@ -54,7 +54,6 @@ RSpec.describe Alerts::Importer do
       date: '2019-08-19',
       time_due: '2019-08-19T17:00:00',
       status: 'requested',
-      nomis_event_id: 123_456,
     }]
   end
 
