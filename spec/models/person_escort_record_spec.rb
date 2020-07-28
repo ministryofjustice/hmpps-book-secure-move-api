@@ -391,10 +391,10 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
-  describe '#set_status' do
+  describe '#confirm!' do
     it 'sets status to `confirmed` if current status is `completed`' do
       person_escort_record = create(:person_escort_record, :completed)
-      person_escort_record.set_status!('confirmed')
+      person_escort_record.confirm!('confirmed')
 
       expect(person_escort_record).to be_confirmed
     end
@@ -403,14 +403,14 @@ RSpec.describe PersonEscortRecord do
       confirmed_at_timstamp = Time.zone.now
       person_escort_record = create(:person_escort_record, :completed)
       allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
-      person_escort_record.set_status!('confirmed')
+      person_escort_record.confirm!('confirmed')
 
       expect(person_escort_record.confirmed_at).to eq(confirmed_at_timstamp)
     end
 
     it 'does not update status if status is wrong value' do
       person_escort_record = create(:person_escort_record, :completed)
-      person_escort_record.set_status!('completed')
+      person_escort_record.confirm!('completed')
 
       expect(person_escort_record).to be_completed
     end
@@ -418,14 +418,14 @@ RSpec.describe PersonEscortRecord do
     it 'does not update status if previous status not valid' do
       person_escort_record = create(:person_escort_record, :in_progress)
 
-      expect { person_escort_record.set_status!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect { person_escort_record.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
       expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'in_progress'")
     end
 
     it 'does not update status if current status the same' do
       person_escort_record = create(:person_escort_record, :confirmed)
 
-      expect { person_escort_record.set_status!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect { person_escort_record.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
       expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
     end
   end

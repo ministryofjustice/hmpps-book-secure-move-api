@@ -77,11 +77,10 @@ class PersonEscortRecord < VersionedModel
     save!
   end
 
-  def set_status!(new_status)
-    if new_status == PERSON_ESCORT_RECORD_CONFIRMED
-      state_machine.confirm!
-    end
+  def confirm!(new_status)
+    return unless new_status == PERSON_ESCORT_RECORD_CONFIRMED
 
+    state_machine.confirm!
     save!
   rescue FiniteMachine::InvalidStateError
     errors.add(:status, "can't update to '#{new_status}' from '#{status}'")

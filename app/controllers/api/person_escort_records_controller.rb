@@ -23,16 +23,13 @@ module Api
     end
 
     def update
-      PersonEscortRecords::ParamsValidator.new(update_person_escort_record_attributes).validate!
-      person_escort_record = PersonEscortRecord.find(params[:id])
-      person_escort_record.set_status!(update_person_escort_record_attributes)
+      PersonEscortRecords::ParamsValidator.new(update_person_escort_record_status).validate!
+      person_escort_record.confirm!(update_person_escort_record_status)
 
       render_person_escort_record(person_escort_record, :ok)
     end
 
     def show
-      person_escort_record = PersonEscortRecord.find(params[:id])
-
       render_person_escort_record(person_escort_record, :ok)
     end
 
@@ -46,12 +43,16 @@ module Api
       params.require(:data).permit(UPDATE_PERMITTED_PER_PARAMS)
     end
 
-    def update_person_escort_record_attributes
+    def update_person_escort_record_status
       update_person_escort_record_params.to_h.dig(:attributes, :status)
     end
 
     def supported_relationships
       PersonEscortRecordSerializer::SUPPORTED_RELATIONSHIPS
+    end
+
+    def person_escort_record
+      @person_escort_record ||= PersonEscortRecord.find(params[:id])
     end
 
     def render_person_escort_record(person_escort_record, status)
