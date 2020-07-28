@@ -7,11 +7,11 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
   let(:person_escort_record) { create(:person_escort_record) }
+  let!(:move) { create(:move, from_location: location, profile: person_escort_record.profile) }
 
   before do
     create(:notification_type, :webhook)
     create(:notification_type, :email)
-    create(:move, from_location: location, profile: person_escort_record.profile)
 
     allow(NotifyWebhookJob).to receive(:perform_later)
     allow(NotifyEmailJob).to receive(:perform_later)
@@ -33,5 +33,23 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
   it 'schedules a NotifyEmailJob' do
     perform
     expect(NotifyEmailJob).to have_received(:perform_later).with(Notification.emails.last.id)
+  end
+
+  context 'when a profile does not have a move' do
+    let!(:move) { create(:move, from_location: location) }
+
+    it 'does not create notifications' do
+      expect { perform }.not_to change(Notification, :count)
+    end
+
+    it 'does not schedule a NotifyWebhookJob' do
+      perform
+      expect(NotifyWebhookJob).not_to have_received(:perform_later)
+    end
+
+    it 'does not schedule a NotifyEmailJob' do
+      perform
+      expect(NotifyEmailJob).not_to have_received(:perform_later)
+    end
   end
 end

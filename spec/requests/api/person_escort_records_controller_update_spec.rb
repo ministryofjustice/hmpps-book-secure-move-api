@@ -7,7 +7,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     include_context 'with supplier with spoofed access token'
 
     subject(:patch_person_escort_record) do
-      patch "/api/v1/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
+      patch "/api/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
 
       person_escort_record.reload
     end
