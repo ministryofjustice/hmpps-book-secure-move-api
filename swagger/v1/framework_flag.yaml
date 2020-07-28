@@ -20,7 +20,7 @@ FrameworkFlag:
       type: object
       required:
       - flag_type
-      - name
+      - title
       - question_value
       properties:
         flag_type:
@@ -33,10 +33,10 @@ FrameworkFlag:
             - alert
           description: Indicates the type of flag
           readOnly: true
-        name:
+        title:
           example: 'High public interest'
           type: string
-          description: the name of the flag
+          description: the title of the flag
           readOnly: true
         question_value:
           type: string

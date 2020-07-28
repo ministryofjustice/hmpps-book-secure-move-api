@@ -123,7 +123,7 @@ RSpec.describe Frameworks::Question do
 
       expect(question.flags.first).to have_attributes(
         flag_type: 'alert',
-        name: 'Physical Health',
+        title: 'Physical Health',
         question_value: 'Yes',
       )
     end

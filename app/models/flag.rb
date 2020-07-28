@@ -9,7 +9,7 @@ class Flag < VersionedModel
   }
 
   validates :flag_type, presence: true, inclusion: { in: flag_types }
-  validates :name, presence: true
+  validates :title, presence: true
   validates :question_value, presence: true
 
   belongs_to :framework_question

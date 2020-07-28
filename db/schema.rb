@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_27_143634) do
+ActiveRecord::Schema.define(version: 2020_07_28_074625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -128,7 +128,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_143634) do
   create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_question_id", null: false
     t.string "flag_type", null: false
-    t.string "name", null: false
+    t.string "title", null: false
     t.string "question_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
