@@ -25,4 +25,8 @@ MoveIncludeParameter:
       - profile.person.gender
       - profile.person.ethnicity
       - profile.person_escort_record
+      - profile.person_escort_record.flags
+      - profile.person_escort_record.framework
+      - profile.person_escort_record.responses
+      - profile.person_escort_record.responses.question
   example: from_location

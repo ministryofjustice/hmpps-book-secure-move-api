@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :flag do
-    sequence(:name) { |x| "High public interest #{x}" }
+    sequence(:title) { |x| "High public interest #{x}" }
     sequence(:flag_type) { 'warning' }
     sequence(:question_value) { 'Yes' }
 

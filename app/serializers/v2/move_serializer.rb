@@ -33,6 +33,10 @@ module V2
       profile.person.ethnicity
       profile.person.gender
       profile.person_escort_record
+      profile.person_escort_record.flags
+      profile.person_escort_record.framework
+      profile.person_escort_record.responses
+      profile.person_escort_record.responses.question
       from_location
       from_location.suppliers
       to_location

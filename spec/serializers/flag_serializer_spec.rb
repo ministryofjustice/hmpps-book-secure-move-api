@@ -17,8 +17,8 @@ RSpec.describe FlagSerializer do
     expect(result[:data][:id]).to eq(flag.id)
   end
 
-  it 'contains a `name` attribute' do
-    expect(result[:data][:attributes][:name]).to eq(flag.name)
+  it 'contains a `title` attribute' do
+    expect(result[:data][:attributes][:title]).to eq(flag.title)
   end
 
   it 'contains a `flag_type` attribute' do

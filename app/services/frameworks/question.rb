@@ -63,7 +63,7 @@ module Frameworks
       flags.each do |flag|
         question.flags.new(
           flag_type: flag['type'],
-          name: flag['label'],
+          title: flag['label'],
           question_value: value,
         )
       end
