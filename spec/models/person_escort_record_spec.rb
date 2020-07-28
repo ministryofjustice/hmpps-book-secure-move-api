@@ -391,6 +391,45 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
+  describe '#confirm!' do
+    it 'sets status to `confirmed` if current status is `completed`' do
+      person_escort_record = create(:person_escort_record, :completed)
+      person_escort_record.confirm!('confirmed')
+
+      expect(person_escort_record).to be_confirmed
+    end
+
+    it 'sets `confirmed` timestamp to `confirmed_at`' do
+      confirmed_at_timstamp = Time.zone.now
+      person_escort_record = create(:person_escort_record, :completed)
+      allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
+      person_escort_record.confirm!('confirmed')
+
+      expect(person_escort_record.confirmed_at).to eq(confirmed_at_timstamp)
+    end
+
+    it 'does not update status if status is wrong value' do
+      person_escort_record = create(:person_escort_record, :completed)
+      person_escort_record.confirm!('completed')
+
+      expect(person_escort_record).to be_completed
+    end
+
+    it 'does not update status if previous status not valid' do
+      person_escort_record = create(:person_escort_record, :in_progress)
+
+      expect { person_escort_record.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'in_progress'")
+    end
+
+    it 'does not update status if current status the same' do
+      person_escort_record = create(:person_escort_record, :confirmed)
+
+      expect { person_escort_record.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
+    end
+  end
+
   def create_response(options = {})
     question = create(:framework_question, framework: options[:person_escort_record].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
     create(:string_response, value: options[:value], framework_question: question, person_escort_record: options[:person_escort_record], responded: options[:responded], parent: options[:parent])

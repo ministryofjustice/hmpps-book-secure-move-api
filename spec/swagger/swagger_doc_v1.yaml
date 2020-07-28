@@ -2566,13 +2566,13 @@
       consumes:
       - application/vnd.api+json
       parameters:
+      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
       - name: body
         in: body
         required: true
-        description: The person_escort_record object to be created
+        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `profile` of the person.
         schema:
-          "$ref": "../v1/person_escort_record.yaml#/PersonEscortRecord"
-      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
+          "$ref": "../v1/post_person_escort_record.yaml#/PostPersonEscortRecord"
       responses:
         '201':
           description: created
@@ -2654,6 +2654,58 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+    patch:
+      summary: Updates a person_escort_record's status
+      tags:
+      - Person Escort Records
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/person_escort_record_id_parameter.yaml#/PersonEscortRecordId"
+      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The `person_escort_record` object to be modified. Sets the current status of the `person_escort_record` as `confirmed` after a `person_escort_record` is `completed`.
+        schema:
+          "$ref": "../v1/patch_person_escort_record.yaml#/PatchPersonEscortRecord"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/200"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/401"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases
