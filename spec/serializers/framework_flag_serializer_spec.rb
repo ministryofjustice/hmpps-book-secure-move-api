@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe FlagSerializer do
-  subject(:serializer) { described_class.new(flag) }
+RSpec.describe FrameworkFlagSerializer do
+  subject(:serializer) { described_class.new(framework_flag) }
 
-  let(:flag) { create(:flag) }
+  let(:framework_flag) { create(:framework_flag) }
   let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
   let(:includes) { {} }
 
@@ -14,24 +14,24 @@ RSpec.describe FlagSerializer do
   end
 
   it 'contains an `id` property' do
-    expect(result[:data][:id]).to eq(flag.id)
+    expect(result[:data][:id]).to eq(framework_flag.id)
   end
 
   it 'contains a `title` attribute' do
-    expect(result[:data][:attributes][:title]).to eq(flag.title)
+    expect(result[:data][:attributes][:title]).to eq(framework_flag.title)
   end
 
   it 'contains a `flag_type` attribute' do
-    expect(result[:data][:attributes][:flag_type]).to eq(flag.flag_type)
+    expect(result[:data][:attributes][:flag_type]).to eq(framework_flag.flag_type)
   end
 
   it 'contains a `question_value` attribute' do
-    expect(result[:data][:attributes][:question_value]).to eq(flag.question_value)
+    expect(result[:data][:attributes][:question_value]).to eq(framework_flag.question_value)
   end
 
   it 'contains a `question` relationship' do
     expect(result[:data][:relationships][:question][:data]).to eq(
-      id: flag.framework_question.id,
+      id: framework_flag.framework_question.id,
       type: 'framework_questions',
     )
   end
@@ -46,9 +46,9 @@ RSpec.describe FlagSerializer do
     let(:expected_json) do
       [
         {
-          id: flag.framework_question.id,
+          id: framework_flag.framework_question.id,
           type: 'framework_questions',
-          attributes: { key: flag.framework_question.key },
+          attributes: { key: framework_flag.framework_question.key },
         },
       ]
     end

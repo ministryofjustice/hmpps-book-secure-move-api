@@ -2,7 +2,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   belongs_to :profile, record_type: :profile
   belongs_to :framework, record_type: :framework
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
-  has_many :flags
+  has_many :framework_flags, key: :flags
 
   attributes :version, :status, :confirmed_at
 
@@ -15,7 +15,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   def framework_responses
-    object.framework_responses.includes(:flags, framework_question: :framework)
+    object.framework_responses.includes(:framework_flags, framework_question: :framework)
   end
 
   def status

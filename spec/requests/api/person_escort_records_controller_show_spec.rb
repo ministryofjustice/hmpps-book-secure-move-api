@@ -8,8 +8,8 @@ RSpec.describe Api::PersonEscortRecordsController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_question) { build(:framework_question, section: 'risk-information') }
-    let(:flag) { build(:flag, framework_question: framework_question) }
-    let(:framework_response) { build(:string_response, framework_question: framework_question, responded: true, flags: [flag]) }
+    let(:flag) { build(:framework_flag, framework_question: framework_question) }
+    let(:framework_response) { build(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag]) }
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
     let(:person_escort_record) { create(:person_escort_record, framework_responses: [framework_response]) }
     let(:person_escort_record_id) { person_escort_record.id }

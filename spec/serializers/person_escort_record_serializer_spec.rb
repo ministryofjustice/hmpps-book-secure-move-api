@@ -62,8 +62,8 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a`flags` relationship with framework response flags' do
-    flag = create(:flag)
-    create(:string_response, person_escort_record: person_escort_record, flags: [flag])
+    flag = create(:framework_flag)
+    create(:string_response, person_escort_record: person_escort_record, framework_flags: [flag])
 
     expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
       id: flag.id,

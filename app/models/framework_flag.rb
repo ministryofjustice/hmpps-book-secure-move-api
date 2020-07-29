@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Flag < VersionedModel
+class FrameworkFlag < VersionedModel
   enum flag_type: {
     information: 'information',
     attention: 'attention',
