@@ -16,6 +16,7 @@ module EventLog
         when Event::APPROVE
           move.status = Move::MOVE_STATUS_REQUESTED
           move.date = event.date
+          Allocations::CreateInNomis.call(move) if event.create_in_nomis?
         when Event::CANCEL
           move.status = Move::MOVE_STATUS_CANCELLED
           move.cancellation_reason = event.cancellation_reason

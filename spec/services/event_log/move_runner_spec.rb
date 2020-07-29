@@ -117,6 +117,10 @@ RSpec.describe EventLog::MoveRunner do
   context 'when event_name=approve' do
     let!(:event) { create(:move_event, :approve, eventable: move) }
 
+    before do
+      allow(Allocations::CreateInNomis).to receive(:call)
+    end
+
     context 'when the move is proposed' do
       let!(:move) { create(:move, :proposed, date: Date.today) }
 
@@ -126,6 +130,11 @@ RSpec.describe EventLog::MoveRunner do
 
       it 'updates the move date' do
         expect { runner.call }.to change(move, :date).from(Date.today).to(Date.tomorrow)
+      end
+
+      it 'does not create a prison transfer event in Nomis' do
+        runner.call
+        expect(Allocations::CreateInNomis).not_to have_received(:call).with(move)
       end
 
       it_behaves_like 'it calls the Notifier with an update_status action_name'
@@ -138,6 +147,15 @@ RSpec.describe EventLog::MoveRunner do
 
       it 'does not change the move status' do
         expect { runner.call }.not_to change(move, :status).from('requested')
+      end
+    end
+
+    context 'when creating in nomis is requested' do
+      let!(:event) { create(:move_event, :approve_with_nomis, eventable: move) }
+
+      it 'creates a prison transfer event in Nomis' do
+        runner.call
+        expect(Allocations::CreateInNomis).to have_received(:call).with(move)
       end
     end
   end
