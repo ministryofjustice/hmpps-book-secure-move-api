@@ -120,6 +120,21 @@ FactoryBot.define do
       end
     end
 
+    trait :with_person_escort_record do
+      transient do
+        person_escort_record_status { 'unstarted' }
+      end
+
+      after(:create) do |move, evaluator|
+        create(
+          :person_escort_record,
+          profile: move.profile,
+          status: evaluator.person_escort_record_status,
+          confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
+        )
+      end
+    end
+
     trait :with_date_to do
       date_to { date + 3.days }
     end
