@@ -460,27 +460,6 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when from nomis' do
-      let(:nomis_event_id) { 12_345_678 }
-      let!(:move) { create :move, nomis_event_ids: [nomis_event_id] }
-      let(:detail_403) { 'Can\'t change moves coming from Nomis' }
-
-      let(:move_params) do
-        {
-          type: 'moves',
-          attributes: {
-            status: 'cancelled',
-            cancellation_reason: 'supplier_declined_to_move',
-            reference: 'new reference',
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with error 403' do
-        before { do_patch }
-      end
-    end
-
     context 'when the move does not exist' do
       let(:move_id) { 'foo' }
       let(:move_params) { nil }

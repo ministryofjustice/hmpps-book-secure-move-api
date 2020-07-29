@@ -187,8 +187,6 @@ namespace :fake_data do
       profile = profiles.sample
       from_location = prisons.sample
       to_location = courts.sample
-      nomis_event_ids = []
-      nomis_event_ids << (1_000_000..1_500_000).to_a.sample if rand(2).zero?
       next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
 
       move = Move.create!(
@@ -199,7 +197,6 @@ namespace :fake_data do
         from_location: from_location,
         to_location: to_location,
         status: %w[proposed requested booked in_transit completed].sample,
-        nomis_event_ids: nomis_event_ids,
       )
       document = Document.new(move: move)
       document.file.attach(io: file, filename: 'file-sample_100kB.doc')

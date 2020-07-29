@@ -24,16 +24,14 @@ module Api::V2
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
+      move.assign_attributes(common_move_attributes)
+      action_name = move.status_changed? ? 'update_status' : 'update'
+      move.save!
+      move.allocation&.refresh_status_and_moves_count!
 
-      @move.assign_attributes(common_move_attributes)
-      action_name = @move.status_changed? ? 'update_status' : 'update'
-      @move.save!
-      @move.allocation&.refresh_status_and_moves_count!
+      Notifier.prepare_notifications(topic: move, action_name: action_name)
 
-      Notifier.prepare_notifications(topic: @move, action_name: action_name)
-
-      render_move(@move, :ok)
+      render_move(move, :ok)
     end
 
   private

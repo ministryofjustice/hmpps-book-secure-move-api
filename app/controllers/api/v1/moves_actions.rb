@@ -25,8 +25,6 @@ module Api::V1
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
-
       updater.call
 
       Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
