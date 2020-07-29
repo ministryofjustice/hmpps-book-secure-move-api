@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_28_090010) do
+ActiveRecord::Schema.define(version: 2020_07_29_080731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -125,21 +125,21 @@ ActiveRecord::Schema.define(version: 2020_07_28_090010) do
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
   end
 
-  create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_question_id", null: false
     t.string "flag_type", null: false
     t.string "title", null: false
     t.string "question_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["framework_question_id"], name: "index_flags_on_framework_question_id"
+    t.index ["framework_question_id"], name: "index_framework_flags_on_framework_question_id"
   end
 
-  create_table "flags_framework_responses", id: false, force: :cascade do |t|
+  create_table "framework_flags_responses", id: false, force: :cascade do |t|
     t.uuid "framework_response_id", null: false
-    t.uuid "flag_id", null: false
-    t.index ["flag_id"], name: "index_flags_framework_responses_on_flag_id"
-    t.index ["framework_response_id"], name: "index_flags_framework_responses_on_framework_response_id"
+    t.uuid "framework_flag_id", null: false
+    t.index ["framework_flag_id"], name: "index_framework_flags_responses_on_framework_flag_id"
+    t.index ["framework_response_id"], name: "index_framework_flags_responses_on_framework_response_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -484,7 +484,7 @@ ActiveRecord::Schema.define(version: 2020_07_28_090010) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "flags", "framework_questions"
+  add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
   add_foreign_key "framework_responses", "person_escort_records"
