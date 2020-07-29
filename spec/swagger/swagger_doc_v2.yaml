@@ -406,6 +406,19 @@
           schema:
             type: boolean
             example: true
+        - name: filter[ready_for_transit]
+          in: query
+          explode: false
+          description:
+            Filters results to either moves which have a confirmed person escort record if set to true,
+            and moves with no person escort record or non confirmed person escort records if set to false.
+            Please note that this filter does not filter by move status, and will include all moves that
+            match the above criteria regardless of status i.e. this filter will include moves which are not
+            necessarily in the `booked` status. Additional filters are necessary to limit the results to the required
+            status of moves (example `booked`).
+          schema:
+            type: boolean
+            example: true
         - name: sort[by]
           description: field to sort results by
           in: query

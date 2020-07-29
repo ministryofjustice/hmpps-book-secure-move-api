@@ -46,6 +46,7 @@ module Moves
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
+      scope = apply_ready_for_transit_filters(scope)
       scope = apply_filter(scope, :supplier_id)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
@@ -85,6 +86,16 @@ module Moves
 
       scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
       scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
+      scope
+    end
+
+    def apply_ready_for_transit_filters(scope)
+      return scope unless filter_params.key?(:ready_for_transit)
+
+      scope_with_person_escort_record = scope.includes(profile: :person_escort_record)
+      scope = scope_with_person_escort_record.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
+      scope = scope_with_person_escort_record.where.not('person_escort_records.status' => 'confirmed').or(scope_with_person_escort_record.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
+
       scope
     end
   end
