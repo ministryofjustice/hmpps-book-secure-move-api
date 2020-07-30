@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/ministryofjustice/appinsights.git
-  revision: 93f458fcdfd582fcd331421141194fee063f87ac
+  revision: 8d35aadc0632c607806274f772bb23809dae5e1e
+  ref: P4-1982-conditionally-send-logs-as-traces
   specs:
     appinsights (0.0.6)
       application_insights (~> 0.5.0)
