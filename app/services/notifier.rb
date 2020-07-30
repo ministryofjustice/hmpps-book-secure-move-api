@@ -7,6 +7,8 @@ class Notifier
       PrepareMoveNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name)
     when Person
       PreparePersonNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name)
+    when Profile
+      PrepareProfileNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name)
     when PersonEscortRecord
       PreparePersonEscortRecordNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name)
     end
