@@ -106,7 +106,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       end
 
       context 'with a reference to a missing framework' do
-        let(:framework_version) { '0.2' }
+        let(:framework_version) { '0.2.1' }
         let(:detail_404) { "Couldn't find Framework" }
 
         it_behaves_like 'an endpoint that responds with error 404'
@@ -128,13 +128,9 @@ RSpec.describe Api::PersonEscortRecordsController do
             },
           }
         end
+        let(:detail_404) { "Couldn't find Framework" }
 
-        it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) do
-            [{ 'title' => 'Unprocessable entity',
-               'detail' => 'Framework must exist' }]
-          end
-        end
+        it_behaves_like 'an endpoint that responds with error 404'
       end
     end
   end

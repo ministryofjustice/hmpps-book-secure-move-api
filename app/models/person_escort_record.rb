@@ -36,8 +36,7 @@ class PersonEscortRecord < VersionedModel
 
   def self.save_with_responses!(profile_id:, version: nil)
     profile = Profile.find(profile_id)
-    # TODO: remove default framework, getting the last framework is temporary until versioning is finalised
-    framework = version.present? ? Framework.find_by!(version: version) : Framework.ordered_by_latest_version.first
+    framework = Framework.find_by!(version: version)
 
     record = new(profile: profile, framework: framework)
     record.build_responses!
