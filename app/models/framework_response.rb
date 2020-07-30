@@ -10,7 +10,7 @@ class FrameworkResponse < VersionedModel
                         foreign_key: 'parent_id'
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
-  has_and_belongs_to_many :flags, autosave: true
+  has_and_belongs_to_many :framework_flags, autosave: true
   validates_each :value, on: :update do |record, _attr, value|
     record.errors.add(:value, :blank) if requires_value?(value, record)
   end
@@ -30,7 +30,7 @@ class FrameworkResponse < VersionedModel
       old_value = self.value
       self.value = value
 
-      update!(flags: build_flags)
+      update!(framework_flags: build_flags)
       clear_dependent_values_and_flags!(old_value)
 
       # lock the status update to avoid race condition on multiple response patches
@@ -49,9 +49,9 @@ private
   end
 
   def build_flags
-    return [] unless framework_question.flags.any?
+    return [] unless framework_question.framework_flags.any?
 
-    framework_question.flags.each_with_object([]) do |flag, arr|
+    framework_question.framework_flags.each_with_object([]) do |flag, arr|
       if option_selected?(flag.question_value)
         arr << flag
       end
@@ -69,11 +69,11 @@ private
   def update_dependent_responses!(dependent_ids)
     return unless dependent_ids.any?
 
-    descendants = descendants_tree(dependent_ids).includes(:framework_question, :flags).map do |descendant|
+    descendants = descendants_tree(dependent_ids).includes(:framework_question, :framework_flags).map do |descendant|
       descendant.assign_attributes(
         value: nil,
         responded: false,
-        flags: [],
+        framework_flags: [],
       )
 
       descendant

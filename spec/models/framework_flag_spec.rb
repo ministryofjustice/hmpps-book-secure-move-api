@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Flag do
-  subject { create(:flag) }
+RSpec.describe FrameworkFlag do
+  subject { create(:framework_flag) }
 
   it { is_expected.to validate_presence_of(:flag_type) }
   it { is_expected.to validate_presence_of(:title) }

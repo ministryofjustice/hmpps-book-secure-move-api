@@ -2,7 +2,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   type 'framework_responses'
   belongs_to :person_escort_record
   belongs_to :framework_question, key: :question
-  has_many :flags
+  has_many :framework_flags, key: :flags
 
   attributes :value, :value_type, :responded
 

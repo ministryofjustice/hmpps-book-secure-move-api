@@ -44,8 +44,8 @@ RSpec.describe FrameworkResponseSerializer do
   end
 
   it 'contains a`flags` relationship when flags present' do
-    flag = create(:flag)
-    framework_response.update(flags: [flag])
+    flag = create(:framework_flag)
+    framework_response.update(framework_flags: [flag])
 
     expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
       id: flag.id,

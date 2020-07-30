@@ -99,7 +99,7 @@ RSpec.describe Frameworks::Importer do
         described_class.new(filepath: filepath, version: '0.1').call
         framework_question = FrameworkQuestion.find_by(key: 'medical-professional-referral')
 
-        expect(framework_question.flags.pluck(:title)).to contain_exactly(
+        expect(framework_question.framework_flags.pluck(:title)).to contain_exactly(
           'Physical Health',
           'Medication',
         )

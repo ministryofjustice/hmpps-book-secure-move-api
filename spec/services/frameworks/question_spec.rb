@@ -112,7 +112,7 @@ RSpec.describe Frameworks::Question do
       questions = { 'medical-professional-referral' => question }
       described_class.new(filepath: filepath, questions: questions).call
 
-      expect(question.flags.size).to eq(2)
+      expect(question.framework_flags.size).to eq(2)
     end
 
     it 'sets attributes on flag as well as question answer to conditionally surface the flag' do
@@ -121,7 +121,7 @@ RSpec.describe Frameworks::Question do
       questions = { 'medical-professional-referral' => question }
       described_class.new(filepath: filepath, questions: questions).call
 
-      expect(question.flags.first).to have_attributes(
+      expect(question.framework_flags.first).to have_attributes(
         flag_type: 'alert',
         title: 'Physical Health',
         question_value: 'Yes',

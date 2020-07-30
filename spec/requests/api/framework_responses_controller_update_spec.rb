@@ -9,7 +9,7 @@ RSpec.describe Api::FrameworkResponsesController do
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_response) { create(:string_response) }
-    let!(:flag) { create(:flag, framework_question: framework_response.framework_question, question_value: 'No') }
+    let!(:flag) { create(:framework_flag, framework_question: framework_response.framework_question, question_value: 'No') }
     let(:framework_response_id) { framework_response.id }
     let(:value) { 'No' }
 
