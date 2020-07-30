@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_080731) do
+ActiveRecord::Schema.define(version: 2020_07_29_191640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -259,7 +259,6 @@ ActiveRecord::Schema.define(version: 2020_07_29_080731) do
     t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -500,7 +499,6 @@ ActiveRecord::Schema.define(version: 2020_07_29_080731) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "moves", column: "original_move_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
   add_foreign_key "moves", "suppliers"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
