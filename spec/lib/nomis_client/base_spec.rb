@@ -16,11 +16,20 @@ RSpec.describe NomisClient::Base do
   end
   let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
 
-  before { allow(OAuth2::Client).to receive(:new).and_return(oauth2_client) }
+  before do
+    # NB: the NomisClient uses class methods which persist for lifetime of the test suite and can cause problems; clearing
+    # these class instance variables before and after tests helps prevent cross-contamination
+    NomisClient::Base.instance_variable_set(:@client, nil)
+    NomisClient::Base.instance_variable_set(:@token, nil)
+
+    allow(OAuth2::Client).to receive(:new).and_return(oauth2_client)
+  end
 
   after do
-    described_class.instance_variable_set(:@client, nil)
-    described_class.instance_variable_set(:@token, nil)
+    # NB: the NomisClient uses class methods which persist for lifetime of the test suite and can cause problems; clearing
+    # these class instance variables before and after tests helps prevent cross-contamination
+    NomisClient::Base.instance_variable_set(:@client, nil)
+    NomisClient::Base.instance_variable_set(:@token, nil)
   end
 
   describe '.get' do
