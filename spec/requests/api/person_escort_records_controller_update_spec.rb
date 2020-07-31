@@ -124,7 +124,7 @@ RSpec.describe Api::PersonEscortRecordsController do
         notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
         expect(notification).to have_attributes(
-          topic: person_escort_record.profile.move,
+          topic: person_escort_record.profile.moves.first,
           notification_type: notification_type_webhook,
           event_type: 'update_move',
         )
@@ -134,7 +134,7 @@ RSpec.describe Api::PersonEscortRecordsController do
         notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
         expect(notification).to have_attributes(
-          topic: person_escort_record.profile.move,
+          topic: person_escort_record.profile.moves.first,
           notification_type: notification_type_email,
           event_type: 'update_move',
         )

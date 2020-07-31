@@ -77,57 +77,59 @@ RSpec.describe Move do
   end
 
   it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
-    expect(build(:move, status: :proposed)).to(
+    expect(build(:move, :proposed)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is requested' do
-    expect(build(:move, status: :requested)).not_to(
+    expect(build(:move, :requested)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is booked' do
-    expect(build(:move, status: :booked)).to(
+    expect(build(:move, :booked)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is in_transit' do
-    expect(build(:move, status: :in_transit)).to(
+    expect(build(:move, :in_transit)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :cancelled)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate presence of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
-    expect(build(:move, status: :proposed)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :proposed)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    create(:move, status: :requested, profile: nil)
+    create(:move, :requested, profile: nil)
 
-    expect(build(:move, status: :requested, profile: nil)).to be_valid
+    expect(build(:move, :requested, profile: nil)).to be_valid
   end
 
   it 'validates presence of `date` if `status` is NOT proposed' do
