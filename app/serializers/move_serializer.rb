@@ -9,6 +9,7 @@ class MoveSerializer < ActiveModel::Serializer
              :time_due,
              :date,
              :move_type,
+             :nomis_event_id,
              :additional_information,
              :rejection_reason,
              :cancellation_reason,
