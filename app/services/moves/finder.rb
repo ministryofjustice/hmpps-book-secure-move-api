@@ -4,7 +4,7 @@ module Moves
   class Finder
     attr_reader :filter_params, :ability
 
-    MOVE_INCLUDES = [:court_hearings, :prison_transfer_reason, :original_move, profile: [:documents, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], from_location: %i[locations_suppliers suppliers], to_location: %i[locations_suppliers suppliers], allocation: %i[from_location to_location], person: %i[gender ethnicity]].freeze
+    MOVE_INCLUDES = [profile: { person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question] }, person: %i[gender ethnicity]].freeze
 
     def initialize(filter_params, ability, order_params)
       @filter_params = filter_params
