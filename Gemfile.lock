@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ministryofjustice/appinsights.git
-  revision: 93f458fcdfd582fcd331421141194fee063f87ac
+  revision: 4a1cb38a468a8088ae2f4eef1361900aab6b4295
   specs:
     appinsights (0.0.6)
       application_insights (~> 0.5.0)
