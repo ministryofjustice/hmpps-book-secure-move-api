@@ -33,6 +33,22 @@ RSpec.describe Notifier do
     end
   end
 
+  context 'when scheduled with a profile' do
+    let(:topic) { create(:profile) }
+
+    it 'queues a job' do
+      expect(PrepareProfileNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name)
+    end
+  end
+
+  context 'when scheduled with a person_escort_record' do
+    let(:topic) { create(:person_escort_record) }
+
+    it 'queues a job' do
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name)
+    end
+  end
+
   context 'when called with another object' do
     let(:topic) { Object.new }
 

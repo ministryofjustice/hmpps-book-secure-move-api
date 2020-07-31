@@ -17,10 +17,11 @@ RSpec.describe Moves::Finder do
       let!(:cancelled_supplier_declined_to_move) { create :move, :cancelled_supplier_declined_to_move }
       let!(:completed_move) { create :move, :completed }
       let!(:move_with_allocation) { create(:move, :with_allocation) }
+      let!(:move_with_person_escort_record) { create(:move, :with_person_escort_record) }
       let(:filter_params) { {} }
 
       it 'returns all moves' do
-        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation]
+        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation, move_with_person_escort_record]
       end
     end
 
@@ -248,6 +249,71 @@ RSpec.describe Moves::Finder do
 
         it 'returns only moves with allocations' do
           expect(results).to contain_exactly(move_with_allocation)
+        end
+      end
+    end
+
+    describe 'by ready_for_transit' do
+      let!(:move_with_no_person_escort_record) { create(:move) }
+      let!(:move_with_unstarted_person_escort_record) { create(:move, :with_person_escort_record) }
+      let!(:move_with_in_progress_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'in_progress')
+      end
+      let!(:move_with_completed_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'completed')
+      end
+      let!(:move_with_confirmed_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'confirmed')
+      end
+
+      context 'with ready_for_transit set as `true`' do
+        let(:filter_params) { { ready_for_transit: 'true' } }
+
+        it 'returns only confirmed moves' do
+          expect(results).to contain_exactly(
+            move_with_confirmed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as `false`' do
+        let(:filter_params) { { ready_for_transit: 'false' } }
+
+        it 'returns all non confirmed moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as `nil`' do
+        let(:filter_params) { { ready_for_transit: nil } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as empty string' do
+        let(:filter_params) { { ready_for_transit: '' } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
         end
       end
     end

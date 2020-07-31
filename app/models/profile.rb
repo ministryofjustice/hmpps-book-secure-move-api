@@ -5,7 +5,7 @@ class Profile < VersionedModel
 
   belongs_to :person
 
-  has_one :move, dependent: :nullify
+  has_many :moves, dependent: :nullify
   has_one :person_escort_record
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
@@ -14,7 +14,6 @@ class Profile < VersionedModel
 
   validate :validate_assessment_answers
   attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
-  attribute :profile_identifiers, Types::Jsonb.new(Profile::ProfileIdentifiers)
 
   # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
   # full of update records where nothing actually changes - making the audit next to useless.

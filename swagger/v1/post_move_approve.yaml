@@ -23,3 +23,9 @@ PostMoveApprove:
           format: date
           example: '2020-05-17'
           description: Date on which the move is scheduled
+        create_in_nomis:
+          oneOf:
+          - type: boolean
+          - type: 'null'
+          example: 'true'
+          description: Indicates if the move should be automatically created in NOMIS

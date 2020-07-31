@@ -89,7 +89,7 @@ RSpec.describe Moves::MoveTypeValidator do
   end
 
   context 'with video remand hearing `move_type`' do
-    let(:move_type) { 'video_remand_hearing' }
+    let(:move_type) { 'video_remand' }
 
     it 'validates `from_location` is a police location' do
       target.from_location = build(:location, :police)
@@ -104,7 +104,7 @@ RSpec.describe Moves::MoveTypeValidator do
     it 'has an error if `from_location` is not a police location' do
       target.from_location = build(:location, :court)
       expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
-      expect(target.errors[:from_location]).to match_array('must be a police location for video remand hearing move')
+      expect(target.errors[:from_location]).to match_array('must be a police location for video remand move')
     end
   end
 end

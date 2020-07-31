@@ -127,6 +127,18 @@ FactoryBot.define do
         end
       end
 
+      trait :approve_with_nomis do
+        event_name { 'approve' }
+        details do
+          { event_params: {
+            attributes: {
+              date: Date.tomorrow,
+              create_in_nomis: true,
+            },
+          } }
+        end
+      end
+
       trait :reject do
         event_name { 'reject' }
         details do

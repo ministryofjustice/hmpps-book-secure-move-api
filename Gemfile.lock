@@ -134,6 +134,8 @@ GEM
     finite_machine (0.13.0)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
+    git (1.7.0)
+      rchardet (~> 1.8)
     github_changelog_generator (1.15.2)
       activesupport
       faraday-http-cache
@@ -271,6 +273,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rchardet (1.8.0)
     redis (4.2.1)
     regexp_parser (1.7.1)
     request_store (1.4.1)
@@ -400,6 +403,7 @@ DEPENDENCIES
   faker
   faraday
   finite_machine
+  git (~> 1.7)
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
   json-schema

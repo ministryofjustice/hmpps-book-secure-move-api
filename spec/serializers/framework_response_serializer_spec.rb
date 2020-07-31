@@ -39,6 +39,20 @@ RSpec.describe FrameworkResponseSerializer do
     )
   end
 
+  it 'contains an empty `flags` relationship if no flags present' do
+    expect(result[:data][:relationships][:flags][:data]).to be_empty
+  end
+
+  it 'contains a`flags` relationship when flags present' do
+    flag = create(:framework_flag)
+    framework_response.update(framework_flags: [flag])
+
+    expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+      id: flag.id,
+      type: 'framework_flags',
+    )
+  end
+
   describe 'value_type' do
     context 'when response is an object response' do
       let(:framework_response) { create(:object_response) }
@@ -89,7 +103,7 @@ RSpec.describe FrameworkResponseSerializer do
         {
           id: framework_response.person_escort_record.id,
           type: 'person_escort_records',
-          attributes: { status: 'in_progress' },
+          attributes: { status: 'not_started' },
         },
         {
           id: framework_response.framework_question.id,

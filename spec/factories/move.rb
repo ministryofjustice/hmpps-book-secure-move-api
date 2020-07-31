@@ -43,10 +43,10 @@ FactoryBot.define do
       move_type { 'police_transfer' }
     end
 
-    trait :video_remand_hearing do
-      move_type { 'video_remand_hearing' }
+    trait :video_remand do
+      move_type { 'video_remand' }
       association(:from_location, :police, factory: :location)
-      to_location { nil } # NB: to_location is always nil for a video_remand_hearing
+      to_location { nil } # NB: to_location is always nil for a video_remand
     end
 
     trait :hospital do
@@ -116,6 +116,21 @@ FactoryBot.define do
           to_location: move.to_location,
           date: move.date,
           moves: [move],
+        )
+      end
+    end
+
+    trait :with_person_escort_record do
+      transient do
+        person_escort_record_status { 'unstarted' }
+      end
+
+      after(:create) do |move, evaluator|
+        create(
+          :person_escort_record,
+          profile: move.profile,
+          status: evaluator.person_escort_record_status,
+          confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
         )
       end
     end

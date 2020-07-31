@@ -17,7 +17,7 @@ class FrameworkQuestion < VersionedModel
                         foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'FrameworkQuestion', optional: true
 
-  has_many :flags
+  has_many :framework_flags
   has_many :framework_responses
 
   def build_responses(question: self, person_escort_record:, questions:)

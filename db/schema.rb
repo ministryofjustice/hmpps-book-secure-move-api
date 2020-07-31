@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_041742) do
+ActiveRecord::Schema.define(version: 2020_07_29_080731) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -124,14 +125,21 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
   end
 
-  create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_question_id", null: false
     t.string "flag_type", null: false
-    t.string "name", null: false
+    t.string "title", null: false
     t.string "question_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["framework_question_id"], name: "index_flags_on_framework_question_id"
+    t.index ["framework_question_id"], name: "index_framework_flags_on_framework_question_id"
+  end
+
+  create_table "framework_flags_responses", id: false, force: :cascade do |t|
+    t.uuid "framework_response_id", null: false
+    t.uuid "framework_flag_id", null: false
+    t.index ["framework_flag_id"], name: "index_framework_flags_responses_on_framework_flag_id"
+    t.index ["framework_response_id"], name: "index_framework_flags_responses_on_framework_response_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -262,7 +270,6 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
     t.datetime "time_due"
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
-    t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
@@ -375,10 +382,10 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "nomis_prison_number"
-    t.string "prison_number"
-    t.string "criminal_records_office"
-    t.string "police_national_computer"
+    t.citext "nomis_prison_number"
+    t.citext "prison_number"
+    t.citext "criminal_records_office"
+    t.citext "police_national_computer"
     t.string "first_names"
     t.string "last_name"
     t.date "date_of_birth"
@@ -398,9 +405,10 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
   create_table "person_escort_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_id", null: false
     t.uuid "profile_id", null: false
-    t.string "state", null: false
+    t.string "status", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "confirmed_at"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
@@ -476,7 +484,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_041742) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "flags", "framework_questions"
+  add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
   add_foreign_key "framework_responses", "person_escort_records"

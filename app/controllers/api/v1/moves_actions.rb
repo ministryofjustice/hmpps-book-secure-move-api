@@ -25,8 +25,6 @@ module Api::V1
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, 'Can\'t change moves coming from Nomis' if move.from_nomis?
-
       updater.call
 
       Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
@@ -111,7 +109,9 @@ module Api::V1
     def move
       @move ||= Move
         .accessible_by(current_ability)
-        .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+        .includes(
+          :from_location, :to_location, profile: { person: %i[gender ethnicity], person_escort_record: { framework_flags: :framework_question } }
+        )
         .find(params[:id])
     end
 

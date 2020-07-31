@@ -14,6 +14,8 @@
     :description: Dev API
   - :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
     :description: Staging API
+  - :url: https://hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+    :description: UAT API
   - :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
     :description: PreProd API
   - :url: https://api.bookasecuremove.service.justice.gov.uk/api/v1
@@ -52,6 +54,14 @@
       :$ref: "../v1/document.yaml#/Document"
     :Ethnicity:
       :$ref: "../v1/ethnicity.yaml#/Ethnicity"
+    :Framework:
+      :$ref: "../v1/framework.yaml#/Framework"
+    :FrameworkFlag:
+      :$ref: "../v1/framework_flag.yaml#/FrameworkFlag"
+    :FrameworkQuestion:
+      :$ref: "../v1/framework_question.yaml#/FrameworkQuestion"
+    :FrameworkResponse:
+      :$ref: "../v1/framework_response.yaml#/FrameworkResponse"
     :Gender:
       :$ref: "../v1/gender.yaml#/Gender"
     :Journey:
@@ -448,6 +458,65 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_documents_responses.yaml#/422"
+  "/framework_responses/{framework_response_id}":
+    patch:
+      summary: Updates a framework response's value
+      tags:
+      - Framework Responses
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/framework_response_id_parameter.yaml#/FrameworkResponseId"
+      - "$ref": "../v1/framework_response_include_parameter.yaml#/FrameworkResponseIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The framework_response object to be modified
+        schema:
+          "$ref": "../v1/framework_response.yaml#/FrameworkResponse"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/200"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/401"
+        '403':
+          description: forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/403"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_framework_response_responses.yaml#/422"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -575,6 +644,19 @@
           description:
             Filters results to either exclude or include moves associated
             to an allocation optionally
+          schema:
+            type: boolean
+            example: true
+        - name: filter[ready_for_transit]
+          in: query
+          explode: false
+          description:
+            Filters results to either moves which have a confirmed person escort record if set to true,
+            and moves with no person escort record or non confirmed person escort records if set to false.
+            Please note that this filter does not filter by move status, and will include all moves that
+            match the above criteria regardless of status i.e. this filter will include moves which are not
+            necessarily in the `booked` status. Additional filters are necessary to limit the results to the required
+            status of moves (example `booked`).
           schema:
             type: boolean
             example: true
@@ -2495,17 +2577,17 @@
     post:
       summary: Creates a new person escort record
       tags:
-      - PersonEscortRecord
+      - Person Escort Records
       consumes:
       - application/vnd.api+json
       parameters:
+      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
       - name: body
         in: body
         required: true
-        description: The person_escort_record object to be created
+        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `profile` of the person.
         schema:
-          "$ref": "../v1/person_escort_record.yaml#/PersonEscortRecord"
-      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
+          "$ref": "../v1/post_person_escort_record.yaml#/PostPersonEscortRecord"
       responses:
         '201':
           description: created
@@ -2543,13 +2625,13 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_person_escort_record_responses.yaml#/422"
-  "/person_escort_record/{person_escort_record_id}":
+  "/person_escort_records/{person_escort_record_id}":
     get:
       summary: Gets a person_escort_record
       description:
         "This method gets the specified person_escort_record"
       tags:
-        - PersonEscortRecord
+        - Person Escort Records
       consumes:
         - application/vnd.api+json
       parameters:
@@ -2587,6 +2669,58 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+    patch:
+      summary: Updates a person_escort_record's status
+      tags:
+      - Person Escort Records
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/person_escort_record_id_parameter.yaml#/PersonEscortRecordId"
+      - "$ref": "../v1/person_escort_record_include_parameter.yaml#/PersonEscortRecordIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The `person_escort_record` object to be modified. Sets the current status of the `person_escort_record` as `confirmed` after a `person_escort_record` is `completed`.
+        schema:
+          "$ref": "../v1/patch_person_escort_record.yaml#/PatchPersonEscortRecord"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/200"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/401"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_person_escort_record_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases

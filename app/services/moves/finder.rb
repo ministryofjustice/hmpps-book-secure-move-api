@@ -4,6 +4,8 @@ module Moves
   class Finder
     attr_reader :filter_params, :ability
 
+    MOVE_INCLUDES = [:from_location, :to_location, profile: { person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question] }, person: %i[gender ethnicity]].freeze
+
     def initialize(filter_params, ability, order_params)
       @filter_params = filter_params
       @ability = ability
@@ -42,10 +44,11 @@ module Moves
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
-      scope = scope.includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+      scope = scope.includes(MOVE_INCLUDES)
       scope = apply_date_range_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
+      scope = apply_ready_for_transit_filters(scope)
       scope = apply_filter(scope, :supplier_id)
       scope = apply_filter(scope, :from_location_id)
       scope = apply_filter(scope, :to_location_id)
@@ -85,6 +88,15 @@ module Moves
 
       scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
       scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
+      scope
+    end
+
+    def apply_ready_for_transit_filters(scope)
+      return scope unless filter_params.key?(:ready_for_transit)
+
+      scope = scope.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
+      scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
+
       scope
     end
   end

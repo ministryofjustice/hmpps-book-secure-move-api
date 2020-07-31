@@ -58,7 +58,7 @@ RSpec.describe Move do
     end
   end
 
-  it 'validates presence of `to_location` if `move_type` is NOT prison_recall or video_remand_hearing' do
+  it 'validates presence of `to_location` if `move_type` is NOT prison_recall or video_remand' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
     )
@@ -70,64 +70,66 @@ RSpec.describe Move do
     )
   end
 
-  it 'does NOT validate presence of `to_location` if `move_type` is video_remand_hearing' do
-    expect(build(:move, move_type: 'video_remand_hearing')).not_to(
+  it 'does NOT validate presence of `to_location` if `move_type` is video_remand' do
+    expect(build(:move, move_type: 'video_remand')).not_to(
       validate_presence_of(:to_location),
     )
   end
 
   it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
-    expect(build(:move, status: :proposed)).to(
+    expect(build(:move, :proposed)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is requested' do
-    expect(build(:move, status: :requested)).not_to(
+    expect(build(:move, :requested)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is booked' do
-    expect(build(:move, status: :booked)).to(
+    expect(build(:move, :booked)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is in_transit' do
-    expect(build(:move, status: :in_transit)).to(
+    expect(build(:move, :in_transit)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :cancelled)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate presence of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
-    expect(build(:move, status: :proposed)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :proposed)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    create(:move, status: :requested, profile: nil)
+    create(:move, :requested, profile: nil)
 
-    expect(build(:move, status: :requested, profile: nil)).to be_valid
+    expect(build(:move, :requested, profile: nil)).to be_valid
   end
 
   it 'validates presence of `date` if `status` is NOT proposed' do
@@ -160,13 +162,6 @@ RSpec.describe Move do
 
   it 'allows date_from == date_to' do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
-  end
-
-  it 'does NOT permit duplicate nomis_event_ids' do
-    move = create(:move, nomis_event_ids: [123_456])
-    move.nomis_event_ids << 123_456
-    move.save
-    expect(move.nomis_event_ids).to eq([123_456])
   end
 
   context 'when a Move for a Person has already been created' do
@@ -217,28 +212,6 @@ RSpec.describe Move do
     end
 
     it { is_expected.to validate_presence_of(:reference) }
-  end
-
-  describe '#nomis_event_id=' do
-    subject(:move) { create :move }
-
-    context 'when nomis_event_id is not present' do
-      it 'assigns the nomis_event_id to the nomis_event_ids array' do
-        move.nomis_event_id = 123_456
-        expect(move.nomis_event_ids).to eq([123_456])
-      end
-    end
-
-    context 'when nomis_event_id is present' do
-      before do
-        move.nomis_event_id = 123_456
-      end
-
-      it 'assigns the nomis_event_id to the nomis_event_ids array without losing the old nomis_event_id' do
-        move.nomis_event_id = 654_321
-        expect(move.nomis_event_ids).to eq([123_456, 654_321])
-      end
-    end
   end
 
   describe '#reference' do
@@ -292,28 +265,6 @@ RSpec.describe Move do
 
       it 'sets move_type to `police_transfer`' do
         expect(move.move_type).to eq 'police_transfer'
-      end
-    end
-  end
-
-  describe '#from_nomis?' do
-    subject(:move) { build :move }
-
-    context 'with nomis_event_ids' do
-      let(:nomis_event_id) { 12_345_678 }
-
-      before { move.nomis_event_ids = [nomis_event_id] }
-
-      it 'is truthy' do
-        expect(move).to be_from_nomis
-      end
-    end
-
-    context 'without nomis_event_ids' do
-      before { move.nomis_event_ids = [] }
-
-      it 'is falsy' do
-        expect(move).not_to be_from_nomis
       end
     end
   end

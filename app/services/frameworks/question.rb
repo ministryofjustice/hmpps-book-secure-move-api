@@ -61,9 +61,9 @@ module Frameworks
 
     def build_flags(flags:, value:)
       flags.each do |flag|
-        question.flags.new(
+        question.framework_flags.new(
           flag_type: flag['type'],
-          name: flag['label'],
+          title: flag['label'],
           question_value: value,
         )
       end

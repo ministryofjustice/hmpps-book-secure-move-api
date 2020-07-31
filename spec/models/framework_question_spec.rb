@@ -12,7 +12,7 @@ RSpec.describe FrameworkQuestion do
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
-  it { is_expected.to have_many(:flags) }
+  it { is_expected.to have_many(:framework_flags) }
   it { is_expected.to have_many(:framework_responses) }
 
   describe '#build_responses' do

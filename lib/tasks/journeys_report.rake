@@ -29,20 +29,22 @@ namespace :journeys do
           .where("ID in (select move_id from journeys WHERE supplier_id = '#{supplier.id}')")
           .where("moves.updated_at::date = date '#{report_date}'").find_each(batch_size: 100) do |move|
         journeys = []
-        Journey.where(move: move).default_order.each do |journey|
+        Journey
+            .where(move: move)
+            .where("state in ('completed','canceled')").default_order.each do |journey|
           journeys << {
             id: journey.id,
             supplier: supplier.key,
             timestamp: journey.client_timestamp.iso8601,
             from: journey.from_location.nomis_agency_id,
             to: journey.to_location.nomis_agency_id,
-            vehicle: journey.vehicle['registration'],
+            vehicle: journey.vehicle.present? ? journey.vehicle['registration'] : nil,
             billable: journey.billable,
             events: journey.events.default_order.map do |event|
               {
                 timestamp: event.client_timestamp.iso8601,
                 event: event.event_name,
-                notes: event.notes,
+                notes: event.details[:event_params].present? ? event.notes : nil,
                 from_location: event.from_location&.nomis_agency_id,
                 to_location: event.to_location&.nomis_agency_id,
               }

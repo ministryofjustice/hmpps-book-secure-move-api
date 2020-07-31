@@ -17,6 +17,10 @@ RSpec.describe FrameworkQuestionSerializer do
     expect(result[:data][:id]).to eq(framework_question.id)
   end
 
+  it 'contains a `section` attribute' do
+    expect(result[:data][:attributes][:section]).to eq(framework_question.section)
+  end
+
   it 'contains a `key` attribute' do
     expect(result[:data][:attributes][:key]).to eq(framework_question.key)
   end

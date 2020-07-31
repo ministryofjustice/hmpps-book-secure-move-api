@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Profile, type: :model do
   it { is_expected.to belong_to(:person).required }
   it { is_expected.to have_many(:documents) }
+  it { is_expected.to have_many(:moves) } # NB: a profile can be re-used across multiple moves
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to validate_presence_of(:person) }
 

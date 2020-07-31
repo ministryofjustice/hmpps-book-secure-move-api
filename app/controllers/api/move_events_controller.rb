@@ -8,7 +8,7 @@ module Api
     before_action :validate_idempotency_key
     around_action :idempotent_action
 
-    APPROVE_PARAMS = [:type, attributes: %i[timestamp date]].freeze
+    APPROVE_PARAMS = [:type, attributes: %i[timestamp date create_in_nomis]].freeze
     CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
     LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
     REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze

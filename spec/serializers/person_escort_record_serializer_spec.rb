@@ -18,11 +18,15 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a `status` attribute' do
-    expect(result[:data][:attributes][:status]).to eq('in_progress')
+    expect(result[:data][:attributes][:status]).to eq('not_started')
   end
 
   it 'contains a `version` attribute' do
     expect(result[:data][:attributes][:version]).to eq(person_escort_record.framework.version)
+  end
+
+  it 'contains a `confirmed_at` attribute' do
+    expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
   end
 
   it 'contains a `profile` relationship' do
@@ -50,6 +54,20 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
       id: response.id,
       type: 'framework_responses',
+    )
+  end
+
+  it 'contains an empty `flags` relationship if no flags present' do
+    expect(result[:data][:relationships][:flags][:data]).to be_empty
+  end
+
+  it 'contains a`flags` relationship with framework response flags' do
+    flag = create(:framework_flag)
+    create(:string_response, person_escort_record: person_escort_record, framework_flags: [flag])
+
+    expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+      id: flag.id,
+      type: 'framework_flags',
     )
   end
 

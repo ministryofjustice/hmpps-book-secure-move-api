@@ -24,16 +24,15 @@ module Api::V2
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
+      move.assign_attributes(common_move_attributes)
+      action_name = move.status_changed? ? 'update_status' : 'update'
+      move.save!
+      move.allocation&.refresh_status_and_moves_count!
 
-      @move.assign_attributes(common_move_attributes)
-      action_name = @move.status_changed? ? 'update_status' : 'update'
-      @move.save!
-      @move.allocation&.refresh_status_and_moves_count!
+      Allocations::CreateInNomis.call(move) if create_in_nomis?
+      Notifier.prepare_notifications(topic: move, action_name: action_name)
 
-      Notifier.prepare_notifications(topic: @move, action_name: action_name)
-
-      render_move(@move, :ok)
+      render_move(move, :ok)
     end
 
   private
@@ -56,6 +55,10 @@ module Api::V2
       ],
       relationships: {},
     ].freeze
+
+    def create_in_nomis?
+      move.allocation_id? && params[:create_in_nomis].to_s == 'true'
+    end
 
     def move_params
       @move_params ||= params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
@@ -141,7 +144,9 @@ module Api::V2
     def move
       @move ||= Move
         .accessible_by(current_ability)
-        .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+        .includes(
+          :from_location, :to_location, profile: { person: %i[gender ethnicity], person_escort_record: { framework_flags: :framework_question } }
+        )
         .find(params[:id])
     end
 

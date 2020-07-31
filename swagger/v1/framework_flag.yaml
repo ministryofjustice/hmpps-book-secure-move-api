@@ -1,0 +1,53 @@
+FrameworkFlag:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: framework_flags
+      enum:
+      - framework_flags
+      description: The type of this object - always `framework_flags`
+    attributes:
+      type: object
+      required:
+      - flag_type
+      - title
+      - question_value
+      properties:
+        flag_type:
+          type: string
+          example: 'checkbox'
+          enum:
+            - information
+            - attention
+            - warning
+            - alert
+          description: Indicates the type of flag
+          readOnly: true
+        title:
+          example: 'High public interest'
+          type: string
+          description: the title of the flag
+          readOnly: true
+        question_value:
+          type: string
+          example: 'No'
+          description: the option required for the response to display a flag
+          readOnly: true
+    relationships:
+      type: object
+      required:
+      - question
+      properties:
+        question:
+          $ref: framework_question_reference.yaml#/FrameworkQuestionReference
+          description: The question this flag is for
