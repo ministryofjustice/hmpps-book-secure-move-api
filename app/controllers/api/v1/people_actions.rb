@@ -62,7 +62,7 @@ module Api::V1
     end
 
     def filter_params
-      params.require(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
+      params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
     end
 
     def person_params
