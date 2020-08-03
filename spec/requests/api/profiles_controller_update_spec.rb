@@ -99,7 +99,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       it 'calls the notifier' do
-        expect(Notifier).to have_received(:prepare_notifications).with(topic: profile.person, action_name: 'update')
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: profile, action_name: 'update')
       end
     end
 

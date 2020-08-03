@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/ministryofjustice/appinsights.git
-  revision: 93f458fcdfd582fcd331421141194fee063f87ac
+  revision: 5a6c4879b2239f9a0ae337238abd7df81e88621e
   specs:
-    appinsights (0.0.6)
+    appinsights (0.0.7)
       application_insights (~> 0.5.0)
       toml-rb (~> 0.3.0)
 
@@ -134,6 +134,8 @@ GEM
     finite_machine (0.13.0)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
+    git (1.7.0)
+      rchardet (~> 1.8)
     github_changelog_generator (1.15.2)
       activesupport
       faraday-http-cache
@@ -271,6 +273,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rchardet (1.8.0)
     redis (4.2.1)
     regexp_parser (1.7.1)
     request_store (1.4.1)
@@ -400,6 +403,7 @@ DEPENDENCIES
   faker
   faraday
   finite_machine
+  git (~> 1.7)
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
   json-schema

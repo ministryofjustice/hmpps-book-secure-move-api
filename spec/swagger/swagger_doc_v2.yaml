@@ -537,6 +537,13 @@
           schema:
             "$ref": "../v2/patch_move.yaml#/Move"
         - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
+        - name: create_in_nomis
+          in: query
+          oneOf:
+          - type: boolean
+          - type: 'null'
+          example: 'true'
+          description: Indicates if the move should be automatically created in NOMIS
       responses:
         "200":
           description: success
