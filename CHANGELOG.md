@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.2.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.2.3) (2020-07-31)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.2.2...v2.2.3)
+
+**Merged pull requests:**
+
+- Revert "Further includes for Moves endpoint" [\#764](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/764) ([cwrw](https://github.com/cwrw))
+- Bumps appinsights gem to support disabling log forwarding [\#763](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/763) ([mafonso](https://github.com/mafonso))
+- Further includes for Moves endpoint [\#762](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/762) ([cwrw](https://github.com/cwrw))
+- P4-1993 Include resources in move endpoint to improve performance [\#761](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/761) ([cwrw](https://github.com/cwrw))
+- P4-1990 fix over-notify on profile updates [\#760](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/760) ([martyn-w](https://github.com/martyn-w))
+- Create prison to prison transfer in Nomis when adding person to allocation [\#759](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/759) ([smoothcontract](https://github.com/smoothcontract))
+- P4-1943 Pull framework versions from repository [\#757](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/757) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#754](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/754) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.2.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.2.2) (2020-07-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.2.1...v2.2.2)
@@ -301,6 +316,7 @@
 - Update CHANGELOG.md [\#534](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/534) ([martyn-w](https://github.com/martyn-w))
 - Rails 6 [\#533](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/533) ([willfish](https://github.com/willfish))
 - \[P4-1610\] Move to included supplier instead of supplier attribute [\#525](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/525) ([willfish](https://github.com/willfish))
+- P4-1597 fake journeys generator [\#521](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/521) ([martyn-w](https://github.com/martyn-w))
 - Setup API V2 Swagger docs [\#507](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/507) ([alexdesi](https://github.com/alexdesi))
 
 ## [v1.10.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.10.5) (2020-06-04)
@@ -316,7 +332,6 @@
 - Reduce number of fixtures created for pagination tests [\#528](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/528) ([cwrw](https://github.com/cwrw))
 - Add new post /v2/person endpoint [\#527](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/527) ([alexdesi](https://github.com/alexdesi))
 - P4-1380 Add support for sorting on GET /allocations endpoint [\#526](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/526) ([smoothcontract](https://github.com/smoothcontract))
-- P4-1597 fake journeys generator [\#521](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/521) ([martyn-w](https://github.com/martyn-w))
 - Removes unused environment configuration files [\#520](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/520) ([willfish](https://github.com/willfish))
 - P4-1562 add proposed journey state [\#519](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/519) ([martyn-w](https://github.com/martyn-w))
 - \[P4-1435\] Move nomis fields to person [\#517](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/517) ([willfish](https://github.com/willfish))
@@ -432,6 +447,7 @@
 - \[P4-1185\] adds special vehicle to personal care needs [\#435](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/435) ([willfish](https://github.com/willfish))
 - P4-1462 Hard code default sort order for GET /allocations endpoint [\#434](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/434) ([smoothcontract](https://github.com/smoothcontract))
 - Hugely speed up linting [\#433](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/433) ([willfish](https://github.com/willfish))
+- Small improvement for Moves::ImportPeople. More need to be done! [\#429](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/429) ([alexdesi](https://github.com/alexdesi))
 
 ## [v1.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.9.0) (2020-05-06)
 
@@ -441,7 +457,6 @@
 
 - P4-1273 Add importer class to populate regions reference data [\#431](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/431) ([smoothcontract](https://github.com/smoothcontract))
 - \[P4-1433\] Removes unused supplier serializer code [\#430](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/430) ([willfish](https://github.com/willfish))
-- Small improvement for Moves::ImportPeople. More need to be done! [\#429](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/429) ([alexdesi](https://github.com/alexdesi))
 - Data migration to update profile ID with the correct profile. [\#427](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/427) ([alexdesi](https://github.com/alexdesi))
 - P4-1376 Create moves when creating an allocation [\#426](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/426) ([cwrw](https://github.com/cwrw))
 - Fix flaky spec [\#425](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/425) ([willfish](https://github.com/willfish))
@@ -565,6 +580,7 @@
 **Merged pull requests:**
 
 - \[P4-1165\] Create and show a court hearing when managing moves [\#360](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/360) ([willfish](https://github.com/willfish))
+- id -\> person\_id [\#358](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/358) ([willfish](https://github.com/willfish))
 
 ## [v1.6.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v1.6.1) (2020-04-09)
 
@@ -574,7 +590,6 @@
 
 - P4-1263 Updated unique date validation to exclude proposed moves [\#361](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/361) ([smoothcontract](https://github.com/smoothcontract))
 - P4-1263 Minor tweak for move date attribute API spec [\#359](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/359) ([smoothcontract](https://github.com/smoothcontract))
-- id -\> person\_id [\#358](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/358) ([willfish](https://github.com/willfish))
 - Fixes broken swagger documentation generation [\#357](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/357) ([willfish](https://github.com/willfish))
 - P4-1263 Update date validation rules around proposed moves [\#356](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/356) ([smoothcontract](https://github.com/smoothcontract))
 - P4-1213 Use StringIO rather than temp file to serialize image blob [\#355](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/355) ([smoothcontract](https://github.com/smoothcontract))
