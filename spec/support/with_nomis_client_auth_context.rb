@@ -10,6 +10,7 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
       'OAuth2::AccessToken',
       get: oauth2_response,
       post: oauth2_response,
+      put: oauth2_response,
       expires?: true,
       refresh!: true,
       expires_at: token_expires_at,

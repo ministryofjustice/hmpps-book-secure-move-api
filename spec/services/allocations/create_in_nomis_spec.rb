@@ -11,6 +11,7 @@ RSpec.describe Allocations::CreateInNomis do
         :move,
         :prison_recall,
         date: move_date,
+        nomis_event_id: nomis_event_id,
         from_location: from_location,
         to_location: to_location,
       )
@@ -20,6 +21,7 @@ RSpec.describe Allocations::CreateInNomis do
     let(:from_nomis_agency_id) { 'PVI' }
     let(:to_nomis_agency_id) { 'HLI' }
     let(:booking_id) { 123 }
+    let(:nomis_event_id) { nil }
     let(:response_body) { { 'id' => 123 }.to_json }
 
     before do
@@ -76,6 +78,15 @@ RSpec.describe Allocations::CreateInNomis do
         expect(create_transfer_in_nomis).to include(
           response_status: 400,
         )
+      end
+    end
+
+    context 'when nomis_event_id is already present' do
+      let(:nomis_response_status) { nil }
+      let(:nomis_event_id) { '123456' }
+
+      it 'is nil' do
+        expect(create_transfer_in_nomis).to be_nil
       end
     end
 

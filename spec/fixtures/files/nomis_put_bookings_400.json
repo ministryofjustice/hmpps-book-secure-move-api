@@ -1,0 +1,5 @@
+{
+  "status": 400,
+  "userMessage": "Move with id 123456789 is not in a scheduled state.",
+  "developerMessage": "Move with id 123456789 is not in a scheduled state."
+}

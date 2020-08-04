@@ -49,4 +49,52 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       end
     end
   end
+
+  describe '.put' do
+    subject(:prison_transfer_put) do
+      described_class.put(booking_id: booking_id, event_id: event_id, body_params: {})
+    end
+
+    let(:booking_id) { 1111 }
+    let(:event_id) { 2222 }
+    let(:response_status) { 201 }
+    let(:response_body) { '{}' }
+
+    it 'removes prison-to-prison transfer from Nomis' do
+      prison_transfer_put
+
+      expect(token)
+        .to have_received(:put)
+        .with('/elite2api/api/bookings/1111/prison-to-prison/2222/cancel', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
+    end
+
+    context 'when Nomis returns an error' do
+      before do
+        allow(oauth2_response).to receive(:error=)
+        allow(token).to receive(:put).and_raise(OAuth2::Error.new(oauth2_response))
+      end
+
+      let(:response_status) { 500 }
+
+      let(:raven_args) do
+        [
+          'Allocations::RemoveFromNomis Error!',
+          extra: {
+            body_params: {},
+            route: '/bookings/1111/prison-to-prison/2222/cancel',
+            nomis_response: { body: '{}', status: 500 },
+          },
+          level: 'error',
+        ]
+      end
+
+      it 'pushes an error warning to Sentry' do
+        allow(Raven).to receive(:capture_message)
+
+        prison_transfer_put
+
+        expect(Raven).to have_received(:capture_message).with(*raven_args)
+      end
+    end
+  end
 end
