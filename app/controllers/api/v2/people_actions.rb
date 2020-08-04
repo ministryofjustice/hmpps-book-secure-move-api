@@ -25,8 +25,6 @@ module Api::V2
 
   private
 
-    PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
-
     PERSON_ATTRIBUTES = %i[
       first_names
       last_name
@@ -37,10 +35,6 @@ module Api::V2
       gender_additional_information
     ].freeze
     PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
-
-    def filter_params
-      params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
-    end
 
     def person_params
       params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h
