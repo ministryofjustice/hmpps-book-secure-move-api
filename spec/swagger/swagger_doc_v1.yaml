@@ -2181,7 +2181,7 @@
           description:
             Filters results to only include people identified by that prison_number.
             Either filter[police_national_computer] or filter[prison_number] or both
-            filters are required.
+            filters are supported.
           schema:
             type: string
             example: G1234UT

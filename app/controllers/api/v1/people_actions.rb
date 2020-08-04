@@ -22,7 +22,6 @@ module Api::V1
       identifiers: [%i[value identifier_type]],
     ].freeze
     PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
-    PERMITTED_FILTER_PARAMS = %i[police_national_computer prison_number].freeze
 
     def index_and_render
       prison_number = filter_params[:prison_number]&.upcase
@@ -59,10 +58,6 @@ module Api::V1
 
     def updater
       @updater ||= People::Updater.new(person, person_params)
-    end
-
-    def filter_params
-      params.require(:filter).permit(PERMITTED_FILTER_PARAMS).to_h
     end
 
     def person_params
