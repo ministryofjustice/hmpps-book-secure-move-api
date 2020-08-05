@@ -34,8 +34,6 @@ class Move < VersionedModel
     video_remand: 'video_remand',
   }
 
-  self.ignored_columns = %w[person_id]
-
   CANCELLATION_REASONS = [
     CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
     CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
