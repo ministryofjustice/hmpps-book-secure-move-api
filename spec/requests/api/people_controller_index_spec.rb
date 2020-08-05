@@ -13,18 +13,42 @@ RSpec.describe Api::PeopleController do
   let(:schema) { load_yaml_schema('get_people_responses.yaml') }
 
   describe 'GET /v1/people' do
-    let(:prison_number) { 'G5033UT' }
-    let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
+    let(:params) {}
 
-    context 'when called with police_national_computer filter' do
-      let!(:people) { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
+    let(:prison_number) { 'G5033UT' }
+
+    context 'when called with NO filters' do
+      let!(:people) { create_list :person, 2 }
+
+      let(:params) {}
 
       before { get_people }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
+        expect(response_json['data'].size).to eq(2)
+      end
+    end
+
+    context 'when called with police_national_computer filter' do
+      let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
+
+      let!(:people) { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
+
+      it 'returns the correct data' do
+        get_people
+
         expect(response_json['data'].size).to eq(5)
+      end
+
+      it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
+        people_finder = instance_double('People::Finder', call: Person.all)
+        allow(People::Finder).to receive(:new).and_return(people_finder)
+
+        get_people
+
+        expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
       end
     end
 
@@ -34,15 +58,6 @@ RSpec.describe Api::PeopleController do
       before { get_people }
 
       it_behaves_like 'an endpoint that responds with success 200'
-    end
-
-    it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
-      people_finder = instance_double('People::Finder', call: Person.all)
-      allow(People::Finder).to receive(:new).and_return(people_finder)
-
-      get_people
-
-      expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
     end
 
     context 'when the filter prison_number is used' do

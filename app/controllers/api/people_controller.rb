@@ -60,6 +60,7 @@ module Api
 
     PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
     PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
+    PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
     OTHER_SUPPORTED_RELATIONSHIPS = %w[location].freeze
 
     def person
@@ -97,6 +98,10 @@ module Api
       IncludeParamsValidator
         .new(other_included_relationships, OTHER_SUPPORTED_RELATIONSHIPS)
         .fully_validate!
+    end
+
+    def filter_params
+      params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
     end
   end
 end
