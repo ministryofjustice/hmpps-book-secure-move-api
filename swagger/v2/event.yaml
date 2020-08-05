@@ -1,0 +1,70 @@
+Event:
+  type: object
+  required:
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: moves
+      enum:
+        - moves
+      description: The type of this object - always `moves`
+    attributes:
+      type: object
+      required:
+        - event_name
+        - timestamp
+      properties:
+        event_name:
+          type: string
+          example: cancel_move
+          description: |
+            Events have many forms which determine their accepted payload shape and validations. The event_name indicates which form the payload, validations and any relevant event actions take.
+
+            An invalid (non-existing) event_name field triggers a validation error.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+
+            This is **mandatory** and specific to each event.
+          readOnly: true
+        timestamp:
+          type: string
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
+
+            This is **mandatory**.
+          format: date-time
+        notes:
+          type: string
+          description: |
+            An arbitary, event-specific and optional field for any additional notes about an event that might be useful for other humans to be informed about.
+        details:
+          type: object
+          description: |
+            A optional json object that is optional and usually different for each event. Custom event validations are run against the values in this object.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+    relationships:
+      type: object
+      required:
+        - eventable
+      properties:
+        eventable:
+          oneOf:
+            - $ref: "../v1/person_reference.yaml#/PersonReference"
+            - $ref: "../v1/move_reference.yaml#/MoveReference"
+            - $ref: "../v1/journey_reference.yaml#/JourneyReference"
+          description: |
+            The subject that the event relates too.
+
+            We validate for each specific event that the eventable is one of the resource types we expect.
+
+            For example, we validate that the cancel_move event's eventable is a move object.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.

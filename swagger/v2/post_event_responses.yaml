@@ -1,0 +1,51 @@
+"201":
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      $ref: "../v2/event.yaml#/Event"
+    included:
+      description: If requested, the included eventable
+      type: array
+      items:
+        oneOf:
+          - $ref: "../v2/person.yaml#/Person"
+          - $ref: "../v2/move.yaml#/Move"
+          - $ref: "../v1/journey.yaml#/Journey"
+"400":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/BadRequest"
+"401":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"
+"415":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
+"422":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/UnprocessableEntity"

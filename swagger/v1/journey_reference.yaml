@@ -1,4 +1,4 @@
-MoveReference:
+JourneyReference:
   type: object
   required:
     - data
@@ -14,10 +14,10 @@ MoveReference:
       properties:
         type:
           type: string
-          example: moves
+          example: journeys
           enum:
-            - moves
-          description: The type of this object - always `moves`
+            - journeys
+          description: The type of this object - always `journeys`
         id:
           type: string
           format: uuid
