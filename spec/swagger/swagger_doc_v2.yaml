@@ -636,7 +636,7 @@
                 "$ref": "../v1/error_responses.yaml#/415"
   "/events":
     post:
-      summary: Creates a new event for a given eventable
+      summary: DRAFT Creates a new event for a given eventable DRAFT
       tags:
         - Events
       consumes:
@@ -681,7 +681,7 @@
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/422"
     get:
-      summary: Returns a list of events
+      summary: DRAFT Returns a list of events DRAFT
       description: |
         Returns a list of events that by default are sorted by their client supplied timestamp.
 
