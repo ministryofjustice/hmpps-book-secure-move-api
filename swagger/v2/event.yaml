@@ -1,4 +1,4 @@
-Event:
+EventResponseBody:
   type: object
   required:
     - type
@@ -11,10 +11,10 @@ Event:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: moves
+      example: events
       enum:
-        - moves
-      description: The type of this object - always `moves`
+        - events
+      description: The type of this object - always `events`
     attributes:
       type: object
       required:
@@ -23,7 +23,6 @@ Event:
       properties:
         event_name:
           type: string
-          example: cancel_move
           description: |
             Events have many forms which determine their accepted payload shape and validations. The event_name indicates which form the payload, validations and any relevant event actions take.
 
@@ -32,7 +31,7 @@ Event:
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
-          readOnly: true
+          example: cancel_move
         timestamp:
           type: string
           description: |
@@ -47,9 +46,12 @@ Event:
         details:
           type: object
           description: |
-            A optional json object that is optional and usually different for each event. Custom event validations are run against the values in this object.
+            JSON object that is optional and usually different for each event. Custom event validations are run against the values in this object.
 
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+          example:
+            cancellation_reason: "made_in_error"
+            cancellation_reason_comment: "cancelled because the prisoner refused to move"
     relationships:
       type: object
       required:
@@ -68,3 +70,76 @@ Event:
             For example, we validate that the cancel_move event's eventable is a move object.
 
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+          example:
+            id: "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
+            type: "moves"
+EventRequestPostBody:
+  type: object
+  required:
+    - type
+    - attributes
+  properties:
+    type:
+      type: string
+      example: events
+      enum:
+        - events
+      description: The type of this object - always `events`
+    attributes:
+      type: object
+      required:
+        - event_name
+        - timestamp
+      properties:
+        event_name:
+          type: string
+          description: |
+            Events have many forms which determine their accepted payload shape and validations. The event_name indicates which form the payload, validations and any relevant event actions take.
+
+            An invalid (non-existing) event_name field triggers a validation error.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+
+            This is **mandatory** and specific to each event.
+          example: cancel_move
+        timestamp:
+          type: string
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
+
+            This is **mandatory**.
+          format: date-time
+        notes:
+          type: string
+          description: |
+            An arbitary, event-specific and optional field for any additional notes about an event that might be useful for other humans to be informed about.
+        details:
+          type: object
+          description: |
+            JSON object that is optional and usually different for each event. Custom event validations are run against the values in this object.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+          example:
+            cancellation_reason: "made_in_error"
+            cancellation_reason_comment: "cancelled because the prisoner refused to move"
+    relationships:
+      type: object
+      required:
+        - eventable
+      properties:
+        eventable:
+          oneOf:
+            - $ref: "../v1/person_reference.yaml#/PersonReference"
+            - $ref: "../v1/move_reference.yaml#/MoveReference"
+            - $ref: "../v1/journey_reference.yaml#/JourneyReference"
+          description: |
+            The subject that the event relates too.
+
+            We validate for each specific event that the eventable is one of the resource types we expect.
+
+            For example, we validate that the cancel_move event's eventable is a move object.
+
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+          example:
+            id: "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
+            type: "moves"

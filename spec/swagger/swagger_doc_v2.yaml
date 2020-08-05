@@ -648,7 +648,7 @@
           required: true
           description: The event object to be created
           schema:
-            "$ref": "../v2/event.yaml#/Event"
+            "$ref": "../v2/event.yaml#/EventRequestPostBody"
       responses:
         "201":
           description: created

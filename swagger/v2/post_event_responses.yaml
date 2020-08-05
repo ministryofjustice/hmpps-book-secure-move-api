@@ -4,15 +4,7 @@
     - data
   properties:
     data:
-      $ref: "../v2/event.yaml#/Event"
-    included:
-      description: If requested, the included eventable
-      type: array
-      items:
-        oneOf:
-          - $ref: "../v2/person.yaml#/Person"
-          - $ref: "../v2/move.yaml#/Move"
-          - $ref: "../v1/journey.yaml#/Journey"
+      $ref: "../v2/event.yaml#/EventResponseBody"
 "400":
   type: object
   required:
