@@ -35,10 +35,11 @@ EventResponseBody:
         timestamp:
           type: string
           description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
 
             This is **mandatory**.
           format: date-time
+          example: "2020-06-16T10:20:30+01:00"
         notes:
           type: string
           description: |
@@ -109,6 +110,7 @@ EventRequestPostBody:
 
             This is **mandatory**.
           format: date-time
+          example: "2020-06-16T10:20:30+01:00"
         notes:
           type: string
           description: |
