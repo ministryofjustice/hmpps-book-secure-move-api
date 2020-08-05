@@ -135,6 +135,14 @@ RSpec.describe Moves::Finder do
         end
       end
 
+      context 'with matching exact date' do
+        let(:filter_params) { { date_of_birth_from: date_of_birth.to_s, date_of_birth_to: date_of_birth.to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
       context 'with matching date of birth from only' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth - 1.day).to_s } }
 
@@ -161,6 +169,14 @@ RSpec.describe Moves::Finder do
 
       context 'with mis-matching date of birth range in future' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth + 2.days).to_s, date_of_birth_to: (date_of_birth + 5.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with nil values' do
+        let(:filter_params) { { date_of_birth_from: nil, date_of_birth_to: nil } }
 
         it 'returns empty results set' do
           expect(results).to be_empty
