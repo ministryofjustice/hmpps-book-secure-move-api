@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 class Profile < VersionedModel
+  self.ignored_columns = %w[
+    last_name
+    first_names
+    date_of_birth
+    aliases
+    gender_id
+    ethnicity_id
+    nationality_id
+    profile_identifiers
+    gender_additional_information
+    latest_nomis_booking_id
+  ]
+
   before_validation :set_assessment_answers
 
   belongs_to :person
