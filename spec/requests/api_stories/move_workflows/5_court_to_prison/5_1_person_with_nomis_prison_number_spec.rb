@@ -2,11 +2,11 @@
 
 require 'rack/test'
 
-# GIVEN a person with a prison number or police national computer number
-# WHEN the supplier wants to move the person from court to prison
-# THEN the supplier should call the api as outlined in the example below
+# 5.1 Court to Prison prison_remand move for a person with a PN identifier
+# https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-RSpec.describe 'court to prison move', type: :request, api_story: true do
+# rubocop:disable Rails/HttpPositionalArguments
+RSpec.describe 'court to prison move', type: :request do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'
@@ -15,7 +15,6 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
   let(:prison) { create(:location, :prison) }
   let(:court) { create(:location, :court) }
 
-  # rubocop:disable Rails/HttpPositionalArguments
   let(:get_people_by_prison_number) do
     get "/api/people?filter[prison_number]=#{prison_number}"
     validate_response(last_response, schema: 'get_people_responses.yaml', strict: false, version: 'v2', status: 200)
@@ -55,7 +54,6 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
     get "/api/moves/#{move_id}?include=profile"
     validate_response(last_response, schema: 'get_move_responses.yaml', strict: false, version: 'v2', status: 200)
   end
-  # rubocop:enable Rails/HttpPositionalArguments
 
   let(:person_id) do
     get_people_by_prison_number['data'].first['id']
@@ -169,7 +167,7 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
 
     # finally, retrieve the move and verify it is completed
     get_move.tap do |json|
-      # expect(json.dig('data', 'attributes', 'move_type')).to eql 'prison_remand' # currently borked
+      expect(json.dig('data', 'attributes', 'move_type')).to eql 'prison_remand'
       expect(json.dig('data', 'attributes', 'status')).to eql 'completed'
       expect(json.dig('data', 'attributes', 'date')).to eql '2020-07-06'
       expect(json.dig('data', 'relationships', 'profile', 'data', 'id')).to eql profile_id
@@ -179,3 +177,4 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
   end
   # rubocop:enable RSpec/MultipleExpectations
 end
+# rubocop:enable Rails/HttpPositionalArguments

@@ -27,6 +27,7 @@ RSpec.describe Api::MoveEventsController do
     end
 
     before do
+      allow(Allocations::RemoveFromNomis).to receive(:call)
       allow(Notifier).to receive(:prepare_notifications)
       post "/api/v1/moves/#{move_id}/cancel", params: cancel_params, headers: headers, as: :json
     end
@@ -44,6 +45,10 @@ RSpec.describe Api::MoveEventsController do
 
       it 'updates the move cancellation_reason_comment' do
         expect(move.reload.cancellation_reason_comment).to eql('no room on the bus')
+      end
+
+      it 'removes a prison transfer event from Nomis' do
+        expect(Allocations::RemoveFromNomis).to have_received(:call).with(move)
       end
 
       describe 'webhook and email notifications' do
