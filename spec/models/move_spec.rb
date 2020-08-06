@@ -229,11 +229,36 @@ RSpec.describe Move do
   end
 
   describe '#move_type' do
-    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: nil }
+    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: move_type, version: version }
 
     let(:from_location) { build :location, :police }
+    let(:move_type) { nil }
+    let(:version) { nil }
 
     before { move.valid? }
+
+    context 'when creating a v2 move' do
+      let(:version) { 2 }
+      let(:to_location) { nil }
+
+      context 'without specifying move_type' do
+        it 'does not set move_type' do
+          expect(move.move_type).to be_nil
+        end
+
+        it 'is not valid' do
+          expect(move).not_to be_valid
+        end
+      end
+
+      context 'when specifying move_type' do
+        let(:move_type) { 'prison_recall' }
+
+        it 'is valid' do
+          expect(move).to be_valid
+        end
+      end
+    end
 
     context 'when to_location is empty' do
       let(:to_location) { nil }
