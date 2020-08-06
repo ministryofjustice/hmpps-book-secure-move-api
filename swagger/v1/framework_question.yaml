@@ -38,6 +38,11 @@ FrameworkQuestion:
             - checkbox
           description: Indicates the type of question
           readOnly: true
+        section:
+          example: 'risk-information'
+          type: string
+          description: the key of the section the question belongs to
+          readOnly: true
         options:
           type: array
           example: ['Yes', 'No']

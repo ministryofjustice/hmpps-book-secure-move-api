@@ -1,9 +1,9 @@
-FrameworkResponse:
+PatchFrameworkResponse:
   type: object
   required:
-  - id
-  - type
-  - attributes
+    - id
+    - type
+    - attributes
   properties:
     id:
       type: string
@@ -22,8 +22,8 @@ FrameworkResponse:
       - value
       properties:
         value:
-          example: 'yes'
           description: the answer value to the person_escort_record question
+          example: 'Yes'
           oneOf:
           - type: string
             example: 'Yes'
@@ -52,32 +52,3 @@ FrameworkResponse:
                       details: Some details about Level 1
                     - option: Level 2
                       details: Some details about Level 2
-        value_type:
-          type: string
-          example: 'array'
-          enum:
-            - string
-            - array
-            - object
-            - collection
-          description: Indicates the type of value for the answer provided
-          readOnly: true
-        responded:
-          type: boolean
-          example: 'true'
-          description: Indicates if response has been answered
-          readOnly: true
-    relationships:
-      type: object
-      required:
-      - person_escort_record
-      properties:
-        person_escort_record:
-          $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
-          description: The person_escort_record the responses refer to
-        question:
-          $ref: framework_question_reference.yaml#/FrameworkQuestionReference
-          description: The question this response is for
-        flags:
-          $ref: framework_flag_reference.yaml#/FrameworkFlagReference
-          description: The framework flags associated with this framework_response
