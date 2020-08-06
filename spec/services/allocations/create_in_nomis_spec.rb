@@ -4,8 +4,8 @@ RSpec.describe Allocations::CreateInNomis do
   context 'when move is valid' do
     subject(:create_transfer_in_nomis) { described_class.call(move) }
 
-    let(:from_location) { create(:location, nomis_agency_id: from_nomis_agency_id) }
-    let(:to_location) { create(:location, nomis_agency_id: to_nomis_agency_id) }
+    let(:from_location) { create(:location, :police, nomis_agency_id: from_nomis_agency_id) }
+    let(:to_location) { create(:location, :prison, nomis_agency_id: to_nomis_agency_id) }
     let(:move) do
       create(
         :move,
