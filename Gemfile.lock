@@ -340,7 +340,7 @@ GEM
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
-    sentry-raven (2.11.0)
+    sentry-raven (2.13.0)
       faraday (>= 0.7.6, < 1.0)
     service_mock (0.9)
       childprocess (~> 0.5)
