@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_191640) do
+ActiveRecord::Schema.define(version: 2020_08_05_154106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -394,6 +394,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_191640) do
     t.datetime "last_synced_with_nomis"
     t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
+    t.index ["date_of_birth"], name: "index_people_on_date_of_birth"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
