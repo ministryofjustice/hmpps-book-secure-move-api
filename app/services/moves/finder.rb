@@ -46,6 +46,7 @@ module Moves
       scope = scope.accessible_by(ability)
       scope = scope.includes(MOVE_INCLUDES)
       scope = apply_date_range_filters(scope)
+      scope = apply_date_of_birth_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
@@ -69,9 +70,19 @@ module Moves
     def apply_date_range_filters(scope)
       scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
       scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
-      # created_at is a date/time, so inclusive filtering has to be subtlely different
+      # created_at is a date/time, so inclusive filtering has to be subtly different
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
+      scope
+    end
+
+    def apply_date_of_birth_filters(scope)
+      return scope unless filter_params.key?(:date_of_birth_from) || filter_params.key?(:date_of_birth_to)
+
+      # only join on person if necessary, otherwise moves without people are not included
+      scope = scope.joins(:person)
+      scope = scope.where('people.date_of_birth >= ?', filter_params[:date_of_birth_from]) if filter_params.key?(:date_of_birth_from)
+      scope = scope.where('people.date_of_birth <= ?', filter_params[:date_of_birth_to]) if filter_params.key?(:date_of_birth_to)
       scope
     end
 

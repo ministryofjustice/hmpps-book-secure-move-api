@@ -563,6 +563,24 @@
             type: string
             example: "2019-05-09"
           format: date
+        - name: filter[date_of_birth_from]
+          in: query
+          description:
+            Filters results to only include moves with people born on or after the
+            given date, e.g. `2009-05-02`
+          schema:
+            type: string
+            example: "2009-05-09"
+          format: date
+        - name: filter[date_of_birth_to]
+          in: query
+          description:
+            Filters results to only include moves with people born on or before
+            the given date, e.g. `2009-05-09`
+          schema:
+            type: string
+            example: "2009-05-09"
+          format: date
         - name: filter[status]
           in: query
           explode: false
