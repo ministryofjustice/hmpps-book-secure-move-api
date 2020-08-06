@@ -1,3 +1,5 @@
+require 'elastic-apm' if ENV['ELASTIC_APM_ENABLE']
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
