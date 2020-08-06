@@ -104,7 +104,7 @@ RSpec.describe Moves::Finder do
         end
       end
 
-      context 'with mis-matching mismatched date range in past' do
+      context 'with mis-matching date range in past' do
         let(:filter_params) { { date_from: (move.date - 5.days).to_s, date_to: (move.date - 2.days).to_s } }
 
         it 'returns empty results set' do
@@ -112,8 +112,71 @@ RSpec.describe Moves::Finder do
         end
       end
 
-      context 'with mis-matching mismatched date range in future' do
+      context 'with mis-matching date range in future' do
         let(:filter_params) { { date_from: (move.date + 2.days).to_s, date_to: (move.date + 5.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by date of birth' do
+      let(:date_of_birth) { 18.years.ago }
+      let!(:person) { create :person, date_of_birth: date_of_birth }
+      let!(:profile) { create :profile, person: person }
+      let!(:move) { create :move, profile: profile }
+
+      context 'with matching date range' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 2.days).to_s, date_of_birth_to: (date_of_birth + 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching exact date' do
+        let(:filter_params) { { date_of_birth_from: date_of_birth.to_s, date_of_birth_to: date_of_birth.to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching date of birth from only' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching date of birth to only' do
+        let(:filter_params) { { date_of_birth_to: (date_of_birth + 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with mis-matching date of birth range in past' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 5.days).to_s, date_of_birth_to: (date_of_birth - 3.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with mis-matching date of birth range in future' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth + 2.days).to_s, date_of_birth_to: (date_of_birth + 5.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with nil values' do
+        let(:filter_params) { { date_of_birth_from: nil, date_of_birth_to: nil } }
 
         it 'returns empty results set' do
           expect(results).to be_empty
