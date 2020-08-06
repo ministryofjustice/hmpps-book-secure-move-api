@@ -473,7 +473,7 @@
         required: true
         description: The framework_response object to be modified
         schema:
-          "$ref": "../v1/framework_response.yaml#/FrameworkResponse"
+          "$ref": "../v1/patch_framework_response.yaml#/PatchFrameworkResponse"
       responses:
         '200':
           description: success
