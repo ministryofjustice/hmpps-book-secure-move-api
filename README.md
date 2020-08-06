@@ -210,3 +210,13 @@ The docker-compose stack also exposes the Postgres port to the host, so you can 
 $ export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/hmpps-book-secure-move-api
 $ bundle exec rake reference_data:create_all
 ```
+
+### Evaluating performance of requests with elastic apm
+
+In development you can validate the performance characteristics of requests locally by:
+
+1. Spinning up a local ELK stack `docker-compose -f apm.yml up -d`
+2. Enabling apm in your .env file by updating `ELASTIC_APM_ENABLED=true`
+3. Start up the rails application
+4. Make some requests to the api
+5. Navigating to the local ELK stack http://localhost:5601
