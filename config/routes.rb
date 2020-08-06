@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   get '/health', to: 'status#health', format: :json
   get '/ping', to: 'status#ping', format: :json
 
+  # diagnostics should only be available on localhost, dev, staging and uat; not on pre-prod or production
+  if Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
+    get '/diagnostics/moves/:id', to: 'diagnostics#moves'
+  end
+
   namespace :api do
     filter :versioned_path
 
