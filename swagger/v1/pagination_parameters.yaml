@@ -11,9 +11,9 @@ PerPage:
   name: per_page
   in: query
   description: Number of records to return in a single response, defaults to 20, maximum
-    value is 100.
+    value is 2000.
   schema:
     type: integer
     default: 20
-    maximum: 100
+    maximum: 2000
   example: 20
