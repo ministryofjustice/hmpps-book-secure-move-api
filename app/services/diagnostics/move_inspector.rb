@@ -119,6 +119,7 @@ module Diagnostics
         @output << "last name:\t#{move.person.last_name}\n"
         @output << "gender:\t#{move.person.gender&.title}\n"
         @output << "ethnicity:\t#{move.person.ethnicity&.title}\n"
+        @output << "date of birth:\t#{move.person.date_of_birth}\n"
         @output << "PN number:\t#{move.person.prison_number}\n"
         @output << "PNC number:\t#{move.person.police_national_computer}\n"
         @output << "CRO number:\t#{move.person.criminal_records_office}\n"
