@@ -23,7 +23,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
 gem 'discard'
 gem 'doorkeeper'
-gem 'elastic-apm', require: false
+gem 'elastic-apm'
+gem 'tty-table'
 gem 'faraday'
 gem 'finite_machine'
 gem 'git', '~> 1.7'
