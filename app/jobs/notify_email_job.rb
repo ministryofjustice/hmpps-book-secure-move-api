@@ -18,15 +18,15 @@ class NotifyEmailJob < ApplicationJob
       raise('govuk_notify_response is missing') if response.govuk_notify_response.blank?
 
       notification.update(
-        delivered_at: DateTime.now,
+        delivered_at: Time.zone.now,
         response_id: response.govuk_notify_response.id,
         delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: DateTime.now,
+        delivery_attempted_at: Time.zone.now,
       )
     rescue StandardError => e
       notification.update(
         delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: DateTime.now,
+        delivery_attempted_at: Time.zone.now,
       )
       Raven.capture_exception(e)
       raise e # re-raise the error to force the notification to be retried by sidekiq later
