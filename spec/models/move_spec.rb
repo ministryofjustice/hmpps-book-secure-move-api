@@ -505,4 +505,19 @@ RSpec.describe Move do
       expect(move.versions.map(&:event)).to eq(%w[create])
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+
+      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      profile = create(:profile)
+
+      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+    end
+  end
 end

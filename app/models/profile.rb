@@ -16,7 +16,7 @@ class Profile < VersionedModel
 
   before_validation :set_assessment_answers
 
-  belongs_to :person
+  belongs_to :person, touch: true
 
   has_many :moves, dependent: :nullify
   has_one :person_escort_record
