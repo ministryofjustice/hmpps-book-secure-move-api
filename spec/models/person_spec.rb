@@ -11,7 +11,7 @@ RSpec.describe Person do
   it { is_expected.to validate_presence_of(:first_names) }
 
   it 'has an audit' do
-    expect(person.versions.map(&:event)).to eq(%w[create])
+    expect(person.versions.map(&:event)).to eq(%w[create update])
   end
 
   it 'gets an image attached' do
