@@ -1,6 +1,29 @@
 # frozen_string_literal: true
 
 class Move < VersionedModel
+  FEED_ATTRIBUTES = %w[
+    id
+    date
+    status
+    created_at
+    updated_at
+    reference
+    move_type
+    additional_information
+    time_due
+    cancellation_reason
+    cancellation_reason_comment
+    profile_id
+    prison_transfer_reason
+    reason_comment
+    move_agreed
+    move_agreed_by
+    date_from
+    date_to
+    allocation_id
+    rejection_reason
+  ].freeze
+
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
@@ -136,6 +159,23 @@ class Move < VersionedModel
     (date.present? && date >= Time.zone.today) ||
       (date.nil? && date_to.present? && date_to >= Time.zone.today) ||
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
+  end
+
+  # rake feed:moves
+  # rake feed:journeys
+  # rake feed:all
+  GenericFeedGenerator.new.call
+
+  S3Writer.new.call('moves.json', report)
+
+  def for_feed(feed_attributes)
+    feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
+
+    feed_attributes.merge!(from_location.for_feed(prefix: :from)) if from_location
+    feed_attributes.merge!(to_location.for_feed(prefix: :to)) if to_location
+    feed_attributes.merge!(supplier.for_feed) if supplier
+
+    feed_attributes
   end
 
 private

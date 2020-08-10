@@ -70,4 +70,14 @@ class Location < ApplicationRecord
   def not_detained?
     !detained?
   end
+
+  def for_feed(prefix: nil)
+    prefix = "#{prefix}_" if prefix
+
+    {
+      "#{prefix}location_key" => key,
+      "#{prefix}location_type" => location_type,
+      "#{prefix}location_nomis_agency_id" => nomis_agency_id,
+    }
+  end
 end
