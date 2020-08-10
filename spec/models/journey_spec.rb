@@ -95,4 +95,19 @@ RSpec.describe Journey, type: :model do
       it_behaves_like 'model is synchronised with state_machine for events and initialization'
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      move = create(:move)
+      journey = create(:journey, move: move)
+
+      expect { journey.update(billable: !journey.billable) }.to change { move.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      move = create(:move)
+
+      expect { create(:journey, move: move) }.to change { move.reload.updated_at }
+    end
+  end
 end
