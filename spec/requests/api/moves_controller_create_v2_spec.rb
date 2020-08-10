@@ -190,11 +190,12 @@ RSpec.describe Api::MovesController do
     end
 
     context 'without a `to_location`' do
+      let(:from_location) { create :location, :police, suppliers: [another_supplier] }
       let(:to_location) { nil }
       let(:data) do
         {
           type: 'moves',
-          attributes: move_attributes.merge(move_type: nil),
+          attributes: move_attributes.merge(move_type: 'prison_recall'),
           relationships: {
             profile: { data: { type: 'profiles', id: profile.id } },
             from_location: { data: { type: 'locations', id: from_location.id } },
@@ -218,7 +219,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'with a proposed move' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'proposed') }
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'proposed') }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -236,7 +237,7 @@ RSpec.describe Api::MovesController do
             time_due: Time.now,
             status: 'requested',
             additional_information: 'some more info',
-            move_type: nil,
+            move_type: 'court_appearance',
           },
           relationships: {
             profile: { data: { type: 'profiles', id: profile.id } },
@@ -266,6 +267,7 @@ RSpec.describe Api::MovesController do
           move_agreed_by: 'John Doe',
           date_from: date_from,
           date_to: date_to,
+          move_type: 'court_appearance',
         }
       end
 
@@ -417,15 +419,29 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      let(:detail_404) {  "Couldn't find Location with 'id'=foo" }
+      let(:detail_404) { "Couldn't find Location with 'id'=foo" }
 
       it_behaves_like 'an endpoint that responds with error 404' do
         before { do_post }
       end
     end
 
+    context 'when omitting move_type attribute' do
+      let(:move_attributes) { attributes_for(:move).except(:move_type) }
+
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
     context 'when specifying invalid attributes' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'invalid') }
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'invalid') }
 
       let(:errors_422) do
         [
@@ -440,10 +456,10 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when a move is a duplicate' do
-      let(:move_attributes) { attributes_for(:move).merge(date: move.date) }
+      let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
       context 'when there are cancelled duplicates' do
-        let!(:move) { create(:move, :cancelled, profile: profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, :cancelled, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { do_post }
@@ -451,7 +467,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'when the Move has been already created' do
-        let!(:move) { create(:move, profile: profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
         let(:errors_422) do
           [
             {

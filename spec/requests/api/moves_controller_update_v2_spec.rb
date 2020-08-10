@@ -24,9 +24,9 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
 
-    let(:from_location) { create :location, suppliers: [supplier] }
+    let(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:move_id) { move.id }
     let(:profile) { create(:profile) }
     let(:date_from) { Date.yesterday }
@@ -40,7 +40,6 @@ RSpec.describe Api::MovesController do
           additional_information: 'some more info',
           cancellation_reason: nil,
           cancellation_reason_comment: nil,
-          move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
           date_from: date_from,
@@ -59,7 +58,6 @@ RSpec.describe Api::MovesController do
         'date_to' => date_to,
         'move_agreed' => true,
         'move_agreed_by' => 'Fred Bloggs',
-        'move_type' => 'court_appearance',
         'status' => 'requested',
       }
     end

@@ -17,9 +17,9 @@ RSpec.describe Api::MovesController do
   describe 'PATCH /moves' do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
-    let!(:from_location) { create :location, suppliers: [supplier] }
+    let!(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:profile) { create(:profile, documents: before_documents) }
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }

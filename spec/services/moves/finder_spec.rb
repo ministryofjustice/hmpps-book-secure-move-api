@@ -37,7 +37,7 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with two location filters' do
-        let!(:second_move) { create :from_court_to_prison }
+        let!(:second_move) { create :from_prison_to_court }
         let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
 
         it 'returns moves matching multiple locations' do
@@ -221,7 +221,7 @@ RSpec.describe Moves::Finder do
       let!(:court_appearance_move) { create :move, :court_appearance }
       let!(:prison_recall_move) { create :move, :prison_recall }
       let!(:prison_transfer_move) { create :move, :prison_transfer }
-      let!(:police_transfer_move) { create :move, move_type: :police_transfer }
+      let!(:police_transfer_move) { create :move, :police_transfer }
 
       context 'with matching move_type' do
         let(:filter_params) { { move_type: 'court_appearance' } }

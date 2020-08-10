@@ -24,6 +24,26 @@ RSpec.describe Moves::MoveTypeValidator do
     it { is_expected.to be_valid }
   end
 
+  context 'with court_appearance `move_type`' do
+    let(:move_type) { 'court_appearance' }
+
+    it 'validates `to_location` is a court' do
+      target.to_location = build(:location, :court)
+      expect(target).to be_valid
+    end
+
+    it 'validates `to_location` is not nil' do
+      target.to_location = nil
+      expect(target).not_to be_valid
+    end
+
+    it 'has an error if `to_location` is not a court' do
+      target.to_location = build(:location, :prison)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:to_location]).to match_array('must be a court location for court appearance move')
+    end
+  end
+
   context 'with court_other `move_type`' do
     let(:move_type) { 'court_other' }
 
@@ -38,7 +58,7 @@ RSpec.describe Moves::MoveTypeValidator do
     end
 
     it 'has an error if `to_location` is not a prison, sch or stc' do
-      %i[prison stc stc].each do |location_type|
+      %i[prison sch stc].each do |location_type|
         target.to_location = build(:location, location_type)
         expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
         expect(target.errors[:to_location]).to match_array('must not be a prison, secure training centre or secure childrens hospital for court other move')
@@ -66,11 +86,67 @@ RSpec.describe Moves::MoveTypeValidator do
     end
   end
 
+  context 'with police_transfer `move_type`' do
+    let(:move_type) { 'police_transfer' }
+
+    it 'validates `from_location` and `to_location` is a police location' do
+      target.from_location = build(:location, :police)
+      target.to_location = build(:location, :police)
+      expect(target).to be_valid
+    end
+
+    it 'validates `from_location` is not nil' do
+      target.from_location = nil
+      target.to_location = build(:location, :police)
+      expect(target).not_to be_valid
+    end
+
+    it 'validates `to_location` is not nil' do
+      target.from_location = build(:location, :police)
+      target.to_location = nil
+      expect(target).not_to be_valid
+    end
+
+    it 'has an error if `from_location` is not a police location' do
+      target.from_location = build(:location, :court)
+      target.to_location = build(:location, :police)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:from_location]).to match_array('must be a police location for police transfer move')
+    end
+
+    it 'has an error if `to_location` is not a police location' do
+      target.from_location = build(:location, :police)
+      target.to_location = build(:location, :court)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:to_location]).to match_array('must be a police location for police transfer move')
+    end
+  end
+
+  context 'with prison_recall `move_type`' do
+    let(:move_type) { 'prison_recall' }
+
+    it 'validates `from_location` is a police location' do
+      target.from_location = build(:location, :police)
+      expect(target).to be_valid
+    end
+
+    it 'validates `from_location` is not nil' do
+      target.from_location = nil
+      expect(target).not_to be_valid
+    end
+
+    it 'has an error if `from_location` is not a police location' do
+      target.from_location = build(:location, :court)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:from_location]).to match_array('must be a police location for prison recall move')
+    end
+  end
+
   context 'with prison_remand `move_type`' do
     let(:move_type) { 'prison_remand' }
 
     it 'validates `to_location` is a prison, sch or stc' do
-      %i[prison stc stc].each do |location_type|
+      %i[prison sch stc].each do |location_type|
         target.to_location = build(:location, location_type)
         expect(target).to be_valid
       end
@@ -85,6 +161,26 @@ RSpec.describe Moves::MoveTypeValidator do
       target.from_location = build(:location, :court)
       expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
       expect(target.errors[:to_location]).to match_array('must be a prison, secure training centre or secure childrens hospital for prison remand move')
+    end
+  end
+
+  context 'with prison_transfer `move_type`' do
+    let(:move_type) { 'prison_transfer' }
+
+    it 'validates `from_location` is a prison location' do
+      target.from_location = build(:location, :prison)
+      expect(target).to be_valid
+    end
+
+    it 'validates `from_location` is not nil' do
+      target.from_location = nil
+      expect(target).not_to be_valid
+    end
+
+    it 'has an error if `from_location` is not a prison location' do
+      target.from_location = build(:location, :court)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:from_location]).to match_array('must be a prison location for prison transfer move')
     end
   end
 
