@@ -219,4 +219,4 @@ In development you can validate the performance characteristics of requests loca
 2. Enabling apm in your .env file by updating `ELASTIC_APM_ENABLED=true`
 3. Start up the rails application
 4. Make some requests to the api
-5. Navigating to the local ELK stack http://localhost:5601
+5. Navigate to the local ELK stack http://localhost:5601
