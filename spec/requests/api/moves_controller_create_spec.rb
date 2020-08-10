@@ -178,6 +178,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'without a `to_location`' do
+        let(:from_location) { create :location, :police, suppliers: [supplier] }
         let(:to_location) { nil }
         let(:data) do
           {

@@ -69,6 +69,7 @@ module Api::V2
         attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
+        attributes[:version] = 2
       end
     end
 

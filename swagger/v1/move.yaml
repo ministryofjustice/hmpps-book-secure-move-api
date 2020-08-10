@@ -19,7 +19,6 @@ Move:
       type: object
       required:
       - status
-      - move_type
       properties:
         reference:
           type: string
