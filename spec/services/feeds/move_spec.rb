@@ -9,7 +9,7 @@ RSpec.describe Feeds::Move do
     let!(:on_end_move) { create(:move, updated_at: updated_at_to) }
 
     let(:expected_jsonl) do
-      on_end_move.for_feed.to_json + "\n" + on_start_move.for_feed.to_json
+      on_start_move.for_feed.to_json + "\n" + on_end_move.for_feed.to_json
     end
 
     it 'returns correctly formatted feed' do
