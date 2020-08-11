@@ -568,7 +568,7 @@ RSpec.describe Move do
     let!(:after_end_move) { create(:move, updated_at: updated_at_to + 1.second) }
 
     it 'returns the expected moves' do
-      actual_moves = Move.updated_at_from_and_to(
+      actual_moves = described_class.updated_at_from_and_to(
         updated_at_from,
         updated_at_to,
       )
