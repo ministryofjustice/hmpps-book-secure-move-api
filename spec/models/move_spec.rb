@@ -543,6 +543,21 @@ RSpec.describe Move do
     end
   end
 
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+
+      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      profile = create(:profile)
+
+      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+    end
+  end
+
   describe '.updated_at_from_and_to' do
     let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
     let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }

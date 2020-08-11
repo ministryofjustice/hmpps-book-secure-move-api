@@ -45,4 +45,19 @@ RSpec.describe Event, type: :model do
       it { expect(event.to_location).to be_a Location }
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      eventable = create(:move)
+      event = create(:event, eventable: eventable)
+
+      expect { event.update(client_timestamp: event.client_timestamp + 1.day) }.to change { eventable.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      eventable = create(:move)
+
+      expect { create(:event, eventable: eventable) }.to change { eventable.reload.updated_at }
+    end
+  end
 end
