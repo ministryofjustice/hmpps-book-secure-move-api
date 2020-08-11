@@ -520,8 +520,7 @@ RSpec.describe Move do
         'date' => be_a(Date),
         'date_from' => be_a(Date),
         'date_to' => nil,
-        'from_location_key' => move.from_location.key,
-        'from_location_nomis_agency_id' => 'PEI',
+        'from_location' => 'PEI',
         'from_location_type' => 'prison',
         'move_agreed' => nil,
         'move_agreed_by' => nil,
@@ -532,8 +531,7 @@ RSpec.describe Move do
         'rejection_reason' => nil,
         'status' => 'requested',
         'time_due' => be_a(Time),
-        'to_location_key' => move.to_location.key,
-        'to_location_nomis_agency_id' => 'GUICCT',
+        'to_location' => 'GUICCT',
         'to_location_type' => 'court',
         'updated_at' => be_a(Time),
         'supplier' => move.supplier.key,
@@ -542,6 +540,24 @@ RSpec.describe Move do
 
     it 'generates a feed document' do
       expect(move.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe '.updated_at_from_and_to' do
+    let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
+    let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
+
+    let!(:before_start_move) { create(:move, updated_at: updated_at_from - 1.second) }
+    let!(:on_start_move) { create(:move, updated_at: updated_at_from) }
+    let!(:on_end_move) {  create(:move, updated_at: updated_at_to) }
+    let!(:after_end_move) { create(:move, updated_at: updated_at_to + 1.second) }
+
+    it 'returns the expected moves' do
+      actual_moves = Move.updated_at_from_and_to(
+        updated_at_from,
+        updated_at_to,
+      )
+      expect(actual_moves).to eq([on_start_move, on_end_move])
     end
   end
 end

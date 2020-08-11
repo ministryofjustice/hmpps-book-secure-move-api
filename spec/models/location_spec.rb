@@ -80,9 +80,8 @@ RSpec.describe Location do
       let(:prefix) { 'from' }
       let(:expected_json) do
         {
-          'from_location_key' => location.key,
           'from_location_type' => location.location_type,
-          'from_location_nomis_agency_id' => location.nomis_agency_id,
+          'from_location' => location.nomis_agency_id,
         }
       end
 
@@ -94,9 +93,8 @@ RSpec.describe Location do
     context 'when a prefix is not supplied' do
       let(:expected_json) do
         {
-          'location_key' => location.key,
           'location_type' => location.location_type,
-          'location_nomis_agency_id' => location.nomis_agency_id,
+          'location' => location.nomis_agency_id,
         }
       end
 

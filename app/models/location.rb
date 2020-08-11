@@ -75,9 +75,8 @@ class Location < ApplicationRecord
     prefix = "#{prefix}_" if prefix
 
     {
-      "#{prefix}location_key" => key,
       "#{prefix}location_type" => location_type,
-      "#{prefix}location_nomis_agency_id" => nomis_agency_id,
+      "#{prefix}location" => nomis_agency_id,
     }
   end
 end
