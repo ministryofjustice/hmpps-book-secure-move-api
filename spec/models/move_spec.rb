@@ -505,4 +505,43 @@ RSpec.describe Move do
       expect(move.versions.map(&:event)).to eq(%w[create])
     end
   end
+
+  describe '#for_feed' do
+    subject(:move) { create(:move, :with_supplier) }
+
+    let(:expected_json) do
+      {
+        'id' => move.id,
+        'additional_information' => 'some more info about the move that the supplier might need to know',
+        'allocation_id' => nil,
+        'cancellation_reason' => nil,
+        'cancellation_reason_comment' => nil,
+        'created_at' => be_a(Time),
+        'date' => be_a(Date),
+        'date_from' => be_a(Date),
+        'date_to' => nil,
+        'from_location_key' => move.from_location.key,
+        'from_location_nomis_agency_id' => 'PEI',
+        'from_location_type' => 'prison',
+        'move_agreed' => nil,
+        'move_agreed_by' => nil,
+        'move_type' => 'court_appearance',
+        'profile_id' => move.profile_id,
+        'reason_comment' => nil,
+        'reference' => move.reference,
+        'rejection_reason' => nil,
+        'status' => 'requested',
+        'time_due' => be_a(Time),
+        'to_location_key' => move.to_location.key,
+        'to_location_nomis_agency_id' => 'GUICCT',
+        'to_location_type' => 'court',
+        'updated_at' => be_a(Time),
+        'supplier' => move.supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(move.for_feed).to include_json(expected_json)
+    end
+  end
 end

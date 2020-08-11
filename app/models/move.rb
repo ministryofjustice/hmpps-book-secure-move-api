@@ -161,17 +161,10 @@ class Move < VersionedModel
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
   end
 
-  # rake feed:moves
-  # rake feed:journeys
-  # rake feed:all
-  GenericFeedGenerator.new.call
-
-  S3Writer.new.call('moves.json', report)
-
-  def for_feed(feed_attributes)
+  def for_feed
     feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
 
-    feed_attributes.merge!(from_location.for_feed(prefix: :from)) if from_location
+    feed_attributes.merge!(from_location.for_feed(prefix: :from))
     feed_attributes.merge!(to_location.for_feed(prefix: :to)) if to_location
     feed_attributes.merge!(supplier.for_feed) if supplier
 

@@ -17,7 +17,7 @@ class Supplier < ApplicationRecord
 
   def for_feed
     {
-      supplier: key,
+      'supplier' => key,
     }
   end
 

@@ -72,4 +72,37 @@ RSpec.describe Location do
       end
     end
   end
+
+  describe '#for_feed' do
+    subject(:location) { create(:location) }
+
+    context 'when a prefix is supplied' do
+      let(:prefix) { 'from' }
+      let(:expected_json) do
+        {
+          'from_location_key' => location.key,
+          'from_location_type' => location.location_type,
+          'from_location_nomis_agency_id' => location.nomis_agency_id,
+        }
+      end
+
+      it 'generates a feed document' do
+        expect(location.for_feed(prefix: prefix)).to include_json(expected_json)
+      end
+    end
+
+    context 'when a prefix is not supplied' do
+      let(:expected_json) do
+        {
+          'location_key' => location.key,
+          'location_type' => location.location_type,
+          'location_nomis_agency_id' => location.nomis_agency_id,
+        }
+      end
+
+      it 'generates a feed document' do
+        expect(location.for_feed).to include_json(expected_json)
+      end
+    end
+  end
 end
