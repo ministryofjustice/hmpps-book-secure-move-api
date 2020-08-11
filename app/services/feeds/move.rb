@@ -1,23 +1,18 @@
 module Feeds
-  class MoveReportGenerator
-    def initialize(start_time: nil, end_time:)
-      @start_time = start_time || Time.zone.now.beginning_of_day - 1.day
-      @end_time = end_time || Time.zone.now.end_of_day - 1.day
-      @inclusive_range = @start_time..@end_time
+  class Move
+    def initialize(updated_at_from = nil, updated_at_to = nil)
+      @updated_at_from = updated_at_from || Time.zone.now.beginning_of_day - 1.day
+      @updated_at_to = updated_at_to || Time.zone.now.end_of_day - 1.day
+
+      @feed = []
     end
 
     def call
-      moves.find_each(&:for_feed)
-    end
+      ::Move.updated_at_from_and_to(@updated_at_from, @updated_at_to).find_each do |move|
+        @feed << move.for_feed.to_json
+      end
 
-  private
-
-    def moves
-      Move.where(updated_at: @inclusive_range).includes(
-        :suppliers,
-        :from_location,
-        :to_location,
-      )
+      @feed.join("\n")
     end
   end
 end
