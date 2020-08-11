@@ -8,12 +8,18 @@ RSpec.describe Feeds::Move do
     let!(:on_start_move) { create(:move, updated_at: updated_at_from) }
     let!(:on_end_move) { create(:move, updated_at: updated_at_to) }
 
-    let(:expected_jsonl) do
-      on_start_move.for_feed.to_json + "\n" + on_end_move.for_feed.to_json
+    let(:expected_json) do
+      [on_start_move, on_end_move].sort_by(&:id).map { |move| JSON.parse(move.for_feed.to_json) }
     end
 
     it 'returns correctly formatted feed' do
-      expect(feed.call).to eq(expected_jsonl)
+      result = feed.call
+      result = result.split("\n")
+      result = result.map do |move|
+        JSON.parse(move)
+      end
+
+      expect(result).to include_json(expected_json)
     end
   end
 end

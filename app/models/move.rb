@@ -115,7 +115,7 @@ class Move < VersionedModel
 
   scope :updated_at_from_and_to, lambda { |from, to|
     includes(:supplier, :from_location, :to_location)
-      .where(updated_at: from..to).order(updated_at: :asc)
+      .where(updated_at: from..to)
   }
 
   attr_accessor :version
