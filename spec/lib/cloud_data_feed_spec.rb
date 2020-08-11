@@ -1,9 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe CloudDataFeed do
-  subject(:cloud_data_feed) { described_class.new }
+  before do
+    Aws.config.update(stub_responses: true)
+    Timecop.freeze(Time.local(2020, 1, 30))
+  end
 
-  xit 'write a file on S3' do
-    # WIP ...
+  after do
+    Timecop.return
+  end
+
+  it 'writes a file on S3 and return the full_name' do
+    full_name = described_class.new('bucket_name')
+                               .write('some content', 'report.json')
+
+    expect(full_name).to eq('2020/01/30/report.json')
   end
 end
