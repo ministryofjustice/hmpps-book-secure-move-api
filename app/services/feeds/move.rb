@@ -8,7 +8,7 @@ module Feeds
     end
 
     def call
-      ::Move.updated_at_from_and_to(@updated_at_from, @updated_at_to).find_each do |move|
+      ::Move.updated_at_range(@updated_at_from, @updated_at_to).find_each do |move|
         @feed << move.for_feed.to_json
       end
 

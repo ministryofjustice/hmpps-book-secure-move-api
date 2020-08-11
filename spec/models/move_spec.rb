@@ -558,7 +558,7 @@ RSpec.describe Move do
     end
   end
 
-  describe '.updated_at_from_and_to' do
+  describe '.updated_at_range' do
     let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
     let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
 
@@ -568,7 +568,7 @@ RSpec.describe Move do
     let!(:after_end_move) { create(:move, updated_at: updated_at_to + 1.second) }
 
     it 'returns the expected moves' do
-      actual_moves = described_class.updated_at_from_and_to(
+      actual_moves = described_class.updated_at_range(
         updated_at_from,
         updated_at_to,
       )

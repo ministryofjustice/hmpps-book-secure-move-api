@@ -113,7 +113,7 @@ class Move < VersionedModel
 
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
-  scope :updated_at_from_and_to, lambda { |from, to|
+  scope :updated_at_range, lambda { |from, to|
     includes(:supplier, :from_location, :to_location)
       .where(updated_at: from..to)
   }
