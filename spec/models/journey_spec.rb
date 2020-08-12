@@ -133,8 +133,6 @@ RSpec.describe Journey, type: :model do
     end
 
     it 'generates a feed document' do
-      journey
-      # binding.pry
       expect(journey.for_feed).to include_json(expected_json)
     end
   end
