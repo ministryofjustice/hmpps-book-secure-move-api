@@ -4,6 +4,7 @@ namespace :feeds do
     feeds = %w[
       move
       profile
+      person
     ]
 
     feeds.each do |feed_name|
