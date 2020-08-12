@@ -15,7 +15,7 @@ class Event < ApplicationRecord
     REJECT = 'reject'.freeze,
   ].freeze
 
-  belongs_to :eventable, polymorphic: true
+  belongs_to :eventable, polymorphic: true, touch: true
 
   validates :eventable, presence: true
   validates :event_name, presence: true, inclusion: { in: EVENT_NAMES }

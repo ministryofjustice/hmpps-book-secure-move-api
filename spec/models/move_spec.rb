@@ -505,4 +505,74 @@ RSpec.describe Move do
       expect(move.versions.map(&:event)).to eq(%w[create])
     end
   end
+
+  describe '#for_feed' do
+    subject(:move) { create(:move, :with_supplier) }
+
+    let(:expected_json) do
+      {
+        'id' => move.id,
+        'additional_information' => 'some more info about the move that the supplier might need to know',
+        'allocation_id' => nil,
+        'cancellation_reason' => nil,
+        'cancellation_reason_comment' => nil,
+        'created_at' => be_a(Time),
+        'date' => be_a(Date),
+        'date_from' => be_a(Date),
+        'date_to' => nil,
+        'from_location' => 'PEI',
+        'from_location_type' => 'prison',
+        'move_agreed' => nil,
+        'move_agreed_by' => nil,
+        'move_type' => 'court_appearance',
+        'profile_id' => move.profile_id,
+        'reason_comment' => nil,
+        'reference' => move.reference,
+        'rejection_reason' => nil,
+        'status' => 'requested',
+        'time_due' => be_a(Time),
+        'to_location' => 'GUICCT',
+        'to_location_type' => 'court',
+        'updated_at' => be_a(Time),
+        'supplier' => move.supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(move.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+
+      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      profile = create(:profile)
+
+      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+    end
+  end
+
+  describe '.updated_at_range' do
+    let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
+    let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
+
+    let!(:before_start_move) { create(:move, updated_at: updated_at_from - 1.second) }
+    let!(:on_start_move) { create(:move, updated_at: updated_at_from) }
+    let!(:on_end_move) {  create(:move, updated_at: updated_at_to) }
+    let!(:after_end_move) { create(:move, updated_at: updated_at_to + 1.second) }
+
+    it 'returns the expected moves' do
+      actual_moves = described_class.updated_at_range(
+        updated_at_from,
+        updated_at_to,
+      )
+      expect(actual_moves).to eq([on_start_move, on_end_move])
+    end
+  end
 end
