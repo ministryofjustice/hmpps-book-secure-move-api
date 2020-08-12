@@ -6,9 +6,7 @@ class Ethnicity < ApplicationRecord
 
   def for_feed
     {
-        "ethnicity" => key,
+      'ethnicity' => key,
     }
   end
-
-
 end

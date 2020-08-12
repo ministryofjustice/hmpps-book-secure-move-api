@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Person < VersionedModel
   FEED_ATTRIBUTES = %w[
     id
@@ -59,5 +60,4 @@ class Person < VersionedModel
 
     feed_attributes
   end
-
 end

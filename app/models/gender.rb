@@ -4,11 +4,9 @@ class Gender < ApplicationRecord
   validates :title, presence: true
   validates :key, presence: true
 
-
   def for_feed
     {
-        "gender" => key,
+      'gender' => key,
     }
   end
-
 end
