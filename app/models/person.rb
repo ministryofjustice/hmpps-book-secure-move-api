@@ -5,15 +5,10 @@ class Person < VersionedModel
     id
     created_at
     updated_at
-    first_names
-    last_name
-    date_of_birth
-    gender_additional_information
     criminal_records_office
     nomis_prison_number
     police_national_computer
     prison_number
-    last_synced_with_nomis
     latest_nomis_booking_id
   ].freeze
 
@@ -37,6 +32,11 @@ class Person < VersionedModel
   validates :last_name, presence: true
   validates :first_names, presence: true
 
+  def age
+    # See: https://medium.com/@craigsheen/calculating-age-in-rails-9bb661f11303
+    @age ||= ((Time.zone.now - date_of_birth.to_time) / 1.year.seconds).floor if date_of_birth.present?
+  end
+
   def latest_profile
     profiles.order(:updated_at).last
   end
@@ -56,7 +56,7 @@ class Person < VersionedModel
     feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
 
     feed_attributes.merge!(gender.for_feed) if gender
-    feed_attributes.merge!(ethnicity.for_feed) if ethnicity
+    feed_attributes.merge!('age' => age) if age
 
     feed_attributes
   end
