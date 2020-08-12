@@ -6,6 +6,7 @@ class FrameworkQuestion < VersionedModel
     checkbox: 'checkbox',
     text: 'text',
     textarea: 'textarea',
+    add_multiple_items: 'add_multiple_items',
   }
 
   validates :key, presence: true

@@ -127,5 +127,41 @@ RSpec.describe Frameworks::Question do
         question_value: 'Yes',
       )
     end
+
+    context 'when question type is add_multiple_items' do
+      it 'sets a question as required if required validation available' do
+        filepath = Rails.root.join(fixture_path, 'property-bags.yml')
+        question = FrameworkQuestion.new(section: 'property-information', key: 'property-bags')
+        described_class.new(filepath: filepath, questions: { 'property-bags' => question }).call
+
+        expect(question.required).to eq(true)
+      end
+
+      it 'does not set dependent questions values' do
+        filepath = Rails.root.join(fixture_path, 'property-bags.yml')
+        question = FrameworkQuestion.new(section: 'property-information', key: 'property-bags')
+        dependent_question = FrameworkQuestion.new(section: 'property-information', key: 'property-bag-type')
+        questions = {
+          'property-bags' => question,
+          'property-bag-type' => dependent_question,
+        }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(dependent_question.dependent_value).to be_nil
+      end
+
+      it 'sets dependent questions parents' do
+        filepath = Rails.root.join(fixture_path, 'property-bags.yml')
+        question = FrameworkQuestion.new(section: 'property-information', key: 'property-bags')
+        dependent_question = FrameworkQuestion.new(section: 'property-information', key: 'property-bag-type')
+        questions = {
+          'property-bags' => question,
+          'property-bag-type' => dependent_question,
+        }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(dependent_question.parent).to eq(question)
+      end
+    end
   end
 end

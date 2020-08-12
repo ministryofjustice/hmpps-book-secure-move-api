@@ -6,7 +6,7 @@ RSpec.describe FrameworkQuestion do
   it { is_expected.to validate_presence_of(:key) }
   it { is_expected.to validate_presence_of(:section) }
   it { is_expected.to validate_presence_of(:question_type) }
-  it { is_expected.to validate_inclusion_of(:question_type).in_array(%w[radio checkbox text textarea]) }
+  it { is_expected.to validate_inclusion_of(:question_type).in_array(%w[radio checkbox text textarea add_multiple_items]) }
 
   it { is_expected.to belong_to(:framework) }
   it { is_expected.to belong_to(:parent).optional }
