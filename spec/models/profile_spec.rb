@@ -190,4 +190,22 @@ RSpec.describe Profile, type: :model do
       expect(profile.for_feed).to include_json(expected_json)
     end
   end
+
+  describe '.updated_at_range' do
+    let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
+    let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
+
+    let!(:before_start_profile) { create(:profile, updated_at: updated_at_from - 1.second) }
+    let!(:on_start_profile) { create(:profile, updated_at: updated_at_from) }
+    let!(:on_end_profile) {  create(:profile, updated_at: updated_at_to) }
+    let!(:after_end_profile) { create(:profile, updated_at: updated_at_to + 1.second) }
+
+    it 'returns the expected profiles' do
+      actual_profiles = described_class.updated_at_range(
+        updated_at_from,
+        updated_at_to,
+      )
+      expect(actual_profiles).to eq([on_start_profile, on_end_profile])
+    end
+  end
 end
