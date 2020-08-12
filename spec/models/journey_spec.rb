@@ -110,4 +110,32 @@ RSpec.describe Journey, type: :model do
       expect { create(:journey, move: move) }.to change { move.reload.updated_at }
     end
   end
+
+  describe '#for_feed' do
+    let(:journey) { create(:journey) }
+
+    let(:expected_json) do
+      {
+        'id': journey.id,
+        'move_id': journey.move.id,
+        'supplier': 'test_supplier_1',
+        'from_location': 'PEI',
+        'from_location_type': 'prison',
+        'to_location': 'GUICCT',
+        'to_location_type': 'court',
+        'billable': false,
+        'state': 'proposed',
+        'vehicle_registration': 'AB12 CDE',
+        'client_timestamp': be_a(Time),
+        'created_at': be_a(Time),
+        'updated_at': be_a(Time),
+      }
+    end
+
+    it 'generates a feed document' do
+      journey
+      # binding.pry
+      expect(journey.for_feed).to include_json(expected_json)
+    end
+  end
 end
