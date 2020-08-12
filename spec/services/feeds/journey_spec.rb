@@ -11,10 +11,10 @@ RSpec.describe Feeds::Journey do
     end
 
     let(:expected_json) do
-      journey_1 = JSON.parse(Journey.first.for_feed.to_json)
-      journey_2 = JSON.parse(Journey.second.for_feed.to_json)
+      journey1 = JSON.parse(Journey.first.for_feed.to_json)
+      journey2 = JSON.parse(Journey.second.for_feed.to_json)
 
-      [journey_1, journey_2]
+      [journey1, journey2]
     end
 
     it 'returns correctly formatted feed' do

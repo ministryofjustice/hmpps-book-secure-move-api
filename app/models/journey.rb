@@ -49,7 +49,6 @@ class Journey < ApplicationRecord
     includes(:supplier, :from_location, :to_location).where(updated_at: from..to)
   }
 
-
   has_state_machine JourneyStateMachine
 
   delegate :start,
