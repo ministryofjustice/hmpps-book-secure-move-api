@@ -43,4 +43,19 @@ RSpec.describe Notification, type: :model do
       end
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      topic = create(:move)
+      notification = create(:notification, topic: topic)
+
+      expect { notification.update(delivery_attempted_at: notification.delivery_attempted_at + 1.day) }.to change { topic.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      topic = create(:move)
+
+      expect { create(:notification, topic: topic) }.to change { topic.reload.updated_at }
+    end
+  end
 end

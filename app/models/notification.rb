@@ -5,7 +5,7 @@ class Notification < ApplicationRecord
 
   belongs_to :subscription
   belongs_to :notification_type # NB: should be either NotificationType::WEBHOOK or NotificationType::EMAIL
-  belongs_to :topic, polymorphic: true # NB: polymorphic association because topic could be associated with a Move or a Profile
+  belongs_to :topic, polymorphic: true, touch: true # NB: polymorphic association because topic could be associated with a Move or a Profile
 
   validates :event_type, presence: true
   validates :topic, presence: true

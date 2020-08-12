@@ -15,6 +15,12 @@ class Supplier < ApplicationRecord
     key == other.key
   end
 
+  def for_feed
+    {
+      'supplier' => key,
+    }
+  end
+
 private
 
   def ensure_key_has_value

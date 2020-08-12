@@ -18,4 +18,16 @@ RSpec.describe Supplier, type: :model do
       expect(supplier.key).to eq('test_supplier_123')
     end
   end
+
+  describe '#for_feed' do
+    let(:expected_json) do
+      {
+        'supplier' => supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(supplier.for_feed).to include_json(expected_json)
+    end
+  end
 end
