@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_154106) do
+ActiveRecord::Schema.define(version: 2020_08_11_110024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -286,6 +286,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_154106) do
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
     t.index ["supplier_id"], name: "index_moves_on_supplier_id"
+    t.index ["updated_at"], name: "index_moves_on_updated_at"
   end
 
   create_table "nationalities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
