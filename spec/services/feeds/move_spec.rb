@@ -13,11 +13,9 @@ RSpec.describe Feeds::Move do
     end
 
     it 'returns correctly formatted feed' do
-      result = feed.call
-      result = result.split("\n")
-      result = result.map { |move| JSON.parse(move) }
+      actual = feed.call.split("\n").map { |move| JSON.parse(move) }
 
-      expect(result).to include_json(expected_json)
+      expect(actual).to include_json(expected_json)
     end
   end
 end
