@@ -172,4 +172,22 @@ RSpec.describe Profile, type: :model do
       expect { create(:profile, person: person) }.to change { person.reload.updated_at }
     end
   end
+
+  describe '#for_feed' do
+    subject(:profile) { create(:profile) }
+
+    let(:expected_json) do
+      {
+        'id' => profile.id,
+        'person_id' => profile.person_id,
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'assessment_answers' => [],
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(profile.for_feed).to include_json(expected_json)
+    end
+  end
 end
