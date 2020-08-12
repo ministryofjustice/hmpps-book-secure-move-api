@@ -31,7 +31,7 @@ namespace :journeys do
         journeys = []
         Journey
             .where(move: move)
-            .where("state in ('completed','canceled')").default_order.each do |journey|
+            .where("state in ('completed','cancelled')").default_order.each do |journey|
           journeys << {
             id: journey.id,
             supplier: supplier.key,
