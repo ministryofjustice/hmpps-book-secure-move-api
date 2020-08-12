@@ -51,7 +51,7 @@ module NomisClient
 
       def token_expired_or_to_expire?
         @token.expires? &&
-          (@token.expires_at - REFRESH_TOKEN_TIMEFRAME_IN_SECONDS < Time.now.to_i)
+          (@token.expires_at - REFRESH_TOKEN_TIMEFRAME_IN_SECONDS < Time.zone.now.to_i)
       end
 
       def update_json_headers(params)
