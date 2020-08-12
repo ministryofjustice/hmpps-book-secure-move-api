@@ -48,9 +48,9 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'by created_at' do
-      let(:first_date) { DateTime.new(2019, 12, 25, 12) }
-      let(:middle_date) { DateTime.new(2019, 12, 26, 12) }
-      let(:last_date) { DateTime.new(2019, 12, 27) }
+      let(:first_date) { Time.zone.parse('2019-12-25T12') }
+      let(:middle_date) { Time.zone.parse('2019-12-26T12') }
+      let(:last_date) { Time.zone.parse('2019-12-27') }
 
       let(:first_moves) { create_list :move, 2, created_at: first_date }
       let(:middle_moves) { create_list :move, 2, created_at: middle_date }
