@@ -50,8 +50,10 @@ module NomisClient
       end
 
       def token_expired_or_to_expire?
+        # rubocop:disable Rails/TimeZone
         @token.expires? &&
           (@token.expires_at - REFRESH_TOKEN_TIMEFRAME_IN_SECONDS < Time.now.to_i)
+        # rubocop:enable Rails/TimeZone
       end
 
       def update_json_headers(params)

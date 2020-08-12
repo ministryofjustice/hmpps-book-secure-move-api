@@ -22,7 +22,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
 
     context 'when the notification has already been delivered' do
       # NB: need to be explicit about the time in the test otherwise there can be a few nanoseconds difference in CircleCI tests
-      let(:delivered_at) { DateTime.parse('2020-02-02 02:02:02.00') }
+      let(:delivered_at) { Time.zone.parse('2020-02-02 02:02:02.00') }
 
       before { allow(client).to receive(:post) }
 
