@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class Profile < VersionedModel
+  FEED_ATTRIBUTES = %w[
+    id
+    person_id
+    created_at
+    updated_at
+    assessment_answers
+  ].freeze
+
   self.ignored_columns = %w[
     last_name
     first_names
@@ -28,6 +36,10 @@ class Profile < VersionedModel
   validate :validate_assessment_answers
   attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
 
+  scope :updated_at_range, lambda { |from, to|
+    where(updated_at: from..to)
+  }
+
   # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
   # full of update records where nothing actually changes - making the audit next to useless.
   def merge_assessment_answers!(new_assessment_answers, category)
@@ -46,6 +58,10 @@ class Profile < VersionedModel
     unless deleted.empty? && inserted.empty? && changed.empty?
       self.assessment_answers = new_list
     end
+  end
+
+  def for_feed
+    attributes.slice(*FEED_ATTRIBUTES)
   end
 
 private

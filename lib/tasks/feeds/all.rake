@@ -3,6 +3,7 @@ namespace :feeds do
   task all: :environment do
     feeds = %w[
       move
+      profile
       person
     ]
 
