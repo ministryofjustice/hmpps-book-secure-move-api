@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_13_104335) do
+ActiveRecord::Schema.define(version: 2020_08_13_125352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_104335) do
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
+    t.index ["updated_at"], name: "index_events_on_updated_at"
   end
 
   create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -220,6 +221,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_104335) do
     t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
     t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
     t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
+    t.index ["updated_at"], name: "index_journeys_on_updated_at"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -402,6 +404,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_104335) do
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
     t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
     t.index ["prison_number"], name: "index_people_on_prison_number"
+    t.index ["updated_at"], name: "index_people_on_updated_at"
   end
 
   create_table "person_escort_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -437,6 +440,7 @@ ActiveRecord::Schema.define(version: 2020_08_13_104335) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
+    t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
