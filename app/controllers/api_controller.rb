@@ -14,6 +14,7 @@ class ApiController < ApplicationController
   before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
+  REGEXP_CSV = /(application|text)\/csv/i.freeze
   REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}.freeze
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
@@ -231,6 +232,10 @@ private
 
   def supported_relationships
     []
+  end
+
+  def csv?
+    request.headers['Accept']&.match?(REGEXP_CSV)
   end
 
   def api_version
