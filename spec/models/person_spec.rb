@@ -76,27 +76,18 @@ RSpec.describe Person do
     end
   end
 
-  describe '.updated_at_range' do
-    let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
-    let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
-
-    let!(:before_start_person) { create(:person) }
-    let!(:on_start_person) { create(:person) }
-    let!(:on_end_person) {  create(:person) }
-    let!(:after_end_person) { create(:person) }
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
 
     it 'returns the expected persons' do
-      # NB: Associations touch parents in factories so updated_at needs to be patched
-      # after all resources have been created
-      before_start_person.update(updated_at: updated_at_from - 1.second)
-      on_start_person.update(updated_at: updated_at_from)
-      on_end_person.update(updated_at: updated_at_to)
-      after_end_person.update(updated_at: updated_at_to + 1.second)
+      create(:only_person, updated_at: updated_at_from - 1.second)
+      create(:only_person, updated_at: updated_at_to + 1.second)
+      on_start_person = create(:only_person, updated_at: updated_at_from)
+      on_end_person = create(:only_person, updated_at: updated_at_to)
 
-      actual_persons = described_class.updated_at_range(
-        updated_at_from,
-        updated_at_to,
-      )
+      actual_persons = described_class.updated_at_range(updated_at_from, updated_at_to)
+
       expect(actual_persons).to eq([on_start_person, on_end_person])
     end
   end
