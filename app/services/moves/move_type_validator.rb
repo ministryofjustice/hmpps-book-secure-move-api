@@ -15,7 +15,7 @@ module Moves
       validate_police_to_location if includes? %w[police_transfer]
       validate_police_from_location if includes? %w[police_transfer prison_recall video_remand]
       validate_detained_to_location if includes? %w[prison_remand]
-      validate_prison_from_location if includes? %w[prison_transfer]
+      validate_detained_from_location if includes? %w[prison_transfer]
     end
 
   private
@@ -30,6 +30,10 @@ module Moves
 
     def validate_court_to_location
       record.errors.add(:to_location, "must be a court location for #{human_move_type} move") unless record.to_location&.court?
+    end
+
+    def validate_detained_from_location
+      record.errors.add(:from_location, "must be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.from_location&.detained?
     end
 
     def validate_detained_to_location
@@ -50,10 +54,6 @@ module Moves
 
     def validate_police_to_location
       record.errors.add(:to_location, "must be a police location for #{human_move_type} move") unless record.to_location&.police?
-    end
-
-    def validate_prison_from_location
-      record.errors.add(:from_location, "must be a prison location for #{human_move_type} move") unless record.from_location&.prison?
     end
   end
 end
