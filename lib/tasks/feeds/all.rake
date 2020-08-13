@@ -5,10 +5,12 @@ namespace :feeds do
       move
       profile
       person
+      journey
     ]
 
     feeds.each do |feed_name|
       puts "Generating #{feed_name} feed ..."
+
       Rake::Task["feeds:#{feed_name}"].invoke
     end
   end
