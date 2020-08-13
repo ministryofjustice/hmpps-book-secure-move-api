@@ -17,7 +17,7 @@ FactoryBot.define do
     end
     # Move types
     trait :court_appearance do
-      # NB: Police / Prison / STC / SCH, YOI --> Court
+      # NB: Police / Prison / STC / SCH --> Court
       move_type { 'court_appearance' }
       association(:from_location, :police, factory: :location)
       association(:to_location, :court, factory: :location)
