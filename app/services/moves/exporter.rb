@@ -63,7 +63,7 @@ module Moves
       'Requires special vehicle',
       'Requires special vehicle details',
       'Uploaded documents',
-    ]
+    ].freeze
 
     MOVE_INCLUDES = [:from_location, :to_location, :profile, :documents, person: %i[gender ethnicity]].freeze
 
@@ -131,7 +131,7 @@ module Moves
       ].flatten
     end
 
-   def answer_details(answers, key)
+    def answer_details(answers, key)
       selected_answers = answers&.select { |answer| answer.key == key }
       comments = selected_answers&.collect do |answer|
         description = answer.nomis_alert_description
@@ -139,6 +139,6 @@ module Moves
       end
 
       [comments.present?.to_s.upcase, comments&.join("\n\n")]
-    end
+     end
   end
 end
