@@ -6,6 +6,7 @@ namespace :feeds do
       profile
       person
       journey
+      notification
     ]
 
     feeds.each do |feed_name|
