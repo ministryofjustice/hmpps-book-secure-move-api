@@ -18,6 +18,17 @@
 # The supplier is paid for only the first journey A-->B but not B-->C.
 #
 class Journey < ApplicationRecord
+  FEED_ATTRIBUTES = %w[
+    id
+    move_id
+    billable
+    state
+    vehicle_registration
+    client_timestamp
+    created_at
+    updated_at
+  ].freeze
+
   include StateMachineable
 
   belongs_to :move, touch: true
@@ -45,6 +56,10 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
+  scope :updated_at_range, lambda { |from, to|
+    includes(:supplier, :from_location, :to_location).where(updated_at: from..to)
+  }
+
   has_state_machine JourneyStateMachine
 
   delegate :start,
@@ -59,4 +74,16 @@ class Journey < ApplicationRecord
            :cancelled?,
            :rejected?,
            to: :state_machine
+
+  def for_feed
+    attributes.slice(*FEED_ATTRIBUTES)
+      .merge(from_location.for_feed(prefix: :from))
+      .merge(to_location.for_feed(prefix: :to))
+      .merge(supplier.for_feed)
+      .merge(vehicle_registration: vehicle_registration)
+  end
+
+  def vehicle_registration
+    vehicle['registration'] if vehicle
+  end
 end

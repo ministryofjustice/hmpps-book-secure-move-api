@@ -1,8 +1,8 @@
 RSpec.describe Feeds::Move do
   subject(:feed) { described_class.new(updated_at_from, updated_at_to) }
 
-  let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
-  let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
+  let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+  let(:updated_at_to) { Time.zone.yesterday.end_of_day }
 
   describe '#call' do
     let!(:on_start_move) { create(:move, updated_at: updated_at_from) }
