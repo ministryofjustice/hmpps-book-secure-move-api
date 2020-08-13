@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :notification do
     association :subscription
-    association :notification_type, :webhook # defaults to webhook
+
+    notification_type do
+      NotificationType.find_or_create_by(id: 'webhook', title: 'Webhook')
+    end
+
     event_type { 'move_created' }
     association :topic, factory: :move
     delivery_attempts { 0 }
@@ -10,10 +14,14 @@ FactoryBot.define do
   end
 
   trait(:email) do
-    association :notification_type, :email
+    notification_type do
+      NotificationType.find_or_create_by(id: 'email', title: 'Email')
+    end
   end
 
   trait(:webhook) do
-    association :notification_type, :webhook
+    notification_type do
+      NotificationType.find_or_create_by(id: 'webhook', title: 'Webhook')
+    end
   end
 end
