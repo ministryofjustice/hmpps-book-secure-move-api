@@ -84,6 +84,6 @@ class Journey < ApplicationRecord
   end
 
   def vehicle_registration
-    vehicle['registration']
+    vehicle['registration'] if vehicle
   end
 end
