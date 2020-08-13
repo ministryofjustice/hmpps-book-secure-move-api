@@ -191,20 +191,18 @@ RSpec.describe Profile, type: :model do
     end
   end
 
-  describe '.updated_at_range' do
-    let(:updated_at_from) { Time.zone.now.beginning_of_day - 1.day }
-    let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
-
-    let!(:before_start_profile) { create(:profile, updated_at: updated_at_from - 1.second) }
-    let!(:on_start_profile) { create(:profile, updated_at: updated_at_from) }
-    let!(:on_end_profile) {  create(:profile, updated_at: updated_at_to) }
-    let!(:after_end_profile) { create(:profile, updated_at: updated_at_to + 1.second) }
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
 
     it 'returns the expected profiles' do
-      actual_profiles = described_class.updated_at_range(
-        updated_at_from,
-        updated_at_to,
-      )
+      create(:profile, updated_at: updated_at_from - 1.second)
+      create(:profile, updated_at: updated_at_to + 1.second)
+      on_start_profile = create(:profile, updated_at: updated_at_from)
+      on_end_profile = create(:profile, updated_at: updated_at_to)
+
+      actual_profiles = described_class.updated_at_range(updated_at_from, updated_at_to)
+
       expect(actual_profiles).to eq([on_start_profile, on_end_profile])
     end
   end
