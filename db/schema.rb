@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_11_110024) do
+ActiveRecord::Schema.define(version: 2020_08_13_104335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -332,6 +332,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_110024) do
     t.index ["topic_id"], name: "index_notifications_on_topic_id"
     t.index ["topic_type", "topic_id"], name: "index_notifications_on_topic_type_and_topic_id"
     t.index ["topic_type"], name: "index_notifications_on_topic_type"
+    t.index ["updated_at"], name: "index_notifications_on_updated_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
