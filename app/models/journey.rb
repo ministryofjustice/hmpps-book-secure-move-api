@@ -18,6 +18,17 @@
 # The supplier is paid for only the first journey A-->B but not B-->C.
 #
 class Journey < ApplicationRecord
+  FEED_ATTRIBUTES = %w[
+    id
+    move_id
+    billable
+    state
+    vehicle_registration
+    client_timestamp
+    created_at
+    updated_at
+  ].freeze
+
   include StateMachineable
 
   belongs_to :move, touch: true
@@ -65,20 +76,14 @@ class Journey < ApplicationRecord
            to: :state_machine
 
   def for_feed
-    {
-      'id' => id,
-      'move_id' => move.id,
-      'supplier' => supplier.key,
-      'from_location' => from_location.nomis_agency_id,
-      'from_location_type' => from_location.location_type,
-      'to_location' => to_location.nomis_agency_id,
-      'to_location_type' => to_location.location_type,
-      'billable' => billable,
-      'state' => state,
-      'vehicle_registration' => vehicle['registration'],
-      'client_timestamp': client_timestamp,
-      'created_at': created_at,
-      'updated_at': updated_at,
-    }
+    attributes.slice(*FEED_ATTRIBUTES)
+      .merge(from_location.for_feed(prefix: :from))
+      .merge(to_location.for_feed(prefix: :to))
+      .merge(supplier.for_feed)
+      .merge(vehicle_registration: vehicle_registration)
+  end
+
+  def vehicle_registration
+    vehicle['registration']
   end
 end
