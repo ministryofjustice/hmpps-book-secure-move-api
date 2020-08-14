@@ -83,7 +83,6 @@ class Move < VersionedModel
   has_many :journeys, -> { default_order }, dependent: :restrict_with_exception, inverse_of: :move
   has_many :court_hearings, dependent: :restrict_with_exception
   has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
-  has_many :documents
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }

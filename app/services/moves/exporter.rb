@@ -65,8 +65,6 @@ module Moves
       'Uploaded documents',
     ].freeze
 
-    MOVE_INCLUDES = [:from_location, :to_location, :profile, :documents, person: %i[gender ethnicity]].freeze
-
     def initialize(moves)
       @moves = moves
     end
@@ -75,10 +73,8 @@ module Moves
       Tempfile.new('export', Rails.root.join('tmp')).tap do |file|
         csv = CSV.new(file)
         csv << HEADINGS
-        moves.includes(MOVE_INCLUDES).find_in_batches do |batched_moves|
-          batched_moves.each do |move|
-            csv << attributes_row(move)
-          end
+        moves.find_each do |move|
+          csv << attributes_row(move)
         end
       end
     end
@@ -87,7 +83,8 @@ module Moves
 
     def attributes_row(move)
       person = move.person
-      answers = move.profile&.assessment_answers
+      profile = move.profile
+      answers = profile&.assessment_answers
 
       [
         move.status, # Status
@@ -127,8 +124,8 @@ module Moves
         answer_details(answers, 'not_for_release'), # Not for release details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
-        move.documents.size, # 'Uploaded documents',
-      ].flatten
+        profile&.documents&.size, # 'Uploaded documents',
+      ].flatten # Expand answer_details column pairs into individual columns
     end
 
     def answer_details(answers, key)
@@ -138,7 +135,8 @@ module Moves
         description.present? ? "#{description}: #{answer.comments}" : answer.comments
       end
 
+      # Return the flag and comments together so we only need a single pass through the assessment answers for each key
       [comments.present?.to_s.upcase, comments&.join("\n\n")]
-     end
+    end
   end
 end

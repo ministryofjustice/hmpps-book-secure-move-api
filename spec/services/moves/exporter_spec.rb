@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Moves::Exporter do
   subject(:file) { described_class.new(moves).call }
+
   let(:content) { file.rewind && file.read }
   let(:csv) { CSV.parse(content) }
   let(:header) { csv.first }
@@ -60,34 +61,32 @@ RSpec.describe Moves::Exporter do
     expect(row).to include(person.ethnicity.title, person.ethnicity.key)
   end
 
+  it 'includes FALSE flag and empty comments when no alerts are present' do
+    expect(row).to include('FALSE', '')
+  end
+
   %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_for_release not_to_be_released special_vehicle].each do |alert_type|
-    it "includes TRUE flag when #{alert_type} is present" do
+    it "includes TRUE flag and comments when #{alert_type} is present" do
       question.update(key: alert_type)
       move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
-      expect(row).to include('TRUE')
-    end
-
-    it "includes comments when #{alert_type} is present" do
-      question.update(key: alert_type)
-      move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
-      expect(row).to include('Yikes!')
-    end
-
-    it "includes description prefix on comments for Nomis #{alert_type} alerts" do
-      question.update(key: alert_type)
-      move.profile.update(assessment_answers: [{ nomis_alert_description: 'Foo', assessment_question_id: question.id, comments: 'Yikes!' }])
-      expect(row).to include('Foo: Yikes!')
-    end
-
-    it "includes multiple comment lines for multiple #{alert_type} alerts" do
-      question.update(key: alert_type)
-      move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!'}])
-      expect(row).to include("Yikes!\n\nBam!")
+      expect(row).to include('TRUE', 'Yikes!')
     end
   end
 
-  it 'includes move documents count' do
-    expect(row.last).to eq '0'
+  it 'includes description prefix on comments for Nomis alerts' do
+    question.update(key: 'violent')
+    move.profile.update(assessment_answers: [{ nomis_alert_description: 'Foo', assessment_question_id: question.id, comments: 'Yikes!' }])
+    expect(row).to include('Foo: Yikes!')
+  end
+
+  it 'includes multiple comment lines for multiple alerts for the same question' do
+    question.update(key: 'violent')
+    move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!' }])
+    expect(row).to include("Yikes!\n\nBam!")
+  end
+
+  it 'includes move profile documents count' do
+    create(:document, documentable: move.profile)
+    expect(row.last).to eq '1'
   end
 end
-
