@@ -3,6 +3,8 @@
 class Document < ApplicationRecord
   include Discard::Model
 
+  self.ignored_columns = %w[move_id]
+
   has_one_attached :file
 
   before_validation :validate_file_presence
