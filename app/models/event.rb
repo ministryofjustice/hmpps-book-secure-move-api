@@ -24,6 +24,11 @@ class Event < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
+  scope :updated_at_range, lambda { |from, to|
+    includes(:eventable)
+      .where(updated_at: from..to)
+  }
+
   serialize :details, HashWithIndifferentAccessSerializer
 
   def supplier_id
@@ -48,5 +53,9 @@ class Event < ApplicationRecord
 
   def to_location
     @to_location ||= Location.find_by(id: event_params&.dig(:relationships, :to_location, :data, :id))
+  end
+
+  def for_feed
+    attributes.as_json
   end
 end
