@@ -8,7 +8,7 @@ module Feeds
     end
 
     def call
-      ::Notification.updated_at_range(@updated_at_from, @updated_at_to).find_each do |notification|
+      ::Notification.includes(:notification_type).updated_at_range(@updated_at_from, @updated_at_to).find_each do |notification|
         @feed << notification.for_feed.to_json
       end
 

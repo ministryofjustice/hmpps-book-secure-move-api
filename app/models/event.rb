@@ -24,11 +24,6 @@ class Event < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
-  scope :updated_at_range, lambda { |from, to|
-    includes(:eventable)
-      .where(updated_at: from..to)
-  }
-
   serialize :details, HashWithIndifferentAccessSerializer
 
   def supplier_id

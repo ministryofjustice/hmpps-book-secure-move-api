@@ -25,9 +25,6 @@ class Person < VersionedModel
 
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
   scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
-  scope :updated_at_range, lambda { |from, to|
-    where(updated_at: from..to)
-  }
 
   validates :last_name, presence: true
   validates :first_names, presence: true

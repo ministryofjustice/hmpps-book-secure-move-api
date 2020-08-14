@@ -75,20 +75,4 @@ RSpec.describe Person do
       expect(person.for_feed).to include_json(expected_json)
     end
   end
-
-  describe '.updated_at_range scope' do
-    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
-    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
-
-    it 'returns the expected persons' do
-      create(:only_person, updated_at: updated_at_from - 1.second)
-      create(:only_person, updated_at: updated_at_to + 1.second)
-      on_start_person = create(:only_person, updated_at: updated_at_from)
-      on_end_person = create(:only_person, updated_at: updated_at_to)
-
-      actual_persons = described_class.updated_at_range(updated_at_from, updated_at_to)
-
-      expect(actual_persons).to eq([on_start_person, on_end_person])
-    end
-  end
 end

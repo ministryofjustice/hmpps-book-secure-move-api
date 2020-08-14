@@ -56,10 +56,6 @@ class Journey < ApplicationRecord
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
-  scope :updated_at_range, lambda { |from, to|
-    includes(:supplier, :from_location, :to_location).where(updated_at: from..to)
-  }
-
   has_state_machine JourneyStateMachine
 
   delegate :start,
