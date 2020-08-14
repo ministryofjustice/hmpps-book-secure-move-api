@@ -3,10 +3,14 @@ module Api::V2
     def index_and_render
       moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
 
-      paginate moves,
-               each_serializer: ::V2::MoveSerializer,
-               include: included_relationships,
-               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      if csv?
+        send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+      else
+        paginate moves,
+                 each_serializer: ::V2::MoveSerializer,
+                 include: included_relationships,
+                 fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      end
     end
 
     def show_and_render

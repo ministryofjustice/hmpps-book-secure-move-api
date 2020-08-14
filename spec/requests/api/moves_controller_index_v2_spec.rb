@@ -7,13 +7,14 @@ RSpec.describe Api::MovesController do
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:accept) { 'application/vnd.api+json; version=2' }
   let(:schema) { load_yaml_schema('get_moves_responses.yaml', version: 'v2') }
   let(:params) { {} }
 
   let(:headers) do
     {
       'CONTENT_TYPE': content_type,
-      'Accept': 'application/vnd.api+json; version=2',
+      'Accept': accept,
       'Authorization' => "Bearer #{access_token}",
     }
   end
@@ -199,6 +200,34 @@ RSpec.describe Api::MovesController do
           expect(response).to have_http_status(:bad_request)
           expect(response_json).to include(expected_error)
         end
+      end
+    end
+
+    context 'with text/csv Accept header' do
+      let(:accept) { 'text/csv; version=2' }
+
+      it 'returns a success code' do
+        do_get
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns an inline file response' do
+        do_get
+        expect(response.headers['Content-Disposition']).to match('inline')
+      end
+
+      it 'sets the correct content type header' do
+        do_get
+        expect(response.headers['Content-Type']).to eq('text/csv')
+      end
+
+      it 'delegates the CSV generation to Moves::Exporter with the correct moves' do
+        moves_exporter = instance_double('Moves::Exporter', call: Tempfile.new)
+        allow(Moves::Exporter).to receive(:new).and_return(moves_exporter)
+
+        do_get
+
+        expect(Moves::Exporter).to have_received(:new).with(ActiveRecord::Relation)
       end
     end
   end
