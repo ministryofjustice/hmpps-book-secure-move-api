@@ -7,12 +7,19 @@ namespace :feeds do
       person
       journey
       notification
+      event
     ]
 
     feeds.each do |feed_name|
-      puts "Generating #{feed_name} feed ..."
+      puts "Generating #{feed_name} feed..."
 
+      start_time = Time.zone.now
       Rake::Task["feeds:#{feed_name}"].invoke
+      end_time = Time.zone.now
+
+      elapsed_time = (start_time - end_time).seconds
+
+      puts "Generated #{feed_name} feed in #{elapsed_time} seconds"
     end
   end
 end
