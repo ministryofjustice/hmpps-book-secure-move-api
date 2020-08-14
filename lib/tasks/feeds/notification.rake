@@ -1,5 +1,5 @@
 namespace :feeds do
-  desc 'Exports a JSON feed of all profiles to s3'
+  desc 'Exports a JSON feed of yesterday\'s notifications to s3'
   task notification: :environment do
     feed = Feeds::Notification.new.call
 
