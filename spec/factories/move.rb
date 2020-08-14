@@ -9,7 +9,6 @@ FactoryBot.define do
     time_due { Time.now }
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
-    move_type { 'court_appearance' }
     sequence(:created_at) { |n| Time.now - n.minutes }
     sequence(:date_from) { |n| Date.today - n.days }
 
@@ -18,7 +17,7 @@ FactoryBot.define do
     end
     # Move types
     trait :court_appearance do
-      # NB: Police / Prison / STC / SCH, YOI --> Court
+      # NB: Police / Prison / STC / SCH --> Court
       move_type { 'court_appearance' }
       association(:from_location, :police, factory: :location)
       association(:to_location, :court, factory: :location)
@@ -41,6 +40,8 @@ FactoryBot.define do
 
     trait :police_transfer do
       move_type { 'police_transfer' }
+      association(:from_location, :police, factory: :location)
+      association(:to_location, :police, factory: :location)
     end
 
     trait :video_remand do
@@ -150,10 +151,10 @@ FactoryBot.define do
     end
   end
 
-  factory :from_court_to_prison, class: 'Move' do
+  factory :from_prison_to_court, class: 'Move' do
     association(:profile)
-    association(:from_location, :court, factory: :location)
-    association(:to_location, :prison, factory: :location)
+    association(:from_location, :prison, factory: :location)
+    association(:to_location, :court, factory: :location)
     date { Date.today }
     time_due { Time.now }
     status { 'requested' }

@@ -19,9 +19,10 @@ RSpec.describe Api::PeopleController do
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2, prison_number: nil }
-    let(:params) { {} }
 
-    context 'when there are no params' do
+    context 'when there are no filters' do
+      let(:params) { {} }
+
       before { get '/api/people', params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -159,6 +160,8 @@ RSpec.describe Api::PeopleController do
     end
 
     describe 'paginating results' do
+      let(:params) { {} }
+
       let!(:people) { create_list :person, 6 }
 
       let(:meta_pagination) do

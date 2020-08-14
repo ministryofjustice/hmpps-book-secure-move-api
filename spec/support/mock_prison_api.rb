@@ -3,6 +3,11 @@
 RSpec.shared_context 'with mock prison-api' do
   # rubocop:disable RSpec/InstanceVariable
   before(:context) do
+    # Make sure tests are using wiremocked Nomis, not real Nomis
+    unless ENV['NOMIS_SITE'] == 'http://localhost:8888'
+      raise "Expected NOMIS_SITE env var to point to wiremock server http://localhost:8888 (currently: #{ENV['NOMIS_SITE']})"
+    end
+
     # Start up an internal wiremock server unless EXTERNAL_WIREMOCK=true
     unless ENV.fetch('EXTERNAL_WIREMOCK', 'false') == 'true'
       unless File.exist?('spec/wiremock/wiremock-standalone.jar')

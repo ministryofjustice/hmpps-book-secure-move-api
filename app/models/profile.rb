@@ -1,11 +1,32 @@
 # frozen_string_literal: true
 
 class Profile < VersionedModel
+  FEED_ATTRIBUTES = %w[
+    id
+    person_id
+    created_at
+    updated_at
+    assessment_answers
+  ].freeze
+
+  self.ignored_columns = %w[
+    last_name
+    first_names
+    date_of_birth
+    aliases
+    gender_id
+    ethnicity_id
+    nationality_id
+    profile_identifiers
+    gender_additional_information
+    latest_nomis_booking_id
+  ]
+
   before_validation :set_assessment_answers
 
-  belongs_to :person
+  belongs_to :person, touch: true
 
-  has_one :move, dependent: :nullify
+  has_many :moves, dependent: :nullify
   has_one :person_escort_record
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
@@ -14,6 +35,10 @@ class Profile < VersionedModel
 
   validate :validate_assessment_answers
   attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
+
+  scope :updated_at_range, lambda { |from, to|
+    where(updated_at: from..to)
+  }
 
   # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
   # full of update records where nothing actually changes - making the audit next to useless.
@@ -33,6 +58,10 @@ class Profile < VersionedModel
     unless deleted.empty? && inserted.empty? && changed.empty?
       self.assessment_answers = new_list
     end
+  end
+
+  def for_feed
+    attributes.slice(*FEED_ATTRIBUTES)
   end
 
 private

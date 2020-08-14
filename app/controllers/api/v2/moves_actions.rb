@@ -29,6 +29,7 @@ module Api::V2
       move.save!
       move.allocation&.refresh_status_and_moves_count!
 
+      Allocations::CreateInNomis.call(move) if create_in_nomis?
       Notifier.prepare_notifications(topic: move, action_name: action_name)
 
       render_move(move, :ok)
@@ -55,6 +56,10 @@ module Api::V2
       relationships: {},
     ].freeze
 
+    def create_in_nomis?
+      move.allocation_id? && params[:create_in_nomis].to_s == 'true'
+    end
+
     def move_params
       @move_params ||= params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
     end
@@ -64,6 +69,7 @@ module Api::V2
         attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
+        attributes[:version] = 2
       end
     end
 
@@ -139,7 +145,9 @@ module Api::V2
     def move
       @move ||= Move
         .accessible_by(current_ability)
-        .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+        .includes(
+          :from_location, :to_location, profile: { person: %i[gender ethnicity], person_escort_record: { framework_flags: :framework_question } }
+        )
         .find(params[:id])
     end
 

@@ -77,57 +77,59 @@ RSpec.describe Move do
   end
 
   it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
-    expect(build(:move, status: :proposed)).to(
+    expect(build(:move, :proposed)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is requested' do
-    expect(build(:move, status: :requested)).not_to(
+    expect(build(:move, :requested)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is booked' do
-    expect(build(:move, status: :booked)).to(
+    expect(build(:move, :booked)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is in_transit' do
-    expect(build(:move, status: :in_transit)).to(
+    expect(build(:move, :in_transit)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :cancelled)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate presence of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
-    expect(build(:move, status: :proposed)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :proposed)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    create(:move, status: :requested, profile: nil)
+    create(:move, :requested, profile: nil)
 
-    expect(build(:move, status: :requested, profile: nil)).to be_valid
+    expect(build(:move, :requested, profile: nil)).to be_valid
   end
 
   it 'validates presence of `date` if `status` is NOT proposed' do
@@ -227,11 +229,36 @@ RSpec.describe Move do
   end
 
   describe '#move_type' do
-    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: nil }
+    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: move_type, version: version }
 
     let(:from_location) { build :location, :police }
+    let(:move_type) { nil }
+    let(:version) { nil }
 
     before { move.valid? }
+
+    context 'when creating a v2 move' do
+      let(:version) { 2 }
+      let(:to_location) { nil }
+
+      context 'without specifying move_type' do
+        it 'does not set move_type' do
+          expect(move.move_type).to be_nil
+        end
+
+        it 'is not valid' do
+          expect(move).not_to be_valid
+        end
+      end
+
+      context 'when specifying move_type' do
+        let(:move_type) { 'prison_recall' }
+
+        it 'is valid' do
+          expect(move).to be_valid
+        end
+      end
+    end
 
     context 'when to_location is empty' do
       let(:to_location) { nil }
@@ -476,6 +503,74 @@ RSpec.describe Move do
 
     it 'has a version record for the create' do
       expect(move.versions.map(&:event)).to eq(%w[create])
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:move) { create(:move, :with_supplier) }
+
+    let(:expected_json) do
+      {
+        'id' => move.id,
+        'additional_information' => 'some more info about the move that the supplier might need to know',
+        'allocation_id' => nil,
+        'cancellation_reason' => nil,
+        'cancellation_reason_comment' => nil,
+        'created_at' => be_a(Time),
+        'date' => be_a(Date),
+        'date_from' => be_a(Date),
+        'date_to' => nil,
+        'from_location' => 'PEI',
+        'from_location_type' => 'prison',
+        'move_agreed' => nil,
+        'move_agreed_by' => nil,
+        'move_type' => 'court_appearance',
+        'profile_id' => move.profile_id,
+        'reason_comment' => nil,
+        'reference' => move.reference,
+        'rejection_reason' => nil,
+        'status' => 'requested',
+        'time_due' => be_a(Time),
+        'to_location' => 'GUICCT',
+        'to_location_type' => 'court',
+        'updated_at' => be_a(Time),
+        'supplier' => move.supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(move.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+
+      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      profile = create(:profile)
+
+      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+    end
+  end
+
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected moves' do
+      create(:move, updated_at: updated_at_from - 1.second)
+      create(:move, updated_at: updated_at_to + 1.second)
+      on_start_move = create(:move, updated_at: updated_at_from)
+      on_end_move = create(:move, updated_at: updated_at_to)
+
+      actual_moves = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_moves).to eq([on_start_move, on_end_move])
     end
   end
 end

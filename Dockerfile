@@ -45,7 +45,8 @@ RUN apk add \
       --no-cache \
       tzdata \
       postgresql-dev \
-      postgresql-client
+      postgresql-client \
+      git
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle

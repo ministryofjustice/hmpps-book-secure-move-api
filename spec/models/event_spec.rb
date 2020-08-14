@@ -45,4 +45,45 @@ RSpec.describe Event, type: :model do
       it { expect(event.to_location).to be_a Location }
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      eventable = create(:move)
+      event = create(:event, eventable: eventable)
+
+      expect { event.update(client_timestamp: event.client_timestamp + 1.day) }.to change { eventable.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      eventable = create(:move)
+
+      expect { create(:event, eventable: eventable) }.to change { eventable.reload.updated_at }
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:event) { create(:event) }
+
+    let(:expected_json) { event.attributes.as_json }
+
+    it 'generates a feed document' do
+      expect(event.for_feed).to eq(expected_json)
+    end
+  end
+
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected events' do
+      create(:event, updated_at: updated_at_from - 1.second)
+      create(:event, updated_at: updated_at_to + 1.second)
+      on_start_event = create(:event, updated_at: updated_at_from)
+      on_end_event = create(:event, updated_at: updated_at_to)
+
+      actual_events = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_events).to eq([on_start_event, on_end_event])
+    end
+  end
 end

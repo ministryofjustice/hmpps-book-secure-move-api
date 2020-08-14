@@ -6,7 +6,6 @@ class Location < ApplicationRecord
   LOCATION_TYPE_PRISON = 'prison'
   LOCATION_TYPE_SECURE_TRAINING_CENTRE = 'secure_training_centre'
   LOCATION_TYPE_SECURE_CHILDRENS_HOME = 'secure_childrens_home'
-  LOCATION_TYPE_YOUTH_OFFENDING_INSTITUTE = 'youth_offending_institute'
   LOCATION_TYPE_APPROVED_PREMISES = 'approved_premises'
   LOCATION_TYPE_PROBATION_OFFICE = 'probation_office'
   LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY = 'community_rehabilitation_company'
@@ -21,7 +20,6 @@ class Location < ApplicationRecord
     prison: LOCATION_TYPE_PRISON,
     secure_training_centre: LOCATION_TYPE_SECURE_TRAINING_CENTRE,
     secure_childrens_home: LOCATION_TYPE_SECURE_CHILDRENS_HOME,
-    youth_offending_institute: LOCATION_TYPE_YOUTH_OFFENDING_INSTITUTE,
     approved_premises: LOCATION_TYPE_APPROVED_PREMISES,
     probation_office: LOCATION_TYPE_PROBATION_OFFICE,
     community_rehabilitation_company: LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY,
@@ -37,7 +35,6 @@ class Location < ApplicationRecord
     'POLICE' => LOCATION_TYPE_POLICE,
     'STC' => LOCATION_TYPE_SECURE_TRAINING_CENTRE,
     'SCH' => LOCATION_TYPE_SECURE_CHILDRENS_HOME,
-    'YOI' => LOCATION_TYPE_YOUTH_OFFENDING_INSTITUTE,
     'APPR' => LOCATION_TYPE_APPROVED_PREMISES,
     'COMM' => LOCATION_TYPE_PROBATION_OFFICE,
     'CRC' => LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY,
@@ -69,5 +66,14 @@ class Location < ApplicationRecord
 
   def not_detained?
     !detained?
+  end
+
+  def for_feed(prefix: nil)
+    prefix = "#{prefix}_" if prefix
+
+    {
+      "#{prefix}location_type" => location_type,
+      "#{prefix}location" => nomis_agency_id,
+    }
   end
 end

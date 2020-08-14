@@ -61,8 +61,10 @@ Move:
           example: John Does
           description: Indicates the name of the person who agreed the move
         time_due:
-          type: string
-          format: date-time
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
           example: "2020-05-17T15:04:07.632Z"
           description: Time due at the destination, e.g. court appointment time
         updated_at:

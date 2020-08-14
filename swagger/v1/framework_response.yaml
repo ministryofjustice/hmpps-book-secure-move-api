@@ -23,11 +23,35 @@ FrameworkResponse:
       properties:
         value:
           example: 'yes'
+          description: the answer value to the person_escort_record question
           oneOf:
           - type: string
-          - type: array
+            example: 'Yes'
           - type: object
-          description: the answer value to the person_escort_record question
+            properties:
+              option:
+                type: string
+              details:
+                type: string
+            example:
+              option: 'Yes'
+              details: 'Some details'
+          - type: array
+            items:
+              oneOf:
+                - type: string
+                  example: 'Level 1'
+                - type: object
+                  properties:
+                    option:
+                      type: string
+                    details:
+                      type: string
+                  example:
+                    - option: Level 1
+                      details: Some details about Level 1
+                    - option: Level 2
+                      details: Some details about Level 2
         value_type:
           type: string
           example: 'array'

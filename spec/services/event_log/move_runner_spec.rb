@@ -87,6 +87,10 @@ RSpec.describe EventLog::MoveRunner do
   context 'when event_name=cancel' do
     let!(:event) { create(:move_event, :cancel, eventable: move) }
 
+    before do
+      allow(Allocations::RemoveFromNomis).to receive(:call)
+    end
+
     context 'when the move is requested' do
       it 'updates the move status to cancelled' do
         expect { runner.call }.to change(move, :status).from('requested').to('cancelled')
@@ -98,6 +102,11 @@ RSpec.describe EventLog::MoveRunner do
 
       it 'updates the move cancellation_reason_comment' do
         expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
+      end
+
+      it 'removes prison transfer event from Nomis' do
+        runner.call
+        expect(Allocations::RemoveFromNomis).to have_received(:call).with(move)
       end
 
       it_behaves_like 'it calls the Notifier with an update_status action_name'

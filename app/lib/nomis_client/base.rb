@@ -7,23 +7,29 @@ module NomisClient
 
     class << self
       def get(path, params = {})
-        token.get("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
-      rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-        Rails.logger.warn "Nomis Connection Error: #{e.message}"
-        raise e
+        token_request(:get, path, params)
       end
 
       def post(path, params = {})
         params = update_json_headers(params)
-        token.post("#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
-      rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-        Rails.logger.warn "Nomis Connection Error: #{e.message}"
-        raise e
+        token_request(:post, path, params)
+      end
+
+      def put(path, params = {})
+        params = update_json_headers(params)
+        token_request(:put, path, params)
       end
 
     private
 
       REFRESH_TOKEN_TIMEFRAME_IN_SECONDS = 5
+
+      def token_request(method, path, params)
+        token.send(method, "#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
+      rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
+        Rails.logger.warn "Nomis Connection Error: #{e.message}"
+        raise e
+      end
 
       def token
         return @token if @token && !token_expired_or_to_expire?
@@ -44,8 +50,10 @@ module NomisClient
       end
 
       def token_expired_or_to_expire?
+        # rubocop:disable Rails/TimeZone
         @token.expires? &&
           (@token.expires_at - REFRESH_TOKEN_TIMEFRAME_IN_SECONDS < Time.now.to_i)
+        # rubocop:enable Rails/TimeZone
       end
 
       def update_json_headers(params)

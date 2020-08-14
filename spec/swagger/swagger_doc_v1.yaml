@@ -473,7 +473,7 @@
         required: true
         description: The framework_response object to be modified
         schema:
-          "$ref": "../v1/framework_response.yaml#/FrameworkResponse"
+          "$ref": "../v1/patch_framework_response.yaml#/PatchFrameworkResponse"
       responses:
         '200':
           description: success
@@ -562,6 +562,24 @@
           schema:
             type: string
             example: "2019-05-09"
+          format: date
+        - name: filter[date_of_birth_from]
+          in: query
+          description:
+            Filters results to only include moves with people born on or after the
+            given date, e.g. `2009-05-02`
+          schema:
+            type: string
+            example: "2009-05-09"
+          format: date
+        - name: filter[date_of_birth_to]
+          in: query
+          description:
+            Filters results to only include moves with people born on or before
+            the given date, e.g. `2009-05-09`
+          schema:
+            type: string
+            example: "2009-05-09"
           format: date
         - name: filter[status]
           in: query
@@ -2181,7 +2199,7 @@
           description:
             Filters results to only include people identified by that prison_number.
             Either filter[police_national_computer] or filter[prison_number] or both
-            filters are required.
+            filters are supported.
           schema:
             type: string
             example: G1234UT

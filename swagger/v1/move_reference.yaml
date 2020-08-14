@@ -1,22 +1,22 @@
 MoveReference:
   type: object
   required:
-  - data
+    - data
   properties:
     data:
       oneOf:
-      - type: object
-      - type: 'null'
-      - type: array
+        - type: object
+        - type: "null"
+        - type: array
       required:
-      - id
-      - type
+        - id
+        - type
       properties:
         type:
           type: string
           example: moves
           enum:
-          - moves
+            - moves
           description: The type of this object - always `moves`
         id:
           type: string

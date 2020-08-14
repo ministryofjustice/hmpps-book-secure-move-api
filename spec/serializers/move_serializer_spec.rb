@@ -31,6 +31,10 @@ RSpec.describe MoveSerializer do
       expect(attributes[:move_type]).to eql move.move_type
     end
 
+    it 'contains a nomis_event_id attribute' do
+      expect(attributes[:nomis_event_id]).to eql move.nomis_event_id
+    end
+
     it 'contains a rejection_reason attribute' do
       expect(attributes[:rejection_reason]).to eql move.rejection_reason
     end

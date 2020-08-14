@@ -4,6 +4,8 @@ module Moves
   class Finder
     attr_reader :filter_params, :ability
 
+    MOVE_INCLUDES = [:court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity profiles], from_location: %i[locations_suppliers suppliers], to_location: %i[locations_suppliers suppliers], allocation: %i[to_location from_location]].freeze
+
     def initialize(filter_params, ability, order_params)
       @filter_params = filter_params
       @ability = ability
@@ -42,8 +44,9 @@ module Moves
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
-      scope = scope.includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+      scope = scope.includes(MOVE_INCLUDES)
       scope = apply_date_range_filters(scope)
+      scope = apply_date_of_birth_filters(scope)
       scope = apply_location_type_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
@@ -67,9 +70,19 @@ module Moves
     def apply_date_range_filters(scope)
       scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
       scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
-      # created_at is a date/time, so inclusive filtering has to be subtlely different
+      # created_at is a date/time, so inclusive filtering has to be subtly different
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
+      scope
+    end
+
+    def apply_date_of_birth_filters(scope)
+      return scope unless filter_params.key?(:date_of_birth_from) || filter_params.key?(:date_of_birth_to)
+
+      # only join on person if necessary, otherwise moves without people are not included
+      scope = scope.joins(:person)
+      scope = scope.where('people.date_of_birth >= ?', filter_params[:date_of_birth_from]) if filter_params.key?(:date_of_birth_from)
+      scope = scope.where('people.date_of_birth <= ?', filter_params[:date_of_birth_to]) if filter_params.key?(:date_of_birth_to)
       scope
     end
 
@@ -92,9 +105,8 @@ module Moves
     def apply_ready_for_transit_filters(scope)
       return scope unless filter_params.key?(:ready_for_transit)
 
-      scope_with_person_escort_record = scope.includes(profile: :person_escort_record)
-      scope = scope_with_person_escort_record.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
-      scope = scope_with_person_escort_record.where.not('person_escort_records.status' => 'confirmed').or(scope_with_person_escort_record.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
+      scope = scope.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
+      scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
 
       scope
     end

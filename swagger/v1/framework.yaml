@@ -37,6 +37,6 @@ Framework:
       required:
       - questions
       properties:
-        question:
+        questions:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
           description: The questions for the framework

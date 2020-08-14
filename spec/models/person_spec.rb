@@ -11,7 +11,7 @@ RSpec.describe Person do
   it { is_expected.to validate_presence_of(:first_names) }
 
   it 'has an audit' do
-    expect(person.versions.map(&:event)).to eq(%w[create])
+    expect(person.versions.map(&:event)).to eq(%w[create update])
   end
 
   it 'gets an image attached' do
@@ -51,6 +51,44 @@ RSpec.describe Person do
 
     it 'is case insensitive' do
       expect(described_class.where(nomis_prison_number: 'flibble')).to include(person)
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:person) { create(:person) }
+
+    let(:expected_json) do
+      {
+        'id' => person.id,
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'criminal_records_office' => person.criminal_records_office,
+        'nomis_prison_number' => person.nomis_prison_number,
+        'police_national_computer' => person.police_national_computer,
+        'prison_number' => person.prison_number,
+        'latest_nomis_booking_id' => person.latest_nomis_booking_id,
+        'age' => person.age,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(person.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected persons' do
+      create(:only_person, updated_at: updated_at_from - 1.second)
+      create(:only_person, updated_at: updated_at_to + 1.second)
+      on_start_person = create(:only_person, updated_at: updated_at_from)
+      on_end_person = create(:only_person, updated_at: updated_at_to)
+
+      actual_persons = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_persons).to eq([on_start_person, on_end_person])
     end
   end
 end

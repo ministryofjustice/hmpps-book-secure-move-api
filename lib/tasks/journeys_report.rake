@@ -31,7 +31,7 @@ namespace :journeys do
         journeys = []
         Journey
             .where(move: move)
-            .where("state in ('completed','canceled')").default_order.each do |journey|
+            .where("state in ('completed','cancelled')").default_order.each do |journey|
           journeys << {
             id: journey.id,
             supplier: supplier.key,
@@ -68,6 +68,7 @@ namespace :journeys do
           gender: person&.gender&.key,
           dob: person&.date_of_birth,
           age: person.present? && person.date_of_birth.present? ? ((move.date.to_date - person.date_of_birth&.to_date) / 365.25).to_i : nil,
+          cancellation_reason: move.cancellation_reason,
           events: move.move_events.default_order.map do |move_event|
             {
               timestamp: move_event.client_timestamp.iso8601,

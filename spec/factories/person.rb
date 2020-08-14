@@ -37,4 +37,9 @@ FactoryBot.define do
     sequence(:prison_number)            { |seq| sprintf('D%04dZZ', seq) }
     sequence(:criminal_records_office)  { |seq| sprintf('CRO/%05d', seq) }
   end
+
+  factory :only_person, class: 'Person' do
+    first_names { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+  end
 end

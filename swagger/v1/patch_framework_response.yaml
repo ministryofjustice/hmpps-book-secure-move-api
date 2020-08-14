@@ -1,0 +1,54 @@
+PatchFrameworkResponse:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: framework_responses
+      enum:
+      - framework_responses
+      description: The type of this object - always `framework_responses`
+    attributes:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          description: the answer value to the person_escort_record question
+          example: 'Yes'
+          oneOf:
+          - type: string
+            example: 'Yes'
+          - type: object
+            properties:
+              option:
+                type: string
+              details:
+                type: string
+            example:
+              option: 'Yes'
+              details: 'Some details'
+          - type: array
+            items:
+              oneOf:
+                - type: string
+                  example: 'Level 1'
+                - type: object
+                  properties:
+                    option:
+                      type: string
+                    details:
+                      type: string
+                  example:
+                    - option: Level 1
+                      details: Some details about Level 1
+                    - option: Level 2
+                      details: Some details about Level 2
