@@ -3,6 +3,6 @@ namespace :feeds do
   task notification: :environment do
     feed = Feeds::Notification.new.call
 
-    CloudDataFeed.new.write(feed, 'notifications.json')
+    CloudDataFeed.new.write(feed, 'notifications.jsonl')
   end
 end

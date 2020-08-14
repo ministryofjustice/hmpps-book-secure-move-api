@@ -3,6 +3,6 @@ namespace :feeds do
   task person: :environment do
     feed = Feeds::Person.new.call
 
-    CloudDataFeed.new.write(feed, 'people.json')
+    CloudDataFeed.new.write(feed, 'people.jsonl')
   end
 end

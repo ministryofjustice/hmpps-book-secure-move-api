@@ -3,6 +3,6 @@ namespace :feeds do
   task move: :environment do
     feed = Feeds::Move.new.call
 
-    CloudDataFeed.new.write(feed, 'moves.json')
+    CloudDataFeed.new.write(feed, 'moves.jsonl')
   end
 end
