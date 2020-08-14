@@ -1,8 +1,8 @@
 namespace :feeds do
-  desc 'Exports a JSON feed of all moves to s3'
+  desc 'Exports a JSON feed of yesterday\'s moves to s3'
   task move: :environment do
     feed = Feeds::Move.new.call
 
-    CloudDataFeed.new.write(feed, 'moves.json')
+    CloudDataFeed.new.write(feed, 'moves.jsonl')
   end
 end

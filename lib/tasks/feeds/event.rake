@@ -3,6 +3,6 @@ namespace :feeds do
   task event: :environment do
     feed = Feeds::Event.new.call
 
-    CloudDataFeed.new.write(feed, 'events.json')
+    CloudDataFeed.new.write(feed, 'events.jsonl')
   end
 end
