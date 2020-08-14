@@ -30,11 +30,6 @@ class Notification < ApplicationRecord
   scope :webhooks, -> { where(notification_type: NotificationType::WEBHOOK) }
   scope :emails, -> { where(notification_type: NotificationType::EMAIL) }
 
-  scope :updated_at_range, lambda { |from, to|
-    includes(:notification_type)
-      .where(updated_at: from..to)
-  }
-
   def kept?
     # this notification is only kept if it is not discarded and its parent subscription is not discarded
     !discarded? && subscription.kept?

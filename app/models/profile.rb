@@ -36,10 +36,6 @@ class Profile < VersionedModel
   validate :validate_assessment_answers
   attribute :assessment_answers, Types::Jsonb.new(Profile::AssessmentAnswers)
 
-  scope :updated_at_range, lambda { |from, to|
-    where(updated_at: from..to)
-  }
-
   # Need to check whether this update actually involves a change, otherwise there will be a papertrail log
   # full of update records where nothing actually changes - making the audit next to useless.
   def merge_assessment_answers!(new_assessment_answers, category)

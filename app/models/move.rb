@@ -113,11 +113,6 @@ class Move < VersionedModel
 
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
-  scope :updated_at_range, lambda { |from, to|
-    includes(:supplier, :from_location, :to_location)
-      .where(updated_at: from..to)
-  }
-
   attr_accessor :version
 
   # TODO: Temporary method to apply correct validation rules when creating v2 move
