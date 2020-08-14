@@ -17,7 +17,7 @@ namespace :feeds do
       Rake::Task["feeds:#{feed_name}"].invoke
       end_time = Time.zone.now
 
-      elapsed_time = (start_time - end_time).seconds
+      elapsed_time = (end_time - start_time).seconds
 
       puts "Generated #{feed_name} feed in #{elapsed_time} seconds"
     end
