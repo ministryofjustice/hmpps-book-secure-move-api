@@ -15,13 +15,13 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
     when 'FrameworkResponse::Object'
       'object'
     when 'FrameworkResponse::Collection'
-      'collection'
+      object.framework_question.question_type == 'add_multiple_items' ? 'collection::add_multiple_items' : 'collection'
     end
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
-    question
+    question.descendants
     flags
   ].freeze
 end

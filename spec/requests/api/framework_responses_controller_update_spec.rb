@@ -119,7 +119,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": value,
-              "value_type": 'collection',
+              "value_type": 'collection::add_multiple_items',
               "responded": true,
             },
           })
@@ -160,7 +160,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": [{ item: 2, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] }],
-              "value_type": 'collection',
+              "value_type": 'collection::add_multiple_items',
               "responded": true,
             },
           })
