@@ -10,4 +10,5 @@ FrameworkResponseIncludeParameter:
       - flags
       - person_escort_record
       - question
+      - question.descendants
   example: framework

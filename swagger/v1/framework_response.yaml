@@ -47,11 +47,10 @@ FrameworkResponse:
                       type: string
                     details:
                       type: string
-                  example:
-                    - option: Level 1
-                      details: Some details about Level 1
-                    - option: Level 2
-                      details: Some details about Level 2
+                    item:
+                      type: integer
+                    responses:
+                      type: array
         value_type:
           type: string
           example: 'array'
@@ -60,6 +59,7 @@ FrameworkResponse:
             - array
             - object
             - collection
+            - collection::add_multiple_items
           description: Indicates the type of value for the answer provided
           readOnly: true
         responded:
