@@ -82,7 +82,7 @@ RSpec.describe FrameworkResponse do
       expect(response).to validate_presence_of(:value).on(:update)
     end
 
-    it 'does not validate collection dependent responses if parent response is not correct value' do
+    it 'does not validate multiple item collection dependent responses if parent response is not correct value' do
       question = create(:framework_question, :add_multiple_items, dependent_value: 'Level 3', options: [], required: true)
       response = create(:collection_response, :multiple_items, value: nil, parent: create(:collection_response, :details), framework_question: question)
 

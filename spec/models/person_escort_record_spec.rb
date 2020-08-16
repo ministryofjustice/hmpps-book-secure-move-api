@@ -136,6 +136,15 @@ RSpec.describe PersonEscortRecord do
       expect { person_escort_record.build_responses! }.to change(FrameworkResponse, :count).by(2)
     end
 
+    it 'creates responses for multiple items questions' do
+      framework = create(:framework)
+      create(:framework_question, :add_multiple_items, framework: framework)
+      profile = create(:profile)
+      person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
+
+      expect { person_escort_record.build_responses! }.to change(FrameworkResponse, :count).by(1)
+    end
+
     it 'creates responses for dependent questions' do
       framework = create(:framework)
       parent_question = create(:framework_question, framework: framework)
