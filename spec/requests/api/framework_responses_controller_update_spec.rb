@@ -80,7 +80,7 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
-      context 'when response is a collection' do
+      context 'when response is a details collection' do
         let(:framework_response) { create(:collection_response, :details) }
         let(:value) { [{ option: 'Level 1', details: 'Some details' }, { option: 'Level 2' }] }
 
@@ -97,7 +97,36 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
-      context 'when incorrect keys added to collection response' do
+      context 'when response is a multiple item collection' do
+        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question) }
+        let(:question1) { create(:framework_question) }
+        let(:question2) { create(:framework_question, :checkbox) }
+        let(:question3) { create(:framework_question, :checkbox, followup_comment: true) }
+        let(:question4) { create(:framework_question, followup_comment: true) }
+        let(:question) { create(:framework_question, :add_multiple_items, dependents: [question1, question2, question3, question4]) }
+        let(:value) do
+          [
+            { item: 1, responses: [{ value: 'No', framework_question_id: question1.id }] },
+            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: question2.id }] },
+            { item: 3, responses: [{ value: [{ option: 'Level 1', details: 'some detail' }], framework_question_id: question3.id }] },
+            { item: 4, responses: [{ value: { option: 'No', details: 'some detail' }, framework_question_id: question4.id }] },
+          ]
+        end
+
+        it 'returns the correct data' do
+          expect(response_json).to include_json(data: {
+            "id": framework_response_id,
+            "type": 'framework_responses',
+            "attributes": {
+              "value": value,
+              "value_type": 'collection',
+              "responded": true,
+            },
+          })
+        end
+      end
+
+      context 'when incorrect keys added to details collection response' do
         let(:framework_response) { create(:collection_response, :details) }
         let(:value) { [{ option: 'Level 1', detailss: 'Some details' }] }
 
@@ -107,6 +136,30 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": [{ option: 'Level 1' }],
+              "value_type": 'collection',
+              "responded": true,
+            },
+          })
+        end
+      end
+
+      context 'when incorrect keys added to multiple items collection response' do
+        let(:framework_response) { create(:collection_response, :multiple_items) }
+        let(:framework_question) { framework_response.framework_question.dependents.first }
+
+        let(:value) do
+          [
+            { items: 1, responses: [{ value: ['Level 1'], framework_question_id: framework_question.id }] },
+            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] },
+          ]
+        end
+
+        it 'returns the correct data' do
+          expect(response_json).to include_json(data: {
+            "id": framework_response_id,
+            "type": 'framework_responses',
+            "attributes": {
+              "value": [{ item: 2, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] }],
               "value_type": 'collection',
               "responded": true,
             },
@@ -165,6 +218,26 @@ RSpec.describe Api::FrameworkResponsesController do
           let(:errors_422) do
             [{ 'title' => 'Unprocessable entity',
                'detail' => 'Value is not included in the list' }]
+          end
+        end
+      end
+
+      context 'with a nested invalid value' do
+        let(:framework_response) { create(:collection_response, :multiple_items) }
+        let(:framework_question) { framework_response.framework_question.dependents.first }
+
+        let(:value) do
+          [
+            { item: 1, responses: [{ value: ['Level 1'], framework_question_id: framework_question.id }] },
+            { item: 2, responses: [{ value: ['Level 3'], framework_question_id: framework_question.id }] },
+            { item: 3, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{ 'title' => 'Unprocessable entity',
+               'detail' => 'Items[1].responses[0].value level 3 are not valid options' }]
           end
         end
       end

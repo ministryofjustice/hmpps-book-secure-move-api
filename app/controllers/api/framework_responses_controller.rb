@@ -4,9 +4,13 @@ module Api
   class FrameworkResponsesController < ApiController
     # NB: permit multiple types of value attributes: array, array of objects,
     # object with option details fields, and string
-    PPERMITTED_PARAMS = [
+    PERMITTED_PARAMS = [
       :type,
-      attributes: [:value, { value: %i[option details] }, { value: [] }],
+      attributes: [
+        :value,
+        { value: [:option, :details, :item, responses: [:framework_question_id, :value, { value: %i[option details] }, { value: [] }]] },
+        { value: [] },
+      ],
     ].freeze
 
     def update
@@ -18,7 +22,7 @@ module Api
   private
 
     def update_framework_response_params
-      params.require(:data).permit(PPERMITTED_PARAMS)
+      params.require(:data).permit(PERMITTED_PARAMS)
     end
 
     def update_framework_response_attributes
