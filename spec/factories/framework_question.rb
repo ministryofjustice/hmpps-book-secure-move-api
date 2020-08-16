@@ -22,5 +22,11 @@ FactoryBot.define do
       question_type { 'checkbox' }
       options { ['Level 1', 'Level 2'] }
     end
+
+    trait :add_multiple_items do
+      question_type { 'add_multiple_items' }
+      options { [] }
+      dependents { [build(:framework_question, :checkbox)] }
+    end
   end
 end

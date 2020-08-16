@@ -19,6 +19,16 @@ FactoryBot.define do
       association(:framework_question, :checkbox, followup_comment: true)
       value { [{ 'option' => 'Level 1', 'details' => 'some comment' }, { 'option' => 'Level 2', 'details' => 'another comment' }] }
     end
+
+    trait :multiple_items do
+      association(:framework_question, :add_multiple_items)
+      value do
+        [
+          { 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => framework_question.dependents.first.id }] },
+          { 'item' => 2, 'responses' => [{ 'value' => ['Level 2'], 'framework_question_id' => framework_question.dependents.first.id }] },
+        ]
+      end
+    end
   end
 
   factory :string_response, parent: :framework_response, class: 'FrameworkResponse::String' do

@@ -36,10 +36,31 @@ RSpec.describe FrameworkResponse::Collection do
       expect(response.errors.messages[:details]).to eq(["can't be blank"])
     end
 
+    it 'validates multiple items collection' do
+      question = create(:framework_question, :add_multiple_items, required: true)
+      response = create(
+        :collection_response,
+        :multiple_items,
+        framework_question: question,
+        value: [{ 'item' => 'Yes', responses: [{ 'value' => ['Level 1'], framework_question_id: question.dependents.first.id }] }],
+      )
+
+      expect(response).not_to be_valid
+      expect(response.errors.messages[:"items[0].item"]).to eq(['is not a number'])
+    end
+
     context 'when question required' do
-      it 'validates presence of value when value is empty' do
+      it 'validates presence of value when value is empty for details question' do
         question = create(:framework_question, :checkbox, followup_comment: true, required: true)
         response = create(:collection_response, :details, value: [], framework_question: question)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'validates presence of value when value is empty for multiple items question' do
+        question = create(:framework_question, :add_multiple_items, required: true)
+        response = create(:collection_response, :multiple_items, value: [], framework_question: question)
 
         expect(response).not_to be_valid
         expect(response.errors.messages[:value]).to eq(["can't be blank"])
@@ -61,17 +82,38 @@ RSpec.describe FrameworkResponse::Collection do
         expect(response.errors.messages[:value]).to eq(["can't be blank"])
       end
 
-      it 'does not validate presence of value when value is provided' do
+      it 'validates presence of value when empty item and responses supplied' do
+        framework_question = create(:framework_question, :add_multiple_items, required: true)
+        response = create(:collection_response, :multiple_items, value: [{ item: nil, responses: nil }], framework_question: framework_question)
+
+        expect(response).not_to be_valid
+        expect(response.errors.messages[:value]).to eq(["can't be blank"])
+      end
+
+      it 'does not validate presence of value when value is provided for detail collection' do
         question = create(:framework_question, :checkbox, followup_comment: true, required: true)
         response = create(:collection_response, :details, value: [{ option: 'Level 1', details: 'some comment' }], framework_question: question)
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is provided for multiple item collection' do
+        question = create(:framework_question, :add_multiple_items, required: true)
+        response = create(:collection_response, :multiple_items, value: [{ item: 1, responses: [{ value: ['Level 1'], framework_question_id: question.dependents.first.id }] }], framework_question: question)
 
         expect(response).to be_valid
       end
     end
 
     context 'when question not required' do
-      it 'does not validate presence of value when value is empty' do
+      it 'does not validate presence of value when value is empty for details response' do
         response = create(:collection_response, :details, value: [])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is empty for multiple item response' do
+        response = create(:collection_response, :multiple_items, value: [])
 
         expect(response).to be_valid
       end
@@ -82,8 +124,14 @@ RSpec.describe FrameworkResponse::Collection do
         expect(response).to be_valid
       end
 
-      it 'does not validate presence of value when value is provided' do
+      it 'does not validate presence of value when value is provided for details response' do
         response = create(:collection_response, :details, value: [{ option: 'Level 2', details: 'some comment' }])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate presence of value when value is provided for multiple response' do
+        response = create(:collection_response, :multiple_items)
 
         expect(response).to be_valid
       end
@@ -155,42 +203,80 @@ RSpec.describe FrameworkResponse::Collection do
       expect(response.value).to be_empty
     end
 
-    it 'returns response value if details supplied' do
-      collection = [
-        { details: 'some comment', option: 'Level 1' },
-        { details: 'some comment', option: 'Level 2' },
-      ]
-      response = create(:collection_response, :details, value: collection)
+    context 'when details response' do
+      it 'returns response value if details supplied' do
+        collection = [
+          { details: 'some comment', option: 'Level 1' },
+          { details: 'some comment', option: 'Level 2' },
+        ]
+        response = create(:collection_response, :details, value: collection)
 
-      expect(response.value.as_json).to contain_exactly(
-        { 'details' => 'some comment', 'option' => 'Level 1' },
-        { 'details' => 'some comment', 'option' => 'Level 2' },
-      )
+        expect(response.value.as_json).to contain_exactly(
+          { 'details' => 'some comment', 'option' => 'Level 1' },
+          { 'details' => 'some comment', 'option' => 'Level 2' },
+        )
+      end
+
+      it 'removes empty hashes in response' do
+        collection = [
+          { details: 'some comment', option: 'Level 1' },
+          {},
+          { details: nil, option: nil },
+        ]
+        response = create(:collection_response, :details, value: collection)
+
+        expect(response.value.as_json).to contain_exactly(
+          { 'details' => 'some comment', 'option' => 'Level 1' },
+        )
+      end
+
+      it 'returns response value if details supplied but empty' do
+        response = create(:collection_response, :details, value: {})
+
+        expect(response.value.as_json).to be_empty
+      end
+
+      it 'returns response value if details supplied but nil' do
+        response = create(:collection_response, :details, value: nil)
+
+        expect(response.value.as_json).to be_empty
+      end
     end
 
-    it 'removes empty hashes in response' do
-      collection = [
-        { details: 'some comment', option: 'Level 1' },
-        {},
-        { details: nil, option: nil },
-      ]
-      response = create(:collection_response, :details, value: collection)
+    context 'when multiple item response' do
+      it 'returns response value if multiple items supplied' do
+        response = create(:collection_response, :multiple_items)
+        expect(response.value.as_json).to contain_exactly(
+          { 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => response.framework_question.dependents.first.id }] },
+          { 'item' => 2, 'responses' => [{ 'value' => ['Level 2'], 'framework_question_id' => response.framework_question.dependents.first.id }] },
+        )
+      end
 
-      expect(response.value.as_json).to contain_exactly(
-        { 'details' => 'some comment', 'option' => 'Level 1' },
-      )
-    end
+      it 'removes empty hashes in response' do
+        question = create(:framework_question, :add_multiple_items)
+        collection = [
+          { 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => question.dependents.first.id }] },
+          {},
+          { item: nil, responses: nil },
+        ]
+        response = create(:collection_response, :multiple_items, value: collection, framework_question: question)
 
-    it 'returns response value if details supplied but empty' do
-      response = create(:collection_response, :details, value: {})
+        expect(response.value.as_json).to contain_exactly(
+          { 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => question.dependents.first.id }] },
+        )
+      end
 
-      expect(response.value.as_json).to be_empty
-    end
+      it 'returns response value if items supplied but empty' do
+        response = create(:collection_response, :multiple_items, value: {})
 
-    it 'returns response value if details supplied but nil' do
-      response = create(:collection_response, :details, value: nil)
+        expect(response.value.as_json).to be_empty
+      end
 
-      expect(response.value.as_json).to be_empty
+      it 'returns response value if items supplied but nil' do
+        response = create(:collection_response, :multiple_items, value: nil)
+
+        expect(response.value.as_json).to be_empty
+      end
     end
   end
 
@@ -203,6 +289,12 @@ RSpec.describe FrameworkResponse::Collection do
 
     it 'returns false if option does not match any option selected' do
       response = create(:collection_response, :details)
+
+      expect(response.option_selected?('Level 3')).to be(false)
+    end
+
+    it 'ignores multiple item type responses' do
+      response = create(:collection_response, :multiple_items)
 
       expect(response.option_selected?('Level 3')).to be(false)
     end
