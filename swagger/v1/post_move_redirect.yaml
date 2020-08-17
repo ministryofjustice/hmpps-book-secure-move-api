@@ -17,6 +17,8 @@ PostMoveRedirect:
       properties:
         timestamp:
           $ref: timestamp_attribute.yaml#/Timestamp
+        move_type:
+          $ref: move_type_attribute.yaml#/MoveType
         notes:
           $ref: notes_attribute.yaml#/Notes
     relationships:

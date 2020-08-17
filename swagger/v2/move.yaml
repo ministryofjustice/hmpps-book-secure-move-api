@@ -37,17 +37,7 @@ Move:
             - completed
           description: Indicates the stage in its lifecycle that this move is at
         move_type:
-          type: string
-          enum:
-            - court_appearance
-            - court_other
-            - hospital
-            - police_transfer
-            - prison_recall
-            - prison_remand
-            - prison_transfer
-            - video_remand
-          description: Indicates the type of move, e.g. prison transfer or court appearance
+          $ref: "../v1/move_type_attribute.yaml#/MoveType"
         move_agreed:
           oneOf:
             - type: boolean

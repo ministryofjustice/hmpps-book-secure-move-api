@@ -25,6 +25,10 @@ class MoveEvent < Event
     @cancellation_reason_comment ||= event_params.dig(:attributes, :cancellation_reason_comment)
   end
 
+  def move_type
+    @move_type ||= event_params.dig(:attributes, :move_type)
+  end
+
 private
 
   def option_selected?(attribute_name)

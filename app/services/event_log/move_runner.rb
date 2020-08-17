@@ -28,6 +28,7 @@ module EventLog
           # no action to perform when a move is locked out, this event is purely for auditing
         when Event::REDIRECT
           move.to_location = event.to_location
+          move.move_type = event.move_type if event.move_type.present?
         when Event::REJECT
           move.status = Move::MOVE_STATUS_CANCELLED
           move.rejection_reason = event.rejection_reason
