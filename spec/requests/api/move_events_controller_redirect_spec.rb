@@ -12,14 +12,17 @@ RSpec.describe Api::MoveEventsController do
     let(:move) { create(:move, :prison_transfer, from_location: from_location) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location) }
+    let(:attributes) do
+      {
+        timestamp: '2020-04-23T18:25:43.511Z',
+        notes: 'requested by PMU',
+      }
+    end
     let(:redirect_params) do
       {
         data: {
           type: 'redirects',
-          attributes: {
-            timestamp: '2020-04-23T18:25:43.511Z',
-            notes: 'requested by PMU',
-          },
+          attributes: attributes,
           relationships: {
             to_location: { data: { type: 'locations', id: new_location.id } },
           },
@@ -43,6 +46,25 @@ RSpec.describe Api::MoveEventsController do
         it 'calls the notifier when updating a person' do
           expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
         end
+      end
+    end
+
+    context 'with an updated move type corresponding to the new location' do
+      let(:new_location) { create(:location, :court) }
+      let(:attributes) do
+        {
+          timestamp: '2020-04-23T18:25:43.511Z',
+          notes: 'requested by PMU',
+          move_type: 'court_appearance',
+        }
+      end
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
+      end
+
+      it 'updates the move move_type' do
+        expect { move.reload }.to change(move, :move_type).from('prison_transfer').to('court_appearance')
       end
     end
 
