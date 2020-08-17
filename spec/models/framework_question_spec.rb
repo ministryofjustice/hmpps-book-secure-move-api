@@ -18,72 +18,6 @@ RSpec.describe FrameworkQuestion do
   describe '#build_responses' do
     let(:questions) { described_class.all.index_by(&:id) }
 
-    it 'builds a string response for radio questions' do
-      question = create(:framework_question)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::String)
-    end
-
-    it 'builds an array response for checkbox questions' do
-      question = create(:framework_question, :checkbox)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::Array)
-    end
-
-    it 'builds a string response for text questions' do
-      question = create(:framework_question, :text)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::String)
-    end
-
-    it 'builds a string response for textarea questions' do
-      question = create(:framework_question, :textarea)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::String)
-    end
-
-    it 'builds an object response for radio with followup questions' do
-      question = create(:framework_question, followup_comment: true)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::Object)
-    end
-
-    it 'builds a collection response for checkbox with followup questions' do
-      question = create(:framework_question, :checkbox, followup_comment: true)
-      person_escort_record = create(:person_escort_record)
-      response = question.build_responses(
-        person_escort_record: person_escort_record,
-        questions: questions,
-      )
-
-      expect(response).to be_a(FrameworkResponse::Collection)
-    end
-
     it 'builds response associated to correct question' do
       question1 = create(:framework_question)
       question2 = create(:framework_question)
@@ -144,6 +78,17 @@ RSpec.describe FrameworkQuestion do
       expect(response.dependents.first.framework_question).to eq(dependent_question)
     end
 
+    it 'does not build dependent responses for multiple item questions' do
+      person_escort_record = create(:person_escort_record)
+      question = create(:framework_question, :add_multiple_items)
+      response = question.build_responses(
+        person_escort_record: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.dependents).to be_empty
+    end
+
     it 'sets person_escort_record on dependent responses' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
@@ -185,6 +130,85 @@ RSpec.describe FrameworkQuestion do
 
       dependent_responses = response.dependents
       expect(dependent_responses.first.dependents.size).to eq(2)
+    end
+  end
+
+  describe '#build_response' do
+    it 'builds a string response for radio questions' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::String)
+    end
+
+    it 'builds an array response for checkbox questions' do
+      question = create(:framework_question, :checkbox)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::Array)
+    end
+
+    it 'builds a string response for text questions' do
+      question = create(:framework_question, :text)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::String)
+    end
+
+    it 'builds a string response for textarea questions' do
+      question = create(:framework_question, :textarea)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::String)
+    end
+
+    it 'builds an object response for radio with followup questions' do
+      question = create(:framework_question, followup_comment: true)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::Object)
+    end
+
+    it 'builds a collection response for checkbox with followup questions' do
+      question = create(:framework_question, :checkbox, followup_comment: true)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::Collection)
+    end
+
+    it 'builds a collection response for multiple items questions' do
+      question = create(:framework_question, :add_multiple_items)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).to be_a(FrameworkResponse::Collection)
     end
   end
 end

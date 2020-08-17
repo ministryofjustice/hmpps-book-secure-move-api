@@ -23,7 +23,7 @@ class FrameworkQuestion < VersionedModel
 
   def build_responses(question: self, person_escort_record:, questions:)
     response = build_response(question, person_escort_record)
-    return response if question.dependents.empty?
+    return response if question.dependents.empty? || question.question_type == 'add_multiple_items'
 
     question.dependents.each do |dependent_question|
       # NB: to avoid extra queries use original set of questions
@@ -35,8 +35,6 @@ class FrameworkQuestion < VersionedModel
     response
   end
 
-private
-
   def build_response(question, person_escort_record)
     klass =
       case question.question_type
@@ -44,6 +42,8 @@ private
         question.followup_comment ? FrameworkResponse::Object : FrameworkResponse::String
       when 'checkbox'
         question.followup_comment ? FrameworkResponse::Collection : FrameworkResponse::Array
+      when 'add_multiple_items'
+        FrameworkResponse::Collection
       else
         FrameworkResponse::String
       end

@@ -74,6 +74,20 @@ RSpec.describe FrameworkResponse do
 
       expect(response).not_to validate_presence_of(:value).on(:update)
     end
+
+    it 'validates multiple item collection dependent responses' do
+      question = create(:framework_question, :add_multiple_items, dependent_value: 'Level 1', options: [], required: true)
+      response = create(:collection_response, :multiple_items, value: nil, parent: create(:collection_response, :details), framework_question: question)
+
+      expect(response).to validate_presence_of(:value).on(:update)
+    end
+
+    it 'does not validate multiple item collection dependent responses if parent response is not correct value' do
+      question = create(:framework_question, :add_multiple_items, dependent_value: 'Level 3', options: [], required: true)
+      response = create(:collection_response, :multiple_items, value: nil, parent: create(:collection_response, :details), framework_question: question)
+
+      expect(response).not_to validate_presence_of(:value).on(:update)
+    end
   end
 
   describe '.requires_value?' do
@@ -91,7 +105,7 @@ RSpec.describe FrameworkResponse do
       expect(described_class.requires_value?(response.value, response)).to be(false)
     end
 
-    it 'returns true if question required, value is empty and has is not dependent' do
+    it 'returns true if question required, value is empty and is not dependent' do
       question = create(:framework_question, options: [], required: true)
       response = create(:string_response, value: nil, framework_question: question)
 
