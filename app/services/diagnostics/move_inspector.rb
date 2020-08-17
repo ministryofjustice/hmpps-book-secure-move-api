@@ -24,8 +24,9 @@ module Diagnostics
         move type:\t#{move.move_type}
         from location:\t#{move.from_location&.title}
         to location:\t#{move.to_location&.title}
+        supplier:\t#{move.supplier&.name}
         created at:\t#{move.created_at}
-        updated at:\t#{move.created_at}
+        updated at:\t#{move.updated_at}        
         additional information: #{move.additional_information}
         
         MOVE EVENTS
