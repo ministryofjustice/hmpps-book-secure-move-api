@@ -21,6 +21,7 @@ FrameworkQuestion:
       required:
       - key
       - question_type
+      - response_type
       - options
       properties:
         key:
@@ -37,6 +38,17 @@ FrameworkQuestion:
             - radio
             - checkbox
           description: Indicates the type of question
+          readOnly: true
+        response_type:
+          type: string
+          example: 'string'
+          enum:
+            - string
+            - array
+            - object
+            - collection
+            - collection::add_multiple_items
+          description: Indicates the type of response for the question
           readOnly: true
         section:
           example: 'risk-information'

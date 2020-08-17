@@ -70,11 +70,19 @@ RSpec.describe FrameworkResponseSerializer do
       end
     end
 
-    context 'when response is an collection response' do
+    context 'when response is a collection response' do
       let(:framework_response) { create(:collection_response) }
 
       it 'returns value_type `collection`' do
         expect(result[:data][:attributes][:value_type]).to eq('collection')
+      end
+    end
+
+    context 'when response is a collection response and question type is add multiple items' do
+      let(:framework_response) { create(:collection_response, :multiple_items) }
+
+      it 'returns value_type `collection`' do
+        expect(result[:data][:attributes][:value_type]).to eq('collection::add_multiple_items')
       end
     end
 

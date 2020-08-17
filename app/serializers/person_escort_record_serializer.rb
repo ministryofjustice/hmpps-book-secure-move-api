@@ -15,7 +15,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   def framework_responses
-    object.framework_responses.includes(:framework_flags, framework_question: :framework)
+    object.framework_responses.includes(:framework_flags, framework_question: %i[framework dependents])
   end
 
   def status
@@ -30,6 +30,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     framework
     profile.person
     responses.question
+    responses.question.descendants
     flags
   ].freeze
 end
