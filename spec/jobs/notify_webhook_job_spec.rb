@@ -92,7 +92,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       context 'when the callback response is a failure' do
-        let(:response) { instance_double(Faraday::Response, success?: false, status: 503, reason_phrase: 'Server error') }
+        let(:response) { instance_double(Faraday::Response, success?: false, status: 503, reason_phrase: 'Server error', body: { message: 'some message', error: 'some error' }.to_json) }
 
         it 'raises Notification failed error' do
           expect { perform! }.to raise_error(RuntimeError, /non-success status received/)

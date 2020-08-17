@@ -18,7 +18,9 @@ class NotifyWebhookJob < ApplicationJob
       client = get_client(subscription)
       response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
-      raise "non-success status received from #{subscription.callback_url} (#{response.status} #{response.reason_phrase})" unless response.success?
+      unless response.success?
+        raise "non-success status received from #{subscription.callback_url}. Status: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
+      end
 
       notification.update(
         delivered_at: Time.zone.now,
