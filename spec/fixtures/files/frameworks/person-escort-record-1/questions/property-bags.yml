@@ -1,0 +1,10 @@
+type: add_multiple_items
+question: Bags of property
+list_item_name: Bag
+questions:
+  - property-bag-seal-number
+  - property-bag-type
+validations:
+  -
+    type: required
+    message: Add at least one bag of property

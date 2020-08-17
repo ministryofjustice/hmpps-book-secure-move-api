@@ -1,0 +1,7 @@
+name: Property information
+steps:
+  -
+    name: Property details
+    slug: property-details
+    questions:
+      - property-bags
