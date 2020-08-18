@@ -34,7 +34,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     framework
     profile.person
     responses.question
-    responses.question.descendants
+    responses.question.descendants.**
     flags
   ].freeze
 end
