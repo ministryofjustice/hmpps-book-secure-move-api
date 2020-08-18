@@ -14,8 +14,12 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     object.framework.version
   end
 
+  def framework_flags
+    object.framework_flags.includes(framework_question: :dependents)
+  end
+
   def framework_responses
-    object.framework_responses.includes(:framework_flags, framework_question: %i[framework dependents])
+    object.framework_responses.includes(:framework_flags, framework_question: [:framework, dependents: :dependents])
   end
 
   def status
