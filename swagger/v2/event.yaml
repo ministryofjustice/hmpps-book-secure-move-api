@@ -18,24 +18,24 @@ EventResponseBody:
     attributes:
       type: object
       required:
-        - event_name
-        - timestamp
+        - event_type
+        - client_timestamp
       properties:
-        event_name:
+        event_type:
           type: string
           description: |
-            Events have many forms which determine their accepted payload shape and validations. The event_name indicates which form the payload, validations and any relevant event actions take.
+            Events have many forms which determine their accepted payload shape and validations. The event_type indicates which form the payload, validations and any relevant event actions take.
 
-            An invalid (non-existing) event_name field triggers a validation error.
+            An invalid (non-existing) event_type field triggers a validation error.
 
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
           example: cancel_move
-        timestamp:
+        client_timestamp:
           type: string
           description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) client_timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
 
             This is **mandatory**.
           format: date-time
@@ -89,24 +89,24 @@ EventRequestPostBody:
     attributes:
       type: object
       required:
-        - event_name
-        - timestamp
+        - event_type
+        - client_timestamp
       properties:
-        event_name:
+        event_type:
           type: string
           description: |
-            Events have many forms which determine their accepted payload shape and validations. The event_name indicates which form the payload, validations and any relevant event actions take.
+            Events have many forms which determine their accepted payload shape and validations. The event_type indicates which form the payload, validations and any relevant event actions take.
 
-            An invalid (non-existing) event_name field triggers a validation error.
+            An invalid (non-existing) event_type field triggers a validation error.
 
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
           example: cancel_move
-        timestamp:
+        client_timestamp:
           type: string
           description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) client_timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
 
             This is **mandatory**.
           format: date-time
