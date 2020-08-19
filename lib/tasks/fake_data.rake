@@ -189,7 +189,7 @@ namespace :fake_data do
       to_location = courts.sample
       next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
 
-      move = Move.create!(
+      Move.create!(
         date: date,
         date_from: date,
         time_due: time,
@@ -198,7 +198,7 @@ namespace :fake_data do
         to_location: to_location,
         status: %w[proposed requested booked in_transit completed].sample,
       )
-      document = Document.new(move: move)
+      document = Document.new(documentable: profile)
       document.file.attach(io: file, filename: 'file-sample_100kB.doc')
       document.save!
     ensure
@@ -240,7 +240,7 @@ namespace :fake_data do
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Event, Journey, Move, Document, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [Allocation, Event, Document, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end
