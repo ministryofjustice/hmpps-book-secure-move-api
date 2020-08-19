@@ -29,6 +29,7 @@ class Notification < ApplicationRecord
   scope :kept, -> { undiscarded.joins(:subscription).merge(Subscription.kept) }
   scope :webhooks, -> { where(notification_type: NotificationType::WEBHOOK) }
   scope :emails, -> { where(notification_type: NotificationType::EMAIL) }
+  scope :default_order, -> { order(created_at: :asc) }
 
   def kept?
     # this notification is only kept if it is not discarded and its parent subscription is not discarded
