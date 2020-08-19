@@ -14,8 +14,10 @@ module Frameworks
 
     def call
       question.question_type = source['type']
-      question.required = true if required?(source['validations'])
+      question.required = true if required?(source.fetch('validations', []))
+
       build_options(source.fetch('options', []))
+      build_followup_questions(followups: source.fetch('questions', []), value: nil)
 
       questions
     end
@@ -61,9 +63,9 @@ module Frameworks
 
     def build_flags(flags:, value:)
       flags.each do |flag|
-        question.flags.new(
+        question.framework_flags.new(
           flag_type: flag['type'],
-          name: flag['label'],
+          title: flag['label'],
           question_value: value,
         )
       end

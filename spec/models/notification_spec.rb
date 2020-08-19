@@ -43,4 +43,44 @@ RSpec.describe Notification, type: :model do
       end
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      topic = create(:move)
+      notification = create(:notification, topic: topic)
+
+      expect { notification.update(delivery_attempted_at: notification.delivery_attempted_at + 1.day) }.to change { topic.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      topic = create(:move)
+
+      expect { create(:notification, topic: topic) }.to change { topic.reload.updated_at }
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:notification) { create(:notification, :email) }
+
+    let(:expected_json) do
+      {
+        'id' => notification.id,
+        'event_type' => 'move_created',
+        'topic_id' => notification.topic_id,
+        'topic_type' => notification.topic_type,
+        'delivery_attempts' => 0,
+        'delivery_attempted_at' => be_a(Time),
+        'delivered_at' => be_a(Time),
+        'discarded_at' => nil,
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'response_id' => nil,
+        'notification_type_id' => 'email',
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(notification.for_feed).to include_json(expected_json)
+    end
+  end
 end

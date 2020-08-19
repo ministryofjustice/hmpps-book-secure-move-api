@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Profile, type: :model do
   it { is_expected.to belong_to(:person).required }
   it { is_expected.to have_many(:documents) }
+  it { is_expected.to have_many(:moves) } # NB: a profile can be re-used across multiple moves
+  it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to validate_presence_of(:person) }
 
   describe '#validate_assessment_answers' do
@@ -153,6 +155,55 @@ RSpec.describe Profile, type: :model do
 
     it 'has a create event' do
       expect(profile.versions.map(&:event)).to eq(%w[create])
+    end
+  end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile, :with_assessment_answers)
+      person = profile.person
+
+      expect { profile.update(assessment_answers: []) }.to change { person.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      person = create(:person_without_profiles)
+
+      expect { create(:profile, person: person) }.to change { person.reload.updated_at }
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:profile) { create(:profile) }
+
+    let(:expected_json) do
+      {
+        'id' => profile.id,
+        'person_id' => profile.person_id,
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'assessment_answers' => [],
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(profile.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected profiles' do
+      create(:profile, updated_at: updated_at_from - 1.second)
+      create(:profile, updated_at: updated_at_to + 1.second)
+      on_start_profile = create(:profile, updated_at: updated_at_from)
+      on_end_profile = create(:profile, updated_at: updated_at_to)
+
+      actual_profiles = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_profiles).to eq([on_start_profile, on_end_profile])
     end
   end
 end

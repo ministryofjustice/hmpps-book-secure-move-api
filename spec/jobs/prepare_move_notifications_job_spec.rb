@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe PrepareMoveNotificationsJob, type: :job do
-  subject(:perform) { described_class.new.perform(topic_id: move.id, action_name: action_name) }
+  subject(:perform) do
+    described_class.new.perform(topic_id: move.id, action_name: action_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
+  end
 
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
   let(:move) { create :move, from_location: location }
   let(:action_name) { 'create' }
+  let(:send_webhooks) { true }
+  let(:send_emails) { true }
+  let(:only_supplier_id) { nil }
 
   before do
     create(:notification_type, :webhook)
@@ -66,8 +71,6 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
 
   context 'when creating a move' do
     context 'when a subscription has both a webhook and email addresses' do
-      let(:subscription) { create :subscription }
-
       it_behaves_like 'it creates a webhook notification record'
       it_behaves_like 'it creates an email notification record'
       it_behaves_like 'it schedules NotifyWebhookJob'
@@ -118,5 +121,41 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     it_behaves_like 'it creates an email notification record'
     it_behaves_like 'it schedules NotifyWebhookJob'
     it_behaves_like 'it schedules NotifyEmailJob'
+  end
+
+  context 'when send_webhooks is false' do
+    let(:send_webhooks) { false }
+
+    it_behaves_like 'it does not create a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it does not schedule NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
+  end
+
+  context 'when send_emails is false' do
+    let(:send_emails) { false }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it does not create an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it does not schedule NotifyEmailJob'
+  end
+
+  context 'when only_supplier_id matches the move supplier' do
+    let(:only_supplier_id) { supplier.id }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
+  end
+
+  context 'when only_supplier_id does not match the move supplier' do
+    let(:only_supplier_id) { create(:supplier).id }
+
+    it_behaves_like 'it does not create a webhook notification record'
+    it_behaves_like 'it does not create an email notification record'
+    it_behaves_like 'it does not schedule NotifyWebhookJob'
+    it_behaves_like 'it does not schedule NotifyEmailJob'
   end
 end

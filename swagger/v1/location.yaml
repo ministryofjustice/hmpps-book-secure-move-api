@@ -34,6 +34,15 @@ Location:
           - court
           - police
           - prison
+          - secure_training_centre
+          - secure_childrens_home
+          - approved_premises
+          - probation_office
+          - community_rehabilitation_company
+          - foreign_national_prison
+          - voluntary_hostel
+          - high_security_hospital
+          - immigration_detention_centre
           example: court
           description: Location type indicates whether this a prison, police station,
             court etc.

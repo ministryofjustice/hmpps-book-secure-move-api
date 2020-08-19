@@ -18,18 +18,20 @@ class NotifyWebhookJob < ApplicationJob
       client = get_client(subscription)
       response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
-      raise "non-success status received from #{subscription.callback_url} (#{response.status} #{response.reason_phrase})" unless response.success?
+      unless response.success?
+        raise "non-success status received from #{subscription.callback_url}. Status: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
+      end
 
       notification.update(
-        delivered_at: DateTime.now,
+        delivered_at: Time.zone.now,
         delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: DateTime.now,
+        delivery_attempted_at: Time.zone.now,
       )
       # TODO: in the future, consider suggesting that the webhook endpoint could return a UUID in the response, which we could store in notification.response_id ?
     rescue StandardError => e
       notification.update(
         delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: DateTime.now,
+        delivery_attempted_at: Time.zone.now,
       )
       Raven.capture_exception(e)
       raise e # re-raise the error to force the notification to be retried by sidekiq later

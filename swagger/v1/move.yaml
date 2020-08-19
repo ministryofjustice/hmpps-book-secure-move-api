@@ -1,7 +1,6 @@
 Move:
   type: object
   required:
-  - id
   - type
   - attributes
   properties:
@@ -20,7 +19,6 @@ Move:
       type: object
       required:
       - status
-      - move_type
       properties:
         reference:
           type: string
@@ -36,15 +34,9 @@ Move:
           - in_transit
           - cancelled
           - completed
-          description: Indicates the stage in it's lifecycle that this move is at
+          description: Indicates the stage in its lifecycle that this move is at
         move_type:
-          type: string
-          enum:
-          - court_appearance
-          - prison_recall
-          - prison_transfer
-          - police_transfer
-          description: Indicates the type of move, e.g. prison transfer or court appearance
+          $ref: move_type_attribute.yaml#/MoveType
         move_agreed:
           oneOf:
           - type: boolean

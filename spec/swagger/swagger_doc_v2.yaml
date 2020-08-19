@@ -7,7 +7,10 @@
   :description: |
     Book A Secure Move supplier and frontend API.
 
-    This api requires an Accept header with a version in, for example:
+    Ids in this api are typically not required in the request body where they
+    are specifiable in the path.
+
+    Ids always come back for resources in responses.
 :consumes:
   - application/vnd.api+json
 :produces:
@@ -19,6 +22,8 @@
     :description: Dev API
   - :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api
     :description: Staging API
+  - :url: https://hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk/api
+    :description: UAT API
   - :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api
     :description: PreProd API
   - :url: https://api.bookasecuremove.service.justice.gov.uk/api
@@ -59,7 +64,8 @@
         - name: filter[police_national_computer]
           in: query
           description:
-            Filters results to only include people identified by that police_national_computer.
+            Filters results to only include people identified by their police_national_computer.
+            This is a case insensitive search.
             Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office]
             are supported.
           schema:
@@ -71,6 +77,7 @@
           in: query
           description:
             Filters results to only include people identified by their
+            This is a case insensitive search.
             criminal_records_office. Either filter[police_national_computer], filter[prison_number]
             or filter[criminal_records_office] are supported.
           schema:
@@ -81,7 +88,8 @@
         - name: filter[prison_number]
           in: query
           description:
-            Filters results to only include people identified by that prison_number.
+            Filters results to only include people identified by their prison_number.
+            This is a case insensitive search.
             Either filter[police_national_computer], filter[prison_number] or filter[criminal_records_office]
             are supported.
           schema:
@@ -96,7 +104,7 @@
         "200":
           description: success
           content:
-            "application/vnd.api+json; version=2":
+            application/vnd.api+json:
               schema:
                 "$ref": "../v2/get_people_responses.yaml#/200"
         "401":
@@ -111,8 +119,14 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/get_people_responses.yaml#/415"
+        "504":
+          description: Nomis Timeout error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_people_responses.yaml#/504"
     post:
-      summary: "Creates a new person and their associated profile"
+      summary: "Creates a new person"
       tags:
         - People
       consumes:
@@ -124,7 +138,7 @@
           required: true
           description: The person object to be created
           schema:
-            "$ref": person.yaml#/Person
+            "$ref": "../v2/person.yaml#/Person"
         - "$ref": "../v2/person_include_parameter.yaml#/PersonIncludeParameter"
       responses:
         "201":
@@ -224,6 +238,46 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/patch_people_responses.yaml#/422"
+  "/people/{person_id}/images":
+    get:
+      summary: It retrieves the image related to the person.
+      description: |
+        The first time the image is retrieved by Nomis and stored on S3.
+        The subsequent times the image is restrieved from S3.
+      tags:
+        - People
+      parameters:
+        - name: Content-Type
+          in: header
+          description: Accepted request content type
+          schema:
+            type: string
+            default: application/vnd.api+json
+          required: true
+        - name: person_id
+          in: path
+          description: The ID of the person
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+          required: true
+      responses:
+        "422":
+          description: unprocessable entity
+          content: {}
+        "404":
+          description: not found
+          content: {}
+        "200":
+          description: success
+          content: {}
+        "504":
+          description: Nomis Timeout Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_people_responses.yaml#/504"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -270,6 +324,24 @@
             type: string
             example: "2019-05-09"
           format: date
+        - name: filter[date_of_birth_from]
+          in: query
+          description:
+            Filters results to only include moves with people born on or after the
+            given date, e.g. `2009-05-02`
+          schema:
+            type: string
+            example: "2009-05-09"
+          format: date
+        - name: filter[date_of_birth_to]
+          in: query
+          description:
+            Filters results to only include moves with people born on or before
+            the given date, e.g. `2009-05-09`
+          schema:
+            type: string
+            example: "2009-05-09"
+          format: date
         - name: filter[status]
           in: query
           explode: false
@@ -311,6 +383,16 @@
                 - supplier_declined_to_move
                 - rejected
                 - other
+        - name: filter[supplier_id]
+          description: Filters results to only include moves for the given supplier UUIDs
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
         - name: filter[from_location_id]
           description:
             Filters results to only include moves from the given location
@@ -341,6 +423,19 @@
           description:
             Filters results to either exclude or include moves associated
             to an allocation optionally
+          schema:
+            type: boolean
+            example: true
+        - name: filter[ready_for_transit]
+          in: query
+          explode: false
+          description:
+            Filters results to either moves which have a confirmed person escort record if set to true,
+            and moves with no person escort record or non confirmed person escort records if set to false.
+            Please note that this filter does not filter by move status, and will include all moves that
+            match the above criteria regardless of status i.e. this filter will include moves which are not
+            necessarily in the `booked` status. Additional filters are necessary to limit the results to the required
+            status of moves (example `booked`).
           schema:
             type: boolean
             example: true
@@ -458,8 +553,15 @@
           required: true
           description: The move object to be modified
           schema:
-            "$ref": "../v2/move.yaml#/Move"
+            "$ref": "../v2/patch_move.yaml#/Move"
         - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
+        - name: create_in_nomis
+          in: query
+          oneOf:
+            - type: boolean
+            - type: "null"
+          example: "true"
+          description: Indicates if the move should be automatically created in NOMIS
       responses:
         "200":
           description: success
@@ -550,3 +652,152 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+  "/events":
+    post:
+      summary: DRAFT Creates a new event for a given eventable DRAFT
+      tags:
+        - Events
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - name: body
+          in: body
+          required: true
+          description: The event object to be created
+          schema:
+            "$ref": "../v2/event.yaml#/EventRequestPostBody"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/422"
+    get:
+      summary: DRAFT Returns a list of events DRAFT
+      description: |
+        Returns a list of events that by default are sorted by their client supplied timestamp.
+
+        This api is paginated using our standard pagination query params.
+      tags:
+        - Events
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: filter[timestamp_from]
+          in: query
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string
+
+            Filters results to only include events on and after the given
+            date-time.
+
+            This filter runs against the client supplied timestamp field.
+          schema:
+            type: string
+            format: date-time
+            example: "filter[timestamp_to]=2020-06-16T00:00:00+01:00"
+          format: date
+          explode: false
+        - name: filter[timestamp_to]
+          in: query
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string
+
+            Filters results to only include events up to and including the given
+            date-time.
+
+            This filter runs against the client supplied timestamp field.
+          schema:
+            type: string
+            format: date-time
+            example: "filter[timestamp_to]=2020-06-17T23:59:59+01:00"
+          explode: false
+        - name: filter[eventable_type]
+          in: query
+          description: |
+            Filters results to only include events of the provided eventable_type/s.
+
+            This filter has a single- and a multiple- eventable mode.
+
+            In multiple mode the filter will filter events of the eventable_type (e.g. filter[eventable_type]=moves,people will return all events that are about moves or people).
+
+            In single eventable mode the filter will check to see whether the eventable_id filter is supplied.
+            When the eventable_id is supplied it will return all events for that single eventable. Otherwise it will return eventables of the supplied type.
+
+            For example:
+              `?filter[eventable_type]=moves&filter[eventable_id]=3561f372-9f1c-4e13-997e-b11e1647cce1`
+
+            Will return the events for the Move indicated by the eventable_id filter.
+
+            Whereas:
+              `?filter[eventable_type]=moves`
+
+            Will return all events with an eventable_type of `moves`
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - people
+                - moves
+                - journeys
+            example: "filter[eventable_type]=people,moves"
+        - name: filter[eventable_id]
+          in: query
+          description: |
+            Filters results to only include events of the provided eventable.
+
+            Must be supplied with an eventable_type filter in single mode (see eventable_type filter description) to uniquely identify a common subject for events.
+          schema:
+            type: string
+            example: "?filter[eventable_id]=3561f372-9f1c-4e13-997e-b11e1647cce1&filter[eventable_type]=moves"
+            explode: false
+        - "$ref": "../v1/pagination_parameters.yaml#/Page"
+        - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_events_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_events_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_events_responses.yaml#/415"

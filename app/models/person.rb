@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class Person < VersionedModel
+  FEED_ATTRIBUTES = %w[
+    id
+    created_at
+    updated_at
+    criminal_records_office
+    nomis_prison_number
+    police_national_computer
+    prison_number
+    latest_nomis_booking_id
+  ].freeze
+
   IDENTIFIER_TYPES = %i[
     police_national_computer criminal_records_office prison_number
   ].freeze
@@ -18,6 +29,13 @@ class Person < VersionedModel
   validates :last_name, presence: true
   validates :first_names, presence: true
 
+  def age
+    # See: https://medium.com/@craigsheen/calculating-age-in-rails-9bb661f11303
+    # rubocop:disable Rails/Date
+    @age ||= ((Time.zone.now - date_of_birth.to_time) / 1.year.seconds).floor if date_of_birth.present?
+    # rubocop:enable Rails/Date
+  end
+
   def latest_profile
     profiles.order(:updated_at).last
   end
@@ -31,5 +49,14 @@ class Person < VersionedModel
         image_io.close
       end
     end
+  end
+
+  def for_feed
+    feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
+
+    feed_attributes.merge!(gender.for_feed) if gender
+    feed_attributes.merge!('age' => age) if age
+
+    feed_attributes
   end
 end

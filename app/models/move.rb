@@ -1,6 +1,29 @@
 # frozen_string_literal: true
 
 class Move < VersionedModel
+  FEED_ATTRIBUTES = %w[
+    id
+    date
+    status
+    created_at
+    updated_at
+    reference
+    move_type
+    additional_information
+    time_due
+    cancellation_reason
+    cancellation_reason_comment
+    profile_id
+    prison_transfer_reason
+    reason_comment
+    move_agreed
+    move_agreed_by
+    date_from
+    date_to
+    allocation_id
+    rejection_reason
+  ].freeze
+
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
@@ -25,12 +48,14 @@ class Move < VersionedModel
 
   enum move_type: {
     court_appearance: 'court_appearance',
-    prison_recall: 'prison_recall',
-    prison_transfer: 'prison_transfer',
+    court_other: 'court_other',
+    hospital: 'hospital',
     police_transfer: 'police_transfer',
+    prison_recall: 'prison_recall',
+    prison_remand: 'prison_remand',
+    prison_transfer: 'prison_transfer',
+    video_remand: 'video_remand',
   }
-
-  self.ignored_columns = %w[person_id]
 
   CANCELLATION_REASONS = [
     CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
@@ -44,9 +69,10 @@ class Move < VersionedModel
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
   ].freeze
 
+  belongs_to :supplier, optional: true
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
-  belongs_to :profile, optional: true
+  belongs_to :profile, optional: true, touch: true
   has_one :person, through: :profile
 
   belongs_to :prison_transfer_reason, optional: true
@@ -59,8 +85,10 @@ class Move < VersionedModel
   has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
-  validates :to_location, presence: true, unless: :prison_recall?
+  validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
   validates :move_type, inclusion: { in: move_types }
+  validates_with Moves::MoveTypeValidator
+
   validates :profile, presence: true, unless: -> { requested? || cancelled? }
   validates :reference, presence: true
 
@@ -80,12 +108,17 @@ class Move < VersionedModel
 
   before_validation :set_reference
   before_validation :set_move_type
-  before_validation :ensure_event_nomis_ids_uniqueness
 
   delegate :suppliers, to: :from_location
 
-  scope :served_by, ->(supplier_id) { where('from_location_id IN (?)', Location.supplier(supplier_id).pluck(:id)) }
   scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
+
+  attr_accessor :version
+
+  # TODO: Temporary method to apply correct validation rules when creating v2 move
+  def v2?
+    version == 2
+  end
 
   def rebooked
     self.class.find_by(original_move_id: id)
@@ -113,14 +146,6 @@ class Move < VersionedModel
     cancellation_reason == CANCELLATION_REASON_REJECTED
   end
 
-  def nomis_event_id=(event_id)
-    nomis_event_ids << event_id
-  end
-
-  def from_nomis?
-    !nomis_event_ids.empty?
-  end
-
   def existing
     self.class.not_cancelled.find_by(date: date, profile_id: profile_id, from_location_id: from_location_id, to_location_id: to_location_id)
   end
@@ -134,6 +159,16 @@ class Move < VersionedModel
     (date.present? && date >= Time.zone.today) ||
       (date.nil? && date_to.present? && date_to >= Time.zone.today) ||
       (date.nil? && date_to.nil? && date_from.present? && date_from >= Time.zone.today)
+  end
+
+  def for_feed
+    feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
+
+    feed_attributes.merge!(from_location.for_feed(prefix: :from))
+    feed_attributes.merge!(to_location.for_feed(prefix: :to)) if to_location
+    feed_attributes.merge!(supplier.for_feed) if supplier
+
+    feed_attributes
   end
 
 private
@@ -151,7 +186,7 @@ private
   end
 
   def set_move_type
-    return if move_type.present?
+    return if move_type.present? || v2?
 
     # TODO: The order is not important, here.
     #       Remove this from the model when we migrate to mandatory move_type under v2
@@ -164,10 +199,6 @@ private
                      else
                        'prison_transfer'
                      end
-  end
-
-  def ensure_event_nomis_ids_uniqueness
-    nomis_event_ids.uniq!
   end
 
   def is_a_police_tranfer?

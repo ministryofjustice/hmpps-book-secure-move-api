@@ -45,4 +45,29 @@ RSpec.describe Event, type: :model do
       it { expect(event.to_location).to be_a Location }
     end
   end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      eventable = create(:move)
+      event = create(:event, eventable: eventable)
+
+      expect { event.update(client_timestamp: event.client_timestamp + 1.day) }.to change { eventable.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      eventable = create(:move)
+
+      expect { create(:event, eventable: eventable) }.to change { eventable.reload.updated_at }
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:event) { create(:event) }
+
+    let(:expected_json) { event.attributes.as_json }
+
+    it 'generates a feed document' do
+      expect(event.for_feed).to eq(expected_json)
+    end
+  end
 end

@@ -17,9 +17,9 @@ RSpec.describe Api::MovesController do
   describe 'PATCH /moves' do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:supplier) { create(:supplier) }
-    let!(:from_location) { create :location, suppliers: [supplier] }
+    let!(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:profile) { create(:profile, documents: before_documents) }
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -662,25 +662,6 @@ RSpec.describe Api::MovesController do
         let(:move_params) { nil }
 
         it_behaves_like 'an endpoint that responds with error 400'
-      end
-
-      context 'when from nomis' do
-        let(:nomis_event_id) { 12_345_678 }
-        let!(:move) { create :move, nomis_event_ids: [nomis_event_id] }
-        let(:detail_403) { 'Can\'t change moves coming from Nomis' }
-
-        let(:move_params) do
-          {
-            type: 'moves',
-            attributes: {
-              status: 'cancelled',
-              cancellation_reason: 'supplier_declined_to_move',
-              reference: 'new reference',
-            },
-          }
-        end
-
-        it_behaves_like 'an endpoint that responds with error 403'
       end
 
       context 'with a missing move' do

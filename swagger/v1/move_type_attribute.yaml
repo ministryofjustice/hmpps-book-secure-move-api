@@ -1,0 +1,12 @@
+MoveType:
+  type: string
+  enum:
+    - court_appearance
+    - court_other
+    - hospital
+    - police_transfer
+    - prison_recall
+    - prison_remand
+    - prison_transfer
+    - video_remand
+  description: Indicates the type of move, e.g. prison transfer or court appearance

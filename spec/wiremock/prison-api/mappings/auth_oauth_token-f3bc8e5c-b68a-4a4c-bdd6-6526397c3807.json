@@ -1,0 +1,31 @@
+{
+  "id" : "f3bc8e5c-b68a-4a4c-bdd6-6526397c3807",
+  "name" : "auth_oauth_token",
+  "request" : {
+    "url" : "/auth/oauth/token",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalTo" : "grant_type=client_credentials",
+      "caseInsensitive" : false
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"access_token\":\"ACCESS.TOKEN.ACCESS-TOKEN-ACCESS-TOKEN\",\"token_type\":\"bearer\",\"expires_in\":1199,\"scope\":\"read write\",\"sub\":\"dev\",\"auth_source\":\"none\",\"jti\":\"ACCESS\",\"iss\":\"https://gateway.t3.nomis-api.hmpps.dsd.io/auth/issuer\"}",
+    "headers" : {
+      "Cache-Control" : "no-store",
+      "Keep-Alive" : "timeout=60",
+      "Pragma" : "no-cache",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "DENY",
+      "Date" : "Tue, 14 Jul 2020 17:55:29 GMT"
+    }
+  },
+  "uuid" : "f3bc8e5c-b68a-4a4c-bdd6-6526397c3807",
+  "persistent" : true,
+  "insertionIndex" : 19
+}

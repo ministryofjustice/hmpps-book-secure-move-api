@@ -19,9 +19,10 @@ RSpec.describe Api::PeopleController do
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2, prison_number: nil }
-    let(:params) { {} }
 
-    context 'when there are no params' do
+    context 'when there are no filters' do
+      let(:params) { {} }
+
       before { get '/api/people', params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -47,6 +48,14 @@ RSpec.describe Api::PeopleController do
       let(:query) { '?filter[prison_number]=G3239GV,GV345VG' }
       let(:import_from_nomis) { instance_double('People::ImportFromNomis', call: nil) }
 
+      let!(:people) do
+        [
+          create(:person, prison_number: 'G3239GV'),
+          create(:person, prison_number: 'GV345VG'),
+          create(:person, prison_number: 'FLIBBLE'),
+        ]
+      end
+
       before { allow(People::ImportFromNomis).to receive(:new).and_return(import_from_nomis) }
 
       it 'updates the person from nomis' do
@@ -54,6 +63,13 @@ RSpec.describe Api::PeopleController do
 
         expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
         expect(import_from_nomis).to have_received(:call)
+      end
+
+      it 'returns the correct people' do
+        get "/api/people#{query}", headers: headers
+
+        prison_numbers = response_json['data'].map { |resource| resource.dig('attributes', 'prison_number') }
+        expect(prison_numbers).to match_array(%w[G3239GV GV345VG])
       end
 
       context 'when the prison_number is downcased' do
@@ -64,6 +80,13 @@ RSpec.describe Api::PeopleController do
 
           expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
           expect(import_from_nomis).to have_received(:call)
+        end
+
+        it 'returns the correct people' do
+          get "/api/people#{query}", headers: headers
+
+          prison_numbers = response_json['data'].map { |resource| resource.dig('attributes', 'prison_number') }
+          expect(prison_numbers).to match_array(%w[G3239GV GV345VG])
         end
       end
     end
@@ -137,6 +160,8 @@ RSpec.describe Api::PeopleController do
     end
 
     describe 'paginating results' do
+      let(:params) { {} }
+
       let!(:people) { create_list :person, 6 }
 
       let(:meta_pagination) do

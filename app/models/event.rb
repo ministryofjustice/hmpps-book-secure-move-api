@@ -15,7 +15,7 @@ class Event < ApplicationRecord
     REJECT = 'reject'.freeze,
   ].freeze
 
-  belongs_to :eventable, polymorphic: true
+  belongs_to :eventable, polymorphic: true, touch: true
 
   validates :eventable, presence: true
   validates :event_name, presence: true, inclusion: { in: EVENT_NAMES }
@@ -48,5 +48,9 @@ class Event < ApplicationRecord
 
   def to_location
     @to_location ||= Location.find_by(id: event_params&.dig(:relationships, :to_location, :data, :id))
+  end
+
+  def for_feed
+    attributes.as_json
   end
 end

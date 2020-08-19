@@ -3,10 +3,14 @@ module Api::V2
     def index_and_render
       moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
 
-      paginate moves,
-               each_serializer: ::V2::MoveSerializer,
-               include: included_relationships,
-               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      if csv?
+        send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+      else
+        paginate moves,
+                 each_serializer: ::V2::MoveSerializer,
+                 include: included_relationships,
+                 fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      end
     end
 
     def show_and_render
@@ -24,16 +28,15 @@ module Api::V2
     end
 
     def update_and_render
-      raise ActiveRecord::ReadOnlyRecord, "Can't change moves coming from Nomis" if move.from_nomis?
+      move.assign_attributes(common_move_attributes)
+      action_name = move.status_changed? ? 'update_status' : 'update'
+      move.save!
+      move.allocation&.refresh_status_and_moves_count!
 
-      @move.assign_attributes(move_attributes)
-      action_name = @move.status_changed? ? 'update_status' : 'update'
-      @move.save!
-      @move.allocation&.refresh_status_and_moves_count!
+      Allocations::CreateInNomis.call(move) if create_in_nomis?
+      Notifier.prepare_notifications(topic: move, action_name: action_name)
 
-      Notifier.prepare_notifications(topic: @move, action_name: action_name)
-
-      render_move(@move, :ok)
+      render_move(move, :ok)
     end
 
   private
@@ -57,15 +60,26 @@ module Api::V2
       relationships: {},
     ].freeze
 
+    def create_in_nomis?
+      move.allocation_id? && params[:create_in_nomis].to_s == 'true'
+    end
+
     def move_params
       @move_params ||= params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
     end
 
     def move_attributes
-      move_params[:attributes].tap do |attributes|
-        attributes[:profile] = profile unless profile_attributes.nil?
+      common_move_attributes.tap do |attributes|
+        attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
+        attributes[:version] = 2
+      end
+    end
+
+    def common_move_attributes
+      move_params[:attributes].tap do |attributes|
+        attributes[:profile] = profile unless profile_attributes.nil?
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
         attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
       end
@@ -78,9 +92,11 @@ module Api::V2
     end
 
     def from_location
-      location_id = from_location_attributes.dig(:data, :id)
-
-      Location.find(location_id) if location_id
+      @from_location ||=
+        begin
+          location_id = from_location_attributes.dig(:data, :id)
+          Location.find(location_id) if location_id
+        end
     end
 
     def to_location
@@ -133,7 +149,9 @@ module Api::V2
     def move
       @move ||= Move
         .accessible_by(current_ability)
-        .includes(:from_location, :to_location, profile: { person: %i[gender ethnicity] })
+        .includes(
+          :from_location, :to_location, profile: { person: %i[gender ethnicity], person_escort_record: { framework_flags: :framework_question } }
+        )
         .find(params[:id])
     end
 

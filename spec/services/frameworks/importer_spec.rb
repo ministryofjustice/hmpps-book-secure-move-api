@@ -56,6 +56,9 @@ RSpec.describe Frameworks::Importer do
           'regular-medication',
           'sensitive-medication',
           'wheelchair-users',
+          'property-bags',
+          'property-bag-type',
+          'property-bag-seal-number',
         )
       end
 
@@ -63,7 +66,7 @@ RSpec.describe Frameworks::Importer do
         described_class.new(filepath: filepath, version: '0.1').call
         framework = Framework.find_by(name: 'person-escort-record-1')
 
-        expect(framework.framework_questions.pluck(:section).uniq).to contain_exactly('offence-details', 'health-information')
+        expect(framework.framework_questions.pluck(:section).uniq).to contain_exactly('offence-details', 'health-information', 'property-information')
       end
 
       it 'maps the correct section to a question' do
@@ -99,7 +102,7 @@ RSpec.describe Frameworks::Importer do
         described_class.new(filepath: filepath, version: '0.1').call
         framework_question = FrameworkQuestion.find_by(key: 'medical-professional-referral')
 
-        expect(framework_question.flags.pluck(:name)).to contain_exactly(
+        expect(framework_question.framework_flags.pluck(:title)).to contain_exactly(
           'Physical Health',
           'Medication',
         )

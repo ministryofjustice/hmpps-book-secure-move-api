@@ -9,17 +9,20 @@ RSpec.describe Api::MoveEventsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, from_location: from_location) }
+    let(:move) { create(:move, :prison_transfer, from_location: from_location) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location) }
+    let(:attributes) do
+      {
+        timestamp: '2020-04-23T18:25:43.511Z',
+        notes: 'requested by PMU',
+      }
+    end
     let(:redirect_params) do
       {
         data: {
           type: 'redirects',
-          attributes: {
-            timestamp: '2020-04-23T18:25:43.511Z',
-            notes: 'requested by PMU',
-          },
+          attributes: attributes,
           relationships: {
             to_location: { data: { type: 'locations', id: new_location.id } },
           },
@@ -43,6 +46,42 @@ RSpec.describe Api::MoveEventsController do
         it 'calls the notifier when updating a person' do
           expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
         end
+      end
+    end
+
+    context 'with an updated move type corresponding to the new location' do
+      let(:new_location) { create(:location, :court) }
+      let(:attributes) do
+        {
+          timestamp: '2020-04-23T18:25:43.511Z',
+          notes: 'requested by PMU',
+          move_type: 'court_appearance',
+        }
+      end
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
+      end
+
+      it 'updates the move move_type' do
+        expect { move.reload }.to change(move, :move_type).from('prison_transfer').to('court_appearance')
+      end
+    end
+
+    context 'with a video remand hearing' do
+      let(:move) { create(:move, :video_remand) }
+
+      it 'populates the move to_location' do
+        expect { move.reload }.to change(move, :to_location).from(nil).to(new_location)
+      end
+    end
+
+    context 'with a hospital move' do
+      let(:move) { create(:move, :hospital) }
+      let(:new_location) { create(:location, :hospital) }
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
       end
     end
 
@@ -92,7 +131,7 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a non-existent to_location' do
+      context 'with a non-existent to_location_id' do
         let(:redirect_params) do
           {
             data: {
@@ -106,8 +145,21 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Invalid to_location',
+              'title' => 'Invalid to_location_id',
               'detail' => 'Validation failed: To location was not found',
+            }]
+          end
+        end
+      end
+
+      context 'with a redirection to an invalid location for the move type' do
+        let(:move) { create(:move, :hospital) }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location must be a high security hospital location for hospital move',
             }]
           end
         end

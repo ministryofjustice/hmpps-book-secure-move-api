@@ -8,7 +8,7 @@ RSpec.describe Api::JourneysController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:locations) { create_list(:location, 2, suppliers: [supplier]) }
-    let!(:move) { create(:move, from_location: locations.first, to_location: locations.last) }
+    let!(:move) { create(:move, from_location: locations.first, to_location: locations.last, supplier: supplier) }
     let!(:last_journey) { create(:journey, move: move, supplier: supplier, client_timestamp: '2020-05-04T09:00:00Z') }
     let!(:intermediate_journeys) { create_list(:journey, intermediate_journeys_count, move: move, supplier: supplier, client_timestamp: '2020-05-04T08:30:00Z') }
     let!(:first_journey) { create(:journey, move: move, supplier: supplier, client_timestamp: '2020-05-04T08:00:00Z') }

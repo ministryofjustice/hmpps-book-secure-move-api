@@ -1,15 +1,9 @@
 Person:
   type: object
   required:
-    - id
     - type
     - attributes
   properties:
-    id:
-      type: string
-      format: uuid
-      example: 88089bbd-8719-4192-b309-f9db9105d3e1
-      description: The unique identifier (UUID) of this object
     type:
       type: string
       example: people
@@ -22,6 +16,11 @@ Person:
         - first_names
         - last_name
       properties:
+        id:
+          type: string
+          format: uuid
+          example: 88089bbd-8719-4192-b309-f9db9105d3e1
+          description: The unique identifier (UUID) of this object
         first_names:
           type: string
           example: Bob
@@ -42,24 +41,25 @@ Person:
           description:
             Supporting information for detainees of certain genders to
             capture any relevant transport information
+          example: "Requires separate toilet."
         prison_number:
           oneof:
             - type: string
-              example: D00001dZZ
-              description: The person identifier used in Nomis
             - type: "null"
+          example: D00001dZZ
+          description: The person identifier used in Nomis
         criminal_records_office:
           oneof:
             - type: string
-              example: CRO0105d
-              description: The criminal record office identifier
             - type: "null"
+          example: CRO0105d
+          description: The criminal record office identifier
         police_national_computer:
           oneof:
             - type: string
-              example: AB/00001d
-              description: The person identifier used by the Police
             - type: "null"
+          example: AB/00001d
+          description: The person identifier used by the Police
     relationships:
       type: object
       properties:

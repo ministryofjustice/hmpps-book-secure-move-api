@@ -25,8 +25,6 @@ module Api::V2
 
   private
 
-    PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
-
     PERSON_ATTRIBUTES = %i[
       first_names
       last_name
@@ -38,25 +36,43 @@ module Api::V2
     ].freeze
     PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
 
-    def filter_params
-      params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
-    end
-
     def person_params
       params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h
     end
 
     def person_attributes
-      person_params[:attributes].merge(ethnicity: ethnicity, gender: gender)
+      attributes = {}
+      attributes.merge!(person_params.fetch(:attributes, {}))
+
+      # Relationships are indicated in json:api via the relationships.<relationship_type> key
+      #
+      # Patch relationships to nil when the resource is supplied but it's data component is nil
+      # Patch relationships to new relationship when the resource is supplied and the id references a resource that exists
+      #
+      # Do not patch the relationship if the resource is not supplied
+      attributes[:ethnicity] = ethnicity if ethnicity_params
+      attributes[:gender] = gender if gender_params
+
+      attributes
+    end
+
+    def ethnicity_params
+      params.require(:data).dig(:relationships, :ethnicity)
     end
 
     def ethnicity
-      ethnicity_id = params.require(:data).dig(:relationships, :ethnicity, :data, :id)
+      ethnicity_id = ethnicity_params.dig(:data, :id)
+
       Ethnicity.find(ethnicity_id) if ethnicity_id
     end
 
+    def gender_params
+      params.require(:data).dig(:relationships, :gender)
+    end
+
     def gender
-      gender_id = params.require(:data).dig(:relationships, :gender, :data, :id)
+      gender_id = gender_params.dig(:data, :id)
+
       Gender.find(gender_id) if gender_id
     end
 

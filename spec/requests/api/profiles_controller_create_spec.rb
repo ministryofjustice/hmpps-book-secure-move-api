@@ -19,10 +19,7 @@ RSpec.describe Api::ProfilesController do
         data: {
           type: 'profiles',
           attributes: {
-            assessment_answers: [
-              { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-              { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
-            ],
+            assessment_answers: [],
           },
         },
       }
@@ -32,10 +29,7 @@ RSpec.describe Api::ProfilesController do
       {
         type: 'profiles',
         attributes: {
-          assessment_answers: [
-            { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
-            { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
-          ],
+          assessment_answers: [],
         },
       }
     end
@@ -72,30 +66,58 @@ RSpec.describe Api::ProfilesController do
         let(:prison_number) { 'G5033UT' }
 
         before do
-          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new) # .with(anything, prison_number)
+          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
                                             .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true))
 
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
         end
 
-        it 'imports the assessment answers from Nomis' do
-          expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:new)
-                                                                  .with(person.profiles.last, person.prison_number)
-        end
-
-        context 'when the person does NOT have a prison_number' do
-          let(:prison_number) { nil }
-
-          before do
-            allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
-                                                                   .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
-
-            post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        context 'when assessment_answers param is present' do
+          let(:profile_params) do
+            {
+              data: {
+                type: 'profiles',
+                attributes: {
+                  assessment_answers: [{ title: risk_type_1.title, assessment_question_id: risk_type_1.id }],
+                },
+              },
+            }
           end
 
-          it 'does NOT import the assessment answers from Nomis' do
+          it 'does NOT imports the assessment answers from Nomis' do
             expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:new)
           end
+        end
+
+        context 'when assessment_answers param is NOT present' do
+          let(:profile_params) do
+            {
+              data: {
+                type: 'profiles',
+                attributes: {},
+              },
+            }
+          end
+
+          it 'imports the assessment answers from Nomis' do
+            expect(Profiles::ImportAlertsAndPersonalCareNeeds).to have_received(:new)
+                                                                    .with(person.profiles.last, person.prison_number)
+          end
+        end
+      end
+
+      context 'when the person does NOT have a prison_number' do
+        let(:prison_number) { nil }
+
+        before do
+          allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
+                                                                 .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
+
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        end
+
+        it 'does NOT import the assessment answers from Nomis' do
+          expect(Profiles::ImportAlertsAndPersonalCareNeeds).not_to have_received(:new)
         end
       end
     end

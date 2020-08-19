@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Move do
+  it { is_expected.to belong_to(:supplier).optional }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
   it { is_expected.to belong_to(:profile).optional }
@@ -57,7 +58,7 @@ RSpec.describe Move do
     end
   end
 
-  it 'validates presence of `to_location` if `move_type` is NOT prison_recall' do
+  it 'validates presence of `to_location` if `move_type` is NOT prison_recall or video_remand' do
     expect(build(:move, move_type: 'prison_transfer')).to(
       validate_presence_of(:to_location),
     )
@@ -69,58 +70,66 @@ RSpec.describe Move do
     )
   end
 
+  it 'does NOT validate presence of `to_location` if `move_type` is video_remand' do
+    expect(build(:move, move_type: 'video_remand')).not_to(
+      validate_presence_of(:to_location),
+    )
+  end
+
   it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
-    expect(build(:move, status: :proposed)).to(
+    expect(build(:move, :proposed)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is requested' do
-    expect(build(:move, status: :requested)).not_to(
+    expect(build(:move, :requested)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is booked' do
-    expect(build(:move, status: :booked)).to(
+    expect(build(:move, :booked)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is in_transit' do
-    expect(build(:move, status: :in_transit)).to(
+    expect(build(:move, :in_transit)).to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validates presence of `profile` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :cancelled)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate presence of `date` if `status` is cancelled' do
-    expect(build(:move, status: :cancelled)).not_to(
+    expect(build(:move, :cancelled)).not_to(
       validate_presence_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `status` is proposed' do
-    expect(build(:move, status: :proposed)).not_to(
+    # NB: uniqueness test requires create() not build()
+    expect(create(:move, :proposed)).not_to(
       validate_uniqueness_of(:date),
     )
   end
 
   it 'does NOT validate uniqueness of `date` if `profile_id` is nil' do
-    create(:move, status: :requested, profile: nil)
+    create(:move, :requested, profile: nil)
 
-    expect(build(:move, status: :requested, profile: nil)).to be_valid
+    expect(build(:move, :requested, profile: nil)).to be_valid
   end
 
   it 'validates presence of `date` if `status` is NOT proposed' do
@@ -153,13 +162,6 @@ RSpec.describe Move do
 
   it 'allows date_from == date_to' do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
-  end
-
-  it 'does NOT permit duplicate nomis_event_ids' do
-    move = create(:move, nomis_event_ids: [123_456])
-    move.nomis_event_ids << 123_456
-    move.save
-    expect(move.nomis_event_ids).to eq([123_456])
   end
 
   context 'when a Move for a Person has already been created' do
@@ -212,28 +214,6 @@ RSpec.describe Move do
     it { is_expected.to validate_presence_of(:reference) }
   end
 
-  describe '#nomis_event_id=' do
-    subject(:move) { create :move }
-
-    context 'when nomis_event_id is not present' do
-      it 'assigns the nomis_event_id to the nomis_event_ids array' do
-        move.nomis_event_id = 123_456
-        expect(move.nomis_event_ids).to eq([123_456])
-      end
-    end
-
-    context 'when nomis_event_id is present' do
-      before do
-        move.nomis_event_id = 123_456
-      end
-
-      it 'assigns the nomis_event_id to the nomis_event_ids array without losing the old nomis_event_id' do
-        move.nomis_event_id = 654_321
-        expect(move.nomis_event_ids).to eq([123_456, 654_321])
-      end
-    end
-  end
-
   describe '#reference' do
     subject(:move) { described_class.new }
 
@@ -249,11 +229,36 @@ RSpec.describe Move do
   end
 
   describe '#move_type' do
-    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: nil }
+    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: move_type, version: version }
 
     let(:from_location) { build :location, :police }
+    let(:move_type) { nil }
+    let(:version) { nil }
 
     before { move.valid? }
+
+    context 'when creating a v2 move' do
+      let(:version) { 2 }
+      let(:to_location) { nil }
+
+      context 'without specifying move_type' do
+        it 'does not set move_type' do
+          expect(move.move_type).to be_nil
+        end
+
+        it 'is not valid' do
+          expect(move).not_to be_valid
+        end
+      end
+
+      context 'when specifying move_type' do
+        let(:move_type) { 'prison_recall' }
+
+        it 'is valid' do
+          expect(move).to be_valid
+        end
+      end
+    end
 
     context 'when to_location is empty' do
       let(:to_location) { nil }
@@ -289,28 +294,6 @@ RSpec.describe Move do
     end
   end
 
-  describe '#from_nomis?' do
-    subject(:move) { build :move }
-
-    context 'with nomis_event_ids' do
-      let(:nomis_event_id) { 12_345_678 }
-
-      before { move.nomis_event_ids = [nomis_event_id] }
-
-      it 'is truthy' do
-        expect(move).to be_from_nomis
-      end
-    end
-
-    context 'without nomis_event_ids' do
-      before { move.nomis_event_ids = [] }
-
-      it 'is falsy' do
-        expect(move).not_to be_from_nomis
-      end
-    end
-  end
-
   describe '#existing' do
     let!(:move) { create :move }
     let(:duplicate) { described_class.new(move.attributes) }
@@ -333,23 +316,6 @@ RSpec.describe Move do
     context 'when there is no existing move' do
       it 'returns nil' do
         expect(move.existing_id).to be_nil
-      end
-    end
-  end
-
-  describe '#served_by' do
-    let(:supplier) { create :supplier }
-    let!(:location) { create :location, suppliers: [supplier] }
-    let!(:move_with_supplier) { create :move, from_location: location }
-    let!(:move_without_supplier) { create :move }
-
-    context 'when querying with supplier' do
-      it 'returns the right move' do
-        expect(described_class.served_by(supplier.id)).to include(move_with_supplier)
-      end
-
-      it 'does not return moves with no supplier' do
-        expect(described_class.served_by(supplier.id)).not_to include(move_without_supplier)
       end
     end
   end
@@ -537,6 +503,58 @@ RSpec.describe Move do
 
     it 'has a version record for the create' do
       expect(move.versions.map(&:event)).to eq(%w[create])
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:move) { create(:move, :with_supplier) }
+
+    let(:expected_json) do
+      {
+        'id' => move.id,
+        'additional_information' => 'some more info about the move that the supplier might need to know',
+        'allocation_id' => nil,
+        'cancellation_reason' => nil,
+        'cancellation_reason_comment' => nil,
+        'created_at' => be_a(Time),
+        'date' => be_a(Date),
+        'date_from' => be_a(Date),
+        'date_to' => nil,
+        'from_location' => 'PEI',
+        'from_location_type' => 'prison',
+        'move_agreed' => nil,
+        'move_agreed_by' => nil,
+        'move_type' => 'court_appearance',
+        'profile_id' => move.profile_id,
+        'reason_comment' => nil,
+        'reference' => move.reference,
+        'rejection_reason' => nil,
+        'status' => 'requested',
+        'time_due' => be_a(Time),
+        'to_location' => 'GUICCT',
+        'to_location_type' => 'court',
+        'updated_at' => be_a(Time),
+        'supplier' => move.supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(move.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe 'relationships' do
+    it 'updates the parent record when updated' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+
+      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+    end
+
+    it 'updates the parent record when created' do
+      profile = create(:profile)
+
+      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
     end
   end
 end

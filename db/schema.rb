@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_01_123259) do
+ActiveRecord::Schema.define(version: 2020_08_13_125352) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -50,6 +51,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.string "prisoner_category"
     t.string "sentence_length"
     t.jsonb "complex_cases"
+    t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
     t.datetime "created_at", null: false
@@ -58,9 +60,9 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.string "requested_by"
-    t.integer "moves_count", null: false
     t.string "estate"
     t.text "sentence_length_comment"
+    t.text "estate_comment"
     t.index ["date"], name: "index_allocations_on_date"
   end
 
@@ -121,16 +123,24 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
+    t.index ["updated_at"], name: "index_events_on_updated_at"
   end
 
-  create_table "flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "framework_question_id", null: false
     t.string "flag_type", null: false
-    t.string "name", null: false
+    t.string "title", null: false
     t.string "question_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["framework_question_id"], name: "index_flags_on_framework_question_id"
+    t.index ["framework_question_id"], name: "index_framework_flags_on_framework_question_id"
+  end
+
+  create_table "framework_flags_responses", id: false, force: :cascade do |t|
+    t.uuid "framework_response_id", null: false
+    t.uuid "framework_flag_id", null: false
+    t.index ["framework_flag_id"], name: "index_framework_flags_responses_on_framework_flag_id"
+    t.index ["framework_response_id"], name: "index_framework_flags_responses_on_framework_response_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -148,6 +158,22 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
+  end
+
+  create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "person_escort_record_id", null: false
+    t.uuid "framework_question_id", null: false
+    t.text "value_text"
+    t.jsonb "value_json"
+    t.string "type", null: false
+    t.uuid "parent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "responded", default: false, null: false
+    t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
+    t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
+    t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
+    t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
   create_table "frameworks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -195,6 +221,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
     t.index ["supplier_id"], name: "index_journeys_on_supplier_id"
     t.index ["to_location_id"], name: "index_journeys_on_to_location_id"
+    t.index ["updated_at"], name: "index_journeys_on_updated_at"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -234,7 +261,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.date "date"
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
-    t.uuid "person_id"
     t.string "status", default: "requested", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -245,7 +271,6 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.datetime "time_due"
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
-    t.integer "nomis_event_ids", default: [], null: false, array: true
     t.uuid "profile_id"
     t.uuid "prison_transfer_reason_id"
     t.text "reason_comment"
@@ -256,11 +281,14 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.uuid "allocation_id"
     t.string "rejection_reason"
     t.uuid "original_move_id"
+    t.uuid "supplier_id"
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
+    t.index ["supplier_id"], name: "index_moves_on_supplier_id"
+    t.index ["updated_at"], name: "index_moves_on_updated_at"
   end
 
   create_table "nationalities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -306,6 +334,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.index ["topic_id"], name: "index_notifications_on_topic_id"
     t.index ["topic_type", "topic_id"], name: "index_notifications_on_topic_type_and_topic_id"
     t.index ["topic_type"], name: "index_notifications_on_topic_type"
+    t.index ["updated_at"], name: "index_notifications_on_updated_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -356,10 +385,10 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "nomis_prison_number"
-    t.string "prison_number"
-    t.string "criminal_records_office"
-    t.string "police_national_computer"
+    t.citext "nomis_prison_number"
+    t.citext "prison_number"
+    t.citext "criminal_records_office"
+    t.citext "police_national_computer"
     t.string "first_names"
     t.string "last_name"
     t.date "date_of_birth"
@@ -369,11 +398,24 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.datetime "last_synced_with_nomis"
     t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
+    t.index ["date_of_birth"], name: "index_people_on_date_of_birth"
     t.index ["ethnicity_id"], name: "index_people_on_ethnicity_id"
     t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
     t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
     t.index ["prison_number"], name: "index_people_on_prison_number"
+    t.index ["updated_at"], name: "index_people_on_updated_at"
+  end
+
+  create_table "person_escort_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.uuid "profile_id", null: false
+    t.string "status", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "confirmed_at"
+    t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
+    t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -398,6 +440,7 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
+    t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -447,8 +490,10 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "flags", "framework_questions"
+  add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
+  add_foreign_key "framework_responses", "framework_questions"
+  add_foreign_key "framework_responses", "person_escort_records"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"
@@ -461,11 +506,13 @@ ActiveRecord::Schema.define(version: 2020_07_01_123259) do
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
   add_foreign_key "moves", "moves", column: "original_move_id"
-  add_foreign_key "moves", "people", name: "fk_rails_moves_person_id"
+  add_foreign_key "moves", "suppliers"
   add_foreign_key "notifications", "notification_types"
   add_foreign_key "notifications", "subscriptions"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "person_escort_records", "frameworks"
+  add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
 end

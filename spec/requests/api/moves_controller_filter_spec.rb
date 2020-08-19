@@ -13,16 +13,12 @@ RSpec.describe Api::MovesController do
   let(:expected_moves) { nil }
   let(:unexpected_moves) { nil }
 
-  shared_examples 'it returns the correct moves' do
+  shared_examples 'an api that filters moves correctly' do
     let(:size) { response_json['data'].size }
     let(:ids) { response_json['data'].map { |move| move['id'] } }
 
-    it 'contains all the expected moves' do
+    it 'contains the correct moves' do
       expect(ids).to match_array(expected_moves.pluck(:id))
-    end
-
-    it 'does not contain any unexpected moves' do
-      # NB: this is a necessary test to catch a dodgy test which has unexpected moves in the expected moves
       expect(ids & unexpected_moves.pluck(:id)).to be_empty
     end
   end
@@ -36,12 +32,10 @@ RSpec.describe Api::MovesController do
 
     describe 'by supplier_id' do
       let(:filter_params) { { filter: { supplier_id: supplier.id } } }
-      let(:supplier_location) { create :location, :with_moves, suppliers: [supplier] }
-      let(:alternative_supplier_location) { create :location, :with_moves, suppliers: [alternative_supplier] }
-      let(:expected_moves) { Move.where(from_location: supplier_location) }
-      let(:unexpected_moves) { Move.where(from_location: alternative_supplier_location) }
+      let(:expected_moves) { create_list :move, 2, supplier: supplier }
+      let(:unexpected_moves) { create_list :move, 2, supplier: alternative_supplier }
 
-      it_behaves_like 'it returns the correct moves'
+      it_behaves_like 'an api that filters moves correctly'
     end
 
     describe 'by from_location_id' do
@@ -50,13 +44,13 @@ RSpec.describe Api::MovesController do
       let(:expected_moves) { create_list :move, 3, from_location: location }
       let(:unexpected_moves) { create_list :move, 3 }
 
-      it_behaves_like 'it returns the correct moves'
+      it_behaves_like 'an api that filters moves correctly'
     end
 
     describe 'by created_at' do
-      let(:first_date) { DateTime.new(2019, 12, 25, 12) }
-      let(:middle_date) { DateTime.new(2019, 12, 26, 12) }
-      let(:last_date) { DateTime.new(2019, 12, 27) }
+      let(:first_date) { Time.zone.parse('2019-12-25T12') }
+      let(:middle_date) { Time.zone.parse('2019-12-26T12') }
+      let(:last_date) { Time.zone.parse('2019-12-27') }
 
       let(:first_moves) { create_list :move, 2, created_at: first_date }
       let(:middle_moves) { create_list :move, 2, created_at: middle_date }
@@ -67,7 +61,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { middle_moves + last_moves }
         let(:unexpected_moves) { first_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'with a created_at_to' do
@@ -75,7 +69,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { first_moves + middle_moves }
         let(:unexpected_moves) { last_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'with a created_at range' do
@@ -83,7 +77,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { first_moves + middle_moves }
         let(:unexpected_moves) { last_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when given bad start date' do
@@ -122,7 +116,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { court_appearance_moves }
         let(:unexpected_moves) { prison_recall_moves + prison_transfer_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when prison_transfer' do
@@ -130,7 +124,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { prison_transfer_moves }
         let(:unexpected_moves) { court_appearance_moves + prison_recall_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when prison_recall' do
@@ -138,7 +132,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { prison_recall_moves }
         let(:unexpected_moves) { court_appearance_moves + prison_transfer_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
     end
 
@@ -152,7 +146,7 @@ RSpec.describe Api::MovesController do
         let(:unexpected_moves) { Move.where(id: move_without_allocation.id) }
         let(:filter_value) { true }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when set to false' do
@@ -160,7 +154,7 @@ RSpec.describe Api::MovesController do
         let(:unexpected_moves) { Move.where(id: move_with_allocation.id) }
         let(:filter_value) { false }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when set to incorrect type' do
@@ -168,7 +162,7 @@ RSpec.describe Api::MovesController do
         let(:unexpected_moves) { Move.none }
         let(:filter_value) { 'some-value' }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when set to empty value' do
@@ -176,7 +170,7 @@ RSpec.describe Api::MovesController do
         let(:unexpected_moves) { Move.none }
         let(:filter_value) { nil }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when filter not set' do
@@ -184,7 +178,7 @@ RSpec.describe Api::MovesController do
         let(:unexpected_moves) { Move.none }
         let(:filter_params) { {} }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
     end
 
@@ -200,7 +194,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { made_in_error_moves }
         let(:unexpected_moves) { supplier_declined_to_move_moves + rejected_moves + other_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when supplier_declined_to_move' do
@@ -208,7 +202,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { supplier_declined_to_move_moves }
         let(:unexpected_moves) { made_in_error_moves + rejected_moves + other_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when rejected' do
@@ -216,7 +210,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { rejected_moves }
         let(:unexpected_moves) { made_in_error_moves + supplier_declined_to_move_moves + other_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
 
       context 'when other' do
@@ -224,7 +218,7 @@ RSpec.describe Api::MovesController do
         let(:expected_moves) { other_moves }
         let(:unexpected_moves) { made_in_error_moves + supplier_declined_to_move_moves + rejected_moves }
 
-        it_behaves_like 'it returns the correct moves'
+        it_behaves_like 'an api that filters moves correctly'
       end
     end
   end

@@ -98,6 +98,40 @@ RSpec.describe Api::PeopleController do
       expect(response_json).to include_json(data: expected_data.merge(id: person.id))
     end
 
+    context 'when gender relationship is not supplied' do
+      let(:person_params) do
+        {
+          data: {
+            type: 'people',
+            relationships: {
+              ethnicity: { data: { id: ethnicity_id, type: 'ethnicities' } },
+            },
+          },
+        }
+      end
+
+      it 'does not change the gender' do
+        expect { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
+          .not_to change { person.reload.gender_id }
+      end
+    end
+
+    context 'when relationships are supplied but are specified as nil' do
+      let(:person_params) do
+        {
+          data: {
+            type: 'people',
+            relationships: { ethnicity: { data: nil } },
+          },
+        }
+      end
+
+      it 'sets the ethnicity to nil' do
+        expect { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
+          .to change { person.reload.ethnicity_id }.to(nil)
+      end
+    end
+
     describe 'include query param' do
       before do
         patch "/api/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json

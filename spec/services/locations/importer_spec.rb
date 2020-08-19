@@ -25,30 +25,48 @@ RSpec.describe Locations::Importer do
         nomis_agency_id: 'SCH1',
         key: 'sch_one',
         title: 'A Test SCH',
-        location_type: 'SCH',
+        location_type: :secure_childrens_home,
         can_upload_documents: true,
       },
       {
         nomis_agency_id: 'STC1',
         key: 'stc_one',
         title: 'A Test STC',
-        location_type: 'STC',
+        location_type: :secure_training_centre,
         can_upload_documents: true,
       },
+      {
+        nomis_agency_id: 'HOSP1',
+        key: 'arkham',
+        title: 'Arkham Asylum',
+        location_type: :high_security_hospital,
+        can_upload_documents: false,
+      },
+      { nomis_agency_id: 'FOO1',
+        key: 'bar',
+        title: "Don't import me",
+        location_type: 'FOO',
+        can_upload_documents: false },
     ]
   end
 
   context 'with no existing records' do
-    it 'creates all the input items' do
-      expect { importer.call }.to change(Location, :count).by(4)
+    it 'creates all the supported input items' do
+      expect { importer.call }.to change(Location, :count).by(5)
     end
 
-    it 'creates call the locations' do
+    it 'creates all the known location types' do
       importer.call
 
-      input_data.each do |data|
+      input_data[0..4].each do |data|
         expect(Location.find_by(data)).to be_present
       end
+    end
+
+    it 'does not import unknown location types' do
+      importer.call
+
+      expect(Location.find_by(input_data.last)).not_to be_present
     end
   end
 
@@ -58,7 +76,7 @@ RSpec.describe Locations::Importer do
     end
 
     it 'creates only the missing items' do
-      expect { importer.call }.to change(Location, :count).by(3)
+      expect { importer.call }.to change(Location, :count).by(4)
     end
   end
 

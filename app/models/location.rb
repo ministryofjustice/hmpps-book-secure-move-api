@@ -4,17 +4,44 @@ class Location < ApplicationRecord
   LOCATION_TYPE_COURT = 'court'
   LOCATION_TYPE_POLICE = 'police'
   LOCATION_TYPE_PRISON = 'prison'
-  LOCATION_TYPE_SECURE_TRAINING_CENTER = 'secure_training_centre'
+  LOCATION_TYPE_SECURE_TRAINING_CENTRE = 'secure_training_centre'
   LOCATION_TYPE_SECURE_CHILDRENS_HOME = 'secure_childrens_home'
-  LOCATION_TYPE_YOUTH_OFFENDNG_INSTITUTE = 'youth_offending_institute'
+  LOCATION_TYPE_APPROVED_PREMISES = 'approved_premises'
+  LOCATION_TYPE_PROBATION_OFFICE = 'probation_office'
+  LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY = 'community_rehabilitation_company'
+  LOCATION_TYPE_FOREIGN_NATIONAL_PRISON = 'foreign_national_prison'
+  LOCATION_TYPE_VOLUNTARY_HOSTEL = 'voluntary_hostel'
+  LOCATION_TYPE_HIGH_SECURITY_HOSPITAL = 'high_security_hospital'
+  LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE = 'immigration_detention_centre'
+
+  enum location_type: {
+    court: LOCATION_TYPE_COURT,
+    police: LOCATION_TYPE_POLICE,
+    prison: LOCATION_TYPE_PRISON,
+    secure_training_centre: LOCATION_TYPE_SECURE_TRAINING_CENTRE,
+    secure_childrens_home: LOCATION_TYPE_SECURE_CHILDRENS_HOME,
+    approved_premises: LOCATION_TYPE_APPROVED_PREMISES,
+    probation_office: LOCATION_TYPE_PROBATION_OFFICE,
+    community_rehabilitation_company: LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY,
+    foreign_national_prison: LOCATION_TYPE_FOREIGN_NATIONAL_PRISON,
+    voluntary_hostel: LOCATION_TYPE_VOLUNTARY_HOSTEL,
+    high_security_hospital: LOCATION_TYPE_HIGH_SECURITY_HOSPITAL,
+    immigration_detention_centre: LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE,
+  }
 
   NOMIS_AGENCY_TYPES = {
     'INST' => LOCATION_TYPE_PRISON,
     'CRT' => LOCATION_TYPE_COURT,
     'POLICE' => LOCATION_TYPE_POLICE,
-    'STC' => LOCATION_TYPE_SECURE_TRAINING_CENTER,
+    'STC' => LOCATION_TYPE_SECURE_TRAINING_CENTRE,
     'SCH' => LOCATION_TYPE_SECURE_CHILDRENS_HOME,
-    'YOI' => LOCATION_TYPE_YOUTH_OFFENDNG_INSTITUTE,
+    'APPR' => LOCATION_TYPE_APPROVED_PREMISES,
+    'COMM' => LOCATION_TYPE_PROBATION_OFFICE,
+    'CRC' => LOCATION_TYPE_COMMUNITY_REHABILITATION_COMPANY,
+    'FNP' => LOCATION_TYPE_FOREIGN_NATIONAL_PRISON,
+    'HOST' => LOCATION_TYPE_VOLUNTARY_HOSTEL,
+    'HSHOSP' => LOCATION_TYPE_HIGH_SECURITY_HOSPITAL,
+    'IMDC' => LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE,
   }.freeze
 
   NOMIS_TYPES_WITH_DOCUMENTS = %w[STC SCH].freeze
@@ -27,24 +54,26 @@ class Location < ApplicationRecord
 
   validates :key, presence: true
   validates :title, presence: true
-  validates :location_type, presence: true
+  validates :location_type, presence: true, inclusion: { in: location_types }
 
   scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
-
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
-
-  scope :prisons, -> { where(location_type: LOCATION_TYPE_PRISON) }
   scope :search_by_title, ->(search) { select(:id).where('title ILIKE :search', search: "%#{search}%") }
 
-  def prison?
-    location_type.to_s == LOCATION_TYPE_PRISON
+  def detained?
+    prison? || secure_training_centre? || secure_childrens_home?
   end
 
-  def police?
-    location_type.to_s == LOCATION_TYPE_POLICE
+  def not_detained?
+    !detained?
   end
 
-  def court?
-    location_type.to_s == LOCATION_TYPE_COURT
+  def for_feed(prefix: nil)
+    prefix = "#{prefix}_" if prefix
+
+    {
+      "#{prefix}location_type" => location_type,
+      "#{prefix}location" => nomis_agency_id,
+    }
   end
 end

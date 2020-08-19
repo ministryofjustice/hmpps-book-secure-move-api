@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
+  subject(:post_moves) { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'POST /moves' do
@@ -18,7 +20,7 @@ RSpec.describe Api::MovesController do
         move_type: 'court_appearance' }
     end
 
-    let!(:from_location) { create :location, location_type: :prison, suppliers: [supplier] }
+    let!(:from_location) { create :location, suppliers: [supplier] }
     let!(:to_location) { create :location, :court }
     let!(:person) { create(:person) }
     let!(:document) { create(:document) }
@@ -41,57 +43,75 @@ RSpec.describe Api::MovesController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
-
-      post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
-    end
-
     context 'when successful' do
       let(:move) { Move.find_by(from_location_id: from_location.id) }
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { post_moves }
+      end
 
-      it 'creates a move', skip_before: true do
-        expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
-          .to change(Move, :count).by(1)
+      it 'creates a move' do
+        expect { post_moves }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the from_location supplier as the supplier on the move' do
+        post_moves
+        expect(move.supplier).to eq(move.from_location.suppliers.first)
       end
 
       context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
+
+        before { post_moves }
 
         it 'audits the supplier' do
           expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
         end
+
+        it 'sets the application owner as the supplier on the move' do
+          expect(move.supplier).to eq(supplier)
+        end
       end
 
       it 'associates the documents with the newly created move' do
+        post_moves
         expect(move.profile.documents).to eq([document])
       end
 
       it 'associates a reason with the newly created move' do
+        post_moves
         expect(move.prison_transfer_reason).to eq(reason)
       end
 
       context 'when it includes all supported relationship' do
+        before { post_moves }
+
         it 'returns the correct data' do
           ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
           expected_response_json = JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
 
-          expect(response_json).to eq expected_response_json
+          # Now, URL is a S3 url (not activestorage) hence it changes everytime we call the endpoint
+          # The following updates the URL matcher for all the documents
+          expected_response_json['included']
+              .select { |e| e['type'] == 'documents' }
+              .each { |e| e['attributes']['url'] = start_with('http://www.example.com/') }
+
+          expect(response_json).to include_json(expected_response_json)
         end
       end
 
       it 'does not provide a default value for move_agreed' do
+        post_moves
         expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq nil
       end
 
       it 'sets the additional_information' do
+        post_moves
         expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
       end
 
-      context 'when the supplier has a webhook subscription', :skip_before do
+      context 'when the supplier has a webhook subscription' do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
@@ -100,14 +120,14 @@ RSpec.describe Api::MovesController do
             Faraday,
             headers: {},
             post:
-                        instance_double(Faraday::Response, success?: true, status: 202),
+            instance_double(Faraday::Response, success?: true, status: 202),
           )
         end
 
         before do
           allow(Faraday).to receive(:new).and_return(faraday_client)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+            post_moves
           end
         end
 
@@ -122,7 +142,7 @@ RSpec.describe Api::MovesController do
         end
       end
 
-      context 'when the supplier has an email subscription', :skip_before do
+      context 'when the supplier has an email subscription' do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
@@ -142,7 +162,7 @@ RSpec.describe Api::MovesController do
         before do
           allow(MoveMailer).to receive(:notify).and_return(notify_response)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
-            post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+            post_moves
           end
         end
 
@@ -158,6 +178,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'without a `to_location`' do
+        let(:from_location) { create :location, :police, suppliers: [supplier] }
         let(:to_location) { nil }
         let(:data) do
           {
@@ -170,14 +191,16 @@ RSpec.describe Api::MovesController do
           }
         end
 
-        it_behaves_like 'an endpoint that responds with success 201'
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { post_moves }
+        end
 
-        it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
-            .to change(Move, :count).by(1)
+        it 'creates a move' do
+          expect { post_moves }.to change(Move, :count).by(1)
         end
 
         it 'sets the move_type to `prison_recall`' do
+          post_moves
           expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
         end
       end
@@ -185,10 +208,12 @@ RSpec.describe Api::MovesController do
       context 'with a proposed move' do
         let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'proposed') }
 
+        before { post_moves }
+
         it_behaves_like 'an endpoint that responds with success 201'
       end
 
-      context 'when a court hearing relationship is passed', skip_before: true do
+      context 'when a court hearing relationship is passed' do
         let(:court_hearing) { create(:court_hearing) }
 
         let(:data) do
@@ -211,7 +236,7 @@ RSpec.describe Api::MovesController do
         end
 
         it 'returns the hearing in the json body' do
-          post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
+          post_moves
 
           court_hearings_response = response_json['included'].select { |entry| entry['type'] == 'court_hearings' }
           expect(court_hearings_response.count).to be 1
@@ -230,6 +255,8 @@ RSpec.describe Api::MovesController do
             date_to: date_to,
           }
         end
+
+        before { post_moves }
 
         it 'sets date_from' do
           expect(response_json.dig('data', 'attributes', 'date_from')).to eq date_from.to_s
@@ -250,18 +277,76 @@ RSpec.describe Api::MovesController do
         end
       end
 
-      context 'with explicit `move_type`' do
-        let(:move_attributes) { attributes_for(:move, move_type: 'prison_recall') }
+      context 'with explicit court_other `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'court_other') }
+        let(:to_location) { create :location, :hospital, suppliers: [supplier] }
 
-        it_behaves_like 'an endpoint that responds with success 201'
-
-        it 'creates a move', skip_before: true do
-          expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
-            .to change(Move, :count).by(1)
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { post_moves }
         end
 
-        it 'sets the move_type to `prison_recall`' do
-          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_recall'
+        it 'creates a move' do
+          expect { post_moves }.to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `court_other`' do
+          post_moves
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'court_other'
+        end
+      end
+
+      context 'with explicit hospital `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
+        let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { post_moves }
+        end
+
+        it 'creates a move' do
+          expect { post_moves }.to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `hospital`' do
+          post_moves
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'hospital'
+        end
+      end
+
+      context 'with explicit prison_remand `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'prison_remand') }
+        let(:to_location) { create :location, :stc, suppliers: [supplier] }
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { post_moves }
+        end
+
+        it 'creates a move' do
+          expect { post_moves }.to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `prison_remand`' do
+          post_moves
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'prison_remand'
+        end
+      end
+
+      context 'with explicit video_remand `move_type`' do
+        let(:move_attributes) { attributes_for(:move, move_type: 'video_remand') }
+        let(:from_location) { create :location, :police, suppliers: [supplier] }
+        let(:to_location) { nil }
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { post_moves }
+        end
+
+        it 'creates a move' do
+          expect { post_moves }.to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `video_remand`' do
+          post_moves
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'video_remand'
         end
       end
 
@@ -280,6 +365,8 @@ RSpec.describe Api::MovesController do
             },
           }
         end
+
+        before { post_moves }
 
         it 'associates the profile with the newly created move' do
           expect(move.profile).to eq(profile)
@@ -318,6 +405,8 @@ RSpec.describe Api::MovesController do
           }
         end
 
+        before { post_moves }
+
         it 'favours the profile passed in with the newly created move' do
           expect(move.profile).to eq(profile)
         end
@@ -333,12 +422,16 @@ RSpec.describe Api::MovesController do
     context 'with a bad request' do
       let(:data) { nil }
 
+      before { post_moves }
+
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
     context 'with a reference to a missing relationship' do
       let(:from_location) { build(:location) }
       let(:detail_404) { "Couldn't find Location without an ID" }
+
+      before { post_moves }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
@@ -362,6 +455,8 @@ RSpec.describe Api::MovesController do
           },
         ]
       end
+
+      before { post_moves }
 
       it_behaves_like 'an endpoint that responds with error 422'
     end

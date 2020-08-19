@@ -17,10 +17,11 @@ RSpec.describe Moves::Finder do
       let!(:cancelled_supplier_declined_to_move) { create :move, :cancelled_supplier_declined_to_move }
       let!(:completed_move) { create :move, :completed }
       let!(:move_with_allocation) { create(:move, :with_allocation) }
+      let!(:move_with_person_escort_record) { create(:move, :with_person_escort_record) }
       let(:filter_params) { {} }
 
       it 'returns all moves' do
-        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation]
+        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation, move_with_person_escort_record]
       end
     end
 
@@ -36,7 +37,7 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with two location filters' do
-        let!(:second_move) { create :from_court_to_prison }
+        let!(:second_move) { create :from_prison_to_court }
         let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
 
         it 'returns moves matching multiple locations' do
@@ -75,12 +76,13 @@ RSpec.describe Moves::Finder do
 
     describe 'by supplier_id' do
       context 'with supplier filter' do
-        let(:supplier) { create :supplier }
-        let!(:location) { create :location, :with_moves, suppliers: [supplier] }
-        let(:filter_params) { { supplier_id: supplier.id } }
+        let(:move) { create :move, :with_supplier }
+        let(:filter_params) { { supplier_id: move.supplier_id } }
 
         it 'returns moves matching the supplier' do
-          expect(results).to match_array location.moves_from
+          create :move, from_location: move.from_location
+
+          expect(results).to contain_exactly move
         end
       end
     end
@@ -102,7 +104,7 @@ RSpec.describe Moves::Finder do
         end
       end
 
-      context 'with mis-matching mismatched date range in past' do
+      context 'with mis-matching date range in past' do
         let(:filter_params) { { date_from: (move.date - 5.days).to_s, date_to: (move.date - 2.days).to_s } }
 
         it 'returns empty results set' do
@@ -110,8 +112,71 @@ RSpec.describe Moves::Finder do
         end
       end
 
-      context 'with mis-matching mismatched date range in future' do
+      context 'with mis-matching date range in future' do
         let(:filter_params) { { date_from: (move.date + 2.days).to_s, date_to: (move.date + 5.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by date of birth' do
+      let(:date_of_birth) { 18.years.ago }
+      let!(:person) { create :person, date_of_birth: date_of_birth }
+      let!(:profile) { create :profile, person: person }
+      let!(:move) { create :move, profile: profile }
+
+      context 'with matching date range' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 2.days).to_s, date_of_birth_to: (date_of_birth + 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching exact date' do
+        let(:filter_params) { { date_of_birth_from: date_of_birth.to_s, date_of_birth_to: date_of_birth.to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching date of birth from only' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with matching date of birth to only' do
+        let(:filter_params) { { date_of_birth_to: (date_of_birth + 1.day).to_s } }
+
+        it 'returns moves matching date of birth range' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with mis-matching date of birth range in past' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth - 5.days).to_s, date_of_birth_to: (date_of_birth - 3.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with mis-matching date of birth range in future' do
+        let(:filter_params) { { date_of_birth_from: (date_of_birth + 2.days).to_s, date_of_birth_to: (date_of_birth + 5.days).to_s } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with nil values' do
+        let(:filter_params) { { date_of_birth_from: nil, date_of_birth_to: nil } }
 
         it 'returns empty results set' do
           expect(results).to be_empty
@@ -156,7 +221,7 @@ RSpec.describe Moves::Finder do
       let!(:court_appearance_move) { create :move, :court_appearance }
       let!(:prison_recall_move) { create :move, :prison_recall }
       let!(:prison_transfer_move) { create :move, :prison_transfer }
-      let!(:police_transfer_move) { create :move, move_type: :police_transfer }
+      let!(:police_transfer_move) { create :move, :police_transfer }
 
       context 'with matching move_type' do
         let(:filter_params) { { move_type: 'court_appearance' } }
@@ -247,6 +312,71 @@ RSpec.describe Moves::Finder do
 
         it 'returns only moves with allocations' do
           expect(results).to contain_exactly(move_with_allocation)
+        end
+      end
+    end
+
+    describe 'by ready_for_transit' do
+      let!(:move_with_no_person_escort_record) { create(:move) }
+      let!(:move_with_unstarted_person_escort_record) { create(:move, :with_person_escort_record) }
+      let!(:move_with_in_progress_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'in_progress')
+      end
+      let!(:move_with_completed_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'completed')
+      end
+      let!(:move_with_confirmed_person_escort_record) do
+        create(:move, :with_person_escort_record, person_escort_record_status: 'confirmed')
+      end
+
+      context 'with ready_for_transit set as `true`' do
+        let(:filter_params) { { ready_for_transit: 'true' } }
+
+        it 'returns only confirmed moves' do
+          expect(results).to contain_exactly(
+            move_with_confirmed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as `false`' do
+        let(:filter_params) { { ready_for_transit: 'false' } }
+
+        it 'returns all non confirmed moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as `nil`' do
+        let(:filter_params) { { ready_for_transit: nil } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
+        end
+      end
+
+      context 'with ready_for_transit set as empty string' do
+        let(:filter_params) { { ready_for_transit: '' } }
+
+        it 'returns all moves' do
+          expect(results).to contain_exactly(
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
         end
       end
     end

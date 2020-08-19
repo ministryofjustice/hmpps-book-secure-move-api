@@ -7,6 +7,7 @@ RSpec.describe Supplier, type: :model do
 
   it { is_expected.to have_and_belong_to_many(:locations) }
   it { is_expected.to have_many(:subscriptions) }
+  it { is_expected.to have_many(:moves) }
 
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_uniqueness_of(:name) }
@@ -15,6 +16,18 @@ RSpec.describe Supplier, type: :model do
   context 'when not providing a key' do
     it 'generates it from the name' do
       expect(supplier.key).to eq('test_supplier_123')
+    end
+  end
+
+  describe '#for_feed' do
+    let(:expected_json) do
+      {
+        'supplier' => supplier.key,
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(supplier.for_feed).to include_json(expected_json)
     end
   end
 end

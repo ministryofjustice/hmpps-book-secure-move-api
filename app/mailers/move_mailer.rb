@@ -19,7 +19,7 @@ class MoveMailer < GovukNotifyRails::Mailer
         'move-date-to': move.date_to&.strftime(DATE_FORMAT) || 'N/A',
         'move-created-at': move.created_at.strftime(TIME_FORMAT),
         'move-updated-at': move.updated_at.strftime(TIME_FORMAT),
-        'notification-created-at': Time.current.strftime(TIME_FORMAT),
+        'notification-created-at': Time.zone.now.strftime(TIME_FORMAT),
         'move-action': move.status, # this is the same as the move status and will only be "requested", "booked", "in_transit" or "cancelled"
         'move-status': move.status,
         'environment': ENV.fetch('SERVER_FQDN', Rails.env),

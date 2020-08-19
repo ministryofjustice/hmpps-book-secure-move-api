@@ -1,7 +1,6 @@
 Move:
   type: object
   required:
-    - id
     - type
     - attributes
   properties:
@@ -36,15 +35,9 @@ Move:
             - in_transit
             - cancelled
             - completed
-          description: Indicates the stage in it's lifecycle that this move is at
+          description: Indicates the stage in its lifecycle that this move is at
         move_type:
-          type: string
-          enum:
-            - court_appearance
-            - prison_recall
-            - prison_transfer
-            - police_transfer
-          description: Indicates the type of move, e.g. prison transfer or court appearance
+          $ref: "../v1/move_type_attribute.yaml#/MoveType"
         move_agreed:
           oneOf:
             - type: boolean
@@ -58,8 +51,10 @@ Move:
           example: John Does
           description: Indicates the name of the person who agreed the move
         time_due:
-          type: string
-          format: date-time
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
           example: "2020-05-17T15:04:07.632Z"
           description: Time due at the destination, e.g. court appointment time
         updated_at:

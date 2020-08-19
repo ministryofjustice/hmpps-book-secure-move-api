@@ -18,7 +18,7 @@ module V2
                :time_due,
                :updated_at
 
-    has_one :profile, serializer: ProfileSerializer
+    has_one :profile, serializer: V2::ProfileSerializer
     has_one :from_location, serializer: LocationSerializer
     has_one :to_location, serializer: LocationSerializer
     has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
@@ -32,6 +32,12 @@ module V2
       profile.documents
       profile.person.ethnicity
       profile.person.gender
+      profile.person_escort_record
+      profile.person_escort_record.flags
+      profile.person_escort_record.framework
+      profile.person_escort_record.responses
+      profile.person_escort_record.responses.question
+      profile.person_escort_record.responses.question.descendants.**
       from_location
       from_location.suppliers
       to_location

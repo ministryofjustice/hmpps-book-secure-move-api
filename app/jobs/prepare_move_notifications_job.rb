@@ -4,22 +4,25 @@
 class PrepareMoveNotificationsJob < ApplicationJob
   queue_as :notifications
 
-  def perform(topic_id:, action_name:)
+  def perform(topic_id:, action_name:, send_webhooks: true, send_emails: true, only_supplier_id: nil)
     move = Move.find(topic_id)
 
-    move.suppliers.each do |supplier|
+    # if the move has a specified supplier, use it; otherwise use the move.suppliers delegate based on from_location
+    [move.supplier || move.suppliers].flatten.each do |supplier|
+      next unless only_supplier_id.nil? || only_supplier_id == supplier.id
+
       supplier.subscriptions.kept.each do |subscription|
         next unless subscription.enabled?
 
         # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
-        if subscription.callback_url.present?
+        if send_webhooks && subscription.callback_url.present?
           NotifyWebhookJob.perform_later(
             build_notification_id(subscription, NotificationType::WEBHOOK, move, action_name),
           )
         end
 
         # NB: only email in certain conditions (should_email?)
-        next unless subscription.email_address.present? && should_email?(move)
+        next unless send_emails && subscription.email_address.present? && should_email?(move)
 
         NotifyEmailJob.perform_later(
           build_notification_id(subscription, NotificationType::EMAIL, move, action_name),

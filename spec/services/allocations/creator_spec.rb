@@ -5,8 +5,13 @@ require 'rails_helper'
 RSpec.describe Allocations::Creator do
   subject(:call_creator) { creator.call }
 
+  before do
+    allow(SupplierChooser).to receive(:new).and_return(instance_double('SupplierChooser', call: supplier))
+  end
+
   let(:creator) do
     described_class.new(
+      doorkeeper_application_owner: 'foo',
       allocation_params: allocation_params,
       complex_case_params: complex_case_params,
     )
@@ -32,8 +37,9 @@ RSpec.describe Allocations::Creator do
     ]
   end
 
-  let!(:from_location) { create(:location) }
+  let!(:from_location) { create(:location, :with_suppliers) }
   let!(:to_location) { create(:location) }
+  let!(:supplier) { from_location&.suppliers&.first }
   let(:date) { Date.today }
   let(:moves_count) { 2 }
   let(:requested_by) { 'Iama Requestor' }
@@ -111,6 +117,16 @@ RSpec.describe Allocations::Creator do
         answer: false,
         allocation_complex_case_id: complex_case1.id,
       )
+    end
+
+    it 'calls the SupplierChooser service with the correct args' do
+      call_creator
+      expect(SupplierChooser).to have_received(:new).with('foo', from_location)
+    end
+
+    it 'sets the allocation moves supplier' do
+      call_creator
+      expect(creator.allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(supplier.id)
     end
 
     context 'when specifying nil complex_cases attribute' do

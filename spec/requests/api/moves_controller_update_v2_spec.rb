@@ -24,8 +24,9 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: profile }
-    let(:from_location) { create :location, suppliers: [supplier] }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
+
+    let(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:move_id) { move.id }
     let(:profile) { create(:profile) }
     let(:date_from) { Date.yesterday }
@@ -39,7 +40,6 @@ RSpec.describe Api::MovesController do
           additional_information: 'some more info',
           cancellation_reason: nil,
           cancellation_reason_comment: nil,
-          move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
           date_from: date_from,
@@ -47,6 +47,7 @@ RSpec.describe Api::MovesController do
         },
       }
     end
+    let(:patch_params) { { data: move_params } }
 
     let(:expected_attributes) do
       {
@@ -57,7 +58,6 @@ RSpec.describe Api::MovesController do
         'date_to' => date_to,
         'move_agreed' => true,
         'move_agreed_by' => 'Fred Bloggs',
-        'move_type' => 'court_appearance',
         'status' => 'requested',
       }
     end
@@ -88,6 +88,10 @@ RSpec.describe Api::MovesController do
             cancellation_reason: 'other',
           },
         }
+      end
+
+      before do
+        allow(Allocations::CreateInNomis).to receive(:call)
       end
 
       it 'updates the allocation status to unfilled' do
@@ -131,6 +135,26 @@ RSpec.describe Api::MovesController do
           do_patch
 
           expect(move.reload.allocation).to be_unfilled
+        end
+      end
+
+      context 'when create_in_nomis param is true' do
+        let(:patch_params) { { data: move_params, create_in_nomis: true } }
+
+        it 'creates a prison transfer event in Nomis' do
+          do_patch
+
+          expect(Allocations::CreateInNomis).to have_received(:call).with(move)
+        end
+      end
+
+      context 'when create_in_nomis param is false' do
+        let(:patch_params) { { data: move_params, create_in_nomis: false } }
+
+        it 'does not create a prison transfer event in Nomis' do
+          do_patch
+
+          expect(Allocations::CreateInNomis).not_to have_received(:call).with(move)
         end
       end
     end
@@ -181,6 +205,31 @@ RSpec.describe Api::MovesController do
 
           expect(move.reload.profile).to be_nil
         end
+      end
+    end
+
+    context 'when trying to update from_location and to_location' do
+      let(:new_from_location) { create :location }
+      let(:new_to_location) { create :location }
+
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: {
+            from_location: { data: { type: 'locations', id: new_from_location.id } },
+            to_location: { data: { type: 'locations', id: new_to_location.id } },
+          },
+        }
+      end
+
+      it 'does not affect both from_location and to_location' do
+        expect { do_patch }.not_to change {
+          [move.reload.from_location,
+           move.reload.to_location]
+        }
       end
     end
 
@@ -434,27 +483,6 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when from nomis' do
-      let(:nomis_event_id) { 12_345_678 }
-      let!(:move) { create :move, nomis_event_ids: [nomis_event_id] }
-      let(:detail_403) { 'Can\'t change moves coming from Nomis' }
-
-      let(:move_params) do
-        {
-          type: 'moves',
-          attributes: {
-            status: 'cancelled',
-            cancellation_reason: 'supplier_declined_to_move',
-            reference: 'new reference',
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with error 403' do
-        before { do_patch }
-      end
-    end
-
     context 'when the move does not exist' do
       let(:move_id) { 'foo' }
       let(:move_params) { nil }
@@ -492,7 +520,7 @@ RSpec.describe Api::MovesController do
     end
 
     def do_patch
-      patch "/api/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      patch "/api/moves/#{move_id}", params: patch_params, headers: headers, as: :json
     end
   end
 end
