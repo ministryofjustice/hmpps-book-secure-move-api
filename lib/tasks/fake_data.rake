@@ -189,7 +189,7 @@ namespace :fake_data do
       to_location = courts.sample
       next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
 
-      move = Move.create!(
+      Move.create!(
         date: date,
         date_from: date,
         time_due: time,
