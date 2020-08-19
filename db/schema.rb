@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_130412) do
+ActiveRecord::Schema.define(version: 2020_08_19_141759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 2020_08_19_130412) do
     t.uuid "eventable_id", null: false
     t.string "eventable_type", null: false
     t.string "type"
+    t.text "notes"
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
