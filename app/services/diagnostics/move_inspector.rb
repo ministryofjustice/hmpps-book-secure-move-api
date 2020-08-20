@@ -49,9 +49,9 @@ module Diagnostics
       ENDJOURNEYS
 
       if move.journeys.any?
-        @output << "#{'ID'.ljust(37)}\t#{'TIMESTAMP'.ljust(27)}\t#{'STATE'.ljust(12)}\t#{'BILLABLE'.ljust(9)}\tFROM --> TO\n"
+        @output << "#{'ID'.ljust(37)}\t#{'TIMESTAMP'.ljust(27)}\t#{'STATE'.ljust(12)}\t#{'BILLABLE'.ljust(9)}\t#{'SUPPLIER'.ljust(9)}\tFROM --> TO\n"
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
-          @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.from_location.title} --> #{journey.to_location.title}\n"
+          @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.supplier.name.ljust(9)}\t#{journey.from_location.title} --> #{journey.to_location.title}\n"
         end
       else
         @output << "(no journeys recorded)\n"
