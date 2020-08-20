@@ -157,7 +157,7 @@ RSpec.describe NomisClient::People do
 
     context 'when resources are found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
+      let(:response_body) { file_fixture('nomis/post_prisoners_200.json').read }
 
       it 'returns the correct people data' do
         expect(response).to match_array client_response

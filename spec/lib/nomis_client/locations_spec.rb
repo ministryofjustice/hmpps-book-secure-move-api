@@ -7,7 +7,7 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
     let(:response) { described_class.get }
     let(:api_endpoint) { '/agencies' }
     let(:response_status) { 200 }
-    let(:response_body) { file_fixture('nomis_get_locations_200.json').read }
+    let(:response_body) { file_fixture('nomis/get_locations_200.json').read }
 
     it 'has the correct number of results' do
       expect(response.count).to eq 11
