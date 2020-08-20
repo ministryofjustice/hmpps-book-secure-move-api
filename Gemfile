@@ -13,7 +13,7 @@ group :production do
   # https://github.com/microsoft/ApplicationInsights-Ruby
   # Gem to add insights automatically to a Rack application
   # enhanced to support a RequestTracker with an ignore list
-  gem 'appinsights', github: 'ministryofjustice/appinsights', ref: '86fc5a29d1c3a61fb9af73227fef79fb6cf50948'
+  gem 'appinsights', github: 'ministryofjustice/appinsights'
 end
 
 gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
