@@ -7,40 +7,63 @@ RSpec.describe Event, type: :model do
   it { is_expected.to validate_presence_of(:eventable) }
   it { is_expected.to validate_presence_of(:event_name) }
   it { is_expected.to validate_presence_of(:client_timestamp) }
-  it { is_expected.to validate_presence_of(:details) }
   it { expect(described_class).to respond_to(:default_order) }
 
-  it 'validates event_name' do
+  it 'validates event_name when type is nil' do
     expect(described_class.new).to validate_inclusion_of(:event_name).in_array(%w[
       create update cancel uncancel complete uncomplete redirect start lockout lodging reject
     ])
   end
 
-  describe 'supplier_id' do
+  it 'does not validate event_name when type is present' do
+    expect(described_class.new(type: 'Event::MoveCancelV2')).not_to validate_inclusion_of(:event_name).in_array(%w[
+      create update cancel uncancel complete uncomplete redirect start lockout lodging reject
+    ])
+  end
+
+  it 'validates details when type is nil' do
+    expect(subject).to validate_presence_of(:details)
+  end
+
+  it 'does not validate details when type is present' do
+    expect(described_class.new(type: 'Event::MoveCancelV2')).not_to validate_presence_of(:details)
+  end
+
+  describe '#supplier_id' do
     it { expect(event.supplier_id).to eql('1234') }
   end
 
-  describe 'event_params' do
+  describe '#event_params' do
     it { expect(event.event_params).to eql({ 'attributes' => { 'notes' => 'foo' } }) }
   end
 
-  describe 'data_params' do
+  describe '#data_params' do
     it { expect(event.data_params).to eql({ 'attributes' => { 'notes' => 'bar' } }) }
   end
 
-  describe 'notes' do
-    it { expect(event.notes).to eql('foo') }
+  describe '#notes' do
+    it 'defers to the column when a value is present' do
+      event = build(:event, notes: 'bar', details: { event_params: { attributes: { notes: 'foo' } } })
+
+      expect(event.notes).to eql('bar')
+    end
+
+    it 'defers to the details column when notes column value is nil' do
+      event = build(:event, notes: nil, details: { event_params: { attributes: { notes: 'foo' } } })
+
+      expect(event.notes).to eql('foo')
+    end
   end
 
   context 'with locations' do
     subject(:event) { build(:event, :locations) }
 
-    describe 'from_location' do
+    describe '#from_location' do
       it { expect(event.from_location).not_to be nil }
       it { expect(event.from_location).to be_a Location }
     end
 
-    describe 'to_location' do
+    describe '#to_location' do
       it { expect(event.to_location).not_to be nil }
       it { expect(event.to_location).to be_a Location }
     end
