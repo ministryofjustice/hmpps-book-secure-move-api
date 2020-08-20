@@ -30,7 +30,7 @@ RSpec.describe LogFormatter::Json do
     let(:expected_json) do
       {
         'severity' => 'DEBUG',
-        'timestamp' => '2020-07-03T15:33:17+01:00',
+        'time' => '2020-07-03T15:33:17+01:00',
         'method' => 'GET',
         'path' => '/api/people',
         'format' => 'json',
@@ -44,7 +44,7 @@ RSpec.describe LogFormatter::Json do
     end
 
     it 'returns the correctly formatted log line' do
-      expect(formatter.call(severity, timestamp, progname, msg)).to eq(expected)
+      expect(formatter.call(severity, time, progname, msg)).to eq(expected)
     end
   end
 end
