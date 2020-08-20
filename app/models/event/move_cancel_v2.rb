@@ -9,7 +9,7 @@ class Event
     end
 
     def cancellation_reason_comment
-      @cancellation_reason ||= details['cancellation_reason_comment']
+      @cancellation_reason_comment ||= details['cancellation_reason_comment']
     end
   end
 end

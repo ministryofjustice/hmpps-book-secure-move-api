@@ -22,7 +22,7 @@ RSpec.describe Event, type: :model do
   end
 
   it 'validates details when type is nil' do
-    expect(subject).to validate_presence_of(:details)
+    expect(described_class.new).to validate_presence_of(:details)
   end
 
   it 'does not validate details when type is present' do
