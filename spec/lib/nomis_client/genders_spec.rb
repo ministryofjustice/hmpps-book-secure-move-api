@@ -9,7 +9,7 @@ RSpec.describe NomisClient::Genders, with_nomis_client_authentication: true do
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_genders_200.json').read }
+      let(:response_body) { file_fixture('nomis/get_genders_200.json').read }
 
       it 'has the correct number of results' do
         expect(response.count).to be 4

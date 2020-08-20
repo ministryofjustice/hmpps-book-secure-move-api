@@ -39,7 +39,7 @@ RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_post_alerts_200.json').read }
+      let(:response_body) { file_fixture('nomis/post_alerts_200.json').read }
 
       it 'returns the correct person data' do
         expect(response.map(&:symbolize_keys)).to eq client_response

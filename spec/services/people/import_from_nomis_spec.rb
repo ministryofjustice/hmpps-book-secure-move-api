@@ -3,7 +3,7 @@ RSpec.describe People::ImportFromNomis do
     subject(:import) { described_class.new([prison_number, non_existent_prison_number]) }
 
     let(:response_status) { '200' }
-    let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
+    let(:response_body) { file_fixture('nomis/post_prisoners_200.json').read }
 
     let(:prison_number) do
       JSON.parse(response_body).first['offenderNo'] # G3239GV
