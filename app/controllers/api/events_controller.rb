@@ -12,7 +12,7 @@ module Api
     ].freeze
 
     def create
-      Events::ParamsValidator.new(event_params).validate!
+      Events::CommonParamsValidator.new(event_params).validate!
       event = Event.create(event_attributes)
 
       render json: event, status: :created, serializer: ::EventSerializer

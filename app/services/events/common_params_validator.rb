@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Events
-  class ParamsValidator
+  class CommonParamsValidator
     EVENT_CLASSES = %w[
       MoveCancelV2
     ].freeze
