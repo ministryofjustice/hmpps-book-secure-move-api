@@ -33,7 +33,7 @@ RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication:
       let(:response_status) { 200 }
 
       context 'with a non-empty body' do
-        let(:response_body) { file_fixture('nomis_post_personal_care_needs_200.json').read }
+        let(:response_body) { file_fixture('nomis/post_personal_care_needs_200.json').read }
 
         it 'returns the correct person data' do
           expect(response.map(&:symbolize_keys)).to eq client_response

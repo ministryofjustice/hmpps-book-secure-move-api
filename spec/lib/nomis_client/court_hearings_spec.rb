@@ -10,7 +10,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
     let(:start_date) { Date.today }
     let(:end_date) { Date.tomorrow }
 
-    let(:response_body) { file_fixture('nomis_get_court_hearings_200.json').read }
+    let(:response_body) { file_fixture('nomis/get_court_hearings_200.json').read }
 
     it 'calls the NomisClient::Base.get with the correct path and params' do
       court_hearings_get
