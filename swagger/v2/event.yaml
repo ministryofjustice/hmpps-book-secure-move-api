@@ -31,7 +31,7 @@ EventResponseBody:
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
-          example: cancel_move
+          example: MoveCancelV2
         client_timestamp:
           type: string
           description: |

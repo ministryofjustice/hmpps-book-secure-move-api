@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   namespace :api do
     filter :versioned_path
 
+    resources :events, only: %i[create index show]
+
     resources :allocations, only: %i[create index show] do
       member do
         post 'cancel', controller: 'allocation_events'

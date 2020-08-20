@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class EventSerializer < ActiveModel::Serializer
-  attributes :client_timestamp, :notes, :details
+  type 'events'
+
+  attributes :client_timestamp, :notes, :details, :event_type
 
   has_one :eventable, polymorphic: true
 
@@ -9,6 +11,6 @@ class EventSerializer < ActiveModel::Serializer
   INCLUDED_FIELDS = {}.freeze
 
   def event_type
-    type
+    object.type.try(:gsub, 'Event::', '')
   end
 end
