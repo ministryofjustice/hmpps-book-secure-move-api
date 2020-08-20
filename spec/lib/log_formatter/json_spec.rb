@@ -14,7 +14,7 @@ RSpec.describe LogFormatter::Json do
     let(:expected_json) do
       {
         'severity' => 'DEBUG',
-        'timestamp' => '2020-07-03T15:33:17+01:00',
+        'time' => '2020-07-03T15:33:17+01:00',
         'msg' => '[ElasticAPM] Agent disabled with `enabled: false',
       }
     end
