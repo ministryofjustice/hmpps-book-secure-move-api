@@ -52,7 +52,7 @@ RSpec.describe NomisClient::AlertCodes, with_nomis_client_authentication: true d
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_alert_codes_200.json').read }
+      let(:response_body) { file_fixture('nomis/get_alert_codes_200.json').read }
 
       it 'returns the correct alert code data' do
         expect(response.map(&:symbolize_keys)).to eq client_response

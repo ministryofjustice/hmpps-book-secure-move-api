@@ -28,7 +28,7 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
 
     context 'when a resource is found' do
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_alert_types_200.json').read }
+      let(:response_body) { file_fixture('nomis/get_alert_types_200.json').read }
 
       it 'returns the correct alert type data' do
         expect(response.map(&:symbolize_keys)).to eq client_response
@@ -62,7 +62,7 @@ RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true d
     context 'when a resource is found' do
       let(:response) { described_class.as_hash }
       let(:response_status) { 200 }
-      let(:response_body) { file_fixture('nomis_get_alert_types_200.json').read }
+      let(:response_body) { file_fixture('nomis/get_alert_types_200.json').read }
 
       it 'returns the correct alert type data' do
         expect(response.deep_symbolize_keys).to eq client_response
