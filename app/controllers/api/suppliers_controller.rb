@@ -12,6 +12,7 @@ module Api
       supplier = Supplier.find(params[:supplier_id])
 
       Location.joins(:moves_from)
+              .includes(:suppliers)
               .where(moves: { supplier_id: supplier.id })
               .order(key: :asc)
               .distinct
