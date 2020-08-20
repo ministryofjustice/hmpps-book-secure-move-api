@@ -165,4 +165,17 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :event_move_cancel_v2, class: 'Event::MoveCancelV2' do
+    eventable { association(:move) }
+    event_name { 'create' }
+    client_timestamp { Time.now.utc }
+
+    details do
+      {
+        'cancellation_reason' => Move::CANCELLATION_REASON_MADE_IN_ERROR,
+        'cancellation_reason_comment' => 'Something or other',
+      }
+    end
+  end
 end
