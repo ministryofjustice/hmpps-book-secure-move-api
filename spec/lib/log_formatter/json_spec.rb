@@ -44,7 +44,7 @@ RSpec.describe LogFormatter::Json do
     end
 
     it 'returns the correctly formatted log line' do
-      expect(formatter.call(severity, time, progname, msg)).to eq(expected)
+      expect(formatter.call(severity, timestamp, progname, msg)).to eq(expected)
     end
   end
 end
