@@ -7,8 +7,10 @@ RSpec.describe Events::CommonParamsValidator do
 
   let(:event_params) do
     {
-      event_type: event_type,
-      client_timestamp: client_timestamp,
+      'attributes' => {
+        'event_type' => event_type,
+        'client_timestamp' => client_timestamp,
+      },
     }
   end
 
