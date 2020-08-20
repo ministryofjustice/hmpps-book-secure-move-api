@@ -1,0 +1,10 @@
+effective_from:
+effective_to:
+suppliers:
+  supplier1:
+    - LOC1
+    - LOC2
+  supplier2:
+    - LOC2
+    - LOC3
+    - FOO
