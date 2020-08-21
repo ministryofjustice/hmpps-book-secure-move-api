@@ -75,5 +75,8 @@ Rails.application.routes.draw do
       resources :regions, only: %i[index show]
       resources :suppliers, only: %i[index show]
     end
+
+    get '/suppliers/:supplier_id/locations', to: 'suppliers#locations'
+
   end
 end
