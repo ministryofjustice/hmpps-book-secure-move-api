@@ -60,6 +60,7 @@ RSpec.describe V2::MoveSerializer do
         :with_court_hearings,
         :prison_transfer,
         profile: create(:profile, :with_documents),
+        supplier: create(:supplier),
       )
     end
 
@@ -70,6 +71,11 @@ RSpec.describe V2::MoveSerializer do
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
         .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings])
+    end
+
+    # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them
+    it 'contains the moves supplier' do
+      expect(result[:included].any? { |r| r[:id] == move.supplier_id })
     end
   end
 end
