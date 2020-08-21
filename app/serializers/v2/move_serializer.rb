@@ -22,6 +22,7 @@ module V2
     has_one :from_location, serializer: LocationSerializer
     has_one :to_location, serializer: LocationSerializer
     has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
+    has_one :supplier, serializer: SupplierSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
 
@@ -46,6 +47,7 @@ module V2
       court_hearings
       allocation
       original_move
+      supplier
     ].freeze
 
     INCLUDED_FIELDS = {

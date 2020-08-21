@@ -1,0 +1,10 @@
+effective_from: '2020-20-20'
+effective_to: '2020-31-31'
+suppliers:
+  supplier1:
+    - LOC1
+    - LOC2
+  supplier2:
+    - LOC2
+    - LOC3
+    - FOO

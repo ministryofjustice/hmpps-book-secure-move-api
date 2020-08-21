@@ -4,7 +4,7 @@ module Moves
   class Finder
     attr_reader :filter_params, :ability
 
-    MOVE_INCLUDES = [:court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity profiles], from_location: %i[locations_suppliers suppliers], to_location: %i[locations_suppliers suppliers], allocation: %i[to_location from_location]].freeze
+    MOVE_INCLUDES = [:supplier, :court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity profiles], from_location: %i[locations_suppliers suppliers], to_location: %i[locations_suppliers suppliers], allocation: %i[to_location from_location]].freeze
 
     def initialize(filter_params, ability, order_params)
       @filter_params = filter_params
@@ -68,8 +68,8 @@ module Moves
     end
 
     def apply_date_range_filters(scope)
-      scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
-      scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+      scope = scope.where('moves.date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
+      scope = scope.where('moves.date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
       # created_at is a date/time, so inclusive filtering has to be subtly different
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
