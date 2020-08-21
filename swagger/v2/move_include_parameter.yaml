@@ -12,9 +12,8 @@ MoveIncludeParameter:
       - original_move
       - prison_transfer_reason
       - from_location
-      - from_location.suppliers
       - to_location
-      - to_location.suppliers
+      - supplier
       - profile.documents
       - profile.person
       - profile.person.gender
