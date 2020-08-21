@@ -56,7 +56,7 @@ namespace :reference_data do
     ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'prison_transfer_reasons')
   end
 
-  desc 'create supplier locations'
+  desc 'create links (with effective dates) between suppliers and locations'
   task create_supplier_locations: :environment do
     SupplierLocation.transaction do
       SupplierLocation.delete_all

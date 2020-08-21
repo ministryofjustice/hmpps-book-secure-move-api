@@ -19,6 +19,7 @@ RSpec.describe SupplierLocations::Importer do
     let!(:location3) { create(:location, nomis_agency_id: 'LOC3') }
 
     it 'creates expected supplier locations' do
+      # valid.yaml contains two suppliers each mapped to two known locations (plus an unknown location)
       expect { call_importer }.to change(SupplierLocation, :count).by(4)
     end
 

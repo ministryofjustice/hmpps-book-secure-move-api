@@ -1,5 +1,5 @@
 effective_from: "2020-08-29"
-effective_to:
+effective_to: null
 suppliers:
   geoamey:	
     - ACI

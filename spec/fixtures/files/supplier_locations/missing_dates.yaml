@@ -1,5 +1,5 @@
-effective_from:
-effective_to:
+effective_from: null
+effective_to: null
 suppliers:
   supplier1:
     - LOC1
