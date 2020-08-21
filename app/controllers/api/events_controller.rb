@@ -24,7 +24,7 @@ module Api
       {}.tap do |attributes|
         attributes.merge!(event_params.fetch(:attributes, {}))
 
-        # NB: json:api doesn't like the rails-convention to name the STI column as type. We require 'event_type' in the request but the column is actually type
+        # NB: json:api doesn't like the rails convention to name the STI column as type. We require 'event_type' in the request but the column is actually type
         attributes.delete('event_type')
 
         attributes.merge!('type' => event_type)
