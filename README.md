@@ -100,7 +100,6 @@ bundle exec rake reference_data:create_regions
 bundle exec rake reference_data:create_suppliers
 bundle exec rake reference_data:create_supplier_locations
 bundle exec rake reference_data:create_prison_transfer_reasons
-bundle exec rake reference_data:link_suppliers
 ```
 
 Alternatively, **all** of the reference data can be created at once by running the combined rake task:

@@ -1,14 +1,15 @@
 class SupplierChooser
-  def initialize(doorkeeper_application_owner, from_location)
-    @doorkeeper_application_owner = doorkeeper_application_owner
-    @from_location = from_location
+  attr_accessor :effective_date, :location
+
+  def initialize(effective_date, location)
+    self.effective_date = effective_date
+    self.location = location
   end
 
   def call
-    return @doorkeeper_application_owner if @doorkeeper_application_owner
+    return unless effective_date.present? && location.present?
 
-    # TODO: Replace with the frontend supplied supplier
-    #       There can only ever be one supplier per location, currently
-    @from_location.suppliers.first
+    supplier_location = SupplierLocation.location(location.id).effective_on(effective_date).first
+    supplier_location&.supplier
   end
 end

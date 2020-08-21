@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Supplier < ApplicationRecord
-  has_and_belongs_to_many :locations
+  has_many :supplier_locations
+  has_many :locations, through: :supplier_locations
   has_many :subscriptions, dependent: :destroy
   has_many :moves, dependent: :restrict_with_exception
 

@@ -6,8 +6,9 @@ RSpec.describe Moves::Updater do
   subject(:updater) { described_class.new(move, move_params) }
 
   let(:before_documents) { create_list(:document, 2) }
-  let!(:from_location) { create(:location, :police) }
-  let!(:move) { create(:move, :proposed, :prison_recall, from_location: from_location, profile: profile) }
+  let(:supplier) { create(:supplier) }
+  let!(:from_location) { create(:location, :police, suppliers: [supplier]) }
+  let!(:move) { create(:move, :proposed, :prison_recall, from_location: from_location, profile: profile, date_from: 2.days.ago) }
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
@@ -40,6 +41,7 @@ RSpec.describe Moves::Updater do
         move_agreed_by: 'Fred Bloggs',
         date_from: date_from,
         date_to: date_to,
+        supplier: supplier,
       )
     end
 
