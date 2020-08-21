@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe CourtCase do
   describe '#build_from_nomis' do
-    let(:nomis_court_case) { JSON.parse(file_fixture('nomis_get_court_cases_200.json').read).first }
+    let(:nomis_court_case) { JSON.parse(file_fixture('nomis/get_court_cases_200.json').read).first }
 
     it 'builds a CourtCase from Nomis response' do
       court_case = described_class.new.build_from_nomis(nomis_court_case)

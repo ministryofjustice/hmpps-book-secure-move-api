@@ -10,7 +10,7 @@ RSpec.describe NomisClient::Activities, with_nomis_client_authentication: true d
     let(:start_date) { Date.today }
     let(:end_date) { Date.tomorrow }
 
-    let(:response_body) { file_fixture('nomis_get_activities_200.json').read }
+    let(:response_body) { file_fixture('nomis/get_activities_200.json').read }
 
     it 'calls the NomisClient::Base.get with the correct path and params' do
       activities_get

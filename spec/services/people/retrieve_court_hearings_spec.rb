@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe People::RetrieveCourtHearings do
   let(:person) { instance_double('Person', latest_nomis_booking_id: '12345') }
-  let(:response_json) { JSON.parse(file_fixture('nomis_get_court_hearings_200.json').read) }
+  let(:response_json) { JSON.parse(file_fixture('nomis/get_court_hearings_200.json').read) }
   let(:date_from) { Date.today }
   let(:date_to) { Date.tomorrow }
 

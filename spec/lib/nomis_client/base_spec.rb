@@ -41,7 +41,7 @@ RSpec.describe NomisClient::Base do
       let(:token_expires_at) { 1.hour.from_now.to_i }
 
       context 'when a resource is found' do
-        let(:response_body) { file_fixture('nomis_get_moves_200.json').read }
+        let(:response_body) { file_fixture('nomis/get_moves_200.json').read }
         let(:response_status) { 200 }
 
         it 'returns a response object with JSON data in the body' do
@@ -61,7 +61,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when a resource is not found' do
-        let(:response_body) { file_fixture('nomis_get_prisoner_404.json').read }
+        let(:response_body) { file_fixture('nomis/get_prisoner_404.json').read }
         let(:response_status) { 404 }
 
         it 'returns a response object with error message in the body' do
@@ -74,7 +74,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when an unrecoverable error occurrs' do
-        let(:response_body) { file_fixture('nomis_get_prisoner_500.json').read }
+        let(:response_body) { file_fixture('nomis/get_prisoner_500.json').read }
         let(:response_status) { 500 }
 
         it 'returns a response object with error message in the body' do
@@ -131,7 +131,7 @@ RSpec.describe NomisClient::Base do
       let(:token_expires_at) { 1.hour.from_now.to_i }
 
       context 'when a resource is found' do
-        let(:response_body) { file_fixture('nomis_post_prisoners_200.json').read }
+        let(:response_body) { file_fixture('nomis/post_prisoners_200.json').read }
         let(:response_status) { 200 }
 
         it 'returns a response object with JSON data in the body' do
@@ -151,7 +151,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when a resource is not found' do
-        let(:response_body) { file_fixture('nomis_post_prisoners_404.json').read }
+        let(:response_body) { file_fixture('nomis/post_prisoners_404.json').read }
         let(:response_status) { 404 }
 
         it 'returns a response object with error message in the body' do
@@ -164,7 +164,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when an unrecoverable error occurrs' do
-        let(:response_body) { file_fixture('nomis_post_prisoners_500.json').read }
+        let(:response_body) { file_fixture('nomis/post_prisoners_500.json').read }
         let(:response_status) { 500 }
 
         it 'returns a response object with error message in the body' do
@@ -241,7 +241,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when request is invalid' do
-        let(:response_body) { file_fixture('nomis_put_bookings_400.json').read }
+        let(:response_body) { file_fixture('nomis/put_bookings_400.json').read }
         let(:response_status) { 400 }
 
         it 'returns a response object with JSON data in the body' do
@@ -254,7 +254,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when a resource is not found' do
-        let(:response_body) { file_fixture('nomis_put_bookings_404.json').read }
+        let(:response_body) { file_fixture('nomis/put_bookings_404.json').read }
         let(:response_status) { 404 }
 
         it 'returns a response object with error message in the body' do
@@ -267,7 +267,7 @@ RSpec.describe NomisClient::Base do
       end
 
       context 'when an unrecoverable error occurrs' do
-        let(:response_body) { file_fixture('nomis_put_bookings_500.json').read }
+        let(:response_body) { file_fixture('nomis/put_bookings_500.json').read }
         let(:response_status) { 500 }
 
         it 'returns a response object with error message in the body' do
