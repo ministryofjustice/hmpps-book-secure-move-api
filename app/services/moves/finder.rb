@@ -68,8 +68,8 @@ module Moves
     end
 
     def apply_date_range_filters(scope)
-      scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
-      scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+      scope = scope.where('moves.date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
+      scope = scope.where('moves.date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
       # created_at is a date/time, so inclusive filtering has to be subtly different
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
