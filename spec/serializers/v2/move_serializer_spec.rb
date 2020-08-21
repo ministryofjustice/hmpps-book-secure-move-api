@@ -75,7 +75,7 @@ RSpec.describe V2::MoveSerializer do
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them
     it 'contains the moves supplier' do
-      expect(result[:included].any? { |r| r[:id] == move.supplier_id })
+      expect(result[:included].any? { |r| r[:id] == move.supplier_id }).to eq(true)
     end
   end
 end
