@@ -6,7 +6,7 @@ require 'rack/test'
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
 # rubocop:disable Rails/HttpPositionalArguments
-RSpec.describe 'court to prison move', type: :request do
+RSpec.describe 'court to prison move', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'
