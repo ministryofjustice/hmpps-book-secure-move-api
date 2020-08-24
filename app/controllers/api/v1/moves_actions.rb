@@ -1,8 +1,6 @@
 module Api::V1
   module MovesActions
     def index_and_render
-      moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-
       paginate moves,
                include: included_relationships - %w[court_hearings],
                fields: MoveSerializer::INCLUDED_FIELDS

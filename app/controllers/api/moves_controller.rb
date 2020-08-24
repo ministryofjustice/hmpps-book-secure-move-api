@@ -8,6 +8,10 @@ module Api
       index_and_render
     end
 
+    def csv
+      send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+    end
+
     def show
       show_and_render
     end
@@ -18,6 +22,12 @@ module Api
 
     def update
       update_and_render
+    end
+
+  private
+
+    def moves
+      @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
     end
 
     def validate_filter_params
