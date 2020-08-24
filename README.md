@@ -98,6 +98,7 @@ bundle exec rake reference_data:create_allocation_complex_cases
 bundle exec rake reference_data:create_nomis_alerts
 bundle exec rake reference_data:create_regions
 bundle exec rake reference_data:create_suppliers
+bundle exec rake reference_data:create_supplier_locations
 bundle exec rake reference_data:create_prison_transfer_reasons
 bundle exec rake reference_data:link_suppliers
 ```

@@ -1,7 +1,3 @@
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
 version: 2.1
 
 orbs:
@@ -150,7 +146,8 @@ executors:
 
   test-executor:
     docker:
-      - image: circleci/ruby:2.7.0
+      # Check https://circleci.com/docs/2.0/language-ruby/ for more details
+      - image: circleci/ruby:2.7.1
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -414,6 +411,14 @@ jobs:
             if [ "$COUNT" -lt 200 ]; then circleci step halt; exit 0;  fi
             echo "More than 200 images found. Proceeding with cleanup"
       - run:
+          name: Delete UNTAGGED images first
+          command: |
+            UNTAGGED_IMAGES=$( aws ecr list-images \
+              --repository-name book-a-secure-move/hmpps-book-secure-move-api \
+              --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
+            aws ecr batch-delete-image --repository-name book-a-secure-move/hmpps-book-secure-move-api \
+              --image-ids "$UNTAGGED_IMAGES" || true
+      - run:
           name: Build manifest
           command: |
             TO_DELETE=$(aws ecr describe-images \
@@ -498,4 +503,3 @@ workflows:
       - schedule:
           cron: "0 9 * * 1"
           <<: *only_master
-

@@ -469,6 +469,19 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
   end
 
+  create_table "supplier_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "supplier_id", null: false
+    t.uuid "location_id", null: false
+    t.date "effective_from"
+    t.date "effective_to"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["effective_from"], name: "index_supplier_locations_on_effective_from"
+    t.index ["effective_to"], name: "index_supplier_locations_on_effective_to"
+    t.index ["location_id"], name: "index_supplier_locations_on_location_id"
+    t.index ["supplier_id"], name: "index_supplier_locations_on_supplier_id"
+  end
+
   create_table "suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "key", null: false
@@ -517,4 +530,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
   add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
+  add_foreign_key "supplier_locations", "locations"
+  add_foreign_key "supplier_locations", "suppliers"
 end
