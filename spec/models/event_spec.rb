@@ -10,7 +10,7 @@ RSpec.describe Event, type: :model do
   it { expect(described_class).to respond_to(:default_order) }
 
   it 'validates event_name when type is nil' do
-    expect(described_class.new).to validate_inclusion_of(:event_name).in_array(%w[
+    expect(described_class.new(type: nil)).to validate_inclusion_of(:event_name).in_array(%w[
       create update cancel uncancel complete uncomplete redirect start lockout lodging reject
     ])
   end
@@ -22,7 +22,7 @@ RSpec.describe Event, type: :model do
   end
 
   it 'validates details when type is nil' do
-    expect(described_class.new).to validate_presence_of(:details)
+    expect(described_class.new(type: nil)).to validate_presence_of(:details)
   end
 
   it 'does not validate details when type is present' do
