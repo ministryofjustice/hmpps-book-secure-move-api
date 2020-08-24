@@ -5,8 +5,6 @@ Accept:
 
     We currently support `application/vnd.api+json` and `version` 1 and 2.
 
-    Additionally, the `GET /moves` endpoint only supports content type of `application/csv` or `text/csv`; this will return a CSV file rather than JSONAPI. When specifying a CSV content type pagination parameters are ignored and all relevant records are returned.
-
     You don't have to supply the media type. `version` _must_ be provided.
   in: header
   required: true
