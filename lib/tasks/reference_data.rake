@@ -56,9 +56,22 @@ namespace :reference_data do
     ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'prison_transfer_reasons')
   end
 
-  desc 'create locations/suppliers relationship'
+  desc 'create links (with effective dates) between suppliers and locations'
+  task create_supplier_locations: :environment do
+    SupplierLocation.transaction do
+      SupplierLocation.delete_all
+      SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations.yml').call
+      SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations_go_live.yml').call
+    end
+  end
+
+  # TODO: this task is now deprecated, replaced by the above `create_supplier_locations` task. This will
+  # be removed once work to make SupplierChooser aware of move dates has been completed as it will no longer
+  # be of use. Keeping for now just in case we need to map any further suppliers to locations prior to go live.
+  desc 'create locations/suppliers relationship (deprecated)'
   task link_suppliers: :environment do
-    supplier_locations = YAML.safe_load(File.read('./lib/tasks/data/supplier_locations.yml'))
+    yaml = YAML.safe_load(File.read('./lib/tasks/data/supplier_locations.yml'))
+    supplier_locations = yaml['suppliers']
 
     # Set the supplier locations. This is an authoritative change, making the
     # suppliers have exactly the locations listed in supplier_locations.yml
@@ -104,6 +117,7 @@ namespace :reference_data do
        reference_data:create_nomis_alerts
        reference_data:create_regions
        reference_data:create_suppliers
+       reference_date:create_supplier_locations
        reference_data:create_prison_transfer_reasons
        reference_data:link_suppliers].each do |task_name|
       puts "Running '#{task_name}' ..."
@@ -113,7 +127,7 @@ namespace :reference_data do
 
 private
 
-  # TODO: Move these methods outside of the rake task
+  # TODO: remove these methods once `link_suppliers` task is removed
   # rubocop:disable all
   def have_locations_changed?(locations1, locations2)
     ((locations1 - locations2) + (locations2 - locations1)).any?
