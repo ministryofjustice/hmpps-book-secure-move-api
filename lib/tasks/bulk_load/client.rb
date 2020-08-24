@@ -1,7 +1,6 @@
 module Tasks
   module BulkLoad
     class Client
-
       def initialize(client_id, client_secret, base_url)
         @client_id = client_id
         @client_secret = client_secret
@@ -30,18 +29,19 @@ module Tasks
 
       def client
         @client ||= OAuth2::Client.new(
-            @client_id,
-            @client_secret,
-            site: @base_url,
-            auth_scheme: 'basic_auth',
-            token_url: "/oauth/token",
-            raise_errors: true,
-            connection_opts: { request: { timeout: 10, open_timeout: 10 } },
-            )
+          @client_id,
+          @client_secret,
+          site: @base_url,
+          auth_scheme: 'basic_auth',
+          token_url: '/oauth/token',
+          raise_errors: true,
+          connection_opts: { request: { timeout: 10, open_timeout: 10 } },
+        )
       end
 
       def token
-        return @token if @token && @token.expires? && (@token.expires_at - 5 < Time.now.to_i)
+        return @token if @token && @token.expires? && (@token.expires_at - 5 < Time.zone.now.to_i)
+
         @token = client.client_credentials.get_token
       end
 
@@ -51,12 +51,13 @@ module Tasks
 
       def update_json_headers(params)
         return unless params
+
         {
           headers:
             {
               'Accept': 'application/vnd.api+json; version=2',
               'Content-Type': 'application/json',
-              'Idempotency-Key': SecureRandom.uuid
+              'Idempotency-Key': SecureRandom.uuid,
             },
         }.deep_merge(params)
       end
