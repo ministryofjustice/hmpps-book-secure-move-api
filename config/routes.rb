@@ -36,6 +36,9 @@ Rails.application.routes.draw do
       resources :profiles, only: %i[create update]
     end
     resources :moves, only: %i[index show create update] do
+      collection do
+        post 'csv'
+      end
       resources :journeys, only: %i[index show create update] do
         member do
           post 'cancel', controller: 'journey_events'
