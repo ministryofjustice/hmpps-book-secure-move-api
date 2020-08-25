@@ -1,6 +1,5 @@
 class Event < ApplicationRecord
   EVENT_NAMES = [
-    NA = 'n/a'.freeze,
     CREATE = 'create'.freeze,
     UPDATE = 'update'.freeze,
     CANCEL = 'cancel'.freeze,
@@ -19,9 +18,9 @@ class Event < ApplicationRecord
   belongs_to :eventable, polymorphic: true, touch: true
 
   validates :eventable, presence: true
-  validates :event_name, presence: true, inclusion: { in: EVENT_NAMES }, unless: ->(event) { event.type.present? }
+  validates :event_name, presence: true, inclusion: { in: EVENT_NAMES }
   validates :client_timestamp, presence: true
-  validates :details, presence: true, unless: ->(event) { event.type.present? }
+  validates :details, presence: true
 
   scope :default_order, -> { order(client_timestamp: :asc) }
 
@@ -39,10 +38,8 @@ class Event < ApplicationRecord
     @data_params ||= details[:data_params]
   end
 
-  # NB: Dynamic attributes for each event are all in the jsonb details column. Static attributes that are common and validated on all events are now flattened as individual columns in their own right. These include the client_timestamp and notes columns.
-  # This will be simplified once suppliers have migrated to the generic events structure.
   def notes
-    @notes ||= super || event_params.dig(:attributes, :notes)
+    @notes ||= event_params.dig(:attributes, :notes)
   end
 
   def from_location
