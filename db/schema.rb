@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_141759) do
+ActiveRecord::Schema.define(version: 2020_08_25_080245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -194,6 +194,20 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
     t.string "key", null: false
     t.string "nomis_code"
     t.datetime "disabled_at"
+  end
+
+  create_table "generic_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "eventable_id", null: false
+    t.string "eventable_type", null: false
+    t.string "type", null: false
+    t.text "notes"
+    t.string "created_by"
+    t.jsonb "details"
+    t.datetime "occurred_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["eventable_id", "eventable_type"], name: "index_generic_events_on_eventable_id_and_eventable_type"
+    t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
