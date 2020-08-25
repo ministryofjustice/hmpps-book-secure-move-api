@@ -34,7 +34,7 @@ RSpec.describe GenericEvents::CommonParamsValidator do
   end
 
   context 'with incorrect recorded_at' do
-    let(:occurred_at) { '2019/01/01' }
+    let(:recorded_at) { '2019/01/01' }
 
     it { is_expected.not_to be_valid }
   end
