@@ -5,7 +5,7 @@ class FrameworkResponse
     validate :validate_multiple_items_collection, on: :update, if: -> { multiple_items? }
 
     def value
-      value_json.delete_if(&:empty?)
+      value_json&.delete_if(&:empty?)
       value_json.presence || []
     end
 

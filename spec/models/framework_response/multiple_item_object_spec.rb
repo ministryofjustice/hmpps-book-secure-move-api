@@ -65,10 +65,8 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates type of responses key' do
       questions = [create(:framework_question)]
       attributes = { item: 1, responses: { value: 'Yes', framework_question_id: questions.first.id } }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
 
-      expect(object).not_to be_valid
-      expect(object.errors.messages[:responses]).to eq(['is incorrect type'])
+      expect { described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record) }.to raise_error(ActiveModel::ValidationError, /is incorrect type/)
     end
 
     it 'validates responses include value key if multiple responses supplied and question required' do
