@@ -7,6 +7,7 @@ RSpec.describe GenericEvent, type: :model do
   it { is_expected.to validate_presence_of(:eventable) }
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:occurred_at) }
+  it { is_expected.to validate_presence_of(:recorded_at) }
   it { is_expected.to validate_presence_of(:details) }
   it { is_expected.to validate_presence_of(:created_by) }
 

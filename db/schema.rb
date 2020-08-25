@@ -204,10 +204,12 @@ ActiveRecord::Schema.define(version: 2020_08_25_080245) do
     t.string "created_by"
     t.jsonb "details"
     t.datetime "occurred_at", null: false
+    t.datetime "recorded_at", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["eventable_id", "eventable_type"], name: "index_generic_events_on_eventable_id_and_eventable_type"
     t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
+    t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|

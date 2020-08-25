@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :generic_event do
     eventable { association(:move) }
     occurred_at { Time.zone.now }
+    recorded_at { Time.zone.now }
     notes { 'Flibble' }
     created_by { GenericEvent::CREATED_BY_OPTIONS.sample }
   end
