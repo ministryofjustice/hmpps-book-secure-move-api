@@ -8,6 +8,8 @@ class FrameworkResponse
     end
 
     def value=(raw_value)
+      super
+
       self.value_text = raw_value
     end
 
@@ -20,6 +22,10 @@ class FrameworkResponse
     end
 
   private
+
+    def value_type_valid?(raw_value)
+      raw_value.is_a?(::String)
+    end
 
     def question_options_and_value_present?
       question_options.any? && value.present?

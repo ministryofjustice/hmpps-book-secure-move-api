@@ -28,11 +28,14 @@ RSpec.describe FrameworkResponse::String do
       expect(response).to be_valid
     end
 
-    it 'validates type as not included in options since it is converted to a string' do
-      response = build(:string_response, value: { 'option' => 'some option' })
+    it 'validates correct type is passed in on creation' do
+      expect { build(:string_response, value: { 'option' => 'some option' }) }.to raise_error(FrameworkResponse::ValueTypeError)
+    end
 
-      expect(response).not_to be_valid
-      expect(response.errors.messages[:value]).to eq(['is not included in the list'])
+    it 'validates correct type is passed in on update' do
+      response = create(:string_response)
+
+      expect { response.update(value: { 'option' => 'some option' }) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     context 'when question required' do

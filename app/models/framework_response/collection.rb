@@ -1,20 +1,21 @@
 class FrameworkResponse
   class Collection < FrameworkResponse
-    validate :validate_collection_type
     validates :value_text, absence: true
     validate :validate_details_collection, on: :update, if: -> { response_details }
     validate :validate_multiple_items_collection, on: :update, if: -> { multiple_items? }
 
     def value
-      value_json.delete_if(&:empty?) if collection_type_valid?(value_json)
+      value_json&.delete_if(&:empty?)
       value_json.presence || []
     end
 
     def value=(raw_value)
+      super
+
       self.value_json =
-        if response_details && collection_type_valid?(raw_value)
+        if response_details
           details_collection(raw_value).to_a
-        elsif multiple_items? && collection_type_valid?(raw_value)
+        elsif multiple_items?
           multiple_items_collection(raw_value).to_a
         else
           raw_value.presence || []
@@ -69,14 +70,8 @@ class FrameworkResponse
       framework_question.question_type == 'add_multiple_items'
     end
 
-    def validate_collection_type
-      unless collection_type_valid?(value)
-        errors.add(:value, 'is incorrect type')
-      end
-    end
-
-    def collection_type_valid?(collection)
-      collection.is_a?(::Array) && collection.all?(::Hash)
+    def value_type_valid?(raw_value)
+      raw_value.is_a?(::Array) && raw_value.all?(::Hash)
     end
   end
 end
