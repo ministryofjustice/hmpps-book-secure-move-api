@@ -9,7 +9,7 @@ RSpec.describe SupplierChooser do
   context 'without an effective from or to date' do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1, location: location) }
 
-    it 'returns matching supplier' do
+    it 'returns matching supplier, ignoring effective dates completely' do
       expect(service.call).to eq(supplier1)
     end
   end
@@ -18,7 +18,7 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
     let!(:supplier_location2) { create(:supplier_location, supplier: supplier2, location: location, effective_from: date.tomorrow) }
 
-    it 'returns matching supplier' do
+    it 'returns matching supplier, excluding ineffective future matches' do
       expect(service.call).to eq(supplier1)
     end
   end
@@ -27,7 +27,7 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_to: date) }
     let!(:supplier_location2) { create(:supplier_location, supplier: supplier2, location: location, effective_to: date.yesterday) }
 
-    it 'returns matching supplier' do
+    it 'returns matching supplier, excluding ineffective expired matches' do
       expect(service.call).to eq(supplier1)
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location2) { create(:supplier_location, supplier: supplier2, location: location, effective_to: date.yesterday) }
     let!(:supplier_location3) { create(:supplier_location, supplier: supplier2, location: location, effective_from: date.tomorrow) }
 
-    it 'returns matching supplier' do
+    it 'returns matching supplier, excluding ineffective future and expired matches' do
       expect(service.call).to eq(supplier1)
     end
   end

@@ -56,7 +56,7 @@ RSpec.describe SupplierLocation do
       let!(:supplier_location2) { create(:supplier_location, supplier: supplier, location: location, effective_from: Date.today, effective_to: Date.today) }
       let(:date) { nil }
 
-      it 'returns matching supplier locations' do
+      it 'returns matching supplier locations, excluding matches that have an effective date' do
         expect(effective_on).to contain_exactly(supplier_location1)
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe SupplierLocation do
     context 'without an effective from or to date' do
       let!(:supplier_location) { create(:supplier_location, supplier: supplier, location: location) }
 
-      it 'returns matching supplier locations' do
+      it 'returns matching supplier locations, ignoring effective dates completely' do
         expect(effective_on).to contain_exactly(supplier_location)
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe SupplierLocation do
       let!(:supplier_location1) { create(:supplier_location, supplier: supplier, location: location, effective_from: date) }
       let!(:supplier_location2) { create(:supplier_location, supplier: supplier, location: location, effective_from: date.tomorrow) }
 
-      it 'returns matching supplier locations' do
+      it 'returns matching supplier locations, excluding ineffective future matches' do
         expect(effective_on).to contain_exactly(supplier_location1)
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe SupplierLocation do
       let!(:supplier_location1) { create(:supplier_location, supplier: supplier, location: location, effective_to: date) }
       let!(:supplier_location2) { create(:supplier_location, supplier: supplier, location: location, effective_to: date.yesterday) }
 
-      it 'returns matching supplier locations' do
+      it 'returns matching supplier locations, excluding ineffective expired matches' do
         expect(effective_on).to contain_exactly(supplier_location1)
       end
     end
@@ -92,7 +92,7 @@ RSpec.describe SupplierLocation do
       let!(:supplier_location2) { create(:supplier_location, supplier: supplier, location: location, effective_to: date.yesterday) }
       let!(:supplier_location3) { create(:supplier_location, supplier: supplier, location: location, effective_from: date.tomorrow) }
 
-      it 'returns matching supplier locations' do
+      it 'returns matching supplier locations, excluding ineffective future and expired matches' do
         expect(effective_on).to contain_exactly(supplier_location1)
       end
     end
