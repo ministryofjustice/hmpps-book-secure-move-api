@@ -27,13 +27,13 @@ RSpec.describe GenericEvents::CommonParamsValidator do
     it { is_expected.not_to be_valid }
   end
 
-  context 'with incorrect occurred_at' do
+  context 'with incorrect non iso8601 occurred_at' do
     let(:occurred_at) { '2019/01/01' }
 
     it { is_expected.not_to be_valid }
   end
 
-  context 'with incorrect recorded_at' do
+  context 'with incorrect non iso8601 recorded_at' do
     let(:recorded_at) { '2019/01/01' }
 
     it { is_expected.not_to be_valid }
