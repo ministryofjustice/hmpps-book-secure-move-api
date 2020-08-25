@@ -138,8 +138,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
       object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
 
-      expect(object).not_to be_valid
-      expect(object.errors.messages[:"responses[0].value"]).to eq(['is incorrect type'])
+      expect { object.valid? }.to raise_error(ActiveModel::ValidationError, /is incorrect type/)
     end
 
     it 'does not validate the response if value for response is valid' do

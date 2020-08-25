@@ -10,17 +10,13 @@ RSpec.describe FrameworkResponse::Collection do
 
     it 'validates correct type is passed in' do
       response = create(:collection_response, :details)
-      response.update(value: { 'option' => 'Level 4' })
 
-      expect(response).not_to be_valid
-      expect(response.errors.messages[:value]).to eq(['is incorrect type'])
+      expect { response.update(value: { 'option' => 'Level 4' }) }.to raise_error(ActiveModel::ValidationError)
+      expect(response.errors.messages[:value]).to contain_exactly('is incorrect type')
     end
 
     it 'validates correct type nested in array is passed in' do
-      response = build(:collection_response, :details, value: ['option', 'Level 4'])
-
-      expect(response).not_to be_valid
-      expect(response.errors.messages[:value]).to eq(['is incorrect type'])
+      expect { build(:collection_response, :details, value: ['option', 'Level 4']) }.to raise_error(ActiveModel::ValidationError, /Value is incorrect type/)
     end
 
     it 'validates details collection' do

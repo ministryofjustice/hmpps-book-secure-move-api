@@ -98,7 +98,7 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when response is a multiple item collection' do
-        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question) }
+        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question, value: nil) }
         let(:question1) { create(:framework_question) }
         let(:question2) { create(:framework_question, :checkbox) }
         let(:question3) { create(:framework_question, :checkbox, followup_comment: true) }

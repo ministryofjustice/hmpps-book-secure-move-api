@@ -42,6 +42,13 @@ class FrameworkResponse < VersionedModel
     raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
   end
 
+  def value=(raw_value)
+    unless raw_value.blank? || value_type_valid?(raw_value)
+      errors.add(:value, 'is incorrect type')
+      raise ActiveModel::ValidationError, self
+    end
+  end
+
 private
 
   def set_responded_value
