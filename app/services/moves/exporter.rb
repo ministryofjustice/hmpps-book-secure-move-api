@@ -76,6 +76,7 @@ module Moves
         moves.find_each do |move|
           csv << attributes_row(move)
         end
+        file.flush
       end
     end
 

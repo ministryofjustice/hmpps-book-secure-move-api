@@ -271,7 +271,7 @@ commands:
 
             kubectl set image -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
-                    webapp="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+                    sidekiq="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
 
             kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
