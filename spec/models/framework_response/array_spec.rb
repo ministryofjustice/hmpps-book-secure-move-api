@@ -26,15 +26,14 @@ RSpec.describe FrameworkResponse::Array do
     it 'validates correct type is passed in on creation' do
       question = create(:framework_question, :checkbox)
 
-      expect { build(:array_response, framework_question: question, value: { 'option' => 'Level 4' }) }.to raise_error(ActiveModel::ValidationError, /Value is incorrect type/)
+      expect { build(:array_response, framework_question: question, value: { 'option' => 'Level 4' }) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     it 'validates correct type is passed in on update' do
       question = create(:framework_question, :checkbox)
       response = create(:array_response, framework_question: question)
 
-      expect { response.update(value: { 'option' => 'Level 4' }) }.to raise_error(ActiveModel::ValidationError)
-      expect(response.errors.messages[:value]).to contain_exactly('is incorrect type')
+      expect { response.update(value: { 'option' => 'Level 4' }) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     context 'when question required' do

@@ -66,7 +66,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       questions = [create(:framework_question)]
       attributes = { item: 1, responses: { value: 'Yes', framework_question_id: questions.first.id } }
 
-      expect { described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record) }.to raise_error(ActiveModel::ValidationError, /is incorrect type/)
+      expect { described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     it 'validates responses include value key if multiple responses supplied and question required' do
@@ -136,7 +136,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
       object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
 
-      expect { object.valid? }.to raise_error(ActiveModel::ValidationError, /is incorrect type/)
+      expect { object.valid? }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     it 'does not validate the response if value for response is valid' do

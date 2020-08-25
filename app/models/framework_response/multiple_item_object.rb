@@ -58,8 +58,7 @@ class FrameworkResponse
 
     def validate_responses_type
       unless responses.blank? || responses_type_valid?
-        errors.add(:responses, 'is incorrect type')
-        raise ActiveModel::ValidationError, self
+        raise FrameworkResponse::ValueTypeError, responses
       end
     end
 

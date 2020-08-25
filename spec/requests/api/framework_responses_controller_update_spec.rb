@@ -222,6 +222,22 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
+      context 'with incorrect value type' do
+        let(:value) { %w[foo-bar] }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [
+              {
+                'title' => 'Invalid Value type',
+                'detail' => 'Value: ["foo-bar"] is incorrect type',
+                'source' => { pointer: '/data/attributes/value' },
+              },
+            ]
+          end
+        end
+      end
+
       context 'with a nested invalid value' do
         let(:framework_response) { create(:collection_response, :multiple_items) }
         let(:framework_question) { framework_response.framework_question.dependents.first }
@@ -238,6 +254,31 @@ RSpec.describe Api::FrameworkResponsesController do
           let(:errors_422) do
             [{ 'title' => 'Unprocessable entity',
                'detail' => 'Items[1].responses[0].value level 3 are not valid options' }]
+          end
+        end
+      end
+
+      context 'with a nested incorrect value type' do
+        let(:framework_response) { create(:collection_response, :multiple_items) }
+        let(:framework_question) { framework_response.framework_question.dependents.first }
+
+        let(:value) do
+          [
+            { item: 1, responses: [{ value: ['Level 1'], framework_question_id: framework_question.id }] },
+            { item: 2, responses: [{ value: 'Level 2', framework_question_id: framework_question.id }] },
+            { item: 3, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [
+              {
+                'title' => 'Invalid Value type',
+                'detail' => 'Value: Level 2 is incorrect type',
+                'source' => { pointer: '/data/attributes/value' },
+              },
+            ]
           end
         end
       end

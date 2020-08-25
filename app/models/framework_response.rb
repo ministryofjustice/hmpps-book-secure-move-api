@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FrameworkResponse < VersionedModel
+  ValueTypeError = Class.new(StandardError)
+
   validates :type, presence: true
   validates :responded, inclusion: { in: [true, false] }
 
@@ -44,8 +46,7 @@ class FrameworkResponse < VersionedModel
 
   def value=(raw_value)
     unless raw_value.blank? || value_type_valid?(raw_value)
-      errors.add(:value, 'is incorrect type')
-      raise ActiveModel::ValidationError, self
+      raise FrameworkResponse::ValueTypeError, raw_value
     end
   end
 

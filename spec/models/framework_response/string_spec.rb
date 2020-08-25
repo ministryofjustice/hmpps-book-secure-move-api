@@ -29,14 +29,13 @@ RSpec.describe FrameworkResponse::String do
     end
 
     it 'validates correct type is passed in on creation' do
-      expect { build(:string_response, value: { 'option' => 'some option' }) }.to raise_error(ActiveModel::ValidationError, /Value is incorrect type/)
+      expect { build(:string_response, value: { 'option' => 'some option' }) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     it 'validates correct type is passed in on update' do
       response = create(:string_response)
 
-      expect { response.update(value: { 'option' => 'some option' }) }.to raise_error(ActiveModel::ValidationError)
-      expect(response.errors.messages[:value]).to contain_exactly('is incorrect type')
+      expect { response.update(value: { 'option' => 'some option' }) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     context 'when question required' do

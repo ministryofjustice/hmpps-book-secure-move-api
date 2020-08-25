@@ -27,7 +27,7 @@ RSpec.describe FrameworkResponse::MultipleItemsCollection, type: :model do
 
       collection = described_class.new(collection: collection, person_escort_record: person_escort_record, questions: [question])
 
-      expect { collection.valid? }.to raise_error(ActiveModel::ValidationError, /is incorrect type/)
+      expect { collection.valid? }.to raise_error(FrameworkResponse::ValueTypeError)
     end
   end
 
