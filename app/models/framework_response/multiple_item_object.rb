@@ -8,7 +8,6 @@ class FrameworkResponse
 
     validates :item, presence: true, numericality: { only_integer: true }
     validates :responses, presence: true
-    validate :validate_responses_type
     validate :multiple_response_objects
     validate :required_questions
 
@@ -20,6 +19,8 @@ class FrameworkResponse
       attributes.deep_symbolize_keys! if attributes.respond_to?(:deep_symbolize_keys!)
       @item = attributes[:item]
       @responses = attributes[:responses] || []
+
+      validate_responses_type
     end
 
     def as_json(_options = {})
@@ -34,7 +35,7 @@ class FrameworkResponse
   private
 
     def multiple_response_objects
-      return unless responses_type_valid? && response_objects.any? { |object| object.invalid?(:update) }
+      return unless response_objects.any? { |object| object.invalid?(:update) }
 
       response_objects.each_with_index do |object, index|
         object.errors.each do |key, value|
@@ -56,8 +57,8 @@ class FrameworkResponse
     end
 
     def validate_responses_type
-      unless responses_type_valid?
-        errors.add(:responses, 'is incorrect type')
+      unless responses.blank? || responses_type_valid?
+        raise FrameworkResponse::ValueTypeError, responses
       end
     end
 
@@ -66,8 +67,6 @@ class FrameworkResponse
     end
 
     def required_questions
-      return unless responses_type_valid?
-
       question_ids = responses.map { |response| response[:framework_question_id] }
       questions.each do |question|
         next unless question.required

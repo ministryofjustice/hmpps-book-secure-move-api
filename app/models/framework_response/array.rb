@@ -1,6 +1,5 @@
 class FrameworkResponse
   class Array < FrameworkResponse
-    validate :validate_array_type
     validates :value_text, absence: true
     validate :validate_value_inclusion, on: :update
 
@@ -9,6 +8,8 @@ class FrameworkResponse
     end
 
     def value=(raw_value)
+      super
+
       self.value_json = raw_value.presence || []
     end
 
@@ -26,10 +27,8 @@ class FrameworkResponse
       end
     end
 
-    def validate_array_type
-      unless value.is_a?(::Array)
-        errors.add(:value, 'is incorrect type')
-      end
+    def value_type_valid?(raw_value)
+      raw_value.is_a?(::Array)
     end
   end
 end

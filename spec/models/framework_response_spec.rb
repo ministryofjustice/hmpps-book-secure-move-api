@@ -362,7 +362,7 @@ RSpec.describe FrameworkResponse do
         child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:array_response, framework_question: child_question, parent: parent_response)
 
-        expect { parent_response.update_with_flags!('Level 2') }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { parent_response.update_with_flags!('Level 2') }.to raise_error(FrameworkResponse::ValueTypeError)
         expect(child_response.reload.value).to eq(['Level 1'])
       end
 
@@ -405,10 +405,10 @@ RSpec.describe FrameworkResponse do
     end
 
     context 'with person_escort_record status' do
-      it 'does not change person escort record status if no answers provided invalid' do
+      it 'does not change person escort record status answers provided invalid' do
         response = create(:string_response, value: nil)
 
-        expect { response.update_with_flags!(%w[Yes]) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { response.update_with_flags!(%w[Yes]) }.to raise_error(FrameworkResponse::ValueTypeError)
         expect(response.person_escort_record).to be_unstarted
       end
 

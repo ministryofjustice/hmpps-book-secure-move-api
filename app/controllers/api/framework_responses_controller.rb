@@ -13,6 +13,8 @@ module Api
       ],
     ].freeze
 
+    rescue_from FrameworkResponse::ValueTypeError, with: :render_value_type_error
+
     def update
       framework_response.update_with_flags!(update_framework_response_attributes)
 
@@ -35,6 +37,17 @@ module Api
 
     def framework_response
       @framework_response ||= FrameworkResponse.find(params[:id])
+    end
+
+    def render_value_type_error(exception)
+      render(
+        json: { errors: [{
+          title: 'Invalid Value type',
+          detail: "Value: #{exception.message} is incorrect type",
+          source: { pointer: '/data/attributes/value' },
+        }] },
+        status: :unprocessable_entity,
+      )
     end
   end
 end
