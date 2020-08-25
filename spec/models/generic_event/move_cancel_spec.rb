@@ -1,4 +1,4 @@
-RSpec.describe Events::MoveCancel do
+RSpec.describe GenericEvent::MoveCancel do
   subject(:generic_event) { build(:event_move_cancel) }
 
   it 'validates cancellation_reason' do

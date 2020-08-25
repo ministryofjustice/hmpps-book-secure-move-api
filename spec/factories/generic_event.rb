@@ -6,7 +6,7 @@ FactoryBot.define do
     created_by { GenericEvent::CREATED_BY_OPTIONS.sample }
   end
 
-  factory :event_move_cancel, parent: :generic_event, class: 'Events::MoveCancel' do
+  factory :event_move_cancel, parent: :generic_event, class: 'GenericEvent::MoveCancel' do
     details do
       {
         cancellation_reason: 'made_in_error',
