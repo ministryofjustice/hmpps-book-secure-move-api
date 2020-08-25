@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::EventsController do
+RSpec.describe Api::GenericEventsController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_event_responses.yaml', version: 'v2') }
   let(:supplier) { create(:supplier) }
@@ -17,12 +17,13 @@ RSpec.describe Api::EventsController do
     }
   end
 
-  describe 'POST /events' do
+  describe 'POST /generic_events' do
     let(:event_attributes) do
       {
-        client_timestamp: Time.zone.now,
+        occurred_at: Time.zone.now,
+        recorded_at: Time.zone.now,
         notes: 'Something or other',
-        event_type: 'MoveCancelV2',
+        event_type: 'MoveCancel',
         details: {
           cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR,
         },
@@ -33,7 +34,7 @@ RSpec.describe Api::EventsController do
 
     let(:data) do
       {
-        type: 'events',
+        type: 'generic_events',
         attributes: event_attributes,
         relationships: {
           eventable: { data: { type: 'moves', id: move.id } },
@@ -46,20 +47,26 @@ RSpec.describe Api::EventsController do
     end
 
     it 'creates a event' do
-      expect { do_post }.to change(Event, :count).by(1)
+      expect { do_post }.to change(GenericEvent, :count).by(1)
     end
 
     it 'sets the eventable' do
-      expect { do_post }.to change { Event.find_by(eventable_id: move.id, eventable_type: 'Move') }.from(nil).to(be_a(Event))
+      expect { do_post }.to change { GenericEvent.find_by(eventable_id: move.id, eventable_type: 'Move') }.from(nil).to(be_a(GenericEvent))
     end
 
     it 'returns serialized data' do
       do_post
 
-      event = Event.last
-      resource_to_json = JSON.parse(ActionController::Base.render(json: event, serializer: EventSerializer))
+      event = GenericEvent.last
+      resource_to_json = JSON.parse(ActionController::Base.render(json: event, serializer: GenericEventSerializer))
 
       expect(response_json).to eq resource_to_json
+    end
+
+    it 'sets the created_by' do
+      do_post
+      event = GenericEvent.find(response_json.dig('data', 'id'))
+      expect(event.created_by).to eq('unknown')
     end
 
     context 'when supplying a reference to a non-existent relationship' do
@@ -86,8 +93,8 @@ RSpec.describe Api::EventsController do
       let(:errors_422) do
         [
           {
-            "title": 'Invalid event_type',
-            "detail": 'Validation failed: Event type is not included in the list',
+            'title' => 'Invalid occurred_at, recorded_at, event_type',
+            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type is not included in the list",
           },
         ]
       end
@@ -99,6 +106,6 @@ RSpec.describe Api::EventsController do
   end
 
   def do_post
-    post '/api/events', params: { data: data }, headers: headers, as: :json
+    post '/api/generic_events', params: { data: data }, headers: headers, as: :json
   end
 end

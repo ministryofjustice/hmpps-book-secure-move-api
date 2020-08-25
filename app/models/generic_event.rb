@@ -1,5 +1,8 @@
 class GenericEvent < ApplicationRecord
   CREATED_BY_OPTIONS = %w[serco geoamey unknown].freeze
+  STI_CLASSES = %w[
+    MoveCancel
+  ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
 

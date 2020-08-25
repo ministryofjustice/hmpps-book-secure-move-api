@@ -1,10 +1,11 @@
 module Api
-  class EventsController < ApiController
+  class GenericEventsController < ApiController
     PERMITTED_EVENT_PARAMS = [
       :type,
       attributes: [
         :event_type,
-        :client_timestamp,
+        :occurred_at,
+        :recorded_at,
         :notes,
         details: {},
       ],
@@ -12,10 +13,10 @@ module Api
     ].freeze
 
     def create
-      Events::CommonParamsValidator.new(event_params).validate!
-      event = Event.create(event_attributes)
+      GenericEvents::CommonParamsValidator.new(event_params).validate!
+      event = event_type.constantize.create(event_attributes)
 
-      render json: event, status: :created, serializer: ::EventSerializer
+      render json: event, status: :created, serializer: ::GenericEventSerializer
     end
 
   private
@@ -23,12 +24,8 @@ module Api
     def event_attributes
       {}.tap do |attributes|
         attributes.merge!(event_params.fetch(:attributes, {}))
-
-        # NB: json:api doesn't like the rails convention to name the STI column as type. We require 'event_type' in the request but the column is actually type
+        attributes.merge!('created_by' => created_by)
         attributes.delete('event_type')
-
-        attributes.merge!('type' => event_type)
-        attributes.merge!('event_name' => Event::NA)
         attributes.merge!('eventable' => eventable) if eventable_params
       end
     end
@@ -49,7 +46,11 @@ module Api
     end
 
     def event_type
-      @event_type ||= 'Event::' + event_params.dig('attributes', 'event_type')
+      @event_type ||= 'GenericEvent::' + event_params.dig('attributes', 'event_type')
+    end
+
+    def created_by
+      current_user&.owner&.name || 'unknown'
     end
   end
 end

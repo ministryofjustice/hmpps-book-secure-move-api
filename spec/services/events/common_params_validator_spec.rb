@@ -2,20 +2,22 @@
 
 require 'rails_helper'
 
-RSpec.describe Events::CommonParamsValidator do
+RSpec.describe GenericEvents::CommonParamsValidator do
   subject(:params_validator) { described_class.new(event_params) }
 
   let(:event_params) do
     {
       'attributes' => {
         'event_type' => event_type,
-        'client_timestamp' => client_timestamp,
+        'occurred_at' => occurred_at,
+        'recorded_at' => recorded_at,
       },
     }
   end
 
-  let(:client_timestamp) { Time.zone.now.iso8601 }
-  let(:event_type) { 'MoveCancelV2' }
+  let(:occurred_at) { Time.zone.now.iso8601 }
+  let(:recorded_at) { Time.zone.now.iso8601 }
+  let(:event_type) { 'MoveCancel' }
 
   it { is_expected.to be_valid }
 
@@ -25,8 +27,14 @@ RSpec.describe Events::CommonParamsValidator do
     it { is_expected.not_to be_valid }
   end
 
-  context 'with incorrect client_timestamp' do
-    let(:client_timestamp) { '2019/01/01' }
+  context 'with incorrect occurred_at' do
+    let(:occurred_at) { '2019/01/01' }
+
+    it { is_expected.not_to be_valid }
+  end
+
+  context 'with incorrect recorded_at' do
+    let(:occurred_at) { '2019/01/01' }
 
     it { is_expected.not_to be_valid }
   end

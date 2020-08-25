@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe EventSerializer do
+RSpec.describe GenericEventSerializer do
   subject(:serializer) { described_class.new(event) }
 
-  let(:event) { create :event }
+  let(:event) { create :event_move_cancel }
 
   let(:result) do
     JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
@@ -17,14 +17,15 @@ RSpec.describe EventSerializer do
       {
         data: {
           id: event.id,
-          type: 'events',
+          type: 'generic_events',
           attributes: {
-            client_timestamp: event.client_timestamp.iso8601,
-            notes: 'Something or other',
-            event_type: 'MoveCancelV2',
+            occurred_at: event.occurred_at.iso8601,
+            recorded_at: event.recorded_at.iso8601,
+            notes: 'Flibble',
+            event_type: 'MoveCancel',
             details: {
               cancellation_reason: 'made_in_error',
-              cancellation_reason_comment: 'Something or other',
+              cancellation_reason_comment: 'It was a mistake',
             },
           },
           relationships: {
@@ -33,20 +34,7 @@ RSpec.describe EventSerializer do
         },
       }
     end
-    let(:move) { create(:move) }
-    let(:event) do
-      create(
-        :event,
-        eventable: move,
-        event_name: 'n/a',
-        notes: 'Something or other',
-        type: 'Event::MoveCancelV2',
-        details: {
-          cancellation_reason: 'made_in_error',
-          cancellation_reason_comment: 'Something or other',
-        },
-      )
-    end
+    let(:move) { event.eventable }
 
     it { expect(result).to include_json(expected_json) }
     it { expect(result[:included]).to be_nil }

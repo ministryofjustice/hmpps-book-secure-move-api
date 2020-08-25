@@ -11,15 +11,16 @@ EventResponseBody:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: events
+      example: generic_events
       enum:
-        - events
-      description: The type of this object - always `events`
+        - generic_events
+      description: The type of this object - always `generic_events`
     attributes:
       type: object
       required:
         - event_type
-        - client_timestamp
+        - occurred_at
+        - recorded_at
       properties:
         event_type:
           type: string
@@ -31,11 +32,23 @@ EventResponseBody:
             See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
-          example: MoveCancelV2
-        client_timestamp:
+          example: MoveCancel
+        occurred_at:
           type: string
           description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) client_timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) `occurred_at` string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred).
+
+            Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
+
+            This is **mandatory**.
+          format: date-time
+          example: "2020-06-16T10:20:30+01:00"
+        recorded_at:
+          type: string
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) `recorded_at` string indicating when the event was recorded in the clients system.
+
+            Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
 
             This is **mandatory**.
           format: date-time
@@ -82,15 +95,16 @@ EventRequestPostBody:
   properties:
     type:
       type: string
-      example: events
+      example: generic_events
       enum:
-        - events
-      description: The type of this object - always `events`
+        - generic_events
+      description: The type of this object - always `generic_events`
     attributes:
       type: object
       required:
         - event_type
-        - client_timestamp
+        - occurred_at
+        - recorded_at
       properties:
         event_type:
           type: string
@@ -103,10 +117,22 @@ EventRequestPostBody:
 
             This is **mandatory** and specific to each event.
           example: cancel_move
-        client_timestamp:
+        occurred_at:
           type: string
           description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) client_timestamp string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred). Please always include the zone to be most accurate (e.g. ‘2020-06-16T10:20:30+01:00’).
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) `occurred_at` string indicating when the event was recorded to have occurred (or at least as close as feasible to when the event is thought to have occurred).
+
+            Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
+
+            This is **mandatory**.
+          format: date-time
+          example: "2020-06-16T10:20:30+01:00"
+        recorded_at:
+          type: string
+          description: |
+            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) `recorded_at` string indicating when the event was recorded in the clients system.
+
+            Please always include the zone to be most accurate (e.g. '2020-06-16T10:20:30+01:00').
 
             This is **mandatory**.
           format: date-time

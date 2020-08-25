@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   namespace :api do
     filter :versioned_path
 
-    resources :events, only: %i[create index show]
+    resources :generic_events, only: %i[create]
 
     resources :allocations, only: %i[create index show] do
       member do
@@ -80,6 +80,5 @@ Rails.application.routes.draw do
     end
 
     get '/suppliers/:supplier_id/locations', to: 'suppliers#locations'
-
   end
 end
