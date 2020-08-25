@@ -21,10 +21,15 @@ namespace :bulk do
 
     client = Tasks::BulkLoad::Client.new(args[:client_id], args[:client_secret], args[:base_url])
 
-    gender_ids = client.get('/api/reference/genders').map { |g| g['id'] }
+    gender_ids = client.get('/api/reference/genders')
+                     .reject { |g| %w[nk ns].include?(g['attributes']['key']) } # some suppliers can't process unspecified gender; exclude from load test now
+                     .map { |g| g['id'] }
+
     ethnicity_ids = client.get('/api/reference/ethnicities').map { |e| e['id'] }
     from_location_name = client.get("/api/reference/locations/#{args[:from_location]}")['attributes']['title']
     to_location_name = client.get("/api/reference/locations/#{args[:to_location]}")['attributes']['title']
+    assessment_questions = client.get('/api/reference/assessment_questions')
+
     total = args[:number].to_i
 
     puts "Creating #{args[:number]} #{args[:move_type]} moves from #{from_location_name} to #{to_location_name} on #{args[:base_url]}"
@@ -32,89 +37,106 @@ namespace :bulk do
     start_time = Time.zone.now
     n = 1
     loop do
-      person_data = {
-        "data": {
-          "type": 'people',
-          "attributes": {
-            "first_names": "Person-#{n}",
-            "last_name": 'Test',
-            "date_of_birth": '1980-02-03',
-            "gender_additional_information": nil,
-            "prison_number": nil,
-            "police_national_computer": nil,
-            "criminal_records_office": nil,
-          },
-          "relationships": {
-            "gender": {
-              "data": {
-                "type": 'genders',
-                "id": gender_ids.sample,
-              },
+      begin
+        person_data = {
+          "data": {
+            "type": 'people',
+            "attributes": {
+              "first_names": "Person-#{n}",
+              "last_name": 'Test',
+              "date_of_birth": '1980-02-03',
+              "gender_additional_information": nil,
+              "prison_number": nil,
+              "police_national_computer": nil,
+              "criminal_records_office": nil,
             },
-            "ethnicity": {
-              "data": {
-                "type": 'ethnicities',
-                "id": ethnicity_ids.sample,
+            "relationships": {
+              "gender": {
+                "data": {
+                  "type": 'genders',
+                  "id": gender_ids.sample,
+                },
               },
-            },
-          },
-        },
-      }
-
-      profile_data = {
-        "data": {
-          "type": 'profiles',
-          "attributes": {
-            "assessment_answers": [],
-          },
-        },
-      }
-
-      person_id = client.post('/api/people', { body: person_data.to_json })['id']
-
-      profile_id = client.post("/api/people/#{person_id}/profiles", { body: profile_data.to_json })['id']
-
-      date = Date.tomorrow.strftime('%Y-%m-%d')
-
-      move_data = {
-        "data": {
-          "type": 'moves',
-          "attributes": {
-            "date": date,
-            "time_due": "#{date}T09:00:00+01:00",
-            "status": 'requested',
-            "additional_information": 'load test move',
-            "move_type": args[:move_type],
-          },
-          "relationships": {
-            "profile": {
-              "data": {
-                "type": 'profiles',
-                "id": profile_id,
-              },
-            },
-            "from_location": {
-              "data": {
-                "type": 'locations',
-                "id": args[:from_location],
-              },
-            },
-            "to_location": {
-              "data": {
-                "type": 'locations',
-                "id": args[:to_location],
+              "ethnicity": {
+                "data": {
+                  "type": 'ethnicities',
+                  "id": ethnicity_ids.sample,
+                },
               },
             },
           },
-        },
-      }
+        }
 
-      move_id = client.post('/api/moves', { body: move_data.to_json })['id']
+        assessment_question = assessment_questions.sample
 
-      abort 'failed to create move' if move_id.blank?
+        profile_data = {
+          "data": {
+            "type": 'profiles',
+            "attributes": {
+              "assessment_answers": [
+                {
+                  "key": assessment_question['attributes']['key'],
+                  "category": assessment_question['attributes']['category'],
+                  "title": assessment_question['attributes']['title'],
+                  "comments": "Test Comment #{n}",
+                  "assessment_question_id": assessment_question['id'],
+                  "imported_from_nomis": false,
+                },
+              ],
+            },
+          },
+        }
 
-      puts "#{n}\t#{move_id}"
-      sleep(0.01)
+        person_id = client.post('/api/people', { body: person_data.to_json })['id']
+
+        profile_id = client.post("/api/people/#{person_id}/profiles", { body: profile_data.to_json })['id']
+
+        date = Date.tomorrow.strftime('%Y-%m-%d')
+
+        move_data = {
+          "data": {
+            "type": 'moves',
+            "attributes": {
+              "date": date,
+              "time_due": "#{date}T09:00:00+01:00",
+              "status": 'requested',
+              "additional_information": 'load test move',
+              "move_type": args[:move_type],
+            },
+            "relationships": {
+              "profile": {
+                "data": {
+                  "type": 'profiles',
+                  "id": profile_id,
+                },
+              },
+              "from_location": {
+                "data": {
+                  "type": 'locations',
+                  "id": args[:from_location],
+                },
+              },
+              "to_location": {
+                "data": {
+                  "type": 'locations',
+                  "id": args[:to_location],
+                },
+              },
+            },
+          },
+        }
+
+        move_id = client.post('/api/moves', { body: move_data.to_json })['id']
+
+        raise 'failed to create move' if move_id.blank?
+
+        puts "#{n}\t#{move_id}"
+        sleep(0.02)
+      rescue StandardError => e
+        puts "Error creating move: #{e.inspect}"
+        puts 'waiting 30 seconds for system to recover'
+        sleep(30)
+      end
 
       n += 1
       break if n > total

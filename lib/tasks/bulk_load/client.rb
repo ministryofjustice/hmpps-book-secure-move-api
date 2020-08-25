@@ -40,7 +40,7 @@ module Tasks
       end
 
       def token
-        return @token if @token && @token.expires? && (@token.expires_at - 5 < Time.zone.now.to_i)
+        return @token if @token && @token.expires? && (@token.expires_at - 5 > Time.zone.now.to_i)
 
         @token = client.client_credentials.get_token
       end
