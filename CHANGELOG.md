@@ -1,5 +1,43 @@
 # Changelog
 
+## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.4...HEAD)
+
+**Merged pull requests:**
+
+- \[P4-2098\] Adds puma instrumentation [\#879](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/879) ([willfish](https://github.com/willfish))
+- Bump aws-sdk-s3 from 1.78.0 to 1.79.0 [\#877](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/877) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- P4-2061 Fix type validation in Framework Responses [\#873](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/873) ([cwrw](https://github.com/cwrw))
+- Bump paper\_trail from 10.3.1 to 11.0.0 [\#872](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/872) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump spring from 2.1.0 to 2.1.1 [\#871](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/871) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Use move date/date\_from to determine correct supplier for move [\#864](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/864) ([smoothcontract](https://github.com/smoothcontract))
+- Rake to update suppliers for all moves [\#863](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/863) ([alexdesi](https://github.com/alexdesi))
+- \[P4-1975\] Adds post /events [\#855](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/855) ([willfish](https://github.com/willfish))
+
+## [v2.3.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.4) (2020-08-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.3...v2.3.4)
+
+**Merged pull requests:**
+
+- Match renamed sidekiq container name [\#876](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/876) ([mafonso](https://github.com/mafonso))
+- Ensure that output buffer is flushed when generating CSV [\#875](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/875) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-1975\] Generic event model [\#874](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/874) ([willfish](https://github.com/willfish))
+- Different endpoint for returning moves in CSV format [\#869](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/869) ([smoothcontract](https://github.com/smoothcontract))
+- Fix ecr cleanup [\#868](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/868) ([mafonso](https://github.com/mafonso))
+- fix api\_story tags [\#867](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/867) ([martyn-w](https://github.com/martyn-w))
+- Minor tweaks to CSV export format [\#866](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/866) ([smoothcontract](https://github.com/smoothcontract))
+- Rename specs [\#865](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/865) ([smoothcontract](https://github.com/smoothcontract))
+- Clean up potential ambiguity on Moves::Finder [\#862](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/862) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-2084\] Adds supplier relationship to v2 move serializer [\#861](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/861) ([willfish](https://github.com/willfish))
+- Ruby 2.7.1 [\#860](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/860) ([willfish](https://github.com/willfish))
+- Add support for importing supplier location mapping with effective dates [\#859](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/859) ([smoothcontract](https://github.com/smoothcontract))
+- Update move\_inspector.rb [\#856](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/856) ([martyn-w](https://github.com/martyn-w))
+- Move Nomis file fixtures to a dedicated folder [\#854](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/854) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog for v2.3.3 [\#853](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/853) ([martyn-w](https://github.com/martyn-w))
+- Add new endpoint /suppliers/:supplier\_id/locations  [\#842](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/842) ([alexdesi](https://github.com/alexdesi))
+
 ## [v2.3.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.3) (2020-08-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.2...v2.3.3)
