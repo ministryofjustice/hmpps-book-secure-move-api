@@ -26,6 +26,7 @@ RSpec.describe Api::GenericEventsController do
         event_type: 'MoveCancel',
         details: {
           cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR,
+          cancellation_reason_comment: 'The flibble got wibbled',
         },
       }
     end
