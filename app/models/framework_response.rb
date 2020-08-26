@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FrameworkResponse < VersionedModel
+  ValueTypeError = Class.new(StandardError)
+
   validates :type, presence: true
   validates :responded, inclusion: { in: [true, false] }
 
@@ -40,6 +42,12 @@ class FrameworkResponse < VersionedModel
     end
   rescue FiniteMachine::InvalidStateError
     raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
+  end
+
+  def value=(raw_value)
+    unless raw_value.blank? || value_type_valid?(raw_value)
+      raise FrameworkResponse::ValueTypeError, raw_value
+    end
   end
 
 private

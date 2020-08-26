@@ -42,6 +42,10 @@ RSpec.describe Api::MoveEventsController do
         expect(move.reload.date).to eql(approved_date)
       end
 
+      it 'updates the move supplier' do
+        expect(move.reload.supplier).to eq(supplier)
+      end
+
       it 'creates a prison transfer event in Nomis' do
         expect(Allocations::CreateInNomis).to have_received(:call).with(move)
       end

@@ -1,6 +1,5 @@
 class FrameworkResponse
   class Object < FrameworkResponse
-    validate :validate_object_type
     validates :value_text, absence: true
     validate :validate_details_object, on: :update, if: -> { response_details }
 
@@ -9,6 +8,8 @@ class FrameworkResponse
     end
 
     def value=(raw_value)
+      super
+
       self.value_json =
         if response_details
           details_object(attributes: raw_value)
@@ -24,8 +25,6 @@ class FrameworkResponse
   private
 
     def details_object(attributes:)
-      return attributes unless attributes.is_a?(::Hash)
-
       DetailsObject.new(
         attributes: attributes,
         question_options: framework_question.options,
@@ -46,10 +45,8 @@ class FrameworkResponse
       end
     end
 
-    def validate_object_type
-      unless value.is_a?(::Hash)
-        errors.add(:value, 'is incorrect type')
-      end
+    def value_type_valid?(raw_value)
+      raw_value.is_a?(::Hash)
     end
   end
 end
