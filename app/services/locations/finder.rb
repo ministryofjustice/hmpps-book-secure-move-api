@@ -24,7 +24,8 @@ module Locations
     def apply_supplier_filters(scope)
       return scope unless filter_params.key?(:supplier_id)
 
-      scope.joins(:locations_suppliers).where(suppliers: { id: filter_params[:supplier_id] })
+      scope = scope.where(suppliers: { id: filter_params[:supplier_id] })
+      scope.merge(SupplierLocation.effective_on(Time.zone.today))
     end
   end
 end

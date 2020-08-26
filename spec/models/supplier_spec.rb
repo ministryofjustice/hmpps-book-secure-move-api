@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe Supplier, type: :model do
   subject(:supplier) { create(:supplier, name: 'Test Supplier 123') }
 
-  it { is_expected.to have_and_belong_to_many(:locations) }
+  it { is_expected.to have_many(:supplier_locations) }
+  it { is_expected.to have_many(:locations).through(:supplier_locations) }
   it { is_expected.to have_many(:subscriptions) }
   it { is_expected.to have_many(:moves) }
 
