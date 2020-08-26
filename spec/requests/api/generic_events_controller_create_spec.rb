@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::GenericEventsController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_event_responses.yaml', version: 'v2') }
-  let(:supplier) { create(:supplier) }
+  let(:supplier) { create(:supplier, name: 'serco') }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -34,7 +34,7 @@ RSpec.describe Api::GenericEventsController do
 
     let(:data) do
       {
-        type: 'generic_events',
+        type: 'events',
         attributes: event_attributes,
         relationships: {
           eventable: { data: { type: 'moves', id: move.id } },
@@ -67,6 +67,17 @@ RSpec.describe Api::GenericEventsController do
       do_post
       event = GenericEvent.find(response_json.dig('data', 'id'))
       expect(event.created_by).to eq('unknown')
+    end
+
+    context 'when using a real access token' do
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application: application).token }
+
+      it 'sets the created_by' do
+        do_post
+        event = GenericEvent.find(response_json.dig('data', 'id'))
+        expect(event.created_by).to eq('serco')
+      end
     end
 
     context 'when supplying a reference to a non-existent relationship' do

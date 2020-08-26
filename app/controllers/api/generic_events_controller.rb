@@ -14,7 +14,7 @@ module Api
 
     def create
       GenericEvents::CommonParamsValidator.new(event_params).validate!
-      event = event_type.constantize.create(event_attributes)
+      event = event_type.constantize.create!(event_attributes)
 
       render json: event, status: :created, serializer: ::GenericEventSerializer
     end

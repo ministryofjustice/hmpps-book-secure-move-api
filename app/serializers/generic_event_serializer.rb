@@ -8,7 +8,6 @@ class GenericEventSerializer < ActiveModel::Serializer
   has_one :eventable, polymorphic: true
 
   SUPPORTED_RELATIONSHIPS = %w[].freeze
-  INCLUDED_FIELDS = {}.freeze
 
   def event_type
     object.type.try(:gsub, 'GenericEvent::', '')
