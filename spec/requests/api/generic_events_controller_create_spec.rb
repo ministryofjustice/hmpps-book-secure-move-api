@@ -113,7 +113,7 @@ RSpec.describe Api::GenericEventsController do
         [
           {
             'title' => 'Invalid occurred_at, recorded_at, event_type, eventable_type',
-            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type is not included in the list, Eventable type is not included in the list",
+            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type 'Event::FooBar' is not a valid event_type, Eventable type 'movess' is not a valid eventable type",
           },
         ]
       end
