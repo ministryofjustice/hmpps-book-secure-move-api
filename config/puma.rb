@@ -21,7 +21,7 @@ environment ENV.fetch('RAILS_ENV') { 'development' }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-# workers ENV.fetch("WEB_CONCURRENCY") { 2 }
+workers ENV.fetch('WEB_CONCURRENCY') { 1 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -33,10 +33,10 @@ environment ENV.fetch('RAILS_ENV') { 'development' }
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 
+preload_app!
 # run a new process instrumenter after work boot
 after_worker_boot do
   require 'prometheus_exporter/instrumentation'
-  require 'prometheus_exporter/client'
 
   PrometheusExporter::Instrumentation::Puma.start
   PrometheusExporter::Instrumentation::Process.start(type: 'web')
