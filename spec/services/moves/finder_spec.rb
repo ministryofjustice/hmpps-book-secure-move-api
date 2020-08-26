@@ -76,7 +76,7 @@ RSpec.describe Moves::Finder do
 
     describe 'by supplier_id' do
       context 'with supplier filter' do
-        let(:move) { create :move, :with_supplier }
+        let(:move) { create :move }
         let(:filter_params) { { supplier_id: move.supplier_id } }
 
         it 'returns moves matching the supplier' do

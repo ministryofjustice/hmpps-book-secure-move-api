@@ -6,8 +6,9 @@ RSpec.describe Moves::Updater do
   subject(:updater) { described_class.new(move, move_params) }
 
   let(:before_documents) { create_list(:document, 2) }
+  let(:supplier) { create(:supplier) }
   let!(:from_location) { create(:location, :police) }
-  let!(:move) { create(:move, :proposed, :prison_recall, from_location: from_location, profile: profile) }
+  let!(:move) { create(:move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier) }
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
@@ -29,6 +30,8 @@ RSpec.describe Moves::Updater do
       },
     }
   end
+
+  before { create :supplier_location, supplier: move.supplier, location: move.from_location } # Used by SupplierChooser
 
   context 'with valid params' do
     it 'updates the correct attributes on an existing move' do

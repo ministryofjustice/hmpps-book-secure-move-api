@@ -164,6 +164,9 @@ RSpec.describe 'singleton', type: :request, api_story: true do
     header 'Accept', 'application/vnd.api+json; version=2'
     header 'Authorization', 'Bearer spoofed-token'
 
+    # Assign prison1 location to Serco supplier
+    create :supplier_location, location: prison1, supplier: serco_supplier, effective_from: Date.new(1900, 1, 1)
+
     # These steps simulate the frontend creating a move request
 
     # get person record(s)

@@ -24,7 +24,10 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
+# <<<<<<< HEAD
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier }
+
+    # let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, date_from: 2.days.ago, supplier: supplier }
 
     let(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:move_id) { move.id }
@@ -340,7 +343,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when updating an existing requested move without a change of move_status' do
-      let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location }
+      let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location, supplier: supplier }
 
       context 'when the supplier has a webhook subscription' do
         # NB: updates to existing moves should trigger a webhook notification

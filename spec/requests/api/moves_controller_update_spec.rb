@@ -396,7 +396,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has a webhook subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: move.supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) do
@@ -426,7 +426,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has an email subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: move.supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
             let(:notify_response) do
@@ -466,7 +466,7 @@ RSpec.describe Api::MovesController do
 
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: move.supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) do
@@ -505,7 +505,7 @@ RSpec.describe Api::MovesController do
 
           context 'when the supplier has an email subscription', :skip_before do
             # NB: updates to existing moves should trigger an email notification
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: move.supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
             let(:notify_response) do

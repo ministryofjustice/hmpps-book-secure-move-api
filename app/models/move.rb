@@ -70,7 +70,7 @@ class Move < VersionedModel
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
   ].freeze
 
-  belongs_to :supplier, optional: true
+  belongs_to :supplier
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true, touch: true
@@ -126,7 +126,9 @@ class Move < VersionedModel
   end
 
   def rebook
-    rebooked || self.class.create(
+    return rebooked if rebooked.present?
+
+    new_booking = self.class.new(
       original_move_id: id,
       from_location_id: from_location_id,
       to_location_id: to_location_id,
@@ -134,9 +136,12 @@ class Move < VersionedModel
       profile_id: profile_id,
       status: MOVE_STATUS_PROPOSED,
       date: date && date + 7.days,
-      date_from: date_from && date_from + 7.days,
+      date_from: (date_from || date) + 7.days,
       date_to: date_to && date_to + 7.days,
     )
+    new_booking.determine_supplier
+    new_booking.save!
+    new_booking
   end
 
   def self.unfilled?
