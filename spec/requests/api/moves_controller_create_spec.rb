@@ -56,7 +56,7 @@ RSpec.describe Api::MovesController do
 
       it 'sets the from_location supplier as the supplier on the move' do
         post_moves
-        expect(move.supplier).to eq(move.from_location.suppliers.first)
+        expect(move.supplier).to eq(supplier)
       end
 
       context 'with a real access token' do
@@ -67,10 +67,6 @@ RSpec.describe Api::MovesController do
 
         it 'audits the supplier' do
           expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
-        end
-
-        it 'sets the application owner as the supplier on the move' do
-          expect(move.supplier).to eq(supplier)
         end
       end
 
