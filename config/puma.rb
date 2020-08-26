@@ -33,10 +33,10 @@ workers ENV.fetch('WEB_CONCURRENCY') { 1 }
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 
+preload_app!
 # run a new process instrumenter after work boot
 after_worker_boot do
   require 'prometheus_exporter/instrumentation'
-  require 'prometheus_exporter/client'
 
   PrometheusExporter::Instrumentation::Puma.start
   PrometheusExporter::Instrumentation::Process.start(type: 'web')
