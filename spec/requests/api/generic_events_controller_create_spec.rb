@@ -100,16 +100,25 @@ RSpec.describe Api::GenericEventsController do
     end
 
     context 'when specifying invalid attributes' do
-      let(:event_attributes) { attributes_for(:event).merge(event_type: 'Event::FooBar') }
-
+      let(:data) do
+        {
+          type: 'events',
+          attributes: event_attributes,
+          relationships: {
+            eventable: { data: { type: 'movess', id: move.id } },
+          },
+        }
+      end
       let(:errors_422) do
         [
           {
-            'title' => 'Invalid occurred_at, recorded_at, event_type',
-            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type is not included in the list",
+            'title' => 'Invalid occurred_at, recorded_at, event_type, eventable_type',
+            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type is not included in the list, Eventable type is not included in the list",
           },
         ]
       end
+
+      let(:event_attributes) { attributes_for(:event).merge(event_type: 'Event::FooBar') }
 
       it_behaves_like 'an endpoint that responds with error 422' do
         before { do_post }

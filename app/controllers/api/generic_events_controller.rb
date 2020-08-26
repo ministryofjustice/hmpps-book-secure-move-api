@@ -13,7 +13,7 @@ module Api
     ].freeze
 
     def create
-      GenericEvents::CommonParamsValidator.new(event_params).validate!
+      GenericEvents::CommonParamsValidator.new(event_params, event_relationships).validate!
       event = event_type.constantize.create!(event_attributes)
 
       render json: event, status: :created, serializer: ::GenericEventSerializer
@@ -34,8 +34,12 @@ module Api
       params.require(:data).permit(PERMITTED_EVENT_PARAMS).to_h
     end
 
+    def event_relationships
+      @event_relationships ||= params.require(:data)[:relationships]
+    end
+
     def eventable_params
-      @eventable_params ||= params.require(:data).dig(:relationships, :eventable)
+      @eventable_params ||= event_relationships[:eventable]
     end
 
     def eventable
