@@ -11,10 +11,10 @@ EventResponseBody:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: generic_events
+      example: events
       enum:
-        - generic_events
-      description: The type of this object - always `generic_events`
+        - events
+      description: The type of this object - always `events`
     attributes:
       type: object
       required:
@@ -95,10 +95,10 @@ EventRequestPostBody:
   properties:
     type:
       type: string
-      example: generic_events
+      example: events
       enum:
-        - generic_events
-      description: The type of this object - always `generic_events`
+        - events
+      description: The type of this object - always `events`
     attributes:
       type: object
       required:

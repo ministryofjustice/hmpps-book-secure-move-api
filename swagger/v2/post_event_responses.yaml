@@ -4,7 +4,7 @@
     - data
   properties:
     data:
-      $ref: "../v2/generic_event.yaml#/EventResponseBody"
+      $ref: "../v2/event.yaml#/EventResponseBody"
 "400":
   type: object
   required:

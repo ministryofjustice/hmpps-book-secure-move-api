@@ -17,7 +17,7 @@ RSpec.describe GenericEventSerializer do
       {
         data: {
           id: event.id,
-          type: 'generic_events',
+          type: 'events',
           attributes: {
             occurred_at: event.occurred_at.iso8601,
             recorded_at: event.recorded_at.iso8601,

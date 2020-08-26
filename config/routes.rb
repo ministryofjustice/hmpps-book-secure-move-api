@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   namespace :api do
     filter :versioned_path
 
-    resources :generic_events, only: %i[create]
+    resources :events, only: %i[create], controller: 'generic_events'
 
     resources :allocations, only: %i[create index show] do
       member do

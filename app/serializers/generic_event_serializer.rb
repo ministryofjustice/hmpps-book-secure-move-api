@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GenericEventSerializer < ActiveModel::Serializer
-  type 'generic_events'
+  type 'events'
 
   attributes :occurred_at, :recorded_at, :notes, :details, :event_type
 

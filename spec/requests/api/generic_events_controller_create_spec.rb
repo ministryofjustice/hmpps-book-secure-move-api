@@ -17,7 +17,7 @@ RSpec.describe Api::GenericEventsController do
     }
   end
 
-  describe 'POST /generic_events' do
+  describe 'POST /events' do
     let(:event_attributes) do
       {
         occurred_at: Time.zone.now,
@@ -106,6 +106,6 @@ RSpec.describe Api::GenericEventsController do
   end
 
   def do_post
-    post '/api/generic_events', params: { data: data }, headers: headers, as: :json
+    post '/api/events', params: { data: data }, headers: headers, as: :json
   end
 end
