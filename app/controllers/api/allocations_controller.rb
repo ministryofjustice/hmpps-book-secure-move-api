@@ -70,7 +70,6 @@ module Api
 
     def creator
       @creator ||= Allocations::Creator.new(
-        doorkeeper_application_owner: doorkeeper_application_owner,
         allocation_params: allocation_params,
         complex_case_params: complex_case_params,
       )

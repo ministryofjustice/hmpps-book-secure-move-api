@@ -6,6 +6,11 @@ class SupplierLocation < ApplicationRecord
 
   validate :effective_to_after_effective_from
 
+  scope :location, ->(location_id) { where(location_id: location_id) }
+  scope :effective_from, ->(date) { where(effective_from: nil).or(where('effective_from <= ?', date)) }
+  scope :effective_to, ->(date) { where(effective_to: nil).or(where('effective_to >= ?', date)) }
+  scope :effective_on, ->(date) { effective_from(date).effective_to(date) }
+
   def self.link_locations(effective_from: nil, effective_to: nil, supplier:, locations:)
     locations.each do |location|
       create!(effective_from: effective_from, effective_to: effective_to, supplier: supplier, location: location)

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   namespace :api do
     filter :versioned_path
 
+    resources :events, only: %i[create], controller: 'generic_events'
+
     resources :allocations, only: %i[create index show] do
       member do
         post 'cancel', controller: 'allocation_events'
@@ -78,6 +80,5 @@ Rails.application.routes.draw do
     end
 
     get '/suppliers/:supplier_id/locations', to: 'suppliers#locations'
-
   end
 end

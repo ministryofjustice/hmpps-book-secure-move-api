@@ -543,6 +543,63 @@ RSpec.describe Move do
     end
   end
 
+  describe '#determine_supplier' do
+    subject(:determined_supplier) { move.determine_supplier }
+
+    let(:location) { create(:location, :police) }
+    let(:old_supplier) { create(:supplier) }
+    let(:new_supplier) { build(:supplier) }
+    let(:date) { Date.today }
+    let(:date_from) { Date.today }
+    let(:move) { create(:move, :cancelled, from_location: location, to_location: nil, supplier: old_supplier, date: date, date_from: date_from) }
+
+    before do
+      supplier_chooser = instance_double('SupplierChooser', call: new_supplier)
+      allow(SupplierChooser).to receive(:new).and_return(supplier_chooser)
+    end
+
+    context 'when date and date_from have not changed' do
+      it 'returns existing supplier' do
+        expect(determined_supplier).to eq old_supplier
+      end
+
+      it 'does not call SupplierChooser service' do
+        determined_supplier
+        expect(SupplierChooser).not_to have_received(:new)
+      end
+    end
+
+    context 'when date is present and has changed' do
+      let(:date_from) { nil }
+
+      before { move.date = Date.tomorrow }
+
+      it 'returns updated supplier' do
+        expect(determined_supplier).to eq new_supplier
+      end
+
+      it 'calls SupplierChooser service to update supplier' do
+        determined_supplier
+        expect(SupplierChooser).to have_received(:new).with(Date.tomorrow, location)
+      end
+    end
+
+    context 'when date_from is present and has changed' do
+      let(:date) { nil }
+
+      before { move.date_from = Date.tomorrow }
+
+      it 'returns updated supplier' do
+        expect(determined_supplier).to eq new_supplier
+      end
+
+      it 'calls SupplierChooser service to update supplier' do
+        determined_supplier
+        expect(SupplierChooser).to have_received(:new).with(Date.tomorrow, location)
+      end
+    end
+  end
+
   describe 'relationships' do
     it 'updates the parent record when updated' do
       profile = create(:profile)

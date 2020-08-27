@@ -686,6 +686,12 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/404"
         "415":
           description: invalid media type
           content:

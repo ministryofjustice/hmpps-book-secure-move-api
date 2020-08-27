@@ -46,7 +46,8 @@ class Location < ApplicationRecord
 
   NOMIS_TYPES_WITH_DOCUMENTS = %w[STC SCH].freeze
 
-  has_and_belongs_to_many :suppliers
+  has_many :supplier_locations
+  has_many :suppliers, through: :supplier_locations
   has_and_belongs_to_many :regions
   # Deleting locations isn't really a thing in practice - so dependent: :destroy is a pragmatic choice
   has_many :moves_from, class_name: 'Move', foreign_key: :from_location_id, inverse_of: :from_location, dependent: :destroy
@@ -56,7 +57,6 @@ class Location < ApplicationRecord
   validates :title, presence: true
   validates :location_type, presence: true, inclusion: { in: location_types }
 
-  scope :supplier, ->(supplier_id) { joins(:suppliers).where(locations_suppliers: { supplier_id: supplier_id }) }
   scope :ordered_by_title, ->(direction) { order('locations.title' => direction) }
   scope :search_by_title, ->(search) { select(:id).where('title ILIKE :search', search: "%#{search}%") }
 
