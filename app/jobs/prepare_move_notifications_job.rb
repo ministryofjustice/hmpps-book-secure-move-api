@@ -2,7 +2,7 @@
 
 # This job is responsible for preparing a set of notify jobs to run
 class PrepareMoveNotificationsJob < ApplicationJob
-  queue_as :notifications
+  include QueueDeterminer
 
   def perform(topic_id:, action_name:, send_webhooks: true, send_emails: true, only_supplier_id: nil)
     move = Move.find(topic_id)
@@ -17,7 +17,8 @@ class PrepareMoveNotificationsJob < ApplicationJob
         # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
         if send_webhooks && subscription.callback_url.present?
           NotifyWebhookJob.perform_later(
-            build_notification_id(subscription, NotificationType::WEBHOOK, move, action_name),
+              notification_id: build_notification(subscription, NotificationType::WEBHOOK, move, action_name).id,
+              queue_name: queue_name
           )
         end
 
@@ -25,7 +26,8 @@ class PrepareMoveNotificationsJob < ApplicationJob
         next unless send_emails && subscription.email_address.present? && should_email?(move)
 
         NotifyEmailJob.perform_later(
-          build_notification_id(subscription, NotificationType::EMAIL, move, action_name),
+            notification_id: build_notification(subscription, NotificationType::EMAIL, move, action_name).id,
+            queue_name: queue_name
         )
       end
     end
@@ -33,12 +35,12 @@ class PrepareMoveNotificationsJob < ApplicationJob
 
 private
 
-  def build_notification_id(subscription, type_id, topic, action_name)
+  def build_notification(subscription, type_id, topic, action_name)
     subscription.notifications.create!(
       notification_type_id: type_id,
       topic: topic,
       event_type: event_type(action_name),
-    ).id
+    )
   end
 
   def should_email?(move)

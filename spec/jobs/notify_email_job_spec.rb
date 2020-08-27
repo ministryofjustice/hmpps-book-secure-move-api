@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe NotifyEmailJob, type: :job do
-  subject(:perform!) { described_class.new.perform(notification.id) }
+  subject(:perform!) { described_class.perform_now(notification_id: notification.id, queue_as: :notifications_high) }
 
   let(:perform_and_ignore_errors!) do
     perform!
