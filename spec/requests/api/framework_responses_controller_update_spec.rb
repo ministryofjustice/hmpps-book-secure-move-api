@@ -73,7 +73,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": value,
-              "value_type": 'object',
+              "value_type": 'object::details',
               "responded": true,
             },
           })
@@ -90,7 +90,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": value,
-              "value_type": 'collection',
+              "value_type": 'collection::details',
               "responded": true,
             },
           })
@@ -136,7 +136,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": [{ option: 'Level 1' }],
-              "value_type": 'collection',
+              "value_type": 'collection::details',
               "responded": true,
             },
           })
@@ -177,7 +177,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": { option: 'Yes' },
-              "value_type": 'object',
+              "value_type": 'object::details',
               "responded": true,
             },
           })

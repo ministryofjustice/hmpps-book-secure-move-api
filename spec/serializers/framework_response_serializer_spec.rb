@@ -25,6 +25,10 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:responded]).to eq(framework_response.responded)
   end
 
+  it 'contains a `value_type` attribute' do
+    expect(result[:data][:attributes][:value_type]).to eq(framework_response.framework_question.response_type)
+  end
+
   it 'contains a `person_escort_record` relationship' do
     expect(result[:data][:relationships][:person_escort_record][:data]).to eq(
       id: framework_response.person_escort_record.id,
@@ -51,48 +55,6 @@ RSpec.describe FrameworkResponseSerializer do
       id: flag.id,
       type: 'framework_flags',
     )
-  end
-
-  describe 'value_type' do
-    context 'when response is an object response' do
-      let(:framework_response) { create(:object_response) }
-
-      it 'returns value_type `object`' do
-        expect(result[:data][:attributes][:value_type]).to eq('object')
-      end
-    end
-
-    context 'when response is an string response' do
-      let(:framework_response) { create(:string_response) }
-
-      it 'returns value_type `string`' do
-        expect(result[:data][:attributes][:value_type]).to eq('string')
-      end
-    end
-
-    context 'when response is a collection response' do
-      let(:framework_response) { create(:collection_response) }
-
-      it 'returns value_type `collection`' do
-        expect(result[:data][:attributes][:value_type]).to eq('collection')
-      end
-    end
-
-    context 'when response is a collection response and question type is add multiple items' do
-      let(:framework_response) { create(:collection_response, :multiple_items) }
-
-      it 'returns value_type `collection`' do
-        expect(result[:data][:attributes][:value_type]).to eq('collection::add_multiple_items')
-      end
-    end
-
-    context 'when response is an array response' do
-      let(:framework_response) { create(:array_response) }
-
-      it 'returns value_type `array`' do
-        expect(result[:data][:attributes][:value_type]).to eq('array')
-      end
-    end
   end
 
   context 'with include options' do
