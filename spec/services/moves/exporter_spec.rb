@@ -22,11 +22,11 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(56)
+    expect(header.count).to eq(54)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(56)
+    expect(row.count).to eq(54)
   end
 
   it 'includes move details' do
@@ -65,7 +65,7 @@ RSpec.describe Moves::Exporter do
     expect(row).to include('false', '')
   end
 
-  %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_for_release not_to_be_released special_vehicle].each do |alert_type|
+  %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_to_be_released special_vehicle].each do |alert_type|
     it "includes TRUE flag and comments when #{alert_type} is present" do
       question.update(key: alert_type)
       move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
