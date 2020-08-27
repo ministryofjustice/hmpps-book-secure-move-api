@@ -217,7 +217,7 @@ RSpec.describe FrameworkQuestion do
       let(:framework_question) { create(:framework_question, followup_comment: true) }
 
       it 'returns response_type `object`' do
-        expect(framework_question.response_type).to eq('object::details')
+        expect(framework_question.response_type).to eq('object::followup_comment')
       end
     end
 
@@ -233,7 +233,7 @@ RSpec.describe FrameworkQuestion do
       let(:framework_question) { create(:framework_question, :checkbox, followup_comment: true) }
 
       it 'returns response_type `collection`' do
-        expect(framework_question.response_type).to eq('collection::details')
+        expect(framework_question.response_type).to eq('collection::followup_comment')
       end
     end
 

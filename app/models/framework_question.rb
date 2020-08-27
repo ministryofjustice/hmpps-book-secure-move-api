@@ -38,9 +38,9 @@ class FrameworkQuestion < VersionedModel
   def response_type
     case question_type
     when 'radio'
-      followup_comment ? 'object::details' : 'string'
+      followup_comment ? 'object::followup_comment' : 'string'
     when 'checkbox'
-      followup_comment ? 'collection::details' : 'array'
+      followup_comment ? 'collection::followup_comment' : 'array'
     when 'add_multiple_items'
       'collection::add_multiple_items'
     else
