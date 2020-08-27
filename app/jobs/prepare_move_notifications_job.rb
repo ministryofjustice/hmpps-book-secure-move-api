@@ -5,6 +5,8 @@ class PrepareMoveNotificationsJob < ApplicationJob
   include QueueDeterminer
 
   def perform(topic_id:, action_name:, send_webhooks: true, send_emails: true, only_supplier_id: nil)
+    puts "IN PrepareMoveNotificationsJob: #{queue_as.inspect}"
+
     move = Move.find(topic_id)
 
     # if the move has a specified supplier, use it; otherwise use the move.suppliers delegate based on from_location
@@ -17,8 +19,7 @@ class PrepareMoveNotificationsJob < ApplicationJob
         # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
         if send_webhooks && subscription.callback_url.present?
           NotifyWebhookJob.perform_later(
-              notification_id: build_notification(subscription, NotificationType::WEBHOOK, move, action_name).id,
-              queue_name: queue_name
+              notification_id: build_notification(subscription, NotificationType::WEBHOOK, move, action_name).id
           )
         end
 
@@ -27,7 +28,6 @@ class PrepareMoveNotificationsJob < ApplicationJob
 
         NotifyEmailJob.perform_later(
             notification_id: build_notification(subscription, NotificationType::EMAIL, move, action_name).id,
-            queue_name: queue_name
         )
       end
     end
