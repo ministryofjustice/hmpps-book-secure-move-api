@@ -72,6 +72,7 @@ module Api
       @creator ||= Allocations::Creator.new(
         allocation_params: allocation_params,
         complex_case_params: complex_case_params,
+        doorkeeper_application_owner: doorkeeper_application_owner
       )
     end
 

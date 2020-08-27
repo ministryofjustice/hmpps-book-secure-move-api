@@ -13,6 +13,7 @@ RSpec.describe Allocations::Creator do
     described_class.new(
       allocation_params: allocation_params,
       complex_case_params: complex_case_params,
+      doorkeeper_application_owner: doorkeeper_application_owner
     )
   end
 
@@ -63,6 +64,7 @@ RSpec.describe Allocations::Creator do
       },
     }
   end
+  let(:doorkeeper_application_owner) { nil }
 
   context 'with valid params' do
     it 'creates an allocation' do
@@ -120,7 +122,12 @@ RSpec.describe Allocations::Creator do
 
     it 'calls the SupplierChooser service with the correct args' do
       call_creator
-      expect(SupplierChooser).to have_received(:new).with(date, from_location)
+      expect(SupplierChooser).to have_received(:new).with(
+          effective_date: date,
+          location: from_location,
+          new_record: true,
+          doorkeeper_application_owner: doorkeeper_application_owner
+          )
     end
 
     it 'sets the allocation moves supplier' do

@@ -12,7 +12,7 @@ module Api::V1
 
     def create_and_render
       move = Move.new(new_move_attributes)
-      move.determine_supplier
+      move.determine_supplier(doorkeeper_application_owner)
       move.profile.documents = profile_documents
 
       authorize!(:create, move)
@@ -114,7 +114,7 @@ module Api::V1
     end
 
     def updater
-      @updater ||= Moves::Updater.new(move, update_move_params)
+      @updater ||= Moves::Updater.new(move, update_move_params, doorkeeper_application_owner)
     end
 
     def included_relationships

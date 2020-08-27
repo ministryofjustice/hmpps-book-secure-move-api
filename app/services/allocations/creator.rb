@@ -2,11 +2,12 @@
 
 module Allocations
   class Creator
-    attr_accessor :allocation_params, :complex_case_params, :allocation
+    attr_accessor :allocation_params, :complex_case_params, :allocation, :doorkeeper_application_owner
 
-    def initialize(allocation_params:, complex_case_params:)
+    def initialize(allocation_params:, complex_case_params:, doorkeeper_application_owner:)
       self.allocation_params = allocation_params
       self.complex_case_params = complex_case_params
+      self.doorkeeper_application_owner = doorkeeper_application_owner
     end
 
     def call
@@ -27,7 +28,12 @@ module Allocations
     end
 
     def moves
-      supplier = SupplierChooser.new(allocation.date, allocation.from_location).call
+      supplier = SupplierChooser.new(
+          effective_date: allocation.date,
+          location: allocation.from_location,
+          new_record: true,
+          doorkeeper_application_owner: doorkeeper_application_owner
+      ).call
 
       Array.new(allocation.moves_count) do
         Move.new(

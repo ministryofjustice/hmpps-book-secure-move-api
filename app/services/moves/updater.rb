@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
+# NB: this is a V1 move updater
 module Moves
   class Updater
-    attr_accessor :move_params, :move, :status_changed
+    attr_accessor :move_params, :move, :status_changed, :doorkeeper_application_owner
 
-    def initialize(move, move_params)
+    def initialize(move, move_params, doorkeeper_application_owner)
       self.move = move
       self.move_params = move_params
+      self.doorkeeper_application_owner = doorkeeper_application_owner
     end
 
     def call
       move.assign_attributes(attributes)
-      move.determine_supplier
+      move.determine_supplier(doorkeeper_application_owner)
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
 

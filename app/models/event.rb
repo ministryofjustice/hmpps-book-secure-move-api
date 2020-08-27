@@ -30,6 +30,10 @@ class Event < ApplicationRecord
     @supplier_id ||= details[:supplier_id]
   end
 
+  def supplier
+    Supplier.find_by(id: supplier_id) # NB: not a conventional table field, could be nil
+  end
+
   def event_params
     @event_params ||= details[:event_params]
   end

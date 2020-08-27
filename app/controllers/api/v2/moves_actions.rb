@@ -13,18 +13,16 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
-      move.determine_supplier
-      authorize!(:create, move)
-      move.save!
-
+      move.determine_supplier(doorkeeper_application_owner)
+      move.save! # NB: the move should be saved and notified even if the current user is no longer authorised to view it
       Notifier.prepare_notifications(topic: move, action_name: 'create')
-
+      authorize!(:create, move)
       render_move(move, :created)
     end
 
     def update_and_render
       move.assign_attributes(common_move_attributes)
-      move.determine_supplier
+      move.determine_supplier(doorkeeper_application_owner)
       action_name = move.status_changed? ? 'update_status' : 'update'
       move.save!
       move.allocation&.refresh_status_and_moves_count!

@@ -171,13 +171,17 @@ class Move < VersionedModel
     feed_attributes
   end
 
-  def determine_supplier
+  def determine_supplier(doorkeeper_application_owner)
     # Supplier choice is based on from_location and effective date. As the from location cannot change after the
     # move is created we only need to look for date changes - if no change then skip the supplier update for speed.
-    return supplier unless new_record? || date_changed? || date_from_changed?
+    return supplier unless supplier.nil? || new_record? || date_changed? || date_from_changed?
 
-    effective_date = date.presence || date_from
-    self.supplier = SupplierChooser.new(effective_date, from_location).call
+    self.supplier = SupplierChooser.new(
+        effective_date: date.presence || date_from,
+        location: from_location,
+        new_record: new_record?,
+        existing_owner: supplier,
+        doorkeeper_application_owner: doorkeeper_application_owner).call
   end
 
 private

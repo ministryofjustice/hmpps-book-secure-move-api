@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Moves::Updater do
-  subject(:updater) { described_class.new(move, move_params) }
+  subject(:updater) { described_class.new(move, move_params, doorkeeper_application_owner) }
 
   let(:before_documents) { create_list(:document, 2) }
   let(:supplier) { create(:supplier) }
@@ -14,6 +14,7 @@ RSpec.describe Moves::Updater do
   let(:date_to) { Date.tomorrow }
   let(:status) { 'requested' }
   let(:cancellation_reason) { nil }
+  let(:doorkeeper_application_owner) { nil }
 
   let(:move_params) do
     {
