@@ -584,11 +584,12 @@ RSpec.describe Move do
         it 'calls SupplierChooser service to update supplier' do
           determined_supplier
           expect(SupplierChooser).to have_received(:new).with(
-              effective_date: Date.tomorrow,
-              location: location,
-              new_record: false,
-              existing_owner: old_supplier,
-              doorkeeper_application_owner: old_supplier)
+            effective_date: Date.tomorrow,
+            location: location,
+            new_record: false,
+            existing_owner: old_supplier,
+            doorkeeper_application_owner: old_supplier,
+          )
         end
       end
 
@@ -604,11 +605,12 @@ RSpec.describe Move do
         it 'calls SupplierChooser service to update supplier' do
           determined_supplier
           expect(SupplierChooser).to have_received(:new).with(
-              effective_date: Date.tomorrow,
-              location: location,
-              new_record: false,
-              existing_owner: old_supplier,
-              doorkeeper_application_owner: old_supplier)
+            effective_date: Date.tomorrow,
+            location: location,
+            new_record: false,
+            existing_owner: old_supplier,
+            doorkeeper_application_owner: old_supplier,
+          )
         end
       end
     end
@@ -624,11 +626,12 @@ RSpec.describe Move do
         it 'calls SupplierChooser service' do
           determined_supplier
           expect(SupplierChooser).to have_received(:new).with(
-              effective_date: Date.today,
-              location: location,
-              new_record: true,
-              existing_owner: old_supplier,
-              doorkeeper_application_owner: old_supplier)
+            effective_date: Date.today,
+            location: location,
+            new_record: true,
+            existing_owner: old_supplier,
+            doorkeeper_application_owner: old_supplier,
+          )
         end
       end
 
@@ -644,11 +647,12 @@ RSpec.describe Move do
         it 'calls SupplierChooser service to update supplier' do
           determined_supplier
           expect(SupplierChooser).to have_received(:new).with(
-              effective_date: Date.tomorrow,
-              location: location,
-              new_record: true,
-              existing_owner: old_supplier,
-              doorkeeper_application_owner: old_supplier)
+            effective_date: Date.tomorrow,
+            location: location,
+            new_record: true,
+            existing_owner: old_supplier,
+            doorkeeper_application_owner: old_supplier,
+          )
         end
       end
 
@@ -664,11 +668,12 @@ RSpec.describe Move do
         it 'calls SupplierChooser service to update supplier' do
           determined_supplier
           expect(SupplierChooser).to have_received(:new).with(
-              effective_date: Date.tomorrow,
-              location: location,
-              new_record: true,
-              existing_owner: old_supplier,
-              doorkeeper_application_owner: old_supplier)
+            effective_date: Date.tomorrow,
+            location: location,
+            new_record: true,
+            existing_owner: old_supplier,
+            doorkeeper_application_owner: old_supplier,
+          )
         end
       end
     end

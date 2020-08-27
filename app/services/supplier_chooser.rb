@@ -76,6 +76,7 @@ private
   def effective_supplier_for_location
     # NB: business rules _should_ preclude multiple effective suppliers for a given location
     return unless effective_date.present? && location.present?
+
     SupplierLocation
         .location(location.id)
         .effective_on(effective_date)

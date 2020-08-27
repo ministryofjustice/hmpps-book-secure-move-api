@@ -5,9 +5,9 @@ RSpec.describe SupplierChooser do
       location: location,
       new_record: new_record,
       doorkeeper_application_owner: doorkeeper_application_owner,
-      existing_owner: existing_owner
-      )
-    end
+      existing_owner: existing_owner,
+    )
+  end
 
   let(:supplier1) { create(:supplier) }
   let(:supplier2) { create(:supplier) }

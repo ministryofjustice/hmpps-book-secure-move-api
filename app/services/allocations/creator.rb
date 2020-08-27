@@ -29,10 +29,10 @@ module Allocations
 
     def moves
       supplier = SupplierChooser.new(
-          effective_date: allocation.date,
-          location: allocation.from_location,
-          new_record: true,
-          doorkeeper_application_owner: doorkeeper_application_owner
+        effective_date: allocation.date,
+        location: allocation.from_location,
+        new_record: true,
+        doorkeeper_application_owner: doorkeeper_application_owner,
       ).call
 
       Array.new(allocation.moves_count) do

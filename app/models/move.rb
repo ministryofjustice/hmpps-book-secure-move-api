@@ -177,11 +177,12 @@ class Move < VersionedModel
     return supplier unless supplier.nil? || new_record? || date_changed? || date_from_changed?
 
     self.supplier = SupplierChooser.new(
-        effective_date: date.presence || date_from,
-        location: from_location,
-        new_record: new_record?,
-        existing_owner: supplier,
-        doorkeeper_application_owner: doorkeeper_application_owner).call
+      effective_date: date.presence || date_from,
+      location: from_location,
+      new_record: new_record?,
+      existing_owner: supplier,
+      doorkeeper_application_owner: doorkeeper_application_owner,
+    ).call
   end
 
 private
