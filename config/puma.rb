@@ -35,13 +35,15 @@ plugin :tmp_restart
 
 preload_app!
 # run a new process instrumenter after work boot
-after_worker_boot do
-  require 'prometheus_exporter/instrumentation'
+if ENV['PROMETHEUS_METRICS'].in? ['on', 'true']
+  after_worker_boot do
+    require 'prometheus_exporter/instrumentation'
 
-  PrometheusExporter::Instrumentation::Puma.start
-  PrometheusExporter::Instrumentation::Process.start(type: 'web')
-  PrometheusExporter::Instrumentation::ActiveRecord.start(
-    custom_labels: { type: 'puma_worker' },
-    config_labels: %i[database host],
-  )
+    PrometheusExporter::Instrumentation::Puma.start
+    PrometheusExporter::Instrumentation::Process.start(type: 'web')
+    PrometheusExporter::Instrumentation::ActiveRecord.start(
+      custom_labels: { type: 'puma_worker' },
+      config_labels: %i[database host],
+    )
+  end
 end
