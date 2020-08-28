@@ -60,6 +60,7 @@ class Move < VersionedModel
   CANCELLATION_REASONS = [
     CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
     CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    CANCELLATION_REASON_CANCELLED_BY_PMU = 'cancelled_by_pmu',
     CANCELLATION_REASON_REJECTED = 'rejected',
     CANCELLATION_REASON_OTHER = 'other',
   ].freeze
