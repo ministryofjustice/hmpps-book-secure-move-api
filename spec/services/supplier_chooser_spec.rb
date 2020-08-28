@@ -1,6 +1,7 @@
 RSpec.describe SupplierChooser do
   subject(:service) { described_class.new(date, location) }
 
+  let!(:serco) { create(:supplier, key: 'serco') }
   let(:supplier1) { create(:supplier) }
   let(:supplier2) { create(:supplier) }
   let(:location) { create(:location) }
@@ -44,7 +45,12 @@ RSpec.describe SupplierChooser do
 
   context 'with no supplier locations' do
     it 'returns nil' do
+      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
+    end
+
+    it 'returns Serco' do
+      expect(service.call).to eq(serco)
     end
   end
 
@@ -52,7 +58,12 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1) }
 
     it 'returns nil' do
+      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
+    end
+
+    it 'returns Serco' do
+      expect(service.call).to eq(serco)
     end
   end
 
@@ -60,7 +71,12 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date.tomorrow, effective_to: date.tomorrow) }
 
     it 'returns nil' do
+      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
+    end
+
+    it 'returns Serco' do
+      expect(service.call).to eq(serco)
     end
   end
 
