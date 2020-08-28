@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.3.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.7) (2020-08-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.6...v2.3.7)
+
+**Merged pull requests:**
+
+- Quick fix for go live with Serco [\#892](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/892) ([smoothcontract](https://github.com/smoothcontract))
+- Add new move cancellation reason [\#890](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/890) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#889](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/889) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.3.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.6) (2020-08-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.5...v2.3.6)
