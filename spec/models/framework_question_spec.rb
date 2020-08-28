@@ -211,4 +211,54 @@ RSpec.describe FrameworkQuestion do
       expect(response).to be_a(FrameworkResponse::Collection)
     end
   end
+
+  describe '#response_type' do
+    context 'when question is of type radio with followup_comments' do
+      let(:framework_question) { create(:framework_question, followup_comment: true) }
+
+      it 'returns response_type `object`' do
+        expect(framework_question.response_type).to eq('object::followup_comment')
+      end
+    end
+
+    context 'when response is of type radio' do
+      let(:framework_question) { create(:framework_question) }
+
+      it 'returns response_type `string`' do
+        expect(framework_question.response_type).to eq('string')
+      end
+    end
+
+    context 'when question is of type checkbox with followup_comments' do
+      let(:framework_question) { create(:framework_question, :checkbox, followup_comment: true) }
+
+      it 'returns response_type `collection`' do
+        expect(framework_question.response_type).to eq('collection::followup_comment')
+      end
+    end
+
+    context 'when question is of type checkbox' do
+      let(:framework_question) { create(:framework_question, :checkbox) }
+
+      it 'returns response_type `array`' do
+        expect(framework_question.response_type).to eq('array')
+      end
+    end
+
+    context 'when question is of type `add_multiple_items`' do
+      let(:framework_question) { create(:framework_question, :add_multiple_items) }
+
+      it 'returns response_type `collection::add_multiple_items`' do
+        expect(framework_question.response_type).to eq('collection::add_multiple_items')
+      end
+    end
+
+    context 'when question is of type text' do
+      let(:framework_question) { create(:framework_question, :text) }
+
+      it 'returns response_type `string`' do
+        expect(framework_question.response_type).to eq('string')
+      end
+    end
+  end
 end

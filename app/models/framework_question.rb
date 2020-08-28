@@ -35,6 +35,19 @@ class FrameworkQuestion < VersionedModel
     response
   end
 
+  def response_type
+    case question_type
+    when 'radio'
+      followup_comment ? 'object::followup_comment' : 'string'
+    when 'checkbox'
+      followup_comment ? 'collection::followup_comment' : 'array'
+    when 'add_multiple_items'
+      'collection::add_multiple_items'
+    else
+      'string'
+    end
+  end
+
   def build_response(question, person_escort_record)
     klass =
       case question.question_type
