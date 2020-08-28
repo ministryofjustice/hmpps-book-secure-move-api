@@ -26,7 +26,7 @@ workers ENV.fetch('WEB_CONCURRENCY') { 1 }
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write
-# process behavior so workers use less memory.
+# process behaviour so workers use less memory.
 #
 # preload_app!
 
@@ -35,7 +35,7 @@ plugin :tmp_restart
 
 preload_app!
 # run a new process instrumenter after work boot
-if ENV['PROMETHEUS_METRICS'].in? ['on', 'true']
+if ['on', 'true'].include? ENV['PROMETHEUS_METRICS']
   after_worker_boot do
     require 'prometheus_exporter/instrumentation'
 

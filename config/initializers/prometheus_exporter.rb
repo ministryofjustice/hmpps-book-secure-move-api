@@ -2,7 +2,7 @@
 
 # check for environment variable so that we can run production rake task in Dockerfile
 # otherwise we try to load the metrics outside of the actual app itself
-if ENV['PROMETHEUS_METRICS'].in? ['on', 'true']
+if ['on', 'true'].include? ENV['PROMETHEUS_METRICS']
   require 'prometheus_exporter/middleware'
   require 'prometheus_exporter/instrumentation'
 
