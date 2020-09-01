@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.3.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.9) (2020-09-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.8...v2.3.9)
+
+**Merged pull requests:**
+
+- Changelog 2.3.8 [\#900](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/900) ([cwrw](https://github.com/cwrw))
+- Guard against empty move dates when calculating age in Journey reports [\#899](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/899) ([cwrw](https://github.com/cwrw))
+- Remove redundant `locations\_suppliers` table [\#897](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/897) ([alexdesi](https://github.com/alexdesi))
+
 ## [v2.3.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.8) (2020-08-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.7...v2.3.8)
