@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.3.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.8) (2020-08-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.7...v2.3.8)
+
+**Merged pull requests:**
+
+- change update to create [\#898](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/898) ([martyn-w](https://github.com/martyn-w))
+- Change in? to include? on checking ENV [\#895](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/895) ([cwrw](https://github.com/cwrw))
+- Disable Prometheus by default [\#894](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/894) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#893](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/893) ([martyn-w](https://github.com/martyn-w))
+- P4-2080 Support additional framework response types [\#887](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/887) ([cwrw](https://github.com/cwrw))
+
 ## [v2.3.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.3.7) (2020-08-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.3.6...v2.3.7)
