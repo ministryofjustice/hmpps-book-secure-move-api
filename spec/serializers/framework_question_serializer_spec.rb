@@ -34,6 +34,10 @@ RSpec.describe FrameworkQuestionSerializer do
     expect(result[:data][:attributes][:options]).to eq(framework_question.options)
   end
 
+  it 'contains a `response_type` attribute' do
+    expect(result[:data][:attributes][:response_type]).to eq(framework_question.response_type)
+  end
+
   it 'contains a `framework` relationship' do
     expect(result[:data][:relationships][:framework][:data]).to eq(
       id: framework_question.framework.id,
@@ -46,56 +50,6 @@ RSpec.describe FrameworkQuestionSerializer do
       id: dependent_question.id,
       type: 'framework_questions',
     )
-  end
-
-  describe 'response_type' do
-    context 'when question is of type radio with followup_comments' do
-      let(:framework_question) { create(:framework_question, followup_comment: true) }
-
-      it 'returns response_type `object`' do
-        expect(result[:data][:attributes][:response_type]).to eq('object')
-      end
-    end
-
-    context 'when response is of type radio' do
-      let(:framework_question) { create(:framework_question) }
-
-      it 'returns response_type `string`' do
-        expect(result[:data][:attributes][:response_type]).to eq('string')
-      end
-    end
-
-    context 'when question is of type checkbox with followup_comments' do
-      let(:framework_question) { create(:framework_question, :checkbox, followup_comment: true) }
-
-      it 'returns response_type `collection`' do
-        expect(result[:data][:attributes][:response_type]).to eq('collection')
-      end
-    end
-
-    context 'when question is of type checkbox' do
-      let(:framework_question) { create(:framework_question, :checkbox) }
-
-      it 'returns response_type `array`' do
-        expect(result[:data][:attributes][:response_type]).to eq('array')
-      end
-    end
-
-    context 'when question is of type `add_multiple_items`' do
-      let(:framework_question) { create(:framework_question, :add_multiple_items) }
-
-      it 'returns response_type `collection::add_multiple_items`' do
-        expect(result[:data][:attributes][:response_type]).to eq('collection::add_multiple_items')
-      end
-    end
-
-    context 'when question is of type text' do
-      let(:framework_question) { create(:framework_question, :text) }
-
-      it 'returns response_type `string`' do
-        expect(result[:data][:attributes][:response_type]).to eq('string')
-      end
-    end
   end
 
   context 'with include options' do

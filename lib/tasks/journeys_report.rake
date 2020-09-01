@@ -67,7 +67,7 @@ namespace :journeys do
           prison_id: person&.nomis_prison_number,
           gender: person&.gender&.key,
           dob: person&.date_of_birth,
-          age: person.present? && person.date_of_birth.present? ? ((move.date.to_date - person.date_of_birth&.to_date) / 365.25).to_i : nil,
+          age: age_at(person, move),
           cancellation_reason: move.cancellation_reason,
           events: move.move_events.default_order.map do |move_event|
             {
@@ -99,4 +99,12 @@ namespace :journeys do
       end
     end
   end
+end
+
+private
+
+def age_at(person, move)
+  return unless person&.date_of_birth && move.date
+
+  ((move.date.to_date - person.date_of_birth.to_date) / 365.25).to_i
 end

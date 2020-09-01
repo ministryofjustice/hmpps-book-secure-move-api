@@ -45,8 +45,8 @@ FrameworkQuestion:
           enum:
             - string
             - array
-            - object
-            - collection
+            - object::followup_comment
+            - collection::followup_comment
             - collection::add_multiple_items
           description: Indicates the type of response for the question
           readOnly: true

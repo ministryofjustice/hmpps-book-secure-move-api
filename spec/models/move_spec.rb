@@ -31,6 +31,7 @@ RSpec.describe Move do
           .in_array(%w[
             made_in_error
             supplier_declined_to_move
+            cancelled_by_pmu
             rejected
             other
           ])

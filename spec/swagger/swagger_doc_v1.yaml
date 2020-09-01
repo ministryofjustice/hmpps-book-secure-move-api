@@ -620,6 +620,7 @@
               enum:
                 - made_in_error
                 - supplier_declined_to_move
+                - cancelled_by_pmu
                 - rejected
                 - other
         - name: filter[supplier_id]

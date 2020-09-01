@@ -36,7 +36,7 @@ FactoryBot.define do
   end
 
   factory :array_response, parent: :framework_response, class: 'FrameworkResponse::Array' do
-    association(:framework_question, options: ['Level 1', 'Level 2'])
+    association(:framework_question, :checkbox, options: ['Level 1', 'Level 2'])
     value { ['Level 1'] }
   end
 end
