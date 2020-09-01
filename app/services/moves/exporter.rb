@@ -56,8 +56,6 @@ module Moves
       'Sign or other language interpreter details',
       'Any other information',
       'Any other information details',
-      'Not for release',
-      'Not for release details',
       'Not to be released',
       'Not to be released details',
       'Requires special vehicle',
@@ -122,7 +120,6 @@ module Moves
         answer_details(answers, 'solicitor'), # Solicitor or other legal representation details
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
         answer_details(answers, 'other_court'), # Any other information details
-        answer_details(answers, 'not_for_release'), # Not for release details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
         profile&.documents&.size || 0, # 'Uploaded documents',

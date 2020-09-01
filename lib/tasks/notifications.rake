@@ -17,16 +17,13 @@ namespace :notifications do
       .where('date >= ?', from_date)
       .where(status: statuses)
 
-    # moves assumed to belong to the supplier (based on from_location)
-    moves_assumed = Move
+    # moves that don't belong to any supplier
+    moves_unassigned = Move
       .where(supplier_id: nil)
-      .where(from_location: Location.supplier(supplier))
-      .where('date >= ?', from_date)
-      .where(status: statuses)
 
     puts "For moves dated from #{from_date} with statuses of #{statuses}"
     puts "\tthere are #{moves_assigned.count} assigned moves for #{supplier.name}"
-    puts "\tthere are #{moves_assumed.count} assumed moves for #{supplier.name}"
+    puts "\tthere are #{moves_unassigned.count} moves not assigned to any supplier"
 
     puts "Sending webhooks: #{send_webhooks}"
     puts "Sending emails: #{send_emails}"
@@ -39,13 +36,9 @@ namespace :notifications do
 
     puts 'Processing assigned moves...'
     moves_assigned.find_each do |move|
-      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: 'update', send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
+      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: 'create', send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
     end
 
-    puts 'Processing assumed moves...'
-    moves_assumed.find_each do |move|
-      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: 'update', send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
-    end
     puts 'All done.'
   end
 end

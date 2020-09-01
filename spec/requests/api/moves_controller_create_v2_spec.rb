@@ -65,23 +65,17 @@ RSpec.describe Api::MovesController do
     it 'sets the from_location supplier as the supplier on the move' do
       do_post
 
-      expect(move.supplier).to eq(move.from_location.suppliers.first)
+      expect(move.supplier).to eq(another_supplier)
     end
 
     context 'with a real access token' do
-      let(:application) { create(:application, owner: supplier) }
+      let(:application) { create(:application, owner: another_supplier) }
       let(:access_token) { create(:access_token, application: application).token }
 
       it 'audits the supplier' do
         do_post
 
-        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
-      end
-
-      it 'sets the application owner as the supplier on the move' do
-        do_post
-
-        expect(move.supplier).to eq(application.owner)
+        expect(move.versions.map(&:whodunnit)).to eq([another_supplier.id])
       end
     end
 

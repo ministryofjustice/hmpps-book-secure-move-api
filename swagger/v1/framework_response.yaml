@@ -57,8 +57,8 @@ FrameworkResponse:
           enum:
             - string
             - array
-            - object
-            - collection
+            - object::followup_comment
+            - collection::followup_comment
             - collection::add_multiple_items
           description: Indicates the type of value for the answer provided
           readOnly: true

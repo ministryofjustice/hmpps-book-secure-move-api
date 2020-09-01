@@ -19,7 +19,7 @@ RSpec.describe Api::MovesController do
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:profile) { create(:profile, documents: before_documents) }
-    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, date_from: 2.days.ago }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -86,6 +86,10 @@ RSpec.describe Api::MovesController do
 
         it 'updates the status of a move' do
           expect(result.status).to eq 'requested'
+        end
+
+        it 'updates the supplier' do
+          expect(result.supplier).to eq supplier
         end
 
         it 'does not update the move type' do

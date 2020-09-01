@@ -4,6 +4,7 @@ MoveCancellationReason:
   enum:
   - made_in_error
   - supplier_declined_to_move
+  - cancelled_by_pmu
   - rejected
   - other
   description: The reason the move has been cancelled

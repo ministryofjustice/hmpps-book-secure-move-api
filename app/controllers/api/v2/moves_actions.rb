@@ -13,6 +13,7 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
+      move.determine_supplier
       authorize!(:create, move)
       move.save!
 
@@ -23,6 +24,7 @@ module Api::V2
 
     def update_and_render
       move.assign_attributes(common_move_attributes)
+      move.determine_supplier
       action_name = move.status_changed? ? 'update_status' : 'update'
       move.save!
       move.allocation&.refresh_status_and_moves_count!
@@ -64,7 +66,6 @@ module Api::V2
 
     def move_attributes
       common_move_attributes.tap do |attributes|
-        attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
         attributes[:version] = 2

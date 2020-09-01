@@ -60,6 +60,7 @@ class Move < VersionedModel
   CANCELLATION_REASONS = [
     CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
     CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    CANCELLATION_REASON_CANCELLED_BY_PMU = 'cancelled_by_pmu',
     CANCELLATION_REASON_REJECTED = 'rejected',
     CANCELLATION_REASON_OTHER = 'other',
   ].freeze
@@ -169,6 +170,15 @@ class Move < VersionedModel
     feed_attributes.merge!(supplier.for_feed) if supplier
 
     feed_attributes
+  end
+
+  def determine_supplier
+    # Supplier choice is based on from_location and effective date. As the from location cannot change after the
+    # move is created we only need to look for date changes - if no change then skip the supplier update for speed.
+    return supplier unless new_record? || date_changed? || date_from_changed?
+
+    effective_date = date.presence || date_from
+    self.supplier = SupplierChooser.new(effective_date, from_location).call
   end
 
 private
