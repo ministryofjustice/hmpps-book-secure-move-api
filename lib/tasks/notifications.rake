@@ -36,7 +36,7 @@ namespace :notifications do
 
     puts 'Processing assigned moves...'
     moves_assigned.find_each do |move|
-      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: 'update', send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
+      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: 'create', send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
     end
 
     puts 'All done.'
