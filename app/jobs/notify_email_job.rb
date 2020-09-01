@@ -5,7 +5,7 @@
 class NotifyEmailJob < ApplicationJob
   include QueueDeterminer
 
-  def perform(notification_id:)
+  def perform(notification_id:, **_)
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
     return unless notification.subscription.enabled?
 

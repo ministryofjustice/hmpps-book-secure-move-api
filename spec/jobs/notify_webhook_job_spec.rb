@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe NotifyWebhookJob, type: :job do
-  subject(:perform!) { described_class.new.perform(notification_id: notification.id) }
+  subject(:perform!) { described_class.perform_now(notification_id: notification.id) }
 
   let(:perform_and_ignore_errors!) do
     perform!

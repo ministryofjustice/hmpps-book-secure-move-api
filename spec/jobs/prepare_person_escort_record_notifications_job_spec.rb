@@ -13,8 +13,8 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
     create(:notification_type, :webhook)
     create(:notification_type, :email)
 
-    allow(NotifyWebhookJob).to receive(:perform_later)
-    allow(NotifyEmailJob).to receive(:perform_later)
+    allow(NotifyWebhookJob).to receive(:perform_later).and_call_original
+    allow(NotifyEmailJob).to receive(:perform_later).and_call_original
   end
 
   it 'creates a webhook notification' do
