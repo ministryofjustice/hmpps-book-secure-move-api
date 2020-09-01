@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_25_080245) do
+ActiveRecord::Schema.define(version: 2020_08_28_145744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -262,15 +262,6 @@ ActiveRecord::Schema.define(version: 2020_08_25_080245) do
     t.index ["location_id"], name: "index_locations_regions_on_location_id"
     t.index ["region_id", "location_id"], name: "index_locations_regions_on_region_id_and_location_id", unique: true
     t.index ["region_id"], name: "index_locations_regions_on_region_id"
-  end
-
-  create_table "locations_suppliers", id: false, force: :cascade do |t|
-    t.uuid "location_id", null: false
-    t.uuid "supplier_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["location_id"], name: "index_locations_suppliers_on_location_id"
-    t.index ["supplier_id"], name: "index_locations_suppliers_on_supplier_id"
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -529,8 +520,6 @@ ActiveRecord::Schema.define(version: 2020_08_25_080245) do
   add_foreign_key "journeys", "suppliers"
   add_foreign_key "locations_regions", "locations"
   add_foreign_key "locations_regions", "regions"
-  add_foreign_key "locations_suppliers", "locations"
-  add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
