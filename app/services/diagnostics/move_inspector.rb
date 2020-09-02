@@ -20,7 +20,7 @@ module Diagnostics
       @output << "time due:\t#{move.time_due}\n" if move.time_due.present?
       @output << "status:\t\t#{move.status}\n"
       @output << "cancel reason:\t#{move.cancellation_reason}\n" if move.cancellation_reason.present?
-      @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if move.cancellation_reason_comment.present?
+      @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if include_person_details && move.cancellation_reason_comment.present?
       @output << <<~ENDDETAILS1
         move type:\t#{move.move_type}
         from location:\t#{move.from_location&.title}
