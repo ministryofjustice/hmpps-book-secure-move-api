@@ -4,7 +4,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
   has_many :framework_flags, key: :flags
 
-  attributes :version, :status, :confirmed_at
+  attributes :version, :status, :confirmed_at, :created_at, :updated_at
 
   meta do
     { section_progress: object.section_progress }
@@ -35,6 +35,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     profile.person
     responses.question
     responses.question.descendants.**
+    responses.question.last_response
     flags
   ].freeze
 end

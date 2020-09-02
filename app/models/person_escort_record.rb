@@ -23,6 +23,7 @@ class PersonEscortRecord < VersionedModel
   has_many :framework_questions, through: :framework
   has_many :framework_flags, through: :framework_responses
   belongs_to :profile
+  has_one :person, through: :profile
 
   has_state_machine PersonEscortRecordStateMachine, on: :status
 

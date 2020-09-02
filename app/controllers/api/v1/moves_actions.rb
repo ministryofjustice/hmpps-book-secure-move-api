@@ -101,7 +101,7 @@ module Api::V1
     end
 
     def render_move(move, status)
-      render json: move, status: status, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
+      render json: move, status: status, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS, per: PersonEscortRecord.where(status: 'confirmed', profile: move.profile.person.profiles).order(created_at: :desc).first
     end
 
     def move

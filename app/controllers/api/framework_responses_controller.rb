@@ -18,7 +18,7 @@ module Api
     def update
       framework_response.update_with_flags!(update_framework_response_attributes)
 
-      render json: framework_response, status: :ok, include: included_relationships
+      render json: framework_response, status: :ok, include: included_relationships, per: PersonEscortRecord.where(status: 'confirmed', profile: framework_response.person_escort_record.profile.person.profiles).order(created_at: :desc).first
     end
 
   private

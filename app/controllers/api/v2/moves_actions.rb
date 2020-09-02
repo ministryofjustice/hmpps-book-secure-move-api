@@ -138,7 +138,8 @@ module Api::V2
              json: move,
              status: status,
              include: included_relationships,
-             fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+             fields: ::V2::MoveSerializer::INCLUDED_FIELDS,
+             per: PersonEscortRecord.where(status: 'confirmed', profile: move.profile.person.profiles).order(created_at: :desc).first
     end
 
     def move

@@ -13,6 +13,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
     question.descendants
+    question.last_response
     flags
   ].freeze
 end

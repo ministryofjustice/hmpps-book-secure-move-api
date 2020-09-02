@@ -58,7 +58,7 @@ module Api
     end
 
     def render_person_escort_record(person_escort_record, status)
-      render json: person_escort_record, status: status, include: included_relationships
+      render json: person_escort_record, status: status, include: included_relationships, per: PersonEscortRecord.where(status: 'confirmed', profile: person_escort_record.profile.person.profiles).order(created_at: :desc).first
     end
 
     def send_notification
