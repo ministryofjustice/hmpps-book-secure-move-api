@@ -1,9 +1,10 @@
 module Diagnostics
   class MoveInspector
-    attr_reader :move
+    attr_reader :move, :include_person_details
 
-    def initialize(move)
+    def initialize(move, include_person_details: false)
       @move = move
+      @include_person_details = include_person_details
     end
 
     def generate
@@ -20,23 +21,25 @@ module Diagnostics
       @output << "status:\t\t#{move.status}\n"
       @output << "cancel reason:\t#{move.cancellation_reason}\n" if move.cancellation_reason.present?
       @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if move.cancellation_reason_comment.present?
-      @output << <<~ENDDETAILS
+      @output << <<~ENDDETAILS1
         move type:\t#{move.move_type}
         from location:\t#{move.from_location&.title}
         to location:\t#{move.to_location&.title}
         supplier:\t#{move.supplier&.name}
         created at:\t#{move.created_at}
-        updated at:\t#{move.updated_at}        
-        additional information: #{move.additional_information}
-        
+        updated at:\t#{move.updated_at}
+      ENDDETAILS1
+      @output << "additional information: #{move.additional_information}" if include_person_details
+      @output << <<~ENDDETAILS2
+
         MOVE EVENTS
         -----------
-      ENDDETAILS
+      ENDDETAILS2
 
       if move.move_events.any?
         @output << "#{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
         move.move_events.default_order.each do |event| # NB use each to preserve sort order
-          @output << "#{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{event.event_params}\n"
+          @output << "#{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{include_person_details ? event.event_params : '-'}\n"
         end
       else
         @output << "(no events recorded)\n"
@@ -51,6 +54,7 @@ module Diagnostics
       if move.journeys.any?
         @output << "#{'ID'.ljust(37)}\t#{'TIMESTAMP'.ljust(27)}\t#{'STATE'.ljust(12)}\t#{'BILLABLE'.ljust(9)}\t#{'SUPPLIER'.ljust(9)}\tFROM --> TO\n"
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
+          # NB only show event details if include_person_details==true, as they could contain personal details
           @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.supplier.name.ljust(9)}\t#{journey.from_location.title} --> #{journey.to_location.title}\n"
         end
       else
@@ -68,7 +72,8 @@ module Diagnostics
           if journey.events.any?
             @output << "  #{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
             journey.events.default_order.each do |event| # NB use each to preserve sort order
-              @output << "  #{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{event.event_params}\n"
+              # NB only show event details if include_person_details==true, as they could contain personal details
+              @output << "  #{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{include_person_details ? event.event_params : '-'}\n"
             end
           else
             @output << "  (no events recorded)\n"
@@ -107,63 +112,65 @@ module Diagnostics
         @output << "(no notifications recorded)\n"
       end
 
-      @output << <<~PERSONDETAILS
+      if include_person_details
+        @output << <<~PERSONDETAILS
 
-        PERSON
-        ------
-      PERSONDETAILS
+          PERSON
+          ------
+        PERSONDETAILS
 
-      if @move.person.present?
+        if @move.person.present?
 
-        @output << "id:\t#{move.person.id}\n"
-        @output << "first names:\t#{move.person.first_names}\n"
-        @output << "last name:\t#{move.person.last_name}\n"
-        @output << "gender:\t#{move.person.gender&.title}\n"
-        @output << "ethnicity:\t#{move.person.ethnicity&.title}\n"
-        @output << "date of birth:\t#{move.person.date_of_birth}\n"
-        @output << "PN number:\t#{move.person.prison_number}\n"
-        @output << "PNC number:\t#{move.person.police_national_computer}\n"
-        @output << "CRO number:\t#{move.person.criminal_records_office}\n"
-        @output << "created at:\t#{move.person.created_at}\n"
-        @output << "updated at:\t#{move.person.updated_at}\n"
-      else
-        @output << "(no person associated with move)\n"
-      end
+          @output << "id:\t#{move.person.id}\n"
+          @output << "first names:\t#{move.person.first_names}\n"
+          @output << "last name:\t#{move.person.last_name}\n"
+          @output << "gender:\t#{move.person.gender&.title}\n"
+          @output << "ethnicity:\t#{move.person.ethnicity&.title}\n"
+          @output << "date of birth:\t#{move.person.date_of_birth}\n"
+          @output << "PN number:\t#{move.person.prison_number}\n"
+          @output << "PNC number:\t#{move.person.police_national_computer}\n"
+          @output << "CRO number:\t#{move.person.criminal_records_office}\n"
+          @output << "created at:\t#{move.person.created_at}\n"
+          @output << "updated at:\t#{move.person.updated_at}\n"
+        else
+          @output << "(no person associated with move)\n"
+        end
 
-      @output << <<~PROFILEDETAILS
+        @output << <<~PROFILEDETAILS
 
-        PROFILE
-        -------
-      PROFILEDETAILS
+          PROFILE
+          -------
+        PROFILEDETAILS
 
-      if @move.profile.present?
+        if @move.profile.present?
 
-        @output << "id:\t#{move.profile.id}\n"
-        @output << "created at:\t#{move.profile.created_at}\n"
-        @output << "updated at:\t#{move.profile.updated_at}\n"
+          @output << "id:\t#{move.profile.id}\n"
+          @output << "created at:\t#{move.profile.created_at}\n"
+          @output << "updated at:\t#{move.profile.updated_at}\n"
 
-        @output << "\nASSESSMENT ANSWERS\n"
-        @output << "------------------\n"
-        if move.profile.assessment_answers.any?
-          move.profile.assessment_answers.each do |answer|
-            @output << "title:\t#{answer.title}\n"
-            @output << "key:\t#{answer.key}\n"
-            @output << "category:\t#{answer.category}\n"
-            @output << "comments:\t#{answer.comments}\n"
-            @output << "created at:\t#{answer.created_at}\n"
-            @output << "expires at:\t#{answer.expires_at}\n"
-            @output << "nomis_alert_type:\t#{answer.nomis_alert_type}\n"
-            @output << "nomis_alert_code:\t#{answer.nomis_alert_code}\n"
-            @output << "nomis_alert_type_description:\t#{answer.nomis_alert_type_description}\n"
-            @output << "nomis_alert_description:\t#{answer.nomis_alert_description}\n"
-            @output << "imported_from_nomis:\t#{answer.imported_from_nomis}\n"
-            @output << "---\n"
+          @output << "\nASSESSMENT ANSWERS\n"
+          @output << "------------------\n"
+          if move.profile.assessment_answers.any?
+            move.profile.assessment_answers.each do |answer|
+              @output << "title:\t#{answer.title}\n"
+              @output << "key:\t#{answer.key}\n"
+              @output << "category:\t#{answer.category}\n"
+              @output << "comments:\t#{answer.comments}\n"
+              @output << "created at:\t#{answer.created_at}\n"
+              @output << "expires at:\t#{answer.expires_at}\n"
+              @output << "nomis_alert_type:\t#{answer.nomis_alert_type}\n"
+              @output << "nomis_alert_code:\t#{answer.nomis_alert_code}\n"
+              @output << "nomis_alert_type_description:\t#{answer.nomis_alert_type_description}\n"
+              @output << "nomis_alert_description:\t#{answer.nomis_alert_description}\n"
+              @output << "imported_from_nomis:\t#{answer.imported_from_nomis}\n"
+              @output << "---\n"
+            end
+          else
+            @output << "(no assessment answers recorded)\n"
           end
         else
-          @output << "(no assessment answers recorded)\n"
+          @output << "(no profile associated with move)\n"
         end
-      else
-        @output << "(no profile associated with move)\n"
       end
 
       @output
