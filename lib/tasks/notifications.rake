@@ -35,8 +35,6 @@ namespace :notifications do
       moves_assigned = moves_assigned.where("id NOT IN (#{already_sent_notifications.to_sql})")
     end
 
-    puts moves_assigned.to_sql
-
     # moves that don't belong to any supplier
     moves_unassigned = Move
       .where(supplier_id: nil)
