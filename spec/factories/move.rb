@@ -108,6 +108,20 @@ FactoryBot.define do
       cancellation_reason_comment { 'the move was cancelled because of some other reason' }
     end
 
+    trait :rejected_no_space do
+      status { 'cancelled' }
+      cancellation_reason { 'rejected' }
+      cancellation_reason_comment { 'no space available at the receiving prison' }
+      rejection_reason { 'no_space_at_receiving_prison' }
+    end
+
+    trait :rejected_no_transport do
+      status { 'cancelled' }
+      cancellation_reason { 'rejected' }
+      cancellation_reason_comment { 'no transportation available to move prisoner' }
+      rejection_reason { 'no_transport_available' }
+    end
+
     # Other traits
     trait :with_allocation do
       after(:create) do |move|
