@@ -4,7 +4,7 @@ module Moves
   class ParamsValidator
     include ActiveModel::Validations
 
-    attr_reader :date_from, :date_to, :created_at_from, :created_at_to, :date_of_birth_from, :date_of_birth_to, :sort_by, :sort_direction, :move_type, :cancellation_reason
+    attr_reader :date_from, :date_to, :created_at_from, :created_at_to, :date_of_birth_from, :date_of_birth_to, :sort_by, :sort_direction, :move_type, :cancellation_reason, :rejection_reason
 
     validates_each :date_from, :date_to, :created_at_from, :created_at_to, :date_of_birth_from, :date_of_birth_to, allow_nil: true do |record, attr, value|
       Date.strptime(value, '%Y-%m-%d')
@@ -14,6 +14,7 @@ module Moves
 
     validates :move_type, inclusion: { in: Move.move_types }, allow_nil: true
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, allow_nil: true
+    validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }, allow_nil: true
     validates :sort_direction, inclusion: %w[asc desc], allow_nil: true
     validates :sort_by,
               inclusion: %w[name from_location to_location prison_transfer_reason created_at date_from date],
@@ -29,6 +30,7 @@ module Moves
       @date_of_birth_to = filter_params[:date_of_birth_to]
       @move_type = filter_params[:move_type]
       @cancellation_reason = filter_params[:cancellation_reason]
+      @rejection_reason = filter_params[:rejection_reason]
 
       @sort_by = sort_params[:by]
       @sort_direction = sort_params[:direction]

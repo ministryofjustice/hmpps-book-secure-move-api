@@ -56,12 +56,13 @@ module Moves
       scope = apply_filter(scope, :status)
       scope = apply_filter(scope, :move_type)
       scope = apply_filter(scope, :cancellation_reason)
+      scope = apply_filter(scope, :rejection_reason)
       scope
     end
 
     def apply_filter(scope, param_name)
       if filter_params.key?(param_name)
-        scope.where(param_name => filter_params[param_name].split(','))
+        scope.where(param_name => filter_params[param_name]&.split(','))
       else
         scope
       end
