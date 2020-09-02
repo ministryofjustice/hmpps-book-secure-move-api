@@ -13,7 +13,8 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
-      move.determine_supplier
+      move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
+
       authorize!(:create, move)
       move.save!
 
@@ -24,7 +25,6 @@ module Api::V2
 
     def update_and_render
       move.assign_attributes(common_move_attributes)
-      move.determine_supplier
       action_name = move.status_changed? ? 'update_status' : 'update'
       move.save!
       move.allocation&.refresh_status_and_moves_count!

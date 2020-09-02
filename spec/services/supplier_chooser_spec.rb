@@ -1,11 +1,48 @@
 RSpec.describe SupplierChooser do
-  subject(:service) { described_class.new(date, location) }
+  subject(:service) { described_class.new(move_or_allocation) }
 
   let!(:serco) { create(:supplier, key: 'serco') }
   let(:supplier1) { create(:supplier) }
   let(:supplier2) { create(:supplier) }
   let(:location) { create(:location) }
   let(:date) { Date.today }
+  let(:move_or_allocation) { build(:move, from_location: location, date: date) }
+
+  context 'with a move with a date' do
+    let(:move_or_allocation) { build(:move, from_location: location, date: date, date_from: nil) }
+    let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+
+    it 'returns matching supplier, effective on move date' do
+      expect(service.call).to eq(supplier1)
+    end
+  end
+
+  context 'with a move without a date' do
+    let(:move_or_allocation) { build(:move, from_location: location, date: nil, date_from: date) }
+    let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+
+    it 'returns matching supplier, effective on move from_date' do
+      expect(service.call).to eq(supplier1)
+    end
+  end
+
+  context 'with an allocation with a date' do
+    let(:move_or_allocation) { build(:allocation, from_location: location, date: date) }
+    let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+
+    it 'returns matching supplier, effective on allocation date' do
+      expect(service.call).to eq(supplier1)
+    end
+  end
+
+  context 'with an allocation without a date' do
+    let(:move_or_allocation) { build(:allocation, from_location: location, date: nil) }
+    let!(:supplier_location1) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+
+    it 'returns nil' do
+      expect(service.call).to be_nil
+    end
+  end
 
   context 'without an effective from or to date' do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1, location: location) }
@@ -45,12 +82,7 @@ RSpec.describe SupplierChooser do
 
   context 'with no supplier locations' do
     it 'returns nil' do
-      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
-    end
-
-    it 'returns Serco' do
-      expect(service.call).to eq(serco)
     end
   end
 
@@ -58,12 +90,7 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1) }
 
     it 'returns nil' do
-      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
-    end
-
-    it 'returns Serco' do
-      expect(service.call).to eq(serco)
     end
   end
 
@@ -71,12 +98,7 @@ RSpec.describe SupplierChooser do
     let!(:supplier_location) { create(:supplier_location, supplier: supplier1, location: location, effective_from: date.tomorrow, effective_to: date.tomorrow) }
 
     it 'returns nil' do
-      pending 'temporarily returning Serco supplier instead'
       expect(service.call).to be_nil
-    end
-
-    it 'returns Serco' do
-      expect(service.call).to eq(serco)
     end
   end
 
