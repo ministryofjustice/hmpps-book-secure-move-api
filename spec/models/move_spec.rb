@@ -446,9 +446,12 @@ RSpec.describe Move do
         expect(original_move.rebook.date_from).to eq(original_move.date_from + 7.days)
       end
 
-      it 'sets the move from_date to 7 days after date if from_date is NOT present' do
+      it 'raises an error is date_from is nil' do
         original_move.date_from = nil
-        expect(original_move.rebook.date_from).to eq(original_move.date + 7.days)
+
+        expect {
+          original_move.rebook.date_from
+        }.to raise_exception ActiveRecord::RecordInvalid
       end
 
       it 'sets the move to date to 7 days in the future if present' do
