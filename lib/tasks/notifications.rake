@@ -1,7 +1,7 @@
 namespace :notifications do
   desc 'Send webhook and email notifications to the specified supplier for future moves'
   task :send, %i[supplier from_date send_webhooks send_emails resend action_name] => :environment do |_, args|
-    abort "Please specify a supplier, e.g. $ rake 'notifications:test_webhook[serco]'" if args[:supplier].blank?
+    abort "Please specify a supplier, e.g. $ rake 'notifications:send[serco]'" if args[:supplier].blank?
     supplier = Supplier.find_by(key: args[:supplier]) || Supplier.find_by(id: args[:supplier]) || Supplier.find_by(name: args[:supplier])
     abort "Unknown supplier: #{args[:supplier]}" if supplier.blank?
 
@@ -13,23 +13,29 @@ namespace :notifications do
 
     statuses = [Move::MOVE_STATUS_REQUESTED, Move::MOVE_STATUS_BOOKED]
 
-    notification_types = []
-    notification_types << NotificationType::WEBHOOK if send_webhooks
-    notification_types << NotificationType::EMAIL if send_emails
-
-    already_sent_notifications_sql = Notification
-                                         .where.not(delivered_at: nil)
-                                         .where(topic_type: 'Move')
-                                         .where(notification_type: notification_types)
-                                         .select(:topic_id)
-                                         .to_sql
-
     # moves directly assigned to the supplier
     moves_assigned = Move
       .where(supplier: supplier)
       .where('date >= ?', from_date)
       .where(status: statuses)
-      .where(resend ? '' : "id NOT IN (#{already_sent_notifications_sql})")
+
+    unless resend
+      # filters out moves which already have notifications associated with them
+
+      notification_types = []
+      notification_types << NotificationType::WEBHOOK if send_webhooks
+      notification_types << NotificationType::EMAIL if send_emails
+
+      already_sent_notifications = Notification
+                                       .where.not(delivered_at: nil)
+                                       .where(topic_type: 'Move')
+                                       .where(notification_type: notification_types)
+                                       .select(:topic_id)
+
+      moves_assigned = moves_assigned.where("id NOT IN (#{already_sent_notifications.to_sql})")
+    end
+
+    puts moves_assigned.to_sql
 
     # moves that don't belong to any supplier
     moves_unassigned = Move
