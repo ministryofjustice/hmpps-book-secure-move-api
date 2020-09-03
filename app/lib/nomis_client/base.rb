@@ -41,9 +41,9 @@ module NomisClient
         @client ||= OAuth2::Client.new(
           ENV['NOMIS_CLIENT_ID'],
           ENV['NOMIS_CLIENT_SECRET'],
-          site: ENV['NOMIS_SITE'],
+          site: ENV['NOMIS_SITE_FOR_API'],
           auth_scheme: ENV['NOMIS_AUTH_SCHEME'],
-          token_url: "#{ENV['NOMIS_AUTH_PATH_PREFIX']}/oauth/token",
+          token_url: "#{ENV['NOMIS_SITE_FOR_AUTH']}/oauth/token",
           raise_errors: true,
           connection_opts: { request: { timeout: NOMIS_TIMEOUT, open_timeout: NOMIS_TIMEOUT } },
         )
