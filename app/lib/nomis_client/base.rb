@@ -25,7 +25,7 @@ module NomisClient
       REFRESH_TOKEN_TIMEFRAME_IN_SECONDS = 5
 
       def token_request(method, path, params)
-        token.send(method, "#{ENV['NOMIS_API_PATH_PREFIX']}#{path}", params)
+        token.send(method, "#{ENV['NOMIS_PRISON_API_PATH_PREFIX']}#{path}", params)
       rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
         Rails.logger.warn "Nomis Connection Error: #{e.message}"
         raise e
@@ -41,9 +41,9 @@ module NomisClient
         @client ||= OAuth2::Client.new(
           ENV['NOMIS_CLIENT_ID'],
           ENV['NOMIS_CLIENT_SECRET'],
-          site: ENV['NOMIS_SITE'],
+          site: ENV['NOMIS_SITE_FOR_API'],
           auth_scheme: ENV['NOMIS_AUTH_SCHEME'],
-          token_url: "#{ENV['NOMIS_AUTH_PATH_PREFIX']}/oauth/token",
+          token_url: "#{ENV['NOMIS_SITE_FOR_AUTH']}/oauth/token",
           raise_errors: true,
           connection_opts: { request: { timeout: NOMIS_TIMEOUT, open_timeout: NOMIS_TIMEOUT } },
         )

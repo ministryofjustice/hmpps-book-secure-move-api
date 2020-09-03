@@ -2,7 +2,7 @@
   "id" : "0fe4f90b-2609-4749-a7eb-02fbdb68509e",
   "name" : "elite2api_api_prisoners",
   "request" : {
-    "url" : "/elite2api/api/prisoners",
+    "url" : "/api/prisoners",
     "method" : "POST",
     "bodyPatterns" : [ {
       "equalToJson" : "{\"offenderNos\":[\"G8133UA\"]}",
