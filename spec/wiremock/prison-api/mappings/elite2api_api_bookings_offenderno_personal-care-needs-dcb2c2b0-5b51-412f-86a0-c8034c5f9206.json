@@ -2,7 +2,7 @@
   "id" : "dcb2c2b0-5b51-412f-86a0-c8034c5f9206",
   "name" : "elite2api_api_bookings_offenderno_personal-care-needs",
   "request" : {
-    "url" : "/elite2api/api/bookings/offenderNo/personal-care-needs?type=MATSTAT%2CPHY%2CDISAB",
+    "url" : "/api/bookings/offenderNo/personal-care-needs?type=MATSTAT%2CPHY%2CDISAB",
     "method" : "POST",
     "bodyPatterns" : [ {
       "equalToJson" : "[\"G8133UA\"]",
