@@ -19,7 +19,7 @@ RSpec.describe Api::MovesController do
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:profile) { create(:profile, documents: before_documents) }
-    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -61,6 +61,7 @@ RSpec.describe Api::MovesController do
             from_location: move.from_location,
             to_location: move.to_location,
             date: move.date,
+            supplier: supplier,
           )
           do_patch
         end
@@ -396,7 +397,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has a webhook subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: move.supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) do
@@ -426,7 +427,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has an email subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: move.supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
             let(:notify_response) do
@@ -462,11 +463,11 @@ RSpec.describe Api::MovesController do
         end
 
         context 'when updating an existing requested move without a change of move_status' do
-          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location }
+          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location, supplier: supplier}
 
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: move.supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.last }
             let(:faraday_client) do
@@ -505,7 +506,7 @@ RSpec.describe Api::MovesController do
 
           context 'when the supplier has an email subscription', :skip_before do
             # NB: updates to existing moves should trigger an email notification
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: move.supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.last }
             let(:notify_response) do
@@ -543,7 +544,7 @@ RSpec.describe Api::MovesController do
         end
 
         context 'when move is associated to an allocation' do
-          let!(:move) { create :move, :with_allocation, profile: profile }
+          let!(:move) { create :move, :with_allocation, profile: profile, supplier: supplier }
           let(:move_params) do
             {
               type: 'moves',
