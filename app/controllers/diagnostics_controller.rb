@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
-class DiagnosticsController < ApplicationController
-  before_action :doorkeeper_authorize!, unless: -> { Rails.env.development? }
+class DiagnosticsController < ApiController
+  def set_content_type
+    self.content_type = 'text/plain'
+  end
 
-  def moves
-    move = Move.find_by(id: params[:id]) || Move.find_by(reference: params[:id])
+  def move
+    move = Move.accessible_by(current_ability).find_by(id: params[:id]) || Move.accessible_by(current_ability).find_by(reference: params[:id])
+    # NB: personal details should only be available on localhost, dev, staging and uat; not on pre-prod or production
+    include_person_details = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
+
     if move.present?
-      render plain: Diagnostics::MoveInspector.new(move).generate, status: :ok
+      render plain: Diagnostics::MoveInspector.new(move, include_person_details: include_person_details).generate, status: :ok
     else
       render plain: "Move \"#{params[:id]}\" not found", status: :not_found
     end
