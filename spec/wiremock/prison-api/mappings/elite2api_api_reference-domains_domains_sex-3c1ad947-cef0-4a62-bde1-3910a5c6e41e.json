@@ -2,7 +2,7 @@
   "id" : "3c1ad947-cef0-4a62-bde1-3910a5c6e41e",
   "name" : "elite2api_api_reference-domains_domains_sex",
   "request" : {
-    "url" : "/elite2api/api/reference-domains/domains/SEX",
+    "url" : "/api/reference-domains/domains/SEX",
     "method" : "GET"
   },
   "response" : {

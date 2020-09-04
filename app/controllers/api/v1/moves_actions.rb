@@ -12,7 +12,7 @@ module Api::V1
 
     def create_and_render
       move = Move.new(new_move_attributes)
-      move.determine_supplier
+      move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
       move.profile.documents = profile_documents
 
       authorize!(:create, move)

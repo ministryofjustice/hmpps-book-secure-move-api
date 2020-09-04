@@ -11,7 +11,6 @@ module Moves
 
     def call
       move.assign_attributes(attributes)
-      move.determine_supplier
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
 

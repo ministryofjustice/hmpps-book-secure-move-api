@@ -2,7 +2,7 @@
   "id" : "a5e4e845-fbe7-4e85-acd9-3b54b7664c61",
   "name" : "elite2api_api_reference-domains_domains_ethnicity",
   "request" : {
-    "url" : "/elite2api/api/reference-domains/domains/ETHNICITY",
+    "url" : "/api/reference-domains/domains/ETHNICITY",
     "method" : "GET"
   },
   "response" : {

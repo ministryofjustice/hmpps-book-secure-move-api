@@ -39,8 +39,8 @@ RSpec.describe Api::MovesController do
 
     describe 'by supplier_id' do
       let(:filter_params) { { filter: { supplier_id: supplier.id } } }
-      let(:expected_moves) { create_list :move, 2, supplier: supplier }
-      let(:unexpected_moves) { create_list :move, 2, supplier: alternative_supplier }
+      let(:expected_moves) { create_list :move, 1, supplier: supplier }
+      let(:unexpected_moves) { create_list :move, 1, supplier: alternative_supplier }
 
       it_behaves_like 'an api that filters moves correctly'
     end
@@ -48,8 +48,8 @@ RSpec.describe Api::MovesController do
     describe 'by from_location_id' do
       let(:filter_params) { { filter: { from_location_id: location.id } } }
       let(:location) { create :location }
-      let(:expected_moves) { create_list :move, 3, from_location: location }
-      let(:unexpected_moves) { create_list :move, 3 }
+      let(:expected_moves) { create_list :move, 1, from_location: location }
+      let(:unexpected_moves) { create_list :move, 1 }
 
       it_behaves_like 'an api that filters moves correctly'
     end
@@ -59,9 +59,9 @@ RSpec.describe Api::MovesController do
       let(:middle_date) { Time.zone.parse('2019-12-26T12') }
       let(:last_date) { Time.zone.parse('2019-12-27') }
 
-      let(:first_moves) { create_list :move, 2, created_at: first_date }
-      let(:middle_moves) { create_list :move, 2, created_at: middle_date }
-      let(:last_moves) { create_list :move, 2, created_at: last_date }
+      let(:first_moves) { create_list :move, 1, created_at: first_date }
+      let(:middle_moves) { create_list :move, 1, created_at: middle_date }
+      let(:last_moves) { create_list :move, 1, created_at: last_date }
 
       context 'with a created_at_from' do
         let(:filter_params) { { filter: { created_at_from: middle_date.to_date.to_s } } }
@@ -114,9 +114,9 @@ RSpec.describe Api::MovesController do
 
     describe 'by move_type' do
       let(:filter_params) { { filter: { move_type: move_type } } }
-      let(:court_appearance_moves) { create_list :move, 3, :court_appearance }
-      let(:prison_recall_moves) { create_list :move, 3, :prison_recall }
-      let(:prison_transfer_moves) { create_list :move, 3, :prison_transfer }
+      let(:court_appearance_moves) { create_list :move, 1, :court_appearance }
+      let(:prison_recall_moves) { create_list :move, 1, :prison_recall }
+      let(:prison_transfer_moves) { create_list :move, 1, :prison_transfer }
 
       context 'when court_appearance' do
         let(:move_type) { 'court_appearance' }
@@ -191,10 +191,10 @@ RSpec.describe Api::MovesController do
 
     describe 'by cancellation_reason' do
       let(:filter_params) { { filter: { cancellation_reason: cancellation_reason } } }
-      let(:made_in_error_moves) { create_list :move, 3, :cancelled_made_in_error }
-      let(:supplier_declined_to_move_moves) { create_list :move, 3, :cancelled_supplier_declined_to_move }
-      let(:rejected_moves) { create_list :move, 3, :cancelled_rejected }
-      let(:other_moves) { create_list :move, 3, :cancelled_other }
+      let(:made_in_error_moves) { create_list :move, 1, :cancelled_made_in_error }
+      let(:supplier_declined_to_move_moves) { create_list :move, 1, :cancelled_supplier_declined_to_move }
+      let(:rejected_moves) { create_list :move, 1, :cancelled_rejected }
+      let(:other_moves) { create_list :move, 1, :cancelled_other }
 
       context 'when made_in_error' do
         let(:cancellation_reason) { 'made_in_error' }
@@ -224,6 +224,28 @@ RSpec.describe Api::MovesController do
         let(:cancellation_reason) { 'other' }
         let(:expected_moves) { other_moves }
         let(:unexpected_moves) { made_in_error_moves + supplier_declined_to_move_moves + rejected_moves }
+
+        it_behaves_like 'an api that filters moves correctly'
+      end
+    end
+
+    describe 'by rejection_reason' do
+      let(:filter_params) { { filter: { rejection_reason: rejection_reason } } }
+      let(:rejected_no_space_moves) { create_list :move, 1, :rejected_no_space }
+      let(:rejected_no_transport_moves) { create_list :move, 1, :rejected_no_transport }
+
+      context 'when no_space_at_receiving_prison' do
+        let(:rejection_reason) { 'no_space_at_receiving_prison' }
+        let(:expected_moves) { rejected_no_space_moves }
+        let(:unexpected_moves) { rejected_no_transport_moves }
+
+        it_behaves_like 'an api that filters moves correctly'
+      end
+
+      context 'when no_transport_available' do
+        let(:rejection_reason) { 'no_transport_available' }
+        let(:expected_moves) { rejected_no_transport_moves }
+        let(:unexpected_moves) { rejected_no_space_moves }
 
         it_behaves_like 'an api that filters moves correctly'
       end
