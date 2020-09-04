@@ -446,7 +446,7 @@ RSpec.describe Move do
         expect(original_move.rebook.date_from).to eq(original_move.date_from + 7.days)
       end
 
-      it 'raises an error is date_from is nil' do
+      it 'raises an error if date_from is nil' do
         original_move.date_from = nil
 
         expect {
