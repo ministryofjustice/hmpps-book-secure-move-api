@@ -1,16 +1,10 @@
 module Api::V2
   module MovesActions
     def index_and_render
-      moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-
-      if csv?
-        send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
-      else
-        paginate moves,
-                 each_serializer: ::V2::MoveSerializer,
-                 include: included_relationships,
-                 fields: ::V2::MoveSerializer::INCLUDED_FIELDS
-      end
+      paginate moves,
+               each_serializer: ::V2::MoveSerializer,
+               include: included_relationships,
+               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
     end
 
     def show_and_render
@@ -19,6 +13,8 @@ module Api::V2
 
     def create_and_render
       move = Move.new(move_attributes)
+      move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
+
       authorize!(:create, move)
       move.save!
 
@@ -70,7 +66,6 @@ module Api::V2
 
     def move_attributes
       common_move_attributes.tap do |attributes|
-        attributes[:supplier] = SupplierChooser.new(doorkeeper_application_owner, from_location).call unless from_location_attributes.nil?
         attributes[:from_location] = from_location unless from_location_attributes.nil?
         attributes[:to_location] = to_location unless to_location_attributes.nil?
         attributes[:version] = 2

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_141759) do
+ActiveRecord::Schema.define(version: 2020_08_28_145744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -196,6 +196,22 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
     t.datetime "disabled_at"
   end
 
+  create_table "generic_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "eventable_id", null: false
+    t.string "eventable_type", null: false
+    t.string "type", null: false
+    t.text "notes"
+    t.string "created_by"
+    t.jsonb "details"
+    t.datetime "occurred_at", null: false
+    t.datetime "recorded_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["eventable_id", "eventable_type"], name: "index_generic_events_on_eventable_id_and_eventable_type"
+    t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
+    t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
+  end
+
   create_table "identifier_types", id: :string, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
@@ -246,17 +262,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
     t.index ["location_id"], name: "index_locations_regions_on_location_id"
     t.index ["region_id", "location_id"], name: "index_locations_regions_on_region_id_and_location_id", unique: true
     t.index ["region_id"], name: "index_locations_regions_on_region_id"
-  end
-
-  create_table "locations_suppliers", id: false, force: :cascade do |t|
-    t.uuid "location_id", null: false
-    t.uuid "supplier_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["location_id", "supplier_id"], name: "index_locations_suppliers_on_location_id_and_supplier_id", unique: true
-    t.index ["location_id"], name: "index_locations_suppliers_on_location_id"
-    t.index ["supplier_id", "location_id"], name: "index_locations_suppliers_on_supplier_id_and_location_id", unique: true
-    t.index ["supplier_id"], name: "index_locations_suppliers_on_supplier_id"
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -469,6 +474,19 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
     t.index ["supplier_id"], name: "index_subscriptions_on_supplier_id"
   end
 
+  create_table "supplier_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "supplier_id", null: false
+    t.uuid "location_id", null: false
+    t.date "effective_from"
+    t.date "effective_to"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["effective_from"], name: "index_supplier_locations_on_effective_from"
+    t.index ["effective_to"], name: "index_supplier_locations_on_effective_to"
+    t.index ["location_id"], name: "index_supplier_locations_on_location_id"
+    t.index ["supplier_id"], name: "index_supplier_locations_on_supplier_id"
+  end
+
   create_table "suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "key", null: false
@@ -502,8 +520,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
   add_foreign_key "journeys", "suppliers"
   add_foreign_key "locations_regions", "locations"
   add_foreign_key "locations_regions", "regions"
-  add_foreign_key "locations_suppliers", "locations"
-  add_foreign_key "locations_suppliers", "suppliers"
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"
@@ -517,4 +533,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_141759) do
   add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
+  add_foreign_key "supplier_locations", "locations"
+  add_foreign_key "supplier_locations", "suppliers"
 end

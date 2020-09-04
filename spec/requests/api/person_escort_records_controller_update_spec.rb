@@ -91,7 +91,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       let!(:subscription) { create(:subscription, supplier: supplier) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-      let!(:move) { create(:move, profile: person_escort_record.profile, from_location: from_location) }
+      let!(:move) { create(:move, profile: person_escort_record.profile, from_location: from_location, supplier: supplier) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
       let(:faraday_client) do
         class_double(

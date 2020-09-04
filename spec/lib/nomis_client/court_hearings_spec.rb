@@ -16,7 +16,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
       court_hearings_get
 
       expect(token).to have_received(:get).with(
-        "/elite2api/api/bookings/1495077/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
+        "/api/bookings/1495077/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
         headers: { 'Page-Limit' => '1000' },
       )
     end
@@ -41,7 +41,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
 
       expect(token)
         .to have_received(:post)
-        .with('/elite2api/api/bookings/1111/court-cases/2222/prison-to-court-hearings', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
+        .with('/api/bookings/1111/court-cases/2222/prison-to-court-hearings', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
     end
 
     context 'when Nomis returns an error' do

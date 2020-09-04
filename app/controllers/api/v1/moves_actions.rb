@@ -1,8 +1,6 @@
 module Api::V1
   module MovesActions
     def index_and_render
-      moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
-
       paginate moves,
                include: included_relationships - %w[court_hearings],
                fields: MoveSerializer::INCLUDED_FIELDS
@@ -14,6 +12,7 @@ module Api::V1
 
     def create_and_render
       move = Move.new(new_move_attributes)
+      move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
       move.profile.documents = profile_documents
 
       authorize!(:create, move)
@@ -85,7 +84,6 @@ module Api::V1
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
           court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
-          supplier: SupplierChooser.new(doorkeeper_application_owner, from_location).call,
         )
       end
     end

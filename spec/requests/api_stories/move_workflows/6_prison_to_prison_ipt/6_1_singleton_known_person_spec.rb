@@ -6,7 +6,7 @@ require 'rack/test'
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
 # rubocop:disable Rails/HttpPositionalArguments
-RSpec.describe 'singleton', type: :request do
+RSpec.describe 'singleton', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'
@@ -163,6 +163,9 @@ RSpec.describe 'singleton', type: :request do
     header 'Content-Type', 'application/vnd.api+json'
     header 'Accept', 'application/vnd.api+json; version=2'
     header 'Authorization', 'Bearer spoofed-token'
+
+    # Assign prison1 location to Serco supplier
+    create :supplier_location, location: prison1, supplier: serco_supplier
 
     # These steps simulate the frontend creating a move request
 

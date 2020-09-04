@@ -8,6 +8,10 @@ module Api
       index_and_render
     end
 
+    def csv
+      send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+    end
+
     def show
       show_and_render
     end
@@ -20,12 +24,18 @@ module Api
       update_and_render
     end
 
+  private
+
+    def moves
+      @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
+    end
+
     def validate_filter_params
       Moves::ParamsValidator.new(filter_params, params[:sort] || {}).validate!(action_name.to_sym)
     end
 
     PERMITTED_FILTER_PARAMS = %i[
-      date_from date_to created_at_from created_at_to date_of_birth_from date_of_birth_to location_type status from_location_id to_location_id supplier_id move_type cancellation_reason has_relationship_to_allocation ready_for_transit
+      date_from date_to created_at_from created_at_to date_of_birth_from date_of_birth_to location_type status from_location_id to_location_id supplier_id move_type cancellation_reason rejection_reason has_relationship_to_allocation ready_for_transit
     ].freeze
 
     def filter_params

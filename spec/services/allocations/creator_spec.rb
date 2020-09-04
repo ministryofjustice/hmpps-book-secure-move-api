@@ -11,7 +11,7 @@ RSpec.describe Allocations::Creator do
 
   let(:creator) do
     described_class.new(
-      doorkeeper_application_owner: 'foo',
+      doorkeeper_application_owner: doorkeeper_application_owner,
       allocation_params: allocation_params,
       complex_case_params: complex_case_params,
     )
@@ -37,6 +37,7 @@ RSpec.describe Allocations::Creator do
     ]
   end
 
+  let(:doorkeeper_application_owner) { nil }
   let!(:from_location) { create(:location, :with_suppliers) }
   let!(:to_location) { create(:location) }
   let!(:supplier) { from_location&.suppliers&.first }
@@ -119,14 +120,31 @@ RSpec.describe Allocations::Creator do
       )
     end
 
-    it 'calls the SupplierChooser service with the correct args' do
-      call_creator
-      expect(SupplierChooser).to have_received(:new).with('foo', from_location)
+    context 'with valid doorkeeper_application_owner' do
+      let(:api_supplier) { create(:supplier) }
+      let(:doorkeeper_application_owner) { api_supplier }
+
+      it 'sets the allocation moves supplier from api token' do
+        call_creator
+        expect(creator.allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(api_supplier.id)
+      end
+
+      it 'does not call the SupplierChooser service' do
+        call_creator
+        expect(SupplierChooser).not_to have_received(:new)
+      end
     end
 
-    it 'sets the allocation moves supplier' do
-      call_creator
-      expect(creator.allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(supplier.id)
+    context 'with nil doorkeeper_application_owner' do
+      it 'sets the allocation moves supplier via SupplierChooser service' do
+        call_creator
+        expect(creator.allocation.moves.pluck(:supplier_id).uniq).to contain_exactly(supplier.id)
+      end
+
+      it 'calls the SupplierChooser service with the correct args' do
+        call_creator
+        expect(SupplierChooser).to have_received(:new).with(creator.allocation)
+      end
     end
 
     context 'when specifying nil complex_cases attribute' do

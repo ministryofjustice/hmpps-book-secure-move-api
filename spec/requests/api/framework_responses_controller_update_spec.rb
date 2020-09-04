@@ -73,7 +73,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": value,
-              "value_type": 'object',
+              "value_type": 'object::followup_comment',
               "responded": true,
             },
           })
@@ -90,7 +90,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": value,
-              "value_type": 'collection',
+              "value_type": 'collection::followup_comment',
               "responded": true,
             },
           })
@@ -98,7 +98,7 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when response is a multiple item collection' do
-        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question) }
+        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question, value: nil) }
         let(:question1) { create(:framework_question) }
         let(:question2) { create(:framework_question, :checkbox) }
         let(:question3) { create(:framework_question, :checkbox, followup_comment: true) }
@@ -136,7 +136,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": [{ option: 'Level 1' }],
-              "value_type": 'collection',
+              "value_type": 'collection::followup_comment',
               "responded": true,
             },
           })
@@ -177,7 +177,7 @@ RSpec.describe Api::FrameworkResponsesController do
             "type": 'framework_responses',
             "attributes": {
               "value": { option: 'Yes' },
-              "value_type": 'object',
+              "value_type": 'object::followup_comment',
               "responded": true,
             },
           })
@@ -222,6 +222,22 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
+      context 'with incorrect value type' do
+        let(:value) { %w[foo-bar] }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [
+              {
+                'title' => 'Invalid Value type',
+                'detail' => 'Value: ["foo-bar"] is incorrect type',
+                'source' => { pointer: '/data/attributes/value' },
+              },
+            ]
+          end
+        end
+      end
+
       context 'with a nested invalid value' do
         let(:framework_response) { create(:collection_response, :multiple_items) }
         let(:framework_question) { framework_response.framework_question.dependents.first }
@@ -238,6 +254,31 @@ RSpec.describe Api::FrameworkResponsesController do
           let(:errors_422) do
             [{ 'title' => 'Unprocessable entity',
                'detail' => 'Items[1].responses[0].value level 3 are not valid options' }]
+          end
+        end
+      end
+
+      context 'with a nested incorrect value type' do
+        let(:framework_response) { create(:collection_response, :multiple_items) }
+        let(:framework_question) { framework_response.framework_question.dependents.first }
+
+        let(:value) do
+          [
+            { item: 1, responses: [{ value: ['Level 1'], framework_question_id: framework_question.id }] },
+            { item: 2, responses: [{ value: 'Level 2', framework_question_id: framework_question.id }] },
+            { item: 3, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [
+              {
+                'title' => 'Invalid Value type',
+                'detail' => 'Value: Level 2 is incorrect type',
+                'source' => { pointer: '/data/attributes/value' },
+              },
+            ]
           end
         end
       end

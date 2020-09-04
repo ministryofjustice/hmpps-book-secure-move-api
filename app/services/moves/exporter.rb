@@ -56,8 +56,6 @@ module Moves
       'Sign or other language interpreter details',
       'Any other information',
       'Any other information details',
-      'Not for release',
-      'Not for release details',
       'Not to be released',
       'Not to be released details',
       'Requires special vehicle',
@@ -76,6 +74,7 @@ module Moves
         moves.find_each do |move|
           csv << attributes_row(move)
         end
+        file.flush
       end
     end
 
@@ -97,12 +96,12 @@ module Moves
         move.to_location&.title, # To location name
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
-        move.date&.strftime('%d/%m/%Y'), # Date of travel
+        move.date&.strftime('%Y-%m-%d'), # Date of travel
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
         person&.first_names, # First name(s)
-        person&.date_of_birth&.strftime('%d/%m/%Y'), # Date of birth
+        person&.date_of_birth&.strftime('%Y-%m-%d'), # Date of birth
         person&.gender&.title, # Gender
         person&.ethnicity&.title, # Ethnicity
         person&.ethnicity&.key, # Ethnicity code
@@ -121,10 +120,9 @@ module Moves
         answer_details(answers, 'solicitor'), # Solicitor or other legal representation details
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
         answer_details(answers, 'other_court'), # Any other information details
-        answer_details(answers, 'not_for_release'), # Not for release details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
-        profile&.documents&.size, # 'Uploaded documents',
+        profile&.documents&.size || 0, # 'Uploaded documents',
       ].flatten # Expand answer_details column pairs into individual columns
     end
 
@@ -136,7 +134,7 @@ module Moves
       end
 
       # Return the flag and comments together so we only need a single pass through the assessment answers for each key
-      [comments.present?.to_s.upcase, comments&.join("\n\n")]
+      [comments.present?.to_s, comments&.join("\n\n")]
     end
   end
 end

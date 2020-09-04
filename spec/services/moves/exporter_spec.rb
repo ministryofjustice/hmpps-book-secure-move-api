@@ -22,11 +22,11 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(56)
+    expect(header.count).to eq(54)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(56)
+    expect(row.count).to eq(54)
   end
 
   it 'includes move details' do
@@ -34,7 +34,7 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'includes move timestamps and date' do
-    expect(row).to include(move.created_at.iso8601, move.updated_at.iso8601, move.date.strftime('%d/%m/%Y'))
+    expect(row).to include(move.created_at.iso8601, move.updated_at.iso8601, move.date.strftime('%Y-%m-%d'))
   end
 
   it 'includes from location details' do
@@ -50,7 +50,7 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'includes person date of birth' do
-    expect(row).to include(person.date_of_birth&.strftime('%d/%m/%Y'))
+    expect(row).to include(person.date_of_birth&.strftime('%Y-%m-%d'))
   end
 
   it 'includes person gender' do
@@ -62,14 +62,14 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'includes FALSE flag and empty comments when no alerts are present' do
-    expect(row).to include('FALSE', '')
+    expect(row).to include('false', '')
   end
 
-  %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_for_release not_to_be_released special_vehicle].each do |alert_type|
+  %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_to_be_released special_vehicle].each do |alert_type|
     it "includes TRUE flag and comments when #{alert_type} is present" do
       question.update(key: alert_type)
       move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
-      expect(row).to include('TRUE', 'Yikes!')
+      expect(row).to include('true', 'Yikes!')
     end
   end
 
@@ -88,5 +88,10 @@ RSpec.describe Moves::Exporter do
   it 'includes move profile documents count' do
     create(:document, documentable: move.profile)
     expect(row.last).to eq '1'
+  end
+
+  it 'includes 0 documents count if no profile' do
+    move.person = nil
+    expect(row.last).to eq '0'
   end
 end

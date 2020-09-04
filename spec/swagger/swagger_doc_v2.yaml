@@ -381,8 +381,20 @@
               enum:
                 - made_in_error
                 - supplier_declined_to_move
+                - cancelled_by_pmu
                 - rejected
                 - other
+        - name: filter[rejection_reason]
+          in: query
+          explode: false
+          description: Filters results to only include moves with the given rejection_reasons
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - no_space_at_receiving_prison
+                - no_transport_available
         - name: filter[supplier_id]
           description: Filters results to only include moves for the given supplier UUIDs
           in: query
@@ -686,6 +698,12 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/post_event_responses.yaml#/404"
         "415":
           description: invalid media type
           content:

@@ -56,40 +56,12 @@ namespace :reference_data do
     ActiveRecord::FixtureSet.create_fixtures(Rails.root.join('db/fixtures'), 'prison_transfer_reasons')
   end
 
-  desc 'create locations/suppliers relationship'
-  task link_suppliers: :environment do
-    supplier_locations = YAML.safe_load(File.read('./lib/tasks/data/supplier_locations.yml'))
-
-    # Set the supplier locations. This is an authoritative change, making the
-    # suppliers have exactly the locations listed in supplier_locations.yml
-    supplier_locations.each do |supplier_name, codes|
-      supplier = Supplier.find_by(key: supplier_name.to_s)
-      locations_in_yaml = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
-
-      existing_location_keys = supplier.locations.pluck(:key)
-      yaml_location_keys = locations_in_yaml.map(&:key)
-
-      if have_locations_changed?(existing_location_keys, yaml_location_keys)
-        supplier.locations = locations_in_yaml
-
-        removed_locations = existing_location_keys - yaml_location_keys
-        added_locations = yaml_location_keys - existing_location_keys
-
-        Raven.capture_message(
-          "Locations updated for the Supplier: #{supplier.name}. ",
-          extra: {
-            added_locations: added_locations,
-            removed_locations: removed_locations,
-          },
-          level: 'warning',
-        )
-
-        puts '- - -'
-        puts "Locations removed from Supplier '#{supplier.name}': #{removed_locations}"
-        puts "Locations added to Supplier '#{supplier.name}': #{added_locations}"
-      else
-        puts "Locations for the Supplier '#{supplier.name}' have not changed."
-      end
+  desc 'create links (with effective dates) between suppliers and locations'
+  task create_supplier_locations: :environment do
+    SupplierLocation.transaction do
+      SupplierLocation.delete_all
+      SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations.yml').call
+      SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations_go_live.yml').call
     end
   end
 
@@ -104,32 +76,10 @@ namespace :reference_data do
        reference_data:create_nomis_alerts
        reference_data:create_regions
        reference_data:create_suppliers
-       reference_data:create_prison_transfer_reasons
-       reference_data:link_suppliers].each do |task_name|
+       reference_data:create_supplier_locations
+       reference_data:create_prison_transfer_reasons].each do |task_name|
       puts "Running '#{task_name}' ..."
       Rake::Task[task_name].invoke
     end
   end
-
-private
-
-  # TODO: Move these methods outside of the rake task
-  # rubocop:disable all
-  def have_locations_changed?(locations1, locations2)
-    ((locations1 - locations2) + (locations2 - locations1)).any?
-  end
-
-  def puts_summary_of_relationships
-    puts
-    puts 'Summary of relationships'
-    puts '========================'
-    Supplier.all.each do |supplier|
-      puts
-      puts "Supplier #{supplier.name}:"
-      supplier.locations.each do |location|
-        puts " - #{location.nomis_agency_id}: #{location.title}"
-      end
-    end
-  end
-  # rubocop:enable all
 end

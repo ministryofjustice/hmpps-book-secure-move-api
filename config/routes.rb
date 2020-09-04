@@ -10,14 +10,12 @@ Rails.application.routes.draw do
 
   get '/health', to: 'status#health', format: :json
   get '/ping', to: 'status#ping', format: :json
-
-  # diagnostics should only be available on localhost, dev, staging and uat; not on pre-prod or production
-  if Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
-    get '/diagnostics/moves/:id', to: 'diagnostics#moves'
-  end
+  get '/diagnostics/moves/:id', to: 'diagnostics#move'
 
   namespace :api do
     filter :versioned_path
+
+    resources :events, only: %i[create], controller: 'generic_events'
 
     resources :allocations, only: %i[create index show] do
       member do
@@ -34,6 +32,9 @@ Rails.application.routes.draw do
       resources :profiles, only: %i[create update]
     end
     resources :moves, only: %i[index show create update] do
+      collection do
+        post 'csv'
+      end
       resources :journeys, only: %i[index show create update] do
         member do
           post 'cancel', controller: 'journey_events'
@@ -75,6 +76,5 @@ Rails.application.routes.draw do
     end
 
     get '/suppliers/:supplier_id/locations', to: 'suppliers#locations'
-
   end
 end

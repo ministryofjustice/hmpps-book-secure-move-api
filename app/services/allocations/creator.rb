@@ -28,7 +28,7 @@ module Allocations
     end
 
     def moves
-      supplier = SupplierChooser.new(doorkeeper_application_owner, allocation.from_location).call
+      supplier = doorkeeper_application_owner || SupplierChooser.new(allocation).call
 
       Array.new(allocation.moves_count) do
         Move.new(

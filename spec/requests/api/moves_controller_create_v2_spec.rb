@@ -65,7 +65,7 @@ RSpec.describe Api::MovesController do
     it 'sets the from_location supplier as the supplier on the move' do
       do_post
 
-      expect(move.supplier).to eq(move.from_location.suppliers.first)
+      expect(move.supplier).to eq(another_supplier)
     end
 
     context 'with a real access token' do

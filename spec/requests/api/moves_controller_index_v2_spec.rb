@@ -202,34 +202,6 @@ RSpec.describe Api::MovesController do
         end
       end
     end
-
-    context 'with text/csv Accept header' do
-      let(:accept) { 'text/csv; version=2' }
-
-      it 'returns a success code' do
-        do_get
-        expect(response).to have_http_status(:ok)
-      end
-
-      it 'returns an inline file response' do
-        do_get
-        expect(response.headers['Content-Disposition']).to match('inline')
-      end
-
-      it 'sets the correct content type header' do
-        do_get
-        expect(response.headers['Content-Type']).to eq('text/csv')
-      end
-
-      it 'delegates the CSV generation to Moves::Exporter with the correct moves' do
-        moves_exporter = instance_double('Moves::Exporter', call: Tempfile.new)
-        allow(Moves::Exporter).to receive(:new).and_return(moves_exporter)
-
-        do_get
-
-        expect(Moves::Exporter).to have_received(:new).with(ActiveRecord::Relation)
-      end
-    end
   end
 
   def do_get

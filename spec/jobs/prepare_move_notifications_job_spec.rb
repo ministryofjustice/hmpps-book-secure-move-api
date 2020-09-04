@@ -2,13 +2,13 @@
 
 RSpec.describe PrepareMoveNotificationsJob, type: :job do
   subject(:perform) do
-    described_class.new.perform(topic_id: move.id, action_name: action_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
+    described_class.perform_now(topic_id: move.id, action_name: action_name, queue_as: :some_queue_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
   end
 
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
-  let(:move) { create :move, from_location: location }
+  let(:move) { create :move, from_location: location, supplier: supplier }
   let(:action_name) { 'create' }
   let(:send_webhooks) { true }
   let(:send_emails) { true }
@@ -17,6 +17,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   before do
     create(:notification_type, :webhook)
     create(:notification_type, :email)
+
     allow(NotifyWebhookJob).to receive(:perform_later)
     allow(NotifyEmailJob).to receive(:perform_later)
   end
@@ -48,7 +49,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   shared_examples_for 'it schedules NotifyWebhookJob' do
     before { perform }
 
-    it { expect(NotifyWebhookJob).to have_received(:perform_later).with(Notification.webhooks.last.id) }
+    it { expect(NotifyWebhookJob).to have_received(:perform_later).with(notification_id: Notification.webhooks.last.id, queue_as: :some_queue_name) }
   end
 
   shared_examples_for 'it does not schedule NotifyWebhookJob' do
@@ -60,7 +61,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   shared_examples_for 'it schedules NotifyEmailJob' do
     before { perform }
 
-    it { expect(NotifyEmailJob).to have_received(:perform_later).with(Notification.emails.last.id) }
+    it { expect(NotifyEmailJob).to have_received(:perform_later).with(notification_id: Notification.emails.last.id, queue_as: :some_queue_name) }
   end
 
   shared_examples_for 'it does not schedule NotifyEmailJob' do
@@ -97,7 +98,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a back-dated move' do
-    let(:move) { create :move, from_location: location, date: 2.days.ago }
+    let(:move) { create :move, from_location: location, date: 2.days.ago, supplier: supplier }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it does not create an email notification record'
@@ -106,7 +107,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a move for today' do
-    let(:move) { create :move, from_location: location, date: Time.zone.today }
+    let(:move) { create :move, from_location: location, date: Time.zone.today, supplier: supplier }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it creates an email notification record'
@@ -115,7 +116,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a forward-dated move' do
-    let(:move) { create :move, from_location: location, date: 2.days.from_now }
+    let(:move) { create :move, from_location: location, date: 2.days.from_now, supplier: supplier }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it creates an email notification record'

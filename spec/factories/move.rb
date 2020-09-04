@@ -12,9 +12,8 @@ FactoryBot.define do
     sequence(:created_at) { |n| Time.now - n.minutes }
     sequence(:date_from) { |n| Date.today - n.days }
 
-    trait :with_supplier do
-      association(:supplier)
-    end
+    association(:supplier)
+
     # Move types
     trait :court_appearance do
       # NB: Police / Prison / STC / SCH --> Court
@@ -108,6 +107,20 @@ FactoryBot.define do
       cancellation_reason_comment { 'the move was cancelled because of some other reason' }
     end
 
+    trait :rejected_no_space do
+      status { 'cancelled' }
+      cancellation_reason { 'rejected' }
+      cancellation_reason_comment { 'no space available at the receiving prison' }
+      rejection_reason { 'no_space_at_receiving_prison' }
+    end
+
+    trait :rejected_no_transport do
+      status { 'cancelled' }
+      cancellation_reason { 'rejected' }
+      cancellation_reason_comment { 'no transportation available to move prisoner' }
+      rejection_reason { 'no_transport_available' }
+    end
+
     # Other traits
     trait :with_allocation do
       after(:create) do |move|
@@ -155,6 +168,8 @@ FactoryBot.define do
     association(:profile)
     association(:from_location, :prison, factory: :location)
     association(:to_location, :court, factory: :location)
+    association(:supplier)
+
     date { Date.today }
     time_due { Time.now }
     status { 'requested' }

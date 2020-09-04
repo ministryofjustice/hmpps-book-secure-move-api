@@ -6,7 +6,7 @@ require 'rack/test'
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
 # rubocop:disable Rails/HttpPositionalArguments
-RSpec.describe 'police to unknown prison recall', type: :request do
+RSpec.describe 'police to unknown prison recall', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'
@@ -167,6 +167,9 @@ RSpec.describe 'police to unknown prison recall', type: :request do
     person
     police
     prison
+
+    # Assign the police location to the supplier
+    create :supplier_location, location: police, supplier: serco_supplier
 
     # These steps simulate the frontend creating a move request before the supplier processes it
 

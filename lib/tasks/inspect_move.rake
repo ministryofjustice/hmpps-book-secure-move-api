@@ -7,6 +7,7 @@ namespace :inspect do
     move = Move.find_by(id: args[:id_or_ref]) || Move.find_by(reference: args[:id_or_ref])
     abort "Could not find move record with id or reference: #{args[:id_or_ref]}" if move.blank?
 
-    puts Diagnostics::MoveInspector.new(move).generate
+    # OK to return personal details if running as a rake task on the server
+    puts Diagnostics::MoveInspector.new(move, include_person_details: true).generate
   end
 end

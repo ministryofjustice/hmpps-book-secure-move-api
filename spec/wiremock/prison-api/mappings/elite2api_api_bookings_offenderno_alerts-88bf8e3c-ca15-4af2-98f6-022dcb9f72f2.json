@@ -2,7 +2,7 @@
   "id" : "88bf8e3c-ca15-4af2-98f6-022dcb9f72f2",
   "name" : "elite2api_api_bookings_offenderno_alerts",
   "request" : {
-    "url" : "/elite2api/api/bookings/offenderNo/alerts",
+    "url" : "/api/bookings/offenderNo/alerts",
     "method" : "POST",
     "bodyPatterns" : [ {
       "equalToJson" : "[\"G8133UA\"]",

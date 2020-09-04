@@ -8,7 +8,11 @@ RSpec.describe EventLog::MoveRunner do
   let!(:move) { create(:move, :requested, to_location: original_location) }
   let(:original_location) { create(:location) }
 
-  before { allow(Notifier).to receive(:prepare_notifications) }
+  before do
+    create :supplier_location, supplier: move.supplier, location: move.from_location
+
+    allow(Notifier).to receive(:prepare_notifications)
+  end
 
   shared_examples_for 'it calls the Notifier with an update_status action_name' do
     before { runner.call }

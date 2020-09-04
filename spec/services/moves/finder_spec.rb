@@ -76,7 +76,7 @@ RSpec.describe Moves::Finder do
 
     describe 'by supplier_id' do
       context 'with supplier filter' do
-        let(:move) { create :move, :with_supplier }
+        let(:move) { create :move }
         let(:filter_params) { { supplier_id: move.supplier_id } }
 
         it 'returns moves matching the supplier' do
@@ -254,6 +254,22 @@ RSpec.describe Moves::Finder do
       let!(:cancelled_rejected_move) { create :move, :cancelled_rejected }
       let!(:cancelled_other_move) { create :move, :cancelled_other }
 
+      context 'with nil cancellation reason' do
+        let(:filter_params) { { cancellation_reason: nil } }
+
+        it 'returns only moves without a cancellation reason' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with empty cancellation reason' do
+        let(:filter_params) { { cancellation_reason: '' } }
+
+        it 'returns only moves without a cancellation reason' do
+          expect(results).to be_empty
+        end
+      end
+
       context 'with matching cancellation_reason' do
         let(:filter_params) { { cancellation_reason: 'other' } }
 
@@ -272,6 +288,51 @@ RSpec.describe Moves::Finder do
 
       context 'with mis-matching cancellation_reason' do
         let(:filter_params) { { cancellation_reason: 'fruit bats' } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by rejection_reason' do
+      let!(:rejected_no_space) { create :move, :rejected_no_space }
+      let!(:rejected_no_transport) { create :move, :rejected_no_transport }
+
+      context 'with nil rejection reason' do
+        let(:filter_params) { { rejection_reason: nil } }
+
+        it 'returns only moves without a rejection reason' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with empty rejection reason' do
+        let(:filter_params) { { rejection_reason: '' } }
+
+        it 'returns only moves without a rejection reason' do
+          expect(results).to be_empty
+        end
+      end
+
+      context 'with matching rejection' do
+        let(:filter_params) { { rejection_reason: 'no_space_at_receiving_prison' } }
+
+        it 'returns moves matching type' do
+          expect(results).to match_array [rejected_no_space]
+        end
+      end
+
+      context 'with multiple rejection' do
+        let(:filter_params) { { rejection_reason: 'no_space_at_receiving_prison,no_transport_available' } }
+
+        it 'returns moves matching status' do
+          expect(results).to match_array [rejected_no_space, rejected_no_transport]
+        end
+      end
+
+      context 'with mis-matching rejection' do
+        let(:filter_params) { { rejection_reason: 'arm stuck in a packet of cornflakes' } }
 
         it 'returns empty results set' do
           expect(results).to be_empty
