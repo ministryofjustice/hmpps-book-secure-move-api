@@ -21,20 +21,20 @@ module Diagnostics
       @output << "status:\t\t#{move.status}\n"
       @output << "cancel reason:\t#{move.cancellation_reason}\n" if move.cancellation_reason.present?
       @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if include_person_details && move.cancellation_reason_comment.present?
-      @output << <<~ENDDETAILS1
+      @output << <<~ENDDETAILS
         move type:\t#{move.move_type}
         from location:\t#{move.from_location&.title}
         to location:\t#{move.to_location&.title}
         supplier:\t#{move.supplier&.name}
         created at:\t#{move.created_at}
         updated at:\t#{move.updated_at}
-      ENDDETAILS1
+      ENDDETAILS
       @output << "additional information: #{move.additional_information}" if include_person_details
-      @output << <<~ENDDETAILS2
+      @output << <<~ENDMOVEEVENTS
 
         MOVE EVENTS
         -----------
-      ENDDETAILS2
+      ENDMOVEEVENTS
 
       if move.move_events.any?
         @output << "#{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
