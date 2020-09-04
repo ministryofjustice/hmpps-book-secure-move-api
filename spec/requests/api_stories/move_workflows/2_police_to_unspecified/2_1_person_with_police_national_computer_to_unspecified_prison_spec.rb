@@ -169,7 +169,7 @@ RSpec.describe 'police to unknown prison recall', type: :request, api_story: tru
     prison
 
     # Assign the police location to the supplier
-    create :supplier_location, location: police, supplier: serco_supplier, effective_from: Date.new(1900, 1, 1)
+    create :supplier_location, location: police, supplier: serco_supplier
 
     # These steps simulate the frontend creating a move request before the supplier processes it
 

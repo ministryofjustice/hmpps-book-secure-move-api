@@ -31,8 +31,6 @@ RSpec.describe Moves::Updater do
     }
   end
 
-  before { create :supplier_location, supplier: move.supplier, location: move.from_location } # Used by SupplierChooser
-
   context 'with valid params' do
     it 'updates the correct attributes on an existing move' do
       updater.call

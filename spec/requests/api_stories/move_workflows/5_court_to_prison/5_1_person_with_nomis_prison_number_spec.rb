@@ -145,7 +145,7 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
     header 'Authorization', 'Bearer spoofed-token'
 
     # Assign location court to Serco supplier
-    create :supplier_location, location: court, supplier: serco_supplier, effective_from: Date.new(1900, 1, 1)
+    create :supplier_location, location: court, supplier: serco_supplier
   end
 
   # rubocop:disable RSpec/MultipleExpectations
