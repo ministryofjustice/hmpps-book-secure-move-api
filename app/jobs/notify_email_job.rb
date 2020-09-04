@@ -3,9 +3,9 @@
 # This job is responsible for sending the notification to the Gov.UK Notify service.
 # It runs as a retryable job to handle the case where the Gov.UK service is temporarily offline.
 class NotifyEmailJob < ApplicationJob
-  queue_as :notifications
+  include QueueDeterminer
 
-  def perform(notification_id)
+  def perform(notification_id:, **_)
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
     return unless notification.subscription.enabled?
 

@@ -8,5 +8,8 @@
 :timeout: 25
 
 :queues:
-  - notifications
-  - default
+  - ["notifications_high", 4]
+  - ["notifications_medium", 3]
+  - ["notifications_low", 2]
+  - ["notifications", 1] # TODO: this queue can be deleted in a future PR once high/medium/low are in place
+  - ["default", 1]

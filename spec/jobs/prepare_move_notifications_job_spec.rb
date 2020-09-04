@@ -2,7 +2,7 @@
 
 RSpec.describe PrepareMoveNotificationsJob, type: :job do
   subject(:perform) do
-    described_class.new.perform(topic_id: move.id, action_name: action_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
+    described_class.perform_now(topic_id: move.id, action_name: action_name, queue_as: :some_queue_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
   end
 
   let(:subscription) { create :subscription }
@@ -48,7 +48,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   shared_examples_for 'it schedules NotifyWebhookJob' do
     before { perform }
 
-    it { expect(NotifyWebhookJob).to have_received(:perform_later).with(Notification.webhooks.last.id) }
+    it { expect(NotifyWebhookJob).to have_received(:perform_later).with(notification_id: Notification.webhooks.last.id, queue_as: :some_queue_name) }
   end
 
   shared_examples_for 'it does not schedule NotifyWebhookJob' do
@@ -60,7 +60,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   shared_examples_for 'it schedules NotifyEmailJob' do
     before { perform }
 
-    it { expect(NotifyEmailJob).to have_received(:perform_later).with(Notification.emails.last.id) }
+    it { expect(NotifyEmailJob).to have_received(:perform_later).with(notification_id: Notification.emails.last.id, queue_as: :some_queue_name) }
   end
 
   shared_examples_for 'it does not schedule NotifyEmailJob' do
