@@ -39,6 +39,7 @@ module Diagnostics
       if move.move_events.any?
         @output << "#{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
         move.move_events.default_order.each do |event| # NB use each to preserve sort order
+          # NB only show event params if include_person_details==true, as they could contain personal details
           @output << "#{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{include_person_details ? event.event_params : '-'}\n"
         end
       else
@@ -54,7 +55,6 @@ module Diagnostics
       if move.journeys.any?
         @output << "#{'ID'.ljust(37)}\t#{'TIMESTAMP'.ljust(27)}\t#{'STATE'.ljust(12)}\t#{'BILLABLE'.ljust(9)}\t#{'SUPPLIER'.ljust(9)}\tFROM --> TO\n"
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
-          # NB only show event details if include_person_details==true, as they could contain personal details
           @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.supplier.name.ljust(9)}\t#{journey.from_location.title} --> #{journey.to_location.title}\n"
         end
       else
@@ -72,7 +72,7 @@ module Diagnostics
           if journey.events.any?
             @output << "  #{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
             journey.events.default_order.each do |event| # NB use each to preserve sort order
-              # NB only show event details if include_person_details==true, as they could contain personal details
+              # NB only show event params if include_person_details==true, as they could contain personal details
               @output << "  #{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{include_person_details ? event.event_params : '-'}\n"
             end
           else
