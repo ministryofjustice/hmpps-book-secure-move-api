@@ -16,7 +16,7 @@ RSpec.describe NomisClient::Activities, with_nomis_client_authentication: true d
       activities_get
 
       expect(token).to have_received(:get).with(
-        "/elite2api/api/bookings/1495077/activities?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
+        "/api/bookings/1495077/activities?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}",
         headers: { 'Page-Limit' => '1000' },
       )
     end
