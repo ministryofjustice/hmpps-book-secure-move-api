@@ -12,9 +12,8 @@ FactoryBot.define do
     sequence(:created_at) { |n| Time.now - n.minutes }
     sequence(:date_from) { |n| Date.today - n.days }
 
-    trait :with_supplier do
-      association(:supplier)
-    end
+    association(:supplier)
+
     # Move types
     trait :court_appearance do
       # NB: Police / Prison / STC / SCH --> Court
@@ -169,6 +168,8 @@ FactoryBot.define do
     association(:profile)
     association(:from_location, :prison, factory: :location)
     association(:to_location, :court, factory: :location)
+    association(:supplier)
+
     date { Date.today }
     time_due { Time.now }
     status { 'requested' }

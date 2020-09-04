@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Move do
-  it { is_expected.to belong_to(:supplier).optional }
+  it { is_expected.to belong_to(:supplier) }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
   it { is_expected.to belong_to(:profile).optional }
@@ -402,7 +402,11 @@ RSpec.describe Move do
   end
 
   describe '#rebook' do
-    let!(:original_move) { create(:move, :proposed, :with_allocation, :with_date_to) }
+    before do
+      create :supplier_location, supplier: original_move.supplier, location: original_move.from_location
+    end
+
+    let(:original_move) { create(:move, :proposed, :with_allocation, :with_date_to) }
 
     context 'when not yet rebooked' do
       it 'creates a new move' do
@@ -442,9 +446,12 @@ RSpec.describe Move do
         expect(original_move.rebook.date_from).to eq(original_move.date_from + 7.days)
       end
 
-      it 'sets the move date from to nil if not present' do
+      it 'raises an error if date_from is nil' do
         original_move.date_from = nil
-        expect(original_move.rebook.date_from).to be_nil
+
+        expect {
+          original_move.rebook.date_from
+        }.to raise_exception ActiveRecord::RecordInvalid
       end
 
       it 'sets the move to date to 7 days in the future if present' do
@@ -508,7 +515,7 @@ RSpec.describe Move do
   end
 
   describe '#for_feed' do
-    subject(:move) { create(:move, :with_supplier) }
+    subject(:move) { create(:move) }
 
     let(:expected_json) do
       {

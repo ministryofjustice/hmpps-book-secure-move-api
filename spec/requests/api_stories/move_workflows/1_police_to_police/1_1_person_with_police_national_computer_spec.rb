@@ -150,6 +150,9 @@ RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
     police1
     police2
 
+    # Assign police1 location to Serco supplier
+    create :supplier_location, location: police1, supplier: serco_supplier
+
     # These steps simulate the frontend creating a move request before the supplier processes it
 
     # get person record(s)
