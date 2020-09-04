@@ -463,7 +463,7 @@ RSpec.describe Api::MovesController do
         end
 
         context 'when updating an existing requested move without a change of move_status' do
-          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location, supplier: supplier}
+          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location, supplier: supplier }
 
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification

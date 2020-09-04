@@ -138,7 +138,7 @@ class Move < VersionedModel
       date: date && date + 7.days,
       date_from: date_from && date_from + 7.days,
       date_to: date_to && date_to + 7.days,
-      supplier: supplier
+      supplier: supplier,
     )
   end
 
