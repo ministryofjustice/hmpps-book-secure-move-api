@@ -24,7 +24,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, date_from: 2.days.ago }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile }
 
     let(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:move_id) { move.id }
@@ -59,7 +59,6 @@ RSpec.describe Api::MovesController do
         'move_agreed' => true,
         'move_agreed_by' => 'Fred Bloggs',
         'status' => 'requested',
-        'supplier_id' => supplier.id,
       }
     end
 

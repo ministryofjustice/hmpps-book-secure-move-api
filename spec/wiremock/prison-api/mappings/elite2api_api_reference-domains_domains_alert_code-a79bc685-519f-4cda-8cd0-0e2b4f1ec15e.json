@@ -2,7 +2,7 @@
   "id" : "a79bc685-519f-4cda-8cd0-0e2b4f1ec15e",
   "name" : "elite2api_api_reference-domains_domains_alert_code",
   "request" : {
-    "url" : "/elite2api/api/reference-domains/domains/ALERT_CODE",
+    "url" : "/api/reference-domains/domains/ALERT_CODE",
     "method" : "GET"
   },
   "response" : {

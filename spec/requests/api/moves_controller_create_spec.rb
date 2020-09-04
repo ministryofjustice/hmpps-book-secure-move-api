@@ -68,6 +68,10 @@ RSpec.describe Api::MovesController do
         it 'audits the supplier' do
           expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
         end
+
+        it 'sets the application owner as the supplier on the move' do
+          expect(move.supplier).to eq(application.owner)
+        end
       end
 
       it 'associates the documents with the newly created move' do

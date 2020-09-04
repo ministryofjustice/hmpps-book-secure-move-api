@@ -17,7 +17,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
       expect(token)
         .to have_received(:post)
-        .with('/elite2api/api/bookings/1111/prison-to-prison', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
+        .with('/api/bookings/1111/prison-to-prison', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
     end
 
     context 'when Nomis returns an error' do
@@ -65,7 +65,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
       expect(token)
         .to have_received(:put)
-        .with('/elite2api/api/bookings/1111/prison-to-prison/2222/cancel', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
+        .with('/api/bookings/1111/prison-to-prison/2222/cancel', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
     end
 
     context 'when Nomis returns an error' do
