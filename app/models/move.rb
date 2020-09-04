@@ -128,7 +128,7 @@ class Move < VersionedModel
   def rebook
     return rebooked if rebooked.present?
 
-    new_move = self.class.new(
+    Move.create!(
       original_move_id: id,
       from_location_id: from_location_id,
       to_location_id: to_location_id,
@@ -138,10 +138,8 @@ class Move < VersionedModel
       date: date && date + 7.days,
       date_from: date_from && date_from + 7.days,
       date_to: date_to && date_to + 7.days,
+      supplier: supplier
     )
-    new_move.determine_supplier
-    new_move.save!
-    new_move
   end
 
   def self.unfilled?

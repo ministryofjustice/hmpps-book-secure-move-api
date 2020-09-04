@@ -24,7 +24,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves' do
-# <<<<<<< HEAD
+    # <<<<<<< HEAD
     let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier }
 
     # let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, date_from: 2.days.ago, supplier: supplier }
