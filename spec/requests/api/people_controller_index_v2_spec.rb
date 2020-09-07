@@ -7,7 +7,6 @@ RSpec.describe Api::PeopleController do
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
-
   let(:headers) do
     {
       'CONTENT_TYPE': content_type,
@@ -19,6 +18,24 @@ RSpec.describe Api::PeopleController do
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
     let!(:people) { create_list :person, 2, prison_number: nil }
+
+    context 'when the API client requires compressed response' do
+      let(:accept_encoding) { 'gzip, deflate' }
+
+      it 'returns compressed response' do
+        get '/api/people', headers: headers.merge('Accept-Encoding' => accept_encoding)
+
+        expect(response.headers['Content-Encoding']).to be 'gzip'
+      end
+    end
+
+    context 'when the API client does NOT require compressions' do
+      it 'returns non compressed response' do
+        get '/api/people', headers: headers
+
+        expect(response.headers['Content-Encoding']).to be nil
+      end
+    end
 
     context 'when there are no filters' do
       let(:params) { {} }
