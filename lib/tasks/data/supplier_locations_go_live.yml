@@ -30,6 +30,7 @@ suppliers:
     - DP1
     - DP2
     - DP3
+    - DP4
     - DP5
     - DP6
     - DP7
@@ -199,7 +200,6 @@ suppliers:
     - DC4
     - DC5
     - DC6
-    - DP4
     - DST1
     - DST2
     - DST3

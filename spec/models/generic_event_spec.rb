@@ -27,7 +27,7 @@ RSpec.describe GenericEvent, type: :model do
     expect { create(:event_move_cancel, eventable: eventable) }.to change { eventable.reload.updated_at }
   end
 
-  describe '#for_feed' do
+  describe '#trigger' do
     subject(:generic_event) { create(:event_move_cancel) }
 
     it 'does nothing to the eventable attributes by default' do
