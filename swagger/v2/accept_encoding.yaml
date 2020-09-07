@@ -1,0 +1,10 @@
+AcceptEncoding:
+  name: Accept-Encoding
+  description: |
+    The compression algorithm the client is able to understand: gzip or deflate.
+  in: header
+  required: false
+  schema:
+    type: string
+    "enum": ["gzip", "deflate", null]
+    example: gzip
