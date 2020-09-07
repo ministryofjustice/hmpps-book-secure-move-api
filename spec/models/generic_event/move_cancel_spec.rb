@@ -1,12 +1,12 @@
 RSpec.describe GenericEvent::MoveCancel do
   subject(:generic_event) { build(:event_move_cancel) }
 
-  it 'validates cancellation_reason' do
-    expect(generic_event).to validate_inclusion_of(:cancellation_reason).in_array(Move::CANCELLATION_REASONS)
+  it_behaves_like 'a move event' do
+    subject(:generic_event) { build(:event_move_cancel) }
   end
 
-  it 'validates eventable_type' do
-    expect(generic_event).to validate_inclusion_of(:eventable_type).in_array(%w[Move])
+  it 'validates cancellation_reason' do
+    expect(generic_event).to validate_inclusion_of(:cancellation_reason).in_array(Move::CANCELLATION_REASONS)
   end
 
   describe '#cancellation_reason' do
