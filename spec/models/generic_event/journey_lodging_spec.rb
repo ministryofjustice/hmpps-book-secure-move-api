@@ -1,10 +1,7 @@
 RSpec.describe GenericEvent::JourneyLodging do
   subject(:generic_event) { build(:event_journey_lodging) }
 
-  it_behaves_like 'a journey event' do
-    subject(:generic_event) { build(:event_journey_lodging) }
-  end
-
+  it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Journey]) }
   it { is_expected.to validate_presence_of(:to_location_id) }
 
   describe '#to_location' do
