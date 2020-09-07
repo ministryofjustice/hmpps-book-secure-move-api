@@ -61,6 +61,7 @@
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
         - name: filter[police_national_computer]
           in: query
           description:
@@ -288,6 +289,7 @@
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
         - name: filter[date_from]
           in: query
           description:
@@ -617,6 +619,7 @@
         - Moves
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
         - name: Authorization
           in: header
           schema:
@@ -728,6 +731,7 @@
         - application/vnd.api+json
       parameters:
         - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
         - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
         - name: filter[timestamp_from]
           in: query
