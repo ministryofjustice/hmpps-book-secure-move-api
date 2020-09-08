@@ -1,6 +1,5 @@
 class GenericEvent < ApplicationRecord
   CREATED_BY_OPTIONS = %w[serco geoamey unknown].freeze
-
   FEED_ATTRIBUTES = %w[
     id
     type
@@ -47,5 +46,11 @@ class GenericEvent < ApplicationRecord
 
   def for_feed
     attributes.slice(*FEED_ATTRIBUTES)
+  end
+
+  def self.from_event(event)
+    type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
+
+    type.constantize.from_event(event).save
   end
 end

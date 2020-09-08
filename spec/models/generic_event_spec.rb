@@ -55,4 +55,21 @@ RSpec.describe GenericEvent, type: :model do
       expect(generic_event.for_feed).to include_json(expected_attributes)
     end
   end
+
+  describe '.from_event' do
+    context 'when the eventable is a Journey' do
+      context 'when the event_name is `cancel`' do
+        let(:event) { create(:event, :cancel, eventable: eventable) }
+        let(:eventable) { create(:journey)}
+
+        it 'calls JourneyCancel.from_event' do
+          allow(GenericEvent::JourneyCancel).to receive(:from_event)
+
+          described_class.from_event(event)
+
+          expect(GenericEvent::JourneyCancel).to receive(:from_event).with(event)
+        end
+      end
+    end
+  end
 end

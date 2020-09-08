@@ -4,6 +4,10 @@ class GenericEvent
 
     validates :to_location_id, presence: true
 
+    eventable
+    event_name
+    runner, trigger
+
     def to_location_id=(id)
       details['to_location_id'] = id
     end
