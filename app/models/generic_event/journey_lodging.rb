@@ -1,8 +1,7 @@
 class GenericEvent
   class JourneyLodging < GenericEvent
-    EVENTABLE_TYPES = %w[Journey].freeze
+    include JourneyEventValidations
 
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
     validates :to_location_id, presence: true
 
     def to_location_id=(id)

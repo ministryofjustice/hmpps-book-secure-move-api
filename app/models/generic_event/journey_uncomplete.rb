@@ -1,9 +1,6 @@
 class GenericEvent
   class JourneyUncomplete < GenericEvent
-    EVENTABLE_TYPES = %w[Journey].freeze
-
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
-
+    include JourneyEventValidations
     def trigger
       eventable.uncomplete
     end
