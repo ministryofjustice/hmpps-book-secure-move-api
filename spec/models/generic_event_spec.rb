@@ -26,4 +26,33 @@ RSpec.describe GenericEvent, type: :model do
 
     expect { create(:event_move_cancel, eventable: eventable) }.to change { eventable.reload.updated_at }
   end
+
+  describe '#trigger' do
+    subject(:generic_event) { create(:event_move_cancel) }
+
+    it 'does nothing to the eventable attributes by default' do
+      expect { generic_event.trigger }.not_to change { generic_event.reload.eventable.attributes }
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:generic_event) { create(:event_move_cancel) }
+
+    it 'returns the expected attributes' do
+      expected_attributes = {
+        'id' => generic_event.id,
+        'type' => 'GenericEvent::MoveCancel',
+        'notes' => 'Flibble',
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'occurred_at' => be_a(Time),
+        'recorded_at' => be_a(Time),
+        'eventable_id' => generic_event.eventable_id,
+        'eventable_type' => 'Move',
+        'details' => { 'cancellation_reason' => 'made_in_error', 'cancellation_reason_comment' => 'It was a mistake' },
+      }
+
+      expect(generic_event.for_feed).to include_json(expected_attributes)
+    end
+  end
 end
