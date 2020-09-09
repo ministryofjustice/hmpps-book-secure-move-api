@@ -19,7 +19,7 @@ RSpec.describe GenericEvent::MoveReject do
         rebook: rebook,
       }
     end
-    let(:eventable) { build(:move)}
+    let(:eventable) { build(:move) }
     let(:rebook) { false }
 
     it 'does not persist changes to the eventable' do

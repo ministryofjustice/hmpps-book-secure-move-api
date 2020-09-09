@@ -23,8 +23,8 @@ RSpec.describe GenericEvent::MoveRedirect do
 
     let(:details) { { move_type: 'court_appearance' } }
 
-    let(:to_location) { create(:location)}
-    let(:eventable) { build(:move, move_type: 'prison_transfer')}
+    let(:to_location) { create(:location) }
+    let(:eventable) { build(:move, move_type: 'prison_transfer') }
 
     it 'does not persist changes to the eventable' do
       generic_event.trigger

@@ -12,10 +12,10 @@ RSpec.describe GenericEvent::MoveApprove do
   let(:create_in_nomis) { true }
   let(:date) { '2019-01-01' }
 
-  it { is_expected.to validate_presence_of(:date)}
+  it { is_expected.to validate_presence_of(:date) }
 
   context 'when the date format is not an iso8601 date' do
-    let(:date) { '2019/01/01'}
+    let(:date) { '2019/01/01' }
 
     it { is_expected.to be_invalid }
   end
