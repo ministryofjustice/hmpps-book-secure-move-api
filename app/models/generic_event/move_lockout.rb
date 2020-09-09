@@ -1,8 +1,6 @@
 class GenericEvent
   class MoveLockout < GenericEvent
-    EVENTABLE_TYPES = %w[Move].freeze
-
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
+    include MoveEventValidations
     validates :from_location_id, presence: true
 
     def from_location_id=(id)

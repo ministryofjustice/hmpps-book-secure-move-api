@@ -1,8 +1,6 @@
 class GenericEvent
   class MoveRedirect < GenericEvent
-    EVENTABLE_TYPES = %w[Move].freeze
-
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
+    include MoveEventValidations
     validates :to_location_id, presence: true
 
     def to_location_id=(id)

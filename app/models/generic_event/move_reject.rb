@@ -1,8 +1,7 @@
 class GenericEvent
   class MoveReject < GenericEvent
-    EVENTABLE_TYPES = %w[Move].freeze
+    include MoveEventValidations
 
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }
 
     def rejection_reason

@@ -2,10 +2,9 @@ class GenericEvent
   class MoveCancel < GenericEvent
     attr_writer :cancellation_reason
 
-    EVENTABLE_TYPES = %w[Move].freeze
+    include MoveEventValidations
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
 
     def cancellation_reason
       @cancellation_reason ||= details['cancellation_reason']

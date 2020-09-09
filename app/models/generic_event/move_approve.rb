@@ -1,8 +1,6 @@
 class GenericEvent
   class MoveApprove < GenericEvent
-    EVENTABLE_TYPES = %w[Move].freeze
-
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
+    include MoveEventValidations
     validates :date, presence: true
 
     validates_each :date do |record, attr, value|
