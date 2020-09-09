@@ -28,11 +28,11 @@ class GenericEvent < ApplicationRecord
 
   belongs_to :eventable, polymorphic: true, touch: true
 
-  validates :eventable,      presence: true
-  validates :type,           presence: true
-  validates :occurred_at,    presence: true
-  validates :recorded_at,    presence: true
-  validates :details,        presence: true
+  validates :eventable,      presence: true # What is the subject of the event
+  validates :type,           presence: true # STI class of the event
+  validates :occurred_at,    presence: true # When did a human think the event occurred
+  validates :recorded_at,    presence: true # When did supplier/frontend record the event
+  validates :details,        presence: true # Details that are specific to each event.
   validates :created_by,     presence: true, inclusion: { in: CREATED_BY_OPTIONS }
 
   # This scope is used to determine the apply order of events as they were determined to have occurred.

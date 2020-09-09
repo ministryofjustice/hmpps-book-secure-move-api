@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveCancel do
   subject(:generic_event) { build(:event_move_cancel) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_cancel) }
-  end
+  it_behaves_like 'a move event'
 
   it 'validates cancellation_reason' do
     expect(generic_event).to validate_inclusion_of(:cancellation_reason).in_array(Move::CANCELLATION_REASONS)
@@ -47,6 +45,68 @@ RSpec.describe GenericEvent::MoveCancel do
       generic_event.trigger
 
       expect(Allocations::RemoveFromNomis).to have_received(:call).with(generic_event.eventable)
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:generic_event) { create(:event_move_cancel, details: details) }
+
+    context 'when the cancellation_reason_comment is present' do
+      let(:details) do
+        {
+          cancellation_reason: 'made_in_error',
+          cancellation_reason_comment: 'It was a mistake',
+        }
+      end
+
+      let(:expected_json) do
+        {
+          'id' => generic_event.id,
+          'type' => 'GenericEvent::MoveCancel',
+          'notes' => 'Flibble',
+          'created_at' => be_a(Time),
+          'updated_at' => be_a(Time),
+          'occurred_at' => be_a(Time),
+          'recorded_at' => be_a(Time),
+          'eventable_id' => generic_event.eventable_id,
+          'eventable_type' => 'Move',
+          'details' => generic_event.details,
+        }
+      end
+
+      it 'generates a feed document' do
+        expect(generic_event.for_feed).to include_json(expected_json)
+      end
+    end
+
+    context 'when the cancellation_reason_comment is not present' do
+      let(:details) do
+        {
+          cancellation_reason: 'made_in_error',
+        }
+      end
+
+      let(:expected_json) do
+        {
+          'id' => generic_event.id,
+          'type' => 'GenericEvent::MoveCancel',
+          'notes' => 'Flibble',
+          'created_at' => be_a(Time),
+          'updated_at' => be_a(Time),
+          'occurred_at' => be_a(Time),
+          'recorded_at' => be_a(Time),
+          'eventable_id' => generic_event.eventable_id,
+          'eventable_type' => 'Move',
+          'details' => {
+            'cancellation_reason' => 'made_in_error',
+            'cancellation_reason_comment' => '',
+          },
+        }
+      end
+
+      it 'generates a feed document' do
+        expect(generic_event.for_feed).to include_json(expected_json)
+      end
     end
   end
 end
