@@ -26,7 +26,9 @@ module Journeys
       )
     end
 
-    def create_generic_event(event); end
+    def create_generic_event(event)
+      GenericEvent.from_event(event).save!
+    end
 
     def run_event_logs(journey)
       EventLog::JourneyRunner.new(journey).call

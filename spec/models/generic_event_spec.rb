@@ -57,19 +57,11 @@ RSpec.describe GenericEvent, type: :model do
   end
 
   describe '.from_event' do
-    context 'when the eventable is a Journey' do
-      context 'when the event_name is `cancel`' do
-        let(:event) { create(:event, :cancel, eventable: eventable) }
-        let(:eventable) { create(:journey)}
+    let(:event) { create(:event, :cancel, eventable: eventable) }
+    let(:eventable) { create(:journey) }
 
-        it 'calls JourneyCancel.from_event' do
-          allow(GenericEvent::JourneyCancel).to receive(:from_event)
-
-          described_class.from_event(event)
-
-          expect(GenericEvent::JourneyCancel).to receive(:from_event).with(event)
-        end
-      end
+    it 'returns an initialized JournalCancel event' do
+      expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
     end
   end
 end
