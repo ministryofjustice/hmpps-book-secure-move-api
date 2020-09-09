@@ -57,7 +57,7 @@ FactoryBot.define do
     eventable { association(:move) }
     details do
       {
-        rejection_reason: 'made_in_error',
+        rejection_reason: 'no_space_at_receiving_prison',
         cancellation_reason_comment: 'It was a mistake',
         rebook: false,
       }
