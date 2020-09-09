@@ -1,6 +1,7 @@
 class GenericEvent
   class MoveLockout < GenericEvent
     include MoveEventValidations
+
     validates :from_location_id, presence: true
 
     def from_location_id=(id)
@@ -8,7 +9,7 @@ class GenericEvent
     end
 
     def from_location_id
-      @from_location_id ||= details['from_location_id']
+      details['from_location_id']
     end
 
     def from_location
