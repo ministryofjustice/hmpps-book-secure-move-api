@@ -10,7 +10,7 @@ class GenericEvent
     end
 
     def date
-      @date ||= details['date']
+      details['date']
     end
 
     def date=(date)
