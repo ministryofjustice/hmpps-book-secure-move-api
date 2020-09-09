@@ -47,6 +47,7 @@ FactoryBot.define do
     eventable { association(:move) }
     details do
       {
+        move_type: 'court_appearance',
         to_location_id: create(:location).id,
       }
     end
