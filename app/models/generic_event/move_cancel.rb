@@ -11,7 +11,7 @@ class GenericEvent
     end
 
     def cancellation_reason_comment
-      @cancellation_reason_comment ||= details.fetch('cancellation_reason_comment', '')
+      details.fetch('cancellation_reason_comment', '')
     end
 
     def trigger
