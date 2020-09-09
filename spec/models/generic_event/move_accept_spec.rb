@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveAccept do
   subject(:generic_event) { build(:event_move_accept) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_accept) }
-  end
+  it_behaves_like 'a move event'
 
   describe '#trigger' do
     it 'does not persist changes to the eventable' do

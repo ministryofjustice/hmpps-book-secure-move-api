@@ -10,7 +10,7 @@ RSpec.describe GenericEvent::MoveApprove do
 
   let(:eventable) { build(:move, :proposed) }
   let(:create_in_nomis) { true }
-  let(:date) { '2019-01-01'}
+  let(:date) { '2019-01-01' }
 
   it { is_expected.to validate_presence_of(:date)}
 
@@ -20,9 +20,7 @@ RSpec.describe GenericEvent::MoveApprove do
     it { is_expected.to be_invalid }
   end
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_approve) }
-  end
+  it_behaves_like 'a move event'
 
   describe '#trigger' do
     before do

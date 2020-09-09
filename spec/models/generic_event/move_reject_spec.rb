@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveReject do
   subject(:generic_event) { build(:event_move_reject) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_reject) }
-  end
+  it_behaves_like 'a move event'
 
   it { is_expected.to validate_inclusion_of(:rejection_reason).in_array(Move::REJECTION_REASONS) }
 

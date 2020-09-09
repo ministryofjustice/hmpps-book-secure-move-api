@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveLockout do
   subject(:generic_event) { build(:event_move_lockout) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_complete) }
-  end
+  it_behaves_like 'a move event'
 
   it { is_expected.to validate_presence_of(:from_location_id) }
 

@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveStart do
   subject(:generic_event) { build(:event_move_start) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_start) }
-  end
+  it_behaves_like 'a move event'
 
   describe '#trigger' do
     it 'does not persist changes to the eventable' do

@@ -1,9 +1,7 @@
 RSpec.describe GenericEvent::MoveRedirect do
   subject(:generic_event) { build(:event_move_redirect) }
 
-  it_behaves_like 'a move event' do
-    subject(:generic_event) { build(:event_move_redirect) }
-  end
+  it_behaves_like 'a move event'
 
   it { is_expected.to validate_presence_of(:to_location_id) }
 
