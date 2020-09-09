@@ -33,8 +33,6 @@ class GenericEvent < ApplicationRecord
   validates :recorded_at,    presence: true # When did supplier/frontend record the event
   validates :created_by,     presence: true, inclusion: { in: CREATED_BY_OPTIONS }
 
-  validates :details # Details that are specific to each event.
-
   # This scope is used to determine the apply order of events as they were determined to have occurred.
   # The order is important as far as the eventable state machine sequencing, the correctness
   # of any attributes of the eventable and for reporting purposes.
