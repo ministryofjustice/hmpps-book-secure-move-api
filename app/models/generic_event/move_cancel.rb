@@ -2,17 +2,16 @@ class GenericEvent
   class MoveCancel < GenericEvent
     attr_writer :cancellation_reason
 
-    EVENTABLE_TYPES = %w[Move].freeze
+    include MoveEventValidations
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
 
     def cancellation_reason
       @cancellation_reason ||= details['cancellation_reason']
     end
 
     def cancellation_reason_comment
-      @cancellation_reason_comment ||= details['cancellation_reason_comment']
+      details.fetch('cancellation_reason_comment', '')
     end
 
     def trigger
@@ -21,6 +20,13 @@ class GenericEvent
       eventable.cancellation_reason_comment = cancellation_reason_comment
 
       Allocations::RemoveFromNomis.call(eventable)
+    end
+
+    def for_feed
+      super.tap do |common_feed_attributes|
+        # NB: Force cancellation_reason_comment to be present
+        common_feed_attributes['details']['cancellation_reason_comment'] = cancellation_reason_comment
+      end
     end
   end
 end
