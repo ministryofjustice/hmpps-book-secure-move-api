@@ -1,20 +1,40 @@
 RSpec.describe GenericEvent::MoveApprove do
-  subject(:generic_event) { build(:event_move_approve, eventable: eventable) }
+  subject(:generic_event) { build(:event_move_approve, eventable: eventable, details: details) }
+
+  let(:details) do
+    {
+      date: date,
+      create_in_nomis: create_in_nomis,
+    }
+  end
 
   let(:eventable) { build(:move, :proposed) }
+  let(:create_in_nomis) { true }
+  let(:date) { '2019-01-01'}
+
+  it { is_expected.to validate_presence_of(:date)}
+
+  context 'when the date format is not an iso8601 date' do
+    let(:date) { '2019/01/01'}
+
+    it { is_expected.to be_invalid }
+  end
 
   it_behaves_like 'a move event' do
     subject(:generic_event) { build(:event_move_approve) }
   end
 
   describe '#trigger' do
+    before do
+      allow(Allocations::CreateInNomis).to receive(:call)
+    end
+
     it 'does not persist changes to the eventable' do
       generic_event.trigger
 
       expect(generic_event.eventable).not_to be_persisted
     end
 
-    rub
     it 'sets the eventable `status` to requested' do
       expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('proposed').to('requested')
     end
@@ -24,27 +44,49 @@ RSpec.describe GenericEvent::MoveApprove do
     end
 
     context 'when the PMU wants the move to be created in Nomis' do
-      before do
-        allow(Allocations::CreateInNomis).to receive(:call)
-      end
+      let(:created_in_nomis) { true }
 
       it 'calls the create in Nomis service' do
-        generic_event.details[:create_in_nomis] = true
-
         generic_event.trigger
 
         expect(Allocations::CreateInNomis).to have_received(:call).with(eventable)
       end
+    end
 
-      context 'when the PMU does NOT want the move to be created in Nomis' do
-        it 'does NOT call the create in Nomis service' do
-          generic_event.details[:create_in_nomis] = false
+    context 'when the PMU does NOT want the move to be created in Nomis' do
+      let(:create_in_nomis) { false }
 
-          generic_event.trigger
+      it 'does NOT call the create in Nomis service' do
+        generic_event.trigger
 
-          expect(Allocations::CreateInNomis).not_to have_received(:call)
-        end
+        expect(Allocations::CreateInNomis).not_to have_received(:call)
       end
+    end
+  end
+
+  describe '#for_feed' do
+    subject(:generic_event) { create(:event_move_approve) }
+
+    let(:expected_json) do
+      {
+        'id' => generic_event.id,
+        'type' => 'GenericEvent::MoveApprove',
+        'notes' => 'Flibble',
+        'created_at' => be_a(Time),
+        'updated_at' => be_a(Time),
+        'occurred_at' => be_a(Time),
+        'recorded_at' => be_a(Time),
+        'eventable_id' => generic_event.eventable_id,
+        'eventable_type' => 'Move',
+        'details' => {
+          'date' => generic_event.date,
+          'create_in_nomis' => true,
+        },
+      }
+    end
+
+    it 'generates a feed document' do
+      expect(generic_event.for_feed).to include_json(expected_json)
     end
   end
 end
