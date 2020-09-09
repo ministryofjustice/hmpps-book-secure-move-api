@@ -8,7 +8,6 @@ RSpec.describe GenericEvent, type: :model do
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:occurred_at) }
   it { is_expected.to validate_presence_of(:recorded_at) }
-  it { is_expected.to validate_presence_of(:details) }
   it { is_expected.to validate_presence_of(:created_by) }
 
   it { expect(generic_event).to validate_inclusion_of(:created_by).in_array(%w[serco geoamey unknown]) }
@@ -53,6 +52,15 @@ RSpec.describe GenericEvent, type: :model do
       }
 
       expect(generic_event.for_feed).to include_json(expected_attributes)
+    end
+  end
+
+  describe '.from_event' do
+    let(:event) { create(:event, :cancel, eventable: eventable) }
+    let(:eventable) { create(:journey) }
+
+    it 'returns an initialized JournalCancel event' do
+      expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
     end
   end
 end

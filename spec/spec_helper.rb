@@ -29,4 +29,8 @@ RSpec.configure do |config|
     # clear cache between each test
     Rails.cache.clear
   end
+
+  def uuid_regex
+    /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/
+  end
 end

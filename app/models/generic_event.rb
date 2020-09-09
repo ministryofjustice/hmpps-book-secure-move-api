@@ -1,6 +1,5 @@
 class GenericEvent < ApplicationRecord
   CREATED_BY_OPTIONS = %w[serco geoamey unknown].freeze
-
   FEED_ATTRIBUTES = %w[
     id
     type
@@ -32,7 +31,6 @@ class GenericEvent < ApplicationRecord
   validates :type,           presence: true # STI class of the event
   validates :occurred_at,    presence: true # When did a human think the event occurred
   validates :recorded_at,    presence: true # When did supplier/frontend record the event
-  validates :details,        presence: true # Details that are specific to each event.
   validates :created_by,     presence: true, inclusion: { in: CREATED_BY_OPTIONS }
 
   # This scope is used to determine the apply order of events as they were determined to have occurred.
@@ -47,5 +45,11 @@ class GenericEvent < ApplicationRecord
 
   def for_feed
     attributes.slice(*FEED_ATTRIBUTES)
+  end
+
+  def self.from_event(event)
+    type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
+
+    type.constantize.from_event(event)
   end
 end

@@ -4,6 +4,10 @@ require 'rails_helper'
 
 RSpec.describe Api::JourneyEventsController do
   describe 'POST /moves/:move_id/journeys/:journey_id/lodgings' do
+    subject(:do_post) do
+      post("/api/v1/moves/#{move_id}/journeys/#{journey_id}/lodgings", params: params, headers: headers, as: :json)
+    end
+
     include_context 'with supplier with spoofed access token'
 
     let(:from_location) { create(:location, suppliers: [supplier]) }
@@ -13,10 +17,6 @@ RSpec.describe Api::JourneyEventsController do
     let(:journey_id) { journey.id }
     let(:initial_journey_state) { :in_progress }
     let(:location) { create(:location) }
-
-    before do
-      post("/api/v1/moves/#{move_id}/journeys/#{journey_id}/lodgings", params: params, headers: headers, as: :json)
-    end
 
     context 'with happy params' do
       let(:params) do
@@ -32,17 +32,30 @@ RSpec.describe Api::JourneyEventsController do
         }
       end
 
-      it_behaves_like 'an endpoint that responds with success 204'
+      it_behaves_like 'an endpoint that responds with success 204' do
+        before do
+          do_post
+        end
+      end
 
       it 'logs a lodging event record' do
+        do_post
         expect(journey.events.last.event_name).to eql('lodging')
+      end
+
+      it 'dual writes a journey lodging event' do
+        expect { do_post }.to change { GenericEvent::JourneyLodging.count }.by(1)
       end
     end
 
     context 'with unhappy params' do
       let(:params) { { foo: 'bar' } }
 
-      it_behaves_like 'an endpoint that responds with error 400'
+      it_behaves_like 'an endpoint that responds with error 400' do
+        before do
+          do_post
+        end
+      end
     end
   end
 end

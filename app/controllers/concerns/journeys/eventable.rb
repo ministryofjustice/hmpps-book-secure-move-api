@@ -9,7 +9,8 @@ module Journeys
 
     def process_event(journeys, event_name, event_params)
       [journeys].flatten.each do |journey|
-        create_event(journey, event_name, event_params)
+        event = create_event(journey, event_name, event_params)
+        create_generic_event(event)
         run_event_logs(journey)
       end
     end
@@ -23,6 +24,10 @@ module Journeys
           supplier_id: supplier_id,
         },
       )
+    end
+
+    def create_generic_event(event)
+      GenericEvent.from_event(event).save!
     end
 
     def run_event_logs(journey)
