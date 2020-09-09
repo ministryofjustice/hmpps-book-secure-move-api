@@ -51,6 +51,6 @@ class GenericEvent < ApplicationRecord
   def self.from_event(event)
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
-    type.constantize.from_event(event).save
+    type.constantize.from_event(event)
   end
 end
