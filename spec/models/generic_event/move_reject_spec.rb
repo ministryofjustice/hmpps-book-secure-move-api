@@ -101,7 +101,7 @@ RSpec.describe GenericEvent::MoveReject do
                                               attributes: {
                                                 rejection_reason: 'no_space_at_receiving_prison',
                                                 cancellation_reason_comment: 'a comment',
-                                                rebook: 'false',
+                                                rebook: false,
                                                 notes: 'foo',
                                               },
                                             },
@@ -119,6 +119,7 @@ RSpec.describe GenericEvent::MoveReject do
         'details' => {
           'rejection_reason' => 'no_space_at_receiving_prison',
           'cancellation_reason_comment' => 'a comment',
+          'rebook' => false,
         },
         'occurred_at' => eq(event.client_timestamp),
         'recorded_at' => eq(event.client_timestamp),

@@ -95,9 +95,8 @@ RSpec.describe GenericEvent::MoveApprove do
                                            details: {
                                              event_params: {
                                                attributes: {
-                                                 rejection_reason: 'no_space_at_receiving_prison',
-                                                 cancellation_reason_comment: 'a comment',
-                                                 rebook: 'false',
+                                                 date: move.date,
+                                                 create_in_nomis: true,
                                                  notes: 'foo',
                                                },
                                              },
@@ -113,8 +112,8 @@ RSpec.describe GenericEvent::MoveApprove do
         'notes' => 'foo',
         'created_by' => 'unknown',
         'details' => {
-          date: '2020-01-30',
-          create_in_nomis: false,
+          'date' => '2020-01-30',
+          'create_in_nomis' => true,
         },
         'occurred_at' => eq(event.client_timestamp),
         'recorded_at' => eq(event.client_timestamp),
@@ -122,8 +121,6 @@ RSpec.describe GenericEvent::MoveApprove do
         'updated_at' => be_within(0.1.seconds).of(event.updated_at),
       }
     end
-
-    let(:date) { Date.new(2020, 1, 30) }
 
     it 'builds a generic_event with the correct attributes' do
       expect(

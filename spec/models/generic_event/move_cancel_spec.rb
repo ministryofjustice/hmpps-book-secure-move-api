@@ -71,7 +71,7 @@ RSpec.describe GenericEvent::MoveCancel do
         'type' => 'GenericEvent::MoveCancel',
         'notes' => 'foo',
         'created_by' => 'unknown',
-        'details' => { cancellation_reason: 'aaa', cancellation_reason_comment: 'bbb' },
+        'details' => { 'cancellation_reason' => 'aaa', 'cancellation_reason_comment' => 'bbb' },
         'occurred_at' => eq(event.client_timestamp),
         'recorded_at' => eq(event.client_timestamp),
         'created_at' => be_within(0.1.seconds).of(event.created_at),
