@@ -39,6 +39,10 @@ RSpec.describe Api::MoveEventsController do
         expect(move.reload.status).to eql('requested')
       end
 
+      it 'creates a move lockout event' do
+        expect(GenericEvent::MoveLockout.count).to eq(1)
+      end
+
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
           expect(Notifier).not_to have_received(:prepare_notifications)

@@ -34,6 +34,10 @@ RSpec.describe Api::MoveEventsController do
       it 'changes the move to in_transit' do
         expect(move.reload).to be_in_transit
       end
+
+      it 'creates a move start event' do
+        expect(GenericEvent::MoveStart.count).to eq(1)
+      end
     end
 
     context 'with unhappy params' do

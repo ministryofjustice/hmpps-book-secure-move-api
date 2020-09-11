@@ -39,7 +39,7 @@ class GenericEvent
       new(event.generic_event_attributes
               .merge(
                 details: {
-                  date: event.eventable.date,
+                  date: event.event_params&.dig(:attributes, :date),
                   create_in_nomis: event.event_params&.dig(:attributes, :create_in_nomis) || false,
                 },
               ))

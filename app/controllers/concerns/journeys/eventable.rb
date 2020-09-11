@@ -27,7 +27,9 @@ module Journeys
     end
 
     def create_generic_event(event)
-      # GenericEvent.from_event(event).save!
+      generic_event = GenericEvent.from_event(event)
+      generic_event.save!
+      event.update!(generic_event_id: generic_event.id)
     end
 
     def run_event_logs(journey)
