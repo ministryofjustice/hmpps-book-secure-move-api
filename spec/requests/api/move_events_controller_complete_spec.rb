@@ -36,6 +36,10 @@ RSpec.describe Api::MoveEventsController do
         expect(move.reload.status).to eql('completed')
       end
 
+      it 'creates a move complete event' do
+        expect(GenericEvent::MoveComplete.count).to eq(1)
+      end
+
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
           expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
