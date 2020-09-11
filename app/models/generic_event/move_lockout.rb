@@ -21,5 +21,13 @@ class GenericEvent
         common_feed_attributes['details'] = from_location.for_feed(prefix: 'from')
       end
     end
+
+    def self.from_event(event)
+      new(event.generic_event_attributes.merge(
+            details: {
+              from_location_id: event.event_params&.dig(:relationships, :from_location, :data, :id),
+            },
+          ))
+    end
   end
 end
