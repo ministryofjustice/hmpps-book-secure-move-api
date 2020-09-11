@@ -9,7 +9,8 @@ module Moves
 
     def process_event(moves, event_name, event_params)
       [moves].flatten.each do |move|
-        create_event(move, event_name, event_params)
+        event = create_event(move, event_name, event_params)
+        create_generic_event(event)
         run_event_logs(move)
       end
     end
@@ -23,6 +24,13 @@ module Moves
           supplier_id: supplier_id,
         },
       )
+    end
+
+    def create_generic_event(event)
+      generic_event = GenericEvent.from_event(event)
+      generic_event.save!
+      event.update!(generic_event_id: generic_event.id)
+      generic_event
     end
 
     def run_event_logs(move)

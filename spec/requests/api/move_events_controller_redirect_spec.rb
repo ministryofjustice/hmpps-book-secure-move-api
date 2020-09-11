@@ -66,6 +66,10 @@ RSpec.describe Api::MoveEventsController do
       it 'updates the move move_type' do
         expect { move.reload }.to change(move, :move_type).from('prison_transfer').to('court_appearance')
       end
+
+      it 'creates a move redirect event' do
+        expect(GenericEvent::MoveRedirect.count).to eq(1)
+      end
     end
 
     context 'with a video remand hearing' do

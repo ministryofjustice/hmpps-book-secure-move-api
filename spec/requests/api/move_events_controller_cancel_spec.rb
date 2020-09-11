@@ -51,6 +51,10 @@ RSpec.describe Api::MoveEventsController do
         expect(Allocations::RemoveFromNomis).to have_received(:call).with(move)
       end
 
+      it 'creates a move cancel event' do
+        expect(GenericEvent::MoveCancel.count).to eq(1)
+      end
+
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
           expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
