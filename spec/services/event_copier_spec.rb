@@ -1,3 +1,4 @@
+# rubocop:disable all
 RSpec.describe EventCopier do
   subject(:service) { described_class.new(dry_run: dry_run) }
 
@@ -125,3 +126,4 @@ RSpec.describe EventCopier do
     end
   end
 end
+# rubocop:enable all
