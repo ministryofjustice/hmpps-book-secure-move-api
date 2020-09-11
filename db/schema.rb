@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_28_145744) do
+ActiveRecord::Schema.define(version: 2020_09_10_083822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -122,9 +122,11 @@ ActiveRecord::Schema.define(version: 2020_08_28_145744) do
     t.string "eventable_type", null: false
     t.string "type"
     t.text "notes"
+    t.uuid "generic_event_id"
     t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
     t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
+    t.index ["generic_event_id"], name: "index_events_on_generic_event_id"
     t.index ["updated_at"], name: "index_events_on_updated_at"
   end
 
@@ -510,6 +512,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_145744) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
+  add_foreign_key "events", "generic_events"
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
