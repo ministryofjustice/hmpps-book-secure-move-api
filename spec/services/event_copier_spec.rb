@@ -94,7 +94,7 @@ RSpec.describe EventCopier do
       end
     end
 
-    context 'when we are in a dry run' do
+    context 'when we are not in a dry run' do
       let(:dry_run) { false }
 
       it 'returns the correct report' do

@@ -26,19 +26,21 @@ class EventCopier
 
           @results[:validation_failure_count] += 1
         end
+
+        next
+      end
+
+      if generic_event.save
+        event.update(generic_event_id: generic_event.id)
+
+        @results[:success_count] += 1
       else
-        if generic_event.save
-          event.update(generic_event_id: generic_event.id)
+        @results[:validation_errors] << {
+          'id' => event.id,
+          'errors' => generic_event.errors.messages,
+        }
 
-          @results[:success_count] += 1
-        else
-          @results[:validation_errors] << {
-            'id' => event.id,
-            'errors' => generic_event.errors.messages,
-          }
-
-          @results[:validation_failure_count] += 1
-        end
+        @results[:validation_failure_count] += 1
       end
     rescue NameError => e
       missing_event = e.message.split('::').last

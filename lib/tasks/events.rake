@@ -16,6 +16,7 @@ namespace :events do
 
     Event.copied.update_all(generic_event_id: nil)
 
+    puts "Deleting #{generic_event_ids.count} generic_events..."
     GenericEvent.where(id: generic_event_ids).delete_all
   end
 end
