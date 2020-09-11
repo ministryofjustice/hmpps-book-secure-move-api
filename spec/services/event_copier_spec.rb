@@ -22,9 +22,12 @@ RSpec.describe EventCopier do
 
       it 'returns the correct report' do
         expected_report = {
-          failure_count: 1,
+          validation_failure_count: 1,
           success_count: 0,
-          errors: [
+          dry_run: dry_run,
+          name_error_count: 0,
+          name_errors: Set.new,
+          validation_errors: [
             {
               'id' => event.id,
               'errors' => {
@@ -43,9 +46,12 @@ RSpec.describe EventCopier do
 
       it 'returns the correct report' do
         expected_report = {
-          failure_count: 1,
+          validation_failure_count: 1,
           success_count: 0,
-          errors: [
+          dry_run: dry_run,
+          name_errors: Set.new,
+          name_error_count: 0,
+          validation_errors: [
             {
               'id' => event.id,
               'errors' => {
@@ -81,9 +87,12 @@ RSpec.describe EventCopier do
 
       it 'returns the correct report' do
         expected_report = {
-          failure_count: 0,
+          validation_failure_count: 0,
           success_count: 1,
-          errors: [],
+          dry_run: dry_run,
+          name_errors: Set.new,
+          name_error_count: 0,
+          validation_errors: [],
         }
 
         expect(service.call).to eq(expected_report)
@@ -99,9 +108,12 @@ RSpec.describe EventCopier do
 
       it 'returns the correct report' do
         expected_report = {
-          failure_count: 0,
+          validation_failure_count: 0,
           success_count: 1,
-          errors: [],
+          dry_run: dry_run,
+          name_errors: Set.new,
+          name_error_count: 0,
+          validation_errors: [],
         }
 
         expect(service.call).to eq(expected_report)
