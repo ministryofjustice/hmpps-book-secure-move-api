@@ -23,6 +23,8 @@ class Event < ApplicationRecord
   validates :details, presence: true
 
   scope :default_order, -> { order(client_timestamp: :asc) }
+  scope :copied, -> { where.not(generic_event_id: nil) }
+  scope :not_copied, -> { where(generic_event_id: nil) }
 
   serialize :details, HashWithIndifferentAccessSerializer
 
