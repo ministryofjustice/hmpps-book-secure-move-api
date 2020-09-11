@@ -44,6 +44,7 @@ RSpec.describe Api::JourneyEventsController do
       end
 
       it 'dual writes a journey lodging event' do
+        pending 'need to link generic events to the original event to enable debug/rollback behaviour'
         expect { do_post }.to change { GenericEvent::JourneyLodging.count }.by(1)
       end
     end
