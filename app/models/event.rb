@@ -16,6 +16,7 @@ class Event < ApplicationRecord
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
+  belongs_to :generic_event
 
   validates :eventable, presence: true
   validates :event_name, presence: true, inclusion: { in: EVENT_NAMES }

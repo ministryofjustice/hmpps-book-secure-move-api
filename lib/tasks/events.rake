@@ -5,18 +5,17 @@ namespace :events do
   task copy: :environment do
     dry_run = ENV.fetch('DRY_RUN', 'true') == 'true'
 
-    EventCopier.new.call
+    report = JSON.parse(EventCopier.new(dry_run: dry_run).call.to_json)
+
+    puts JSON.pretty_generate(report)
   end
 
   desc 'rollback copied events'
   task rollback: :environment do
-    dry_run = ENV.fetch('DRY_RUN', 'true') == 'true'
+    generic_event_ids = Event.copied.pluck(:generic_event_id)
 
-    GenericEvent.where(id: Event.copied.pluck(:generic_event_id)).delete_all
-  end
+    Event.copied.update_all(generic_event_id: nil)
 
-  desc 'report on copied events'
-  task report: :environment do
-    dry_run = ENV.fetch('DRY_RUN', 'true') == 'true'
+    GenericEvent.where(id: generic_event_ids).delete_all
   end
 end
