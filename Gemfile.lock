@@ -131,7 +131,7 @@ GEM
     faraday-http-cache (2.2.0)
       faraday (>= 0.8)
     ffi (1.13.1)
-    finite_machine (0.13.0)
+    finite_machine (0.14.0)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
     git (1.7.0)
