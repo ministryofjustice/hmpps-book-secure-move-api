@@ -47,7 +47,7 @@ private
       moves = moves.where(date: Time.zone.now + date_from_offset.days)
     else
       moves = moves.where('date >= ?', Time.zone.now + date_from_offset.days) if date_from_offset.present?
-      moves = moves.where('date =< ?', Time.zone.now + date_to_offset.days) if date_to_offset.present?
+      moves = moves.where('date <= ?', Time.zone.now + date_to_offset.days) if date_to_offset.present?
     end
     metric.observe(moves.count, status: status, supplier: supplier, date_from_offset: date_from_offset, date_to_offset: date_to_offset)
   end
