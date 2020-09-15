@@ -13,12 +13,21 @@ module Api
       ],
     ].freeze
 
+    BULK_PERMITTED_PARAMS = (%i[id] + PERMITTED_PARAMS).freeze
+
     rescue_from FrameworkResponse::ValueTypeError, with: :render_value_type_error
+    rescue_from FrameworkResponses::BulkUpdateError, with: :render_bulk_update_error
 
     def update
       framework_response.update_with_flags!(update_framework_response_attributes)
 
       render json: framework_response, status: :ok, include: included_relationships
+    end
+
+    def bulk_update
+      FrameworkResponses::BulkUpdater.new(person_escort_record, bulk_update_framework_response_values).call
+
+      render status: :no_content
     end
 
   private
@@ -31,12 +40,26 @@ module Api
       update_framework_response_params.to_h.dig(:attributes, :value)
     end
 
+    def bulk_update_framework_response_params
+      params.require(:data).map { |response| response.permit(BULK_PERMITTED_PARAMS) }
+    end
+
+    def bulk_update_framework_response_values
+      bulk_update_framework_response_params.each_with_object({}) do |response_params, hash|
+        hash[response_params['id']] = response_params.to_h.dig(:attributes, :value)
+      end
+    end
+
     def supported_relationships
       FrameworkResponseSerializer::SUPPORTED_RELATIONSHIPS
     end
 
     def framework_response
       @framework_response ||= FrameworkResponse.find(params[:id])
+    end
+
+    def person_escort_record
+      @person_escort_record ||= PersonEscortRecord.find(params[:id])
     end
 
     def render_value_type_error(exception)
@@ -46,6 +69,22 @@ module Api
           detail: "Value: #{exception.message} is incorrect type",
           source: { pointer: '/data/attributes/value' },
         }] },
+        status: :unprocessable_entity,
+      )
+    end
+
+    def render_bulk_update_error(exception)
+      errors = exception.errors.map do |id, error_message|
+        {
+          id: id,
+          title: 'Invalid value',
+          detail: error_message,
+          source: { pointer: '/data/attributes/value' },
+        }
+      end
+
+      render(
+        json: { errors: errors },
         status: :unprocessable_entity,
       )
     end
