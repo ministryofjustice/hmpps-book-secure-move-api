@@ -10,60 +10,45 @@ class MoveCollector < PrometheusExporter::Server::TypeCollector
   end
 
   def metrics
-    # All moves in any status
-    move_count = PrometheusExporter::Metric::Counter.new('move_count', 'Number of moves in the system')
-    move_count.observe(Move.count)
+    metric = PrometheusExporter::Metric::Gauge.new('move_gauge', 'Number of moves in the system')
 
-    # Moves by status
-    move_count_proposed = PrometheusExporter::Metric::Counter.new('move_count_proposed', 'Number of proposed moves in the system')
-    move_count_proposed.observe(Move.where(status: Move::MOVE_STATUS_PROPOSED).count)
+    statuses = [nil] + Move.statuses.values
+    suppliers = [nil] + Supplier.all
 
-    move_count_requested = PrometheusExporter::Metric::Counter.new('move_count_requested', 'Number of requested moves in the system')
-    move_count_requested.observe(Move.where(status: Move::MOVE_STATUS_REQUESTED).count)
+    statuses.each do |status|
+      suppliers.each do |supplier|
+        observe_moves_count_buckets(metric, status: status, supplier: supplier)
+      end
+    end
 
-    move_count_booked = PrometheusExporter::Metric::Counter.new('move_count_booked', 'Number of booked moves in the system')
-    move_count_booked.observe(Move.where(status: Move::MOVE_STATUS_BOOKED).count)
+    [metric]
+  end
 
-    move_count_in_transit = PrometheusExporter::Metric::Counter.new('move_count_in_transit', 'Number of in_transit moves in the system')
-    move_count_in_transit.observe(Move.where(status: Move::MOVE_STATUS_IN_TRANSIT).count)
+private
 
-    move_count_completed = PrometheusExporter::Metric::Counter.new('move_count_completed', 'Number of completed moves in the system')
-    move_count_completed.observe(Move.where(status: Move::MOVE_STATUS_COMPLETED).count)
+  def observe_moves_count_buckets(metric, status: nil, supplier: nil)
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: nil, date_to_offset: nil) # all time
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: nil, date_to_offset: 0) # the past
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: -29, date_to_offset: 0) # the past 30 days
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: -6, date_to_offset: 0) # the past week
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: -1, date_to_offset: -1) # yesterday
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: 0, date_to_offset: 0) # today
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: 1, date_to_offset: 1) # tomorrow
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: 0, date_to_offset: 6) # the next 7 days
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: 0, date_to_offset: 29) # the next 30 days
+    observe_moves_count(metric, status: status, supplier: supplier, date_from_offset: 0, date_to_offset: nil) # the future
+  end
 
-    move_count_cancelled = PrometheusExporter::Metric::Counter.new('move_count_cancelled', 'Number of cancelled moves in the system')
-    move_count_cancelled.observe(Move.where(status: Move::MOVE_STATUS_CANCELLED).count)
-
-    # Moves which are not cancelled scheduled for specific date ranges
-    move_count_today_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_today_not_cancelled', 'Number of moves in the system which were scheduled for today and were not cancelled')
-    move_count_today_not_cancelled.observe(Move.not_cancelled.where(date: Time.zone.today).count)
-
-    move_count_past_7_days_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_past_7_days_not_cancelled', 'Number of moves in the system which were scheduled for the past 7 days and were not cancelled')
-    move_count_past_7_days_not_cancelled.observe(Move.not_cancelled.where(date: (Time.zone.today - 6)..Time.zone.today).count)
-
-    move_count_past_30_days_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_past_30_days_not_cancelled', 'Number of moves in the system which were scheduled for the past 30 days and were not cancelled')
-    move_count_past_30_days_not_cancelled.observe(Move.not_cancelled.where(date: (Time.zone.today - 29)..Time.zone.today).count)
-
-    move_count_tomorrow_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_tomorrow_not_cancelled', 'Number of moves in the system which are scheduled for tomorrow and are not cancelled')
-    move_count_tomorrow_not_cancelled.observe(Move.not_cancelled.where(date: Time.zone.tomorrow).count)
-
-    move_count_next_7_days_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_next_7_days_not_cancelled', 'Number of moves in the system which are scheduled for the next 7 days and are not cancelled')
-    move_count_next_7_days_not_cancelled.observe(Move.not_cancelled.where(date: Time.zone.today..(Time.zone.today + 6)).count)
-
-    move_count_next_30_days_not_cancelled = PrometheusExporter::Metric::Counter.new('move_count_next_30_days_not_cancelled', 'Number of moves in the system which are scheduled for the next 30 days and are not cancelled')
-    move_count_next_30_days_not_cancelled.observe(Move.not_cancelled.where(date: Time.zone.today..(Time.zone.today + 29)).count)
-
-    [move_count,
-     move_count_proposed,
-     move_count_requested,
-     move_count_booked,
-     move_count_in_transit,
-     move_count_completed,
-     move_count_cancelled,
-     move_count_today_not_cancelled,
-     move_count_past_7_days_not_cancelled,
-     move_count_past_30_days_not_cancelled,
-     move_count_tomorrow_not_cancelled,
-     move_count_next_7_days_not_cancelled,
-     move_count_next_30_days_not_cancelled]
+  def observe_moves_count(metric, status: nil, supplier: nil, date_from_offset: nil, date_to_offset: nil)
+    moves = Move
+    moves = moves.where(supplier: supplier) if supplier.present?
+    moves = moves.where(status: status) if status.present?
+    if date_from_offset.present? && date_to_offset.present? && date_from_offset == date_to_offset
+      moves = moves.where(date: Time.zone.now + date_from_offset.days)
+    else
+      moves = moves.where('date >= ?', Time.zone.now + date_from_offset.days) if date_from_offset.present?
+      moves = moves.where('date =< ?', Time.zone.now + date_to_offset.days) if date_to_offset.present?
+    end
+    metric.observe(moves.count, status: status, supplier: supplier, date_from_offset: date_from_offset, date_to_offset: date_to_offset)
   end
 end
