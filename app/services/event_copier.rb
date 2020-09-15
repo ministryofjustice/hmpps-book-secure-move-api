@@ -1,4 +1,3 @@
-# rubocop:disable Rails/Output
 class EventCopier
   def initialize(dry_run:)
     @dry_run = dry_run
@@ -16,10 +15,10 @@ class EventCopier
     event_not_copied = Event.not_copied
     event_not_copied_count = event_not_copied.count
 
-    puts "Processing #{event_not_copied_count} events ..."
+    message "Processing #{event_not_copied_count} events ..."
 
     event_not_copied.find_each.each_with_index do |event, i|
-      puts "Processed #{i} / #{event_not_copied_count} ..." if (i % 500).zero?
+      message "Processed #{i} / #{event_not_copied_count} ..." if (i % 500).zero?
 
       generic_event = GenericEvent.from_event(event)
 
@@ -58,5 +57,10 @@ class EventCopier
     end
     @results
   end
+
+private
+
+  def message(text)
+    puts text unless Rails.env.test? # rubocop:disable Rails/Output
+  end
 end
-# rubocop:enable Rails/Output
