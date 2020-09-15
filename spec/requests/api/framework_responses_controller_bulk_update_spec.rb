@@ -61,77 +61,79 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(other_framework_response.framework_flags).to contain_exactly(other_flag)
       end
 
-      context 'when responses are strings' do
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq(value)
-          expect(other_framework_response.reload.value).to eq(other_value)
-        end
-      end
+      context 'when responses are combined' do
+        let(:string_response) { create(:string_response, person_escort_record: person_escort_record, value: 'No') }
+        let(:array_response) { create(:array_response, person_escort_record: person_escort_record) }
+        let(:object_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
+        let(:details_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
+        let(:multiple_items_response) { create(:collection_response, :multiple_items, framework_question: multiple_question, value: nil, person_escort_record: person_escort_record) }
 
-      context 'when responses are arrays' do
-        let(:framework_response) { create(:array_response, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:array_response, person_escort_record: person_escort_record) }
-        let(:value) { ['Level 1', 'Level 2'] }
-        let(:other_value) { ['Level 1'] }
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq(value)
-          expect(other_framework_response.reload.value).to eq(other_value)
-        end
-      end
-
-      context 'when responses are objects' do
-        let(:framework_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
-        let(:value) { { option: 'No', details: 'Some details' } }
-        let(:other_value) { { option: 'Yes', details: nil } }
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq(value.stringify_keys)
-          expect(other_framework_response.reload.value).to eq(other_value.stringify_keys)
-        end
-      end
-
-      context 'when responses are details collection' do
-        let(:framework_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
-        let(:value) { [{ option: 'Level 1', details: 'Some details' }, { option: 'Level 2', details: nil }] }
-        let(:other_value) { [{ option: 'Level 1', details: nil }, { option: 'Level 2', details: 'Some details' }] }
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq(value.map(&:stringify_keys))
-          expect(other_framework_response.reload.value).to eq(other_value.map(&:stringify_keys))
-        end
-      end
-
-      context 'when responses are multiple item collection' do
-        let(:framework_response) { create(:collection_response, :multiple_items, framework_question: question, value: nil, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:collection_response, :multiple_items, framework_question: question, value: nil, person_escort_record: person_escort_record) }
         let(:question1) { create(:framework_question) }
         let(:question2) { create(:framework_question, :checkbox) }
-        let(:question3) { create(:framework_question, :checkbox, followup_comment: true) }
-        let(:question4) { create(:framework_question, followup_comment: true) }
-        let(:question) { create(:framework_question, :add_multiple_items, dependents: [question1, question2, question3, question4]) }
-        let(:value) do
+        let(:multiple_question) { create(:framework_question, :add_multiple_items, dependents: [question1, question2]) }
+
+        let(:array_value) { ['Level 1', 'Level 2'] }
+        let(:object_value) { { 'option' => 'No', 'details' => 'Some details' } }
+        let(:details_value) { [{ 'option' => 'Level 1', 'details' => 'Some details' }, { 'option' => 'Level 2', 'details' => nil }] }
+        let(:multiple_items_value) do
           [
-            { item: 1, responses: [{ value: 'No', framework_question_id: question1.id }] },
-            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: question2.id }] },
-            { item: 3, responses: [{ value: [{ option: 'Level 1', details: 'some detail' }], framework_question_id: question3.id }] },
-            { item: 4, responses: [{ value: { option: 'No', details: 'some detail' }, framework_question_id: question4.id }] },
-          ]
-        end
-        let(:other_value) do
-          [
-            { item: 1, responses: [{ value: 'Yes', framework_question_id: question1.id }] },
-            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: question2.id }] },
-            { item: 3, responses: [{ value: [{ option: 'Level 1', details: nil }], framework_question_id: question3.id }] },
-            { item: 4, responses: [{ value: { option: 'Yes', details: nil }, framework_question_id: question4.id }] },
+            { 'item' => 1, 'responses' => [{ 'value' => 'No', 'framework_question_id' => question1.id }] },
+            { 'item' => 2, 'responses' => [{ 'value' => ['Level 2'], 'framework_question_id' => question2.id }] },
           ]
         end
 
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq(value.map(&:deep_stringify_keys))
-          expect(other_framework_response.reload.value).to eq(other_value.map(&:deep_stringify_keys))
+        let(:bulk_per_params) do
+          {
+            data: [
+              {
+                id: string_response.id,
+                type: 'framework_responses',
+                attributes: {
+                  value: value,
+                },
+              },
+              {
+                id: array_response.id,
+                type: 'framework_responses',
+                attributes: {
+                  value: array_value,
+                },
+              },
+              {
+                id: object_response.id,
+                type: 'framework_responses',
+                attributes: {
+                  value: object_value,
+                },
+              },
+              {
+                id: details_response.id,
+                type: 'framework_responses',
+                attributes: {
+                  value: details_value,
+                },
+              },
+              {
+                id: multiple_items_response.id,
+                type: 'framework_responses',
+                attributes: {
+                  value: multiple_items_value,
+                },
+              },
+            ],
+          }
+        end
+
+        it 'updates all response values' do
+          {
+            string_response => value,
+            array_response => array_value,
+            object_response => object_value,
+            details_response => details_value,
+            multiple_items_response => multiple_items_value,
+          }.each do |response, expected_value|
+            expect(response.reload.value).to eq(expected_value)
+          end
         end
       end
     end

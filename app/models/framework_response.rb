@@ -101,6 +101,8 @@ class FrameworkResponse < VersionedModel
     SQL
   end
 
+  private_class_method :update_dependent_responses!, :descendants_tree, :recursive_tree
+
 private
 
   def set_responded_value
