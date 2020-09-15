@@ -367,10 +367,10 @@ RSpec.describe FrameworkResponse do
       end
 
       it 'clears flags on dependent responses if value changed' do
-        parent_response = create(:collection_response, :details)
+        parent_response = create(:string_response)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, framework_flags: [create(:framework_flag)])
-        parent_response.update_with_flags!([option: 'Level 2'])
+        parent_response.update_with_flags!('No')
 
         expect(child_response.reload.framework_flags).to be_empty
       end

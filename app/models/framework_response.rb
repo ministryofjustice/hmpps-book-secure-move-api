@@ -25,7 +25,7 @@ class FrameworkResponse < VersionedModel
     ActiveRecord::Base.transaction do
       update!(value: new_value)
       rebuild_flags!
-      self.class.clear_dependent_values_and_flags!([self])
+      FrameworkResponse.clear_dependent_values_and_flags!([self])
 
       # lock the status update to avoid race condition on multiple response patches
       person_escort_record.with_lock do
@@ -55,7 +55,7 @@ class FrameworkResponse < VersionedModel
   end
 
   def self.clear_dependent_values_and_flags!(responses_to_update)
-    all_dependent_ids = where(id: responses_to_update.map(&:id)).includes(dependents: :framework_question).map do |response|
+    all_dependent_ids = FrameworkResponse.where(id: responses_to_update.map(&:id)).includes(dependents: :framework_question).map do |response|
       response.dependents.reject { |dependent| response.option_selected?(dependent.framework_question.dependent_value) }
     end
 
@@ -75,11 +75,13 @@ class FrameworkResponse < VersionedModel
       descendant
     end
 
-    import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
+    # Retain the class to avoid any clashes in implementation as this is utilising STI
+    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
   end
 
   def self.descendants_tree(ids)
-    where("framework_responses.id IN (#{recursive_tree})", ids)
+    # Retain the class to avoid any clashes in implementation as this is utilising STI
+    FrameworkResponse.where("framework_responses.id IN (#{recursive_tree})", ids)
   end
 
   def self.recursive_tree
