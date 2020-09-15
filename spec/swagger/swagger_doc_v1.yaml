@@ -2768,7 +2768,9 @@
           required: true
           description: __Array__ of framework_response objects to be modified
           schema:
-            "$ref": "../v1/patch_framework_response.yaml#/PatchFrameworkResponse"
+            type: array
+            items:
+              "$ref": "../v1/patch_framework_response.yaml#/PatchFrameworkResponse"
       responses:
         "204":
           description: no content

@@ -19,13 +19,12 @@ class FrameworkResponse < VersionedModel
 
   after_validation :set_responded_value, on: :update
 
-  def update_with_flags!(value)
-    ActiveRecord::Base.transaction do
-      self.value = value
-      return unless value_text_changed? || value_json_changed?
+  def update_with_flags!(new_value)
+    return unless value != new_value
 
-      rebuild_flags
-      save!
+    ActiveRecord::Base.transaction do
+      update!(value: new_value)
+      rebuild_flags!
       self.class.clear_dependent_values_and_flags!([self])
 
       # lock the status update to avoid race condition on multiple response patches
@@ -43,7 +42,7 @@ class FrameworkResponse < VersionedModel
     end
   end
 
-  def rebuild_flags
+  def rebuild_flags!
     self.framework_flags = framework_question.framework_flags.select { |flag| option_selected?(flag.question_value) }
   end
 
@@ -56,8 +55,8 @@ class FrameworkResponse < VersionedModel
   end
 
   def self.clear_dependent_values_and_flags!(responses_to_update)
-    all_dependent_ids = responses_to_update.map do |r|
-      r.dependents.includes(:framework_question, :parent).reject { |dependent| r.option_selected?(dependent.framework_question.dependent_value) }
+    all_dependent_ids = where(id: responses_to_update.map(&:id)).includes(dependents: :framework_question).map do |response|
+      response.dependents.reject { |dependent| response.option_selected?(dependent.framework_question.dependent_value) }
     end
 
     update_dependent_responses!(all_dependent_ids.flatten)

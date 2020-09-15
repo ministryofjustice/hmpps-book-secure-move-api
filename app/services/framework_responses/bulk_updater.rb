@@ -15,6 +15,8 @@ module FrameworkResponses
 
       raise BulkUpdateError.new(errors), 'Bulk update error' if errors.any?
 
+      return if updated_responses.empty?
+
       # Ensure atomic behaviour as we don't want partial inconsistent updates
       ActiveRecord::Base.transaction do
         apply_bulk_response_changes(updated_responses)
@@ -29,9 +31,12 @@ module FrameworkResponses
         validator = ActiveRecord::Import::Validator.new(FrameworkResponse)
 
         FrameworkResponse.includes(framework_question: %i[framework_flags]).where(person_escort_record: person_escort_record).find(response_values_hash.keys).each do |response|
-          response.value = response_values_hash[response.id]
+          new_value = response_values_hash[response.id]
+          next if response.value == new_value
+
+          response.value = new_value
           if validator.valid_model?(response)
-            updated_responses << response if response.changed?
+            updated_responses << response
           else
             errors[response.id] = response.errors.full_messages.first
           end
@@ -46,8 +51,7 @@ module FrameworkResponses
       FrameworkResponse.import(updated_responses, validate: false, on_duplicate_key_update: { conflict_target: [:id], columns: %i[value_text value_json responded] })
 
       # Update associated flags for all modified response values
-      updated_flags = updated_responses.each(&:rebuild_flags)
-      FrameworkResponse.import(updated_flags, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: { conflict_target: [:id] })
+      updated_responses.each(&:rebuild_flags!)
 
       # Clear dependent values for all modified response values
       FrameworkResponse.clear_dependent_values_and_flags!(updated_responses)

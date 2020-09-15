@@ -15,8 +15,8 @@ RSpec.describe Api::FrameworkResponsesController do
     let(:person_escort_record) { create(:person_escort_record, :in_progress) }
     let(:per_id) { person_escort_record.id }
 
-    let(:framework_response) { create(:string_response, person_escort_record: person_escort_record) }
-    let(:other_framework_response) { create(:string_response, person_escort_record: person_escort_record) }
+    let(:framework_response) { create(:string_response, person_escort_record: person_escort_record, value: 'No') }
+    let(:other_framework_response) { create(:string_response, person_escort_record: person_escort_record, value: 'Yes') }
     let(:framework_response_id) { framework_response.id }
     let(:other_framework_response_id) { other_framework_response.id }
 
@@ -132,55 +132,6 @@ RSpec.describe Api::FrameworkResponsesController do
         it 'updates response values' do
           expect(framework_response.reload.value).to eq(value.map(&:deep_stringify_keys))
           expect(other_framework_response.reload.value).to eq(other_value.map(&:deep_stringify_keys))
-        end
-      end
-
-      context 'when incorrect keys added to details collection responses' do
-        let(:framework_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
-        let(:value) { [{ option: 'Level 1', detailss: 'Some details' }] }
-        let(:other_value) { [{ option: 'Level 1', detailzz: 'Some details' }] }
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq([{ 'option' => 'Level 1', 'details' => nil }])
-          expect(other_framework_response.reload.value).to eq([{ 'option' => 'Level 1', 'details' => nil }])
-        end
-      end
-
-      context 'when incorrect keys added to multiple items collection responses' do
-        let(:framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
-        let(:framework_question) { framework_response.framework_question.dependents.first }
-        let(:other_framework_question) { other_framework_response.framework_question.dependents.first }
-
-        let(:value) do
-          [
-            { items: 1, responses: [{ value: ['Level 1'], framework_question_id: framework_question.id }] },
-            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: framework_question.id }] },
-          ]
-        end
-        let(:other_value) do
-          [
-            { items: 1, responses: [{ value: ['Level 1'], framework_question_id: other_framework_question.id }] },
-            { item: 2, responses: [{ value: ['Level 2'], framework_question_id: other_framework_question.id }] },
-          ]
-        end
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq([{ 'item' => 2, 'responses' => [{ 'value' => ['Level 2'], 'framework_question_id' => framework_question.id }] }])
-          expect(other_framework_response.reload.value).to eq([{ 'item' => 2, 'responses' => [{ 'value' => ['Level 2'], 'framework_question_id' => other_framework_question.id }] }])
-        end
-      end
-
-      context 'when incorrect keys added to object responses' do
-        let(:framework_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
-        let(:other_framework_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
-        let(:value) { { option: 'Yes', detailss: 'Some details' } }
-        let(:other_value) { { option: 'No', detailzz: 'Some details' } }
-
-        it 'updates response values' do
-          expect(framework_response.reload.value).to eq({ 'option' => 'Yes', 'details' => nil })
-          expect(other_framework_response.reload.value).to eq({ 'option' => 'No', 'details' => nil })
         end
       end
     end
