@@ -10,8 +10,6 @@ if ENV['COVERAGE']
     add_filter 'app/channels'
     # app doesn't send emails (yet)
     add_filter 'app/mailers/application_mailer.rb'
-    # Ignore Prometheus metrics
-    add_filter 'lib/prometheus/move_collector.rb'
 
     # The intention of this value is that it should never go down after a PR
     # It is a (very) naive attempt to prevent untested code entering the codebase

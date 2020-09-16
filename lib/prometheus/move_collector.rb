@@ -40,6 +40,7 @@ private
   end
 
   def observe_moves_count(metric, status: nil, supplier: nil, date_from_offset: nil, date_to_offset: nil)
+    # TODO: investigate how to move these queries to a read-only replica database
     moves = Move
     moves = moves.where(supplier: supplier) if supplier.present?
     moves = moves.where(status: status) if status.present?
