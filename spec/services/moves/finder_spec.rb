@@ -25,6 +25,37 @@ RSpec.describe Moves::Finder do
       end
     end
 
+    describe 'by location_id' do
+      let!(:shared_location) { create :location }
+      let!(:move) { create :move, from_location: shared_location }
+      let!(:second_move) { create :move, to_location: shared_location }
+
+      context 'with matching location filter' do
+        let(:filter_params) { { location_id: shared_location.id } }
+
+        it 'returns moves matching from location or to location' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with two location filters' do
+        let!(:third_move) { create :move }
+        let(:filter_params) { { location_id: [shared_location.id, third_move.from_location_id] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move, third_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { location_id: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
     describe 'by from_location_id' do
       let!(:move) { create :move }
 
@@ -32,7 +63,7 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { from_location_id: [move.from_location_id] } }
 
         it 'returns moves matching from location' do
-          expect(results).to match_array [move]
+          expect(results).to contain_exactly(move)
         end
       end
 
@@ -41,12 +72,41 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
 
         it 'returns moves matching multiple locations' do
-          expect(results).to match_array [move, second_move]
+          expect(results).to contain_exactly(move, second_move)
         end
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { from_location_id: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by to_location_id' do
+      let!(:move) { create :move }
+
+      context 'with matching location filter' do
+        let(:filter_params) { { to_location_id: [move.to_location_id] } }
+
+        it 'returns moves matching from location' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two location filters' do
+        let!(:second_move) { create :from_prison_to_court }
+        let(:filter_params) { { to_location_id: [move.to_location_id, second_move.to_location_id] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { to_location_id: Random.uuid } }
 
         it 'returns empty results set' do
           expect(results).to be_empty
