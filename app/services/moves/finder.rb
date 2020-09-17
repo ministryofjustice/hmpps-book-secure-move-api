@@ -48,11 +48,10 @@ module Moves
       scope = apply_date_range_filters(scope)
       scope = apply_date_of_birth_filters(scope)
       scope = apply_location_type_filters(scope)
+      scope = apply_location_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
       scope = apply_filter(scope, :supplier_id)
-      scope = apply_filter(scope, :from_location_id)
-      scope = apply_filter(scope, :to_location_id)
       scope = apply_filter(scope, :status)
       scope = apply_filter(scope, :move_type)
       scope = apply_filter(scope, :cancellation_reason)
@@ -60,9 +59,13 @@ module Moves
       scope
     end
 
+    def split_params(name)
+      filter_params[name]&.split(',')
+    end
+
     def apply_filter(scope, param_name)
       if filter_params.key?(param_name)
-        scope.where(param_name => filter_params[param_name]&.split(','))
+        scope.where(param_name => split_params(param_name))
       else
         scope
       end
@@ -93,6 +96,13 @@ module Moves
       scope
         .joins(:to_location)
         .where(locations: { location_type: filter_params[:location_type] })
+    end
+
+    def apply_location_filters(scope)
+      scope = scope.where(from_location_id: split_params(:from_location_id)) if filter_params.key?(:from_location_id)
+      scope = scope.where(to_location_id: split_params(:to_location_id)) if filter_params.key?(:to_location_id)
+      scope = scope.where(from_location_id: split_params(:location_id)).or(scope.where(to_location_id: split_params(:location_id))) if filter_params.key?(:location_id)
+      scope
     end
 
     def apply_allocation_relationship_filters(scope)
