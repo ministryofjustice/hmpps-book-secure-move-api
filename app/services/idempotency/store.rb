@@ -36,10 +36,10 @@ module Idempotency
       return if @idempotency_key.blank?
 
       # cache the response for a short time
-      Rails.cache.write(cache_response_key, response, expiry: CACHE_RESPONSE_TTL)
+      Rails.cache.write(cache_response_key, response, expires_in: CACHE_RESPONSE_TTL)
 
       # set conflict flag for a longer time
-      Rails.cache.write(conflict_key, 1, expiry: CONFLICT_TTL)
+      Rails.cache.write(conflict_key, 1, expires_in: CONFLICT_TTL)
     end
   end
 end

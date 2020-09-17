@@ -40,7 +40,7 @@ RSpec.describe Idempotency::Store do
   describe 'read' do
     context 'when cached response exists' do
       before do
-        Rails.cache.write(cache_response_key, response, expiry: 10.seconds)
+        Rails.cache.write(cache_response_key, response, expires_in: 10.seconds)
       end
 
       it 'returns the cached response' do
@@ -50,7 +50,7 @@ RSpec.describe Idempotency::Store do
 
     context 'when the conflict key exists' do
       before do
-        Rails.cache.write(conflict_key, 1, expiry: 10.seconds)
+        Rails.cache.write(conflict_key, 1, expires_in: 10.seconds)
       end
 
       it 'raises a conflict error' do
