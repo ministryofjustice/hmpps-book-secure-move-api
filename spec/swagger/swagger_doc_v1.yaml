@@ -1180,7 +1180,9 @@
     post:
       summary: Records a lockout against a move
       description: |
-        Recording a lockout event does not change the moves status. After recording the lockout, the move should be *redirected* to a new location.
+        Recording a lockout event does not change the moves status. After recording the lockout, if (with the agreement
+        of the Authority) the move has a new final destination, then the move should be *redirected* to the new
+        destination. If the final destination is unaltered, then the move should not be redirected.
 
         Move events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to
         complete or cancel existing journeys.
