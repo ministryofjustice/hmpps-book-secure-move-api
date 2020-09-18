@@ -5,12 +5,7 @@ require 'rails_helper'
 RSpec.describe EventLog::MoveExecutor do
   subject(:move_executor) { described_class.new(move) }
 
-  # let!(:move) { create(:move, :requested, to_location: original_location) }
-  # let(:original_location) { create(:location) }
-
   before do
-    # create :supplier_location, supplier: move.supplier, location: move.from_location
-
     allow(Notifier).to receive(:prepare_notifications)
   end
 
@@ -153,21 +148,30 @@ RSpec.describe EventLog::MoveExecutor do
   end
 
   context 'when event_name=approve' do
-    let!(:event) { create(:event_move_approve, eventable: move) }
+    let!(:event) { create(:event_move_approve, eventable: move, details: details) }
+
+    let(:today) { Date.today }
+
+    let!(:move) { create(:move, :proposed, date: today) }
+
+    let(:details) do
+      {
+        date: today + 1.day,
+        create_in_nomis: false,
+      }
+    end
 
     before do
       allow(Allocations::CreateInNomis).to receive(:call)
     end
 
     context 'when the move is proposed' do
-      let!(:move) { create(:move, :proposed, date: Date.today) }
-
       it 'updates the move status to requested' do
         expect { move_executor.call }.to change(move, :status).from('proposed').to('requested')
       end
 
       it 'updates the move date' do
-        expect { move_executor.call }.to change(move, :date).from(Date.today).to(Date.tomorrow)
+        expect { move_executor.call }.to change(move, :date).from(today).to(today + 1.day)
       end
 
       it 'does not create a prison transfer event in Nomis' do
@@ -177,5 +181,156 @@ RSpec.describe EventLog::MoveExecutor do
 
       it_behaves_like 'it calls the Notifier with an update_status action_name'
     end
+
+    context 'when the move is already requested' do
+      let!(:move) { create(:move, :requested, date: today + 1.day) }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { move_executor.call }.not_to change(move, :status).from('requested')
+      end
+    end
+
+    context 'when creating in nomis is requested' do
+      let(:details) do
+        {
+          date: today + 1.day,
+          create_in_nomis: true,
+        }
+      end
+
+      it 'creates a prison transfer event in Nomis' do
+        move_executor.call
+        expect(Allocations::CreateInNomis).to have_received(:call).with(move)
+      end
+    end
+  end
+
+  context 'when event_name=accept' do
+    let!(:event) { create(:event_move_accept, eventable: move) }
+
+    context 'when the move is requested' do
+      let!(:move) { create(:move, :requested) }
+
+      it 'updates the move status to booked' do
+        expect { move_executor.call }.to change(move, :status).from('requested').to('booked')
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already booked' do
+      let!(:move) { create(:move, :booked) }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { move_executor.call }.not_to change(move, :status).from('booked')
+      end
+    end
+  end
+
+  context 'when event_name=reject' do
+    let(:move) { create(:move, :requested) }
+    let!(:event) { create(:event_move_reject, eventable: move) }
+
+    context 'when the move is requested' do
+      it 'updates the move status to cancelled' do
+        expect { move_executor.call }.to change(move, :status).from('requested').to('cancelled')
+      end
+
+      it 'updates the move rejection_reason' do
+        expect { move_executor.call }.to change(move, :rejection_reason).from(nil).to(event.details['rejection_reason'])
+      end
+
+      it 'updates the move cancellation_reason' do
+        expect { move_executor.call }.to change(move, :cancellation_reason).from(nil).to('rejected')
+      end
+
+      it 'updates the move cancellation_reason_comment' do
+        expect { move_executor.call }.to change(move, :cancellation_reason_comment).from(nil).to(event.details['cancellation_reason_comment'])
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when a rebook is requested' do
+      let!(:event) do
+        create(:event_move_reject, eventable: move,
+                                   details: {
+                                     rejection_reason: 'no_space_at_receiving_prison',
+                                     rebook: true,
+                                   })
+      end
+
+      it 'creates a new move' do
+        expect { move_executor.call }.to change(Move, :count).by(1)
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already rejected' do
+      let!(:move) { create(:move, :cancelled, rejection_reason: 'no_space_at_receiving_prison', cancellation_reason: 'rejected', cancellation_reason_comment: 'It was a mistake') }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { move_executor.call }.not_to change(move, :status).from('cancelled')
+      end
+    end
+  end
+
+  context 'when event_name=complete' do
+    let!(:event) { create(:event_move_complete, eventable: move) }
+    let(:move) { create(:move, :requested) }
+
+    context 'when the move is requested' do
+      it 'updates the move status to completed' do
+        expect { move_executor.call }.to change(move, :status).from('requested').to('completed')
+      end
+
+      it_behaves_like 'it calls the Notifier with an update_status action_name'
+    end
+
+    context 'when the move is already completed' do
+      let!(:move) { create(:move, :completed) }
+
+      it_behaves_like 'it does not call the Notifier'
+
+      it 'does not change the move status' do
+        expect { move_executor.call }.not_to change(move, :status).from('completed')
+      end
+    end
+  end
+
+  context 'when event_name=lockout' do
+    # NB: lockout events have should have no effect on a move, they are purely for auditing
+    let!(:event) { create(:event_move_lockout, eventable: move) }
+    let(:move) { create(:move) }
+
+    it 'does not update the move status' do
+      expect { move_executor.call }.not_to change(move, :status).from('requested')
+    end
+
+    it_behaves_like 'it does not call the Notifier'
+  end
+
+  context 'when the move record fails to save' do
+    let!(:event) do
+      create(:event_move_cancel, eventable: move,
+                                 details: {
+                                   cancellation_reason: 'made_in_error',
+                                   rebook: 'It was a mistake',
+                                 })
+    end
+    let(:move) { create(:move) }
+
+    before do
+      allow(move).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+    end
+
+    it_behaves_like 'it does not call the Notifier'
   end
 end
