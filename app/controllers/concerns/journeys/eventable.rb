@@ -33,7 +33,7 @@ module Journeys
     end
 
     def run_event_logs(journey)
-      EventLog::JourneyRunner.new(journey).call
+      EventLog::JourneyExecutor.new(journey).call
     end
   end
 end
