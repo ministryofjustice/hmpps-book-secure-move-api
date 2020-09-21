@@ -14,12 +14,24 @@ class GenericEvent < ApplicationRecord
     details
   ].freeze
 
-  STI_CLASSES = Dir['app/models/generic_event/*'].map { |file|
-    file
-      .gsub('app/models/generic_event/', '')
-      .sub('.rb', '')
-      .camelcase
-  }.freeze
+  STI_CLASSES = %w[
+    JourneyCancel
+    JourneyComplete
+    JourneyLockout
+    JourneyLodging
+    JourneyReject
+    JourneyStart
+    JourneyUncancel
+    JourneyUncomplete
+    MoveAccept
+    MoveApprove
+    MoveCancel
+    MoveComplete
+    MoveLockout
+    MoveRedirect
+    MoveReject
+    MoveStart
+  ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
 

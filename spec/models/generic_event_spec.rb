@@ -26,6 +26,17 @@ RSpec.describe GenericEvent, type: :model do
     expect { create(:event_move_cancel, eventable: eventable) }.to change { eventable.reload.updated_at }
   end
 
+  it 'defines the correct STI classes for validation' do
+    expected_sti_classes = Dir['app/models/generic_event/*'].map { |file|
+      file
+        .gsub('app/models/generic_event/', '')
+        .sub('.rb', '')
+        .camelcase
+    }.freeze
+
+    expect(described_class::STI_CLASSES).to match_array(expected_sti_classes)
+  end
+
   describe '#trigger' do
     subject(:generic_event) { create(:event_move_cancel) }
 
