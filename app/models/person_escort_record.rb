@@ -1,6 +1,8 @@
 class PersonEscortRecord < VersionedModel
   include StateMachineable
 
+  # "not_started" cannot be used as the name of the enum due to warnings in the model
+  # that it starts with a "not_".
   PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
   PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
   PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze

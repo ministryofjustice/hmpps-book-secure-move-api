@@ -12,7 +12,14 @@ class EventCopier
   end
 
   def call
-    Event.not_copied.find_each do |event|
+    event_not_copied = Event.not_copied
+    event_not_copied_count = event_not_copied.count
+
+    message "Processing #{event_not_copied_count} events ..."
+
+    event_not_copied.find_each.each_with_index do |event, i|
+      message "Processed #{i} / #{event_not_copied_count} ..." if (i % 500).zero?
+
       generic_event = GenericEvent.from_event(event)
 
       if @dry_run
@@ -48,7 +55,12 @@ class EventCopier
       @results[:name_error_count] += 1
       @results[:name_errors] << missing_event
     end
-
     @results
+  end
+
+private
+
+  def message(text)
+    puts text unless Rails.env.test? # rubocop:disable Rails/Output
   end
 end
