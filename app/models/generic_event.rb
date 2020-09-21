@@ -13,8 +13,8 @@ class GenericEvent < ApplicationRecord
     eventable_type
     details
   ].freeze
+
   STI_CLASSES = %w[
-    MoveCancel
     JourneyCancel
     JourneyComplete
     JourneyLockout
@@ -23,6 +23,14 @@ class GenericEvent < ApplicationRecord
     JourneyStart
     JourneyUncancel
     JourneyUncomplete
+    MoveAccept
+    MoveApprove
+    MoveCancel
+    MoveComplete
+    MoveLockout
+    MoveRedirect
+    MoveReject
+    MoveStart
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
