@@ -14,7 +14,14 @@ class GenericEvent < ApplicationRecord
     details
   ].freeze
   STI_CLASSES = %w[
+    MoveAccept
+    MoveApprove
     MoveCancel
+    MoveComplete
+    MoveLockout
+    MoveRedirect
+    MoveReject
+    MoveStart
     JourneyCancel
     JourneyComplete
     JourneyLockout
