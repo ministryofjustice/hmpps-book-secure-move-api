@@ -23,11 +23,5 @@ module EventLog
         false
       end
     end
-
-  private
-
-    def events
-      move.move_events.default_order
-    end
   end
 end

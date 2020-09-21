@@ -37,6 +37,7 @@ class Journey < ApplicationRecord
   belongs_to :to_location, class_name: 'Location'
 
   has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
+  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   enum states: {
     proposed: 'proposed',
