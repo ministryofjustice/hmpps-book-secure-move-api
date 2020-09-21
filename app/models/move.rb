@@ -90,7 +90,7 @@ class Move < VersionedModel
   validates :move_type, inclusion: { in: move_types }
   validates_with Moves::MoveTypeValidator
 
-  validates :profile, presence: true, unless: -> { requested? || cancelled? }
+  validates :profile, presence: true, if: -> { proposed? || in_transit? || completed? }
   validates :reference, presence: true
 
   validate :validate_move_uniqueness, unless: -> { proposed? || cancelled? || profile_id.nil? }

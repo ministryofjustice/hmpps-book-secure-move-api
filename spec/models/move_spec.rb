@@ -77,7 +77,7 @@ RSpec.describe Move do
     )
   end
 
-  it 'validates presence of `profile` if `status` is NOT requested or cancelled' do
+  it 'validates presence of `profile` if `status` is proposed' do
     expect(build(:move, :proposed)).to(
       validate_presence_of(:profile),
     )
@@ -89,14 +89,20 @@ RSpec.describe Move do
     )
   end
 
-  it 'validates presence of `profile` if `status` is booked' do
-    expect(build(:move, :booked)).to(
+  it 'does NOT validate presence of `profile` if `status` is booked' do
+    expect(build(:move, :booked)).not_to(
       validate_presence_of(:profile),
     )
   end
 
   it 'validates presence of `profile` if `status` is in_transit' do
     expect(build(:move, :in_transit)).to(
+      validate_presence_of(:profile),
+    )
+  end
+
+  it 'validates presence of `profile` if `status` is completed' do
+    expect(build(:move, :completed)).to(
       validate_presence_of(:profile),
     )
   end
