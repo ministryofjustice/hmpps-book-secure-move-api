@@ -16,4 +16,3 @@ module EventLog
     end
   end
 end
-
