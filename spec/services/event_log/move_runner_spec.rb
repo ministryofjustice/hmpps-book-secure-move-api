@@ -105,7 +105,7 @@ RSpec.describe EventLog::MoveRunner do
       end
 
       it 'updates the move cancellation_reason_comment' do
-        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
+        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('It was a mistake')
       end
 
       it 'removes prison transfer event from Nomis' do
@@ -117,7 +117,7 @@ RSpec.describe EventLog::MoveRunner do
     end
 
     context 'when the move is already cancelled' do
-      let!(:move) { create(:move, :cancelled, cancellation_reason: 'supplier_declined_to_move', cancellation_reason_comment: 'computer says no') }
+      let!(:move) { create(:move, :cancelled, cancellation_reason: 'supplier_declined_to_move', cancellation_reason_comment: 'It was a mistake') }
 
       it_behaves_like 'it does not call the Notifier'
 
@@ -238,7 +238,7 @@ RSpec.describe EventLog::MoveRunner do
       end
 
       it 'updates the move cancellation_reason_comment' do
-        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('computer says no')
+        expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('It was a mistake')
       end
 
       it_behaves_like 'it calls the Notifier with an update_status action_name'
@@ -255,7 +255,7 @@ RSpec.describe EventLog::MoveRunner do
     end
 
     context 'when the move is already rejected' do
-      let!(:move) { create(:move, :cancelled, rejection_reason: 'no_transport_available', cancellation_reason: 'rejected', cancellation_reason_comment: 'computer says no') }
+      let!(:move) { create(:move, :cancelled, rejection_reason: 'no_transport_available', cancellation_reason: 'rejected', cancellation_reason_comment: 'It was a mistake') }
 
       it_behaves_like 'it does not call the Notifier'
 
