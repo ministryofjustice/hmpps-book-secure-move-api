@@ -5,8 +5,8 @@ RSpec.describe Feeds::Event do
   let(:updated_at_to) { Time.zone.now.end_of_day - 1.day }
 
   describe '#call' do
-    let!(:on_start_event) { create(:event, updated_at: updated_at_from) }
-    let!(:on_end_event) { create(:event, updated_at: updated_at_to) }
+    let!(:on_start_event) { create(:event_move_cancel, updated_at: updated_at_from) }
+    let!(:on_end_event) { create(:event_journey_cancel, updated_at: updated_at_to) }
 
     let(:expected_json) do
       [on_start_event, on_end_event].sort_by(&:id).map { |event| JSON.parse(event.for_feed.to_json) }

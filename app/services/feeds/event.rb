@@ -8,7 +8,7 @@ module Feeds
     end
 
     def call
-      ::Event.includes(:eventable).updated_at_range(@updated_at_from, @updated_at_to).find_each do |event|
+      ::GenericEvent.includes(:eventable).updated_at_range(@updated_at_from, @updated_at_to).find_each do |event|
         @feed << event.for_feed.to_json
       end
 
