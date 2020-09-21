@@ -1,5 +1,23 @@
 # Changelog
 
+## [v2.4.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.3) (2020-09-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.2...v2.4.3)
+
+**Merged pull requests:**
+
+- Use correct key in setting expiry for keys in cache [\#937](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/937) ([cwrw](https://github.com/cwrw))
+- Add comment to explain enum usage for unstarted and fix test [\#935](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/935) ([cwrw](https://github.com/cwrw))
+- Explicitly define the FrameworkResponse class in class methods [\#933](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/933) ([cwrw](https://github.com/cwrw))
+- Avoid noisy test output [\#932](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/932) ([smoothcontract](https://github.com/smoothcontract))
+- Add some console log to event copier [\#930](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/930) ([alexdesi](https://github.com/alexdesi))
+- \[P4-2162\] Copy events rake task [\#928](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/928) ([willfish](https://github.com/willfish))
+- \[P4-2161\] Dual write events [\#927](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/927) ([willfish](https://github.com/willfish))
+- Remove any repeat nested includes to avoid circular loading [\#926](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/926) ([cwrw](https://github.com/cwrw))
+- 2.4.2 changelog [\#925](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/925) ([willfish](https://github.com/willfish))
+- Add new endpoint for bulk update of PER framework responses [\#921](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/921) ([smoothcontract](https://github.com/smoothcontract))
+- P4 2161 dual write events [\#920](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/920) ([alexdesi](https://github.com/alexdesi))
+
 ## [v2.4.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.2) (2020-09-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.1...v2.4.2)

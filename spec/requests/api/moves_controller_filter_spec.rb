@@ -38,10 +38,28 @@ RSpec.describe Api::MovesController do
       it_behaves_like 'an api that filters moves correctly'
     end
 
+    describe 'by location_id' do
+      let(:filter_params) { { filter: { location_id: location.id } } }
+      let(:location) { create :location }
+      let(:expected_moves) { create_list(:move, 1, from_location: location) + create_list(:move, 1, to_location: location) }
+      let(:unexpected_moves) { create_list :move, 1 }
+
+      it_behaves_like 'an api that filters moves correctly'
+    end
+
     describe 'by from_location_id' do
       let(:filter_params) { { filter: { from_location_id: location.id } } }
       let(:location) { create :location }
       let(:expected_moves) { create_list :move, 1, from_location: location }
+      let(:unexpected_moves) { create_list :move, 1 }
+
+      it_behaves_like 'an api that filters moves correctly'
+    end
+
+    describe 'by to_location_id' do
+      let(:filter_params) { { filter: { to_location_id: location.id } } }
+      let(:location) { create :location }
+      let(:expected_moves) { create_list :move, 1, to_location: location }
       let(:unexpected_moves) { create_list :move, 1 }
 
       it_behaves_like 'an api that filters moves correctly'
