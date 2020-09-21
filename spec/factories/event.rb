@@ -98,7 +98,7 @@ FactoryBot.define do
           { event_params: {
             attributes: {
               cancellation_reason: 'supplier_declined_to_move',
-              cancellation_reason_comment: 'computer says no',
+              cancellation_reason_comment: 'It was a mistake',
             },
           } }
         end
@@ -145,7 +145,7 @@ FactoryBot.define do
           { event_params: {
             attributes: {
               rejection_reason: 'no_transport_available',
-              cancellation_reason_comment: 'computer says no',
+              cancellation_reason_comment: 'It was a mistake',
             },
           } }
         end
@@ -157,7 +157,7 @@ FactoryBot.define do
           { event_params: {
             attributes: {
               rejection_reason: 'no_transport_available',
-              cancellation_reason_comment: 'computer says no',
+              cancellation_reason_comment: 'It was a mistake',
               rebook: true,
             },
           } }
