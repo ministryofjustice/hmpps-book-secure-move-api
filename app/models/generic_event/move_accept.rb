@@ -1,8 +1,6 @@
 class GenericEvent
   class MoveAccept < GenericEvent
-    EVENTABLE_TYPES = %w[Move].freeze
-
-    validates :eventable_type, inclusion: { in: EVENTABLE_TYPES }
+    include MoveEventValidations
 
     def trigger
       eventable.status = Move::MOVE_STATUS_BOOKED
