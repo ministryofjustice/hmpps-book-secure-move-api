@@ -6,7 +6,7 @@ module EventLog
       @move = move
     end
 
-    # Process events in order of client_timestamp
+    # Process events in order of occurred_at
     def call
       # iterate over all events in the log and apply changes to the move
 

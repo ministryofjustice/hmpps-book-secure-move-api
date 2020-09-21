@@ -11,7 +11,7 @@ module EventLog
       journey.generic_events.applied_order.each(&:trigger)
 
       if journey.changed? && journey.valid?
-        journey.save!
+        journey.save
       end
     end
   end
