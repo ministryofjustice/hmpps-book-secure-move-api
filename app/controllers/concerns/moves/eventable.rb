@@ -34,7 +34,7 @@ module Moves
     end
 
     def run_event_logs(move)
-      EventLog::MoveRunner.new(move).call
+      EventLog::MoveExecutor.new(move).call
     end
   end
 end
