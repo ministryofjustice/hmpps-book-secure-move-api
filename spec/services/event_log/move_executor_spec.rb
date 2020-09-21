@@ -38,10 +38,10 @@ RSpec.describe EventLog::MoveExecutor do
   end
 
   context 'when event_name=start' do
+    let!(:event) { create(:event_move_start, eventable: move) }
+
     context 'when the move is booked' do
       let(:move) { create(:move, :booked) }
-
-      let!(:event) { create(:event_move_start, eventable: move) }
 
       it 'updates the move status to in_transit' do
         expect { move_executor.call }.to change(move, :status).from('booked').to('in_transit')
@@ -52,8 +52,6 @@ RSpec.describe EventLog::MoveExecutor do
 
     context 'when the move is already in_transit' do
       let!(:move) { create(:move, :in_transit) }
-
-      it_behaves_like 'it does not call the Notifier'
 
       it 'does not change the move status' do
         expect { move_executor.call }.not_to change(move, :status).from('in_transit')
@@ -329,6 +327,15 @@ RSpec.describe EventLog::MoveExecutor do
 
     before do
       allow(move).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+    end
+
+    it 'does not update the move status' do
+      begin
+        move_executor.call # this raises a validation error
+      rescue ActiveRecord::RecordInvalid
+        nil
+      end
+      expect(move.reload.status).to eql('requested')
     end
 
     it_behaves_like 'it does not call the Notifier'
