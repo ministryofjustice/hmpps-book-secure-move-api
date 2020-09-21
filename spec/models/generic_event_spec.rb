@@ -63,13 +63,4 @@ RSpec.describe GenericEvent, type: :model do
       expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
     end
   end
-
-  context 'when an sti gets defined and missed from the validated STI_CLASSES list' do
-    it 'propagates a NotImplementedError' do
-      class MoveFoo < described_class
-      end
-    rescue NotImplementedError => e
-      expect(e.message).to eq('Missing MoveFoo event class in GenericEvent::STI_CLASSES')
-    end
-  end
 end

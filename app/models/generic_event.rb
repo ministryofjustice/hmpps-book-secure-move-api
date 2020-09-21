@@ -14,24 +14,12 @@ class GenericEvent < ApplicationRecord
     details
   ].freeze
 
-  STI_CLASSES = %w[
-    MoveAccept
-    MoveApprove
-    MoveCancel
-    MoveComplete
-    MoveLockout
-    MoveRedirect
-    MoveReject
-    MoveStart
-    JourneyCancel
-    JourneyComplete
-    JourneyLockout
-    JourneyLodging
-    JourneyReject
-    JourneyStart
-    JourneyUncancel
-    JourneyUncomplete
-  ].freeze
+  STI_CLASSES = Dir['app/models/generic_event/*'].map { |file|
+    file
+      .gsub('app/models/generic_event/', '')
+      .sub('.rb', '')
+      .camelcase
+  }.freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
 
@@ -59,13 +47,5 @@ class GenericEvent < ApplicationRecord
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
     type.constantize.from_event(event)
-  end
-
-  def self.inherited(subclass)
-    super
-
-    subclass_type = subclass.to_s.split('::').last
-
-    raise NotImplementedError, "Missing #{subclass_type} event class in GenericEvent::STI_CLASSES" unless STI_CLASSES.include?(subclass_type)
   end
 end
