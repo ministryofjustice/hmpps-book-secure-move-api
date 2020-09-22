@@ -5,7 +5,10 @@ RSpec.describe GenericEvent::JourneyUpdate do
 
   describe '.from_event' do
     let(:journey) { create(:journey) }
-    let(:event) { create(:event, :update, eventable: journey) }
+    let(:event) { create(:event, :update, eventable: journey, details: details) }
+    let(:details) do
+      { event_params: { attributes: { notes: 'baz' } } }
+    end
 
     let(:expected_generic_event_attributes) do
       {
@@ -13,9 +16,9 @@ RSpec.describe GenericEvent::JourneyUpdate do
         'eventable_id' => journey.id,
         'eventable_type' => 'Journey',
         'type' => 'GenericEvent::JourneyUpdate',
-        'notes' => 'foo',
+        'notes' => 'baz',
         'created_by' => 'unknown',
-        'details' => {},
+        'details' => details,
         'occurred_at' => eq(event.client_timestamp),
         'recorded_at' => eq(event.client_timestamp),
         'created_at' => be_within(0.1.seconds).of(event.created_at),
