@@ -146,8 +146,6 @@ module Api
         },
       )
       create_generic_event(event)
-
-      event
     end
 
     def create_generic_event(event)
