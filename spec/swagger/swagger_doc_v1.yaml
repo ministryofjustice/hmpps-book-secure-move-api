@@ -1318,11 +1318,11 @@
   "/moves/{move_id}/start":
     post:
       summary: Starts a move
-      description:
-        "Starting a move will change the move status from `booked`
-        to `in_transit`.
+      description: |
+        Starting a move will change the move status from `booked` to `in_transit`.
 
-        "
+        A move should only be started when the Escorting Escort Vehicle is loaded and ready for exit from the Designated
+        Location.
       tags:
         - Moves
       consumes:
@@ -1339,6 +1339,9 @@
             ### Starting a Move
 
             Starting a move will change the move status from `booked` to `in_transit`.
+
+            A move should only be started when the Escorting Escort Vehicle is loaded and ready for exit from the
+            Designated Location.
           schema:
             "$ref": "../v1/post_move_start.yaml#/PostMoveStart"
       responses:
