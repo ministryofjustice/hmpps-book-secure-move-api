@@ -4,6 +4,10 @@ require 'rails_helper'
 
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
+    subject(:do_post) do
+      post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers: headers, as: :json
+    end
+
     include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
@@ -40,10 +44,6 @@ RSpec.describe Api::JourneysController do
       }
     end
 
-    before do
-      post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers: headers, as: :json
-    end
-
     context 'when successful' do
       let(:application) { create(:application, owner: supplier) }
       let(:access_token) { create(:access_token, application: application).token }
@@ -75,10 +75,23 @@ RSpec.describe Api::JourneysController do
         }
       end
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before do
+          do_post
+        end
+      end
 
       it 'returns the correct data' do
+        do_post
         expect(response_json).to include_json(data: data)
+      end
+
+      it 'creates a `create` event' do
+        expect { do_post }.to change { Event.where(event_name: 'create', eventable_type: 'Journey').count }.by(1)
+      end
+
+      it 'creates a JourneyCreate generic event' do
+        expect { do_post }.to change(GenericEvent::JourneyCreate, :count).by(1)
       end
     end
 
@@ -88,13 +101,21 @@ RSpec.describe Api::JourneysController do
       context 'with a bad request' do
         let(:journey_params) { nil }
 
-        it_behaves_like 'an endpoint that responds with error 400'
+        it_behaves_like 'an endpoint that responds with error 400' do
+          before do
+            do_post
+          end
+        end
       end
 
       context 'with an invalid timestamp' do
         let(:timestamp) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
+          before do
+            do_post
+          end
+
           let(:errors_422) do
             [{ 'title' => 'Invalid timestamp',
                'detail' => 'Validation failed: Timestamp must be formatted as a valid ISO-8601 date-time' }]
@@ -106,6 +127,10 @@ RSpec.describe Api::JourneysController do
         let(:billable) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
+          before do
+            do_post
+          end
+
           let(:errors_422) do
             [{ 'title' => 'Invalid billable',
                'detail' => 'Validation failed: Billable is not included in the list' }]
@@ -117,13 +142,21 @@ RSpec.describe Api::JourneysController do
         let(:move_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
-        it_behaves_like 'an endpoint that responds with error 404'
+        it_behaves_like 'an endpoint that responds with error 404' do
+          before do
+            do_post
+          end
+        end
       end
 
       context 'with a reference to a missing relationship' do
         let(:to_location_id) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
+          before do
+            do_post
+          end
+
           let(:errors_422) do
             [{ 'title' => 'Invalid location',
                'detail' => 'Validation failed: Location reference was not found id=foo-bar' }]
