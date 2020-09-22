@@ -18,23 +18,23 @@ RSpec.describe PersonEscortRecordCollector do
   end
 
   it 'PER count for all statuses' do
-    expect(metric[{ status: nil, confirmed_at_from_offset: nil, confirmed_at_to_offset: nil }]).to be(8)
+    expect(metric[{ status: '*', confirmed_at_from_offset: '*', confirmed_at_to_offset: '*' }]).to be(8)
   end
 
   it 'unstarted PER count' do
-    expect(metric[{ status: 'unstarted', confirmed_at_from_offset: nil, confirmed_at_to_offset: nil }]).to be(1)
+    expect(metric[{ status: 'unstarted', confirmed_at_from_offset: '*', confirmed_at_to_offset: '*' }]).to be(1)
   end
 
   it 'in_progress PER count' do
-    expect(metric[{ status: 'in_progress', confirmed_at_from_offset: nil, confirmed_at_to_offset: nil }]).to be(1)
+    expect(metric[{ status: 'in_progress', confirmed_at_from_offset: '*', confirmed_at_to_offset: '*' }]).to be(1)
   end
 
   it 'completed PER count' do
-    expect(metric[{ status: 'completed', confirmed_at_from_offset: nil, confirmed_at_to_offset: nil }]).to be(1)
+    expect(metric[{ status: 'completed', confirmed_at_from_offset: '*', confirmed_at_to_offset: '*' }]).to be(1)
   end
 
   it 'confirmed PER count' do
-    expect(metric[{ status: 'confirmed', confirmed_at_from_offset: nil, confirmed_at_to_offset: nil }]).to be(5)
+    expect(metric[{ status: 'confirmed', confirmed_at_from_offset: '*', confirmed_at_to_offset: '*' }]).to be(5)
   end
 
   it 'confirmed PER count for past 29 days including today' do
