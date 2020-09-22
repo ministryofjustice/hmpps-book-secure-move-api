@@ -22,35 +22,35 @@ RSpec.describe MoveCollector do
   end
 
   it 'move count for all statuses, all suppliers, all dates' do
-    expect(metric[{ status: nil, supplier: nil, date_from_offset: nil, date_to_offset: nil }]).to be(9)
+    expect(metric[{ status: '*', supplier: '*', date_from_offset: '*', date_to_offset: '*' }]).to be(9)
   end
 
   it 'move count for supplier1' do
-    expect(metric[{ status: nil, supplier: supplier1.key, date_from_offset: nil, date_to_offset: nil }]).to be(3)
+    expect(metric[{ status: '*', supplier: supplier1.key, date_from_offset: '*', date_to_offset: '*' }]).to be(3)
   end
 
   it 'move count for supplier2' do
-    expect(metric[{ status: nil, supplier: supplier2.key, date_from_offset: nil, date_to_offset: nil }]).to be(6)
+    expect(metric[{ status: '*', supplier: supplier2.key, date_from_offset: '*', date_to_offset: '*' }]).to be(6)
   end
 
   it 'move count for requested moves' do
-    expect(metric[{ status: 'requested', supplier: nil, date_from_offset: nil, date_to_offset: nil }]).to be(2)
+    expect(metric[{ status: 'requested', supplier: '*', date_from_offset: '*', date_to_offset: '*' }]).to be(2)
   end
 
   it 'move count for cancelled moves for supplier 2' do
-    expect(metric[{ status: 'cancelled', supplier: supplier2.key, date_from_offset: nil, date_to_offset: nil }]).to be(1)
+    expect(metric[{ status: 'cancelled', supplier: supplier2.key, date_from_offset: '*', date_to_offset: '*' }]).to be(1)
   end
 
   it 'move count for today' do
-    expect(metric[{ status: nil, supplier: nil, date_from_offset: 0, date_to_offset: 0 }]).to be(1)
+    expect(metric[{ status: '*', supplier: '*', date_from_offset: 0, date_to_offset: 0 }]).to be(1)
   end
 
   it 'move count for past 6 days including today' do
-    expect(metric[{ status: nil, supplier: nil, date_from_offset: -6, date_to_offset: 0 }]).to be(3)
+    expect(metric[{ status: '*', supplier: '*', date_from_offset: -6, date_to_offset: 0 }]).to be(3)
   end
 
   it 'move count for next 29 days including today' do
-    expect(metric[{ status: nil, supplier: nil, date_from_offset: 0, date_to_offset: 29 }]).to be(4)
+    expect(metric[{ status: '*', supplier: '*', date_from_offset: 0, date_to_offset: 29 }]).to be(4)
   end
 
   it 'booked move count for supplier2 for today' do

@@ -38,6 +38,6 @@ private
     pers = pers.where('confirmed_at >= ?', Time.zone.today.midnight + confirmed_at_from_offset.days) if confirmed_at_from_offset.present?
     pers = pers.where('confirmed_at < ?', Time.zone.tomorrow.midnight + confirmed_at_to_offset.days) if confirmed_at_to_offset.present?
 
-    metric.observe(pers.count, status: status, confirmed_at_from_offset: confirmed_at_from_offset, confirmed_at_to_offset: confirmed_at_to_offset)
+    metric.observe(pers.count, status: status || '*', confirmed_at_from_offset: confirmed_at_from_offset || '*', confirmed_at_to_offset: confirmed_at_to_offset || '*')
   end
 end

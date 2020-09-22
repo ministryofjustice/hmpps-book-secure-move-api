@@ -40,7 +40,6 @@ private
   end
 
   def observe_moves_count(metric, status: nil, supplier: nil, date_from_offset: nil, date_to_offset: nil)
-    # TODO: investigate how to move these queries to a read-only replica database
     moves = Move
     moves = moves.where(supplier: supplier) if supplier.present?
     moves = moves.where(status: status) if status.present?
@@ -50,6 +49,6 @@ private
       moves = moves.where('date >= ?', Time.zone.today + date_from_offset.days) if date_from_offset.present?
       moves = moves.where('date <= ?', Time.zone.today + date_to_offset.days) if date_to_offset.present?
     end
-    metric.observe(moves.count, status: status, supplier: supplier&.key, date_from_offset: date_from_offset, date_to_offset: date_to_offset)
+    metric.observe(moves.count, status: status || '*', supplier: supplier&.key || '*', date_from_offset: date_from_offset || '*', date_to_offset: date_to_offset || '*')
   end
 end
