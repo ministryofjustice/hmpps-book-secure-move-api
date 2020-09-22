@@ -17,12 +17,14 @@ class GenericEvent < ApplicationRecord
   STI_CLASSES = %w[
     JourneyCancel
     JourneyComplete
+    JourneyCreate
     JourneyLockout
     JourneyLodging
     JourneyReject
     JourneyStart
     JourneyUncancel
     JourneyUncomplete
+    JourneyUpdate
     MoveAccept
     MoveApprove
     MoveCancel

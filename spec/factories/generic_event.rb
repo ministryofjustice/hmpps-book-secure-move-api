@@ -22,6 +22,7 @@ FactoryBot.define do
   end
 
   factory :event_move_cancel, parent: :generic_event, class: 'GenericEvent::MoveCancel' do
+    eventable { association(:move) }
     details do
       {
         cancellation_reason: 'made_in_error',
@@ -76,6 +77,10 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_journey_create, parent: :generic_event, class: 'GenericEvent::JourneyCreate' do
+    eventable { association(:journey) }
+  end
+
   factory :event_journey_lockout, parent: :generic_event, class: 'GenericEvent::JourneyLockout' do
     eventable { association(:journey) }
     details do
@@ -107,6 +112,10 @@ FactoryBot.define do
   end
 
   factory :event_journey_uncomplete, parent: :generic_event, class: 'GenericEvent::JourneyUncomplete' do
+    eventable { association(:journey) }
+  end
+
+  factory :event_journey_update, parent: :generic_event, class: 'GenericEvent::JourneyUpdate' do
     eventable { association(:journey) }
   end
 end
