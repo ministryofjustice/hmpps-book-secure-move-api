@@ -137,7 +137,7 @@ module Api
 
     def create_event
       # Logs the event for posterity and the immutable event log
-      journey.events.create!(
+      event = journey.events.create!(
         event_name: action_name,
         client_timestamp: Time.zone.parse(data_params.dig(:attributes, :timestamp)),
         details: {
@@ -145,6 +145,13 @@ module Api
           supplier_id: supplier.id,
         },
       )
+      create_generic_event(event)
+    end
+
+    def create_generic_event(event)
+      generic_event = GenericEvent.from_event(event)
+      generic_event.save!
+      event.update!(generic_event_id: generic_event.id)
     end
   end
 end

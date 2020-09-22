@@ -41,7 +41,7 @@ class Event < ApplicationRecord
   end
 
   def notes
-    @notes ||= event_params.dig(:attributes, :notes)
+    @notes ||= event_params&.dig(:attributes, :notes)
   end
 
   def from_location
