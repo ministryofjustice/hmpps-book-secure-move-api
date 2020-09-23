@@ -10,6 +10,8 @@ RSpec.describe MoveCollector do
   let(:supplier2) { create(:supplier) }
 
   before do
+    pending 'temporarily disabled'
+
     create(:move, :cancelled, supplier: supplier1, date: 1.year.ago.to_date)
     create(:move, :cancelled, supplier: supplier2, date: 4.weeks.ago.to_date)
     create(:move, :completed, supplier: supplier1, date: 6.days.ago.to_date)
