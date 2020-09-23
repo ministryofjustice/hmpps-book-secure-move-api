@@ -66,6 +66,7 @@ class Event < ApplicationRecord
       eventable: eventable,
       details: {},
       created_by: 'unknown',
+      supplier_id: supplier_id,
     }
   end
 end
