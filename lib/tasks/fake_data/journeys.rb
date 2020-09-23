@@ -35,43 +35,6 @@ module Tasks
 
           # randomly create some events with intermediate journeys
           case random_event # add some random events to the journeys
-          when :lockout_journey_unbillable # unbillable lockout at current_location, redirect journey (not move) to intermediate_location, e.g. "delayed by flat tyre"
-            # lockout event
-            create_lockout_journey_event(
-              journey,
-              timestamp,
-              ['delayed by flat tyre', 'delayed by van breakdown', 'delayed by prisoner escape', 'delayed by traffic conditions', 'delayed by driver unavailable'].sample,
-              current_location,
-            )
-
-            # unbillable journey for redirection to intermediate_location
-            journey = create_journey(timestamp, current_location, intermediate_location, false)
-            create_redirect_journey_event(journey, timestamp, 'redirecting because of lockout', intermediate_location)
-            journey_counter += 1
-
-            # unbillable journey for redirection from intermediate_location back to current_location journey the following day
-            timestamp += 1.day
-            journey = create_journey(timestamp, intermediate_location, current_location, false)
-            create_redirect_journey_event(journey, timestamp, 'redirecting back because of lockout previous day', current_location)
-            # NB do not set current location to intermediate location in this case
-
-          when :redirect_journey_unbillable # unbillable redirect at current_location, redirect journey (not move) to intermediate_location, e.g. "insufficient capacity in van"
-            journey = create_journey(timestamp, current_location, intermediate_location, false)
-            create_redirect_journey_event(
-              journey,
-              timestamp,
-              ['insufficient capacity in van', 'insufficient fuel', 'driver unavailable', 'van breakdown'].sample,
-              intermediate_location,
-            )
-            journey_counter += 1
-
-            # unbillable journey for redirection from intermediate_location back to current_location journey the same day
-            timestamp += rand(30..90).minutes
-            journey = create_journey(timestamp, intermediate_location, current_location, false)
-            create_redirect_journey_event(journey, timestamp, 'redirecting back because of earlier redirection', current_location)
-
-            # NB do not set current location to intermediate location in this case
-
           when :redirect_move_billable # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
             create_redirect_move_event(
               timestamp,
@@ -138,25 +101,6 @@ module Tasks
         )
       end
 
-      def create_redirect_journey_event(journey, timestamp, notes, location)
-        journey.events.create!(
-          event_name: 'redirect',
-          client_timestamp: timestamp,
-          details: {
-            fake: true,
-            supplier_id: supplier.id,
-            event_params: {
-              attributes: {
-                notes: notes,
-              },
-              relationships: {
-                to_location: { data: { id: location.id } },
-              },
-            },
-          },
-        )
-      end
-
       def create_redirect_move_event(timestamp, notes, location)
         move.move_events.create!(
           event_name: 'redirect',
@@ -177,12 +121,8 @@ module Tasks
       end
 
       def random_event
-        case rand(1..6)
+        case rand(1..2)
         when 1
-          :lockout_journey_unbillable
-        when 2
-          :redirect_journey_unbillable
-        when 3
           :redirect_move_billable
         end
       end
