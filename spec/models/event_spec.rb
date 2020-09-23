@@ -72,6 +72,8 @@ RSpec.describe Event, type: :model do
   end
 
   describe '#generic_event_attributes' do
+    subject(:event) { build(:event, details: { supplier_id: '111' }) }
+
     it 'returns the correct attributes' do
       expected = {
         created_at: nil,
@@ -79,7 +81,7 @@ RSpec.describe Event, type: :model do
         details: {},
         eventable: be_a(Move),
         recorded_at: be_a(Time),
-        supplier_id: '1234',
+        supplier_id: '111',
         updated_at: nil,
       }
 
