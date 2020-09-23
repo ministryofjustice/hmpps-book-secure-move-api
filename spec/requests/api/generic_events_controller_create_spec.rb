@@ -77,7 +77,7 @@ RSpec.describe Api::GenericEventsController do
       it 'sets the supplier_id' do
         do_post
         event = GenericEvent.find(response_json.dig('data', 'id'))
-        expect(event.supplier).to be(supplier)
+        expect(event.supplier).to eq(supplier)
       end
     end
 
