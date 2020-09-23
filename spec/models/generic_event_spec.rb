@@ -47,7 +47,7 @@ RSpec.describe GenericEvent, type: :model do
   end
 
   describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_cancel) }
+    subject(:generic_event) { create(:event_move_cancel, supplier: create(:supplier, key: 'serco')) }
 
     it 'returns the expected attributes' do
       expected_attributes = {
@@ -61,6 +61,7 @@ RSpec.describe GenericEvent, type: :model do
         'eventable_id' => generic_event.eventable_id,
         'eventable_type' => 'Move',
         'details' => { 'cancellation_reason' => 'made_in_error', 'cancellation_reason_comment' => 'It was a mistake' },
+        'supplier' => 'serco',
       }
 
       expect(generic_event.for_feed).to include_json(expected_attributes)

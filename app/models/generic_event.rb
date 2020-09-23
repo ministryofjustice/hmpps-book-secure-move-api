@@ -3,7 +3,6 @@ class GenericEvent < ApplicationRecord
   FEED_ATTRIBUTES = %w[
     id
     type
-    actioned_by
     notes
     created_at
     updated_at
@@ -55,7 +54,9 @@ class GenericEvent < ApplicationRecord
   def trigger; end
 
   def for_feed
-    attributes.slice(*FEED_ATTRIBUTES)
+    feed = attributes.slice(*FEED_ATTRIBUTES)
+    feed.merge!(supplier&.for_feed) if supplier_id
+    feed
   end
 
   def self.from_event(event)
