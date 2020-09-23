@@ -4,6 +4,7 @@ RSpec.describe GenericEvent, type: :model do
   subject(:generic_event) { build(:event_move_cancel) }
 
   it { is_expected.to belong_to(:eventable) }
+  it { is_expected.to belong_to(:supplier).optional }
   it { is_expected.to validate_presence_of(:eventable) }
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:occurred_at) }

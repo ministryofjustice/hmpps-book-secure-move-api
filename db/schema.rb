@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_10_083822) do
+ActiveRecord::Schema.define(version: 2020_09_23_102115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -209,9 +209,11 @@ ActiveRecord::Schema.define(version: 2020_09_10_083822) do
     t.datetime "recorded_at", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "supplier_id"
     t.index ["eventable_id", "eventable_type"], name: "index_generic_events_on_eventable_id_and_eventable_type"
     t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
     t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
+    t.index ["supplier_id"], name: "index_generic_events_on_supplier_id"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
@@ -517,6 +519,7 @@ ActiveRecord::Schema.define(version: 2020_09_10_083822) do
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
   add_foreign_key "framework_responses", "person_escort_records"
+  add_foreign_key "generic_events", "suppliers"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"

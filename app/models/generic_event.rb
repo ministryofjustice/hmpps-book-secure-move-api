@@ -36,6 +36,7 @@ class GenericEvent < ApplicationRecord
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
+  belongs_to :supplier,  optional: true
 
   validates :eventable,      presence: true # What is the subject of the event
   validates :type,           presence: true # STI class of the event
