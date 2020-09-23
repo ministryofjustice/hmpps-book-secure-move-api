@@ -25,28 +25,6 @@ RSpec.describe Tasks::FakeData::Journeys do
     expect(move.journeys.count).to be >= number_of_journeys
   end
 
-  context 'when lockout occurs' do
-    before do
-      allow(generator).to receive(:random_event).and_return(:lockout_journey_unbillable)
-      create_journeys
-    end
-
-    it 'creates a lockout event' do
-      expect(Event.where(event_name: 'lockout').exists?).to be true
-    end
-  end
-
-  context 'when journey redirect occurs' do
-    before do
-      allow(generator).to receive(:random_event).and_return(:redirect_journey_unbillable)
-      create_journeys
-    end
-
-    it 'creates a redirect event' do
-      expect(Event.where(event_name: 'redirect').exists?).to be true
-    end
-  end
-
   context 'when move redirect occurs' do
     before do
       allow(generator).to receive(:random_event).and_return(:redirect_move_billable)
