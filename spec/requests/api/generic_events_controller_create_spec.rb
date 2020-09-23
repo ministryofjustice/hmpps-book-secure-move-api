@@ -64,20 +64,20 @@ RSpec.describe Api::GenericEventsController do
       expect(response_json).to eq resource_to_json
     end
 
-    it 'sets the created_by' do
+    it 'does not set the supplier_id' do
       do_post
       event = GenericEvent.find(response_json.dig('data', 'id'))
-      expect(event.created_by).to eq('unknown')
+      expect(event.supplier).to be_nil
     end
 
     context 'when using a real access token' do
       let(:application) { create(:application, owner: supplier) }
       let(:access_token) { create(:access_token, application: application).token }
 
-      it 'sets the created_by' do
+      it 'sets the supplier_id' do
         do_post
         event = GenericEvent.find(response_json.dig('data', 'id'))
-        expect(event.created_by).to eq('serco')
+        expect(event.supplier).to eq(supplier)
       end
     end
 

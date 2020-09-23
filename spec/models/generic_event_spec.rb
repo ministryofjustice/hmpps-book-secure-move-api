@@ -9,9 +9,7 @@ RSpec.describe GenericEvent, type: :model do
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:occurred_at) }
   it { is_expected.to validate_presence_of(:recorded_at) }
-  it { is_expected.to validate_presence_of(:created_by) }
 
-  it { expect(generic_event).to validate_inclusion_of(:created_by).in_array(%w[serco geoamey unknown]) }
   it { expect(described_class).to respond_to(:applied_order) }
 
   it 'updates the parent record when updated' do
@@ -47,7 +45,7 @@ RSpec.describe GenericEvent, type: :model do
   end
 
   describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_cancel) }
+    subject(:generic_event) { create(:event_move_cancel, supplier: create(:supplier, key: 'serco')) }
 
     it 'returns the expected attributes' do
       expected_attributes = {
@@ -61,6 +59,7 @@ RSpec.describe GenericEvent, type: :model do
         'eventable_id' => generic_event.eventable_id,
         'eventable_type' => 'Move',
         'details' => { 'cancellation_reason' => 'made_in_error', 'cancellation_reason_comment' => 'It was a mistake' },
+        'supplier' => 'serco',
       }
 
       expect(generic_event.for_feed).to include_json(expected_attributes)

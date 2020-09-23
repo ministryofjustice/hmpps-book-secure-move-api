@@ -1,9 +1,7 @@
 class GenericEvent < ApplicationRecord
-  CREATED_BY_OPTIONS = %w[serco geoamey unknown].freeze
   FEED_ATTRIBUTES = %w[
     id
     type
-    actioned_by
     notes
     created_at
     updated_at
@@ -42,7 +40,6 @@ class GenericEvent < ApplicationRecord
   validates :type,           presence: true # STI class of the event
   validates :occurred_at,    presence: true # When did a human think the event occurred
   validates :recorded_at,    presence: true # When did supplier/frontend record the event
-  validates :created_by,     presence: true, inclusion: { in: CREATED_BY_OPTIONS }
 
   # This scope is used to determine the apply order of events as they were determined to have occurred.
   # The order is important as far as the eventable state machine sequencing, the correctness
@@ -55,7 +52,9 @@ class GenericEvent < ApplicationRecord
   def trigger; end
 
   def for_feed
-    attributes.slice(*FEED_ATTRIBUTES)
+    feed = attributes.slice(*FEED_ATTRIBUTES)
+    feed.merge!(supplier&.for_feed) if supplier_id
+    feed
   end
 
   def self.from_event(event)
