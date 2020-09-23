@@ -23,7 +23,7 @@ module Tasks
 
         if number_of_journeys > 1
           intermediate_location = random_location(current_location)
-          journey = create_journey(timestamp, current_location, intermediate_location, true)
+          create_journey(timestamp, current_location, intermediate_location, true)
           timestamp += rand(30..90).minutes
           current_location = intermediate_location
           journey_counter += 1
@@ -43,17 +43,14 @@ module Tasks
             )
 
             # billable journey for redirection to intermediate_location
-            journey = create_journey(timestamp, current_location, intermediate_location, true)
+            create_journey(timestamp, current_location, intermediate_location, true)
 
             # subsequent redirect event back to to_location to make sure events remain consistent with move record; no journey record is required
             timestamp += rand(30..90).minutes
             create_redirect_move_event(timestamp, 'redirecting back to original destination following earlier redirect', to_location)
-
-            current_location = intermediate_location
           else
             # 50% chance of a conventional intermediate journey
-            journey = create_journey(timestamp, current_location, intermediate_location, true)
-            current_location = intermediate_location
+            create_journey(timestamp, current_location, intermediate_location, true)
           end
 
           journey_counter += 1
