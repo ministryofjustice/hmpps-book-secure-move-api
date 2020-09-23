@@ -24,8 +24,8 @@ module Api
     def event_attributes
       {}.tap do |attributes|
         attributes.merge!(event_params.fetch(:attributes, {}))
-        attributes.merge!('created_by' => created_by)
         attributes.delete('event_type')
+        attributes.merge!('supplier' => doorkeeper_application_owner) if doorkeeper_application_owner
         attributes.merge!('eventable' => eventable) if eventable_params
       end
     end

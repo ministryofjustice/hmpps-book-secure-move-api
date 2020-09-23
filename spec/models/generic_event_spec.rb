@@ -9,9 +9,7 @@ RSpec.describe GenericEvent, type: :model do
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:occurred_at) }
   it { is_expected.to validate_presence_of(:recorded_at) }
-  it { is_expected.to validate_presence_of(:created_by) }
 
-  it { expect(generic_event).to validate_inclusion_of(:created_by).in_array(%w[serco geoamey unknown]) }
   it { expect(described_class).to respond_to(:applied_order) }
 
   it 'updates the parent record when updated' do
