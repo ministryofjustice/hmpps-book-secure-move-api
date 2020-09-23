@@ -20,6 +20,7 @@ class FrameworkQuestion < VersionedModel
 
   has_many :framework_flags
   has_many :framework_responses
+  has_and_belongs_to_many :framework_nomis_codes
 
   def build_responses(question: self, person_escort_record:, questions:)
     response = build_response(question, person_escort_record)
