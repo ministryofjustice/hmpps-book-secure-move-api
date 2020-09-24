@@ -4,6 +4,8 @@ module Allocations
   class Finder
     attr_reader :filter_params, :search_params
 
+    ALLOCATION_INCLUDES = [:from_location, :to_location, moves: %i[profile]].freeze
+
     def initialize(filters: {}, ordering: {}, search: {})
       @search_params = search
       @filter_params = filters
@@ -17,7 +19,7 @@ module Allocations
     end
 
     def call
-      scope = apply_filters(Allocation)
+      scope = apply_filters(Allocation.includes(ALLOCATION_INCLUDES))
       scope = apply_search(scope)
       apply_ordering(scope)
     end
