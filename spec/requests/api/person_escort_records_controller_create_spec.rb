@@ -129,8 +129,10 @@ RSpec.describe Api::PersonEscortRecordsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Invalid profile',
-              'detail' => 'Validation failed: Profile has already been taken',
+              'title' => 'Unprocessable entity',
+              'detail' => 'Profile has already been taken',
+              'source' => { 'pointer' => '/data/attributes/profile' },
+              'code' => 'taken',
             },
           ]
         end
