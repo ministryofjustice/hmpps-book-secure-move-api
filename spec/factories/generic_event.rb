@@ -131,6 +131,10 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_journey_ready_to_exit, parent: :generic_event, class: 'GenericEvent::JourneyReadyToExit' do
+    eventable { association(:journey) }
+  end
+
   factory :event_journey_reject, parent: :generic_event, class: 'GenericEvent::JourneyReject' do
     eventable { association(:journey) }
   end
