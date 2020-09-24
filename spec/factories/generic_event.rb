@@ -87,6 +87,16 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :event_move_notify_premises_of_expected_collection_time, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfEta' do
+    eventable { association(:move) }
+    details do
+      {
+        expected_at: '2020-06-16T10:20:30+01:00',
+      }
+    end
+  end
+
   factory :event_move_redirect, parent: :generic_event, class: 'GenericEvent::MoveRedirect' do
     eventable { association(:move) }
     details do
