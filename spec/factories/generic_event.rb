@@ -30,6 +30,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_collection_by_escort, parent: :generic_event, class: 'GenericEvent::MoveCollectionByEscort' do
+    eventable { association(:move) }
+    details do
+      {
+        cancellation_reason: 'made_in_error',
+        cancellation_reason_comment: 'It was a mistake',
+      }
+    end
+  end
+
   factory :event_move_complete, parent: :generic_event, class: 'GenericEvent::MoveComplete' do
     eventable { association(:move) }
   end
@@ -71,6 +81,7 @@ FactoryBot.define do
   factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do
     eventable { association(:journey) }
 
+
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
@@ -99,8 +110,10 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+
   factory :event_journey_handover_to_destination, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToDestination' do
     eventable { association(:journey) }
+
 
     details do
       {
