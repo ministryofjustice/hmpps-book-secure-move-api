@@ -53,6 +53,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_lodging_start, parent: :generic_event, class: 'GenericEvent::MoveLodgingStart' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        reason: 'overnight_lodging',
+      }
+    end
+  end
+
   factory :event_move_redirect, parent: :generic_event, class: 'GenericEvent::MoveRedirect' do
     eventable { association(:move) }
     details do
