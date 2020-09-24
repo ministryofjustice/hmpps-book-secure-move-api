@@ -75,6 +75,10 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_notify_premises_of_arrival_in_30_mins, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins' do
+    eventable { association(:move) }
+  end
+
   factory :event_move_redirect, parent: :generic_event, class: 'GenericEvent::MoveRedirect' do
     eventable { association(:move) }
     details do
