@@ -373,7 +373,7 @@ GEM
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
     unicode-display_width (1.7.0)
-    validate_url (1.0.12)
+    validate_url (1.0.13)
       activemodel (>= 3.0.0)
       public_suffix
     websocket-driver (0.7.3)
