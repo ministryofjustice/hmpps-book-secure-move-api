@@ -49,6 +49,9 @@ FactoryBot.define do
     details do
       {
         from_location_id: create(:location).id,
+        reason: 'no_space',
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: Faker::Name.name,
       }
     end
   end
