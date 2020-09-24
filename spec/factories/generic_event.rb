@@ -96,6 +96,10 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_journey_exit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyExitThroughOuterGate' do
+    eventable { association(:journey) }
+  end
+
   factory :event_journey_lockout, parent: :generic_event, class: 'GenericEvent::JourneyLockout' do
     eventable { association(:journey) }
     details do
