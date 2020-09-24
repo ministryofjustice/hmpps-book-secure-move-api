@@ -71,7 +71,6 @@ FactoryBot.define do
   factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do
     eventable { association(:journey) }
 
-
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
@@ -98,6 +97,16 @@ FactoryBot.define do
 
   factory :event_journey_exit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyExitThroughOuterGate' do
     eventable { association(:journey) }
+  end
+
+  factory :event_journey_handover_to_destination, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToDestination' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        supplier_personnel_id: SecureRandom.uuid,
+      }
+    end
   end
 
   factory :event_journey_lockout, parent: :generic_event, class: 'GenericEvent::JourneyLockout' do
