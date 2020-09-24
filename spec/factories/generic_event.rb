@@ -68,6 +68,18 @@ FactoryBot.define do
     eventable { association(:move) }
   end
 
+  factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do
+    eventable { association(:journey) }
+
+
+    details do
+      {
+        vehicle_reg: Faker::Vehicle.license_plate,
+        supplier_personnel_id: SecureRandom.uuid,
+      }
+    end
+  end
+
   factory :event_journey_cancel, parent: :generic_event, class: 'GenericEvent::JourneyCancel' do
     eventable { association(:journey) }
   end
