@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.4.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.7) (2020-09-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.6...v2.4.7)
+
+**Merged pull requests:**
+
+- P4 2281 add supplier locations [\#973](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/973) ([martyn-w](https://github.com/martyn-w))
+- Use normal validation error when raising taken error [\#972](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/972) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#971](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/971) ([martyn-w](https://github.com/martyn-w))
+- Rescue multiple errors on unique index error [\#970](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/970) ([cwrw](https://github.com/cwrw))
+
 ## [v2.4.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.6) (2020-09-24)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.5...v2.4.6)
