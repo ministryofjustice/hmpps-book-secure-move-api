@@ -63,6 +63,15 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_lodging_end, parent: :generic_event, class: 'GenericEvent::MoveLodgingEnd' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_move_redirect, parent: :generic_event, class: 'GenericEvent::MoveRedirect' do
     eventable { association(:move) }
     details do
@@ -90,7 +99,6 @@ FactoryBot.define do
 
   factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do
     eventable { association(:journey) }
-
 
     details do
       {
@@ -120,10 +128,8 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
-
   factory :event_journey_handover_to_destination, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToDestination' do
     eventable { association(:journey) }
-
 
     details do
       {
