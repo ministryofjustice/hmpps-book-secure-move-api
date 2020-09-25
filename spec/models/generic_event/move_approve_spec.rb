@@ -68,7 +68,7 @@ RSpec.describe GenericEvent::MoveApprove do
     let(:expected_json) do
       {
         'id' => generic_event.id,
-        'type' => 'GenericEvent::MoveApprove',
+        'type' => 'MoveApprove',
         'notes' => 'Flibble',
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),

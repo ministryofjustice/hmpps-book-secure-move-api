@@ -25,7 +25,7 @@ RSpec.describe GenericEvent::JourneyLockout do
     let(:expected_json) do
       {
         'id' => generic_event.id,
-        'type' => 'GenericEvent::JourneyLockout',
+        'type' => 'JourneyLockout',
         'notes' => 'Flibble',
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),

@@ -50,7 +50,7 @@ RSpec.describe GenericEvent, type: :model do
     it 'returns the expected attributes' do
       expected_attributes = {
         'id' => generic_event.id,
-        'type' => 'GenericEvent::MoveCancel',
+        'type' => 'MoveCancel',
         'notes' => 'Flibble',
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),

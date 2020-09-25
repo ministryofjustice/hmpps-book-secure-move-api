@@ -65,7 +65,7 @@ RSpec.describe GenericEvent::MoveRedirect do
       let(:expected_json) do
         {
           'id' => generic_event.id,
-          'type' => 'GenericEvent::MoveRedirect',
+          'type' => 'MoveRedirect',
           'notes' => 'Flibble',
           'created_at' => be_a(Time),
           'updated_at' => be_a(Time),
@@ -95,7 +95,7 @@ RSpec.describe GenericEvent::MoveRedirect do
       let(:expected_json) do
         {
           'id' => generic_event.id,
-          'type' => 'GenericEvent::MoveRedirect',
+          'type' => 'MoveRedirect',
           'notes' => 'Flibble',
           'created_at' => be_a(Time),
           'updated_at' => be_a(Time),
