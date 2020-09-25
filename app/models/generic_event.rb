@@ -1,7 +1,6 @@
 class GenericEvent < ApplicationRecord
   FEED_ATTRIBUTES = %w[
     id
-    type
     notes
     created_at
     updated_at
@@ -67,6 +66,7 @@ class GenericEvent < ApplicationRecord
 
   def for_feed
     feed = attributes.slice(*FEED_ATTRIBUTES)
+    feed.merge!('type' => type.sub('GenericEvent::', ''))
     feed.merge!(supplier&.for_feed) if supplier_id
     feed
   end

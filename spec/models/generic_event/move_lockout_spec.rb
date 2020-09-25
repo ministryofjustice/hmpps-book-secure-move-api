@@ -42,7 +42,7 @@ RSpec.describe GenericEvent::MoveLockout do
     let(:expected_json) do
       {
         'id' => generic_event.id,
-        'type' => 'GenericEvent::MoveLockout',
+        'type' => 'MoveLockout',
         'notes' => 'Flibble',
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),

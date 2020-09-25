@@ -70,7 +70,7 @@ RSpec.describe GenericEvent::MoveReject do
       let(:expected_json) do
         {
           'id' => generic_event.id,
-          'type' => 'GenericEvent::MoveReject',
+          'type' => 'MoveReject',
           'notes' => 'Flibble',
           'created_at' => be_a(Time),
           'updated_at' => be_a(Time),

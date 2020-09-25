@@ -25,7 +25,7 @@ RSpec.describe GenericEvent::JourneyLodging do
     let(:expected_json) do
       {
         'id' => generic_event.id,
-        'type' => 'GenericEvent::JourneyLodging',
+        'type' => 'JourneyLodging',
         'notes' => 'Flibble',
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),
