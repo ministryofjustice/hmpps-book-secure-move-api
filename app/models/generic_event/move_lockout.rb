@@ -4,7 +4,7 @@ class GenericEvent
     include AuthoriserValidations
 
     enum reason: {
-      unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - policy only)
+      unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
       no_space: 'no_space', # (PECS)
       unachievable_redirection: 'unachievable_redirection', # (PECS)
       late_sitting_court: 'late_sitting_court', # (PECS)
