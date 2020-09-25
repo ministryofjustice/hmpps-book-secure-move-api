@@ -42,6 +42,9 @@ class PersonEscortRecord < VersionedModel
 
     record = new(profile: profile, framework: framework)
     record.build_responses!
+  rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
+    record.errors.add(:profile, :taken)
+    raise ActiveRecord::RecordInvalid, record
   end
 
   def build_responses!

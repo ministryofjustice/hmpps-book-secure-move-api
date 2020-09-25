@@ -105,6 +105,49 @@ RSpec.describe Api::PersonEscortRecordsController do
         it_behaves_like 'an endpoint that responds with error 404'
       end
 
+      context 'when a person escort record already exists on a profile' do
+        let(:errors_422) do
+          [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => 'Profile has already been taken',
+              'source' => { 'pointer' => '/data/attributes/profile' },
+              'code' => 'taken',
+            },
+          ]
+        end
+
+        before do
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422'
+      end
+
+      context 'when a person escort record already exists on a profile and unique index error thrown' do
+        let(:errors_422) do
+          [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => 'Profile has already been taken',
+              'source' => { 'pointer' => '/data/attributes/profile' },
+              'code' => 'taken',
+            },
+          ]
+        end
+
+        before do
+          person_escort_record = PersonEscortRecord.new
+          allow(PersonEscortRecord).to receive(:new).and_return(person_escort_record)
+          allow(person_escort_record).to receive(:build_responses!).and_raise(PG::UniqueViolation, 'duplicate key value violates unique constraint')
+
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422'
+      end
+
       context 'with a reference to a missing framework' do
         let(:framework_version) { '0.2.1' }
         let(:detail_404) { "Couldn't find Framework" }

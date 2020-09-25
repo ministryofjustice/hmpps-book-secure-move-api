@@ -1,5 +1,29 @@
 # Changelog
 
+## [v2.4.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.7) (2020-09-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.6...v2.4.7)
+
+**Merged pull requests:**
+
+- P4 2281 add supplier locations [\#973](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/973) ([martyn-w](https://github.com/martyn-w))
+- Use normal validation error when raising taken error [\#972](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/972) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#971](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/971) ([martyn-w](https://github.com/martyn-w))
+- Rescue multiple errors on unique index error [\#970](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/970) ([cwrw](https://github.com/cwrw))
+
+## [v2.4.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.6) (2020-09-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.5...v2.4.6)
+
+**Merged pull requests:**
+
+- P4-2198 Fix unique profile when creating the PER error [\#969](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/969) ([cwrw](https://github.com/cwrw))
+- Reduce N+1 queries for GET /allocations endpoint [\#967](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/967) ([smoothcontract](https://github.com/smoothcontract))
+- Bump validate\_url from 1.0.12 to 1.0.13 [\#965](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/965) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[P4-2265\] Adds supplier to all new generic event rows transparently [\#964](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/964) ([willfish](https://github.com/willfish))
+- \[P4-2265\] Adds supplier to generic\_event feed [\#963](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/963) ([willfish](https://github.com/willfish))
+- CHANGELOG [\#962](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/962) ([willfish](https://github.com/willfish))
+
 ## [v2.4.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.5) (2020-09-23)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.4...v2.4.5)
