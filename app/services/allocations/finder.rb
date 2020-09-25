@@ -68,8 +68,8 @@ module Allocations
     end
 
     def apply_date_range_filters(scope)
-      scope = scope.where('date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
-      scope = scope.where('date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+      scope = scope.where('allocations.date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
+      scope = scope.where('allocations.date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
       scope
     end
 

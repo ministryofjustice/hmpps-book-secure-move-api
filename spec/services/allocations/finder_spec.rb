@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Allocations::Finder do
   subject(:allocation_finder) { described_class.new(filters: filter_params, ordering: sort_params, search: search_params) }
 
-  let!(:from_location) { create :location }
-  let!(:to_location) { create :location }
+  let(:from_location) { create :location }
+  let(:to_location) { create :location }
   let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
 
   let(:filter_params) { {} }
@@ -199,6 +199,37 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :date, direction: :desc } }
 
       it 'orders by allocation date' do
+        expect(allocation_finder.call).to eq([allocation3, allocation2, allocation])
+      end
+    end
+  end
+
+  describe 'combined filtering and sorting' do
+    context 'when filtering by date and sorting by location' do
+      let!(:location1) { create :location, title: 'LOCATION1' }
+      let!(:location2) { create :location, title: 'Location2' }
+      let!(:location3) { create :location, title: 'LOCATION3' }
+
+      let!(:allocation) { create :allocation, :with_moves, from_location: from_location, to_location: location1 }
+      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: location2 }
+      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: location3 }
+
+      let(:sort_params) { { by: :to_location, direction: :desc } }
+      let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
+
+      it 'returns allocations matching date range sorted by location title (case-sensitive)' do
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[Location2 LOCATION3 LOCATION1])
+      end
+    end
+
+    context 'when filtering and sorting by date' do
+      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: to_location }
+      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: to_location }
+
+      let(:sort_params) { { by: :date, direction: :desc } }
+      let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
+
+      it 'returns allocations matching date range ordered by allocation date' do
         expect(allocation_finder.call).to eq([allocation3, allocation2, allocation])
       end
     end
