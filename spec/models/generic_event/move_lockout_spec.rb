@@ -16,21 +16,10 @@ RSpec.describe GenericEvent::MoveLockout do
   end
 
   it_behaves_like 'a move event'
+  it_behaves_like 'an authorised event'
 
   it { is_expected.to validate_presence_of(:from_location_id) }
   it { is_expected.to validate_inclusion_of(:reason).in_array(reasons) }
-
-  context 'when authorised_at is supplied' do
-    it 'is valid when the authorised_at value is a valid iso8601 datetime' do
-      generic_event.authorised_at = '2020-06-16T10:20:30+01:00'
-      expect(generic_event).to be_valid
-    end
-
-    it 'is invalid when the authorised_at value is not a valid iso8601 datetime' do
-      generic_event.authorised_at = '16-06-2020 10:20:30+01:00'
-      expect(generic_event).not_to be_valid
-    end
-  end
 
   describe '#from_location' do
     it 'returns a `Location` if from_location_id is in the details' do
