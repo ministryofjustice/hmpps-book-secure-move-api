@@ -1,8 +1,30 @@
 class GenericEvent
   class MoveLockout < GenericEvent
     include MoveEventValidations
+    include AuthoriserValidations
+
+    enum reason: {
+      unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
+      no_space: 'no_space', # (PECS)
+      unachievable_redirection: 'unachievable_redirection', # (PECS)
+      late_sitting_court: 'late_sitting_court', # (PECS)
+      unavailable_resource_vehicle_or_staff: 'unavailable_resource_vehicle_or_staff', # (supplier)
+      traffic_issues: 'traffic_issues', # (supplier)
+      mechanical_or_other_vehicle_failure: 'mechanical_or_other_vehicle_failure', # (supplier)
+      ineffective_route_planning: 'ineffective_route_planning', # (supplier)
+      other: 'other',
+    }
 
     validates :from_location_id, presence: true
+    validates :reason, inclusion: { in: reasons }, if: -> { reason }
+
+    def reason=(reason)
+      details['reason'] = reason
+    end
+
+    def reason
+      details['reason']
+    end
 
     def from_location_id=(id)
       details['from_location_id'] = id
@@ -19,6 +41,11 @@ class GenericEvent
     def for_feed
       super.tap do |common_feed_attributes|
         common_feed_attributes['details'] = from_location.for_feed(prefix: 'from')
+        common_feed_attributes['details'].merge!(
+          'authorised_at' => authorised_at,
+          'authorised_by' => authorised_by,
+          'reason' => reason,
+        )
       end
     end
 

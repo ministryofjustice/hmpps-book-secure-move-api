@@ -13,11 +13,17 @@ class GenericEvent < ApplicationRecord
   ].freeze
 
   STI_CLASSES = %w[
+    JourneyAdmitThroughOuterGate
+    JourneyArriveAtOuterGate
     JourneyCancel
     JourneyComplete
     JourneyCreate
+    JourneyExitThroughOuterGate
+    JourneyHandoverToDestination
     JourneyLockout
     JourneyLodging
+    JourneyPersonLeaveVehicle
+    JourneyReadyToExit
     JourneyReject
     JourneyStart
     JourneyUncancel
@@ -26,8 +32,16 @@ class GenericEvent < ApplicationRecord
     MoveAccept
     MoveApprove
     MoveCancel
+    MoveCollectionByEscort
     MoveComplete
     MoveLockout
+    MoveLodgingEnd
+    MoveLodgingStart
+    MoveNotifyPremisesOfArrivalIn30Mins
+    MoveNotifyPremisesOfEta
+    MoveNotifyPremisesOfExpectedCollectionTime
+    MoveOperationSafeguard
+    MoveOperationTornado
     MoveRedirect
     MoveReject
     MoveStart

@@ -30,6 +30,15 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_collection_by_escort, parent: :generic_event, class: 'GenericEvent::MoveCollectionByEscort' do
+    eventable { association(:move) }
+    details do
+      {
+        vehicle_type: 'cellular',
+      }
+    end
+  end
+
   factory :event_move_complete, parent: :generic_event, class: 'GenericEvent::MoveComplete' do
     eventable { association(:move) }
   end
@@ -39,6 +48,70 @@ FactoryBot.define do
     details do
       {
         from_location_id: create(:location).id,
+        reason: 'no_space',
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: 'PMU',
+      }
+    end
+  end
+
+  factory :event_move_lodging_start, parent: :generic_event, class: 'GenericEvent::MoveLodgingStart' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        reason: 'overnight_lodging',
+      }
+    end
+  end
+
+  factory :event_move_lodging_end, parent: :generic_event, class: 'GenericEvent::MoveLodgingEnd' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_move_notify_premises_of_arrival_in_30_mins, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins' do
+    eventable { association(:move) }
+  end
+
+  factory :event_move_notify_premises_of_eta, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfEta' do
+    eventable { association(:move) }
+    details do
+      {
+        expected_at: '2020-06-16T10:20:30+01:00',
+      }
+    end
+  end
+
+  factory :event_move_notify_premises_of_expected_collection_time, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfEta' do
+    eventable { association(:move) }
+    details do
+      {
+        expected_at: '2020-06-16T10:20:30+01:00',
+      }
+    end
+  end
+
+  factory :event_move_operation_safeguard, parent: :generic_event, class: 'GenericEvent::MoveOperationSafeguard' do
+    eventable { association(:move) }
+    details do
+      {
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: 'PMU',
+      }
+    end
+  end
+
+  factory :event_move_operation_tornado, parent: :generic_event, class: 'GenericEvent::MoveOperationTornado' do
+    eventable { association(:move) }
+    details do
+      {
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: 'PMU',
       }
     end
   end
@@ -68,6 +141,21 @@ FactoryBot.define do
     eventable { association(:move) }
   end
 
+  factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        vehicle_reg: Faker::Vehicle.license_plate,
+        supplier_personnel_id: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_journey_arrive_at_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyArriveAtOuterGate' do
+    eventable { association(:journey) }
+  end
+
   factory :event_journey_cancel, parent: :generic_event, class: 'GenericEvent::JourneyCancel' do
     eventable { association(:journey) }
   end
@@ -78,6 +166,20 @@ FactoryBot.define do
 
   factory :event_journey_create, parent: :generic_event, class: 'GenericEvent::JourneyCreate' do
     eventable { association(:journey) }
+  end
+
+  factory :event_journey_exit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyExitThroughOuterGate' do
+    eventable { association(:journey) }
+  end
+
+  factory :event_journey_handover_to_destination, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToDestination' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        supplier_personnel_id: SecureRandom.uuid,
+      }
+    end
   end
 
   factory :event_journey_lockout, parent: :generic_event, class: 'GenericEvent::JourneyLockout' do
@@ -96,6 +198,14 @@ FactoryBot.define do
         to_location_id: create(:location).id,
       }
     end
+  end
+
+  factory :event_journey_person_leave_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyPersonLeaveVehicle' do
+    eventable { association(:journey) }
+  end
+
+  factory :event_journey_ready_to_exit, parent: :generic_event, class: 'GenericEvent::JourneyReadyToExit' do
+    eventable { association(:journey) }
   end
 
   factory :event_journey_reject, parent: :generic_event, class: 'GenericEvent::JourneyReject' do

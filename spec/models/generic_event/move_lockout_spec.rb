@@ -1,9 +1,25 @@
 RSpec.describe GenericEvent::MoveLockout do
   subject(:generic_event) { build(:event_move_lockout) }
 
+  let(:reasons) do
+    %w[
+      unachievable_ptr_request
+      no_space
+      unachievable_redirection
+      late_sitting_court
+      unavailable_resource_vehicle_or_staff
+      traffic_issues
+      mechanical_or_other_vehicle_failure
+      ineffective_route_planning
+      other
+    ]
+  end
+
   it_behaves_like 'a move event'
+  it_behaves_like 'an authorised event'
 
   it { is_expected.to validate_presence_of(:from_location_id) }
+  it { is_expected.to validate_inclusion_of(:reason).in_array(reasons) }
 
   describe '#from_location' do
     it 'returns a `Location` if from_location_id is in the details' do
@@ -19,7 +35,7 @@ RSpec.describe GenericEvent::MoveLockout do
   end
 
   describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_lockout, details: { from_location_id: from_location.id }) }
+    subject(:generic_event) { create(:event_move_lockout, details: { from_location_id: from_location.id, reason: 'no_space', authorised_at: Time.zone.now.iso8601, authorised_by: 'CDM' }) }
 
     let(:from_location) { create(:location) }
 
@@ -37,6 +53,9 @@ RSpec.describe GenericEvent::MoveLockout do
         'details' => {
           'from_location_type' => from_location.location_type,
           'from_location' => from_location.nomis_agency_id,
+          'reason' => 'no_space',
+          'authorised_at' => generic_event.authorised_at,
+          'authorised_by' => 'CDM',
         },
       }
     end
