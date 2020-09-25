@@ -221,6 +221,18 @@ RSpec.describe Allocations::Finder do
         expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[Location2 LOCATION3 LOCATION1])
       end
     end
+
+    context 'when filtering and sorting by date' do
+      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: to_location }
+      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: to_location }
+
+      let(:sort_params) { { by: :date, direction: :desc } }
+      let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
+
+      it 'returns allocations matching date range ordered by allocation date' do
+        expect(allocation_finder.call).to eq([allocation3, allocation2, allocation])
+      end
+    end
   end
 
   describe 'searching' do
