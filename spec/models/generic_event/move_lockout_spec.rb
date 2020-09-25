@@ -35,7 +35,7 @@ RSpec.describe GenericEvent::MoveLockout do
   end
 
   describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_lockout, details: { from_location_id: from_location.id, reason: 'no_space', authorised_at: Time.zone.now.iso8601, authorised_by: 'Joe Bloggs' }) }
+    subject(:generic_event) { create(:event_move_lockout, details: { from_location_id: from_location.id, reason: 'no_space', authorised_at: Time.zone.now.iso8601, authorised_by: 'CDM' }) }
 
     let(:from_location) { create(:location) }
 
@@ -55,7 +55,7 @@ RSpec.describe GenericEvent::MoveLockout do
           'from_location' => from_location.nomis_agency_id,
           'reason' => 'no_space',
           'authorised_at' => generic_event.authorised_at,
-          'authorised_by' => 'Joe Bloggs',
+          'authorised_by' => 'CDM',
         },
       }
     end

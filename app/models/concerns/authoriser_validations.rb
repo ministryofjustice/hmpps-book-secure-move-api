@@ -26,7 +26,7 @@ module AuthoriserValidations
       Other: 'Other',
     }
 
-    validates :authorised_by, presence: true, inclusion: { in: authorised_bies }
+    validates :authorised_by, inclusion: { in: authorised_bies }, if: -> { authorised_by.present? }
     validates_each :authorised_at, if: -> { authorised_at.present? } do |record, attr, value|
       Time.zone.iso8601(value)
     rescue ArgumentError

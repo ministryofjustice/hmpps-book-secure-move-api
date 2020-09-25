@@ -7,7 +7,8 @@ RSpec.shared_examples 'an authorised event' do
     ]
   end
 
-  it { is_expected.to validate_presence_of(:authorised_by) }
+  # TODO: Reinstate this validation when suppliers have moved over to generic event api
+  # it { is_expected.to validate_presence_of(:authorised_by) }
   it { is_expected.to validate_inclusion_of(:authorised_by).in_array(authorised_bies) }
 
   context 'when authorised_at is supplied' do
