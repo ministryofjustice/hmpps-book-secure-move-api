@@ -34,8 +34,7 @@ FactoryBot.define do
     eventable { association(:move) }
     details do
       {
-        cancellation_reason: 'made_in_error',
-        cancellation_reason_comment: 'It was a mistake',
+        vehicle_type: 'cellular',
       }
     end
   end
