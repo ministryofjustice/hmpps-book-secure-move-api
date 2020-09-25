@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.4.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.8) (2020-09-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.7...v2.4.8)
+
+**Merged pull requests:**
+
+- Fix ambiguous date column error in Allocations::Finder service [\#977](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/977) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-2264\] Newly specced events [\#976](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/976) ([willfish](https://github.com/willfish))
+- Changelog 2.4.7 [\#975](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/975) ([cwrw](https://github.com/cwrw))
+- Add new tasks to backfill generic event starting from a certain date [\#974](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/974) ([alexdesi](https://github.com/alexdesi))
+
 ## [v2.4.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.7) (2020-09-24)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.6...v2.4.7)
