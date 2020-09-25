@@ -107,6 +107,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_operation_tornado, parent: :generic_event, class: 'GenericEvent::MoveOperationTornado' do
+    eventable { association(:move) }
+    details do
+      {
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: Faker::Name.name,
+      }
+    end
+  end
+
   factory :event_move_redirect, parent: :generic_event, class: 'GenericEvent::MoveRedirect' do
     eventable { association(:move) }
     details do
