@@ -12,7 +12,7 @@ class GenericEvent
       other: 'other',
     }
 
-    validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
+    validates :reason,      presence: true, inclusion: { in: reasons }
     validates :location_id, presence: true
 
     def reason=(reason)
