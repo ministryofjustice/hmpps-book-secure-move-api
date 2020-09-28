@@ -4,7 +4,7 @@ class CloudDataFeed
     @bucket = @s3.bucket(bucket_name)
   end
 
-  def write(content, obj_name, report_date = Time.zone.today)
+  def write(content, obj_name, report_date = Time.zone.yesterday)
     folder_name = report_date.strftime('%Y/%m/%d')
     filename = report_date.strftime('%Y-%m-%d')
 
