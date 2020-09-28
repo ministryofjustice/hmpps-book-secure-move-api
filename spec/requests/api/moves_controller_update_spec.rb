@@ -122,7 +122,9 @@ RSpec.describe Api::MovesController do
         end
 
         it 'returns the correct data' do
-          expect(response_json).to eq resource_to_json
+          # NB this test was a bit flaky on CircleCI due to the way active storage URLs are generated and cached - the
+          # fix here strips out the inner path from the url
+          expect(clean_active_storage_urls(response_json.to_json)).to eq clean_active_storage_urls(resource_to_json.to_json)
         end
 
         context 'when changing a moves profile documents', :skip_before do
@@ -700,5 +702,12 @@ RSpec.describe Api::MovesController do
 
   def do_patch
     patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+  end
+
+  def clean_active_storage_urls(text)
+    # this strips the path from test active storage urls, in order to prevent a flaky test in CircleCI
+    # e.g. "http://www.example.com/rails/active_storage/disk/XXX/YYY/ZZZ/file-sample_100kB.doc?content_type=AAA&disposition=BBB"
+    # ---> "http://www.example.com/file-sample_100kB.doc?content_type=AAA&disposition=BBB"
+    text.gsub(/(\"https?\:\/\/www\.example\.com\/)([^\"]+)\/([^\"]+\")/, '\1\3')
   end
 end
