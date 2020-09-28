@@ -24,9 +24,13 @@ module Api
     def event_attributes
       {}.tap do |attributes|
         attributes.merge!(event_params.fetch(:attributes, {}))
+
         attributes.delete('event_type')
+
         attributes.merge!('supplier' => doorkeeper_application_owner) if doorkeeper_application_owner
         attributes.merge!('eventable' => eventable) if eventable_params
+
+        attributes['details'].merge!(event_specific_relationships) if event_specific_relationships.any?
       end
     end
 
@@ -55,6 +59,16 @@ module Api
 
     def created_by
       current_user&.owner&.name || 'unknown'
+    end
+
+    def event_specific_relationships
+      event_specific_relationships = event_relationships.to_unsafe_hash.except('eventable')
+      event_specific_relationships.each_with_object({}) do |(relationship, relationship_attributes), acc|
+        key = "#{relationship}_id"
+        id = relationship_attributes.dig(:data, :id)
+
+        acc[key] = id
+      end
     end
   end
 end
