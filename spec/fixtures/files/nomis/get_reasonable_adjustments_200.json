@@ -5,14 +5,16 @@
       "commentText": "Some comment text about DA",
       "startDate": "2016-11-25",
       "endDate": null,
-      "agencyId": "LGI"
+      "agencyId": "LGI",
+      "treatmentDescription": "Some treatment description about DA"
     },
     {
       "treatmentCode": "LEARN SUPP",
       "commentText": "Some comment text about LEARN SUPP",
       "startDate": "2020-04-01",
       "endDate": "2020-05-01",
-      "agencyId": "WYI"
+      "agencyId": "WYI",
+      "treatmentDescription": "Some treatment description about LEARN SUPP"
     }
   ]
 }
