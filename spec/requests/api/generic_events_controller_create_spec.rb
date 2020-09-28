@@ -47,10 +47,10 @@ RSpec.describe Api::GenericEventsController do
         {
           type: 'events',
           attributes: event_attributes,
-          relationships: { eventable: { data: { type: 'moves', id: move.id } }, },
+          relationships: { eventable: { data: { type: 'moves', id: move.id } } },
         }
       end
-      
+
       it 'sets up relationships correctly' do
         do_post
 
@@ -67,7 +67,7 @@ RSpec.describe Api::GenericEventsController do
           attributes[:event_type] = 'MoveLockout'
         end
       end
-      
+
       it 'sets up relationships correctly' do
         do_post
 
