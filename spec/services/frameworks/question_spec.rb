@@ -163,5 +163,51 @@ RSpec.describe Frameworks::Question do
         expect(dependent_question.parent).to eq(question)
       end
     end
+
+    context 'when question has NOMIS mappings' do
+      it 'sets NOMIS codes on questions' do
+        filepath = Rails.root.join(fixture_path, 'wheelchair-users.yml')
+        question = FrameworkQuestion.new(section: 'health', key: 'wheelchair-users')
+        questions = { 'wheelchair-users' => question }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(question.framework_nomis_codes.size).to eq(2)
+      end
+
+      it 'sets correct attributes on NOMIS codes' do
+        filepath = Rails.root.join(fixture_path, 'wheelchair-users.yml')
+        question = FrameworkQuestion.new(section: 'health', key: 'wheelchair-users')
+        questions = { 'wheelchair-users' => question }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(question.framework_nomis_codes.first).to have_attributes(
+          code: 'PEEP',
+          code_type: 'personal_care_need',
+          fallback: false,
+        )
+      end
+
+      it 'sets NOMIS fallback codes on questions' do
+        filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
+        question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
+        questions = { 'medical-professional-referral' => question }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(question.framework_nomis_codes.size).to eq(2)
+      end
+
+      it 'sets correct attributes on NOMIS fallback codes' do
+        filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
+        question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
+        questions = { 'medical-professional-referral' => question }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(question.framework_nomis_codes.first).to have_attributes(
+          code: nil,
+          code_type: 'alert',
+          fallback: true,
+        )
+      end
+    end
   end
 end

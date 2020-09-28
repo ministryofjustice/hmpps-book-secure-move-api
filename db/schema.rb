@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_23_102115) do
+ActiveRecord::Schema.define(version: 2020_09_23_123415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -145,6 +145,21 @@ ActiveRecord::Schema.define(version: 2020_09_23_102115) do
     t.uuid "framework_flag_id", null: false
     t.index ["framework_flag_id"], name: "index_framework_flags_responses_on_framework_flag_id"
     t.index ["framework_response_id"], name: "index_framework_flags_responses_on_framework_response_id"
+  end
+
+  create_table "framework_nomis_codes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "code_type", null: false
+    t.string "code"
+    t.boolean "fallback", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "framework_nomis_codes_questions", id: false, force: :cascade do |t|
+    t.uuid "framework_question_id"
+    t.uuid "framework_nomis_code_id"
+    t.index ["framework_nomis_code_id"], name: "index_framework_nomis_codes_questions_on_nomis_code_id"
+    t.index ["framework_question_id"], name: "index_framework_nomis_codes_questions_on_question_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
