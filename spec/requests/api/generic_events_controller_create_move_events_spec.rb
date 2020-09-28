@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::GenericEventsController do
-  events = %w[
+  %w[
     move_accept
     move_approve
     move_cancel

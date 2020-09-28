@@ -1,9 +1,9 @@
-RSpec.shared_examples 'a generic event endpoint'  do |factory, event_type|
+RSpec.shared_examples 'a generic event endpoint' do |factory, event_type|
   let(:headers) do
     {
-      'CONTENT_TYPE':  ApiController::CONTENT_TYPE ,
+      'CONTENT_TYPE': ApiController::CONTENT_TYPE,
       'Accept': 'application/vnd.api+json; version=2',
-      'Authorization' => "Bearer spoofed-token",
+      'Authorization' => 'Bearer spoofed-token',
     }
   end
 
@@ -12,7 +12,7 @@ RSpec.shared_examples 'a generic event endpoint'  do |factory, event_type|
       type: 'events',
       attributes: event_attributes,
       relationships: {
-        eventable: { data: { type: eventable_type, id: eventable_id } }
+        eventable: { data: { type: eventable_type, id: eventable_id } },
       },
     }
   end

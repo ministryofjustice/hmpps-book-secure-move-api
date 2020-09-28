@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::GenericEventsController do
-  events = %w[
+  %w[
     journey_admit_through_outer_gate
     journey_arrive_at_outer_gate
     journey_cancel
