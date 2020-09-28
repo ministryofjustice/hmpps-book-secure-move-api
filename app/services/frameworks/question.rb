@@ -18,6 +18,8 @@ module Frameworks
 
       build_options(source.fetch('options', []))
       build_followup_questions(followups: source.fetch('questions', []), value: nil)
+      build_nomis_mappings(mappings: source.fetch('nomis_mappings', []))
+      build_nomis_fallbacks(fallbacks: source.fetch('nomis_fallback_mappings', []))
 
       questions
     end
@@ -67,6 +69,24 @@ module Frameworks
           flag_type: flag['type'],
           title: flag['label'],
           question_value: value,
+        )
+      end
+    end
+
+    def build_nomis_mappings(mappings:)
+      mappings.each do |mapping|
+        question.framework_nomis_codes.new(
+          code_type: mapping['type'],
+          code: mapping['code'],
+        )
+      end
+    end
+
+    def build_nomis_fallbacks(fallbacks:)
+      fallbacks.each do |fallback|
+        question.framework_nomis_codes.new(
+          code_type: fallback['type'],
+          fallback: true,
         )
       end
     end

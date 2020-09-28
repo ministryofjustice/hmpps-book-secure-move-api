@@ -11,3 +11,10 @@ validations:
   -
     type: 'required'
     message: You must select an option
+nomis_mappings:
+  -
+    code: PEEP
+    type: personal_care_need
+  -
+    code: WHEELCHR_ACC
+    type: reasonable_adjustment
