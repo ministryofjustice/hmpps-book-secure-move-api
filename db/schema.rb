@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_23_123415) do
+ActiveRecord::Schema.define(version: 2020_09_29_055929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -440,7 +440,9 @@ ActiveRecord::Schema.define(version: 2020_09_23_123415) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "confirmed_at"
+    t.uuid "move_id"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
+    t.index ["move_id"], name: "index_person_escort_records_on_move_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
@@ -551,6 +553,7 @@ ActiveRecord::Schema.define(version: 2020_09_23_123415) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "person_escort_records", "frameworks"
+  add_foreign_key "person_escort_records", "moves"
   add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
