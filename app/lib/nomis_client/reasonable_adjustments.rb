@@ -26,6 +26,7 @@ module NomisClient
           start_date: reasonable_adjustment['startDate'],
           end_date: reasonable_adjustment['endDate'],
           agency_id: reasonable_adjustment['agencyId'],
+          treatment_description: reasonable_adjustment['treatmentDescription'],
         }
       end
     end

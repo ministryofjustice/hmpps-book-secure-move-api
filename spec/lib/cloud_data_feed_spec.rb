@@ -14,7 +14,7 @@ RSpec.describe CloudDataFeed do
     full_name = described_class.new('bucket_name')
                     .write('some content', 'report.json')
 
-    expect(full_name).to eq('2020/01/30/2020-01-30-report.json')
+    expect(full_name).to eq('2020/01/29/2020-01-29-report.json')
   end
 
   context 'when a report date is specified' do

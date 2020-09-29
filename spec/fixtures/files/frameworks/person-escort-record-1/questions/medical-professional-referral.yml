@@ -22,3 +22,8 @@ options:
     value: 'No'
     followup_comment:
       label: Please give details
+nomis_fallback_mappings:
+  -
+    type: alert
+  -
+    type: personal_care_need
