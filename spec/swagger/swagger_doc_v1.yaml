@@ -2955,6 +2955,15 @@
               - court
               - police
               - prison
+              - secure_training_centre
+              - secure_childrens_home
+              - approved_premises
+              - probation_office
+              - community_rehabilitation_company
+              - foreign_national_prison
+              - voluntary_hostel
+              - high_security_hospital
+              - immigration_detention_centre
         - name: filter[nomis_agency_id]
           in: query
           description: Filters results by NOMIS agency ID
