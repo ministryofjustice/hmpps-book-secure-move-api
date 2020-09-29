@@ -75,6 +75,7 @@ class Move < VersionedModel
   belongs_to :to_location, class_name: 'Location', optional: true
   belongs_to :profile, optional: true, touch: true
   has_one :person, through: :profile
+  has_one :person_escort_record
 
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
