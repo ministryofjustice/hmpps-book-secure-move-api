@@ -51,11 +51,21 @@ RSpec.describe Api::GenericEventsController do
         }
       end
 
-      xit 'sets up relationships correctly' do
+      it 'returns with an error' do
         do_post
-
-        event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
-        expect(event.from_location).to be_a(Location)
+        expected_message = {
+          'errors' => [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => "From location id can't be blank",
+              'source' => {
+                'pointer' => '/data/attributes/from_location_id',
+              },
+              'code' => 'blank',
+            },
+          ],
+        }
+        expect(response_json).to eq(expected_message)
       end
     end
 
@@ -70,7 +80,6 @@ RSpec.describe Api::GenericEventsController do
 
       it 'sets up relationships correctly' do
         do_post
-
         event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
         expect(event.from_location).to be_a(Location)
       end
