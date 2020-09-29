@@ -1,5 +1,7 @@
 class GenericEvent
   class MoveLodgingEnd < GenericEvent
+    DETAILS_ATTRIBUTES = %w[].freeze
+
     include MoveEventValidations
 
     validates :location_id, presence: true

@@ -1,5 +1,10 @@
 class GenericEvent
   class MoveCancel < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      cancellation_reason
+      cancellation_reason_comment
+    ].freeze
+
     attr_writer :cancellation_reason
 
     include MoveEventValidations

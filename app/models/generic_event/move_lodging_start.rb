@@ -1,5 +1,9 @@
 class GenericEvent
   class MoveLodgingStart < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      reason
+    ].freeze
+
     include MoveEventValidations
 
     enum reason: {

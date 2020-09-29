@@ -1,5 +1,11 @@
 class GenericEvent
   class MoveReject < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      rejection_reason
+      cancellation_reason_comment
+      rebook
+    ].freeze
+
     include MoveEventValidations
 
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }
