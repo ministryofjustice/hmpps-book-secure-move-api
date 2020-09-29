@@ -3,27 +3,23 @@
 require 'rails_helper'
 
 RSpec.describe Api::GenericEventsController do
-  %w[
-    journey_admit_through_outer_gate
-    journey_arrive_at_outer_gate
-    journey_cancel
-    journey_complete
-    journey_create
-    journey_exit_through_outer_gate
-    journey_handover_to_destination
-    journey_lockout
-    journey_lodging
-    journey_person_leave_vehicle
-    journey_ready_to_exit
-    journey_reject
-    journey_start
-    journey_uncancel
-    journey_uncomplete
-    journey_update
-  ].each do |event|
-    it_behaves_like 'a generic event endpoint', "event_#{event}", event.camelize do
-      let(:eventable_id) { create(:journey).id }
-      let(:eventable_type) { 'journeys' }
-    end
-  end
+  let(:eventable_type) { 'journeys' }
+  let(:eventable_id) { create(:journey).id }
+
+  it_behaves_like 'a generic event endpoint', 'journey_admit_through_outer_gate', 'JourneyAdmitThroughOuterGate'
+  it_behaves_like 'a generic event endpoint', 'journey_arrive_at_outer_gate', 'JourneyArriveAtOuterGate'
+  it_behaves_like 'a generic event endpoint', 'journey_cancel', 'JourneyCancel'
+  it_behaves_like 'a generic event endpoint', 'journey_complete', 'JourneyComplete'
+  it_behaves_like 'a generic event endpoint', 'journey_create', 'JourneyCreate'
+  it_behaves_like 'a generic event endpoint', 'journey_exit_through_outer_gate', 'JourneyExitThroughOuterGate'
+  it_behaves_like 'a generic event endpoint', 'journey_handover_to_destination', 'JourneyHandoverToDestination'
+  it_behaves_like 'a generic event endpoint', 'journey_lockout', 'JourneyLockout'
+  it_behaves_like 'a generic event endpoint', 'journey_lodging', 'JourneyLodging'
+  it_behaves_like 'a generic event endpoint', 'journey_person_leave_vehicle', 'JourneyPersonLeaveVehicle'
+  it_behaves_like 'a generic event endpoint', 'journey_ready_to_exit', 'JourneyReadyToExit'
+  it_behaves_like 'a generic event endpoint', 'journey_reject', 'JourneyReject'
+  it_behaves_like 'a generic event endpoint', 'journey_start', 'JourneyStart'
+  it_behaves_like 'a generic event endpoint', 'journey_uncancel', 'JourneyUncancel'
+  it_behaves_like 'a generic event endpoint', 'journey_uncomplete', 'JourneyUncomplete'
+  it_behaves_like 'a generic event endpoint', 'journey_update', 'JourneyUpdate'
 end
