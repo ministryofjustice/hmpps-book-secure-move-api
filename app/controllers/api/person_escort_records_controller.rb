@@ -4,10 +4,11 @@ module Api
   class PersonEscortRecordsController < ApiController
     after_action :send_notification, only: :update
 
+    # TODO: Remove profile id and transition to Move id, for now accept both
     NEW_PERMITTED_PER_PARAMS = [
       :type,
       attributes: [:version],
-      relationships: [profile: {}],
+      relationships: [profile: {}, move: {}],
     ].freeze
 
     UPDATE_PERMITTED_PER_PARAMS = [
@@ -16,9 +17,11 @@ module Api
     ].freeze
 
     def create
+      # TODO: Remove profile id and transition to Move id, for now accept both
       person_escort_record = PersonEscortRecord.save_with_responses!(
         version: new_person_escort_record_params.dig(:attributes, :version),
         profile_id: new_person_escort_record_params.dig(:relationships, :profile, :data, :id),
+        move_id: new_person_escort_record_params.dig(:relationships, :move, :data, :id),
       )
 
       render_person_escort_record(person_escort_record, :created)

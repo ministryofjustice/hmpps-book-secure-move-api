@@ -37,11 +37,19 @@ class PersonEscortRecord < VersionedModel
            :confirmed?,
            to: :state_machine
 
-  def self.save_with_responses!(profile_id:, version: nil)
-    profile = Profile.find(profile_id)
+  def self.save_with_responses!(profile_id: nil, version: nil, move_id: nil)
+    # TODO: Remove profile id and transition to Move id, for now accept both
+    if move_id.present?
+      move = Move.find(move_id)
+      profile = move.profile
+    else
+      move = nil
+      profile = Profile.find(profile_id)
+    end
+
     framework = Framework.find_by!(version: version)
 
-    record = new(profile: profile, framework: framework)
+    record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
   rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
     record.errors.add(:profile, :taken)

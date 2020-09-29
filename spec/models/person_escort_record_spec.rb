@@ -29,6 +29,24 @@ RSpec.describe PersonEscortRecord do
       expect { described_class.save_with_responses!(profile_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it 'returns error if move does not exist' do
+      expect { described_class.save_with_responses!(move_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'returns error if move is not associated to a profile' do
+      create(:framework, version: '1.2.1')
+      move = create(:move, profile: nil)
+
+      expect { described_class.save_with_responses!(move_id: move.id, version: '1.2.1') }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'returns error if no move is passed' do
+      create(:framework, version: '1.2.1')
+      create(:move)
+
+      expect { described_class.save_with_responses!(move_id: nil, version: '1.2.1') }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
     it 'returns framework with version specified' do
       framework = create(:framework, version: '1.2.1')
       profile = create(:profile)
@@ -62,6 +80,15 @@ RSpec.describe PersonEscortRecord do
       described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
 
       expect { described_class.save_with_responses!(profile_id: profile.id, version: framework.version) }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'does not allow multiple person_escort_records on a profile through move' do
+      profile = create(:profile)
+      move = create(:move, profile: profile)
+      framework = create(:framework)
+      described_class.save_with_responses!(move_id: move.id, version: framework.version)
+
+      expect { described_class.save_with_responses!(move_id: move.id, version: framework.version) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'sets initial status to unstarted' do
