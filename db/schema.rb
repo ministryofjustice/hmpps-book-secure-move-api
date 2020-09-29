@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_29_055929) do
+ActiveRecord::Schema.define(version: 2020_09_30_010746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -160,6 +160,27 @@ ActiveRecord::Schema.define(version: 2020_09_29_055929) do
     t.uuid "framework_nomis_code_id"
     t.index ["framework_nomis_code_id"], name: "index_framework_nomis_codes_questions_on_nomis_code_id"
     t.index ["framework_question_id"], name: "index_framework_nomis_codes_questions_on_question_id"
+  end
+
+  create_table "framework_nomis_mappings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.jsonb "raw_nomis_mapping", null: false
+    t.string "code", null: false
+    t.string "type", null: false
+    t.text "code_description"
+    t.text "comments"
+    t.date "start_date"
+    t.date "end_date"
+    t.date "creation_date"
+    t.date "expiry_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "framework_nomis_mappings_responses", id: false, force: :cascade do |t|
+    t.uuid "framework_response_id"
+    t.uuid "framework_nomis_mapping_id"
+    t.index ["framework_nomis_mapping_id"], name: "index_framework_nomis_mappings_responses_on_nomis_mapping_id"
+    t.index ["framework_response_id"], name: "index_framework_nomis_mappings_responses_on_response_id"
   end
 
   create_table "framework_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
