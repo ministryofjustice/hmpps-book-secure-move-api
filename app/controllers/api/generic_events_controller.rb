@@ -62,13 +62,7 @@ module Api
     end
 
     def event_specific_relationships
-      event_specific_relationships = event_relationships.to_unsafe_hash.except('eventable')
-      event_specific_relationships.each_with_object({}) do |(relationship, relationship_attributes), acc|
-        key = "#{relationship}_id"
-        id = relationship_attributes.dig(:data, :id)
-
-        acc[key] = id
-      end
+      GenericEvents::EventSpecificRelationshipsMapper.new(event_relationships).call
     end
   end
 end

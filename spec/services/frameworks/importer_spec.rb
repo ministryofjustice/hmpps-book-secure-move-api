@@ -108,5 +108,27 @@ RSpec.describe Frameworks::Importer do
         )
       end
     end
+
+    context 'when creating framework NOMIS codes' do
+      it 'persists NOMIS codes relative to a framework question' do
+        described_class.new(filepath: filepath, version: '0.1').call
+        framework_question = FrameworkQuestion.find_by(key: 'wheelchair-users')
+
+        expect(framework_question.framework_nomis_codes.pluck(:code)).to contain_exactly(
+          'PEEP',
+          'WHEELCHR_ACC',
+        )
+      end
+
+      it 'persists NOMIS fallbacks relative to a framework question' do
+        described_class.new(filepath: filepath, version: '0.1').call
+        framework_question = FrameworkQuestion.find_by(key: 'medical-professional-referral')
+
+        expect(framework_question.framework_nomis_codes.where(fallback: true).pluck(:code_type)).to contain_exactly(
+          'alert',
+          'personal_care_need',
+        )
+      end
+    end
   end
 end

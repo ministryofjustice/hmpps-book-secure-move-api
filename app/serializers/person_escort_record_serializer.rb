@@ -1,5 +1,6 @@
 class PersonEscortRecordSerializer < ActiveModel::Serializer
   belongs_to :profile, record_type: :profile
+  belongs_to :move, record_type: :move
   belongs_to :framework, record_type: :framework
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
   has_many :framework_flags, key: :flags
@@ -31,6 +32,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
+    move
     framework
     profile.person
     responses.question

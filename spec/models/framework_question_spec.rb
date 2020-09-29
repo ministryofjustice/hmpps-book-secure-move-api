@@ -14,6 +14,7 @@ RSpec.describe FrameworkQuestion do
   it { is_expected.to have_many(:dependents) }
   it { is_expected.to have_many(:framework_flags) }
   it { is_expected.to have_many(:framework_responses) }
+  it { is_expected.to have_and_belong_to_many(:framework_nomis_codes) }
 
   describe '#build_responses' do
     let(:questions) { described_class.all.index_by(&:id) }

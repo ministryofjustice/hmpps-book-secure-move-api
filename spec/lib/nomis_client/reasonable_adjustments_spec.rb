@@ -15,6 +15,7 @@ RSpec.describe NomisClient::ReasonableAdjustments, with_nomis_client_authenticat
           start_date: '2016-11-25',
           end_date: nil,
           agency_id: 'LGI',
+          treatment_description: 'Some treatment description about DA',
         },
         {
           treatment_code: 'LEARN SUPP',
@@ -22,6 +23,7 @@ RSpec.describe NomisClient::ReasonableAdjustments, with_nomis_client_authenticat
           start_date: '2020-04-01',
           end_date: '2020-05-01',
           agency_id: 'WYI',
+          treatment_description: 'Some treatment description about LEARN SUPP',
         },
       ]
     end

@@ -9,6 +9,8 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:profile) { create(:profile) }
     let(:profile_id) { profile.id }
+    let(:move) { create(:move, profile: profile) }
+    let(:move_id) { move.id }
     let(:framework) { create(:framework, framework_questions: [build(:framework_question, section: 'risk-information')]) }
     let(:framework_version) { framework.version }
 
@@ -59,6 +61,88 @@ RSpec.describe Api::PersonEscortRecordsController do
               "data": {
                 "id": profile_id,
                 "type": 'profiles',
+              },
+            },
+            "move": {
+              "data": {},
+            },
+            "framework": {
+              "data": {
+                "id": framework.id,
+                "type": 'frameworks',
+              },
+            },
+            "responses": {
+              "data": [
+                {
+                  "id": FrameworkResponse.last.id,
+                  "type": 'framework_responses',
+                },
+              ],
+            },
+            "flags": {
+              "data": [],
+            },
+          },
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with success 201'
+
+      it 'returns the correct data' do
+        expect(response_json).to include_json(data: data)
+      end
+    end
+
+    # TODO: Remove profile id and transition to Move id, for now accept both
+    context 'when successful with move' do
+      let(:person_escort_record_params) do
+        {
+          data: {
+            "type": 'person_escort_records',
+            "attributes": {
+              "version": framework_version,
+            },
+            "relationships": {
+              "move": {
+                "data": {
+                  "id": move_id,
+                  "type": 'moves',
+                },
+              },
+            },
+          },
+        }
+      end
+      let(:schema) { load_yaml_schema('post_person_escort_record_responses.yaml') }
+      let(:data) do
+        {
+          "id": PersonEscortRecord.last.id,
+          "type": 'person_escort_records',
+          "attributes": {
+            "version": framework_version,
+            "status": 'not_started',
+            "confirmed_at": nil,
+          },
+          "meta": {
+            'section_progress' => [
+              {
+                "key": 'risk-information',
+                "status": 'not_started',
+              },
+            ],
+          },
+          "relationships": {
+            "profile": {
+              "data": {
+                "id": profile_id,
+                "type": 'profiles',
+              },
+            },
+            "move": {
+              "data": {
+                "id": move_id,
+                "type": 'moves',
               },
             },
             "framework": {
