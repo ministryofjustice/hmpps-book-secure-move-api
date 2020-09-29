@@ -19,16 +19,10 @@ RSpec.describe Api::GenericEventsController do
 
   describe 'POST /events' do
     let(:event_attributes) do
-      {
-        occurred_at: Time.zone.now,
-        recorded_at: Time.zone.now,
-        notes: 'Something or other',
-        event_type: 'MoveCancel',
-        details: {
-          cancellation_reason: Move::CANCELLATION_REASON_MADE_IN_ERROR,
-          cancellation_reason_comment: 'The flibble got wibbled',
-        },
-      }
+      attributes_for(:event_move_lockout).tap do |attributes|
+        attributes.except!(:eventable)
+        attributes[:event_type] = 'MoveLockout'
+      end
     end
 
     let(:move) { create(:move) }
@@ -39,6 +33,7 @@ RSpec.describe Api::GenericEventsController do
         attributes: event_attributes,
         relationships: {
           eventable: { data: { type: 'moves', id: move.id } },
+          from_location: { data: { type: 'locations', id: move.from_location.id } },
         },
       }
     end
@@ -47,8 +42,42 @@ RSpec.describe Api::GenericEventsController do
       before { do_post }
     end
 
+    context 'when event-specific relationships are in the details attribute' do
+      let(:data) do
+        {
+          type: 'events',
+          attributes: event_attributes,
+          relationships: { eventable: { data: { type: 'moves', id: move.id } } },
+        }
+      end
+
+      xit 'sets up relationships correctly' do
+        do_post
+
+        event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
+        expect(event.from_location).to be_a(Location)
+      end
+    end
+
+    context 'when event-specific relationships are in the relationship attribute' do
+      let(:event_attributes) do
+        attributes_for(:event_move_lockout).tap do |attributes|
+          attributes.except!(:eventable)
+          attributes[:details] = attributes[:details].except(:from_location_id)
+          attributes[:event_type] = 'MoveLockout'
+        end
+      end
+
+      it 'sets up relationships correctly' do
+        do_post
+
+        event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
+        expect(event.from_location).to be_a(Location)
+      end
+    end
+
     it 'creates a event' do
-      expect { do_post }.to change(GenericEvent, :count).by(1)
+      expect { do_post }.to change(GenericEvent::MoveLockout, :count).by(1)
     end
 
     it 'sets the eventable' do
