@@ -14,7 +14,7 @@ RSpec.describe Frameworks::Question do
       expect(question.required).to eq(true)
     end
 
-    it 'sets a question as not requried if no validation available' do
+    it 'sets a question as not required if no validation available' do
       filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
