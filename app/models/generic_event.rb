@@ -1,4 +1,5 @@
 class GenericEvent < ApplicationRecord
+  DETAILS_ATTRIBUTES = %w[]
   FEED_ATTRIBUTES = %w[
     id
     notes
@@ -75,13 +76,5 @@ class GenericEvent < ApplicationRecord
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
     type.constantize.from_event(event)
-  end
-
-  def self.details_attributes
-    if const_defined?('DETAILS_ATTRIBUTES')
-      self::DETAILS_ATTRIBUTES 
-    else
-      []
-    end
   end
 end
