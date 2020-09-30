@@ -136,4 +136,44 @@ RSpec.describe Journey, type: :model do
       expect(journey.for_feed).to include_json(expected_json)
     end
   end
+
+  describe '#handle_run' do
+    subject(:journey) { create(:journey) }
+
+    before do
+      allow(journey).to receive(:save)
+    end
+
+    context 'when the journey has not changed' do
+      it 'does not save the journey' do
+        journey.handle_run
+
+        expect(journey).not_to have_received(:save)
+      end
+    end
+
+    context 'when the journey has changed but is not valid' do
+      before do
+        journey.state = 'foo'
+      end
+
+      it 'does not save the journey' do
+        journey.handle_run
+
+        expect(journey).not_to have_received(:save)
+      end
+    end
+
+    context 'when the journey has changed and is valid' do
+      before do
+        journey.state = 'in_progress'
+      end
+
+      it 'saves the journey' do
+        journey.handle_run
+
+        expect(journey).to have_received(:save)
+      end
+    end
+  end
 end
