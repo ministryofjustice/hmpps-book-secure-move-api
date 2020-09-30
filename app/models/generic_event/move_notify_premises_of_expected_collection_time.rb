@@ -1,5 +1,9 @@
 class GenericEvent
   class MoveNotifyPremisesOfExpectedCollectionTime < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      expected_at
+    ].freeze
+
     include MoveEventValidations
 
     validates :expected_at, presence: true

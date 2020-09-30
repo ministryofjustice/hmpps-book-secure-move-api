@@ -1,5 +1,11 @@
 class GenericEvent
   class MoveLockout < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      authorised_at
+      authorised_by
+      reason
+    ].freeze
+
     include MoveEventValidations
     include AuthoriserValidations
 

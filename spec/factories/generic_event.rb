@@ -4,6 +4,7 @@ FactoryBot.define do
     occurred_at { Time.zone.now }
     recorded_at { Time.zone.now }
     notes { 'Flibble' }
+    details { {} }
   end
 
   factory :event_move_accept, parent: :generic_event, class: 'GenericEvent::MoveAccept' do

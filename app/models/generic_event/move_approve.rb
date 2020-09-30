@@ -1,5 +1,10 @@
 class GenericEvent
   class MoveApprove < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      date
+      create_in_nomis
+    ].freeze
+
     include MoveEventValidations
     validates :date, presence: true
 
