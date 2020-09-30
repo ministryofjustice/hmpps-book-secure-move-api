@@ -577,19 +577,12 @@ RSpec.describe Move do
     subject(:move) { create(:move) }
 
     before do
-      allow(move).to receive(:save!)
       allow(Notifier).to receive(:prepare_notifications)
     end
 
     context 'when the move has not changed' do
       it 'returns false' do
         expect(move.handle_run).to eq(false)
-      end
-
-      it 'does not primadonna save the move' do
-        move.handle_run
-
-        expect(move).not_to have_received(:save!)
       end
 
       it 'does not trigger a move notification' do
@@ -611,7 +604,7 @@ RSpec.describe Move do
       it 'saves the move' do
         move.handle_run
 
-        expect(move).to have_received(:save!)
+        expect(move.reload.status).to eq('in_transit')
       end
 
       it 'triggers a move notification' do
@@ -623,8 +616,10 @@ RSpec.describe Move do
 
     context 'when the move date has changed' do
       before do
-        move.date = move.date + 1.day
+        move.date = new_date
       end
+
+      let(:new_date) { move.date + 1.day }
 
       it 'returns true' do
         expect(move.handle_run).to eq(true)
@@ -633,7 +628,7 @@ RSpec.describe Move do
       it 'saves the move' do
         move.handle_run
 
-        expect(move).to have_received(:save!)
+        expect(move.reload.date).to eq(new_date)
       end
 
       it 'triggers a move notification' do

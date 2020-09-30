@@ -140,18 +140,6 @@ RSpec.describe Journey, type: :model do
   describe '#handle_run' do
     subject(:journey) { create(:journey) }
 
-    before do
-      allow(journey).to receive(:save)
-    end
-
-    context 'when the journey has not changed' do
-      it 'does not save the journey' do
-        journey.handle_run
-
-        expect(journey).not_to have_received(:save)
-      end
-    end
-
     context 'when the journey has changed but is not valid' do
       before do
         journey.state = 'foo'
@@ -160,7 +148,7 @@ RSpec.describe Journey, type: :model do
       it 'does not save the journey' do
         journey.handle_run
 
-        expect(journey).not_to have_received(:save)
+        expect(journey.reload.state).not_to eq('foo')
       end
     end
 
@@ -172,7 +160,7 @@ RSpec.describe Journey, type: :model do
       it 'saves the journey' do
         journey.handle_run
 
-        expect(journey).to have_received(:save)
+        expect(journey.reload.state).to eq('in_progress')
       end
     end
   end

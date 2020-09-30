@@ -13,7 +13,9 @@ RSpec.describe GenericEvents::Runner do
   let!(:events) { [move_start_event, move_complete_event, move_reject_event] }
 
   before do
-    allow(eventable).to receive_message_chain('generic_events.applied_order').and_return(events)
+    allow(eventable).to receive(:generic_events) do
+      class_double('GenericEvent', applied_order: events)
+    end
     allow(eventable).to receive(:handle_run).and_call_original
 
     allow(move_start_event).to receive(:trigger).and_call_original
@@ -24,9 +26,7 @@ RSpec.describe GenericEvents::Runner do
   it 'calls #trigger against each event' do
     runner.call
 
-    expect(move_start_event).to have_received(:trigger).ordered
-    expect(move_complete_event).to have_received(:trigger).ordered
-    expect(move_reject_event).to have_received(:trigger).ordered
+    expect(events).to all(have_received(:trigger).ordered)
   end
 
   it 'calls #handle_run against the eventable' do
