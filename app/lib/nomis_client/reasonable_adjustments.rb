@@ -8,14 +8,14 @@ module NomisClient
 
         reasonable_adjustments_response = get_response(booking_id: booking_id, reasonable_adjustment_types: reasonable_adjustment_types)
 
-        reasonable_adjustments_response['reasonableAdjustments'].map do |reasonable_adjustment_attributes|
+        reasonable_adjustments_response['reasonableAdjustments']&.map do |reasonable_adjustment_attributes|
           attributes_for(reasonable_adjustment_attributes)
         end
       end
 
       def get_response(booking_id:, reasonable_adjustment_types:)
         NomisClient::Base.get(
-          "/bookings/#{booking_id}/personal-care-needs?type=#{reasonable_adjustment_types}",
+          "/bookings/#{booking_id}/reasonable-adjustments?type=#{reasonable_adjustment_types}",
         ).parsed
       end
 
