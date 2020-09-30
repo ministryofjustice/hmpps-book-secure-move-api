@@ -1,5 +1,5 @@
 class GenericEvent < ApplicationRecord
-  DETAILS_ATTRIBUTES = %w[]
+  DETAILS_ATTRIBUTES = %w[].freeze
   FEED_ATTRIBUTES = %w[
     id
     notes
