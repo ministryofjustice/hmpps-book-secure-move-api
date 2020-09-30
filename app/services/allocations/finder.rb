@@ -4,7 +4,7 @@ module Allocations
   class Finder
     attr_reader :filter_params, :search_params
 
-    ALLOCATION_INCLUDES = [:from_location, :to_location, moves: %i[profile]].freeze
+    ALLOCATION_INCLUDES = [from_location: :suppliers, to_location: :suppliers, moves: %i[from_location to_location court_hearings profile person]].freeze
 
     def initialize(filters: {}, ordering: {}, search: {})
       @search_params = search
@@ -60,7 +60,6 @@ module Allocations
     end
 
     def apply_filters(scope)
-      scope = scope.includes(from_location: :suppliers, to_location: :suppliers)
       scope = apply_date_range_filters(scope)
       scope = apply_location_filters(scope)
       scope = apply_status_filters(scope)
