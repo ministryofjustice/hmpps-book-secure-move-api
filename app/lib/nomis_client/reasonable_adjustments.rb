@@ -8,7 +8,7 @@ module NomisClient
 
         reasonable_adjustments_response = get_response(booking_id: booking_id, reasonable_adjustment_types: reasonable_adjustment_types)
 
-        reasonable_adjustments_response['reasonableAdjustments']&.map do |reasonable_adjustment_attributes|
+        reasonable_adjustments_response['reasonableAdjustments'].map do |reasonable_adjustment_attributes|
           attributes_for(reasonable_adjustment_attributes)
         end
       end

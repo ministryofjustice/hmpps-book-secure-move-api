@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_09_30_010746) do
   create_table "framework_nomis_mappings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.jsonb "raw_nomis_mapping", null: false
     t.string "code", null: false
-    t.string "type", null: false
+    t.string "code_type", null: false
     t.text "code_description"
     t.text "comments"
     t.date "start_date"

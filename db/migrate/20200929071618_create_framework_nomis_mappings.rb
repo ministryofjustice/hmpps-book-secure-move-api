@@ -3,7 +3,7 @@ class CreateFrameworkNomisMappings < ActiveRecord::Migration[6.0]
     create_table :framework_nomis_mappings, id: :uuid do |t|
       t.jsonb :raw_nomis_mapping, null: false
       t.string :code, null: false
-      t.string :type, null: false
+      t.string :code_type, null: false
       t.text :code_description
       t.text :comments
       t.date :start_date

@@ -51,6 +51,9 @@ class PersonEscortRecord < VersionedModel
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
+    if move&.from_location&.prison?
+      FrameworkNomisMappings::Importer.new(framework_nomis_codes: framework.framework_nomis_codes, person: profile.person, framework_responses: record.framework_responses).call
+    end
   rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
     record.errors.add(:profile, :taken)
     raise ActiveRecord::RecordInvalid, record

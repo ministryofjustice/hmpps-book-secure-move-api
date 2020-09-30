@@ -37,6 +37,7 @@ module V2
       profile.person_escort_record.flags
       profile.person_escort_record.framework
       profile.person_escort_record.responses
+      profile.person_escort_record.responses.nomis_mappings
       profile.person_escort_record.responses.question
       profile.person_escort_record.responses.question.descendants.**
       from_location

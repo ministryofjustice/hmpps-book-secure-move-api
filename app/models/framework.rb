@@ -7,4 +7,5 @@ class Framework < ApplicationRecord
 
   has_many :framework_questions
   has_many :person_escort_records
+  has_many :framework_nomis_codes, through: :framework_questions
 end
