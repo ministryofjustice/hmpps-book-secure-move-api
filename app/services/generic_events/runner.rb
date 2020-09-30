@@ -6,7 +6,7 @@ module GenericEvents
 
     def call
       @eventable.generic_events.applied_order.each(&:trigger)
-      @eventable.handle_run
+      @eventable.handle_event_run
     end
   end
 end

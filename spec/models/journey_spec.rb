@@ -137,7 +137,7 @@ RSpec.describe Journey, type: :model do
     end
   end
 
-  describe '#handle_run' do
+  describe '#handle_event_run' do
     subject(:journey) { create(:journey) }
 
     context 'when the journey has changed but is not valid' do
@@ -146,7 +146,7 @@ RSpec.describe Journey, type: :model do
       end
 
       it 'does not save the journey' do
-        journey.handle_run
+        journey.handle_event_run
 
         expect(journey.reload.state).not_to eq('foo')
       end
@@ -158,7 +158,7 @@ RSpec.describe Journey, type: :model do
       end
 
       it 'saves the journey' do
-        journey.handle_run
+        journey.handle_event_run
 
         expect(journey.reload.state).to eq('in_progress')
       end

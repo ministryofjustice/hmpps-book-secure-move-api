@@ -573,7 +573,7 @@ RSpec.describe Move do
     end
   end
 
-  describe '#handle_run' do
+  describe '#handle_event_run' do
     subject(:move) { create(:move) }
 
     before do
@@ -582,11 +582,11 @@ RSpec.describe Move do
 
     context 'when the move has not changed' do
       it 'returns false' do
-        expect(move.handle_run).to eq(false)
+        expect(move.handle_event_run).to eq(false)
       end
 
       it 'does not trigger a move notification' do
-        move.handle_run
+        move.handle_event_run
 
         expect(Notifier).not_to have_received(:prepare_notifications)
       end
@@ -598,17 +598,17 @@ RSpec.describe Move do
       end
 
       it 'returns true' do
-        expect(move.handle_run).to eq(true)
+        expect(move.handle_event_run).to eq(true)
       end
 
       it 'saves the move' do
-        move.handle_run
+        move.handle_event_run
 
         expect(move.reload.status).to eq('in_transit')
       end
 
       it 'triggers a move notification' do
-        move.handle_run
+        move.handle_event_run
 
         expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
       end
@@ -622,17 +622,17 @@ RSpec.describe Move do
       let(:new_date) { move.date + 1.day }
 
       it 'returns true' do
-        expect(move.handle_run).to eq(true)
+        expect(move.handle_event_run).to eq(true)
       end
 
       it 'saves the move' do
-        move.handle_run
+        move.handle_event_run
 
         expect(move.reload.date).to eq(new_date)
       end
 
       it 'triggers a move notification' do
-        move.handle_run
+        move.handle_event_run
 
         expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
       end

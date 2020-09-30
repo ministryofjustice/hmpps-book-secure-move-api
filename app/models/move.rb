@@ -179,7 +179,7 @@ class Move < VersionedModel
     feed_attributes
   end
 
-  def handle_run
+  def handle_event_run
     if changed?
       action_name = status_changed? ? 'update_status' : 'update'
 
