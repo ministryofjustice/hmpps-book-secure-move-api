@@ -1,7 +1,5 @@
 class GenericEvent
   class JourneyLodging < GenericEvent
-    DETAILS_ATTRIBUTES = %w[].freeze
-
     include JourneyEventValidations
 
     validates :to_location_id, presence: true

@@ -1,7 +1,5 @@
 class GenericEvent
   class JourneyUncomplete < GenericEvent
-    DETAILS_ATTRIBUTES = %w[].freeze
-
     include JourneyEventValidations
 
     def trigger

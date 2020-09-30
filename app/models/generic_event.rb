@@ -76,4 +76,12 @@ class GenericEvent < ApplicationRecord
 
     type.constantize.from_event(event)
   end
+
+  def self.details_attributes
+    if const_defined?('DETAILS_ATTRIBUTES')
+      self::DETAILS_ATTRIBUTES 
+    else
+      []
+    end
+  end
 end

@@ -1,7 +1,5 @@
 class GenericEvent
   class JourneyCancel < GenericEvent
-    DETAILS_ATTRIBUTES = %w[].freeze
-
     include JourneyEventValidations
 
     def trigger

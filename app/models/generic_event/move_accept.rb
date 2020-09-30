@@ -1,7 +1,5 @@
 class GenericEvent
   class MoveAccept < GenericEvent
-    DETAILS_ATTRIBUTES = %w[].freeze
-
     include MoveEventValidations
 
     def trigger

@@ -1,7 +1,5 @@
 class GenericEvent
   class JourneyUpdate < GenericEvent
-    DETAILS_ATTRIBUTES = %w[].freeze
-
     include JourneyEventValidations
 
     def self.from_event(event)
