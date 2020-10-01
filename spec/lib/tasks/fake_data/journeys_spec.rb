@@ -28,10 +28,11 @@ RSpec.describe Tasks::FakeData::Journeys do
   context 'when move redirect occurs' do
     before do
       allow(generator).to receive(:random_event).and_return(:redirect_move_billable)
+      create_journeys
     end
 
-    it 'creates 2 redirect events' do
-      expect { create_journeys }.to change { GenericEvent::MoveRedirect.where(eventable: move).count }.from(0).to(2)
+    it 'creates a redirect event' do
+      expect(move.events.where(event_name: 'redirect').exists?).to be true
     end
   end
 end
