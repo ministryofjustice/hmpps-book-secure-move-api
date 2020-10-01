@@ -572,4 +572,70 @@ RSpec.describe Move do
       expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
     end
   end
+
+  describe '#handle_event_run' do
+    subject(:move) { create(:move) }
+
+    before do
+      allow(Notifier).to receive(:prepare_notifications)
+    end
+
+    context 'when the move has not changed' do
+      it 'returns false' do
+        expect(move.handle_event_run).to eq(false)
+      end
+
+      it 'does not trigger a move notification' do
+        move.handle_event_run
+
+        expect(Notifier).not_to have_received(:prepare_notifications)
+      end
+    end
+
+    context 'when the move status has changed' do
+      before do
+        move.status = 'in_transit'
+      end
+
+      it 'returns true' do
+        expect(move.handle_event_run).to eq(true)
+      end
+
+      it 'saves the move' do
+        move.handle_event_run
+
+        expect(move.reload.status).to eq('in_transit')
+      end
+
+      it 'triggers a move notification' do
+        move.handle_event_run
+
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update_status')
+      end
+    end
+
+    context 'when the move date has changed' do
+      before do
+        move.date = new_date
+      end
+
+      let(:new_date) { move.date + 1.day }
+
+      it 'returns true' do
+        expect(move.handle_event_run).to eq(true)
+      end
+
+      it 'saves the move' do
+        move.handle_event_run
+
+        expect(move.reload.date).to eq(new_date)
+      end
+
+      it 'triggers a move notification' do
+        move.handle_event_run
+
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
+      end
+    end
+  end
 end

@@ -15,6 +15,7 @@ module Api
     def create
       GenericEvents::CommonParamsValidator.new(event_params, event_relationships).validate!
       event = event_type.constantize.create!(event_attributes)
+      run_event_logs
 
       render json: event, status: :created, serializer: ::GenericEventSerializer
     end
@@ -64,6 +65,10 @@ module Api
 
     def event_specific_relationships
       GenericEvents::EventSpecificRelationshipsMapper.new(event_relationships).call
+    end
+
+    def run_event_logs
+      GenericEvents::Runner.new(eventable).call
     end
   end
 end

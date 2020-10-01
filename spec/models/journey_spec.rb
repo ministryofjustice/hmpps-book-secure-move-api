@@ -136,4 +136,32 @@ RSpec.describe Journey, type: :model do
       expect(journey.for_feed).to include_json(expected_json)
     end
   end
+
+  describe '#handle_event_run' do
+    subject(:journey) { create(:journey) }
+
+    context 'when the journey has changed but is not valid' do
+      before do
+        journey.state = 'foo'
+      end
+
+      it 'does not save the journey' do
+        journey.handle_event_run
+
+        expect(journey.reload.state).not_to eq('foo')
+      end
+    end
+
+    context 'when the journey has changed and is valid' do
+      before do
+        journey.state = 'in_progress'
+      end
+
+      it 'saves the journey' do
+        journey.handle_event_run
+
+        expect(journey.reload.state).to eq('in_progress')
+      end
+    end
+  end
 end
