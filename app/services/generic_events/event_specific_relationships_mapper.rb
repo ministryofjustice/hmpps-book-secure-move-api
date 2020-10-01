@@ -1,7 +1,7 @@
 module GenericEvents
   class EventSpecificRelationshipsMapper
     def initialize(event_relationships)
-      @event_relationships = event_relationships.to_unsafe_hash.except('eventable')
+      @event_relationships = event_relationships.to_h.except('eventable')
     end
 
     def call
