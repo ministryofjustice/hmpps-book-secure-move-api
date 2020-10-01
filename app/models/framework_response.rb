@@ -16,6 +16,7 @@ class FrameworkResponse < VersionedModel
 
   belongs_to :parent, class_name: 'FrameworkResponse', optional: true
   has_and_belongs_to_many :framework_flags, autosave: true
+  has_and_belongs_to_many :framework_nomis_mappings
 
   after_validation :set_responded_value, on: :update
 
