@@ -80,14 +80,20 @@ module Tasks
       end
 
       def create_redirect_move_event(timestamp, notes, location)
-        GenericEvent::MoveRedirect.create!(
-          eventable: move,
-          occurred_at: timestamp,
-          recorded_at: timestamp,
-          notes: notes,
+        move.events.create!(
+          event_name: 'redirect',
+          client_timestamp: timestamp,
           details: {
+            fake: true,
             supplier_id: supplier.id,
-            to_location_id: location.id,
+            event_params: {
+              attributes: {
+                notes: notes,
+              },
+              relationships: {
+                to_location: { data: { id: location.id } },
+              },
+            },
           },
         )
       end
