@@ -51,33 +51,4 @@ RSpec.describe FrameworkNomisMappingSerializer do
   it 'contains a `expiry_date` attribute' do
     expect(result[:data][:attributes][:expiry_date]).to eq(framework_nomis_mapping.expiry_date)
   end
-
-  it 'contains a `responses` relationship' do
-    expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
-      id: framework_response.id,
-      type: 'framework_responses',
-    )
-  end
-
-  context 'with include options' do
-    let(:includes) do
-      {
-        responses: :value_type,
-      }
-    end
-
-    let(:expected_json) do
-      [
-        {
-          id: framework_response.id,
-          type: 'framework_responses',
-          attributes: { value_type: framework_response.framework_question.response_type },
-        },
-      ]
-    end
-
-    it 'contains an included question' do
-      expect(result[:included]).to include_json(expected_json)
-    end
-  end
 end

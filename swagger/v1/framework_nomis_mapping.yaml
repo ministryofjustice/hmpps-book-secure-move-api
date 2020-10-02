@@ -78,10 +78,3 @@ FrameworkNomisMapping:
             format: date
             description: Date of when the nomis mapping expires
             readOnly: true
-    relationships:
-      type: object
-      required:
-      properties:
-        responses:
-          $ref: framework_response_reference.yaml#/FrameworkResponseReference
-          description: The framework responses associated with this framework_nomis_mapping
