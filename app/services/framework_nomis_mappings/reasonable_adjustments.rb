@@ -8,7 +8,7 @@ module FrameworkNomisMappings
     end
 
     def call
-      return [] unless booking_id && nomis_codes.any?
+      return [] unless booking_id && nomis_codes.present?
 
       build_mappings.compact
     end
@@ -16,7 +16,7 @@ module FrameworkNomisMappings
   private
 
     def imported_reasonable_adjustments
-      @imported_reasonable_adjustments ||= NomisClient::ReasonableAdjustments.get(booking_id: booking_id, reasonable_adjustment_types: nomis_codes.pluck(:code).compact.join(','))
+      @imported_reasonable_adjustments ||= NomisClient::ReasonableAdjustments.get(booking_id: booking_id, reasonable_adjustment_types: nomis_codes.pluck(:code).compact.uniq.join(','))
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e
       Rails.logger.warn "Importing Framework reasonable adjustment mappings Error: #{e.message}"
 

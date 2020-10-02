@@ -41,6 +41,8 @@ module FrameworkNomisMappings
     def valid_personal_care_need?(date, status)
       end_date = Date.parse(date) if date.present?
 
+      # Allow personal care needs that are 'ON' (ongoing) and end in the future if
+      # end date defined
       status == 'ON' && (end_date.nil? || end_date >= Time.zone.today)
     end
   end
