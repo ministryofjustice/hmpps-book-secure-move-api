@@ -249,4 +249,14 @@ FactoryBot.define do
   factory :event_journey_update, parent: :generic_event, class: 'GenericEvent::JourneyUpdate' do
     eventable { association(:journey) }
   end
+
+  factory :event_per_court_excessive_delay_not_due_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtExcessiveDelayNotDueToSupplier' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        subtype: 'making_prisoner_available_for_loading',
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
 end
