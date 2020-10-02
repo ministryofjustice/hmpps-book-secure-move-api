@@ -5,7 +5,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
   has_many :framework_flags, key: :flags
 
-  attributes :version, :status, :confirmed_at
+  attributes :version, :status, :confirmed_at, :created_at
 
   meta do
     { section_progress: object.section_progress }
@@ -20,7 +20,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
   end
 
   def framework_responses
-    object.framework_responses.includes(:framework_flags, framework_question: [:framework, dependents: :dependents])
+    object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
   end
 
   def status
@@ -36,6 +36,7 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     framework
     profile.person
     responses.question
+    responses.nomis_mappings
     responses.question.descendants.**
     flags
   ].freeze
