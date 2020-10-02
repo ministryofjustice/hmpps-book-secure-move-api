@@ -97,6 +97,17 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_operation_hmcts, parent: :generic_event, class: 'GenericEvent::MoveOperationHmcts' do
+    eventable { association(:move) }
+    details do
+      {
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: 'PMU',
+        court_cell_number: '6b',
+      }
+    end
+  end
+
   factory :event_move_operation_safeguard, parent: :generic_event, class: 'GenericEvent::MoveOperationSafeguard' do
     eventable { association(:move) }
     details do
