@@ -92,11 +92,11 @@ RSpec.describe Api::AllocationsController do
       end
       let(:pagination_links) do
         {
-          self: "http://www.example.com/api/v1/allocations?page%5Bnumber%5D=1&page%5Bsize%5D=5",
-          first: "http://www.example.com/api/v1/allocations?page%5Bnumber%5D=1&page%5Bsize%5D=5",
+          self: 'http://www.example.com/api/v1/allocations?page%5Bnumber%5D=1&page%5Bsize%5D=5',
+          first: 'http://www.example.com/api/v1/allocations?page%5Bnumber%5D=1&page%5Bsize%5D=5',
           prev: nil,
-          next: "http://www.example.com/api/v1/allocations?page%5Bnumber%5D=2&page%5Bsize%5D=5",
-          last: "http://www.example.com/api/v1/allocations?page%5Bnumber%5D=2&page%5Bsize%5D=5",
+          next: 'http://www.example.com/api/v1/allocations?page%5Bnumber%5D=2&page%5Bsize%5D=5',
+          last: 'http://www.example.com/api/v1/allocations?page%5Bnumber%5D=2&page%5Bsize%5D=5',
         }
       end
 

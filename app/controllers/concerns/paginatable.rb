@@ -16,7 +16,7 @@ module Paginatable
     render options
   end
 
-  private
+private
 
   def paginate_collection(collection, options)
     options[:page] = params[:page] || 1
@@ -32,7 +32,7 @@ module Paginatable
         per_page: options[:per_page],
         total_pages: collection.total_pages,
         total_objects: collection.total_count,
-      }
+      },
     )
   end
 end
