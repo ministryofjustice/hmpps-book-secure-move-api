@@ -1,0 +1,87 @@
+FrameworkNomisMapping:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: framework_nomis_mappings
+      enum:
+      - framework_nomis_mappings
+      description: The type of this object - always `framework_nomis_mappings`
+    attributes:
+      type: object
+      required:
+      - code
+      - code_type
+      properties:
+        code:
+          example: 'XVL'
+          type: string
+          description: the code of the nomis mapping
+          readOnly: true
+        code_type:
+          type: string
+          example: 'alert'
+          enum:
+            - alert
+            - personal_care_need
+            - reasonable_adjustment
+          description: Indicates the type of nomis mapping
+          readOnly: true
+        code_description:
+          example: 'Violent'
+          type: string
+          description: the description of the nomis mapping
+          readOnly: true
+        comments:
+          type: string
+          example: 'Threatening to take staff hostage'
+          description: comments on the nomis mapping
+          readOnly: true
+        start_date:
+          example: "2019-08-08"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date
+            description: Date of when the nomis mapping started
+            readOnly: true
+        end_date:
+          example: "2019-08-08"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date
+            description: Date of when the nomis mapping ends
+            readOnly: true
+        creation_date:
+          example: "2019-08-08"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date
+            description: Date of when the nomis mapping was created
+            readOnly: true
+        expiry_date:
+          example: "2019-08-08"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date
+            description: Date of when the nomis mapping expires
+            readOnly: true
+    relationships:
+      type: object
+      required:
+      properties:
+        responses:
+          $ref: framework_response_reference.yaml#/FrameworkResponseReference
+          description: The framework responses associated with this framework_nomis_mapping
