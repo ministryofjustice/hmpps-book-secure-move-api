@@ -201,6 +201,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_journey_person_boards_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyPersonBoardsVehicle' do
+    eventable { association(:journey) }
+    details do
+      {
+        vehicle_type: 'cellular',
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
   factory :event_journey_person_leave_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyPersonLeaveVehicle' do
     eventable { association(:journey) }
   end
