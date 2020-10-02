@@ -10,4 +10,5 @@ RSpec.describe GenericEvent::MoveCollectionByEscort do
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
   it { is_expected.to validate_inclusion_of(:subtype).in_array(subtypes) }
+  it { is_expected.to validate_presence_of(:location_id) }
 end

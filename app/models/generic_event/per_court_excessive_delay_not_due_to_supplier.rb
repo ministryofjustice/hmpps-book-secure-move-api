@@ -14,6 +14,15 @@ class GenericEvent
     }
 
     validates :subtype, inclusion: { in: subtypes}
+    validates :location_id, presence: true
+
+    def location_id=(location_id)
+      details['location_id'] = location_id
+    end
+
+    def location_id
+      details['location_id']
+    end
 
     def subtype=(subtype)
       details['subtype'] = subtype

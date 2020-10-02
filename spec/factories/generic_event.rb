@@ -256,6 +256,7 @@ FactoryBot.define do
       {
         subtype: 'making_prisoner_available_for_loading',
         vehicle_reg: Faker::Vehicle.license_plate,
+        location_id: create(:location).id,
       }
     end
   end
