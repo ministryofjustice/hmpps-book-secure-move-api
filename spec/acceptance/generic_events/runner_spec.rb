@@ -292,15 +292,20 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when the move record fails to save' do
-      let!(:event) { create(:move_event, :broken_cancel, eventable: move) }
+      let!(:event) { build(:event_move_cancel, eventable: move, details: event_details) }
+      let(:event_details) do
+        {
+          cancellation_reason: 'foo',
+          cancellation_reason_comment: 'It was a mistake',
+        }
+      end
+
+      before do
+        event.save(validate: false) # NB: We validate the cancellation_reason inside of the event model so need to skip this
+      end
 
       it 'does not update the move status' do
-        begin
-          runner.call # this raises a validation error
-        rescue ActiveRecord::RecordInvalid
-          nil
-        end
-        expect(move.reload.status).to eql('requested')
+        expect { runner.call }.to raise_error(ActiveRecord::RecordInvalid, /Cancellation reason is not included in the list/) # this raises a validation error}
       end
 
       it_behaves_like 'it does not call the Notifier'
