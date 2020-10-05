@@ -12,6 +12,6 @@ module VehicleRegValidations
   end
 
   included do
-    validates :vehicle_reg, presence: true 
+    validates :vehicle_reg, presence: true
   end
 end
