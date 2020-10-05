@@ -260,6 +260,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_assign_cell_in_custody, parent: :generic_event, class: 'GenericEvent::PerCourtAssignCellInCustody' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        court_cell_number: '7b',
+      }
+    end
+  end
+
   factory :event_per_court_excessive_delay_not_due_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtExcessiveDelayNotDueToSupplier' do
     eventable { association(:person_escort_record) }
     details do
