@@ -65,7 +65,7 @@ module FrameworkNomisMappings
 
           if mapping_nomis_codes.any?
             mapping_nomis_codes.each do |nomis_code|
-              hash[nomis_code.id] = mapping
+              hash[nomis_code.id] = hash[nomis_code.id].to_a + [mapping]
             end
           elsif mapping_nomis_fallback
             hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]

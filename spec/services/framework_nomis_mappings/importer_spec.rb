@@ -3,18 +3,31 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkNomisMappings::Importer do
-  let(:nomis_alert) do
-    {
-      alert_id: 2,
-      alert_code: 'VI',
-      alert_code_description: 'Hold separately',
-      comment: 'Some comment',
-      created_at: '2013-03-29',
-      expires_at: '2100-06-08',
-      expired: false,
-      active: true,
-      offender_no: 'A9127EK',
-    }
+  let(:nomis_alerts) do
+    [
+      {
+        alert_id: 2,
+        alert_code: 'VI',
+        alert_code_description: 'Hold separately',
+        comment: 'Some comment',
+        created_at: '2013-03-29',
+        expires_at: '2100-06-08',
+        expired: false,
+        active: true,
+        offender_no: 'A9127EK',
+      },
+      {
+        alert_id: 3,
+        alert_code: 'VI',
+        alert_code_description: 'Hold separately',
+        comment: 'Some other comment',
+        created_at: '2013-04-29',
+        expires_at: '2101-07-09',
+        expired: false,
+        active: true,
+        offender_no: 'A9127EK',
+      },
+    ]
   end
 
   let(:nomis_reasonable_adjustments) do
@@ -78,7 +91,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
   end
 
   before do
-    allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    allow(NomisClient::Alerts).to receive(:get).and_return(nomis_alerts)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(nomis_personal_care_needs)
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return(nomis_reasonable_adjustments)
   end
@@ -87,7 +100,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     framework_responses = FrameworkResponse.where(id: [framework_response1.id, framework_response2.id])
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
 
-    expect { described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call }.to change(FrameworkNomisMapping, :count).by(5)
+    expect { described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call }.to change(FrameworkNomisMapping, :count).by(6)
   end
 
   it 'associates NOMIS mappings correctly to framework responses' do
@@ -95,7 +108,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
     described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call
 
-    expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI')
+    expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI', 'VI')
   end
 
   it 'associates duplicate NOMIS mapping codes and types to framework responses' do
@@ -106,8 +119,8 @@ RSpec.describe FrameworkNomisMappings::Importer do
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
     described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call
 
-    expect(framework_response1.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert])
-    expect(framework_response2.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert])
+    expect(framework_response1.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert], %w[VI alert])
+    expect(framework_response2.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert], %w[VI alert])
   end
 
   it 'associates multiple NOMIS mappings to a fallback question response' do
@@ -132,7 +145,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
     described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call
 
-    expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI')
+    expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI', 'VI')
   end
 
   it 'persists other NOMIS mappings if one import fails' do
