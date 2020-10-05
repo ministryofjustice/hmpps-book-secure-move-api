@@ -38,14 +38,14 @@ RSpec.describe FrameworkNomisMappings::PersonalCareNeeds do
     expect(mappings).to be_empty
   end
 
-  it 'ignores personal care needs with status "I"' do
+  it 'ignores personal care needs with status "I" (recovered)' do
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([nomis_personal_care_need(problem_status: 'I')])
     mappings = described_class.new(prison_number: 'A9127EK').call
 
     expect(mappings).to be_empty
   end
 
-  it 'ignores personal care needs with status "EBS"' do
+  it 'ignores personal care needs with status "EBS" (Expired Body Scan Entry)' do
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([nomis_personal_care_need(problem_status: 'EBS')])
     mappings = described_class.new(prison_number: 'A9127EK').call
 

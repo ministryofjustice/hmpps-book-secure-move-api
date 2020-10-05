@@ -3,6 +3,7 @@
 module FrameworkNomisMappings
   class Importer
     attr_reader :person, :framework_responses, :framework_nomis_codes
+
     def initialize(person:, framework_responses:, framework_nomis_codes:)
       @person = person
       @framework_responses = framework_responses

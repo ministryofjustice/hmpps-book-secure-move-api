@@ -96,7 +96,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return(nomis_reasonable_adjustments)
   end
 
-  it 'persists alerts, reasonable adjustments and personal care needs NOMIS mappings' do
+  it 'persists all alerts, reasonable adjustments and personal care needs from NOMIS clients as NOMIS mappings' do
     framework_responses = FrameworkResponse.where(id: [framework_response1.id, framework_response2.id])
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
 
@@ -167,7 +167,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     expect { described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: framework_nomis_codes).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
-  it 'does nothing is no person present' do
+  it 'does nothing if no person present' do
     framework_responses = FrameworkResponse.where(id: [framework_response1.id, framework_response2.id])
     framework_nomis_codes = framework_responses.flat_map(&:framework_nomis_codes)
 
@@ -181,7 +181,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     expect { described_class.new(person: person, framework_responses: [], framework_nomis_codes: framework_nomis_codes).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
-  it 'does nothing is no framework NOMIS codes present' do
+  it 'does nothing if no framework NOMIS codes present' do
     framework_responses = FrameworkResponse.where(id: [framework_response1.id, framework_response2.id])
 
     expect { described_class.new(person: person, framework_responses: framework_responses, framework_nomis_codes: []).call }.not_to change(FrameworkNomisMapping, :count)
