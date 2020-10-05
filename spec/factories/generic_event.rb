@@ -250,6 +250,15 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_per_court_cell_share_risk_assessment, parent: :generic_event, class: 'GenericEvent::PerCourtCellShareRiskAssessment' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_per_court_all_documentation_provided_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtAllDocumentationProvidedToSupplier' do
     eventable { association(:person_escort_record) }
     details do
