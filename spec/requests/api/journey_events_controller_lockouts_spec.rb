@@ -38,12 +38,7 @@ RSpec.describe Api::JourneyEventsController do
         end
       end
 
-      it 'logs a lockout event record' do
-        do_post
-        expect(journey.events.last.event_name).to eql('lockout')
-      end
-
-      it 'dual writes a journey lockout event' do
+      it 'writes a journey lockout event' do
         expect { do_post }.to change { GenericEvent::JourneyLockout.count }.by(1)
       end
     end
