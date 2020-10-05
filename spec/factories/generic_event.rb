@@ -250,6 +250,16 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_per_court_all_documentation_provided_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtAllDocumentationProvidedToSupplier' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        subtype: 'warrant',
+        court_location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_per_court_excessive_delay_not_due_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtExcessiveDelayNotDueToSupplier' do
     eventable { association(:person_escort_record) }
     details do
