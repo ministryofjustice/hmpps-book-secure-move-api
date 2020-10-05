@@ -143,7 +143,7 @@ RSpec.describe Api::PeopleController do
       it 'return an empty data key' do
         get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
 
-        expect(response_json).to eq('data' => [])
+        expect(response_json['data']).to eq([])
         expect(response).to have_http_status(:success)
       end
     end

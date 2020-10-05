@@ -10,11 +10,11 @@ module Mock
     end
 
     def data
-      paginate Location.all, status: :ok
+      paginate Location.all, serializer: LocationSerializer, status: :ok
     end
 
     def data_with_meta
-      paginate Location.all, status: :ok, meta: { foo: 'bar' }
+      paginate Location.all, serializer: LocationSerializer, status: :ok, meta: { foo: 'bar' }
     end
   end
 end

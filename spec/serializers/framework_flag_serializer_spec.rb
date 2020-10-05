@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkFlagSerializer do
-  subject(:serializer) { described_class.new(framework_flag) }
+  subject(:serializer) { described_class.new(framework_flag, include: includes) }
 
   let(:framework_flag) { create(:framework_flag) }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -38,9 +38,7 @@ RSpec.describe FrameworkFlagSerializer do
 
   context 'with include options' do
     let(:includes) do
-      {
-        question: :key,
-      }
+      %i[question]
     end
 
     let(:expected_json) do

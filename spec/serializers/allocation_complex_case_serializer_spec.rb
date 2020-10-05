@@ -6,7 +6,7 @@ RSpec.describe AllocationComplexCaseSerializer do
   subject(:serializer) { described_class.new(allocation_complex_case) }
 
   let(:allocation_complex_case) { create :allocation_complex_case }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'allocation_complex_cases'

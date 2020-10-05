@@ -61,7 +61,7 @@ module Api
     end
 
     def render_person_escort_record(person_escort_record, status)
-      render json: person_escort_record, status: status, include: included_relationships
+      render_json person_escort_record, serializer: PersonEscortRecordSerializer, include: included_relationships, status: status
     end
 
     def send_notification

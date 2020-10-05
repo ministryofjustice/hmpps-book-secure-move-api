@@ -6,7 +6,7 @@ RSpec.describe DocumentSerializer do
   subject(:serializer) { described_class.new(document) }
 
   let(:document) { create :document }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   before { ActiveStorage::Current.host = 'http://example.com' }
 

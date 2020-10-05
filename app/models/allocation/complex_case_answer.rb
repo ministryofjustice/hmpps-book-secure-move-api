@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Allocation
-  class ComplexCaseAnswer < ActiveModelSerializers::Model
-    attributes(
+  class ComplexCaseAnswer
+    include ActiveModel::Model
+
+    attr_accessor(
       :title,
       :answer,
       :allocation_complex_case_id,

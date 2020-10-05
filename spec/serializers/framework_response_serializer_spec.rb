@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkResponseSerializer do
-  subject(:serializer) { described_class.new(framework_response) }
+  subject(:serializer) { described_class.new(framework_response, include: includes) }
 
   let(:framework_response) { create(:string_response) }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -73,10 +73,7 @@ RSpec.describe FrameworkResponseSerializer do
 
   context 'with include options' do
     let(:includes) do
-      {
-        person_escort_record: :status,
-        question: :key,
-      }
+      %i[person_escort_record question]
     end
     let(:framework_response) do
       create(:string_response, person_escort_record: create(:person_escort_record))

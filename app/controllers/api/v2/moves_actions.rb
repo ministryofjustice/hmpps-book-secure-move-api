@@ -2,7 +2,7 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves,
-               each_serializer: ::V2::MoveSerializer,
+               serializer: ::V2::MoveSerializer,
                include: included_relationships,
                fields: ::V2::MoveSerializer::INCLUDED_FIELDS
     end
@@ -134,11 +134,7 @@ module Api::V2
     end
 
     def render_move(move, status)
-      render serializer: ::V2::MoveSerializer,
-             json: move,
-             status: status,
-             include: included_relationships,
-             fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      render_json move, serializer: ::V2::MoveSerializer, include: included_relationships, fields: ::V2::MoveSerializer::INCLUDED_FIELDS, status: status
     end
 
     def move

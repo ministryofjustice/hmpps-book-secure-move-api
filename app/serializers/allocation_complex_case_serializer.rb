@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-class AllocationComplexCaseSerializer < ActiveModel::Serializer
+class AllocationComplexCaseSerializer
+  include JSONAPI::Serializer
+
+  set_type :allocation_complex_cases
+
   attributes :id, :key, :title
 end

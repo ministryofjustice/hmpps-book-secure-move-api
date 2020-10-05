@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-class GenderSerializer < ActiveModel::Serializer
+class GenderSerializer
+  include JSONAPI::Serializer
+
+  set_type :genders
+
   attributes :id, :key, :title, :description, :disabled_at, :nomis_code
 end
