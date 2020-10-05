@@ -51,6 +51,9 @@ class PersonEscortRecord < VersionedModel
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
+    record.import_nomis_mappings!
+
+    record
   rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
     record.errors.add(:profile, :taken)
     raise ActiveRecord::RecordInvalid, record
@@ -72,6 +75,18 @@ class PersonEscortRecord < VersionedModel
     end
 
     self
+  end
+
+  def import_nomis_mappings!
+    return unless move&.from_location&.prison?
+
+    framework_nomis_codes = framework_responses.includes(:framework_nomis_codes).flat_map(&:framework_nomis_codes)
+
+    FrameworkNomisMappings::Importer.new(
+      person: profile.person,
+      framework_responses: framework_responses,
+      framework_nomis_codes: framework_nomis_codes,
+    ).call
   end
 
   def section_progress

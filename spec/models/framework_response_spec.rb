@@ -8,7 +8,9 @@ RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
+  it { is_expected.to have_many(:framework_nomis_codes).through(:framework_question) }
   it { is_expected.to have_and_belong_to_many(:framework_flags) }
+  it { is_expected.to have_and_belong_to_many(:framework_nomis_mappings) }
   it { is_expected.to validate_presence_of(:type) }
 
   context 'with validations' do
