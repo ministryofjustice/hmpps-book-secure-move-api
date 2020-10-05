@@ -3,6 +3,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
   belongs_to :person_escort_record
   belongs_to :framework_question, key: :question
   has_many :framework_flags, key: :flags
+  has_many :framework_nomis_mappings, key: :nomis_mappings
 
   attributes :value, :value_type, :responded
 
@@ -12,6 +13,7 @@ class FrameworkResponseSerializer < ActiveModel::Serializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     person_escort_record
+    nomis_mappings
     question.descendants
     flags
   ].freeze
