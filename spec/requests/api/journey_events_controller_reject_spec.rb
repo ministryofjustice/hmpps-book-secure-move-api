@@ -41,7 +41,7 @@ RSpec.describe Api::JourneyEventsController do
         expect(journey.reload).to be_rejected
       end
 
-      it 'dual writes a journey reject event' do
+      it 'writes a journey reject event' do
         expect { do_post }.to change { GenericEvent::JourneyReject.count }.by(1)
       end
     end

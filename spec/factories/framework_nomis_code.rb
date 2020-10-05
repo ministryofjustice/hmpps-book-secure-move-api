@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :framework_nomis_code do
-    sequence(:code) { 'XAB' }
-    sequence(:code_type) { 'alert' }
+    code { 'XAB' }
+    code_type { 'alert' }
   end
 end
