@@ -279,6 +279,15 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_ready_in_custody, parent: :generic_event, class: 'GenericEvent::PerCourtReadyInCustody' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_per_court_excessive_delay_not_due_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtExcessiveDelayNotDueToSupplier' do
     eventable { association(:person_escort_record) }
     details do
@@ -287,6 +296,16 @@ FactoryBot.define do
         vehicle_reg: Faker::Vehicle.license_plate,
         location_id: create(:location).id,
         ended_at: Time.zone.now.iso8601,
+      }
+    end
+  end
+
+  factory :event_per_court_return_to_custody_area_from_dock, parent: :generic_event, class: 'GenericEvent::PerCourtReturnToCustodyAreaFromDock' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        court_cell_number: '7b',
       }
     end
   end
