@@ -58,6 +58,8 @@
       :$ref: "../v1/framework.yaml#/Framework"
     :FrameworkFlag:
       :$ref: "../v1/framework_flag.yaml#/FrameworkFlag"
+    :FrameworkNomisMapping:
+      :$ref: "../v1/framework_nomis_mapping.yaml#/FrameworkNomisMapping"
     :FrameworkQuestion:
       :$ref: "../v1/framework_question.yaml#/FrameworkQuestion"
     :FrameworkResponse:

@@ -10,5 +10,6 @@ FrameworkResponseIncludeParameter:
       - flags
       - person_escort_record
       - question
+      - nomis_mappings
       - question.descendants
   example: framework

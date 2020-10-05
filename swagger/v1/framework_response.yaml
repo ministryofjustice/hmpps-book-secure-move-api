@@ -81,3 +81,6 @@ FrameworkResponse:
         flags:
           $ref: framework_flag_reference.yaml#/FrameworkFlagReference
           description: The framework flags associated with this framework_response
+        nomis_mappings:
+          $ref: framework_nomis_mapping_reference.yaml#/FrameworkNomisMappingReference
+          description: The framework nomis mappings associated with this framework_response

@@ -79,27 +79,8 @@ module Tasks
         )
       end
 
-      def create_lockout_journey_event(journey, timestamp, notes, location)
-        journey.events.create!(
-          event_name: 'lockout',
-          client_timestamp: timestamp,
-          details: {
-            fake: true,
-            supplier_id: supplier.id,
-            event_params: {
-              attributes: {
-                notes: notes,
-              },
-              relationships: {
-                from_location: { data: { id: location.id } },
-              },
-            },
-          },
-        )
-      end
-
       def create_redirect_move_event(timestamp, notes, location)
-        move.move_events.create!(
+        move.events.create!(
           event_name: 'redirect',
           client_timestamp: timestamp,
           details: {

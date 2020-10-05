@@ -30,6 +30,10 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
   end
 
+  it 'contains a `created_at` attribute' do
+    expect(result[:data][:attributes][:created_at]).to eq(person_escort_record.created_at)
+  end
+
   it 'contains a `profile` relationship' do
     expect(result[:data][:relationships][:profile][:data]).to eq(
       id: person_escort_record.profile.id,
@@ -98,8 +102,9 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   context 'with include options' do
-    let(:includes) { { responses: [:value, question: :key] } }
-    let(:framework_response) { build(:object_response) }
+    let(:includes) { { responses: [:value, question: :key, nomis_mappings: :code] } }
+    let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
+    let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
       create(:person_escort_record, framework_responses: [framework_response])
     end
@@ -115,6 +120,11 @@ RSpec.describe PersonEscortRecordSerializer do
           id: framework_response.framework_question.id,
           type: 'framework_questions',
           attributes: { key: framework_response.framework_question.key },
+        },
+        {
+          id: framework_nomis_mapping.id,
+          type: 'framework_nomis_mappings',
+          attributes: { code: framework_nomis_mapping.code },
         },
       ]
     end
