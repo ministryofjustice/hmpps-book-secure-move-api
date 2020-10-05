@@ -30,7 +30,7 @@ module Api::V1
 
       people = People::Finder.new(filter_params).call
 
-      paginate people, include: included_relationships
+      paginate people, serializer: PersonSerializer, include: included_relationships
     end
 
     def create_and_render
@@ -49,7 +49,7 @@ module Api::V1
   private
 
     def render_person(person, status)
-      render json: person, status: status, include: included_relationships
+      render_json person, serializer: PersonSerializer, include: included_relationships, status: status
     end
 
     def creator

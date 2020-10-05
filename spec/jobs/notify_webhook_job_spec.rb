@@ -13,7 +13,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
   let(:delivered_at) { nil }
   let(:client) { class_double(Faraday, post: nil, headers: client_headers) }
   let(:client_headers) { {} }
-  let(:data) { ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json }
+  let(:data) { NotificationSerializer.new(notification).serializable_hash.to_json }
   let(:hmac) { Encryptor.hmac(notification.subscription.secret, data) }
   let(:post_headers) { { 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id } }
 

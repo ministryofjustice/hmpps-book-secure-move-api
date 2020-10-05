@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe LocationSerializer do
-  subject(:serializer) { described_class.new(location) }
+  subject(:serializer) { described_class.new(location, include: %i[suppliers]) }
 
   let(:disabled_at) { Time.new(2019, 1, 1) }
   let(:supplier) { create(:supplier) }
   let(:location) { create :location, disabled_at: disabled_at, suppliers: [supplier] }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: %w[suppliers]).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
 
@@ -41,7 +41,7 @@ RSpec.describe LocationSerializer do
   end
 
   it 'contains a disabled_at attribute' do
-    expect(attributes[:disabled_at]).to eql disabled_at
+    expect(attributes[:disabled_at]).to eql disabled_at.iso8601
   end
 
   it 'contains an included supplier' do

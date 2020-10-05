@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkNomisMappingSerializer do
-  subject(:serializer) { described_class.new(framework_nomis_mapping) }
+  subject(:serializer) { described_class.new(framework_nomis_mapping, include: includes) }
 
   let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
   let!(:framework_response) do
     create(:string_response, framework_nomis_mappings: [framework_nomis_mapping])
   end
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -45,10 +45,10 @@ RSpec.describe FrameworkNomisMappingSerializer do
   end
 
   it 'contains a `creation_date` attribute' do
-    expect(result[:data][:attributes][:creation_date]).to eq(framework_nomis_mapping.creation_date)
+    expect(result[:data][:attributes][:creation_date]).to eq(framework_nomis_mapping.creation_date.iso8601)
   end
 
   it 'contains a `expiry_date` attribute' do
-    expect(result[:data][:attributes][:expiry_date]).to eq(framework_nomis_mapping.expiry_date)
+    expect(result[:data][:attributes][:expiry_date]).to eq(framework_nomis_mapping.expiry_date.iso8601)
   end
 end

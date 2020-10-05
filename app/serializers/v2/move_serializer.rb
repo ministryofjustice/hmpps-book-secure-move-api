@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 module V2
-  class MoveSerializer < ActiveModel::Serializer
+  class MoveSerializer
+    include JSONAPI::Serializer
+
+    set_type :moves
+
     attributes :additional_information,
                :cancellation_reason,
                :cancellation_reason_comment,
@@ -27,7 +31,7 @@ module V2
     has_many :court_hearings, serializer: CourtHearingSerializer
 
     belongs_to :allocation, serializer: AllocationSerializer
-    belongs_to :original_move, serializer: MoveSerializer
+    belongs_to :original_move, serializer: V2::MoveSerializer
 
     SUPPORTED_RELATIONSHIPS = %w[
       profile.documents

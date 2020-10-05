@@ -3,12 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe MoveSerializer do
-  subject(:serializer) { described_class.new(move) }
+  subject(:serializer) { described_class.new(move, adapter_options) }
 
   let(:move) { create :move }
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
 
@@ -75,7 +73,7 @@ RSpec.describe MoveSerializer do
   describe 'person' do
     context 'with a person' do
       # TODO: Remove support for person on a Move
-      let(:adapter_options) { { include: 'person', fields: MoveSerializer::INCLUDED_FIELDS } }
+      let(:adapter_options) { { include: %i[person], fields: MoveSerializer::INCLUDED_FIELDS } }
 
       let(:expected_json) do
         person = move.person
@@ -112,10 +110,7 @@ RSpec.describe MoveSerializer do
   describe 'locations' do
     let(:adapter_options) do
       {
-        include: {
-          from_location: %I[location_type title],
-          to_location: %I[location_type title],
-        },
+        include: %i[from_location to_location],
       }
     end
     let(:expected_json) do
@@ -140,9 +135,7 @@ RSpec.describe MoveSerializer do
     context 'without a to_location' do
       let(:adapter_options) do
         {
-          include: {
-            to_location: %I[location_type title],
-          },
+          include: %i[to_location],
         }
       end
       let(:move) { create(:move, :prison_recall) }
@@ -152,7 +145,7 @@ RSpec.describe MoveSerializer do
       end
 
       it 'does not contain an included location' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end
@@ -160,7 +153,7 @@ RSpec.describe MoveSerializer do
   describe 'allocation' do
     context 'with an allocation' do
       let(:adapter_options) do
-        { include: :allocation, fields: MoveSerializer::INCLUDED_FIELDS }
+        { include: %i[allocation] }
       end
       let(:move) { create(:move, :with_allocation) }
       let(:expected_json) do
@@ -195,7 +188,7 @@ RSpec.describe MoveSerializer do
       end
 
       it 'contains an included allocation' do
-        expect(result[:included]).to eq(expected_json)
+        expect(result[:included]).to include_json(expected_json)
       end
     end
 
@@ -242,9 +235,7 @@ RSpec.describe MoveSerializer do
   describe 'prison_transfer_reason' do
     let(:adapter_options) do
       {
-        include: {
-          prison_transfer_reason: %I[title],
-        },
+        include: %i[prison_transfer_reason],
       }
     end
     let(:move) { create(:move, :prison_transfer) }
@@ -271,7 +262,7 @@ RSpec.describe MoveSerializer do
       end
 
       it 'does not contain an included prison_transfer_reason' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end

@@ -3,23 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe NotificationSerializer do
-  subject(:serializer) { described_class.new(notification) }
+  subject(:serializer) { described_class.new(notification, adapter_options) }
 
+  let(:adapter_options) { {} }
   let(:notification) { create(:notification) }
 
-  describe '#move?' do
-    it { expect(serializer.move?).to be true }
-  end
-
-  describe '#move_url' do
-    it { expect(serializer.move_url).to eql "http://localhost:4000/api/v1/moves/#{notification.topic.id}" }
-  end
-
   describe 'json rendering' do
-    let(:adapter_options) { {} }
-    let(:result) do
-      JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-    end
+    let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
     let(:expected_result) do
       {
@@ -28,7 +18,7 @@ RSpec.describe NotificationSerializer do
           "type": 'notifications',
           "attributes": {
             "event_type": 'move_created',
-            "timestamp": notification.created_at.as_json,
+            "timestamp": notification.created_at.iso8601,
           },
           "relationships": {
             "move": {
@@ -61,16 +51,27 @@ RSpec.describe NotificationSerializer do
       expect(result[:data][:attributes][:timestamp]).to eql notification.created_at.as_json
     end
 
-    it 'contains a move relationship data' do
-      expect(result[:data][:relationships][:move][:data]).to eql(id: notification.topic.id, type: 'moves')
+    context 'when topic is a Move' do
+      it 'contains a move relationship data' do
+        expect(result[:data][:relationships][:move][:data]).to eql(id: notification.topic.id, type: 'moves')
+      end
+
+      it 'contains a move relationship links' do
+        expect(result[:data][:relationships][:move][:links]).to eql(self: "http://localhost:4000/api/v1/moves/#{notification.topic.id}")
+      end
     end
 
-    it 'contains a move relationship links' do
-      expect(result[:data][:relationships][:move][:links]).to eql(self: "http://localhost:4000/api/v1/moves/#{notification.topic.id}")
+    context 'when topic is not a Move' do
+      let(:allocation) { create(:allocation) }
+      let(:notification) { create(:notification, topic: allocation) }
+
+      it 'does not contain relationship data' do
+        expect(result[:data][:relationships]).to be_empty
+      end
     end
 
     it 'renders the correct json' do
-      expect(result).to eql(expected_result)
+      expect(result).to include_json(expected_result)
     end
   end
 end

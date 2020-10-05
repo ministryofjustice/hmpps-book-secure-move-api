@@ -21,7 +21,7 @@ module Api
     ].freeze
 
     def index
-      paginate journeys
+      paginate journeys, serializer: JourneySerializer
     end
 
     def show
@@ -42,7 +42,7 @@ module Api
   private
 
     def render_journey(journey, status)
-      render json: journey, status: status, include: included_relationships
+      render_json journey, serializer: JourneySerializer, include: included_relationships, status: status
     end
 
     def supported_relationships

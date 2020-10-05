@@ -11,7 +11,7 @@ RSpec.describe Api::MovesController do
   let(:params) { {} }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, serializer: V2::MoveSerializer))
+    JSON.parse(V2::MoveSerializer.new(move).serializable_hash.to_json)
   end
 
   let(:headers) do

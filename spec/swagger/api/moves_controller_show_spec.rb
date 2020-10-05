@@ -46,7 +46,7 @@ RSpec.describe Api::MovesController, :with_client_authentication, :rswag, type: 
 
       response '200', 'success' do
         let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+          JSON.parse(MoveSerializer.new(move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
         end
 
         schema '$ref' => 'get_move_responses.yaml#/200'

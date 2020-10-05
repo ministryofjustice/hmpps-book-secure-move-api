@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-class ProfileSerializer < ActiveModel::Serializer
-  attributes(
-    :assessment_answers,
-  )
+class ProfileSerializer
+  include JSONAPI::Serializer
 
-  belongs_to :person, serializer: PersonSerializer
-  has_many :documents, serializer: DocumentSerializer
-  has_one :person_escort_record, serializer: PersonEscortRecordSerializer
+  set_type :profiles
+
+  attributes :assessment_answers
+
+  belongs_to :person
+  has_many :documents
+  has_one :person_escort_record
 
   SUPPORTED_RELATIONSHIPS = %w[documents person].freeze
 end

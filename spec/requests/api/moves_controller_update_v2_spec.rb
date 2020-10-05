@@ -12,7 +12,7 @@ RSpec.describe Api::MovesController do
   let(:supplier) { create(:supplier) }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move.reload, serializer: V2::MoveSerializer))
+    JSON.parse(V2::MoveSerializer.new(move.reload, serializer: V2::MoveSerializer).serializable_hash.to_json)
   end
 
   let(:headers) do

@@ -17,7 +17,7 @@ module Api
         Rails.logger.info("Did not save to nomis #{court_hearing.attributes.to_json}")
       end
 
-      render json: court_hearing, status: :created
+      render_json court_hearing, serializer: CourtHearingSerializer, status: :created
     end
 
   private

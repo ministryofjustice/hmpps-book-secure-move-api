@@ -103,7 +103,7 @@ RSpec.describe Api::GenericEventsController do
       do_post
 
       event = GenericEvent.last
-      resource_to_json = JSON.parse(ActionController::Base.render(json: event, serializer: GenericEventSerializer))
+      resource_to_json = JSON.parse(GenericEventSerializer.new(event).serializable_hash.to_json)
 
       expect(response_json).to eq resource_to_json
     end

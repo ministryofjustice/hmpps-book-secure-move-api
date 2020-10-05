@@ -17,7 +17,7 @@ module Api
       event = event_type.constantize.create!(event_attributes)
       run_event_logs
 
-      render json: event, status: :created, serializer: ::GenericEventSerializer
+      render_json event, serializer: GenericEventSerializer, status: :created
     end
 
   private
