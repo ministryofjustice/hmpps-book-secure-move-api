@@ -41,7 +41,7 @@ module Api
     end
 
     def event_relationships
-      @event_relationships ||= params.require(:data)[:relationships]
+      @event_relationships ||= params.require(:data)[:relationships].to_unsafe_hash
     end
 
     def eventable_params

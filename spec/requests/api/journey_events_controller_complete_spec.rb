@@ -41,7 +41,7 @@ RSpec.describe Api::JourneyEventsController do
         expect(journey.reload).to be_completed
       end
 
-      it 'dual writes a journey complete event' do
+      it 'writes a journey complete event' do
         expect { do_post }.to change { GenericEvent::JourneyComplete.count }.by(1)
       end
     end

@@ -38,12 +38,7 @@ RSpec.describe Api::JourneyEventsController do
         end
       end
 
-      it 'logs a lodging event record' do
-        do_post
-        expect(journey.events.last.event_name).to eql('lodging')
-      end
-
-      it 'dual writes a journey lodging event' do
+      it 'writes a journey lodging event' do
         expect { do_post }.to change { GenericEvent::JourneyLodging.count }.by(1)
       end
     end
