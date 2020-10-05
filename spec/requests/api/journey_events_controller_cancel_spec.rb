@@ -41,7 +41,7 @@ RSpec.describe Api::JourneyEventsController do
         expect(journey.reload).to be_cancelled
       end
 
-      it 'dual writes a journey cancel event' do
+      it 'writes a journey cancel event' do
         expect { do_post }.to change { GenericEvent::JourneyCancel.count }.by(1)
       end
     end

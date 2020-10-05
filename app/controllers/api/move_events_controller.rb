@@ -2,7 +2,7 @@
 
 module Api
   class MoveEventsController < ApiController
-    include Moves::Eventable
+    include Eventable
     include Idempotentable
 
     before_action :validate_idempotency_key

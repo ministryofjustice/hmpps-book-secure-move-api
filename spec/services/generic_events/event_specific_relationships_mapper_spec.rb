@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvents::EventSpecificRelationshipsMapper do
-  subject(:mapper) { described_class.new(ActionController::Parameters.new(event_relationships)) }
+  subject(:mapper) { described_class.new(HashWithIndifferentAccess.new(event_relationships)) }
 
   context 'when only the eventable is passed' do
     let(:event_relationships) do

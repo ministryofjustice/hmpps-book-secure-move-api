@@ -15,7 +15,7 @@ module NomisClient
 
       def get_response(booking_id:, reasonable_adjustment_types:)
         NomisClient::Base.get(
-          "/bookings/#{booking_id}/personal-care-needs?type=#{reasonable_adjustment_types}",
+          "/bookings/#{booking_id}/reasonable-adjustments?type=#{reasonable_adjustment_types}",
         ).parsed
       end
 

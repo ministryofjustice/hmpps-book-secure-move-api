@@ -2,7 +2,7 @@
 
 module Api
   class JourneyEventsController < ApiController
-    include Journeys::Eventable
+    include Eventable
     include Idempotentable
 
     before_action :validate_idempotency_key

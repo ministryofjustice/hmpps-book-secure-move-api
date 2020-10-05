@@ -84,8 +84,9 @@ class Move < VersionedModel
   has_many :notifications, as: :topic, dependent: :destroy # NB: polymorphic association
   has_many :journeys, -> { default_order }, dependent: :restrict_with_exception, inverse_of: :move
   has_many :court_hearings, dependent: :restrict_with_exception
-  has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
+  has_many :move_events, as: :eventable, dependent: :destroy # NB: polymorphic association
+  has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   validates :from_location, presence: true
@@ -176,6 +177,19 @@ class Move < VersionedModel
     feed_attributes.merge!(supplier.for_feed) if supplier
 
     feed_attributes
+  end
+
+  def handle_event_run
+    if changed?
+      action_name = status_changed? ? 'update_status' : 'update'
+
+      save! # save before notifying
+
+      Notifier.prepare_notifications(topic: self, action_name: action_name)
+      true
+    else
+      false
+    end
   end
 
 private

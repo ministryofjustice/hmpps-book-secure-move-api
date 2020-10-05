@@ -15,6 +15,7 @@ module Api
     def create
       GenericEvents::CommonParamsValidator.new(event_params, event_relationships).validate!
       event = event_type.constantize.create!(event_attributes)
+      run_event_logs
 
       render json: event, status: :created, serializer: ::GenericEventSerializer
     end
@@ -29,6 +30,7 @@ module Api
 
         attributes.merge!('supplier' => doorkeeper_application_owner) if doorkeeper_application_owner
         attributes.merge!('eventable' => eventable) if eventable_params
+        attributes['details'] = attributes['details'].slice(*event_type.constantize::DETAILS_ATTRIBUTES)
 
         attributes['details'].merge!(event_specific_relationships) if event_specific_relationships.any?
       end
@@ -39,7 +41,7 @@ module Api
     end
 
     def event_relationships
-      @event_relationships ||= params.require(:data)[:relationships]
+      @event_relationships ||= params.require(:data)[:relationships].to_unsafe_hash
     end
 
     def eventable_params
@@ -63,6 +65,10 @@ module Api
 
     def event_specific_relationships
       GenericEvents::EventSpecificRelationshipsMapper.new(event_relationships).call
+    end
+
+    def run_event_logs
+      GenericEvents::Runner.new(eventable).call
     end
   end
 end

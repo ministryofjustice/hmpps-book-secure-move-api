@@ -1,5 +1,9 @@
 class GenericEvent
   class MoveRedirect < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      move_type
+    ].freeze
+
     include MoveEventValidations
     validates :to_location_id, presence: true
 

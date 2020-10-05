@@ -83,4 +83,8 @@ class Journey < ApplicationRecord
   def vehicle_registration
     vehicle['registration'] if vehicle
   end
+
+  def handle_event_run
+    save if changed? && valid?
+  end
 end

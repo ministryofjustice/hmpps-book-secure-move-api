@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.5.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.0) (2020-09-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.9...v2.5.0)
+
+**Merged pull requests:**
+
+- Add includes to allocation to avoid n+1 queries when including resources [\#994](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/994) ([cwrw](https://github.com/cwrw))
+- P4-2067 Fix reasonable adjustments url [\#992](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/992) ([cwrw](https://github.com/cwrw))
+- \[P4-2264\] Enable json:api only relationships in generic event api [\#990](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/990) ([willfish](https://github.com/willfish))
+- Add missing swagger docs for extra location types [\#988](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/988) ([smoothcontract](https://github.com/smoothcontract))
+- P4-2067 Allow passing in a Move to create a Person Escort Record [\#987](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/987) ([cwrw](https://github.com/cwrw))
+- Fix move controller flaky test [\#986](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/986) ([martyn-w](https://github.com/martyn-w))
+- CHANGELOG [\#985](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/985) ([willfish](https://github.com/willfish))
+- \[P4-2264\] Adds success case event controller specs [\#983](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/983) ([willfish](https://github.com/willfish))
+- \[P4-2264\] Handle event-specific relationships in generic events controller [\#981](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/981) ([willfish](https://github.com/willfish))
+
 ## [v2.4.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.4.9) (2020-09-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.8...v2.4.9)

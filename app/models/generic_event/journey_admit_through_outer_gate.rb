@@ -1,5 +1,10 @@
 class GenericEvent
   class JourneyAdmitThroughOuterGate < GenericEvent
+    DETAILS_ATTRIBUTES = %w[
+      vehicle_reg
+      supplier_personnel_id
+    ].freeze
+
     include JourneyEventValidations
 
     validates :vehicle_reg, presence: true

@@ -1,4 +1,4 @@
-RSpec.shared_examples 'a generic event endpoint' do |factory, event_type|
+RSpec.shared_examples 'a generic event endpoint' do |event, event_type|
   let(:headers) do
     {
       'CONTENT_TYPE': ApiController::CONTENT_TYPE,
@@ -13,7 +13,7 @@ RSpec.shared_examples 'a generic event endpoint' do |factory, event_type|
       attributes: event_attributes,
       relationships: {
         eventable: { data: { type: eventable_type, id: eventable_id } },
-      },
+      }.merge(event_specific_relationships),
     }
   end
 
@@ -21,8 +21,28 @@ RSpec.shared_examples 'a generic event endpoint' do |factory, event_type|
     attributes_for(factory).tap do |attributes|
       attributes.except!(:eventable)
       attributes[:event_type] = event_type
+      attributes[:details].keys.grep(/_id/).each do |relationship_key|
+        attributes[:details].delete(relationship_key)
+      end
     end
   end
+
+  let(:event_specific_relationships) do
+    attributes = attributes_for(factory)
+    relationship_attributes = attributes[:details].slice(*attributes[:details].keys.grep(/_id/))
+
+    relationship_attributes.each_with_object({}) do |(key, value), acc|
+      named_relationship_key = key.to_s.sub('_id', '')
+      acc[named_relationship_key] = {
+        'data' => {
+          'id' => value,
+          'type' => 'locations',
+        },
+      }
+    end
+  end
+
+  let(:factory) { "event_#{event}" }
 
   describe 'POST /events' do
     it "creates a GenericEvent::#{event_type}" do

@@ -8,6 +8,7 @@ RSpec.describe Api::GenericEventsController do
   let(:supplier) { create(:supplier, name: 'serco') }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:runner) { instance_double('GenericEvents::Runner') }
 
   let(:headers) do
     {
@@ -15,6 +16,11 @@ RSpec.describe Api::GenericEventsController do
       'Accept': 'application/vnd.api+json; version=2',
       'Authorization' => "Bearer #{access_token}",
     }
+  end
+
+  before do
+    allow(GenericEvents::Runner).to receive(:new).with(an_instance_of(Move)).and_return(runner)
+    allow(runner).to receive(:call)
   end
 
   describe 'POST /events' do
@@ -51,11 +57,21 @@ RSpec.describe Api::GenericEventsController do
         }
       end
 
-      xit 'sets up relationships correctly' do
+      it 'returns with an error' do
         do_post
-
-        event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
-        expect(event.from_location).to be_a(Location)
+        expected_message = {
+          'errors' => [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => "From location id can't be blank",
+              'source' => {
+                'pointer' => '/data/attributes/from_location_id',
+              },
+              'code' => 'blank',
+            },
+          ],
+        }
+        expect(response_json).to eq(expected_message)
       end
     end
 
@@ -70,7 +86,6 @@ RSpec.describe Api::GenericEventsController do
 
       it 'sets up relationships correctly' do
         do_post
-
         event = GenericEvent::MoveLockout.find(response_json.dig('data', 'id'))
         expect(event.from_location).to be_a(Location)
       end
@@ -97,6 +112,11 @@ RSpec.describe Api::GenericEventsController do
       do_post
       event = GenericEvent.find(response_json.dig('data', 'id'))
       expect(event.supplier).to be_nil
+    end
+
+    it 'invokes the GenericEvents::Runner service' do
+      do_post
+      expect(runner).to have_received(:call)
     end
 
     context 'when using a real access token' do
