@@ -17,6 +17,7 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'move_notify_premises_of_arrival_in_30_mins', 'MoveNotifyPremisesOfArrivalIn30Mins'
   it_behaves_like 'a generic event endpoint', 'move_notify_premises_of_eta', 'MoveNotifyPremisesOfEta'
   it_behaves_like 'a generic event endpoint', 'move_notify_premises_of_expected_collection_time', 'MoveNotifyPremisesOfExpectedCollectionTime'
+  it_behaves_like 'a generic event endpoint', 'move_operation_hmcts', 'MoveOperationHmcts'
   it_behaves_like 'a generic event endpoint', 'move_operation_safeguard', 'MoveOperationSafeguard'
   it_behaves_like 'a generic event endpoint', 'move_operation_tornado', 'MoveOperationTornado'
   it_behaves_like 'a generic event endpoint', 'move_redirect', 'MoveRedirect'
