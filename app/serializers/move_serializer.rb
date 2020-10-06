@@ -5,8 +5,7 @@ class MoveSerializer
 
   set_type :moves
 
-  attributes :id,
-             :reference,
+  attributes :reference,
              :status,
              :updated_at,
              :created_at,

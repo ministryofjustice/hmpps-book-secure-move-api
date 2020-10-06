@@ -6,7 +6,7 @@ class NotificationSerializer
 
   set_type :notifications
 
-  attributes :id, :event_type
+  attributes :event_type
 
   attribute :timestamp, &:created_at
 

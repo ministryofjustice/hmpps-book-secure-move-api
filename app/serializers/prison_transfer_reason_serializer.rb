@@ -5,5 +5,5 @@ class PrisonTransferReasonSerializer
 
   set_type :prison_transfer_reasons
 
-  attributes :id, :title, :key, :disabled_at
+  attributes :title, :key, :disabled_at
 end

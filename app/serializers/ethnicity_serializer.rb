@@ -5,5 +5,5 @@ class EthnicitySerializer
 
   set_type :ethnicities
 
-  attributes :id, :key, :title, :description, :nomis_code, :disabled_at
+  attributes :key, :title, :description, :nomis_code, :disabled_at
 end

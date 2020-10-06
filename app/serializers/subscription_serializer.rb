@@ -5,7 +5,7 @@ class SubscriptionSerializer
 
   set_type :subscriptions
 
-  attributes :id, :callback_url, :enabled
+  attributes :callback_url, :enabled
 
   # NB: take care not to expose :username, :password or :secret in the serializer
 end

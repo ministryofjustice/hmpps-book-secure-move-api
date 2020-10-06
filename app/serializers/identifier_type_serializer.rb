@@ -5,5 +5,5 @@ class IdentifierTypeSerializer
 
   set_type :identifier_types
 
-  attributes :id, :key, :title, :description, :disabled_at
+  attributes :key, :title, :description, :disabled_at
 end

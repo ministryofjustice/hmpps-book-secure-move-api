@@ -5,5 +5,5 @@ class GenderSerializer
 
   set_type :genders
 
-  attributes :id, :key, :title, :description, :disabled_at, :nomis_code
+  attributes :key, :title, :description, :disabled_at, :nomis_code
 end

@@ -5,5 +5,5 @@ class AllocationComplexCaseSerializer
 
   set_type :allocation_complex_cases
 
-  attributes :id, :key, :title
+  attributes :key, :title
 end

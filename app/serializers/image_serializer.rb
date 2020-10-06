@@ -5,5 +5,5 @@ class ImageSerializer
 
   set_type :images
 
-  attributes :id, :url
+  attributes :url
 end

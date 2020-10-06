@@ -5,7 +5,7 @@ class JourneySerializer
 
   set_type :journeys
 
-  attributes :id, :state, :billable, :vehicle
+  attributes :state, :billable, :vehicle
   attribute :timestamp, &:client_timestamp
 
   has_one :from_location, serializer: LocationSerializer

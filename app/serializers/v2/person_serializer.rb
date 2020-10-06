@@ -7,7 +7,6 @@ module V2
     set_type :people
 
     attributes(
-      :id,
       :first_names,
       :last_name,
       :date_of_birth,
