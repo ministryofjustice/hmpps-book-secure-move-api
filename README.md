@@ -163,10 +163,10 @@ git tag
 git tag v1.0.1
 # Push the tag to origin
 git push origin v1.0.1
+```
 
 Tagged deploys are gated for the `production` environment and require an approval. This is typically done after
 a review from a product owner where reasonable and if a hotfix is not necessary.
-the workflow.
 
 You'll want to login to CircleCI and navigate to the project build list to find the build that needs approving.
 
