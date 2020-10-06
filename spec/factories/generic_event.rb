@@ -159,7 +159,7 @@ FactoryBot.define do
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
-        supplier_personnel_id: SecureRandom.uuid,
+        supplier_personnel_number: SecureRandom.uuid,
       }
     end
   end
@@ -189,7 +189,7 @@ FactoryBot.define do
 
     details do
       {
-        supplier_personnel_id: SecureRandom.uuid,
+        supplier_personnel_number: SecureRandom.uuid,
       }
     end
   end
