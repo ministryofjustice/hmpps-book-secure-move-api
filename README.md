@@ -141,7 +141,7 @@ Docker image, pushing code staging:
 
 This application is deployed to [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/).
 
-Currently we have a `dev`, `staging`, `uat`, `preprod` and `production` environment on Cloud
+Currently we have a `dev`, `staging`, `uat`, `preprod` and `production` environments on Cloud
 Platform with the following namespace names:
 
 * hmpps-book-secure-move-api-dev
@@ -154,10 +154,18 @@ Platform with the following namespace names:
 `master` branch on Circle CI.
 
 `preprod`, `uat` and `production` can be deployed by generating a new tag
-following [semantic versioning](https://semver.org/) pointing to the current commit.
+following [semantic versioning](https://semver.org/) pointing to the current commit. We typically do this locally with:
+
+```bash
+# Get a list of tags
+git tag
+# Tag following semantic versioning rules
+git tag v1.0.1
+# Push the tag to origin
+git push origin v1.0.1
 
 Tagged deploys are gated for the `production` environment and require an approval. This is typically done after
-a review from a product owner where reasonable and if a hotfix is not necessary/
+a review from a product owner where reasonable and if a hotfix is not necessary.
 the workflow.
 
 You'll want to login to CircleCI and navigate to the project build list to find the build that needs approving.
