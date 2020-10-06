@@ -70,6 +70,6 @@ private
     params = request.query_parameters.dup
     params[:page] = number
     params[:per_page] = options[:per_page]
-    "#{request.url}?#{params.to_query}"
+    "#{request.protocol}#{request.host}#{request.path}?#{params.to_query}"
   end
 end
