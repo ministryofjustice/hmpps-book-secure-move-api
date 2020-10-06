@@ -108,7 +108,7 @@ RSpec.describe Mock::PaginationController, type: :request do
       end
 
       it 'links to previous page' do
-        get '/mock/data?page=2'
+        get '/mock/data', params: { page: 2 }
 
         expect(response_json['links']).to include_json(
           {
@@ -122,7 +122,7 @@ RSpec.describe Mock::PaginationController, type: :request do
       end
 
       it 'links to next page' do
-        get '/mock/data?per_page=2'
+        get '/mock/data', params: { per_page: 2 }
 
         expect(response_json['links']).to include_json(
           {

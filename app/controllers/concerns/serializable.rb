@@ -36,7 +36,7 @@ private
   end
 
   def paginate_collection(collection, options)
-    options[:page] = params[:page] || 1
+    options[:page] = params[:page] || FIRST_PAGE
     options[:per_page] = params[:per_page] || ::Kaminari.config.default_per_page
 
     collection.page(options[:page]).per(options[:per_page])

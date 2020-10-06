@@ -6,7 +6,7 @@ default: &default
 
 development:
   <<: *default
-  database: pecs_staging
+  database: pecs_move_platform_backend_development
 test:
   <<: *default
   database: pecs_move_platform_backend_test

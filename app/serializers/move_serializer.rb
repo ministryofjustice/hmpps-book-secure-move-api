@@ -24,7 +24,7 @@ class MoveSerializer
              :date_to
 
   has_one :person
-  has_one :profile # <- TODO: update the serializer to V2
+  has_one :profile
 
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer
