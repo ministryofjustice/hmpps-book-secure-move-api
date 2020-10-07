@@ -4,8 +4,27 @@ class GenericEvent
       move_type
     ].freeze
 
+    enum reason: {
+      no_space: 'no_space',
+      serious_incident: 'serious_incident',
+      covid: 'covid',
+      receiving_prison_request: 'receiving_prison_request',
+      force_majeure: 'force_majeure',
+      other: 'other',
+    }
+
     include MoveEventValidations
+
     validates :to_location_id, presence: true
+    validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
+
+    def reason=(reason)
+      details['reason'] = reason
+    end
+
+    def reason
+      details['reason']
+    end
 
     def to_location_id=(id)
       details['to_location_id'] = id
