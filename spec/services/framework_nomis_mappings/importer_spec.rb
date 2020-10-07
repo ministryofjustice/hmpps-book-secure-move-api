@@ -207,6 +207,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'does not set a status if no importing attempted' do
     person_escort_record = create(:person_escort_record, framework_responses: [create(:string_response)], profile: person.profiles.first)
+    described_class.new(person_escort_record: person_escort_record).call
 
     expect(person_escort_record.nomis_sync_status).to be_empty
   end
