@@ -41,7 +41,7 @@ module Api
     end
 
     def event_relationships
-      @event_relationships ||= params.require(:data)[:relationships]
+      @event_relationships ||= params.require(:data)[:relationships].to_unsafe_hash
     end
 
     def eventable_params
@@ -52,7 +52,7 @@ module Api
       type = eventable_params.dig('data', 'type')
       id = eventable_params.dig('data', 'id')
 
-      type.singularize.capitalize.constantize.find(id)
+      type.singularize.camelize.constantize.find(id)
     end
 
     def event_type

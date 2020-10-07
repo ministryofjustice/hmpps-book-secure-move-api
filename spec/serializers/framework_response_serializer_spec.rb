@@ -57,6 +57,20 @@ RSpec.describe FrameworkResponseSerializer do
     )
   end
 
+  it 'contains an empty `nomis_mappings` relationship if no nomis_mappings present' do
+    expect(result[:data][:relationships][:nomis_mappings][:data]).to be_empty
+  end
+
+  it 'contains a `nomis_mappings` relationship when nomis_mappings present' do
+    framework_nomis_mapping = create(:framework_nomis_mapping)
+    framework_response.update(framework_nomis_mappings: [framework_nomis_mapping])
+
+    expect(result[:data][:relationships][:nomis_mappings][:data]).to contain_exactly(
+      id: framework_nomis_mapping.id,
+      type: 'framework_nomis_mappings',
+    )
+  end
+
   context 'with include options' do
     let(:includes) do
       {

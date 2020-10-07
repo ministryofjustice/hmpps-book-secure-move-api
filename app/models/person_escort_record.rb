@@ -20,6 +20,7 @@ class PersonEscortRecord < VersionedModel
   validates :confirmed_at, presence: { if: :confirmed? }
 
   has_many :framework_responses, dependent: :destroy
+  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :framework
   has_many :framework_questions, through: :framework
@@ -51,6 +52,9 @@ class PersonEscortRecord < VersionedModel
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
+    record.import_nomis_mappings!
+
+    record
   rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
     record.errors.add(:profile, :taken)
     raise ActiveRecord::RecordInvalid, record
@@ -72,6 +76,18 @@ class PersonEscortRecord < VersionedModel
     end
 
     self
+  end
+
+  def import_nomis_mappings!
+    return unless move&.from_location&.prison?
+
+    framework_nomis_codes = framework_responses.includes(:framework_nomis_codes).flat_map(&:framework_nomis_codes)
+
+    FrameworkNomisMappings::Importer.new(
+      person: profile.person,
+      framework_responses: framework_responses,
+      framework_nomis_codes: framework_nomis_codes,
+    ).call
   end
 
   def section_progress
@@ -98,6 +114,10 @@ class PersonEscortRecord < VersionedModel
   rescue FiniteMachine::InvalidStateError
     errors.add(:status, "can't update to '#{new_status}' from '#{status}'")
     raise ActiveModel::ValidationError, self
+  end
+
+  def handle_event_run
+    save if changed? && valid?
   end
 
 private

@@ -38,7 +38,7 @@ RSpec.describe Api::MoveEventsController do
         expect(move.reload).to be_booked
       end
 
-      it 'dual writes a move accept event' do
+      it 'writes a move accept event' do
         expect { do_post }.to change { GenericEvent::MoveAccept.count }.by(1)
       end
     end

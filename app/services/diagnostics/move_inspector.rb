@@ -36,9 +36,9 @@ module Diagnostics
         -----------
       ENDMOVEEVENTS
 
-      if move.move_events.any?
+      if move.events.any?
         @output << "#{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
-        move.move_events.default_order.each do |event| # NB use each to preserve sort order
+        move.events.default_order.each do |event| # NB use each to preserve sort order
           # NB only show event params if include_person_details==true, as they could contain personal details
           @output << "#{event.event_name.ljust(15)}\t#{event.client_timestamp.to_s.ljust(27)}\t#{include_person_details ? event.event_params : '-'}\n"
         end

@@ -24,6 +24,7 @@ class MoveMailer < GovukNotifyRails::Mailer
         'move-status': move.status,
         'environment': ENV.fetch('SERVER_FQDN', Rails.env),
         'supplier': notification.subscription.supplier.name,
+        'event-type': notification.event_type,
       )
     end
     mail(to: notification.subscription.email_address)
