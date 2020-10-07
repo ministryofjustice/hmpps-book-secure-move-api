@@ -57,9 +57,8 @@ RSpec.describe Api::GenericEventsController do
         }
       end
 
-      it 'returns with an error' do
-        do_post
-        expected_message = {
+      let(:expected_error) do
+        {
           'errors' => [
             {
               'title' => 'Unprocessable entity',
@@ -79,6 +78,10 @@ RSpec.describe Api::GenericEventsController do
             },
           ],
         }
+      end
+
+      it 'returns with an error' do
+        do_post
         expect(response_json).to eq(expected_message)
       end
     end
