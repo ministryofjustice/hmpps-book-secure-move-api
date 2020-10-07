@@ -73,7 +73,7 @@ RSpec.describe MoveSerializer do
   describe 'person' do
     context 'with a person' do
       # TODO: Remove support for person on a Move
-      let(:adapter_options) { { include: %i[person], fields: MoveSerializer::INCLUDED_FIELDS } }
+      let(:adapter_options) { { include: %i[person] } }
 
       let(:expected_json) do
         person = move.person
@@ -153,7 +153,7 @@ RSpec.describe MoveSerializer do
   describe 'allocation' do
     context 'with an allocation' do
       let(:adapter_options) do
-        { include: %i[allocation] }
+        { include: %i[allocation], fields: MoveSerializer::INCLUDED_FIELDS }
       end
       let(:move) { create(:move, :with_allocation) }
       let(:expected_json) do
@@ -188,7 +188,7 @@ RSpec.describe MoveSerializer do
       end
 
       it 'contains an included allocation' do
-        expect(result[:included]).to include_json(expected_json)
+        expect(result[:included]).to eq(expected_json)
       end
     end
 

@@ -60,6 +60,6 @@ class MoveSerializer
   ].freeze
 
   INCLUDED_FIELDS = {
-    allocation: %i[to_location from_location moves_count created_at],
+    allocations: %i[to_location from_location moves_count created_at],
   }.freeze
 end
