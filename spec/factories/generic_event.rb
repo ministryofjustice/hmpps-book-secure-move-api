@@ -97,6 +97,17 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_operation_hmcts, parent: :generic_event, class: 'GenericEvent::MoveOperationHmcts' do
+    eventable { association(:move) }
+    details do
+      {
+        authorised_at: Time.zone.now.iso8601,
+        authorised_by: 'PMU',
+        court_cell_number: '6b',
+      }
+    end
+  end
+
   factory :event_move_operation_safeguard, parent: :generic_event, class: 'GenericEvent::MoveOperationSafeguard' do
     eventable { association(:move) }
     details do
@@ -148,7 +159,7 @@ FactoryBot.define do
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
-        supplier_personnel_id: SecureRandom.uuid,
+        supplier_personnel_number: SecureRandom.uuid,
       }
     end
   end
@@ -178,7 +189,7 @@ FactoryBot.define do
 
     details do
       {
-        supplier_personnel_id: SecureRandom.uuid,
+        supplier_personnel_number: SecureRandom.uuid,
       }
     end
   end
@@ -197,6 +208,16 @@ FactoryBot.define do
     details do
       {
         to_location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_journey_person_boards_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyPersonBoardsVehicle' do
+    eventable { association(:journey) }
+    details do
+      {
+        vehicle_type: 'cellular',
+        vehicle_reg: Faker::Vehicle.license_plate,
       }
     end
   end
@@ -227,5 +248,65 @@ FactoryBot.define do
 
   factory :event_journey_update, parent: :generic_event, class: 'GenericEvent::JourneyUpdate' do
     eventable { association(:journey) }
+  end
+
+  factory :event_per_court_cell_share_risk_assessment, parent: :generic_event, class: 'GenericEvent::PerCourtCellShareRiskAssessment' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_per_court_all_documentation_provided_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtAllDocumentationProvidedToSupplier' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        subtype: 'warrant',
+        court_location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_per_court_assign_cell_in_custody, parent: :generic_event, class: 'GenericEvent::PerCourtAssignCellInCustody' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        court_cell_number: '7b',
+      }
+    end
+  end
+
+  factory :event_per_court_ready_in_custody, parent: :generic_event, class: 'GenericEvent::PerCourtReadyInCustody' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_per_court_excessive_delay_not_due_to_supplier, parent: :generic_event, class: 'GenericEvent::PerCourtExcessiveDelayNotDueToSupplier' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        subtype: 'making_prisoner_available_for_loading',
+        vehicle_reg: Faker::Vehicle.license_plate,
+        location_id: create(:location).id,
+        ended_at: Time.zone.now.iso8601,
+      }
+    end
+  end
+
+  factory :event_per_court_return_to_custody_area_from_dock, parent: :generic_event, class: 'GenericEvent::PerCourtReturnToCustodyAreaFromDock' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        court_cell_number: '7b',
+      }
+    end
   end
 end

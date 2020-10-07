@@ -24,6 +24,7 @@ RSpec.describe PersonEscortRecord do
   it { is_expected.to have_many(:framework_responses) }
   it { is_expected.to have_many(:framework_questions).through(:framework) }
   it { is_expected.to have_many(:framework_flags).through(:framework_responses) }
+  it { is_expected.to have_many(:generic_events) }
   it { is_expected.to belong_to(:framework) }
   it { is_expected.to belong_to(:profile) }
   it { is_expected.to belong_to(:move).optional }
@@ -526,6 +527,34 @@ RSpec.describe PersonEscortRecord do
 
       expect { person_escort_record.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
       expect(person_escort_record.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
+    end
+  end
+
+  describe '#handle_event_run' do
+    subject(:person_escort_record) { create(:person_escort_record) }
+
+    context 'when the person_escort_record has changed but is not valid' do
+      before do
+        person_escort_record.status = 'foo'
+      end
+
+      it 'does not save the person_escort_record' do
+        person_escort_record.handle_event_run
+
+        expect(person_escort_record.reload.status).not_to eq('foo')
+      end
+    end
+
+    context 'when the person_escort_record has changed and is valid' do
+      before do
+        person_escort_record.status = 'in_progress'
+      end
+
+      it 'saves the person_escort_record' do
+        person_escort_record.handle_event_run
+
+        expect(person_escort_record.reload.status).to eq('in_progress')
+      end
     end
   end
 

@@ -22,6 +22,7 @@ class GenericEvent < ApplicationRecord
     JourneyHandoverToDestination
     JourneyLockout
     JourneyLodging
+    JourneyPersonBoardsVehicle
     JourneyPersonLeaveVehicle
     JourneyReadyToExit
     JourneyReject
@@ -40,11 +41,18 @@ class GenericEvent < ApplicationRecord
     MoveNotifyPremisesOfArrivalIn30Mins
     MoveNotifyPremisesOfEta
     MoveNotifyPremisesOfExpectedCollectionTime
+    MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
     MoveRedirect
     MoveReject
     MoveStart
+    PerCourtAllDocumentationProvidedToSupplier
+    PerCourtAssignCellInCustody
+    PerCourtCellShareRiskAssessment
+    PerCourtExcessiveDelayNotDueToSupplier
+    PerCourtReadyInCustody
+    PerCourtReturnToCustodyAreaFromDock
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
