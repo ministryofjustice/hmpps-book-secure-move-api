@@ -16,5 +16,6 @@ RSpec.describe GenericEvent::MoveLodgingStart do
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Move]) }
   it { is_expected.to validate_inclusion_of(:reason).in_array(reasons) }
   it { is_expected.to validate_presence_of(:reason) }
-  it { is_expected.to validate_presence_of(:location_id) }
+
+  it_behaves_like 'an event requiring a location', :location_id
 end

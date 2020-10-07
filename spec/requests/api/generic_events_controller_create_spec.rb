@@ -69,6 +69,14 @@ RSpec.describe Api::GenericEventsController do
               },
               'code' => 'blank',
             },
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => 'From location id the location relationship you passed has an id that does not exist in our system. please use an existing from location',
+              'source' => {
+                'pointer' => '/data/attributes/from_location_id',
+              },
+              'code' => 'The location relationship you passed has an id that does not exist in our system. Please use an existing from_location',
+            },
           ],
         }
         expect(response_json).to eq(expected_message)

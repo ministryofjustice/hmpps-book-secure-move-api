@@ -1,16 +1,9 @@
 class GenericEvent
   class JourneyLockout < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :from_location_id
+
     include JourneyEventValidations
-
-    validates :from_location_id, presence: true
-
-    def from_location_id=(id)
-      details['from_location_id'] = id
-    end
-
-    def from_location_id
-      @from_location_id ||= details['from_location_id']
-    end
+    include LocationValidations
 
     def from_location
       Location.find_by(id: from_location_id)

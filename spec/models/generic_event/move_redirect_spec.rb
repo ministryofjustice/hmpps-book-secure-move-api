@@ -3,7 +3,7 @@ RSpec.describe GenericEvent::MoveRedirect do
 
   it_behaves_like 'a move event'
 
-  it { is_expected.to validate_presence_of(:to_location_id) }
+  it_behaves_like 'an event requiring a location', :to_location_id
 
   describe '#to_location' do
     it 'returns a `Location` if to_location_id is in the details' do

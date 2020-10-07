@@ -1,5 +1,6 @@
 class GenericEvent
   class PerCourtExcessiveDelayNotDueToSupplier < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :location_id
     DETAILS_ATTRIBUTES = %w[
       subtype
       vehicle_reg
@@ -8,6 +9,7 @@ class GenericEvent
 
     include PersonEscortRecordEventValidations
     include AuthoriserValidations
+    include LocationValidations
 
     enum subtype: {
       making_prisoner_available_for_loading: 'making_prisoner_available_for_loading',
@@ -15,7 +17,6 @@ class GenericEvent
     }
 
     validates :subtype, inclusion: { in: subtypes }
-    validates :location_id, presence: true
     validates :ended_at, presence: true
     validates_each :ended_at do |record, attr, value|
       Time.zone.iso8601(value)
@@ -29,14 +30,6 @@ class GenericEvent
 
     def ended_at
       details['ended_at']
-    end
-
-    def location_id=(location_id)
-      details['location_id'] = location_id
-    end
-
-    def location_id
-      details['location_id']
     end
 
     def subtype=(subtype)

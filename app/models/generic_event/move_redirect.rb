@@ -1,26 +1,19 @@
 class GenericEvent
   class MoveRedirect < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :to_location_id
     DETAILS_ATTRIBUTES = %w[
       move_type
     ].freeze
 
     include MoveEventValidations
-    validates :to_location_id, presence: true
+    include LocationValidations
 
-    def to_location_id=(id)
-      details['to_location_id'] = id
-    end
-
-    def to_location_id
-      details['to_location_id']
+    def to_location
+      Location.find_by(id: to_location_id)
     end
 
     def move_type
       details['move_type']
-    end
-
-    def to_location
-      Location.find_by(id: to_location_id)
     end
 
     def trigger

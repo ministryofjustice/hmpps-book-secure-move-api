@@ -2,7 +2,8 @@ RSpec.describe GenericEvent::JourneyLockout do
   subject(:generic_event) { build(:event_journey_lockout) }
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Journey]) }
-  it { is_expected.to validate_presence_of(:from_location_id) }
+
+  it_behaves_like 'an event requiring a location', :from_location_id
 
   describe '#from_location' do
     it 'returns a `Location` if from_location_id is in the details' do
