@@ -1,9 +1,13 @@
 RSpec.shared_examples 'an event that specifies a vehicle type' do
   let(:vehicle_types) do
     %w[
-      cellular
-      mpv
-      other
+      c4
+      pro_cab
+      mvp
+      2_cell
+      3_cell
+      6_cell
+      12_cell
     ]
   end
 

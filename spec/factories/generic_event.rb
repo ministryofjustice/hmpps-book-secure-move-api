@@ -35,7 +35,7 @@ FactoryBot.define do
     eventable { association(:move) }
     details do
       {
-        vehicle_type: 'cellular',
+        vehicle_type: 'pro_cab',
       }
     end
   end
@@ -216,7 +216,7 @@ FactoryBot.define do
     eventable { association(:journey) }
     details do
       {
-        vehicle_type: 'cellular',
+        vehicle_type: 'pro_cab',
         vehicle_reg: Faker::Vehicle.license_plate,
       }
     end
