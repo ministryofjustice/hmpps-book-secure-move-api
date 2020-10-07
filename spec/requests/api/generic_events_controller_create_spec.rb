@@ -82,7 +82,7 @@ RSpec.describe Api::GenericEventsController do
 
       it 'returns with an error' do
         do_post
-        expect(response_json).to eq(expected_message)
+        expect(response_json).to eq(expected_error)
       end
     end
 
