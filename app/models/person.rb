@@ -37,7 +37,7 @@ class Person < VersionedModel
   end
 
   def latest_profile
-    profiles.order(:updated_at).last
+    profiles.max_by(&:updated_at)
   end
 
   def attach_image(image_blob)
