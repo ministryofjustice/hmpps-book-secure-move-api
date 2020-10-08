@@ -13,9 +13,13 @@ module VehicleTypeValidations
 
   included do
     enum vehicle_type: {
-      cellular: 'cellular',
-      mpv: 'mpv',
-      other: 'other',
+      'c4': 'c4',
+      'pro_cab': 'pro_cab',
+      'mvp': 'mvp',
+      '2_cell': '2_cell',
+      '3_cell': '3_cell',
+      '6_cell': '6_cell',
+      '12_cell': '12_cell',
     }
 
     validates :vehicle_type, inclusion: { in: vehicle_types }
