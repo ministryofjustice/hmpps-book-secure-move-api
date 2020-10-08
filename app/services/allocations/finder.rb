@@ -4,7 +4,7 @@ module Allocations
   class Finder
     attr_reader :filter_params, :search_params
 
-    ALLOCATION_INCLUDES = [from_location: :suppliers, to_location: :suppliers, moves: %i[from_location to_location court_hearings profile person]].freeze
+    ALLOCATION_INCLUDES = [from_location: :suppliers, to_location: :suppliers, moves: [:from_location, :to_location, :court_hearings, person: %i[gender ethnicity profiles], profile: %i[person_escort_record documents]]].freeze
 
     def initialize(filters: {}, ordering: {}, search: {})
       @search_params = search
