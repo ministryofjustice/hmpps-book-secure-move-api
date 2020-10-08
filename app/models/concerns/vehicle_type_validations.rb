@@ -15,7 +15,7 @@ module VehicleTypeValidations
     enum vehicle_type: {
       'c4': 'c4',
       'pro_cab': 'pro_cab',
-      'mvp': 'mvp',
+      'mpv': 'mpv',
       '2_cell': '2_cell',
       '3_cell': '3_cell',
       '6_cell': '6_cell',
