@@ -87,7 +87,7 @@ RSpec.describe Api::MovesController do
         response '200', 'success' do
           let(:move_id) { pentonville_move.id }
           let(:resource_to_json) do
-            JSON.parse(ActionController::Base.render(json: pentonville_move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+            JSON.parse(MoveSerializer.new(pentonville_move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
           end
 
           schema "$ref": 'get_move_responses.yaml#/200'
@@ -115,7 +115,7 @@ RSpec.describe Api::MovesController do
     let(:move_attributes) { attributes_for(:move) }
     let!(:person) { create(:person) }
     let(:resource_to_json) do
-      JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+      JSON.parse(MoveSerializer.new(move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
     end
 
     before do

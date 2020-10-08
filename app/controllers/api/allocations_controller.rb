@@ -8,9 +8,9 @@ module Api
       allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
       if allocations_params.valid?
         allocations = Allocations::Finder.new(filters: filter_params, ordering: sort_params, search: search_params).call
-        paginate allocations, include: included_relationships
+        paginate allocations, serializer: AllocationSerializer, include: included_relationships
       else
-        render_allocation({ error: allocations_params.errors }, :bad_request)
+        render json: { error: allocations_params.errors }, status: :bad_request
       end
     end
 
@@ -61,7 +61,7 @@ module Api
     end
 
     def render_allocation(allocation, status)
-      render json: allocation, status: status, include: included_relationships
+      render_json allocation, serializer: AllocationSerializer, include: included_relationships, status: status
     end
 
     def find_allocation

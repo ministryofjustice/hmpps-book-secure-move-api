@@ -2,6 +2,7 @@
 
 class ApiController < ApplicationController
   include ActiveStorage::SetCurrent # Sets host for service_url
+  include Serializable
 
   DEFAULT_API_VERSION = '1'
 

@@ -3,13 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe SubscriptionSerializer do
-  subject(:serializer) { described_class.new(subscription) }
+  subject(:serializer) { described_class.new(subscription, adapter_options) }
 
   let(:subscription) { create(:subscription) }
   let(:adapter_options) { {} }
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'subscriptions'

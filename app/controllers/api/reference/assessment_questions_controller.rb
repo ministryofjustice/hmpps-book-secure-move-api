@@ -5,7 +5,7 @@ module Api
     class AssessmentQuestionsController < ApiController
       def index
         types = AssessmentQuestions::Finder.new(filter_params).call
-        render json: types
+        render_json types, serializer: AssessmentQuestionSerializer
       end
 
     private

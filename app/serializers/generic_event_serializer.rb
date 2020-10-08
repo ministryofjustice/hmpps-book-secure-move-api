@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-class GenericEventSerializer < ActiveModel::Serializer
-  type 'events'
+class GenericEventSerializer
+  include JSONAPI::Serializer
 
-  attributes :occurred_at, :recorded_at, :notes, :details, :event_type
+  set_type :events
+
+  attributes :occurred_at, :recorded_at, :notes, :details
 
   has_one :eventable, polymorphic: true
 
   SUPPORTED_RELATIONSHIPS = %w[].freeze
 
-  def event_type
+  attribute :event_type do |object|
     object.type.try(:gsub, 'GenericEvent::', '')
   end
 end

@@ -1,13 +1,18 @@
-class FrameworkResponseSerializer < ActiveModel::Serializer
-  type 'framework_responses'
+# frozen_string_literal: true
+
+class FrameworkResponseSerializer
+  include JSONAPI::Serializer
+
+  set_type :framework_responses
+
   belongs_to :person_escort_record
-  belongs_to :framework_question, key: :question
-  has_many :framework_flags, key: :flags
-  has_many :framework_nomis_mappings, key: :nomis_mappings
+  belongs_to :question, serializer: FrameworkQuestionSerializer, &:framework_question
+  has_many :flags, serializer: FrameworkFlagSerializer, &:framework_flags
+  has_many :nomis_mappings, serializer: FrameworkNomisMappingSerializer, &:framework_nomis_mappings
 
-  attributes :value, :value_type, :responded
+  attributes :value, :responded
 
-  def value_type
+  attribute :value_type do |object|
     object.framework_question.response_type
   end
 

@@ -46,7 +46,7 @@ RSpec.describe Api::AllocationsController, :with_client_authentication, :rswag, 
 
       response '200', 'success' do
         let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS))
+          JSON.parse(AllocationSerializer.new(allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
         end
 
         schema '$ref' => 'get_allocation_responses.yaml#/200'

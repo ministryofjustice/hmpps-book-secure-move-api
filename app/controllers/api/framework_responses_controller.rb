@@ -21,7 +21,7 @@ module Api
     def update
       framework_response.update_with_flags!(update_framework_response_attributes)
 
-      render json: framework_response, status: :ok, include: included_relationships
+      render_json framework_response, serializer: FrameworkResponseSerializer, include: included_relationships, status: :ok
     end
 
     def bulk_update

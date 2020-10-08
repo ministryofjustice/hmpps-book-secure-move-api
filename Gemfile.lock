@@ -45,11 +45,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_model_serializers (0.10.10)
-      actionpack (>= 4.1, < 6.1)
-      activemodel (>= 4.1, < 6.1)
-      case_transform (>= 0.2)
-      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     activejob (6.0.3.4)
       activesupport (= 6.0.3.4)
       globalid (>= 0.3.6)
@@ -97,8 +92,6 @@ GEM
     builder (3.2.4)
     byebug (11.1.3)
     cancancan (3.1.0)
-    case_transform (0.2)
-      activesupport
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
@@ -154,7 +147,8 @@ GEM
     jmespath (1.4.0)
     json-schema (2.8.1)
       addressable (>= 2.4)
-    jsonapi-renderer (0.2.2)
+    jsonapi-serializer (2.1.0)
+      activesupport (>= 4.2)
     jwt (2.2.1)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
@@ -211,7 +205,6 @@ GEM
     octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
-    pager_api (0.3.2)
     paper_trail (11.0.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
@@ -385,7 +378,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers (~> 0.10.0)
   activerecord-import (~> 1.0, >= 1.0.5)
   appinsights!
   aws-sdk-s3
@@ -405,6 +397,7 @@ DEPENDENCIES
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
   json-schema
+  jsonapi-serializer (~> 2.1)
   kaminari
   listen
   lograge (~> 0.11.2)
@@ -414,7 +407,6 @@ DEPENDENCIES
   nokogiri (>= 1.10.4)
   notifications-ruby-client (~> 5.1.2)
   oauth2
-  pager_api
   paper_trail
   pg (~> 1.0.0)
   prometheus_exporter

@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 
-class DocumentSerializer < ActiveModel::Serializer
+class DocumentSerializer
+  include JSONAPI::Serializer
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::NumberHelper
 
-  attributes :id, :url, :filename, :filesize, :content_type
+  set_type :documents
 
-  def url
+  attribute :url do |object|
     object.file.service_url
   end
 
-  def filename
+  attribute :filename do |object|
     object.file.filename
   end
 
-  def filesize
+  attribute :filesize do |object|
     object.file.byte_size
   end
 
-  def content_type
+  attribute :content_type do |object|
     object.file.content_type
   end
 end

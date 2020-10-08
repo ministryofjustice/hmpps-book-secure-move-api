@@ -44,6 +44,8 @@ RSpec.describe Profile, type: :model do
   describe '#assessment_answers' do
     let!(:person) { create :person }
     let(:profile) { person.profiles.first }
+    let(:created_at) { Date.civil(2019, 5, 30) }
+    let(:expires_at) { Date.civil(2019, 6, 30) }
     let(:assessment_question) { create :assessment_question, category: 'health' }
     let(:assessment_answers) do
       [
@@ -51,8 +53,8 @@ RSpec.describe Profile, type: :model do
           title: 'Sight Impaired',
           comments: 'just a test',
           assessment_question_id: assessment_question.id,
-          created_at: Date.civil(2019, 5, 30),
-          expires_at: Date.civil(2019, 6, 30),
+          created_at: created_at,
+          expires_at: expires_at,
           nomis_alert_code: nil,
           nomis_alert_type: nil,
           nomis_alert_description: nil,
@@ -62,7 +64,12 @@ RSpec.describe Profile, type: :model do
       ]
     end
     let(:expected_attributes) do
-      assessment_answers.first.merge(category: 'health', key: 'sight_impaired')
+      assessment_answers.first.merge(
+        created_at: created_at.iso8601,
+        expires_at: expires_at.iso8601,
+        category: 'health',
+        key: 'sight_impaired',
+      ).stringify_keys
     end
 
     it 'serializes assessment answers correctly' do

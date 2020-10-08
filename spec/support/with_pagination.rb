@@ -9,6 +9,10 @@ RSpec.shared_examples 'an endpoint that paginates resources' do
     it 'provides meta data with pagination' do
       expect(response_json['meta']['pagination']).to include_json(meta_pagination)
     end
+
+    it 'provides pagination links' do
+      expect(response_json['links']).to include_json(pagination_links)
+    end
   end
 
   context 'with page parameter' do

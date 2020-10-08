@@ -23,7 +23,8 @@ module Api
       success = People::RetrieveImage.call(person)
 
       if success
-        render json: Image.new(person.id, person.image.service_url)
+        image = Image.new(person.id, person.image.service_url)
+        render_json image, serializer: ImageSerializer
       else
         raise ActiveRecord::RecordNotFound, 'Image not found'
       end
@@ -33,7 +34,7 @@ module Api
       response = People::RetrieveCourtCases.call(person, court_case_filter_params)
 
       if response.success?
-        render json: response.court_cases, each_serializer: CourtCaseSerializer, include: other_included_relationships
+        render_json response.court_cases, serializer: CourtCaseSerializer, include: other_included_relationships
       else
         render json: json_api_errors_for(response.error)
       end
@@ -46,7 +47,7 @@ module Api
       response = People::RetrieveTimetable.call(person, start_date, end_date)
 
       if response.success?
-        render json: response.content, each_serializer: TimetableSerializer, include: other_included_relationships
+        render_json response.content, serializer: TimetableSerializer, include: other_included_relationships
       else
         render json: json_api_errors_for(response.error)
       end

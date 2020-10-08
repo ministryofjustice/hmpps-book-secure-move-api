@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-class SupplierSerializer < ActiveModel::Serializer
+class SupplierSerializer
+  include JSONAPI::Serializer
+
+  set_type :suppliers
+
   attributes :name, :key
 end

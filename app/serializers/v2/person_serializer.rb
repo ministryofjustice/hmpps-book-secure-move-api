@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 module V2
-  class PersonSerializer < ActiveModel::Serializer
+  class PersonSerializer
+    include JSONAPI::Serializer
+
+    set_type :people
+
     attributes(
-      :id,
       :first_names,
       :last_name,
       :date_of_birth,
