@@ -5,7 +5,7 @@ module Api
     class PrisonTransferReasonsController < ApiController
       def index
         reasons = PrisonTransferReason.all
-        render json: reasons
+        render_json reasons, serializer: PrisonTransferReasonSerializer
       end
     end
   end

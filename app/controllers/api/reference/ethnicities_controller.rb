@@ -5,7 +5,7 @@ module Api
     class EthnicitiesController < ApiController
       def index
         ethnicities = Ethnicity.all
-        render json: ethnicities
+        render_json ethnicities, serializer: EthnicitySerializer
       end
     end
   end

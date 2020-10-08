@@ -88,11 +88,15 @@ RSpec.describe Api::AllocationsController do
           per_page: 5,
           total_pages: 2,
           total_objects: 6,
-          links: {
-            first: '/api/v1/allocations?page=1',
-            last: '/api/v1/allocations?page=2',
-            next: '/api/v1/allocations?page=2',
-          },
+        }
+      end
+      let(:pagination_links) do
+        {
+          self: 'http://www.example.com/api/v1/allocations?page=1&per_page=5',
+          first: 'http://www.example.com/api/v1/allocations?page=1&per_page=5',
+          prev: nil,
+          next: 'http://www.example.com/api/v1/allocations?page=2&per_page=5',
+          last: 'http://www.example.com/api/v1/allocations?page=2&per_page=5',
         }
       end
 

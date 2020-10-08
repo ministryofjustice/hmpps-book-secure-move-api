@@ -39,7 +39,7 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_aut
     it 'updates the profile' do
       described_class.new(profile, prison_number).call
 
-      expect(profile.assessment_answers[0].attributes).to include({ 'nomis_alert_code' => 'ACCU9', 'nomis_alert_type' => 'MATSTAT' })
+      expect(profile.assessment_answers[0]).to have_attributes({ 'nomis_alert_code' => 'ACCU9', 'nomis_alert_type' => 'MATSTAT' })
     end
   end
 
@@ -58,7 +58,7 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_aut
     it 'updates the profile' do
       described_class.new(profile, prison_number).call
 
-      expect(profile.assessment_answers[0].attributes).to include({ 'nomis_alert_type': 'FOO', 'nomis_alert_code': 'AA' })
+      expect(profile.assessment_answers[0]).to have_attributes({ 'nomis_alert_type': 'FOO', 'nomis_alert_code': 'AA' })
     end
   end
 end

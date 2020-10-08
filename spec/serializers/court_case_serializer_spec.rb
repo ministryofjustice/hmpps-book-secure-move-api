@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe CourtCaseSerializer do
-  subject(:court_case_deserialized) { ActiveModelSerializers::Adapter.create(court_case_serializer).serializable_hash }
+  subject(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
-  let(:court_case_serializer) { described_class.new(court_case) }
+  let(:serializer) { described_class.new(court_case) }
 
   let(:court_case) do
     CourtCase.new.build_from_nomis(
@@ -22,13 +22,16 @@ RSpec.describe CourtCaseSerializer do
   let(:location) { create :location, nomis_agency_id: 'SNARCC' }
 
   it 'return a serialized court cases' do
-    expect(court_case_deserialized[:data][:attributes]).to eq(
+    expect(result[:data][:attributes]).to eq(
       nomis_case_id: '111',
       nomis_case_status: 'ACTIVE',
       case_start_date: '2016-11-14',
       case_type: 'Adult',
       case_number: 'T20167984',
     )
-    expect(court_case_deserialized[:data][:relationships][:location][:data]).not_to be_nil
+  end
+
+  it 'includes related location' do
+    expect(result[:data][:relationships][:location][:data]).not_to be_nil
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
     ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
-    JSON.parse(ActionController::Base.render(json: move.reload, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+    JSON.parse(MoveSerializer.new(move.reload, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
   end
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }

@@ -42,7 +42,7 @@ RSpec.describe PersonalCareNeeds::Importer do
     it 'appends an assessment answer with the default values' do
       importer.call
 
-      expect(profile.assessment_answers.first.as_json).to include(
+      expect(profile.assessment_answers.first.as_json.symbolize_keys).to include(
         category: default_question.category,
         key: 'health_issue',
         nomis_alert_code: problem_code,
@@ -57,7 +57,7 @@ RSpec.describe PersonalCareNeeds::Importer do
     it 'appends an assessment answer with special vehicle and physical domain values' do
       importer.call
 
-      expect(profile.assessment_answers.first.as_json).to include(
+      expect(profile.assessment_answers.first.as_json.symbolize_keys).to include(
         category: assessment_question.category,
         key: assessment_question.key,
         nomis_alert_code: problem_code,

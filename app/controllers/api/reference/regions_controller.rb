@@ -4,12 +4,13 @@ module Api
   module Reference
     class RegionsController < ApiController
       def index
-        render json: Region.all.includes(locations: :suppliers), include: included_relationships
+        regions = Region.all.includes(locations: :suppliers)
+        render_json regions, serializer: RegionSerializer, include: included_relationships
       end
 
       def show
         region = Region.find(params[:id])
-        render json: region, include: included_relationships
+        render_json region, serializer: RegionSerializer, include: included_relationships
       end
 
     private

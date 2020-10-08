@@ -1,9 +1,32 @@
 RSpec.describe GenericEvent::MoveRedirect do
   subject(:generic_event) { build(:event_move_redirect) }
 
+  let(:redirect_reasons) do
+    %w[
+      no_space
+      serious_incident
+      covid
+      receiving_prison_request
+      force_majeure
+      other
+    ]
+  end
+
   it_behaves_like 'a move event'
 
+
   it_behaves_like 'an event requiring a location', :to_location_id
+
+  it { is_expected.to validate_presence_of(:to_location_id) }
+  it { is_expected.to validate_inclusion_of(:reason).in_array(redirect_reasons) }
+
+  context 'when reason is nil' do
+    before do
+      generic_event.details.delete('reason')
+    end
+
+    it { is_expected.to be_valid }
+  end
 
   describe '#to_location' do
     it 'returns a `Location` if to_location_id is in the details' do

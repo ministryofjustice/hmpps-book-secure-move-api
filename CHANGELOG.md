@@ -1,5 +1,25 @@
 # Changelog
 
+## [v2.5.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.1) (2020-10-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.0...v2.5.1)
+
+**Merged pull requests:**
+
+- Bump rails from 6.0.3.3 to 6.0.3.4 [\#1016](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1016) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[P4-2304\] Update list of possible vehicle types [\#1010](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1010) ([willfish](https://github.com/willfish))
+- Review README.md [\#1007](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1007) ([willfish](https://github.com/willfish))
+- \[P4-2304\] Reinstate specs for v1 events [\#1004](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1004) ([willfish](https://github.com/willfish))
+- \[P4-2304\] Newly specced events \(part 1\) [\#1003](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1003) ([willfish](https://github.com/willfish))
+- Bump aws-sdk-s3 from 1.82.0 to 1.83.0 [\#1002](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1002) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2067 Import NOMIS mappings when creating the PER [\#1000](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1000) ([cwrw](https://github.com/cwrw))
+- P4-2067 Add NOMIS Mappings and Importer [\#999](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/999) ([cwrw](https://github.com/cwrw))
+- \[P4-2164\] Removes dual writing of v1 and v2 events [\#998](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/998) ([willfish](https://github.com/willfish))
+- Bump aws-sdk-s3 from 1.81.1 to 1.82.0 [\#996](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/996) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog v2.5.0 [\#995](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/995) ([cwrw](https://github.com/cwrw))
+- \[P4-2264\] Adds GenericEvents::Runner and consumes it when creating GenericEvents [\#993](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/993) ([willfish](https://github.com/willfish))
+- Update move\_mailer.rb [\#989](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/989) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.5.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.0) (2020-09-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.4.9...v2.5.0)

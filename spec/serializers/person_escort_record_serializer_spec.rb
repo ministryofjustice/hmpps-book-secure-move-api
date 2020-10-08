@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe PersonEscortRecordSerializer do
-  subject(:serializer) { described_class.new(person_escort_record) }
+  subject(:serializer) { described_class.new(person_escort_record, include: includes) }
 
   let(:move) { create(:move) }
   let(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -31,7 +31,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a `created_at` attribute' do
-    expect(result[:data][:attributes][:created_at]).to eq(person_escort_record.created_at)
+    expect(result[:data][:attributes][:created_at]).to eq(person_escort_record.created_at.iso8601)
   end
 
   it 'contains a `profile` relationship' do
@@ -61,7 +61,7 @@ RSpec.describe PersonEscortRecordSerializer do
 
   it 'contains a`responses` relationship with framework responses' do
     question = create(:framework_question)
-    response = serializer.framework_responses.create!(type: 'FrameworkResponse::String', framework_question: question)
+    response = person_escort_record.framework_responses.create!(type: 'FrameworkResponse::String', framework_question: question)
 
     expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
       id: response.id,
@@ -102,7 +102,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   context 'with include options' do
-    let(:includes) { { responses: [:value, question: :key, nomis_mappings: :code] } }
+    let(:includes) { ['responses', 'responses.question', 'responses.nomis_mappings'] }
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
     let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
@@ -110,7 +110,7 @@ RSpec.describe PersonEscortRecordSerializer do
     end
 
     let(:expected_json) do
-      [
+      UnorderedArray(
         {
           id: framework_response.id,
           type: 'framework_responses',
@@ -126,7 +126,7 @@ RSpec.describe PersonEscortRecordSerializer do
           type: 'framework_nomis_mappings',
           attributes: { code: framework_nomis_mapping.code },
         },
-      ]
+      )
     end
 
     it 'contains an included responses and question' do

@@ -5,8 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'active_model_serializers', '~> 0.10.0'
-
 # don't enable this in dev/test - the insights envs are staging/preprod/prod
 group :production do
   # usage docs for application_insights gem at
@@ -27,13 +25,13 @@ gem 'faraday'
 gem 'finite_machine'
 gem 'git', '~> 1.7'
 gem 'govuk_notify_rails', '~> 2.1.2'
+gem 'jsonapi-serializer', '~> 2.1'
 gem 'json-schema'
 gem 'kaminari'
 gem 'net-http-persistent'
 gem 'nokogiri', '>= 1.10.4'
 gem 'notifications-ruby-client', '~> 5.1.2'
 gem 'oauth2'
-gem 'pager_api'
 gem 'paper_trail'
 gem 'pg', '~> 1.0.0'
 gem 'prometheus_exporter'

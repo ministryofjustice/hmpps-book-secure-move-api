@@ -107,7 +107,7 @@ RSpec.describe Api::PeopleController do
 
         it 'includes the correct relationships' do
           expect(response_json['included'].count).to eq(2)
-          expect(response_json['included']).to include_json([{ type: 'ethnicities' }, { type: 'genders' }])
+          expect(response_json['included']).to include_json(UnorderedArray({ type: 'ethnicities' }, { type: 'genders' }))
         end
       end
 

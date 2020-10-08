@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-class IdentifierTypeSerializer < ActiveModel::Serializer
-  attributes :id, :key, :title, :description, :disabled_at
+class IdentifierTypeSerializer
+  include JSONAPI::Serializer
+
+  set_type :identifier_types
+
+  attributes :key, :title, :description, :disabled_at
 end

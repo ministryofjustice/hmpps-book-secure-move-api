@@ -5,7 +5,7 @@ module Api
     class IdentifierTypesController < ApiController
       def index
         identifier_types = IdentifierType.all
-        render json: identifier_types
+        render_json identifier_types, serializer: IdentifierTypeSerializer
       end
     end
   end

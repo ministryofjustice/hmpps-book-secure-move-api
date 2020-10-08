@@ -3,13 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe V2::MoveSerializer do
-  subject(:serializer) { described_class.new(move) }
+  subject(:serializer) { described_class.new(move, adapter_options) }
 
   let(:move) { create :move }
-
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   context 'with no options' do
     let(:adapter_options) { {} }

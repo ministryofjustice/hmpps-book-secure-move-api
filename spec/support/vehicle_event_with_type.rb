@@ -3,7 +3,7 @@ RSpec.shared_examples 'an event that specifies a vehicle type' do
     %w[
       c4
       pro_cab
-      mvp
+      mpv
       2_cell
       3_cell
       6_cell
