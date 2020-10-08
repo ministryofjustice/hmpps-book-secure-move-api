@@ -2,24 +2,26 @@ require 'csv'
 
 module Metrics
   module BaseMetric
-    attr_reader :metric_label,
+    attr_reader :metric_label, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
-                :rows_name, :rows_field, :rows, :timestamp,
+                :rows_name, :rows_field, :rows,
                 :values
 
     def setup_metric(metric)
       @metric_label = metric[:label]
+      @interval = metric[:interval]
+      @timestamp = nil
       @columns_name = metric[:columns][:name]
       @columns_field = metric[:columns][:field]
       @columns = evaluate(metric[:columns][:values])
       @rows_name = metric[:rows][:name]
       @rows_field = metric[:rows][:field]
       @rows = evaluate(metric[:rows][:values])
-      @values = calculate_all_values
-      @timestamp = Time.zone.now.iso8601
+      @values = nil
     end
 
     def to_csv
+      calculate_all_values
       CSV.generate do |csv|
         csv << [metric_label] + columns.map { |column| column_key(column) }
         rows.each do |row|
@@ -29,9 +31,10 @@ module Metrics
     end
 
     def to_fixed_key_json
+      calculate_all_values
       {
         label: metric_label,
-        timestamp: timestamp,
+        timestamp: timestamp.iso8601,
         data: rows.map do |row|
           {
             row: row_key(row),
@@ -42,18 +45,20 @@ module Metrics
     end
 
     def to_datasette_json
+      calculate_all_values
       {
         database: metric_label,
-        timestamp: timestamp,
+        timestamp: timestamp.iso8601,
         columns: columns.map { |column| column_key(column) },
         rows: rows.map { |row| columns.map { |column| value(column, row) } },
       }
     end
 
     def to_d3_json
+      calculate_all_values
       {
         label: metric_label,
-        timestamp: timestamp,
+        timestamp: timestamp.iso8601,
         data: rows.map { |row| ([[rows_name, row_key(row)]] + columns.map { |column| [column_key(column), value(column, row)] }).to_h },
       }
     end
@@ -69,12 +74,15 @@ module Metrics
     end
 
     def calculate_all_values
-      {}.tap do |v|
-        columns.each do |column|
-          rows.each do |row|
-            v[value_key(column, row)] = calculate(column, row)
+      if values.nil? || timestamp.nil? || timestamp + interval < Time.zone.now
+        @values = {}.tap do |v|
+          columns.each do |column|
+            rows.each do |row|
+              v[value_key(column, row)] = calculate(column, row)
+            end
           end
         end
+        @timestamp = Time.zone.now
       end
     end
 
