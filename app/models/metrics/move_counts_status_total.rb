@@ -4,6 +4,7 @@ module Metrics
 
     METRIC = {
       label: 'Move counts by status',
+      file: 'moves/status_count',
       interval: 5.minutes,
       columns: {
         name: 'status',

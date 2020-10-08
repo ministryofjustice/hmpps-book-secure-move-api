@@ -5,6 +5,7 @@ module Metrics
 
     METRIC = {
       label: 'Move counts by time bin + status',
+      file: 'moves/time_bin_status_count',
       interval: 5.minutes,
       columns: {
         name: 'time',

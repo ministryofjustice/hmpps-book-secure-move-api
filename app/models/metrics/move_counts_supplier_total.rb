@@ -4,6 +4,7 @@ module Metrics
 
     METRIC = {
       label: 'Move counts by supplier',
+      file: 'moves/supplier_count',
       interval: 5.minutes,
       columns: {
         name: 'supplier',
