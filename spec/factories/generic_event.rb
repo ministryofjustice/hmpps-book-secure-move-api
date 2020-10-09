@@ -397,4 +397,17 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_prisoner_welfare, parent: :generic_event, class: 'GenericEvent::PerPrisonerWelfare' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        given_at: Time.zone.now.xmlschema,
+        outcome: 'accepted',
+        subtype: 'food',
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
 end
