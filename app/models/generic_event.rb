@@ -51,7 +51,6 @@ class GenericEvent < ApplicationRecord
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment
     PerCourtExcessiveDelayNotDueToSupplier
-    PerCourtNotifySupplierOfReturnDestination
     PerCourtPreReleaseChecksCompleted
     PerCourtReadyInCustody
     PerCourtRelease
