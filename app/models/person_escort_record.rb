@@ -81,13 +81,7 @@ class PersonEscortRecord < VersionedModel
   def import_nomis_mappings!
     return unless move&.from_location&.prison?
 
-    framework_nomis_codes = framework_responses.includes(:framework_nomis_codes).flat_map(&:framework_nomis_codes)
-
-    FrameworkNomisMappings::Importer.new(
-      person: profile.person,
-      framework_responses: framework_responses,
-      framework_nomis_codes: framework_nomis_codes,
-    ).call
+    FrameworkNomisMappings::Importer.new(person_escort_record: self).call
   end
 
   def section_progress

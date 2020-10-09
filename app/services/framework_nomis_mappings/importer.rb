@@ -2,16 +2,17 @@
 
 module FrameworkNomisMappings
   class Importer
-    attr_reader :person, :framework_responses, :framework_nomis_codes
+    attr_reader :person, :person_escort_record, :framework_responses, :framework_nomis_codes
 
-    def initialize(person:, framework_responses:, framework_nomis_codes:)
-      @person = person
-      @framework_responses = framework_responses
-      @framework_nomis_codes = framework_nomis_codes
+    def initialize(person_escort_record:)
+      @person_escort_record = person_escort_record
+      @person = person_escort_record&.profile&.person
+      @framework_responses = person_escort_record&.framework_responses
+      @framework_nomis_codes = framework_responses&.includes(:framework_nomis_codes)&.flat_map(&:framework_nomis_codes)
     end
 
     def call
-      return unless person && framework_responses.any? && framework_nomis_codes.any?
+      return unless person_escort_record && framework_responses.any? && framework_nomis_codes.any?
 
       ActiveRecord::Base.transaction do
         return unless persist_framework_nomis_mappings.any?
@@ -20,14 +21,24 @@ module FrameworkNomisMappings
           nomis_code_ids = responses_to_codes[response.id]&.pluck(:nomis_code_id)
           response.framework_nomis_mappings = nomis_code_ids_to_mappings.slice(*nomis_code_ids).values.flatten
         end
+
+        person_escort_record.update(nomis_sync_status: nomis_sync_status)
       end
     end
 
   private
 
+    def nomis_sync_status
+      [
+        alert_mappings.nomis_sync_status,
+        personal_care_need_mappings.nomis_sync_status,
+        reasonable_adjust_mappings.nomis_sync_status,
+      ]
+    end
+
     def persist_framework_nomis_mappings
       @persist_framework_nomis_mappings ||= begin
-        mappings = alert_mappings + personal_care_need_mappings + reasonable_adjust_mappings
+        mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call
         # TODO: log any validation failures
         import = FrameworkNomisMapping.import(mappings, all_or_none: true)
 
@@ -36,18 +47,18 @@ module FrameworkNomisMappings
     end
 
     def alert_mappings
-      FrameworkNomisMappings::Alerts.new(prison_number: person.prison_number).call
+      @alert_mappings ||= FrameworkNomisMappings::Alerts.new(prison_number: person.prison_number)
     end
 
     def personal_care_need_mappings
-      FrameworkNomisMappings::PersonalCareNeeds.new(prison_number: person.prison_number).call
+      @personal_care_need_mappings ||= FrameworkNomisMappings::PersonalCareNeeds.new(prison_number: person.prison_number)
     end
 
     def reasonable_adjust_mappings
-      FrameworkNomisMappings::ReasonableAdjustments.new(
+      @reasonable_adjust_mappings ||= FrameworkNomisMappings::ReasonableAdjustments.new(
         booking_id: person.latest_nomis_booking_id,
         nomis_codes: grouped_framework_nomis_codes['reasonable_adjustment'],
-      ).call
+      )
     end
 
     def grouped_framework_nomis_codes

@@ -16,7 +16,7 @@ class PersonEscortRecordSerializer
     object.framework_flags.includes(framework_question: :dependents)
   end
 
-  attributes :confirmed_at, :created_at
+  attributes :confirmed_at, :created_at, :nomis_sync_status
 
   attribute :version do |object|
     object.framework.version
