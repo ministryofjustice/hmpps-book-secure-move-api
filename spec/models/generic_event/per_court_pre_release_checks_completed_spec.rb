@@ -1,5 +1,5 @@
 RSpec.describe GenericEvent::PerCourtPreReleaseChecksCompleted do
-  subject(:generic_event) { build(:per_court_pre_release_checks_completed) }
+  subject(:generic_event) { build(:event_per_court_pre_release_checks_completed) }
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
 
