@@ -134,6 +134,21 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record.framework_responses.first.framework_nomis_mappings.count).to eq(1)
     end
 
+    it 'updates nomis sync status if successful' do
+      move = create(:move)
+      framework = create(:framework)
+      alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
+      create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
+
+      expect(person_escort_record.nomis_sync_status).to include_json(
+        [
+          { 'resource_type' => 'alerts', 'status' => 'success' },
+        ],
+      )
+    end
+
     it 'sets correct response for framework questions' do
       profile = create(:profile)
       framework = create(:framework)
