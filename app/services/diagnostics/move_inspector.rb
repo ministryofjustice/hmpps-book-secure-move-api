@@ -71,7 +71,7 @@ module Diagnostics
           @output << "#{journey.from_location.title} --> #{journey.to_location.title} (#{journey.id})\n"
           if journey.generic_events.any?
             @output << "  #{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
-            journey.generic_events.default_order.each do |event| # NB use each to preserve sort order
+            journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
               # NB only show event params if include_person_details==true, as they could contain personal details
               @output << "  #{event.type.ljust(15)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.details : '-'}\n"
             end
