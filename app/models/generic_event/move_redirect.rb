@@ -17,7 +17,6 @@ class GenericEvent
     include MoveEventValidations
     include LocationValidations
 
-    validates :to_location_id, presence: true
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
 
     def reason=(reason)
