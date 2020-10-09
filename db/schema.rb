@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_01_043655) do
+ActiveRecord::Schema.define(version: 2020_10_07_043824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -462,6 +462,7 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "confirmed_at"
     t.uuid "move_id"
+    t.jsonb "nomis_sync_status", default: [], null: false
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true

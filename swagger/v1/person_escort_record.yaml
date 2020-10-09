@@ -33,6 +33,29 @@ PersonEscortRecord:
           type: string
           example: '1.0.1'
           description: Determines the version of framework questions of the `person_escort_record`
+        nomis_sync_status:
+          type: array
+          items:
+            type: object
+            properties:
+              resource_type:
+                type: string
+                enum:
+                  - alerts
+                  - personal_care_needs
+                  - reasonable_adjustments
+              status:
+                type: string
+                enum:
+                  - success
+                  - failed
+              synced_at:
+                type: string
+                format: date-time
+              message:
+                type: string
+          readOnly: true
+          description: A list of all NOMIS resources imported when creating the person escort record, and the status of the import, either successful or failed. The timestamp and error message are also included.
         confirmed_at:
           example: "2020-07-24T17:29:26.338Z"
           oneOf:

@@ -47,6 +47,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             "version": framework_version,
             "status": 'not_started',
             "confirmed_at": nil,
+            "nomis_sync_status": [],
           },
           "meta": {
             'section_progress' => [
@@ -123,6 +124,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             "version": framework_version,
             "status": 'not_started',
             "confirmed_at": nil,
+            "nomis_sync_status": [],
           },
           "meta": {
             'section_progress' => [
