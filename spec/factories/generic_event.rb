@@ -350,4 +350,13 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_take_from_custody_to_dock, parent: :generic_event, class: 'GenericEvent::PerCourtTakeFromCustodyToDock' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
 end
