@@ -59,24 +59,7 @@ RSpec.describe Api::GenericEventsController do
 
       let(:expected_error) do
         {
-          'errors' => [
-            {
-              'title' => 'Unprocessable entity',
-              'detail' => "From location id can't be blank",
-              'source' => {
-                'pointer' => '/data/attributes/from_location_id',
-              },
-              'code' => 'blank',
-            },
-            {
-              'title' => 'Unprocessable entity',
-              'detail' => 'From location id the location relationship you passed has an id that does not exist in our system. please use an existing from location',
-              'source' => {
-                'pointer' => '/data/attributes/from_location_id',
-              },
-              'code' => 'The location relationship you passed has an id that does not exist in our system. Please use an existing from_location',
-            },
-          ],
+          'errors' => [{ 'detail' => "Couldn't find Location without an ID", 'title' => 'Resource not found' }],
         }
       end
 
@@ -166,6 +149,7 @@ RSpec.describe Api::GenericEventsController do
           attributes: event_attributes,
           relationships: {
             eventable: { data: { type: 'movess', id: move.id } },
+            from_location: { data: { type: 'locations', id: move.from_location.id } },
           },
         }
       end
