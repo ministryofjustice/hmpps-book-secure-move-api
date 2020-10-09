@@ -320,4 +320,14 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_release, parent: :generic_event, class: 'GenericEvent::PerCourtRelease' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
 end
