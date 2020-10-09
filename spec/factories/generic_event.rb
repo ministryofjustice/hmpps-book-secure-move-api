@@ -378,4 +378,8 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_generic, parent: :generic_event, class: 'GenericEvent::PerGeneric' do
+    eventable { association(:person_escort_record) }
+  end
+
 end
