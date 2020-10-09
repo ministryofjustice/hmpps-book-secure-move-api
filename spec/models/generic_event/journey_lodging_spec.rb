@@ -97,10 +97,6 @@ RSpec.describe GenericEvent::JourneyLodging do
       it 'builds a generic_event with the correct attributes' do
         expect(described_class.from_event(event).attributes).to include_json(expected_generic_event_attributes)
       end
-
-      it 'builds an invalid generic_event' do
-        expect(described_class.from_event(event)).not_to be_valid
-      end
     end
   end
 end
