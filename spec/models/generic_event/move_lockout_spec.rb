@@ -17,8 +17,8 @@ RSpec.describe GenericEvent::MoveLockout do
 
   it_behaves_like 'a move event'
   it_behaves_like 'an authorised event'
+  it_behaves_like 'an event requiring a location', :from_location_id
 
-  it { is_expected.to validate_presence_of(:from_location_id) }
   it { is_expected.to validate_inclusion_of(:reason).in_array(reasons) }
 
   describe '#from_location' do

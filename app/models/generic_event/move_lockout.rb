@@ -1,5 +1,6 @@
 class GenericEvent
   class MoveLockout < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :from_location_id
     DETAILS_ATTRIBUTES = %w[
       authorised_at
       authorised_by
@@ -8,6 +9,7 @@ class GenericEvent
 
     include MoveEventValidations
     include AuthoriserValidations
+    include LocationValidations
 
     enum reason: {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
@@ -21,7 +23,6 @@ class GenericEvent
       other: 'other',
     }
 
-    validates :from_location_id, presence: true
     validates :reason, inclusion: { in: reasons }, if: -> { reason }
 
     def reason=(reason)
@@ -30,14 +31,6 @@ class GenericEvent
 
     def reason
       details['reason']
-    end
-
-    def from_location_id=(id)
-      details['from_location_id'] = id
-    end
-
-    def from_location_id
-      details['from_location_id']
     end
 
     def from_location

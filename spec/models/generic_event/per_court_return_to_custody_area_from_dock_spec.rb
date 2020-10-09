@@ -8,5 +8,6 @@ RSpec.describe GenericEvent::PerCourtReturnToCustodyAreaFromDock do
   end
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
-  it { is_expected.to validate_presence_of(:location_id) }
+
+  it_behaves_like 'an event requiring a location', :location_id
 end

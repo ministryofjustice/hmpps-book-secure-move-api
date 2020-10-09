@@ -1,16 +1,9 @@
 class GenericEvent
   class JourneyLodging < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :to_location_id
+
     include JourneyEventValidations
-
-    validates :to_location_id, presence: true
-
-    def to_location_id=(id)
-      details['to_location_id'] = id
-    end
-
-    def to_location_id
-      @to_location_id ||= details['to_location_id']
-    end
+    include LocationValidations
 
     def to_location
       Location.find_by(id: to_location_id)

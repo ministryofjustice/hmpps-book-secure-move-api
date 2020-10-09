@@ -1,20 +1,12 @@
 class GenericEvent
   class PerCourtReturnToCustodyAreaFromDock < GenericEvent
+    LOCATION_ATTRIBUTE_KEY = :location_id
     DETAILS_ATTRIBUTES = %w[
       court_cell_number
     ].freeze
 
     include PersonEscortRecordEventValidations
-
-    validates :location_id, presence: true
-
-    def location_id=(location_id)
-      details['location_id'] = location_id
-    end
-
-    def location_id
-      details['location_id']
-    end
+    include LocationValidations
 
     def court_cell_number=(court_cell_number)
       details['court_cell_number'] = court_cell_number
