@@ -359,4 +359,13 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_take_to_see_visitors, parent: :generic_event, class: 'GenericEvent::PerCourtTakeToSeeVisitors' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
 end
