@@ -24,4 +24,14 @@ RSpec.describe GenericEvent::PerPrisonerWelfare do
 
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event with a supplier personnel number'
+
+  context 'when the given_at date time format is not an iso8601 date' do
+    before do
+      generic_event.given_at = given_at
+    end
+
+    let(:given_at) { '2019/01/01T18:00:00' }
+
+    it { is_expected.not_to be_valid }
+  end
 end

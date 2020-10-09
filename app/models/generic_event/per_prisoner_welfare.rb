@@ -32,6 +32,12 @@ class GenericEvent
     validates :outcome, inclusion: { in: outcomes }
     validates :subtype, inclusion: { in: subtypes }
 
+    validates_each :given_at do |record, attr, value|
+      Time.zone.iso8601(value)
+    rescue ArgumentError
+      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
+    end
+
     def given_at=(given_at)
       details['given_at'] = given_at
     end
