@@ -37,10 +37,10 @@ module Diagnostics
       ENDMOVEEVENTS
 
       if move.generic_events.any?
-        @output << "#{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
+        @output << "#{'EVENT'.ljust(30)}\t#{'TIMESTAMP'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
         move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
           # NB only show event params if include_person_details==true, as they could contain personal details
-          @output << "#{event.type.ljust(15)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.details : '-'}\n"
+          @output << "#{event.type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
         end
       else
         @output << "(no events recorded)\n"
@@ -70,10 +70,10 @@ module Diagnostics
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
           @output << "#{journey.from_location.title} --> #{journey.to_location.title} (#{journey.id})\n"
           if journey.generic_events.any?
-            @output << "  #{'EVENT'.ljust(15)}\t#{'TIMESTAMP'.ljust(27)}\tPARAMS\n"
+            @output << "  #{'EVENT'.ljust(30)}\t#{'TIMESTAMP'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
             journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
               # NB only show event params if include_person_details==true, as they could contain personal details
-              @output << "  #{event.type.ljust(15)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.details : '-'}\n"
+              @output << "  #{event.type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
             end
           else
             @output << "  (no events recorded)\n"
