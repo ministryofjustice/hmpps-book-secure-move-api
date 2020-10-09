@@ -51,8 +51,19 @@ class GenericEvent < ApplicationRecord
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment
     PerCourtExcessiveDelayNotDueToSupplier
+    PerCourtNotifySupplierOfReturnDestination
+    PerCourtPreReleaseChecksCompleted
     PerCourtReadyInCustody
+    PerCourtRelease
+    PerCourtReleaseOnBail
     PerCourtReturnToCustodyAreaFromDock
+    PerCourtReturnToCustodyAreaFromVisitorArea
+    PerCourtTakeFromCustodyToDock
+    PerCourtTakeToSeeVisitors
+    PerCourtTask
+    PerGeneric
+    PerMedicalAid
+    PerPrisonerWelfare
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
