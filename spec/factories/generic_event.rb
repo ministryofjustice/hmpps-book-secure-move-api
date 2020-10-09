@@ -382,4 +382,19 @@ FactoryBot.define do
     eventable { association(:person_escort_record) }
   end
 
+  factory :event_per_medical_aid, parent: :generic_event, class: 'GenericEvent::PerMedicalAid' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        advised_by: Faker::Name.name,
+        advised_at: Time.zone.now.xmlschema,
+        treated_by: Faker::Name.name,
+        treated_at: Time.zone.now.xmlschema,
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
 end
