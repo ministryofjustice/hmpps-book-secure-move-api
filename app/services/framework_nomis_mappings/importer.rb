@@ -39,8 +39,9 @@ module FrameworkNomisMappings
     def persist_framework_nomis_mappings
       @persist_framework_nomis_mappings ||= begin
         mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call
-        # TODO: log any validation failures
         import = FrameworkNomisMapping.import(mappings, all_or_none: true)
+
+        log_exception('FrameworkNomisMapping import validation Error', import.failed_instances.map { |mapping| mapping.errors.messages }) if import.failed_instances.any?
 
         FrameworkNomisMapping.where(id: import.ids)
       end
@@ -81,6 +82,7 @@ module FrameworkNomisMappings
             end
           elsif mapping_nomis_fallback
             hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]
+            log_exception('New NOMIS codes imported', [{ code: mapping.code, type: mapping_nomis_fallback.code_type }])
           end
         end
       end
@@ -88,6 +90,17 @@ module FrameworkNomisMappings
 
     def responses_to_codes
       @responses_to_codes ||= framework_responses.joins(:framework_nomis_codes).select('framework_responses.id as id, framework_nomis_codes.id as nomis_code_id').group_by(&:id)
+    end
+
+    def log_exception(description, params)
+      Raven.capture_message(
+        description,
+        extra: {
+          id: person_escort_record&.id,
+          params: params,
+        },
+        level: 'error',
+      )
     end
   end
 end
