@@ -19,13 +19,7 @@ class GenericEvent
     validates :treated_at, presence: true
     validates :treated_by, presence: true
 
-    validates_each :advised_at do |record, attr, value|
-      Time.zone.iso8601(value)
-    rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-    end
-
-    validates_each :treated_at do |record, attr, value|
+    validates_each :advised_at, :treated_at do |record, attr, value|
       Time.zone.iso8601(value)
     rescue ArgumentError
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
