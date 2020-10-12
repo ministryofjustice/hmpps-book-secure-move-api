@@ -222,7 +222,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.6)
-    puma (4.3.6)
+    puma (5.0.2)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-cors (1.1.1)
@@ -412,7 +412,7 @@ DEPENDENCIES
   prometheus_exporter
   pry-byebug
   pry-rails
-  puma (~> 4)
+  puma (~> 5)
   rack-cors
   rack-test (~> 1.1.0)
   rails (~> 6.0.3)
