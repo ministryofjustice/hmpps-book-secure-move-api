@@ -22,12 +22,10 @@ module GenericEvents
     validates_inclusion_of :event_type, in: GenericEvent::STI_CLASSES, message: "'%{value}' is not a valid event_type"
     validates_inclusion_of :eventable_type, in: EVENTABLE_TYPES, message: "'%{value}' is not a valid eventable type"
 
-    %i[occurred_at recorded_at].each do |field|
-      validates_each field do |record, attr, value|
-        Time.zone.iso8601(value)
-      rescue ArgumentError
-        record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-      end
+    validates_each :occurred_at, :recorded_at do |record, attr, value|
+      Time.zone.iso8601(value)
+    rescue ArgumentError
+      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
     end
 
     def initialize(event_params, event_relationships)

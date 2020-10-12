@@ -57,21 +57,15 @@ RSpec.describe Api::GenericEventsController do
         }
       end
 
+      let(:expected_error) do
+        {
+          'errors' => [{ 'detail' => "Couldn't find Location without an ID", 'title' => 'Resource not found' }],
+        }
+      end
+
       it 'returns with an error' do
         do_post
-        expected_message = {
-          'errors' => [
-            {
-              'title' => 'Unprocessable entity',
-              'detail' => "From location id can't be blank",
-              'source' => {
-                'pointer' => '/data/attributes/from_location_id',
-              },
-              'code' => 'blank',
-            },
-          ],
-        }
-        expect(response_json).to eq(expected_message)
+        expect(response_json).to eq(expected_error)
       end
     end
 
@@ -155,6 +149,7 @@ RSpec.describe Api::GenericEventsController do
           attributes: event_attributes,
           relationships: {
             eventable: { data: { type: 'movess', id: move.id } },
+            from_location: { data: { type: 'locations', id: move.from_location.id } },
           },
         }
       end

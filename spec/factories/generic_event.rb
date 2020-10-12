@@ -310,4 +310,104 @@ FactoryBot.define do
       }
     end
   end
+  factory :event_per_court_pre_release_checks_completed, parent: :generic_event, class: 'GenericEvent::PerCourtPreReleaseChecksCompleted' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_per_court_release, parent: :generic_event, class: 'GenericEvent::PerCourtRelease' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_per_court_release_on_bail, parent: :generic_event, class: 'GenericEvent::PerCourtReleaseOnBail' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_per_court_return_to_custody_area_from_visitor_area, parent: :generic_event, class: 'GenericEvent::PerCourtReturnToCustodyAreaFromVisitorArea' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_per_court_take_from_custody_to_dock, parent: :generic_event, class: 'GenericEvent::PerCourtTakeFromCustodyToDock' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_per_court_take_to_see_visitors, parent: :generic_event, class: 'GenericEvent::PerCourtTakeToSeeVisitors' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_per_court_task, parent: :generic_event, class: 'GenericEvent::PerCourtTask' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_per_generic, parent: :generic_event, class: 'GenericEvent::PerGeneric' do
+    eventable { association(:person_escort_record) }
+  end
+
+  factory :event_per_medical_aid, parent: :generic_event, class: 'GenericEvent::PerMedicalAid' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        advised_by: Faker::Name.name,
+        advised_at: Time.zone.now.xmlschema,
+        treated_by: Faker::Name.name,
+        treated_at: Time.zone.now.xmlschema,
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
+  factory :event_per_prisoner_welfare, parent: :generic_event, class: 'GenericEvent::PerPrisonerWelfare' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        given_at: Time.zone.now.xmlschema,
+        outcome: 'accepted',
+        subtype: 'food',
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
 end

@@ -8,9 +8,13 @@ RSpec.describe Diagnostics::MoveInspector do
   let(:move) { create(:move, :in_transit, :court_appearance, profile: profile) }
   let(:journey) { create(:journey, move: move) }
   let(:include_person_details) { false }
+  let(:journey_event) { create(:event_journey_start, eventable: journey) }
+  let(:move_event) { create(:event_move_start, eventable: move) }
 
   before do
-    journey # create the journey
+    journey       # create the journey
+    journey_event # create the journey event
+    move_event    # create the move event
   end
 
   it { is_expected.to match(/id:\s+#{move.id}/) }

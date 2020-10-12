@@ -2,7 +2,8 @@ RSpec.describe GenericEvent::JourneyLockout do
   subject(:generic_event) { build(:event_journey_lockout) }
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Journey]) }
-  it { is_expected.to validate_presence_of(:from_location_id) }
+
+  it_behaves_like 'an event requiring a location', :from_location_id
 
   describe '#from_location' do
     it 'returns a `Location` if from_location_id is in the details' do
@@ -72,33 +73,6 @@ RSpec.describe GenericEvent::JourneyLockout do
 
       it 'builds a valid generic_event' do
         expect(described_class.from_event(event)).to be_valid
-      end
-    end
-
-    context 'when the event does not have locations' do
-      let(:event) { create(:event, :cancel, eventable: journey) }
-      let(:expected_generic_event_attributes) do
-        {
-          'id' => nil,
-          'eventable_id' => journey.id,
-          'eventable_type' => 'Journey',
-          'type' => 'GenericEvent::JourneyLockout',
-          'notes' => 'foo',
-          'created_by' => 'unknown',
-          'details' => { 'from_location_id' => nil },
-          'occurred_at' => eq(event.client_timestamp),
-          'recorded_at' => eq(event.client_timestamp),
-          'created_at' => be_within(0.1.seconds).of(event.created_at),
-          'updated_at' => be_within(0.1.seconds).of(event.updated_at),
-        }
-      end
-
-      it 'builds a generic_event with the correct attributes' do
-        expect(described_class.from_event(event).attributes).to include_json(expected_generic_event_attributes)
-      end
-
-      it 'builds an invalid generic_event' do
-        expect(described_class.from_event(event)).not_to be_valid
       end
     end
   end

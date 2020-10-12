@@ -24,7 +24,7 @@ class AllocationSerializer
 
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer
-  has_many :moves
+  has_many :moves, serializer: V2::MoveSerializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     from_location
