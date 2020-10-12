@@ -236,6 +236,28 @@ namespace :fake_data do
     end
   end
 
+  desc 'create fake prison location populations'
+  task create_populations: :environment do
+    puts 'create_populations...'
+    Location.prison.find_each do |location|
+      (10.days.ago.to_date..20.days.from_now.to_date).each do |date|
+        Population.create!(
+          date: date,
+          location_id: location.id,
+          operational_capacity: Faker::Number.between(from: 200, to: 500),
+          usable_capacity: Faker::Number.between(from: 250, to: 450),
+          unlock: Faker::Number.between(from: 300, to: 400),
+          bedwatch: Faker::Number.between(from: 1, to: 10),
+          overnights_in: Faker::Number.between(from: 1, to: 10),
+          overnights_out: Faker::Number.between(from: 1, to: 10),
+          out_of_area_courts: Faker::Number.between(from: 1, to: 10),
+          discharges: Faker::Number.between(from: 1, to: 10),
+          updated_by: Faker::Name.name,
+        )
+      end
+    end
+  end
+
   desc 'drop all the fake data - CAUTION: this deletes all existing data'
   task drop_all: :environment do
     puts 'drop_all...'
@@ -259,6 +281,7 @@ namespace :fake_data do
       Rake::Task['fake_data:create_moves'].invoke
       Rake::Task['fake_data:create_allocations'].invoke
       Rake::Task['fake_data:create_journeys'].invoke
+      Rake::Task['fake_data:create_populations'].invoke
     else
       puts 'you can only run this in the development or test environments'
     end
