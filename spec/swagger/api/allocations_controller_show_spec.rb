@@ -43,10 +43,9 @@ RSpec.describe Api::AllocationsController, :with_client_authentication, :rswag, 
                 format: 'uuid',
                 example: '00525ecb-7316-492a-aae2-f69334b2a155',
                 required: true
-
       response '200', 'success' do
         let(:resource_to_json) do
-          JSON.parse(AllocationSerializer.new(allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
+          JSON.parse(AllocationSerializer.new(allocation).serializable_hash.to_json)
         end
 
         schema '$ref' => 'get_allocation_responses.yaml#/200'
