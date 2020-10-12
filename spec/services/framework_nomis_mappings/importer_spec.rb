@@ -211,4 +211,42 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
     expect(person_escort_record.nomis_sync_status).to be_empty
   end
+
+  context 'when logging errors' do
+    it 'pushes an error warning to Sentry when validation fails on persisting NOMIS mappings' do
+      nomis_alert = { comment: 'Some comment', expired: false, active: true }
+      allow(Raven).to receive(:capture_message)
+      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+
+      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
+      described_class.new(person_escort_record: person_escort_record).call
+
+      raven_args = [
+        'FrameworkNomisMapping import validation Error',
+        extra: {
+          id: person_escort_record.id,
+          params: [{ code: ["can't be blank"] }],
+        },
+        level: 'error',
+      ]
+
+      expect(Raven).to have_received(:capture_message).with(*raven_args)
+    end
+
+    it 'pushes an error warning to Sentry when a NOMIS resource is new' do
+      allow(Raven).to receive(:capture_message)
+      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
+      described_class.new(person_escort_record: person_escort_record).call
+      personal_care_need = [
+        'New NOMIS codes imported',
+        extra: {
+          id: person_escort_record.id,
+          params: [{ code: 'PEEP', type: 'personal_care_need' }],
+        },
+        level: 'error',
+      ]
+
+      expect(Raven).to have_received(:capture_message).with(*personal_care_need).once
+    end
+  end
 end
