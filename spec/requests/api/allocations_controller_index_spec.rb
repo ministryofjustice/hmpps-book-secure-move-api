@@ -150,10 +150,12 @@ RSpec.describe Api::AllocationsController do
 
       before { get_allocations }
 
-      context 'when not including the include param' do
-        it 'returns the default minimum includes' do
-          returned_types = response_json['included'].map { |r| r['type'] }.uniq
-          expect(returned_types).to contain_exactly('profiles', 'people', 'moves', 'locations', 'ethnicities', 'genders')
+      context 'when not including the include query param' do
+        let!(:allocation) { create(:allocation, :with_moves) }
+        let(:params) { {} }
+
+        it 'returns no included relationships ' do
+          expect(response_json).not_to include('included')
         end
       end
 
