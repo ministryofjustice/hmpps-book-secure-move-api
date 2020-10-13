@@ -12,9 +12,14 @@ module Moves
       record.errors.add attr, 'is not a valid date.'
     end
 
+    validates_each :cancellation_reason, :rejection_reason, allow_nil: true do |record, attr, value|
+      values = value&.split(',') || []
+      if (values - Move.const_get(attr.to_s.pluralize.upcase)).any?
+        record.errors.add(attr, :inclusion)
+      end
+    end
+
     validates :move_type, inclusion: { in: Move.move_types }, allow_nil: true
-    validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }, allow_nil: true
-    validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }, allow_nil: true
     validates :sort_direction, inclusion: %w[asc desc], allow_nil: true
     validates :sort_by,
               inclusion: %w[name from_location to_location prison_transfer_reason created_at date_from date],
