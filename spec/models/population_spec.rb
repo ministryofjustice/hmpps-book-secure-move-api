@@ -12,14 +12,14 @@ RSpec.describe Population do
   it { is_expected.to validate_presence_of(:overnights_out) }
   it { is_expected.to validate_presence_of(:out_of_area_courts) }
   it { is_expected.to validate_presence_of(:discharges) }
-  it { is_expected.to validate_numericality_of(:operational_capacity) }
-  it { is_expected.to validate_numericality_of(:usable_capacity) }
-  it { is_expected.to validate_numericality_of(:unlock) }
-  it { is_expected.to validate_numericality_of(:bedwatch) }
-  it { is_expected.to validate_numericality_of(:overnights_in) }
-  it { is_expected.to validate_numericality_of(:overnights_out) }
-  it { is_expected.to validate_numericality_of(:out_of_area_courts) }
-  it { is_expected.to validate_numericality_of(:discharges) }
+  it { is_expected.to validate_numericality_of(:operational_capacity).is_greater_than(0) }
+  it { is_expected.to validate_numericality_of(:usable_capacity).is_greater_than(0) }
+  it { is_expected.to validate_numericality_of(:unlock).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:bedwatch).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:overnights_in).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:overnights_out).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:out_of_area_courts).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:discharges).is_greater_than_or_equal_to(0) }
 
   describe '#moves_from' do
     it 'includes non-cancelled prison transfer moves from same location on same date' do
@@ -135,17 +135,18 @@ RSpec.describe Population do
     let!(:move1) { create(:move, :prison_transfer, from_location: prison1, date: Date.today) }
     let!(:move2) { create(:move, :prison_transfer, to_location: prison2, date: Date.today) }
     let!(:move3) { create(:move, :prison_transfer, from_location: prison1, date: Date.tomorrow) }
-    let!(:population1) { create(:population, location: prison1, date: Date.today) }
-    let!(:population2) { create(:population, location: prison2, date: Date.today) }
-    let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) }
-    let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) }
+    let!(:population1) { create(:population, location: prison1, date: Date.today) } # Included
+    let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
+    let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) } # Included
+    let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) } # Included
+    let!(:population5) { create(:population, location: prison1, date: Date.today - 2) } # Falls outside scope of dates, so not included
     let(:date_range) { (Date.yesterday..Date.tomorrow) }
     let(:locations) { Location.where(id: [prison1.id, prison2.id]) }
 
     let(:expected_hash) do
       {
         prison1.id => [
-          nil,
+          nil, # No population data for yesterday
           {
             free_spaces: population1.free_spaces,
             id: population1.id,
@@ -156,7 +157,7 @@ RSpec.describe Population do
           },
         ],
         prison2.id => [
-          nil,
+          nil, # No population data for yesterday
           {
             free_spaces: population2.free_spaces,
             id: population2.id,
@@ -169,7 +170,7 @@ RSpec.describe Population do
       }
     end
 
-    it 'returns hashed array of free spaces by location' do
+    it 'returns hashed array of free space details by location id' do
       expect(described_class.free_spaces_date_range(locations, date_range)).to eq(expected_hash)
     end
   end

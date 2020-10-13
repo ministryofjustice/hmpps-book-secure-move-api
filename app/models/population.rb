@@ -40,11 +40,11 @@ class Population < ApplicationRecord
 
   def self.free_spaces_for_date(locations, date)
     locations
-      # Join with matching populations for location and given date (if any). Can't use a where clause as there may not be a capacity record
+      # Join with matching populations for location and given date (if any). Can't use a where clause as there may not be a population record
       .joins(sanitize_sql(['LEFT OUTER JOIN populations p ON p.location_id = locations.id AND p.date = :date', date: date]))
-      # Join with matching (non cancelled) moves to the location on the given date (if any) so we can count them
+      # Join with matching (non cancelled) prison transfers to the location on the given date (if any) so we can count them
       .joins("LEFT OUTER JOIN moves moves_in ON moves_in.to_location_id = locations.id AND moves_in.move_type = 'prison_transfer' AND moves_in.status <> 'cancelled' AND moves_in.date = p.date")
-      # Join with matching (non cancelled) moves from the location on the given date (if any) so we can count them
+      # Join with matching (non cancelled) prison transfers from the location on the given date (if any) so we can count them
       .joins("LEFT OUTER JOIN moves moves_out ON moves_out.from_location_id = locations.id AND moves_out.move_type = 'prison_transfer' AND moves_out.status <> 'cancelled' AND moves_out.date = p.date")
       # Group by columns used in the free space calculation
       .group(:id, :'p.id', :usable_capacity, :unlock, :bedwatch, :overnights_in, :overnights_out, :out_of_area_courts, :discharges)
