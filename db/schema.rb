@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_07_043824) do
+ActiveRecord::Schema.define(version: 2020_10_09_103849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -468,6 +468,24 @@ ActiveRecord::Schema.define(version: 2020_10_07_043824) do
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
+  create_table "populations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "location_id", null: false
+    t.date "date", null: false
+    t.integer "operational_capacity", null: false
+    t.integer "usable_capacity", null: false
+    t.integer "unlock", null: false
+    t.integer "bedwatch", null: false
+    t.integer "overnights_in", null: false
+    t.integer "overnights_out", null: false
+    t.integer "out_of_area_courts", null: false
+    t.integer "discharges", null: false
+    t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date"], name: "index_populations_on_date"
+    t.index ["location_id"], name: "index_populations_on_location_id"
+  end
+
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
@@ -577,6 +595,7 @@ ActiveRecord::Schema.define(version: 2020_10_07_043824) do
   add_foreign_key "person_escort_records", "frameworks"
   add_foreign_key "person_escort_records", "moves"
   add_foreign_key "person_escort_records", "profiles"
+  add_foreign_key "populations", "locations"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
   add_foreign_key "supplier_locations", "locations"

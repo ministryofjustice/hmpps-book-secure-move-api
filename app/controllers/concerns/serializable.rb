@@ -32,7 +32,7 @@ private
     serializer_class = options.delete(:serializer)
     raise ArgumentError, 'serializer option must be specified' unless serializer_class
 
-    serializer_class.new(serializable, options.slice(:include, :fields, :meta, :links))
+    serializer_class.new(serializable, options.slice(:include, :fields, :meta, :links, :params))
   end
 
   def paginate_collection(collection, options)
