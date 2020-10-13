@@ -73,7 +73,7 @@ module Api::V2
     end
 
     def common_move_attributes
-      move_params[:attributes].tap do |attributes|
+      move_params.fetch(:attributes, {}).tap do |attributes|
         attributes[:profile] = profile unless profile_attributes.nil?
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
         attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
