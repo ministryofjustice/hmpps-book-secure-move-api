@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     end
     resources :framework_responses, only: %i[update]
 
+    get 'locations_free_spaces', to: 'populations#index'
+
     namespace :reference do
       resources :allocation_complex_cases, only: :index
       resources :assessment_questions, only: :index
