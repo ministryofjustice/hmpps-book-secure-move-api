@@ -120,6 +120,7 @@ references:
     run:
       name: Create release and notify Sentry of deploy
       command: |
+        export SENTRY_LOG_LEVEL=debug
         curl -sL https://sentry.io/get-cli/ | bash
         export SENTRY_RELEASE=$(sentry-cli releases propose-version)
         sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
