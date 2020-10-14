@@ -1,9 +1,9 @@
 class GenericEvent
   class PerCourtAllDocumentationProvidedToSupplier < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :court_location_id
-    DETAILS_ATTRIBUTES = %w[
-      subtype
-    ].freeze
+
+    details_attributes :subtype
+    relationship_attributes :court_location_id
 
     include PersonEscortRecordEventValidations
     include LocationValidations
@@ -15,13 +15,5 @@ class GenericEvent
     }
 
     validates :subtype, inclusion: { in: subtypes }
-
-    def subtype=(subtype)
-      details['subtype'] = subtype
-    end
-
-    def subtype
-      details['subtype']
-    end
   end
 end

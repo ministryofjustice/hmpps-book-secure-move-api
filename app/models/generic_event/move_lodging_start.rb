@@ -1,9 +1,9 @@
 class GenericEvent
   class MoveLodgingStart < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
-    DETAILS_ATTRIBUTES = %w[
-      reason
-    ].freeze
+
+    details_attributes :reason
+    relationship_attributes :location_id
 
     include MoveEventValidations
     include LocationValidations
@@ -19,13 +19,5 @@ class GenericEvent
     }
 
     validates :reason, presence: true, inclusion: { in: reasons }
-
-    def reason=(reason)
-      details['reason'] = reason
-    end
-
-    def reason
-      details['reason']
-    end
   end
 end

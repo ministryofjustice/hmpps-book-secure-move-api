@@ -95,4 +95,42 @@ class GenericEvent < ApplicationRecord
 
     type.constantize.from_event(event)
   end
+
+  def self.details_attributes(*attributes)
+    define_singleton_method(:details_attributes) do
+      instance_variable_get('@details_attributes')
+    end
+
+    instance_variable_set('@details_attributes', attributes)
+
+    attributes.each do |attribute_key|
+      define_method(attribute_key) do
+        details[attribute_key]
+      end
+
+      define_method("#{attribute_key}=") do |attribute_value|
+        details[attribute_key] = attribute_value
+      end
+    end
+  end
+
+  # Relationship attributes live against the details but are expected in the json:api relationship section
+  # so are defined separately
+  def self.relationship_attributes(*attributes)
+    define_singleton_method(:relationship_attributes) do
+      instance_variable_get('@relationship_attributes')
+    end
+
+    instance_variable_set('@relationship_attributes', attributes)
+
+    attributes.each do |attribute_key|
+      define_method(attribute_key) do
+        details[attribute_key]
+      end
+
+      define_method("#{attribute_key}=") do |attribute_value|
+        details[attribute_key] = attribute_value
+      end
+    end
+  end
 end

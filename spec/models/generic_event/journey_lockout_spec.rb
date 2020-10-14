@@ -3,6 +3,7 @@ RSpec.describe GenericEvent::JourneyLockout do
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Journey]) }
 
+  it_behaves_like 'an event with relationships', :from_location_id
   it_behaves_like 'an event requiring a location', :from_location_id
 
   describe '#from_location' do

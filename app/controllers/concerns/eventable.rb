@@ -43,6 +43,6 @@ private
   def assign_specific_attributes!(attributes, event_params, type)
     attributes[:details] = {}
     attributes[:details].merge!(::GenericEvents::EventSpecificRelationshipsMapper.new(event_params[:relationships]).call)
-    attributes[:details].merge!(event_params[:attributes].slice(*type::DETAILS_ATTRIBUTES))
+    attributes[:details].merge!(event_params[:attributes].slice(*type.details_attributes))
   end
 end
