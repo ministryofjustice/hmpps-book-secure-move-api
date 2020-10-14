@@ -116,7 +116,7 @@ class GenericEvent < ApplicationRecord
     class_variable_set('@@details_attributes', attributes)
   end
 
-  # Location attributes live against the details but are expected in the json:api relationship section
+  # Relationship attributes live against the details but are expected in the json:api relationship section
   # so are defined separately
   def self.relationship_attributes(*attributes)
     define_singleton_method(:relationship_attributes) do
