@@ -455,6 +455,34 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'when no attributes specified' do
+      let(:move_attributes) { nil }
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
+    context 'when no attributes or relationships specified' do
+      let(:data) { { type: 'moves' } }
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable entity', 'detail' => 'From location must exist', 'source' => { 'pointer' => '/data/attributes/from_location' }, 'code' => 'blank' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
     context 'when a move is a duplicate' do
       let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
