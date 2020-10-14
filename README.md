@@ -156,6 +156,10 @@ Platform with the following namespace names:
 `preprod`, `uat` and `production` can be deployed by generating a new tag
 following [semantic versioning](https://semver.org/) pointing to the current commit. We typically do this locally with:
 
+Deployments and associated commits are tracked in the service Sentry project.
+The Git SHA is used to identify the release and is tracked  by means of the `SENTRY_RELEASE` environment variable in Dockerfile.
+The associated commits are tracked by a CircleCI integration triggered on the deployment stage.
+
 ```bash
 # Get a list of tags
 git tag
