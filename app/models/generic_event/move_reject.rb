@@ -16,7 +16,7 @@ class GenericEvent
 
     def for_feed
       super.tap do |common_feed_attributes|
-        common_feed_attributes['details']['rebook'] = rebook
+        common_feed_attributes['details']['rebook'] = rebook || false
       end
     end
 
