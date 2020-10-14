@@ -244,6 +244,28 @@ RSpec.describe FrameworkResponse do
       expect(response.framework_flags).to contain_exactly(flag2)
     end
 
+    it 'raises an error if transaction fails twice' do
+      response = create(:string_response, value: nil)
+      allow(response).to receive(:update!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+
+      expect { response.update_with_flags!('Yes') }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+    end
+
+    it 'retries the transaction if it fails only once and saves response' do
+      response = create(:string_response, value: nil)
+
+      # Allow update to fail first time, and second time to complete transaction
+      return_values = [:raise, true]
+      allow(response).to receive(:update!).twice do
+        return_value = return_values.shift
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
+      end
+
+      response.update_with_flags!('Yes')
+
+      expect(response.value).to eq('Yes')
+    end
+
     context 'when dependent responses' do
       it 'clears dependent responses if value changed' do
         parent_response = create(:string_response)
