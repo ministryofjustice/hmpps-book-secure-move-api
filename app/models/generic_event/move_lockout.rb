@@ -1,11 +1,9 @@
 class GenericEvent
   class MoveLockout < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :from_location_id
-    DETAILS_ATTRIBUTES = %w[
-      authorised_at
-      authorised_by
-      reason
-    ].freeze
+
+    details_attributes :authorised_at, :authorised_by, :reason
+    relationship_attributes :from_location_id
 
     include MoveEventValidations
     include AuthoriserValidations
@@ -24,14 +22,6 @@ class GenericEvent
     }
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason }
-
-    def reason=(reason)
-      details['reason'] = reason
-    end
-
-    def reason
-      details['reason']
-    end
 
     def from_location
       Location.find_by(id: from_location_id)

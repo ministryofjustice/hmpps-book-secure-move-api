@@ -8,7 +8,7 @@ module Eventable
 
   def process_event(eventables, event_name, event_params)
     [eventables].flatten.each do |eventable|
-      create_generic_event(eventable, event_name, event_params)
+      result = create_generic_event(eventable, event_name, event_params)
       run_event_logs(eventable)
     end
   end
@@ -43,6 +43,6 @@ private
   def assign_specific_attributes!(attributes, event_params, type)
     attributes[:details] = {}
     attributes[:details].merge!(::GenericEvents::EventSpecificRelationshipsMapper.new(event_params[:relationships]).call)
-    attributes[:details].merge!(event_params[:attributes].slice(*type::DETAILS_ATTRIBUTES))
+    attributes[:details].merge!(event_params[:attributes].slice(*type.details_attributes))
   end
 end

@@ -1,6 +1,7 @@
 RSpec.describe GenericEvent::MoveCancel do
   subject(:generic_event) { build(:event_move_cancel) }
 
+  it_behaves_like 'an event with details', :cancellation_reason, :cancellation_reason_comment
   it_behaves_like 'a move event'
 
   it 'validates cancellation_reason' do

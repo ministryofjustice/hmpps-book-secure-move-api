@@ -1,10 +1,6 @@
 class GenericEvent
   class MoveOperationHmcts < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      authorised_at
-      authorised_by
-      court_cell_number
-    ].freeze
+    details_attributes :authorised_at, :authorised_by, :court_cell_number
 
     include MoveEventValidations
     include AuthoriserValidations

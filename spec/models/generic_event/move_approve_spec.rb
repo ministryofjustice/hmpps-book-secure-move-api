@@ -14,6 +14,8 @@ RSpec.describe GenericEvent::MoveApprove do
 
   it { is_expected.to validate_presence_of(:date) }
 
+  it_behaves_like 'an event with details', :date, :create_in_nomis
+
   context 'when the date format is not an iso8601 date' do
     let(:date) { '2019/01/01' }
 

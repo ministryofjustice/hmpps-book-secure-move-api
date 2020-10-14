@@ -1,8 +1,6 @@
 class GenericEvent
   class MoveCollectionByEscort < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      vehicle_type
-    ].freeze
+    details_attributes :vehicle_type
 
     include MoveEventValidations
     include VehicleTypeValidations

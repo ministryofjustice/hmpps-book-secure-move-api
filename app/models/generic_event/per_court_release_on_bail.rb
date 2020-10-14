@@ -1,9 +1,9 @@
 class GenericEvent
   class PerCourtReleaseOnBail < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
-    DETAILS_ATTRIBUTES = %w[
-      supplier_personnel_number
-    ].freeze
+
+    details_attributes :supplier_personnel_number
+    relationship_attributes :location_id
 
     include PersonEscortRecordEventValidations
     include SupplierPersonnelNumberValidations

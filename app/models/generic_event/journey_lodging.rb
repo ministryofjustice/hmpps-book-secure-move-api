@@ -2,6 +2,8 @@ class GenericEvent
   class JourneyLodging < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :to_location_id
 
+    relationship_attributes :to_location_id
+
     include JourneyEventValidations
     include LocationValidations
 
