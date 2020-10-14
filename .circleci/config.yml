@@ -288,7 +288,7 @@ commands:
             kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
-      - *notify_notify_sentry_release
+      - *notify_sentry_release
       - when:
           condition: <<parameters.notify_slack>>
           steps:
