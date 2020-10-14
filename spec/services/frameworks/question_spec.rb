@@ -55,6 +55,14 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'allows followup comments to be required on an option' do
+      filepath = Rails.root.join(fixture_path, 'property-bag-type.yml')
+      question = FrameworkQuestion.new(section: 'property-information', key: 'property-bag-type')
+      described_class.new(filepath: filepath, questions: { 'property-bag-type' => question }).call
+
+      expect(question.followup_comment_options).to contain_exactly('UK currency')
+    end
+
+    it 'allows followup comments to be required on an option if there are no NOMIS mappings' do
       filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
