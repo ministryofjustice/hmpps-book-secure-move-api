@@ -8,7 +8,7 @@ module Eventable
 
   def process_event(eventables, event_name, event_params)
     [eventables].flatten.each do |eventable|
-      result = create_generic_event(eventable, event_name, event_params)
+      create_generic_event(eventable, event_name, event_params)
       run_event_logs(eventable)
     end
   end
