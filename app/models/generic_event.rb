@@ -101,7 +101,9 @@ class GenericEvent < ApplicationRecord
       instance_variable_get('@details_attributes')
     end
 
-    attributes = attributes.each_with_object([]) do |attribute_key, acc|
+    instance_variable_set('@details_attributes', attributes)
+
+    attributes.each do |attribute_key|
       define_method(attribute_key) do
         details[attribute_key]
       end
@@ -109,11 +111,7 @@ class GenericEvent < ApplicationRecord
       define_method("#{attribute_key}=") do |attribute_value|
         details[attribute_key] = attribute_value
       end
-
-      acc << attribute_key
     end
-
-    instance_variable_set('@details_attributes', attributes)
   end
 
   # Relationship attributes live against the details but are expected in the json:api relationship section
@@ -123,7 +121,9 @@ class GenericEvent < ApplicationRecord
       instance_variable_get('@relationship_attributes')
     end
 
-    attributes = attributes.each_with_object([]) do |attribute_key, acc|
+    instance_variable_set('@relationship_attributes', attributes)
+
+    attributes.each do |attribute_key|
       define_method(attribute_key) do
         details[attribute_key]
       end
@@ -131,10 +131,6 @@ class GenericEvent < ApplicationRecord
       define_method("#{attribute_key}=") do |attribute_value|
         details[attribute_key] = attribute_value
       end
-
-      acc << attribute_key
     end
-
-    instance_variable_set('@relationship_attributes', attributes)
   end
 end
