@@ -121,7 +121,7 @@ references:
       name: Create release and notify Sentry of deploy
       command: |
         curl -sL https://sentry.io/get-cli/ | bash
-        export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+        export SENTRY_RELEASE="<<parameters.env>>-$(sentry-cli releases propose-version)"
         sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
         sentry-cli releases set-commits $SENTRY_RELEASE --auto
         sentry-cli releases finalize $SENTRY_RELEASE
