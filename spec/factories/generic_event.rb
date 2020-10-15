@@ -173,6 +173,17 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_journey_change_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyChangeVehicle' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        vehicle_reg: Faker::Vehicle.license_plate,
+        # Implicitly does the following on creation: previous_vehicle_reg: eventable.vehicle_registration
+      }
+    end
+  end
+
   factory :event_journey_complete, parent: :generic_event, class: 'GenericEvent::JourneyComplete' do
     eventable { association(:journey) }
   end
