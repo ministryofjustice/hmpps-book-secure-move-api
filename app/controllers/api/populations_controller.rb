@@ -10,6 +10,12 @@ module Api
       paginate locations, serializer: LocationFreeSpacesSerializer, params: serializer_params
     end
 
+    def show
+      population = find_population
+
+      render_population(population, :ok)
+    end
+
   private
 
     PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id].freeze
@@ -42,6 +48,18 @@ module Api
 
     def locations
       @locations ||= Locations::Finder.new(filter_params, sort_params).call
+    end
+
+    def find_population
+      Population.find(params[:id])
+    end
+
+    def render_population(population, status)
+      render_json population, serializer: PopulationSerializer, include: included_relationships, status: status
+    end
+
+    def supported_relationships
+      PopulationSerializer::SUPPORTED_RELATIONSHIPS
     end
   end
 end
