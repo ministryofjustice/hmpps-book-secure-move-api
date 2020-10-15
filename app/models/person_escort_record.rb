@@ -39,15 +39,9 @@ class PersonEscortRecord < VersionedModel
            :confirmed?,
            to: :state_machine
 
-  def self.save_with_responses!(profile_id: nil, version: nil, move_id: nil)
-    # TODO: Remove profile id and transition to Move id, for now accept both
-    if move_id.present?
-      move = Move.find(move_id)
-      profile = move.profile
-    else
-      move = nil
-      profile = Profile.find(profile_id)
-    end
+  def self.save_with_responses!(version: nil, move_id: nil)
+    move = Move.find(move_id)
+    profile = move.profile
 
     framework = Framework.find_by!(version: version)
 

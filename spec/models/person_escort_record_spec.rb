@@ -41,10 +41,6 @@ RSpec.describe PersonEscortRecord do
   end
 
   describe '.save_with_responses!' do
-    it 'returns error if profile does not exist' do
-      expect { described_class.save_with_responses!(profile_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
     it 'returns error if move does not exist' do
       expect { described_class.save_with_responses!(move_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -65,37 +61,29 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns framework with version specified' do
       framework = create(:framework, version: '1.2.1')
-      profile = create(:profile)
-      described_class.save_with_responses!(profile_id: profile.id, version: '1.2.1')
+      move = create(:move)
+      described_class.save_with_responses!(move_id: move.id, version: '1.2.1')
 
       expect(described_class.last.framework).to eq(framework)
     end
 
     it 'returns error if wrong framework version passed' do
       create(:framework, version: '1.2.1')
-      profile = create(:profile)
+      move = create(:move)
 
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { described_class.save_with_responses!(move_id: move.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if no framework version passed' do
       create(:framework, version: '1.0.0')
-      profile = create(:profile)
-      expect { described_class.save_with_responses!(profile_id: profile.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      move = create(:move)
+      expect { described_class.save_with_responses!(move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if nil framework version passed' do
       create(:framework, version: '1.0.0')
-      profile = create(:profile)
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it 'does not allow multiple person_escort_records on a profile' do
-      profile = create(:profile)
-      framework = create(:framework)
-      described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
-
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: framework.version) }.to raise_error(ActiveRecord::RecordInvalid)
+      move = create(:move)
+      expect { described_class.save_with_responses!(move_id: move.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'does not allow multiple person_escort_records on a profile through move' do
@@ -108,18 +96,18 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'sets initial status to unstarted' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
 
-      expect(described_class.save_with_responses!(profile_id: profile.id, version: framework.version).status).to eq('unstarted')
+      expect(described_class.save_with_responses!(move_id: move.id, version: framework.version).status).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       create(:framework_question, :checkbox, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_responses.count).to eq(2)
     end
@@ -151,10 +139,10 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'sets correct response for framework questions' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       checkbox_question = create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: checkbox_question.id,
@@ -163,10 +151,10 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'allows access to framework question through person escort record' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_questions.count).to eq(1)
     end
