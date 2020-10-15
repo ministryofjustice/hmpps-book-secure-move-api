@@ -1,0 +1,75 @@
+# frozen_string_literal: true
+
+module V2
+  module Moves
+    class MovesSerializer
+      include JSONAPI::Serializer
+
+      set_type :moves
+
+      attributes :additional_information,
+                 :cancellation_reason,
+                 :cancellation_reason_comment,
+                 :created_at,
+                 :date,
+                 :date_from,
+                 :date_to,
+                 :move_agreed,
+                 :move_agreed_by,
+                 :move_type,
+                 :reference,
+                 :rejection_reason,
+                 :status,
+                 :time_due,
+                 :updated_at
+
+
+
+
+      has_one :profile, serializer: V2::ProfileSerializer
+              # if: Proc.new { |record, params| puts "PARAMS111.dot_relationships: #{params[:dot_relationships].inspect}"; params && params[:dot_relationships].include?('move.profile') }
+              # lazy_load_data: Proc.new { |record, params| puts "PARAMS222.dot_relationships: #{params[:dot_relationships].inspect}"; params && params[:dot_relationships].include?('move.profile') }
+
+
+
+      has_one :from_location, serializer: ::V2::Moves::LocationSerializer
+              # if: Proc.new { |record, params| params && params[:dot_relationships].include?('move.from_location') }
+
+      has_one :to_location, serializer: LocationSerializer
+
+      has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
+      has_one :supplier, serializer: SupplierSerializer
+      #
+      # has_many :court_hearings, serializer: CourtHearingSerializer
+      #
+      # belongs_to :allocation, serializer: AllocationSerializer
+      # belongs_to :original_move, serializer: V2::MoveSerializer
+
+      # SUPPORTED_RELATIONSHIPS = %w[
+      #   profile.documents
+      #   profile.person.ethnicity
+      #   profile.person.gender
+      #   profile.person_escort_record
+      #   profile.person_escort_record.flags
+      #   profile.person_escort_record.framework
+      #   profile.person_escort_record.responses
+      #   profile.person_escort_record.responses.nomis_mappings
+      #   profile.person_escort_record.responses.question
+      #   profile.person_escort_record.responses.question.descendants.**
+      #   from_location
+      #   from_location.suppliers
+      #   to_location
+      #   to_location.suppliers
+      #   prison_transfer_reason
+      #   court_hearings
+      #   allocation
+      #   original_move
+      #   supplier
+      # ].freeze
+      #
+      # INCLUDED_FIELDS = {
+      #   allocation: %i[to_location from_location moves_count created_at],
+      # }.freeze
+    end
+  end
+end

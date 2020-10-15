@@ -12,7 +12,8 @@ class LocationSerializer
              :can_upload_documents,
              :disabled_at
 
-  has_many :suppliers
+  has_many :suppliers , if: ->(_, params) { params[:dot_relationships].include?('from_location.suppliers') }
+  # has_many :suppliers, lazy_load_data: true, if: ->(_, params) { !params[:dot_relationships].include?('from_location.suppliers') }
 
-  SUPPORTED_RELATIONSHIPS = %w[suppliers].freeze
+  # SUPPORTED_RELATIONSHIPS = %w[suppliers].freeze
 end

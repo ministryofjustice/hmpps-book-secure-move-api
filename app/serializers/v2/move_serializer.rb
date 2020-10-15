@@ -45,7 +45,6 @@ module V2
       profile.person_escort_record.responses.question
       profile.person_escort_record.responses.question.descendants.**
       from_location
-      from_location.suppliers
       to_location
       to_location.suppliers
       prison_transfer_reason
@@ -53,7 +52,7 @@ module V2
       allocation
       original_move
       supplier
-    ].freeze
+    ].freeze # from_location.suppliers
 
     INCLUDED_FIELDS = {
       allocation: %i[to_location from_location moves_count created_at],

@@ -5,11 +5,16 @@ module Api
     before_action :validate_filter_params, only: %i[index]
 
     def index
+      puts "\nDEBUG moves index---------\n#{request.url}\n" +
+               "\tINCLUDED RELATIONSHIPS:\t #{included_relationships.inspect}\n" +
+               "\tINCLUDED DB RELATIONSHIPS:\t #{included_db_relationships.inspect}\n"
+               "\tPARAMS:\t #{params.inspect}\n" +
+               "-----DEBUG\n\n"
       index_and_render
     end
 
     def csv
-      send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+      send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
     def show
@@ -27,7 +32,11 @@ module Api
   private
 
     def moves
-      @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
+      @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}, included_db_relationships).call
+    end
+
+    def csv_moves
+      @csv_moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
     end
 
     def validate_filter_params

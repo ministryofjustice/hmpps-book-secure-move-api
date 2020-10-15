@@ -16,9 +16,10 @@ module V2
       :police_national_computer,
     )
 
-    has_one :ethnicity, serializer: EthnicitySerializer
-    has_one :gender, serializer: GenderSerializer
-    has_many :profiles, serializer: ProfileSerializer
+
+    # has_one :ethnicity, serializer: EthnicitySerializer
+    # has_one :gender, serializer: GenderSerializer
+    # has_many :profiles, serializer: ProfileSerializer
 
     SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles].freeze
   end

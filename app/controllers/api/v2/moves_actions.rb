@@ -2,9 +2,15 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves,
-               serializer: ::V2::MoveSerializer,
+               serializer: ::V2::Moves::MovesSerializer,
                include: included_relationships,
-               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+               fields: ::V2::MoveSerializer::INCLUDED_FIELDS,
+               params: { included_relationships: included_relationships,
+                         included_db_relationships: included_db_relationships,
+                         # rels: included_db_relationships.map{|x| x.is_a?(Symbol) ? [x, true] : [x.keys.first, x.values.first]}.to_h,
+                         dot_relationships: (included_relationships || []).map{|rel| get_dot_relationships('move', rel) }.flatten
+
+               }
     end
 
     def show_and_render
