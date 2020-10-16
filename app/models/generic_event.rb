@@ -16,6 +16,7 @@ class GenericEvent < ApplicationRecord
     JourneyAdmitThroughOuterGate
     JourneyArriveAtOuterGate
     JourneyCancel
+    JourneyChangeVehicle
     JourneyComplete
     JourneyCreate
     JourneyExitThroughOuterGate
@@ -35,6 +36,8 @@ class GenericEvent < ApplicationRecord
     MoveCancel
     MoveCollectionByEscort
     MoveComplete
+    MoveCrossSupplierDropOff
+    MoveCrossSupplierPickUp
     MoveLockout
     MoveLodgingEnd
     MoveLodgingStart
@@ -51,6 +54,7 @@ class GenericEvent < ApplicationRecord
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment
     PerCourtExcessiveDelayNotDueToSupplier
+    PerCourtHearing
     PerCourtPreReleaseChecksCompleted
     PerCourtReadyInCustody
     PerCourtRelease
@@ -63,6 +67,19 @@ class GenericEvent < ApplicationRecord
     PerGeneric
     PerMedicalAid
     PerPrisonerWelfare
+    PersonMoveAssault
+    PersonMoveBookedIntoReceivingEstablishment
+    PersonMoveDeathInCustody
+    PersonMoveMajorIncidentOther
+    PersonMoveMinorIncidentOther
+    PersonMovePersonEscaped
+    PersonMovePersonEscapedKpi
+    PersonMoveReleasedError
+    PersonMoveRoadTrafficAccident
+    PersonMoveSeriousInjury
+    PersonMoveUsedForce
+    PersonMoveVehicleBrokeDown
+    PersonMoveVehicleSystemsFailed
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true

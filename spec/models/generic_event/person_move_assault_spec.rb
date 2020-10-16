@@ -8,7 +8,7 @@ RSpec.describe GenericEvent::PersonMoveAssault do
 
   it { is_expected.to validate_presence_of(:supplier_personnel_numbers) }
 
-  context "when reported_at is not a valid iso8601 date" do
+  context 'when reported_at is not a valid iso8601 date' do
     before do
       generic_event.reported_at = '2019/01/01'
     end
