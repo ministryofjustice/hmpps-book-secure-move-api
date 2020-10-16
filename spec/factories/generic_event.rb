@@ -44,6 +44,10 @@ FactoryBot.define do
     eventable { association(:move) }
   end
 
+  factory :event_move_cross_supplier_drop_off, parent: :generic_event, class: 'GenericEvent::MoveCrossSupplierDropOff' do
+    eventable { association(:move) }
+  end
+
   factory :event_move_lockout, parent: :generic_event, class: 'GenericEvent::MoveLockout' do
     eventable { association(:move) }
     details do
