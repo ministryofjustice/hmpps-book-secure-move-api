@@ -594,4 +594,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_person_move_vehicle_systems_failed, parent: :generic_event, class: 'GenericEvent::PersonMoveVehicleSystemsFailed' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+        postcode: 'W1A 1AA',
+      }
+    end
+  end
 end
