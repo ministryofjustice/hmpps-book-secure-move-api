@@ -2,9 +2,8 @@ RSpec.describe GenericEvent::JourneyChangeVehicle do
   subject(:generic_event) { build(:event_journey_change_vehicle) }
 
   it_behaves_like 'an event with details', :vehicle_reg, :previous_vehicle_reg
+  it_behaves_like 'an event with eventable types', 'Journey'
   it_behaves_like 'an event that specifies a vehicle registration'
-
-  it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Journey]) }
 
   describe '#trigger' do
     it 'does not persist changes to the eventable' do

@@ -434,4 +434,14 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :event_person_move_booked_into_receiving_establishment, parent: :generic_event, class: 'GenericEvent::PersonMoveBookedIntoReceivingEstablishment' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
 end
