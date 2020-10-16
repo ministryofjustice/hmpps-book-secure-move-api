@@ -1,4 +1,4 @@
-class Population < ApplicationRecord
+class Population < VersionedModel
   belongs_to :location
 
   validates :date, presence: true
@@ -21,6 +21,14 @@ class Population < ApplicationRecord
 
   def free_spaces
     usable_capacity - unlock - bedwatch - overnights_in - moves_to.count + overnights_out + out_of_area_courts + discharges + moves_from.count
+  end
+
+  def save_uniquely!
+    save!
+    self
+  rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
+    errors.add(:date, :taken)
+    raise ActiveRecord::RecordInvalid, self
   end
 
   def self.free_spaces_date_range(locations, date_range)

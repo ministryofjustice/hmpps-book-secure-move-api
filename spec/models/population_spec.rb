@@ -129,6 +129,23 @@ RSpec.describe Population do
     end
   end
 
+  describe '.save_uniquely!' do
+    it 'saves population if no errors' do
+      population = build(:population)
+      population.save_uniquely!
+
+      expect(population).to be_persisted
+    end
+
+    it 'raises exception with existing populations for the same date and location' do
+      existing_population = create(:population)
+      new_population = build(:population, location: existing_population.location, date: existing_population.date)
+
+      expect { new_population.save_uniquely! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect(new_population.errors[:date]).to contain_exactly('has already been taken')
+    end
+  end
+
   describe '.free_spaces_date_range' do
     let!(:prison1) { create(:location, :prison) }
     let!(:prison2) { create(:location, :prison) }
