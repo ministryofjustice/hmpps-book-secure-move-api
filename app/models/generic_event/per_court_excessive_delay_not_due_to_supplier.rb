@@ -15,11 +15,6 @@ class GenericEvent
     }
 
     validates :subtype, inclusion: { in: subtypes }
-    validates :ended_at, presence: true
-    validates_each :ended_at do |record, attr, value|
-      Time.zone.iso8601(value)
-    rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-    end
+    validates :ended_at, presence: true, iso_date_time: true
   end
 end

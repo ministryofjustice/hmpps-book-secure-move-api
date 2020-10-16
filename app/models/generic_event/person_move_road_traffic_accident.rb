@@ -10,10 +10,6 @@ class GenericEvent
     include SupplierPersonnelNumberValidations
     include VehicleRegValidations
 
-    validates_each :reported_at do |record, attr, value|
-      Time.zone.iso8601(value)
-    rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-    end
+    validates :reported_at, iso_date_time: true
   end
 end
