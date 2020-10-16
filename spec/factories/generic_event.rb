@@ -486,4 +486,17 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :event_person_move_major_incident_other, parent: :generic_event, class: 'GenericEvent::PersonMoveMajorIncidentOther' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        notes: 'Jimmy was brutally assaulted by Karen.',
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+      }
+    end
+  end
 end
