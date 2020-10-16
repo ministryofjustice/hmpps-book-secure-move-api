@@ -12,5 +12,27 @@ FactoryBot.define do
     out_of_area_courts { Faker::Number.between(from: 1, to: 10) }
     discharges { Faker::Number.between(from: 1, to: 10) }
     updated_by { Faker::Name.name }
+
+    trait :with_moves_from do
+      after(:create) do |population|
+        create(
+          :move,
+          :prison_transfer,
+          from_location: population.location,
+          date: population.date,
+        )
+      end
+    end
+
+    trait :with_moves_to do
+      after(:create) do |population|
+        create(
+          :move,
+          :prison_transfer,
+          to_location: population.location,
+          date: population.date,
+        )
+      end
+    end
   end
 end
