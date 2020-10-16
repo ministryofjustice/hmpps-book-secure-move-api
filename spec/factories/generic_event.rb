@@ -427,9 +427,9 @@ FactoryBot.define do
     details do
       {
         advised_by: Faker::Name.name,
-        advised_at: Time.zone.now.xmlschema,
+        advised_at: Time.zone.now.iso8601,
         treated_by: Faker::Name.name,
-        treated_at: Time.zone.now.xmlschema,
+        treated_at: Time.zone.now.iso8601,
         location_id: create(:location).id,
         supplier_personnel_number: SecureRandom.uuid,
         vehicle_reg: Faker::Vehicle.license_plate,
@@ -441,12 +441,25 @@ FactoryBot.define do
     eventable { association(:person_escort_record) }
     details do
       {
-        given_at: Time.zone.now.xmlschema,
+        given_at: Time.zone.now.iso8601,
         outcome: 'accepted',
         subtype: 'food',
         location_id: create(:location).id,
         supplier_personnel_number: SecureRandom.uuid,
         vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
+  factory :event_person_move_assault, parent: :generic_event, class: 'GenericEvent::PersonMoveAssault' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        notes: 'Jimmy was brutally assaulted by Karen.',
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601
       }
     end
   end
