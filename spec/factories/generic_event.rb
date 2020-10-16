@@ -48,6 +48,15 @@ FactoryBot.define do
     eventable { association(:move) }
   end
 
+  factory :event_move_cross_supplier_pick_up, parent: :generic_event, class: 'GenericEvent::MoveCrossSupplierPickUp' do
+    eventable { association(:move) }
+    details do
+      {
+        previous_move_id: create(:move).id,
+      }
+    end
+  end
+
   factory :event_move_lockout, parent: :generic_event, class: 'GenericEvent::MoveLockout' do
     eventable { association(:move) }
     details do
