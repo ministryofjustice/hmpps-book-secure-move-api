@@ -508,4 +508,16 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :event_person_move_person_escaped, parent: :generic_event, class: 'GenericEvent::PersonMovePersonEscaped' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+      }
+    end
+  end
 end
