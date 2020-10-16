@@ -15,7 +15,7 @@ options:
       label: Please give details
       validations:
       -
-        type: 'required'
+        type: 'required_unless_nomis_mappings'
         message: You must add more information
   -
     label: 'No'
