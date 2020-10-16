@@ -3,8 +3,8 @@ class GenericEvent
     before_create :set_previous_vehicle_registration
 
     details_attributes :vehicle_reg, :previous_vehicle_reg
+    eventable_types 'Journey'
 
-    include JourneyEventValidations
     include VehicleRegValidations
 
     def trigger

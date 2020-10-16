@@ -120,7 +120,6 @@ class GenericEvent < ApplicationRecord
     define_singleton_method(:relationship_attributes) do
       instance_variable_get('@relationship_attributes')
     end
-
     instance_variable_set('@relationship_attributes', attributes)
 
     attributes.each do |attribute_key|
@@ -132,5 +131,15 @@ class GenericEvent < ApplicationRecord
         details[attribute_key] = attribute_value
       end
     end
+  end
+
+  def self.eventable_types(*types)
+    define_singleton_method(:eventable_types) do
+      instance_variable_get('@eventable_types')
+    end
+
+    validates :eventable_type, inclusion: { in: types }
+
+    instance_variable_set('@eventable_types', types)
   end
 end
