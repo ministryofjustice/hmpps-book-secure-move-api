@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.5.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.6) (2020-10-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.5...v2.5.6)
+
+**Merged pull requests:**
+
+- Changelog v2.5.5 [\#1047](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1047) ([cwrw](https://github.com/cwrw))
+- Import new conditional framework validation [\#1043](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1043) ([cwrw](https://github.com/cwrw))
+
 ## [v2.5.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.5) (2020-10-15)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.4...v2.5.5)
