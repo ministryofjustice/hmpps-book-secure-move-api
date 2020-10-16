@@ -456,7 +456,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -478,7 +478,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -490,7 +490,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -502,7 +502,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -514,7 +514,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -526,7 +526,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -538,7 +538,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -550,7 +550,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -562,7 +562,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -574,7 +574,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
       }
@@ -586,7 +586,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
         postcode: 'W1A 1AA',
@@ -599,7 +599,7 @@ FactoryBot.define do
     details do
       {
         location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
+        supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
         postcode: 'W1A 1AA',

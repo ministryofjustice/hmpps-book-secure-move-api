@@ -6,6 +6,6 @@ class GenericEvent
 
     validates :expected_at, presence: true
 
-    validates_each :expected_at, iso_date_time: true
+    validates :expected_at, iso_date_time: true
   end
 end
