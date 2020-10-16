@@ -5,7 +5,6 @@ RSpec.describe GenericEvent::PersonMoveSeriousInjury do
   it_behaves_like 'an event with relationships', :location_id
   it_behaves_like 'an event with eventable types', 'Person', 'Move'
   it_behaves_like 'an event requiring a location', :location_id
-  it_behaves_like 'an event that specifies a vehicle registration'
 
   it { is_expected.to validate_presence_of(:supplier_personnel_numbers) }
 

@@ -8,7 +8,6 @@ class GenericEvent
 
     include LocationValidations
     include SupplierPersonnelNumberValidations
-    include VehicleRegValidations
 
     validates_each :reported_at do |record, attr, value|
       Time.zone.iso8601(value)
