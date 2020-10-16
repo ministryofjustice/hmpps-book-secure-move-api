@@ -26,7 +26,7 @@ module Frameworks
 
     def required?(validations)
       validation_types = validations.flat_map { |validation| validation['type'] }
-      validation_types.any?('required')
+      validation_types.any?('required') || validation_types.any?('required_unless_nomis_mappings')
     end
 
     def build_options(options)
