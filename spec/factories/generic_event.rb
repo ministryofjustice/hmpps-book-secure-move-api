@@ -325,6 +325,22 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_hearing, parent: :generic_event, class: 'GenericEvent::PerCourtHearing' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        is_virtual: true,
+        is_trial: true,
+        court_listing_at: Time.zone.now.iso8601,
+        started_at: Time.zone.now.iso8601,
+        ended_at: Time.zone.now.iso8601,
+        agreed_at: Time.zone.now.iso8601,
+        court_outcome: 'Defendant acquitted',
+        location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_per_court_return_to_custody_area_from_dock, parent: :generic_event, class: 'GenericEvent::PerCourtReturnToCustodyAreaFromDock' do
     eventable { association(:person_escort_record) }
     details do
