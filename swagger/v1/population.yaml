@@ -89,14 +89,10 @@ Population:
           $ref: location_reference.yaml#/LocationReference
           description: The location (prison) that the population information relates to
         moves_from:
-          type: array
-          items:
-            $ref: move_reference.yaml#/MoveReference
+          $ref: move_reference.yaml#/MoveReference
           description: The current scheduled prison transfers out of this location on the specified date
           readOnly: true
         moves_to:
-          type: array
-          items:
-            $ref: move_reference.yaml#/MoveReference
+          $ref: move_reference.yaml#/MoveReference
           description: The current scheduled prison transfers into this location on the specified date
           readOnly: true
