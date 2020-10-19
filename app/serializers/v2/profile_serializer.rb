@@ -7,7 +7,8 @@ class V2::ProfileSerializer
 
   attributes :assessment_answers
 
-  belongs_to :person, serializer: ::V2::PersonSerializer, if: Proc.new { |_, params| params[:dot_relationships].include?('profile.person')}
+  belongs_to :person, serializer: ::V2::PersonSerializer
+             # if: Proc.new { |_, params| params[:dot_relationships].include?('profile.person')}
   # has_many :documents, serializer: DocumentSerializer
   # has_one :person_escort_record, serializer: PersonEscortRecordSerializer
 

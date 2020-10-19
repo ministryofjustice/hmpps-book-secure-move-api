@@ -1,7 +1,10 @@
 module Api::V1
   module MovesActions
     def index_and_render
-      paginate moves, serializer: MoveSerializer, include: included_relationships - %w[court_hearings], fields: MoveSerializer::INCLUDED_FIELDS
+      paginate moves,
+               serializer: MoveSerializer,
+               include: included_relationships - %w[court_hearings],
+               fields: MoveSerializer::INCLUDED_FIELDS
     end
 
     def show_and_render

@@ -2,13 +2,13 @@
 
 module Moves
   class Finder
-    attr_reader :filter_params, :ability
+    attr_reader :filter_params, :ability, :db_includes
 
-    MOVE_INCLUDES = [:allocation, :supplier, :court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity], from_location: %i[supplier_locations], to_location: %i[supplier_locations]].freeze
+    # MOVE_INCLUDES = [:allocation, :supplier, :court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity], from_location: %i[supplier_locations], to_location: %i[supplier_locations]].freeze
     # MOVES_INCLUDES = [:allocation, :supplier, :court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity], from_location: %i[supplier_locations], to_location: %i[supplier_locations]].freeze
 
 
-    def initialize(filter_params, ability, order_params, included_db_relationships)
+    def initialize(filter_params, ability, order_params, db_includes)
       @filter_params = filter_params
       @ability = ability
       @order_by = (order_params[:by] || 'date').to_sym
@@ -18,7 +18,7 @@ module Moves
                            # default if no 'by' parameter is date descending
                            :desc
                          end
-      @included_db_relationships = included_db_relationships
+      @db_includes = db_includes
     end
 
     def call
@@ -28,8 +28,6 @@ module Moves
     end
 
   private
-
-
 
     def apply_ordering(scope)
       case @order_by
@@ -65,9 +63,10 @@ module Moves
     end
 
     def apply_includes(scope)
+      puts "db_includes: #{db_includes}"
 
-      scope = scope.includes(@included_db_relationships)
-      scope = scope.joins(@included_db_relationships) # NB: do not join - you may get duplicates
+      scope = scope.includes(db_includes)
+      # scope = scope.joins(db_includes) # NB: do not join - you may get duplicates
       scope
     end
 
