@@ -44,7 +44,7 @@ RSpec.describe Api::MovesController do
 
           get_moves
 
-          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {})
+          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {}, any_args)
         end
 
         it 'filters the results' do

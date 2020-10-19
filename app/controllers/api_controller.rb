@@ -227,7 +227,7 @@ private
   end
 
   def included_db_relationships
-    @included_db_relationships ||= included_relationships.map{|value| cast_relationship_to_symbol_hash(value)} if included_relationships.present?
+    @included_db_relationships ||= included_relationships.map { |value| cast_relationship_to_symbol_hash(value) } if included_relationships.present?
   end
 
   def cast_relationship_to_symbol_hash(value)
@@ -235,19 +235,8 @@ private
     if parts.length == 1
       parts.first.to_sym
     else
-      { parts.first.to_sym => cast_relationship_to_symbol_hash(parts.last)}
+      { parts.first.to_sym => cast_relationship_to_symbol_hash(parts.last) }
     end
-  end
-
-  def get_dot_relationships(base, value)
-    dot_rels = []
-    parts = "#{base}.#{value}".split('.')
-    i=0
-    while i < parts.length - 1
-      dot_rels << "#{parts[i]}.#{parts[i+1]}"
-      i += 1
-    end
-    dot_rels
   end
 
   def include_params_validator

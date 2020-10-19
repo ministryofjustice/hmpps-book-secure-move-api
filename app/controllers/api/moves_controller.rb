@@ -11,7 +11,7 @@ module Api
     def csv
       # NB: this method should behave the same irrespective of api version / includes etc
       csv_moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {},
-                                    [:from_location, :to_location, {profile: :documents}, person: %i[gender ethnicity]]).call
+                                    [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]]).call
       send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 

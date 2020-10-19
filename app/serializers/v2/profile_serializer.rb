@@ -3,7 +3,7 @@
 class V2::ProfileSerializer
   include JSONAPI::Serializer
 
-  INCLUDED_ATTRIBUTES = [:assessment_answers]
+  INCLUDED_ATTRIBUTES = [:assessment_answers].freeze
 
   set_type :profiles
 

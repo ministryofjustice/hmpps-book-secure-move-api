@@ -10,7 +10,7 @@ class LocationSerializer
     nomis_agency_id
     can_upload_documents
     disabled_at
-  ]
+  ].freeze
 
   set_type :locations
 

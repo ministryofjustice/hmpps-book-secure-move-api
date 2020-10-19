@@ -4,15 +4,15 @@ module V2
   class PersonSerializer
     include JSONAPI::Serializer
 
-    INCLUDED_ATTRIBUTES = [
-      :first_names,
-      :last_name,
-      :date_of_birth,
-      :gender_additional_information,
-      :prison_number,
-      :criminal_records_office,
-      :police_national_computer
-    ]
+    INCLUDED_ATTRIBUTES = %i[
+      first_names
+      last_name
+      date_of_birth
+      gender_additional_information
+      prison_number
+      criminal_records_office
+      police_national_computer
+    ].freeze
 
     set_type :people
 

@@ -122,6 +122,21 @@ module Api::V1
       IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
     end
 
+    def included_db_relationships
+      # NB: v1 API needs a hardcoded included_db_relationships as they are not usually provided in the request
+      [
+        :allocation,
+        :supplier,
+        :court_hearings,
+        :prison_transfer_reason,
+        :original_move,
+        :from_location,
+        :to_location,
+        profile: [:documents, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]],
+        person: %i[gender ethnicity],
+      ]
+    end
+
     def supported_relationships
       MoveSerializer::SUPPORTED_RELATIONSHIPS
     end
