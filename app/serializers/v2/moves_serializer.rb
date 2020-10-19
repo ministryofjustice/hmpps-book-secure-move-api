@@ -37,6 +37,8 @@ module V2
     SUPPORTED_RELATIONSHIPS = %w[
       profile.person.ethnicity
       profile.person.gender
+      profile.person_escort_record
+      profile.person_escort_record.flags
       from_location
       to_location
       prison_transfer_reason
