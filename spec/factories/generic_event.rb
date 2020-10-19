@@ -192,7 +192,7 @@ FactoryBot.define do
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
-        # Implicitly does the following on creation: previous_vehicle_reg: eventable.vehicle_registration
+        previous_vehicle_reg: Fake::Vehicle.license_plate,
       }
     end
   end
