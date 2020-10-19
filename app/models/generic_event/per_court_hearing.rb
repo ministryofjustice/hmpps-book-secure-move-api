@@ -8,16 +8,13 @@ class GenericEvent
 
     eventable_types 'PersonEscortRecord'
 
-    validates :is_virtual,       presence: true
-    validates :is_trial,         presence: true
+    validates :is_virtual,       presence: true, inclusion: [true, false]
+    validates :is_trial,         presence: true, inclusion: [true, false]
     validates :court_listing_at, presence: true, iso_date_time: true
     validates :started_at,       presence: true, iso_date_time: true
     validates :ended_at,         presence: true, iso_date_time: true
     validates :agreed_at,        presence: true, iso_date_time: true
     validates :court_outcome,    presence: true
-
-    validates :is_virtual,       inclusion: [true, false]
-    validates :is_trial,         inclusion: [true, false]
 
     include LocationValidations
   end
