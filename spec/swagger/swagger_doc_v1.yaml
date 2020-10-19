@@ -2828,6 +2828,7 @@
           description: The population object to be created
           schema:
             "$ref": "../v1/population.yaml#/Population"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
       responses:
         "201":
           description: created

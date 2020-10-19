@@ -1,7 +1,7 @@
 class Population < ApplicationRecord
   belongs_to :location
 
-  validates :date, presence: true
+  validates :date, presence: true, uniqueness: { scope: :location_id }
   validates :operational_capacity, presence: true, numericality: { greater_than: 0 }
   validates :usable_capacity, presence: true, numericality: { greater_than: 0 }
   validates :unlock, presence: true, numericality: { greater_than_or_equal_to: 0 }

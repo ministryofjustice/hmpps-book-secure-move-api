@@ -21,6 +21,11 @@ RSpec.describe Population do
   it { is_expected.to validate_numericality_of(:out_of_area_courts).is_greater_than_or_equal_to(0) }
   it { is_expected.to validate_numericality_of(:discharges).is_greater_than_or_equal_to(0) }
 
+  it 'validates uniqueness of date per location' do
+    population = build(:population)
+    expect(population).to validate_uniqueness_of(:date).scoped_to(:location_id)
+  end
+
   describe '#moves_from' do
     it 'includes non-cancelled prison transfer moves from same location on same date' do
       location = create(:location, :prison)
