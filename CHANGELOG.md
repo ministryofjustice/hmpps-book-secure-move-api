@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.5.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.7) (2020-10-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.6...v2.5.7)
+
+**Merged pull requests:**
+
+- Update notifications.rake [\#1054](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1054) ([martyn-w](https://github.com/martyn-w))
+- Changelog v2.5.6 [\#1050](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1050) ([cwrw](https://github.com/cwrw))
+- Bump activerecord-import from 1.0.6 to 1.0.7 [\#1049](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1049) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add GET /populations/:id endpoint to return a population resource [\#1048](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1048) ([smoothcontract](https://github.com/smoothcontract))
+- Bump timecop from 0.9.1 to 0.9.2 [\#1044](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1044) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.5.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.6) (2020-10-15)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.5...v2.5.6)
