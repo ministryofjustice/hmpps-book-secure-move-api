@@ -11,10 +11,6 @@ module AuthoriserValidations
     }
 
     validates :authorised_by, inclusion: { in: authorised_bies }, if: -> { authorised_by.present? }
-    validates_each :authorised_at, if: -> { authorised_at.present? } do |record, attr, value|
-      Time.zone.iso8601(value)
-    rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-    end
+    validates :authorised_at, iso_date_time: true, if: -> { authorised_at.present? }
   end
 end
