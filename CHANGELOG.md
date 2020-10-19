@@ -1,5 +1,51 @@
 # Changelog
 
+## [v2.5.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.7) (2020-10-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.6...v2.5.7)
+
+**Merged pull requests:**
+
+- Update notifications.rake [\#1054](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1054) ([martyn-w](https://github.com/martyn-w))
+- Changelog v2.5.6 [\#1050](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1050) ([cwrw](https://github.com/cwrw))
+- Bump activerecord-import from 1.0.6 to 1.0.7 [\#1049](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1049) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add GET /populations/:id endpoint to return a population resource [\#1048](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1048) ([smoothcontract](https://github.com/smoothcontract))
+- Bump timecop from 0.9.1 to 0.9.2 [\#1044](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1044) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v2.5.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.6) (2020-10-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.5...v2.5.6)
+
+**Merged pull requests:**
+
+- Changelog v2.5.5 [\#1047](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1047) ([cwrw](https://github.com/cwrw))
+- Import new conditional framework validation [\#1043](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1043) ([cwrw](https://github.com/cwrw))
+
+## [v2.5.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.5) (2020-10-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.4...v2.5.5)
+
+**Merged pull requests:**
+
+- Re enable commit tracking [\#1042](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1042) ([mafonso](https://github.com/mafonso))
+- Remove conflicting sentry command [\#1040](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1040) ([mafonso](https://github.com/mafonso))
+- IM-54 sentry release commits [\#1039](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1039) ([mafonso](https://github.com/mafonso))
+- Fix those pesky deprecation warnings [\#1038](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1038) ([willfish](https://github.com/willfish))
+- \[P4-2349\] DRY up getters/setters in events [\#1037](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1037) ([willfish](https://github.com/willfish))
+- Retry transaction when it fails on updating responses [\#1035](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1035) ([cwrw](https://github.com/cwrw))
+- Protect against empty attributes when creating a move [\#1034](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1034) ([cwrw](https://github.com/cwrw))
+- Cancellation reason and rejection reason should accept a list [\#1033](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1033) ([cwrw](https://github.com/cwrw))
+- Add APM gem [\#1032](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1032) ([mafonso](https://github.com/mafonso))
+- Bump dev/test gems [\#1031](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1031) ([willfish](https://github.com/willfish))
+- Bumps pg gem [\#1030](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1030) ([willfish](https://github.com/willfish))
+- Add new model and endpoint to return population free spaces [\#1029](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1029) ([smoothcontract](https://github.com/smoothcontract))
+- Puma 4 -\> Puma 5 [\#1028](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1028) ([willfish](https://github.com/willfish))
+- Removes allocation versioning [\#1027](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1027) ([willfish](https://github.com/willfish))
+- CHANGELOG [\#1026](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1026) ([willfish](https://github.com/willfish))
+- P4-2211 Details optional if NOMIS mappings present on response [\#1024](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1024) ([cwrw](https://github.com/cwrw))
+- P4-2211 Log exceptions when NOMIS mappings fail or new NOMIS codes detected [\#1023](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1023) ([cwrw](https://github.com/cwrw))
+- Ruby 2.7.2 [\#1019](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1019) ([willfish](https://github.com/willfish))
+
 ## [v2.5.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.4) (2020-10-12)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.3...v2.5.4)

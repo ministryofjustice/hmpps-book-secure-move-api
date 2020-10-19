@@ -12,8 +12,9 @@ RSpec.describe GenericEvent::MoveRedirect do
     ]
   end
 
+  it_behaves_like 'an event with details', :move_type, :reason
+  it_behaves_like 'an event with relationships', :to_location_id
   it_behaves_like 'a move event'
-
   it_behaves_like 'an event requiring a location', :to_location_id
 
   it { is_expected.to validate_inclusion_of(:reason).in_array(redirect_reasons) }

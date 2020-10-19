@@ -1,9 +1,9 @@
 class GenericEvent
   class MoveRedirect < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :to_location_id
-    DETAILS_ATTRIBUTES = %w[
-      move_type
-    ].freeze
+
+    details_attributes :move_type, :reason
+    relationship_attributes :to_location_id
 
     enum reason: {
       no_space: 'no_space',
@@ -19,20 +19,8 @@ class GenericEvent
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
 
-    def reason=(reason)
-      details['reason'] = reason
-    end
-
-    def reason
-      details['reason']
-    end
-
     def to_location
       Location.find_by(id: to_location_id)
-    end
-
-    def move_type
-      details['move_type']
     end
 
     def trigger

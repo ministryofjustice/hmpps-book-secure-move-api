@@ -1,13 +1,7 @@
 class GenericEvent
   class JourneyHandoverToDestination < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      supplier_personnel_number
-    ].freeze
+    details_attributes :supplier_personnel_number
 
     include JourneyEventValidations
-
-    def supplier_personnel_number
-      details['supplier_personnel_number']
-    end
   end
 end

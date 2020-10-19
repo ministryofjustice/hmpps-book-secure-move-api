@@ -1,6 +1,8 @@
 RSpec.describe GenericEvent::MoveNotifyPremisesOfEta do
   subject(:generic_event) { build(:event_move_notify_premises_of_eta) }
 
+  it_behaves_like 'an event with details', :expected_at
+
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[Move]) }
   it { is_expected.to validate_presence_of(:expected_at) }
 

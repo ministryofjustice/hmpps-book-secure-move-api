@@ -1,15 +1,17 @@
 RSpec.describe GenericEvent::PerMedicalAid do
   subject(:generic_event) { build(:event_per_medical_aid) }
 
+  it_behaves_like 'an event with details', :advised_at, :advised_by, :treated_at, :treated_by, :supplier_personnel_number, :vehicle_reg
+  it_behaves_like 'an event with relationships', :location_id
+  it_behaves_like 'an event requiring a location', :location_id
+  it_behaves_like 'an event with a supplier personnel number'
+
   it { is_expected.to validate_presence_of(:advised_at) }
   it { is_expected.to validate_presence_of(:advised_by) }
   it { is_expected.to validate_presence_of(:treated_at) }
   it { is_expected.to validate_presence_of(:treated_by) }
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
-
-  it_behaves_like 'an event requiring a location', :location_id
-  it_behaves_like 'an event with a supplier personnel number'
 
   context 'when the advised_at date time format is not an iso8601 date' do
     before do

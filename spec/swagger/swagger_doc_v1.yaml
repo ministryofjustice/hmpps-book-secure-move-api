@@ -86,6 +86,8 @@
       :$ref: "../v1/person_reference.yaml#/PersonReference"
     :PersonEscortRecord:
       :$ref: "../v1/person_escort_record.yaml#/PersonEscortRecord"
+    :Population:
+      :$ref: "../v1/population.yaml#/Population"
     :PrisonTransferReason:
       :$ref: "../v1/prison_transfer_reason.yaml#/PrisonTransferReason"
     :ProfileIdentifier:
@@ -2812,6 +2814,41 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/422"
+  "/populations/{population_id}":
+    get:
+      summary: Returns population details for a given date and location
+      tags:
+        - Populations
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/population_id_parameter.yaml#/PopulationId"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_population_responses.yaml#/200"
+        "401":
+          description: unauthorised
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid content type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases

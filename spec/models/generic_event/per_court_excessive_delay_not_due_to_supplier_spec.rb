@@ -8,11 +8,13 @@ RSpec.describe GenericEvent::PerCourtExcessiveDelayNotDueToSupplier do
     ]
   end
 
+  it_behaves_like 'an event with details', :subtype, :vehicle_reg, :ended_at, :authorised_by, :authorised_at
+  it_behaves_like 'an event with relationships', :location_id
+  it_behaves_like 'an event requiring a location', :location_id
+
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
   it { is_expected.to validate_inclusion_of(:subtype).in_array(subtypes) }
   it { is_expected.to validate_presence_of(:ended_at) }
-
-  it_behaves_like 'an event requiring a location', :location_id
 
   context 'with incorrect non iso8601 ended_at' do
     before do

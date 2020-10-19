@@ -1,9 +1,6 @@
 class GenericEvent
   class MoveApprove < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      date
-      create_in_nomis
-    ].freeze
+    details_attributes :date, :create_in_nomis
 
     include MoveEventValidations
     validates :date, presence: true
@@ -14,29 +11,17 @@ class GenericEvent
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date')
     end
 
-    def date
-      details['date']
-    end
-
-    def date=(date)
-      details['date'] = date
-    end
-
-    def create_in_nomis?
-      details.fetch(:create_in_nomis, false)
-    end
-
     def trigger
       eventable.status = Move::MOVE_STATUS_REQUESTED
 
       eventable.date = date
-      Allocations::CreateInNomis.call(eventable) if create_in_nomis?
+      Allocations::CreateInNomis.call(eventable) if create_in_nomis
     end
 
     def for_feed
       super.tap do |common_feed_attributes|
         # NB: Force create_in_nomis to be true or false
-        common_feed_attributes['details']['create_in_nomis'] = create_in_nomis?
+        common_feed_attributes['details']['create_in_nomis'] = create_in_nomis || false
       end
     end
 

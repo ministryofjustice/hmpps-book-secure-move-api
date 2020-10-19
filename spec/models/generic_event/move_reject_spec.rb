@@ -1,6 +1,7 @@
 RSpec.describe GenericEvent::MoveReject do
   subject(:generic_event) { build(:event_move_reject) }
 
+  it_behaves_like 'an event with details', :rejection_reason, :cancellation_reason_comment, :rebook
   it_behaves_like 'a move event'
 
   it { is_expected.to validate_inclusion_of(:rejection_reason).in_array(Move::REJECTION_REASONS) }
@@ -66,7 +67,40 @@ RSpec.describe GenericEvent::MoveReject do
   describe '#for_feed' do
     subject(:generic_event) { create(:event_move_reject) }
 
-    context 'when the move_type is present' do
+    context 'when rebook is present' do
+      before do
+        generic_event.rebook = true
+      end
+
+      let(:expected_json) do
+        {
+          'id' => generic_event.id,
+          'type' => 'MoveReject',
+          'notes' => 'Flibble',
+          'created_at' => be_a(Time),
+          'updated_at' => be_a(Time),
+          'occurred_at' => be_a(Time),
+          'recorded_at' => be_a(Time),
+          'eventable_id' => generic_event.eventable_id,
+          'eventable_type' => 'Move',
+          'details' => {
+            'rejection_reason' => 'no_space_at_receiving_prison',
+            'cancellation_reason_comment' => 'It was a mistake',
+            'rebook' => true,
+          },
+        }
+      end
+
+      it 'generates a feed document' do
+        expect(generic_event.for_feed).to include_json(expected_json)
+      end
+    end
+
+    context 'when rebook is absent' do
+      before do
+        generic_event.details.delete('rebook')
+      end
+
       let(:expected_json) do
         {
           'id' => generic_event.id,

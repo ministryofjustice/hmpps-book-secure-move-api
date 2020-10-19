@@ -2,6 +2,8 @@ class GenericEvent
   class JourneyLockout < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :from_location_id
 
+    relationship_attributes :from_location_id
+
     include JourneyEventValidations
     include LocationValidations
 
