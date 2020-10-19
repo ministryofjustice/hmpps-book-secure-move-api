@@ -192,7 +192,7 @@ FactoryBot.define do
     details do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
-        previous_vehicle_reg: Fake::Vehicle.license_plate,
+        previous_vehicle_reg: Faker::Vehicle.license_plate,
       }
     end
   end
