@@ -3,14 +3,17 @@
 class V2::ProfileSerializer
   include JSONAPI::Serializer
 
+  INCLUDED_ATTRIBUTES = [:assessment_answers]
+
   set_type :profiles
 
-  attributes :assessment_answers
+  attributes(*INCLUDED_ATTRIBUTES)
 
   belongs_to :person, serializer: ::V2::PersonSerializer
-             # if: Proc.new { |_, params| params[:dot_relationships].include?('profile.person')}
-  # has_many :documents, serializer: DocumentSerializer
-  # has_one :person_escort_record, serializer: PersonEscortRecordSerializer
 
-  SUPPORTED_RELATIONSHIPS = %w[documents person].freeze
+  has_many :documents, serializer: DocumentSerializer
+
+  has_one :person_escort_record, serializer: PersonEscortRecordSerializer
+
+  SUPPORTED_RELATIONSHIPS = %w[documents person person_escort_record].freeze
 end

@@ -3,7 +3,9 @@
 class PrisonTransferReasonSerializer
   include JSONAPI::Serializer
 
+  INCLUDED_ATTRIBUTES = [:title, :key, :disabled_at]
+
   set_type :prison_transfer_reasons
 
-  attributes :title, :key, :disabled_at
+  attributes(*INCLUDED_ATTRIBUTES)
 end

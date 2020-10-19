@@ -2,17 +2,9 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves,
-               serializer: ::V2::Moves::MovesSerializer,
+               serializer: ::V2::MovesSerializer,
                include: included_relationships,
-               fields: ::V2::Moves::MovesSerializer::INCLUDED_FIELDS,
-               # fields: { moves: [ :date, :date_from, :created_at ] },
-               # fields: { people: [ :first_names, :last_name ] },
-               # fields: { moves: [ :profile, :from_location, :to_location, :prison_transfer_reason, :supplier, :additional_information,
-
-               # params: { included_relationships: included_relationships,
-               #           included_db_relationships: included_db_relationships,
-               #           dot_relationships: (included_relationships || []).map{|rel| get_dot_relationships('move', rel) }.flatten
-               # }
+               fields: ::V2::MovesSerializer::INCLUDED_FIELDS
     end
 
     def show_and_render
@@ -159,9 +151,9 @@ module Api::V2
     end
 
     def supported_relationships
-      # for performance reasons, we support a fewer number of include relationships on the index and csv actions
+      # for performance reasons, we support a fewer number of include relationships on the index (and csv) actions
       if action_name == 'index'
-        ::V2::Moves::MovesSerializer::SUPPORTED_RELATIONSHIPS
+        ::V2::MovesSerializer::SUPPORTED_RELATIONSHIPS
       else
         ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
       end

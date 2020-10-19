@@ -4,18 +4,19 @@ module V2
   class PersonSerializer
     include JSONAPI::Serializer
 
-    set_type :people
-
-    attributes(
+    INCLUDED_ATTRIBUTES = [
       :first_names,
       :last_name,
       :date_of_birth,
       :gender_additional_information,
       :prison_number,
       :criminal_records_office,
-      :police_national_computer,
-    )
+      :police_national_computer
+    ]
 
+    set_type :people
+
+    attributes(*INCLUDED_ATTRIBUTES)
 
     has_one :ethnicity, serializer: EthnicitySerializer
     has_one :gender, serializer: GenderSerializer

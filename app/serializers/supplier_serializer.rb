@@ -3,7 +3,9 @@
 class SupplierSerializer
   include JSONAPI::Serializer
 
+  INCLUDED_ATTRIBUTES = [:name, :key]
+
   set_type :suppliers
 
-  attributes :name, :key
+  attributes(*INCLUDED_ATTRIBUTES)
 end
