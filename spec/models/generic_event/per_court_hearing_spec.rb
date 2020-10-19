@@ -14,9 +14,6 @@ RSpec.describe GenericEvent::PerCourtHearing do
   it { is_expected.to validate_presence_of(:agreed_at) }
   it { is_expected.to validate_presence_of(:court_outcome) }
 
-  it { is_expected.to validate_inclusion_of(:is_trial).in_array([true, false]) }
-  it { is_expected.to validate_inclusion_of(:is_virtual).in_array([true, false]) }
-
   %i[court_listing_at started_at ended_at agreed_at].each do |details_attribute|
     context "when #{details_attribute} is not a valid iso8601 date" do
       before do

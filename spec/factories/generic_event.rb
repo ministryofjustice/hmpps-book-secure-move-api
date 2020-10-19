@@ -7,6 +7,17 @@ FactoryBot.define do
     details { {} }
   end
 
+  factory :incident, parent: :generic_event do
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_numbers: [SecureRandom.uuid],
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+      }
+    end
+  end
+
   factory :event_move_accept, parent: :generic_event, class: 'GenericEvent::MoveAccept' do
     eventable { association(:move) }
   end
@@ -451,16 +462,7 @@ FactoryBot.define do
     end
   end
 
-  factory :event_person_move_assault, parent: :generic_event, class: 'GenericEvent::PersonMoveAssault' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_assault, parent: :incident, class: 'GenericEvent::PersonMoveAssault' do
   end
 
   factory :event_person_move_booked_into_receiving_establishment, parent: :generic_event, class: 'GenericEvent::PersonMoveBookedIntoReceivingEstablishment' do
@@ -473,112 +475,31 @@ FactoryBot.define do
     end
   end
 
-  factory :event_person_move_death_in_custody, parent: :generic_event, class: 'GenericEvent::PersonMoveDeathInCustody' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_death_in_custody, parent: :incident, class: 'GenericEvent::PersonMoveDeathInCustody' do
   end
 
-  factory :event_person_move_major_incident_other, parent: :generic_event, class: 'GenericEvent::PersonMoveMajorIncidentOther' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_major_incident_other, parent: :incident, class: 'GenericEvent::PersonMoveMajorIncidentOther' do
   end
 
-  factory :event_person_move_minor_incident_other, parent: :generic_event, class: 'GenericEvent::PersonMoveMinorIncidentOther' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_minor_incident_other, parent: :incident, class: 'GenericEvent::PersonMoveMinorIncidentOther' do
   end
 
-  factory :event_person_move_person_escaped, parent: :generic_event, class: 'GenericEvent::PersonMovePersonEscaped' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_person_escaped, parent: :incident, class: 'GenericEvent::PersonMovePersonEscaped' do
   end
 
-  factory :event_person_move_person_escaped_kpi, parent: :generic_event, class: 'GenericEvent::PersonMovePersonEscapedKpi' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_person_escaped_kpi, parent: :incident, class: 'GenericEvent::PersonMovePersonEscapedKpi' do
   end
 
-  factory :event_person_move_released_error, parent: :generic_event, class: 'GenericEvent::PersonMoveReleasedError' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_released_error, parent: :incident, class: 'GenericEvent::PersonMoveReleasedError' do
   end
 
-  factory :event_person_move_road_traffic_accident, parent: :generic_event, class: 'GenericEvent::PersonMoveRoadTrafficAccident' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_road_traffic_accident, parent: :incident, class: 'GenericEvent::PersonMoveRoadTrafficAccident' do
   end
 
-  factory :event_person_move_serious_injury, parent: :generic_event, class: 'GenericEvent::PersonMoveSeriousInjury' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_serious_injury, parent: :incident, class: 'GenericEvent::PersonMoveSeriousInjury' do
   end
 
-  factory :event_person_move_used_force, parent: :generic_event, class: 'GenericEvent::PersonMoveUsedForce' do
-    eventable { association(:move) }
-    details do
-      {
-        location_id: create(:location).id,
-        supplier_personnel_numbers: [SecureRandom.uuid],
-        vehicle_reg: Faker::Vehicle.license_plate,
-        reported_at: Time.zone.now.iso8601,
-      }
-    end
+  factory :event_person_move_used_force, parent: :incident, class: 'GenericEvent::PersonMoveUsedForce' do
   end
 
   factory :event_person_move_vehicle_broke_down, parent: :generic_event, class: 'GenericEvent::PersonMoveVehicleBrokeDown' do
