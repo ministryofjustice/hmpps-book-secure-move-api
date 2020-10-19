@@ -7,6 +7,17 @@ FactoryBot.define do
     details { {} }
   end
 
+  factory :incident, parent: :generic_event do
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_numbers: [SecureRandom.uuid],
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+      }
+    end
+  end
+
   factory :event_move_accept, parent: :generic_event, class: 'GenericEvent::MoveAccept' do
     eventable { association(:move) }
   end
@@ -42,6 +53,19 @@ FactoryBot.define do
 
   factory :event_move_complete, parent: :generic_event, class: 'GenericEvent::MoveComplete' do
     eventable { association(:move) }
+  end
+
+  factory :event_move_cross_supplier_drop_off, parent: :generic_event, class: 'GenericEvent::MoveCrossSupplierDropOff' do
+    eventable { association(:move) }
+  end
+
+  factory :event_move_cross_supplier_pick_up, parent: :generic_event, class: 'GenericEvent::MoveCrossSupplierPickUp' do
+    eventable { association(:move) }
+    details do
+      {
+        previous_move_id: create(:move).id,
+      }
+    end
   end
 
   factory :event_move_lockout, parent: :generic_event, class: 'GenericEvent::MoveLockout' do
@@ -173,6 +197,17 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_journey_change_vehicle, parent: :generic_event, class: 'GenericEvent::JourneyChangeVehicle' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        vehicle_reg: Faker::Vehicle.license_plate,
+        previous_vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
   factory :event_journey_complete, parent: :generic_event, class: 'GenericEvent::JourneyComplete' do
     eventable { association(:journey) }
   end
@@ -301,6 +336,22 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_court_hearing, parent: :generic_event, class: 'GenericEvent::PerCourtHearing' do
+    eventable { association(:person_escort_record) }
+    details do
+      {
+        is_virtual: true,
+        is_trial: true,
+        court_listing_at: Time.zone.now.iso8601,
+        started_at: Time.zone.now.iso8601,
+        ended_at: Time.zone.now.iso8601,
+        agreed_at: Time.zone.now.iso8601,
+        court_outcome: 'Defendant acquitted',
+        location_id: create(:location).id,
+      }
+    end
+  end
+
   factory :event_per_court_return_to_custody_area_from_dock, parent: :generic_event, class: 'GenericEvent::PerCourtReturnToCustodyAreaFromDock' do
     eventable { association(:person_escort_record) }
     details do
@@ -387,9 +438,9 @@ FactoryBot.define do
     details do
       {
         advised_by: Faker::Name.name,
-        advised_at: Time.zone.now.xmlschema,
+        advised_at: Time.zone.now.iso8601,
         treated_by: Faker::Name.name,
-        treated_at: Time.zone.now.xmlschema,
+        treated_at: Time.zone.now.iso8601,
         location_id: create(:location).id,
         supplier_personnel_number: SecureRandom.uuid,
         vehicle_reg: Faker::Vehicle.license_plate,
@@ -401,12 +452,78 @@ FactoryBot.define do
     eventable { association(:person_escort_record) }
     details do
       {
-        given_at: Time.zone.now.xmlschema,
+        given_at: Time.zone.now.iso8601,
         outcome: 'accepted',
         subtype: 'food',
         location_id: create(:location).id,
         supplier_personnel_number: SecureRandom.uuid,
         vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
+  factory :event_person_move_assault, parent: :incident, class: 'GenericEvent::PersonMoveAssault' do
+  end
+
+  factory :event_person_move_booked_into_receiving_establishment, parent: :generic_event, class: 'GenericEvent::PersonMoveBookedIntoReceivingEstablishment' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
+  factory :event_person_move_death_in_custody, parent: :incident, class: 'GenericEvent::PersonMoveDeathInCustody' do
+  end
+
+  factory :event_person_move_major_incident_other, parent: :incident, class: 'GenericEvent::PersonMoveMajorIncidentOther' do
+  end
+
+  factory :event_person_move_minor_incident_other, parent: :incident, class: 'GenericEvent::PersonMoveMinorIncidentOther' do
+  end
+
+  factory :event_person_move_person_escaped, parent: :incident, class: 'GenericEvent::PersonMovePersonEscaped' do
+  end
+
+  factory :event_person_move_person_escaped_kpi, parent: :incident, class: 'GenericEvent::PersonMovePersonEscapedKpi' do
+  end
+
+  factory :event_person_move_released_error, parent: :incident, class: 'GenericEvent::PersonMoveReleasedError' do
+  end
+
+  factory :event_person_move_road_traffic_accident, parent: :incident, class: 'GenericEvent::PersonMoveRoadTrafficAccident' do
+  end
+
+  factory :event_person_move_serious_injury, parent: :incident, class: 'GenericEvent::PersonMoveSeriousInjury' do
+  end
+
+  factory :event_person_move_used_force, parent: :incident, class: 'GenericEvent::PersonMoveUsedForce' do
+  end
+
+  factory :event_person_move_vehicle_broke_down, parent: :generic_event, class: 'GenericEvent::PersonMoveVehicleBrokeDown' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_numbers: [SecureRandom.uuid],
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+        postcode: 'W1A 1AA',
+      }
+    end
+  end
+
+  factory :event_person_move_vehicle_systems_failed, parent: :generic_event, class: 'GenericEvent::PersonMoveVehicleSystemsFailed' do
+    eventable { association(:move) }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_numbers: [SecureRandom.uuid],
+        vehicle_reg: Faker::Vehicle.license_plate,
+        reported_at: Time.zone.now.iso8601,
+        postcode: 'W1A 1AA',
       }
     end
   end

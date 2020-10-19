@@ -16,11 +16,18 @@ module Api
       render_population(population, :ok)
     end
 
+    def create
+      population = Population.new(population_attributes).save_uniquely!
+
+      render_population(population, :created)
+    end
+
   private
 
     PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id].freeze
     PERMITTED_SORT_PARAMS = %i[by direction].freeze
     PERMITTED_DATE_RANGE_PARAMS = %i[date_from date_to].freeze
+    PERMITTED_POPULATION_PARAMS = %i[date operational_capacity usable_capacity unlock bedwatch overnights_in overnights_out out_of_area_courts discharges updated_by].freeze
 
     def filter_params
       params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
@@ -32,6 +39,10 @@ module Api
 
     def date_range_params
       params.permit(PERMITTED_DATE_RANGE_PARAMS).to_h
+    end
+
+    def population_params
+      params.require(:data).require(:attributes).permit(PERMITTED_POPULATION_PARAMS)
     end
 
     def date_from
@@ -48,6 +59,14 @@ module Api
 
     def locations
       @locations ||= Locations::Finder.new(filter_params, sort_params).call
+    end
+
+    def location
+      Location.find(params.require(:data).dig(:relationships, :location, :data, :id))
+    end
+
+    def population_attributes
+      population_params.merge(location: location).to_h
     end
 
     def find_population
