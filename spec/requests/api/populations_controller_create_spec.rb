@@ -54,16 +54,6 @@ RSpec.describe Api::PopulationsController do
         expect { post_populations }.to change(Population, :count).by(1)
       end
 
-      context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
-        let(:access_token) { create(:access_token, application: application).token }
-
-        it 'audits the supplier' do
-          post_populations
-          expect(population.versions.map(&:whodunnit)).to eq([supplier.id])
-        end
-      end
-
       it 'returns the correct data' do
         post_populations
         expect(response_json).to include_json resource_to_json

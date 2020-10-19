@@ -1,4 +1,4 @@
-class Population < VersionedModel
+class Population < ApplicationRecord
   belongs_to :location
 
   validates :date, presence: true
