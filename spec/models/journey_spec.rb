@@ -165,4 +165,30 @@ RSpec.describe Journey, type: :model do
       end
     end
   end
+
+  describe '#vehicle_registration=' do
+    subject(:journey) { build(:journey) }
+
+    let(:new_registration) { 'AB12 CDF' }
+
+    context 'when vehicle was already present' do
+      before do
+        journey.vehicle = { id: '12345678ABC', registration: 'AB12 CDE' }
+      end
+
+      it 'assigns the new vehicle registration value' do
+        expect { journey.vehicle_registration = new_registration }.to change(journey, :vehicle_registration).from('AB12 CDE').to('AB12 CDF')
+      end
+    end
+
+    context 'when vehicle was not already present' do
+      before do
+        journey.vehicle = nil
+      end
+
+      it 'assigns the new registration' do
+        expect { journey.vehicle_registration = new_registration }.to change(journey, :vehicle_registration).from(nil).to('AB12 CDF')
+      end
+    end
+  end
 end

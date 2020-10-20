@@ -1,7 +1,7 @@
 class Population < ApplicationRecord
   belongs_to :location
 
-  validates :date, presence: true
+  validates :date, presence: true, uniqueness: { scope: :location_id }
   validates :operational_capacity, presence: true, numericality: { greater_than: 0 }
   validates :usable_capacity, presence: true, numericality: { greater_than: 0 }
   validates :unlock, presence: true, numericality: { greater_than_or_equal_to: 0 }
@@ -21,6 +21,14 @@ class Population < ApplicationRecord
 
   def free_spaces
     usable_capacity - unlock - bedwatch - overnights_in - moves_to.count + overnights_out + out_of_area_courts + discharges + moves_from.count
+  end
+
+  def save_uniquely!
+    save!
+    self
+  rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
+    errors.add(:date, :taken)
+    raise ActiveRecord::RecordInvalid, self
   end
 
   def self.free_spaces_date_range(locations, date_range)

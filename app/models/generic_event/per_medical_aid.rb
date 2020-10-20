@@ -10,15 +10,9 @@ class GenericEvent
     include PersonEscortRecordEventValidations
     include SupplierPersonnelNumberValidations
 
-    validates :advised_at, presence: true
+    validates :advised_at, presence: true, iso_date_time: true
     validates :advised_by, presence: true
-    validates :treated_at, presence: true
+    validates :treated_at, presence: true, iso_date_time: true
     validates :treated_by, presence: true
-
-    validates_each :advised_at, :treated_at do |record, attr, value|
-      Time.zone.iso8601(value)
-    rescue ArgumentError
-      record.errors.add(attr, 'must be formatted as a valid ISO-8601 date-time')
-    end
   end
 end

@@ -9,6 +9,7 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'journey_admit_through_outer_gate', 'JourneyAdmitThroughOuterGate'
   it_behaves_like 'a generic event endpoint', 'journey_arrive_at_outer_gate', 'JourneyArriveAtOuterGate'
   it_behaves_like 'a generic event endpoint', 'journey_cancel', 'JourneyCancel'
+  it_behaves_like 'a generic event endpoint', 'journey_change_vehicle', 'JourneyChangeVehicle'
   it_behaves_like 'a generic event endpoint', 'journey_complete', 'JourneyComplete'
   it_behaves_like 'a generic event endpoint', 'journey_create', 'JourneyCreate'
   it_behaves_like 'a generic event endpoint', 'journey_exit_through_outer_gate', 'JourneyExitThroughOuterGate'

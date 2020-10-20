@@ -21,6 +21,11 @@ RSpec.describe Population do
   it { is_expected.to validate_numericality_of(:out_of_area_courts).is_greater_than_or_equal_to(0) }
   it { is_expected.to validate_numericality_of(:discharges).is_greater_than_or_equal_to(0) }
 
+  it 'validates uniqueness of date per location' do
+    population = build(:population)
+    expect(population).to validate_uniqueness_of(:date).scoped_to(:location_id)
+  end
+
   describe '#moves_from' do
     it 'includes non-cancelled prison transfer moves from same location on same date' do
       location = create(:location, :prison)
@@ -126,6 +131,23 @@ RSpec.describe Population do
       move = create(:move, :prison_transfer)
       population = create(:population, location: move.from_location, date: move.date, usable_capacity: 10, unlock: 0, bedwatch: 0, overnights_in: 0, overnights_out: 0, out_of_area_courts: 0, discharges: 0)
       expect(population.free_spaces).to eq(11)
+    end
+  end
+
+  describe '.save_uniquely!' do
+    it 'saves population if no errors' do
+      population = build(:population)
+      population.save_uniquely!
+
+      expect(population).to be_persisted
+    end
+
+    it 'raises exception with existing populations for the same date and location' do
+      existing_population = create(:population)
+      new_population = build(:population, location: existing_population.location, date: existing_population.date)
+
+      expect { new_population.save_uniquely! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect(new_population.errors[:date]).to contain_exactly('has already been taken')
     end
   end
 

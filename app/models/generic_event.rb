@@ -16,6 +16,7 @@ class GenericEvent < ApplicationRecord
     JourneyAdmitThroughOuterGate
     JourneyArriveAtOuterGate
     JourneyCancel
+    JourneyChangeVehicle
     JourneyComplete
     JourneyCreate
     JourneyExitThroughOuterGate
@@ -35,6 +36,8 @@ class GenericEvent < ApplicationRecord
     MoveCancel
     MoveCollectionByEscort
     MoveComplete
+    MoveCrossSupplierDropOff
+    MoveCrossSupplierPickUp
     MoveLockout
     MoveLodgingEnd
     MoveLodgingStart
@@ -51,6 +54,7 @@ class GenericEvent < ApplicationRecord
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment
     PerCourtExcessiveDelayNotDueToSupplier
+    PerCourtHearing
     PerCourtPreReleaseChecksCompleted
     PerCourtReadyInCustody
     PerCourtRelease
@@ -63,6 +67,19 @@ class GenericEvent < ApplicationRecord
     PerGeneric
     PerMedicalAid
     PerPrisonerWelfare
+    PersonMoveAssault
+    PersonMoveBookedIntoReceivingEstablishment
+    PersonMoveDeathInCustody
+    PersonMoveMajorIncidentOther
+    PersonMoveMinorIncidentOther
+    PersonMovePersonEscaped
+    PersonMovePersonEscapedKpi
+    PersonMoveReleasedError
+    PersonMoveRoadTrafficAccident
+    PersonMoveSeriousInjury
+    PersonMoveUsedForce
+    PersonMoveVehicleBrokeDown
+    PersonMoveVehicleSystemsFailed
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
@@ -120,7 +137,6 @@ class GenericEvent < ApplicationRecord
     define_singleton_method(:relationship_attributes) do
       instance_variable_get('@relationship_attributes')
     end
-
     instance_variable_set('@relationship_attributes', attributes)
 
     attributes.each do |attribute_key|
@@ -132,5 +148,15 @@ class GenericEvent < ApplicationRecord
         details[attribute_key] = attribute_value
       end
     end
+  end
+
+  def self.eventable_types(*types)
+    define_singleton_method(:eventable_types) do
+      instance_variable_get('@eventable_types')
+    end
+
+    validates :eventable_type, inclusion: { in: types }
+
+    instance_variable_set('@eventable_types', types)
   end
 end

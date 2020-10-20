@@ -386,6 +386,7 @@ GEM
       citrus (~> 3.0, > 3.0)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
+    uk_postcode (2.1.6)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
@@ -458,6 +459,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen
   timecop
+  uk_postcode (~> 2)
   validate_url (~> 1.0.8)
 
 RUBY VERSION
