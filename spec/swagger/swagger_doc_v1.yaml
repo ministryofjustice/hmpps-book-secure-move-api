@@ -2901,6 +2901,58 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+    patch:
+      summary: Updates existing population details
+      tags:
+        - Populations
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The population details to be updated
+          schema:
+            "$ref": "../v1/population.yaml#/Population"
+        - "$ref": "../v1/population_id_parameter.yaml#/PopulationId"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases
