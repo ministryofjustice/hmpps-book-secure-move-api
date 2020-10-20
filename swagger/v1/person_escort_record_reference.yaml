@@ -1,26 +1,22 @@
 PersonEscortRecordReference:
   type: object
   required:
-    - data
+  - data
   properties:
     data:
-      oneOf:
-      - type: object
-      - type: 'null'
+      type: object
       required:
-        - type
-        - id
+      - type
+      - id
       properties:
         type:
           type: string
           example: person_escort_records
           enum:
-            - person_escort_records
-          description: The type of this object - always `person_escort_records`
+          - person_escort_records
+          description: The type of this object - always `people`
         id:
           type: string
           format: uuid
           example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
-          description:
-            The unique identifier (UUID) of the object that this reference
-            points to
+          description: The unique identifier (UUID) of the object that this reference points to
