@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_16_104115) do
+ActiveRecord::Schema.define(version: 2020_10_21_055517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -196,6 +196,7 @@ ActiveRecord::Schema.define(version: 2020_10_16_104115) do
     t.uuid "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "prefill"
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
   end
