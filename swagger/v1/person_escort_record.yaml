@@ -100,9 +100,8 @@ PersonEscortRecord:
     relationships:
       type: object
       required:
-        - profile
+        - move
         - framework
-        - responses
       properties:
         profile:
           $ref: profile_reference.yaml#/ProfileReference

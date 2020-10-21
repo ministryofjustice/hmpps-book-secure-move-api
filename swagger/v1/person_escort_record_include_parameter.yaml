@@ -15,4 +15,5 @@ PersonEscortRecordIncludeParameter:
       - responses.nomis_mappings
       - responses.question.descendants.**
       - flags
+      - move
   example: framework
