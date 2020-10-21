@@ -53,6 +53,7 @@ module V2
       allocation
       original_move
       supplier
+      events
     ].freeze
 
     INCLUDED_FIELDS = {

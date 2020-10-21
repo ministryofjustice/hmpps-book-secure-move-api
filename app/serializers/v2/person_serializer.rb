@@ -23,6 +23,6 @@ module V2
       object.generic_events.applied_order
     end
 
-    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles].freeze
+    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles events].freeze
   end
 end
