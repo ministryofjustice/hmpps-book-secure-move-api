@@ -155,11 +155,11 @@ RSpec.describe PersonEscortRecordSerializer do
         ]
       end
 
-      it 'contains event relationships' do
+      it 'contains event relationships in the correct order' do
         expect(result[:data][:relationships][:events]).to eq(data: expected_event_relationships)
       end
 
-      it 'contains included events' do
+      it 'contains included events in the correct order' do
         expect(result[:included].map { |event| event[:id] }).to match_array([third_event.id, second_event.id, first_event.id])
       end
     end
