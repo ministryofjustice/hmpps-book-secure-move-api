@@ -15,6 +15,9 @@ class PersonEscortRecordSerializer
   has_many :flags, serializer: FrameworkFlagSerializer do |object|
     object.framework_flags.includes(framework_question: :dependents)
   end
+  has_many :events, serializer: GenericEventSerializer do |object|
+    object.generic_events.applied_order
+  end
 
   attributes :confirmed_at, :created_at, :nomis_sync_status
 
@@ -38,5 +41,6 @@ class PersonEscortRecordSerializer
     responses.nomis_mappings
     responses.question.descendants.**
     flags
+    events
   ].freeze
 end

@@ -31,6 +31,9 @@ class MoveSerializer
   has_many :documents do |object|
     object.profile&.documents
   end
+  has_many :events, serializer: GenericEventSerializer do |object|
+    object.generic_events.applied_order
+  end
   has_many :court_hearings
   belongs_to :allocation
   belongs_to :original_move, serializer: MoveSerializer

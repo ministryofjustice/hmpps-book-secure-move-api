@@ -18,6 +18,8 @@ class Person < VersionedModel
 
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
+  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
+
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true
 
