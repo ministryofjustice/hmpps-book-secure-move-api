@@ -11,15 +11,20 @@ module Api
     end
 
     def show
-      population = find_population
-
       render_population(population, :ok)
     end
 
     def create
-      population = Population.new(population_attributes).save_uniquely!
+      new_population = Population.new(create_population_attributes).save_uniquely!
 
-      render_population(population, :created)
+      render_population(new_population, :created)
+    end
+
+    def update
+      population.assign_attributes(update_population_attributes)
+      population.save_uniquely!
+
+      render_population(population, :ok)
     end
 
   private
@@ -61,16 +66,22 @@ module Api
       @locations ||= Locations::Finder.new(filter_params, sort_params).call
     end
 
-    def location
-      Location.find(params.require(:data).dig(:relationships, :location, :data, :id))
+    def location_id
+      @location_id = params.require(:data).dig(:relationships, :location, :data, :id)
     end
 
-    def population_attributes
-      population_params.merge(location: location).to_h
+    def create_population_attributes
+      population_params.merge(location: Location.find(location_id)).to_h
     end
 
-    def find_population
-      Population.find(params[:id])
+    def update_population_attributes
+      population_params.tap { |hash|
+        hash.merge!(location: Location.find(location_id)) if location_id.present?
+      }.to_h
+    end
+
+    def population
+      @population ||= Population.find(params[:id])
     end
 
     def render_population(population, status)
