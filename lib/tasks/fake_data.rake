@@ -68,6 +68,7 @@ namespace :fake_data do
       title: 'Any other information',
       comments: ['Former prison officer'] },
   ].freeze
+  # rubocop:disable all
   def fake_assessment_answers
     ASSESSMENT_ANSWERS.sample(3).map do |assessment_answer|
       fake_assessment_answer(assessment_answer)
@@ -114,6 +115,7 @@ namespace :fake_data do
       }
     end
   end
+  # rubocop:enable all
 
   desc 'create fake prisons'
   task create_prisons: :environment do
