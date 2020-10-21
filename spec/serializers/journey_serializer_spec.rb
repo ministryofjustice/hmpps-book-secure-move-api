@@ -95,7 +95,7 @@ RSpec.describe JourneySerializer do
 
     context 'without generic events' do
       it 'contains an empty allocation' do
-        expect(result_data[:relationships][:events]).to eq(data: [])
+        expect(result[:data][:relationships][:events]).to eq(data: [])
       end
 
       it 'does not contain an included event' do
