@@ -233,7 +233,12 @@ private
   def cast_relationship_to_symbol_hash(value)
     parts = value.split('.', 2)
     if parts.length == 1
-      parts.first.to_sym
+      # special hack to allow for the flags table renamed in the backend but not in the FE includes
+      if parts.first == 'flags'
+        :framework_flags
+      else
+        parts.first.to_sym
+      end
     else
       { parts.first.to_sym => cast_relationship_to_symbol_hash(parts.last) }
     end
