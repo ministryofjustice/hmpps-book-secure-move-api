@@ -29,6 +29,9 @@ module V2
     has_one :supplier, serializer: SupplierSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
+    has_many :events, serializer: GenericEventSerializer do |object|
+      object.generic_events.applied_order
+    end
 
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
@@ -53,6 +56,7 @@ module V2
       allocation
       original_move
       supplier
+      events
     ].freeze
 
     INCLUDED_FIELDS = {
