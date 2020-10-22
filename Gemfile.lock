@@ -136,6 +136,10 @@ GEM
     finite_machine (0.14.0)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
+    flipper (0.19.0)
+    flipper-active_record (0.19.0)
+      activerecord (>= 5.0, < 7)
+      flipper (~> 0.19.0)
     git (1.7.0)
       rchardet (~> 1.8)
     github_changelog_generator (1.15.2)
@@ -419,6 +423,7 @@ DEPENDENCIES
   faker
   faraday
   finite_machine
+  flipper-active_record (~> 0.19)
   git (~> 1.7)
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)
