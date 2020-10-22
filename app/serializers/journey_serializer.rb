@@ -20,5 +20,6 @@ class JourneySerializer
     from_location.suppliers
     to_location
     to_location.suppliers
+    events
   ].freeze
 end
