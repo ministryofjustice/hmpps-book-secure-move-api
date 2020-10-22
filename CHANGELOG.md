@@ -1,5 +1,25 @@
 # Changelog
 
+## [v2.5.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.8) (2020-10-22)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.7...v2.5.8)
+
+**Merged pull requests:**
+
+- \[P4-2394\] Adds incident fault classification enum to events [\#1066](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1066) ([willfish](https://github.com/willfish))
+- \[P4-1976\] Support event includes in all known eventables [\#1064](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1064) ([willfish](https://github.com/willfish))
+- Update swagger documentation to use Move instead of Profile [\#1063](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1063) ([cwrw](https://github.com/cwrw))
+- Fixes fake data generation [\#1062](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1062) ([willfish](https://github.com/willfish))
+- P4-2356 Surface pre-filling fields and relationships [\#1061](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1061) ([cwrw](https://github.com/cwrw))
+- P4-2325 Import `prefill` value from a Framework [\#1060](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1060) ([cwrw](https://github.com/cwrw))
+- Add new PATCH /populations/:id endpoint to update populations [\#1059](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1059) ([smoothcontract](https://github.com/smoothcontract))
+- Updates swagger for generic event endpoint [\#1058](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1058) ([willfish](https://github.com/willfish))
+- Bump aws-sdk-s3 from 1.83.0 to 1.83.1 [\#1057](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1057) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update CHANGELOG.md [\#1055](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1055) ([martyn-w](https://github.com/martyn-w))
+- Bump faraday from 1.0.1 to 1.1.0 [\#1053](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1053) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[P4-2351\] Impement final event STI models [\#1052](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1052) ([willfish](https://github.com/willfish))
+- Add new endpoint POST /populations to support creating new populations [\#1051](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1051) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.5.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.7) (2020-10-19)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.6...v2.5.7)
