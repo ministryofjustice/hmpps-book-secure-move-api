@@ -2624,7 +2624,7 @@
       - name: body
         in: body
         required: true
-        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `profile` of the person.
+        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `move` already associated to a `profile` for a person.
         schema:
           "$ref": "../v1/post_person_escort_record.yaml#/PostPersonEscortRecord"
       responses:

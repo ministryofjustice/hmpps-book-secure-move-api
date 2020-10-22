@@ -29,6 +29,9 @@ module V2
     has_one :supplier, serializer: SupplierSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
+    has_many :events, serializer: GenericEventSerializer do |object|
+      object.generic_events.applied_order
+    end
 
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
@@ -41,6 +44,7 @@ module V2
       profile.person_escort_record.flags
       profile.person_escort_record.framework
       profile.person_escort_record.responses
+      profile.person_escort_record.prefill_source
       profile.person_escort_record.responses.nomis_mappings
       profile.person_escort_record.responses.question
       profile.person_escort_record.responses.question.descendants.**
@@ -53,7 +57,8 @@ module V2
       allocation
       original_move
       supplier
-    ].freeze # from_location.suppliers
+      events
+    ].freeze
 
     INCLUDED_FIELDS = {
       allocation: %i[to_location from_location moves_count created_at],

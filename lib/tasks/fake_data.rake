@@ -197,6 +197,7 @@ namespace :fake_data do
         from_location: from_location,
         to_location: to_location,
         status: %w[proposed requested booked in_transit completed].sample,
+        supplier: Supplier.all.sample,
       )
       document = Document.new(documentable: profile)
       document.file.attach(io: file, filename: 'file-sample_100kB.doc')
@@ -262,7 +263,22 @@ namespace :fake_data do
   task drop_all: :environment do
     puts 'drop_all...'
     if Rails.env.development? || Rails.env.test?
-      [Allocation, Event, Document, Journey, Move, Location, Profile, Person, AssessmentQuestion, Ethnicity, Gender, IdentifierType, Supplier].each(&:destroy_all)
+      [
+        Allocation,
+        Event,
+        Document,
+        Journey,
+        Move,
+        SupplierLocation,
+        Location,
+        Profile,
+        Person,
+        AssessmentQuestion,
+        Ethnicity,
+        Gender,
+        IdentifierType,
+        Supplier,
+      ].each(&:destroy_all)
     else
       puts 'you can only run this in the development or test environments'
     end

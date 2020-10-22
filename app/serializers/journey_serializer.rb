@@ -11,10 +11,15 @@ class JourneySerializer
   has_one :from_location, serializer: LocationSerializer
   has_one :to_location, serializer: LocationSerializer
 
+  has_many :events, serializer: GenericEventSerializer do |object|
+    object.generic_events.applied_order
+  end
+
   SUPPORTED_RELATIONSHIPS = %w[
     from_location
     from_location.suppliers
     to_location
     to_location.suppliers
+    events
   ].freeze
 end

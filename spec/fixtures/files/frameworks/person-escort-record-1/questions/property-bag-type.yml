@@ -1,6 +1,7 @@
 type: checkbox
 question: What type of property is in this bag?
 description: Property type
+prefill: true
 options:
   -
     label: Medication
