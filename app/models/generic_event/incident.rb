@@ -16,7 +16,7 @@ class GenericEvent
       child.include SupplierPersonnelNumberValidations
 
       child.validates :reported_at, iso_date_time: true
-      child.validates :fault_classification, inclusion: { in: child.fault_classifications }
+      child.validates :fault_classification, presence: true, inclusion: { in: child.fault_classifications }
 
       super
     end
