@@ -32,5 +32,9 @@ FactoryBot.define do
       status { PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED }
       confirmed_at { Time.zone.now }
     end
+
+    trait :prefilled do
+      association(:prefill_source, factory: :person_escort_record)
+    end
   end
 end

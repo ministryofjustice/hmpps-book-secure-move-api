@@ -91,13 +91,15 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:relationships][:prefill_source][:data]).to be_nil
   end
 
-  it 'contains a`prefill_source` relationship with person_escort_record prefill_source' do
-    person_escort_record.update(prefill_source: create(:person_escort_record))
+  context 'with a prefill source' do
+    let(:person_escort_record) { create(:person_escort_record, :prefilled, move: move, profile: move.profile) }
 
-    expect(result[:data][:relationships][:prefill_source][:data]).to eq(
-      id: person_escort_record.prefill_source.id,
-      type: 'person_escort_records',
-    )
+    it 'contains a`prefill_source` relationship ' do
+      expect(result[:data][:relationships][:prefill_source][:data]).to eq(
+        id: person_escort_record.prefill_source.id,
+        type: 'person_escort_records',
+      )
+    end
   end
 
   describe 'meta' do
@@ -123,7 +125,7 @@ RSpec.describe PersonEscortRecordSerializer do
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
     let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
-      create(:person_escort_record, framework_responses: [framework_response], prefill_source: create(:person_escort_record))
+      create(:person_escort_record, :prefilled, framework_responses: [framework_response])
     end
 
     let(:expected_json) do
