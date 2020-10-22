@@ -1,5 +1,6 @@
 type: radio
 question: Has the detainee been referred to a medical professional?
+prefill: false
 options:
   -
     label: 'Yes'

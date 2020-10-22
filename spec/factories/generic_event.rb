@@ -14,6 +14,7 @@ FactoryBot.define do
         supplier_personnel_numbers: [SecureRandom.uuid],
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
+        fault_classification: 'investigation',
       }
     end
   end

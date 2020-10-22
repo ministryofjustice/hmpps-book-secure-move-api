@@ -1,0 +1,29 @@
+EventReference:
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      oneOf:
+        - type: 'null'
+        - type: array
+          description: Multiple event references are associated with this record
+      example:
+        - id: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+          type: events
+      required:
+        - type
+        - id
+      properties:
+        type:
+          type: string
+          example: events
+          enum:
+            - events
+          description: The type of this object - always `events`
+        id:
+          type: string
+          format: uuid
+          example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+          description: The unique identifier (UUID) of the object that this reference
+            points to

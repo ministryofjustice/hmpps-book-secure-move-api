@@ -29,7 +29,7 @@ EventResponseBody:
 
             An invalid (non-existing) event_type field triggers a validation error.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
           example: MoveCancel
@@ -62,7 +62,7 @@ EventResponseBody:
           description: |
             JSON object that is optional and usually different for each event. Custom event validations are run against the values in this object.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
           example:
             cancellation_reason: "made_in_error"
             cancellation_reason_comment: "cancelled because the prisoner refused to move"
@@ -73,9 +73,10 @@ EventResponseBody:
       properties:
         eventable:
           oneOf:
-            - $ref: "../v1/person_reference.yaml#/PersonReference"
             - $ref: "../v1/move_reference.yaml#/MoveReference"
             - $ref: "../v1/journey_reference.yaml#/JourneyReference"
+            - $ref: "../v1/person_reference.yaml#/PersonReference"
+            - $ref: "../v1/person_escort_record_reference.yaml#/PersonEscortRecordReference"
           description: |
             The subject that the event relates too.
 
@@ -83,7 +84,7 @@ EventResponseBody:
 
             For example, we validate that the cancel_move event's eventable is a move object.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
           example:
             id: "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
             type: "moves"
@@ -113,7 +114,7 @@ EventRequestPostBody:
 
             An invalid (non-existing) event_type field triggers a validation error.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
 
             This is **mandatory** and specific to each event.
           example: cancel_move
@@ -146,7 +147,7 @@ EventRequestPostBody:
           description: |
             JSON object that is optional and usually different for each event. Custom event validations are run against the values in this object.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
           example:
             cancellation_reason: "made_in_error"
             cancellation_reason_comment: "cancelled because the prisoner refused to move"
@@ -157,9 +158,10 @@ EventRequestPostBody:
       properties:
         eventable:
           oneOf:
-            - $ref: "../v1/person_reference.yaml#/PersonReference"
             - $ref: "../v1/move_reference.yaml#/MoveReference"
             - $ref: "../v1/journey_reference.yaml#/JourneyReference"
+            - $ref: "../v1/person_reference.yaml#/PersonReference"
+            - $ref: "../v1/person_reference.yaml#/PersonEscortRecordReference"
           description: |
             The subject that the event relates too.
 
@@ -167,7 +169,7 @@ EventRequestPostBody:
 
             For example, we validate that the cancel_move event's eventable is a move object.
 
-            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki) for specific event validations/expected json payloads and lengthy descriptions.
+            See our [wiki](https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/Event-Documentation) for specific event validations/expected json payloads and lengthy descriptions.
           example:
             id: "ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154"
             type: "moves"

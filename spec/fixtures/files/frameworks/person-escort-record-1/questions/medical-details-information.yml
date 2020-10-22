@@ -1,5 +1,6 @@
 type: textarea
 question: Please provide the relevant medication details
+prefill: true
 validations:
   -
     type: 'required'

@@ -8,12 +8,16 @@ class PersonEscortRecordSerializer
   belongs_to :profile, serializer: V2::ProfileSerializer
   belongs_to :move, serializer: V2::MoveSerializer
   belongs_to :framework
+  belongs_to :prefill_source, serializer: PersonEscortRecordSerializer
 
   has_many :responses, serializer: FrameworkResponseSerializer do |object|
     object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
   end
   has_many :flags, serializer: FrameworkFlagSerializer do |object|
     object.framework_flags.includes(framework_question: :dependents)
+  end
+  has_many :events, serializer: GenericEventSerializer do |object|
+    object.generic_events.applied_order
   end
 
   attributes :confirmed_at, :created_at, :nomis_sync_status
@@ -38,5 +42,7 @@ class PersonEscortRecordSerializer
     responses.nomis_mappings
     responses.question.descendants.**
     flags
+    events
+    prefill_source
   ].freeze
 end

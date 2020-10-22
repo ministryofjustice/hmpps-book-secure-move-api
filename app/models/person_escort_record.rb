@@ -27,6 +27,7 @@ class PersonEscortRecord < VersionedModel
   has_many :framework_flags, through: :framework_responses
   belongs_to :profile
   belongs_to :move, optional: true
+  belongs_to :prefill_source, class_name: 'PersonEscortRecord', optional: true
 
   has_state_machine PersonEscortRecordStateMachine, on: :status
 

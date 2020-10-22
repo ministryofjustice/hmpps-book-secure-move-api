@@ -19,7 +19,10 @@ module V2
     has_one :ethnicity, serializer: EthnicitySerializer
     has_one :gender, serializer: GenderSerializer
     has_many :profiles, serializer: ProfileSerializer
+    has_many :events, serializer: GenericEventSerializer do |object|
+      object.generic_events.applied_order
+    end
 
-    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles].freeze
+    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles events].freeze
   end
 end

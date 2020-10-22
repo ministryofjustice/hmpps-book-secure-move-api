@@ -1,5 +1,6 @@
 type: radio
 question: Does the detainee have any sensitive medical or medication information that needs to be shared
+prefill: false
 options:
   -
     label: 'Yes'

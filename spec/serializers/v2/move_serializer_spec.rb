@@ -60,6 +60,7 @@ RSpec.describe V2::MoveSerializer do
         supplier: create(:supplier),
       )
     end
+    let!(:event) { create(:event_move_cancel, eventable: move) }
 
     let(:adapter_options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
 
@@ -67,12 +68,50 @@ RSpec.describe V2::MoveSerializer do
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers])
+        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers events])
     end
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them
     it 'contains the moves supplier' do
       expect(result[:included].any? { |r| r[:id] == move.supplier_id }).to eq(true)
+    end
+  end
+
+  describe 'generic_events' do
+    let(:adapter_options) { { include: %i[events] } }
+
+    context 'with generic events' do
+      let(:move) { create(:move) }
+      let(:now) {  Time.zone.now }
+      let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
+      let!(:second_event) { create(:event_move_start, eventable: move, occurred_at: now + 1.second) }
+      let!(:third_event) { create(:event_move_approve, eventable: move, occurred_at: now) }
+
+      let(:expected_event_relationships) do
+        [
+          { id: third_event.id, type: 'events' },
+          { id: second_event.id, type: 'events' },
+          { id: first_event.id, type: 'events' },
+        ]
+      end
+
+      it 'contains event relationships in the correct order' do
+        expect(result[:data][:relationships][:events]).to eq(data: expected_event_relationships)
+      end
+
+      it 'contains included events in the correct order' do
+        expect(result[:included].map { |event| event[:id] }).to match_array([third_event.id, second_event.id, first_event.id])
+      end
+    end
+
+    context 'without generic events' do
+      it 'contains an empty allocation' do
+        expect(result[:data][:relationships][:events]).to eq(data: [])
+      end
+
+      it 'does not contain an included event' do
+        expect(result[:included]).to be_blank
+      end
     end
   end
 end

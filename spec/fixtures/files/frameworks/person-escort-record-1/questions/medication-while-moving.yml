@@ -1,5 +1,6 @@
 type: radio
 question: Will the detainee need to take this medication while moving?
+prefill: false
 options:
   -
     label: 'Yes'

@@ -1,5 +1,6 @@
 type: text
 question: Seal number
+prefill: true
 validations:
   -
     type: required

@@ -67,6 +67,11 @@ FrameworkResponse:
           example: 'true'
           description: Indicates if response has been answered
           readOnly: true
+        prefilled:
+          type: boolean
+          example: 'true'
+          description: Indicates if a response has been prefilled on creation by an existing, confirmed person escort record's similar response
+          readOnly: true
     relationships:
       type: object
       required:

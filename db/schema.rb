@@ -196,6 +196,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_164648) do
     t.uuid "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "prefill"
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
   end
@@ -210,6 +211,7 @@ ActiveRecord::Schema.define(version: 2020_10_21_164648) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "responded", default: false, null: false
+    t.boolean "prefilled", default: false, null: false
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
     t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
@@ -463,8 +465,10 @@ ActiveRecord::Schema.define(version: 2020_10_21_164648) do
     t.datetime "confirmed_at"
     t.uuid "move_id"
     t.jsonb "nomis_sync_status", default: [], null: false
+    t.uuid "prefill_source_id"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
+    t.index ["prefill_source_id"], name: "index_person_escort_records_on_prefill_source_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
   end
 
