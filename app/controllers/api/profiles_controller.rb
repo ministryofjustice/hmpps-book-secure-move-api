@@ -50,7 +50,12 @@ module Api
     def profile_attributes
       profile_attributes = profile_params.fetch(:attributes, {})
       profile_attributes[:documents] = documents unless document_attributes.nil?
+      profile_attributes.merge!(category_attributes)
       profile_attributes
+    end
+
+    def category_attributes
+      Profiles::GetPrisonerCategoryAttributes.new(person.latest_nomis_booking_id).call
     end
 
     def documents
