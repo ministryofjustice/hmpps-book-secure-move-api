@@ -9,7 +9,7 @@ class LocationFreeSpacesSerializer
 
   meta do |object, params|
     {
-      populations: params[:populations][object.id],
+      populations: params[object.id],
     }
   end
 end
