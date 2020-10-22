@@ -199,7 +199,7 @@ RSpec.describe Allocation do
     context 'without associated moves' do
       let!(:allocations) { create_list(:allocation, 2) }
 
-      it 'contains zero total and filled move counts' do 
+      it 'contains zero total and filled move counts' do
         expect(move_totals).to eq({
           described_class.first.id => {
             total: 0,
@@ -220,7 +220,7 @@ RSpec.describe Allocation do
         described_class.first.moves.update(profile: nil)
       end
 
-      it 'contains correct total and filled move counts' do 
+      it 'contains correct total and filled move counts' do
         expect(move_totals).to eq({
           described_class.first.id => {
             total: 1,

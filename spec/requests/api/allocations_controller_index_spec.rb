@@ -26,12 +26,12 @@ RSpec.describe Api::AllocationsController do
         {
           data: [
             {
-              "id": allocation.id,
-              "type": 'allocations',
-              "meta": {
-                "moves": {
-                  "total": 1,
-                  "filled": 1,
+              'id': allocation.id,
+              'type': 'allocations',
+              'meta': {
+                'moves': {
+                  'total': 1,
+                  'filled': 1,
                 },
               },
             },
