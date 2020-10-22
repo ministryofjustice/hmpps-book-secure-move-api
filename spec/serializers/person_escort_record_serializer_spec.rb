@@ -87,6 +87,21 @@ RSpec.describe PersonEscortRecordSerializer do
     )
   end
 
+  it 'contains a nil `prefill_source` relationship if no prefill_source present' do
+    expect(result[:data][:relationships][:prefill_source][:data]).to be_nil
+  end
+
+  context 'with a prefill source' do
+    let(:person_escort_record) { create(:person_escort_record, :prefilled, move: move, profile: move.profile) }
+
+    it 'contains a`prefill_source` relationship ' do
+      expect(result[:data][:relationships][:prefill_source][:data]).to eq(
+        id: person_escort_record.prefill_source.id,
+        type: 'person_escort_records',
+      )
+    end
+  end
+
   describe 'meta' do
     it 'includes section progress' do
       question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
@@ -106,11 +121,11 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   context 'with include options' do
-    let(:includes) { ['responses', 'responses.question', 'responses.nomis_mappings'] }
+    let(:includes) { ['responses', 'prefill_source', 'responses.question', 'responses.nomis_mappings'] }
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
     let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
-      create(:person_escort_record, framework_responses: [framework_response])
+      create(:person_escort_record, :prefilled, framework_responses: [framework_response])
     end
 
     let(:expected_json) do
@@ -129,6 +144,11 @@ RSpec.describe PersonEscortRecordSerializer do
           id: framework_nomis_mapping.id,
           type: 'framework_nomis_mappings',
           attributes: { code: framework_nomis_mapping.code },
+        },
+        {
+          id: person_escort_record.prefill_source.id,
+          type: 'person_escort_records',
+          attributes: { created_at: person_escort_record.prefill_source.created_at.iso8601 },
         },
       )
     end
