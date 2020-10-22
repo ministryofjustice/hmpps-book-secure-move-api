@@ -25,6 +25,10 @@ RSpec.describe LocationFreeSpacesSerializer do
     it 'contains a title attribute' do
       expect(attributes[:title]).to eql location.title
     end
+
+    it 'contains empty meta data' do
+      expect(meta).to eql({ populations: nil })
+    end
   end
 
   context 'with custom params' do
