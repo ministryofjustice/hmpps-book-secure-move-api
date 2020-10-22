@@ -192,4 +192,46 @@ RSpec.describe Allocation do
       expect(allocation).to be_unfilled
     end
   end
+
+  describe '.move_totals' do
+    subject(:move_totals) { described_class.all.move_totals }
+
+    context 'without associated moves' do
+      let!(:allocations) { create_list(:allocation, 2) }
+
+      it 'contains zero total and filled move counts' do 
+        expect(move_totals).to eq({
+          described_class.first.id => {
+            total: 0,
+            filled: 0,
+          },
+          described_class.last.id => {
+            total: 0,
+            filled: 0,
+          },
+        })
+      end
+    end
+
+    context 'with associated moves' do
+      let!(:allocations) { create_list(:allocation, 2, :with_moves) }
+
+      before do
+        described_class.first.moves.update(profile: nil)
+      end
+
+      it 'contains correct total and filled move counts' do 
+        expect(move_totals).to eq({
+          described_class.first.id => {
+            total: 1,
+            filled: 0,
+          },
+          described_class.last.id => {
+            total: 1,
+            filled: 1,
+          },
+        })
+      end
+    end
+  end
 end
