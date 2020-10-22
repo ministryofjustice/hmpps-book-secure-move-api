@@ -112,6 +112,9 @@ PersonEscortRecord:
         framework:
           $ref: framework_reference.yaml#/FrameworkReference
           description: The framework associated with this person_escort_record
+        prefill_source:
+          $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
+          description: The person_escort_record the current person_escort_record has been prefilled from
         responses:
           $ref: framework_response_reference.yaml#/FrameworkResponseReference
           description: The framework response associated with this person_escort_record

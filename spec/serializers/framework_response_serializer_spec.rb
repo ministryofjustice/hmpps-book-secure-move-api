@@ -29,6 +29,10 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:value_type]).to eq(framework_response.framework_question.response_type)
   end
 
+  it 'contains a `prefilled` attribute' do
+    expect(result[:data][:attributes][:prefilled]).to eq(framework_response.prefilled)
+  end
+
   it 'contains a `person_escort_record` relationship' do
     expect(result[:data][:relationships][:person_escort_record][:data]).to eq(
       id: framework_response.person_escort_record.id,

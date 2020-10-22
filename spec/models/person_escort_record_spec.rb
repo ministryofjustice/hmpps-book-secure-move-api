@@ -28,6 +28,7 @@ RSpec.describe PersonEscortRecord do
   it { is_expected.to belong_to(:framework) }
   it { is_expected.to belong_to(:profile) }
   it { is_expected.to belong_to(:move).optional }
+  it { is_expected.to belong_to(:prefill_source).optional }
 
   it 'validates uniqueness of profile' do
     person_escort_record = build(:person_escort_record)

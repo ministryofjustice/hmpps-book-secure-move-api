@@ -10,7 +10,7 @@ class FrameworkResponseSerializer
   has_many :flags, serializer: FrameworkFlagSerializer, &:framework_flags
   has_many :nomis_mappings, serializer: FrameworkNomisMappingSerializer, &:framework_nomis_mappings
 
-  attributes :value, :responded
+  attributes :value, :responded, :prefilled
 
   attribute :value_type do |object|
     object.framework_question.response_type
