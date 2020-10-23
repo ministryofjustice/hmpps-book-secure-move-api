@@ -529,6 +529,9 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
+    t.string "category"
+    t.string "category_code"
+    t.index ["category_code"], name: "index_profiles_on_category_code"
     t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
