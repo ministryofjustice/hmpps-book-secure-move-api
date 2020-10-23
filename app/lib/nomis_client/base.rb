@@ -29,6 +29,9 @@ module NomisClient
       rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
         Rails.logger.warn "Nomis Connection Error: #{e.message}"
         raise e
+      rescue OAuth2::Error => e
+        Rails.logger.warn "Nomis OAuth Client Error: #{e.message}"
+        raise e
       end
 
       def token
