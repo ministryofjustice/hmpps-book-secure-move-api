@@ -48,6 +48,3 @@ PostJourney:
         supplier:
           $ref: supplier_reference.yaml#/SupplierReference
           description: The supplier that is performing the journey. This is optional - if not specified the user account will be used.
-        events:
-          $ref: event_reference.yaml#/EventReference
-          description: Event about this record

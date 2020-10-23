@@ -134,6 +134,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_journey do
+      after(:create) do |move|
+        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move)
+      end
+    end
+
     trait :with_person_escort_record do
       transient do
         person_escort_record_status { 'unstarted' }

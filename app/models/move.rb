@@ -196,6 +196,15 @@ class Move < VersionedModel
     end
   end
 
+  def all_events_for_timeline
+    eventable_ids = [id, profile&.person_escort_record_id, profile&.person_id].compact
+    eventable_ids += journeys.pluck(:id)
+
+    eventable_types = %w[Move PersonEscortRecord Person Journey]
+
+    GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids).applied_order
+  end
+
 private
 
   def date_to_after_date_from
