@@ -93,8 +93,10 @@ class Allocation < VersionedModel
   end
 
   def self.move_totals
-    # Join with matching (non cancelled) moves within the allocation (if any) so we can count them
-    rows = joins("LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id AND moves.status <> 'cancelled'")
+    # Isolate this query from any higher level query that may include existing joins on moves
+    rows = where(id: pluck(:id))
+      # Join with matching (non cancelled) moves within the allocation (if any) so we can count them
+      .joins("LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id AND moves.status <> 'cancelled'")
       .group('allocations.id')
       # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(
       .pluck(Arel.sql('allocations.id, count(moves), count(moves) filter (where moves.profile_id is not null)'))
