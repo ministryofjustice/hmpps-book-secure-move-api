@@ -8,6 +8,8 @@ module Serializable
 
     paginated_collection = paginate_collection(collection, options)
 
+    yield(paginated_collection, options) if block_given?
+
     options[:meta] = meta(paginated_collection, options)
     options[:links] = links(paginated_collection, options)
     options[:json] = build_serializer(paginated_collection, options)
