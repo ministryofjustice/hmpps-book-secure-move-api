@@ -6,7 +6,7 @@ module Profiles
     end
 
     def call
-      @profile.update(GetPrisonerCategoryAttributes.new(@nomis_booking_id).call) if @nomis_booking_id.present?
+      @profile.update(NomisClient::BookingDetails.get(@nomis_booking_id))
     end
   end
 end

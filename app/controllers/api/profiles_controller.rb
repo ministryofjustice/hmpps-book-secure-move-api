@@ -55,7 +55,7 @@ module Api
     end
 
     def category_attributes
-      Profiles::GetPrisonerCategoryAttributes.new(person.latest_nomis_booking_id).call
+      NomisClient::BookingDetails.get(person.latest_nomis_booking_id)
     end
 
     def documents

@@ -7,18 +7,16 @@ RSpec.describe Profiles::ImportPrisonerCategory do
   let(:person) { create(:person, latest_nomis_booking_id: latest_nomis_booking_id) }
   let(:profile) { create(:profile, person: person) }
 
-  let(:get_prisoner_category) { instance_double(Profiles::GetPrisonerCategoryAttributes, call: { category: 'Cat B', category_code: 'B' }) }
-
-  before do
-    allow(Profiles::GetPrisonerCategoryAttributes).to receive(:new) { get_prisoner_category }
-  end
-
   context 'with a person who has a latest_nomis_booking_id' do
     let(:latest_nomis_booking_id) { 123 }
 
+    before do
+      allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: 'Cat B', category_code: 'B' })
+    end
+
     it 'calls GetPrisonerCategoryAttributes with the latest_nomis_booking_id' do
       call
-      expect(get_prisoner_category).to have_received(:call)
+      expect(NomisClient::BookingDetails).to have_received(:get).with(123)
     end
 
     it 'sets the profile category' do
@@ -31,9 +29,13 @@ RSpec.describe Profiles::ImportPrisonerCategory do
   context 'with person who does not have a latest_nomis_booking_id' do
     let(:latest_nomis_booking_id) { nil }
 
+    before do
+      allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: nil, category_code: nil })
+    end
+
     it 'calls GetPrisonerCategoryAttributes with the latest_nomis_booking_id' do
       call
-      expect(get_prisoner_category).not_to have_received(:call)
+      expect(NomisClient::BookingDetails).to have_received(:get).with(nil)
     end
 
     it 'does not set the profile category' do
