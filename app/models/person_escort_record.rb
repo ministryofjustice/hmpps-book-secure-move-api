@@ -69,8 +69,8 @@ class PersonEscortRecord < VersionedModel
       questions.values.each do |question|
         next unless question.parent_id.nil?
 
-        response = question.build_responses(person_escort_record: self, questions: questions)
-        framework_responses.build(response.slice(:type, :framework_question_id, :dependents))
+        response = question.build_responses(person_escort_record: self, questions: questions, previous_responses: previous_responses)
+        framework_responses.build(response.slice(:type, :framework_question_id, :dependents, :value))
       end
 
       PersonEscortRecord.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
@@ -133,6 +133,21 @@ private
   def required_responses
     framework_responses.includes(:framework_question, :parent).select do |framework_response|
       framework_response.parent ? framework_response.parent.option_selected?(framework_response.framework_question.dependent_value) : framework_response
+    end
+  end
+
+  def previous_per
+    @previous_per ||= profile.person.latest_person_escort_record if Flipper.enabled?(:prefill)
+  end
+
+  def previous_responses
+    return {} unless previous_per
+
+    previous_per.framework_responses.includes(:dependents).each_with_object({}) do |response, hash|
+      value = response.prefill_value
+      next if value.blank?
+
+      hash[response.framework_question.key] = value
     end
   end
 end
