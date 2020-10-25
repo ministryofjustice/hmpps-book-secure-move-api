@@ -39,6 +39,12 @@ class FrameworkResponse < VersionedModel
     self.framework_flags = framework_question.framework_flags.select { |flag| option_selected?(flag.question_value) }
   end
 
+  def prefill_value
+    return unless framework_question.prefill
+
+    value
+  end
+
   def self.requires_value?(value, record)
     return false if value.present? || !record.framework_question.required
 
