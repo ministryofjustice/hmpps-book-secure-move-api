@@ -86,7 +86,10 @@ class FrameworkResponse
     end
 
     def responses_to_prefill(responses)
-      responses.select { |response| framework_question.dependents.find(response['framework_question_id']).prefill }
+      responses.select do |response|
+        question = framework_question.dependents.find { |dependent| dependent.id == response['framework_question_id'] }
+        question&.prefill
+      end
     end
   end
 end

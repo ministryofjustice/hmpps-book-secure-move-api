@@ -71,7 +71,7 @@ class PersonEscortRecord < VersionedModel
         next unless question.parent_id.nil?
 
         response = question.build_responses(person_escort_record: self, questions: questions, previous_responses: previous_responses)
-        framework_responses.build(response.slice(:type, :framework_question_id, :dependents, :value, :prefilled))
+        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled))
       end
 
       PersonEscortRecord.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
@@ -142,13 +142,15 @@ private
   end
 
   def previous_responses
-    return {} unless previous_per
+    @previous_responses ||= begin
+      return {} unless previous_per
 
-    previous_per.framework_responses.includes(:dependents).each_with_object({}) do |response, hash|
-      value = response.prefill_value
-      next if value.blank?
+      previous_per.framework_responses.includes(framework_question: :dependents).each_with_object({}) do |response, hash|
+        value = response.prefill_value
+        next if value.blank?
 
-      hash[response.framework_question.key] = value
+        hash[response.framework_question.key] = value
+      end
     end
   end
 end
