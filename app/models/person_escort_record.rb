@@ -63,6 +63,7 @@ class PersonEscortRecord < VersionedModel
 
   def build_responses!
     ApplicationRecord.retriable_transaction do
+      self.prefill_source = previous_per
       save!
 
       questions = framework_questions.includes(:dependents).index_by(&:id)

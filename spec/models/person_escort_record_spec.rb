@@ -198,6 +198,14 @@ RSpec.describe PersonEscortRecord do
         enable_feature!(:prefill)
       end
 
+      it 'sets prefill_source on person escort record' do
+        framework_question = create(:framework_question, framework: framework, prefill: true)
+        prefill_source = create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+
+        expect(person_escort_record.prefill_source).to eq(prefill_source)
+      end
+
       it 'does not prefill responses if no previous confirmed person_escort_record exists for person' do
         other_profile = create(:profile)
         framework_question = create(:framework_question, framework: framework, prefill: true)
