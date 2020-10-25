@@ -169,6 +169,23 @@ RSpec.describe FrameworkQuestion do
         expect(response.dependents.first.value).to contain_exactly('Level 1')
       end
 
+      it 'sets prefilled value on dependents' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question)
+        dependent_question = create(:framework_question, :checkbox, parent: question)
+        previous_responses = {
+          question.key => 'Yes',
+          dependent_question.key => ['Level 1'],
+        }
+        response = question.build_responses(
+          person_escort_record: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.dependents.first).to be_prefilled
+      end
+
       it 'builds response for multiple item question with correct value' do
         person_escort_record = create(:person_escort_record)
         question = create(:framework_question, :add_multiple_items)

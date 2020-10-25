@@ -71,7 +71,7 @@ class PersonEscortRecord < VersionedModel
         next unless question.parent_id.nil?
 
         response = question.build_responses(person_escort_record: self, questions: questions, previous_responses: previous_responses)
-        framework_responses.build(response.slice(:type, :framework_question_id, :dependents, :value))
+        framework_responses.build(response.slice(:type, :framework_question_id, :dependents, :value, :prefilled))
       end
 
       PersonEscortRecord.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })

@@ -231,6 +231,14 @@ RSpec.describe PersonEscortRecord do
         expect(person_escort_record.framework_responses.first).not_to be_responded
       end
 
+      it 'sets prefilled value as true on responses' do
+        framework_question = create(:framework_question, framework: framework, prefill: true)
+        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+
+        expect(person_escort_record.framework_responses.first).to be_prefilled
+      end
+
       it 'maps values correctly to question response' do
         framework_question1 = create(:framework_question, framework: framework, prefill: true)
         framework_question2 = create(:framework_question, framework: framework, prefill: true)
