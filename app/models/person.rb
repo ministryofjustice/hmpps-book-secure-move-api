@@ -18,6 +18,7 @@ class Person < VersionedModel
 
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
+  has_many :person_escort_records, through: :profiles
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :ethnicity, optional: true
@@ -60,5 +61,9 @@ class Person < VersionedModel
     feed_attributes.merge!('age' => age) if age
 
     feed_attributes
+  end
+
+  def latest_person_escort_record
+    person_escort_records.where(status: 'confirmed').order(confirmed_at: :desc).first
   end
 end
