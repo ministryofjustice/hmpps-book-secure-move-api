@@ -5,9 +5,9 @@ module Api
     before_action :validate_date_range_params, only: %i[index]
 
     def index
-      serializer_params = { populations: Population.free_spaces_date_range(locations, (date_from..date_to)) }
-
-      paginate locations, serializer: LocationFreeSpacesSerializer, params: serializer_params
+      paginate locations, serializer: LocationFreeSpacesSerializer do |paginated_locations, options|
+        options[:params] = Population.free_spaces_date_range(paginated_locations, (date_from..date_to))
+      end
     end
 
     def show

@@ -1,6 +1,6 @@
 {
-  "id" : "3c1ad947-cef0-4a62-bde1-3910a5c6e41e",
-  "name" : "elite2api_api_reference-domains_domains_sex",
+  "id" : "48828b24-5790-478a-b7ab-88b87ab1314f",
+  "name" : "api_reference-domains_domains_sex",
   "request" : {
     "url" : "/api/reference-domains/domains/SEX",
     "method" : "GET"
@@ -9,23 +9,22 @@
     "status" : 200,
     "body" : "[{\"domain\":\"SEX\",\"code\":\"F\",\"description\":\"Female\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"SEX\",\"code\":\"M\",\"description\":\"Male\",\"activeFlag\":\"Y\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"SEX\",\"code\":\"NK\",\"description\":\"Not Known / Not Recorded\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"SEX\",\"code\":\"NS\",\"description\":\"Not Specified (Indeterminate)\",\"activeFlag\":\"Y\",\"listSeq\":4,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"SEX\",\"code\":\"REF\",\"description\":\"Refused\",\"activeFlag\":\"N\",\"listSeq\":5,\"systemDataFlag\":\"N\",\"expiredDate\":\"2006-07-12\",\"subCodes\":[]}]",
     "headers" : {
-      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
-      "Keep-Alive" : "timeout=60",
-      "Pragma" : "no-cache",
+      "Date" : "Thu, 22 Oct 2020 09:50:33 GMT",
       "Content-Type" : "application/json",
-      "Expires" : "0",
       "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
       "Total-Records" : "5",
       "Page-Offset" : "0",
       "Page-Limit" : "1000",
       "X-Content-Type-Options" : "nosniff",
       "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
       "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
-      "X-Frame-Options" : "SAMEORIGIN",
-      "Date" : "Tue, 14 Jul 2020 17:55:29 GMT"
+      "X-Frame-Options" : "SAMEORIGIN"
     }
   },
-  "uuid" : "3c1ad947-cef0-4a62-bde1-3910a5c6e41e",
+  "uuid" : "48828b24-5790-478a-b7ab-88b87ab1314f",
   "persistent" : true,
-  "insertionIndex" : 21
+  "insertionIndex" : 11
 }
