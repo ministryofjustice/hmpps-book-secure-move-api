@@ -146,12 +146,12 @@ module Api::V2
         .find(params[:id])
     end
 
-    def included_relationships
-      IncludeParamHandler.new(params).call
-    end
+    # def included_relationships
+    #   IncludeParamHandler.new(params).call
+    # end
 
     def supported_relationships
-      # for performance reasons, we support a fewer number of include relationships on the index (and csv) actions
+      # for performance reasons, we support fewer include relationships on the index action
       if action_name == 'index'
         ::V2::MovesSerializer::SUPPORTED_RELATIONSHIPS
       else

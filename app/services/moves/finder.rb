@@ -19,7 +19,7 @@ module Moves
 
     def call
       scope = apply_filters(Move)
-      scope = apply_includes(scope)
+      scope = scope.includes(db_includes)
       apply_ordering(scope)
     end
 
@@ -55,12 +55,6 @@ module Moves
       scope = apply_filter(scope, :move_type)
       scope = apply_filter(scope, :cancellation_reason)
       scope = apply_filter(scope, :rejection_reason)
-      scope
-    end
-
-    def apply_includes(scope)
-      scope = scope.includes(db_includes)
-      # scope = scope.joins(db_includes) # NB: do not join - you may get duplicates
       scope
     end
 

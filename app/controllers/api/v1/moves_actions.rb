@@ -119,7 +119,7 @@ module Api::V1
     end
 
     def included_relationships
-      IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
+      include_params_handler.included_relationships || MoveSerializer::SUPPORTED_RELATIONSHIPS
     end
 
     def included_db_relationships

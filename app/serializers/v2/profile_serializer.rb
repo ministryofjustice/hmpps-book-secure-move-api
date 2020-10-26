@@ -3,11 +3,9 @@
 class V2::ProfileSerializer
   include JSONAPI::Serializer
 
-  INCLUDED_ATTRIBUTES = [:assessment_answers].freeze
-
   set_type :profiles
 
-  attributes(*INCLUDED_ATTRIBUTES)
+  attributes :assessment_answers
 
   belongs_to :person, serializer: ::V2::PersonSerializer
 

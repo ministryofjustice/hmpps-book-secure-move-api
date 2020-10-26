@@ -4,14 +4,14 @@ module Api
   class MovesController < ApiController
     before_action :validate_filter_params, only: %i[index]
 
+    CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]].freeze
+
     def index
       index_and_render
     end
 
     def csv
-      # NB: this method should behave the same irrespective of api version / includes etc
-      csv_moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {},
-                                    [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]]).call
+      csv_moves = Moves::Finder.new(filter_params, current_ability, params[:sort] || {}, CSV_INCLUDES).call
       send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
@@ -30,7 +30,6 @@ module Api
   private
 
     def moves
-      # called by index method only
       @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}, included_db_relationships).call
     end
 

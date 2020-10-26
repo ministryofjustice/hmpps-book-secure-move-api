@@ -222,26 +222,16 @@ private
     include_params_validator.fully_validate!
   end
 
+  def include_params_handler
+    @include_params_handler ||= IncludeParamHandler.new(params)
+  end
+
   def included_relationships
-    @included_relationships ||= IncludeParamHandler.new(params).call
+    @included_relationships ||= include_params_handler.included_relationships
   end
 
   def included_db_relationships
-    @included_db_relationships ||= included_relationships.map { |value| cast_relationship_to_symbol_hash(value) } if included_relationships.present?
-  end
-
-  def cast_relationship_to_symbol_hash(value)
-    parts = value.split('.', 2)
-    if parts.length == 1
-      # special hack to allow for the flags table renamed in the backend but not in the FE includes
-      if parts.first == 'flags'
-        :framework_flags
-      else
-        parts.first.to_sym
-      end
-    else
-      { parts.first.to_sym => cast_relationship_to_symbol_hash(parts.last) }
-    end
+    @included_db_relationships ||= include_params_handler.active_record_relationships
   end
 
   def include_params_validator
