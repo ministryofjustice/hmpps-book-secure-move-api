@@ -122,8 +122,8 @@ module Api::V1
       include_params_handler.included_relationships || MoveSerializer::SUPPORTED_RELATIONSHIPS
     end
 
-    def included_db_relationships
-      # NB: v1 API needs a hardcoded included_db_relationships as they are not usually provided in the request
+    def active_record_relationships
+      # NB: v1 API needs a hardcoded active_record_relationships as they are not usually provided in the request
       [
         :allocation,
         :supplier,

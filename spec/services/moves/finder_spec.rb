@@ -3,13 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Moves::Finder do
-  subject(:results) { described_class.new(filter_params, ability, order_params, db_includes).call }
+  subject(:results) { described_class.new(
+      filter_params: filter_params,
+      ability: ability,
+      order_params: order_params,
+      active_record_relationships: active_record_relationships).call }
 
   let(:filter_params) { {} }
   let(:application) { Doorkeeper::Application.new(name: 'test') }
   let(:ability) { Ability.new(application) }
   let(:order_params) { {} }
-  let(:db_includes) { [] }
+  let(:active_record_relationships) { [] }
 
   describe 'filtering' do
     context 'with no filters' do
@@ -450,7 +454,7 @@ RSpec.describe Moves::Finder do
       let!(:move_with_confirmed_person_escort_record) do
         create(:move, :with_person_escort_record, person_escort_record_status: 'confirmed')
       end
-      let(:db_includes) { [profile: [:person_escort_record]] }
+      let(:active_record_relationships) { [profile: [:person_escort_record]] }
 
       context 'with ready_for_transit set as `true`' do
         let(:filter_params) { { ready_for_transit: 'true' } }

@@ -2,9 +2,9 @@
 
 module Moves
   class Finder
-    attr_reader :filter_params, :ability, :db_includes
+    attr_reader :filter_params, :ability, :active_record_relationships
 
-    def initialize(filter_params, ability, order_params, db_includes)
+    def initialize(filter_params:, ability:, order_params:, active_record_relationships:)
       @filter_params = filter_params
       @ability = ability
       @order_by = (order_params[:by] || 'date').to_sym
@@ -14,12 +14,12 @@ module Moves
                            # default if no 'by' parameter is date descending
                            :desc
                          end
-      @db_includes = db_includes
+      @active_record_relationships = active_record_relationships
     end
 
     def call
       scope = apply_filters(Move)
-      scope = scope.includes(db_includes)
+      scope = scope.includes(active_record_relationships)
       apply_ordering(scope)
     end
 
@@ -113,11 +113,14 @@ module Moves
     end
 
     def apply_ready_for_transit_filters(scope)
-      return scope unless filter_params.key?(:ready_for_transit)
+      return scope unless filter_params.key?(:ready_for_transit) && ['true', 'false'].include?(filter_params[:ready_for_transit])
 
-      scope = scope.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
-      scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
-
+      scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
+      if filter_params[:ready_for_transit] == 'true'
+        scope = scope.where('person_escort_records.status' => 'confirmed')
+      else
+        scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
+      end
       scope
     end
   end
