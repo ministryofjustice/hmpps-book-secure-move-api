@@ -222,8 +222,16 @@ private
     include_params_validator.fully_validate!
   end
 
+  def include_params_handler
+    @include_params_handler ||= IncludeParamHandler.new(params)
+  end
+
   def included_relationships
-    IncludeParamHandler.new(params).call
+    @included_relationships ||= include_params_handler.included_relationships
+  end
+
+  def active_record_relationships
+    @active_record_relationships ||= include_params_handler.active_record_relationships
   end
 
   def include_params_validator

@@ -2,9 +2,9 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves,
-               serializer: ::V2::MoveSerializer,
+               serializer: ::V2::MovesSerializer,
                include: included_relationships,
-               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+               fields: ::V2::MovesSerializer::INCLUDED_FIELDS
     end
 
     def show_and_render
@@ -146,12 +146,13 @@ module Api::V2
         .find(params[:id])
     end
 
-    def included_relationships
-      IncludeParamHandler.new(params).call
-    end
-
     def supported_relationships
-      ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
+      # for performance reasons, we support fewer include relationships on the index action
+      if action_name == 'index'
+        ::V2::MovesSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
   end
 end

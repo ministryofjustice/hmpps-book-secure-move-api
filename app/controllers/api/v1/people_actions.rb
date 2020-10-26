@@ -76,12 +76,12 @@ module Api::V1
     end
 
     def included_relationships
-      IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
+      include_params_handler.included_relationships || PersonSerializer::SUPPORTED_RELATIONSHIPS
     end
 
     def other_included_relationships
       # Custom included relationships to avoid the people actions relationships
-      @other_included_relationships ||= IncludeParamHandler.new(params).call || Api::PeopleController::OTHER_SUPPORTED_RELATIONSHIPS
+      @other_included_relationships ||= include_params_handler.included_relationships || Api::PeopleController::OTHER_SUPPORTED_RELATIONSHIPS
     end
   end
 end

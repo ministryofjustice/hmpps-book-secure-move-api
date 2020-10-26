@@ -4,12 +4,18 @@ module Api
   class MovesController < ApiController
     before_action :validate_filter_params, only: %i[index]
 
+    CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]].freeze
+
     def index
       index_and_render
     end
 
     def csv
-      send_file(Moves::Exporter.new(moves).call, type: 'text/csv', disposition: :inline)
+      csv_moves = Moves::Finder.new(filter_params: filter_params,
+                                    ability: current_ability,
+                                    order_params: params[:sort] || {},
+                                    active_record_relationships: CSV_INCLUDES).call
+      send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
     def show
@@ -27,7 +33,10 @@ module Api
   private
 
     def moves
-      @moves ||= Moves::Finder.new(filter_params, current_ability, params[:sort] || {}).call
+      @moves ||= Moves::Finder.new(filter_params: filter_params,
+                                   ability: current_ability,
+                                   order_params: params[:sort] || {},
+                                   active_record_relationships: active_record_relationships).call
     end
 
     def validate_filter_params
