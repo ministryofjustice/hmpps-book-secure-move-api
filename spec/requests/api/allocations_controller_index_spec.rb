@@ -20,6 +20,31 @@ RSpec.describe Api::AllocationsController do
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
+    describe 'meta data' do
+      let!(:allocation) { create(:allocation, :with_moves) }
+      let(:expected_json) do
+        {
+          data: [
+            {
+              'id': allocation.id,
+              'type': 'allocations',
+              'meta': {
+                'moves': {
+                  'total': 1,
+                  'filled': 1,
+                },
+              },
+            },
+          ],
+        }
+      end
+
+      it 'includes total and filled moves count' do
+        get_allocations
+        expect(response_json).to include_json(expected_json)
+      end
+    end
+
     describe 'finding results' do
       before do
         allocations_finder = instance_double('Allocations::Finder', call: Allocation.all)
