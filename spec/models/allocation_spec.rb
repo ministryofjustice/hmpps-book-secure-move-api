@@ -214,21 +214,21 @@ RSpec.describe Allocation do
     end
 
     context 'with associated moves' do
-      let!(:allocations) { create_list(:allocation, 2, :with_moves) }
+      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
 
       before do
-        described_class.first.moves.update(profile: nil)
+        described_class.first.moves.first.update(profile: nil)
       end
 
       it 'contains correct total and filled move counts' do
         expect(move_totals).to eq({
           described_class.first.id => {
-            total: 1,
-            filled: 0,
+            total: 2,
+            filled: 1,
           },
           described_class.last.id => {
-            total: 1,
-            filled: 1,
+            total: 2,
+            filled: 2,
           },
         })
       end
