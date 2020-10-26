@@ -249,4 +249,32 @@ RSpec.describe FrameworkNomisMappings::Importer do
       expect(Raven).to have_received(:capture_message).with(*personal_care_need).once
     end
   end
+
+  context 'with transaction failure' do
+    it 'raises an error if transaction fails twice' do
+      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
+
+      allow(person_escort_record).to receive(:update).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+
+      expect { described_class.new(person_escort_record: person_escort_record).call }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+    end
+
+    it 'retries the transaction if it fails only once and updates person_escort_record' do
+      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
+      nomis_sync_status = [
+        { 'resource_type' => 'alerts', 'status' => 'success' },
+      ]
+
+      # Allow update to fail first time, and second time to complete transaction
+      return_values = [:raise, true]
+      allow(person_escort_record).to receive(:update).twice do
+        return_value = return_values.shift
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : person_escort_record.update!(nomis_sync_status: nomis_sync_status)
+      end
+
+      described_class.new(person_escort_record: person_escort_record).call
+
+      expect(person_escort_record.nomis_sync_status).to eq(nomis_sync_status)
+    end
+  end
 end

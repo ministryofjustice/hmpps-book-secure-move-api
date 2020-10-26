@@ -24,7 +24,7 @@ class FrameworkResponse < VersionedModel
   def update_with_flags!(new_value)
     return unless value != new_value
 
-    ActiveRecord::Base.transaction { update_response_transaction(new_value) }
+    ApplicationRecord.retriable_transaction { update_response_transaction(new_value) }
   rescue FiniteMachine::InvalidStateError
     raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
   end
@@ -113,17 +113,5 @@ private
     person_escort_record.with_lock do
       person_escort_record.update_status!
     end
-  rescue ActiveRecord::PreparedStatementCacheExpired
-    # retry transaction once if this transaction fails
-    if retried
-      raise
-    else
-      @retried = true
-      retry
-    end
-  end
-
-  def retried
-    @retried ||= false
   end
 end

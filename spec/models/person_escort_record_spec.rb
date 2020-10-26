@@ -300,6 +300,38 @@ RSpec.describe PersonEscortRecord do
     rescue ActiveRecord::RecordInvalid
       expect(FrameworkResponse.count).to be_zero
     end
+
+    it 'raises an error if transaction fails twice' do
+      framework = create(:framework)
+      create(:framework_question, framework: framework)
+      profile = create(:profile)
+      person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
+      allow(person_escort_record).to receive(:save!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+
+      expect { person_escort_record.build_responses! }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+    end
+
+    it 'retries the transaction if it fails only once and saves person_escort_record' do
+      framework = create(:framework)
+      radio_question = create(:framework_question, framework: framework)
+      profile = create(:profile)
+      person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
+
+      # Allow update to fail first time, and second time to complete transaction
+      return_values = [:raise, true]
+      allow(person_escort_record).to receive(:save!).twice do
+        return_value = return_values.shift
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : person_escort_record.save
+      end
+
+      person_escort_record.build_responses!
+
+      expect(person_escort_record.framework_responses.first).to have_attributes(
+        framework_question_id: radio_question.id,
+        person_escort_record_id: person_escort_record.id,
+        type: 'FrameworkResponse::String',
+      )
+    end
   end
 
   describe '#import_nomis_mappings!' do
