@@ -360,6 +360,24 @@ RSpec.describe FrameworkResponse do
 
         expect(child_response.reload.responded).to be(true)
       end
+
+      it 'sets prefilled to false on dependent responses if value changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
+        parent_response.update_with_flags!([option: 'Level 2'])
+
+        expect(child_response.reload.prefilled).to be(false)
+      end
+
+      it 'does not set prefilled to false on dependent responses if value not changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
+        parent_response.update_with_flags!([option: 'Level 1'])
+
+        expect(child_response.reload.prefilled).to be(true)
+      end
     end
 
     context 'with person_escort_record status' do
@@ -423,9 +441,16 @@ RSpec.describe FrameworkResponse do
       expect(response.responded).to be(true)
     end
 
-    it 'sets the responded value to update on update with value' do
+    it 'sets the responded value to true on update with value' do
       response = create(:string_response, value: 'Yes')
       response.update(value: nil)
+
+      expect(response.responded).to be(true)
+    end
+
+    it 'sets the responded value to true on update with a prefilled value' do
+      response = create(:string_response, value: 'Yes', prefilled: true, responded: false)
+      response.update(value: 'Yes')
 
       expect(response.responded).to be(true)
     end

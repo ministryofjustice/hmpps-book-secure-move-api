@@ -68,6 +68,7 @@ class FrameworkResponse < VersionedModel
       descendant.assign_attributes(
         value: nil,
         responded: false,
+        prefilled: false,
         framework_flags: [],
       )
 
@@ -75,7 +76,7 @@ class FrameworkResponse < VersionedModel
     end
 
     # Retain the class to avoid any clashes in implementation as this is utilising STI
-    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
+    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded prefilled])
   end
 
   def self.descendants_tree(ids)
