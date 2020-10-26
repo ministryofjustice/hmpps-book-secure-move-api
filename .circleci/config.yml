@@ -445,7 +445,7 @@ jobs:
             echo "Deleting:"
             aws ecr batch-delete-image \
             --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-            --image-ids ${TO_DELETE}
+            --image-ids "${TO_DELETE}"
       - run:
           name: Confirm live latest images
           command: |
