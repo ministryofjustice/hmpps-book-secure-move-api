@@ -94,7 +94,7 @@ class Allocation < VersionedModel
 
   def self.move_totals
     # Isolate this query from any higher level query that may include existing joins on moves
-    rows = Allocation.where(id: pluck(:id))
+    rows = unscoped.where(id: pluck(:id).uniq)
       # Join with matching (non cancelled) moves within the allocation (if any) so we can count them
       .joins("LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id AND moves.status <> 'cancelled'")
       .group('allocations.id')
