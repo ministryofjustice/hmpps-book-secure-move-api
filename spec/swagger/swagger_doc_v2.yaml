@@ -478,7 +478,7 @@
             enum:
               - asc
               - desc
-        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
+        - "$ref": "../v2/moves_include_parameter.yaml#/MovesIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:

@@ -1,0 +1,23 @@
+MovesIncludeParameter:
+  name: include
+  description: Returns a specific list of related resources to the moves
+  in: query
+  style: form
+  explode: false
+  schema:
+    type: string
+    enum:
+      - allocation
+      - from_location
+      - prison_transfer_reason
+      - profile.person
+      - profile.person.ethnicity
+      - profile.person.gender
+      - profile.person_escort_record
+      - profile.person_escort_record.flags
+      - profile.person_escort_record.framework
+      - profile.person_escort_record.responses
+      - supplier
+      - to_location
+
+  example: from_location

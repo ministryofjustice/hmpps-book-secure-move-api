@@ -34,6 +34,7 @@ module V2
     }.freeze
 
     SUPPORTED_RELATIONSHIPS = %w[
+      profile.person
       profile.person.ethnicity
       profile.person.gender
       profile.person_escort_record
