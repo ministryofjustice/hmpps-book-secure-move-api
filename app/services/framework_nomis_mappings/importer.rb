@@ -14,7 +14,7 @@ module FrameworkNomisMappings
     def call
       return unless person_escort_record && framework_responses.any? && framework_nomis_codes.any?
 
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.retriable_transaction do
         return unless persist_framework_nomis_mappings.any?
 
         framework_responses.includes(:framework_nomis_mappings).each do |response|

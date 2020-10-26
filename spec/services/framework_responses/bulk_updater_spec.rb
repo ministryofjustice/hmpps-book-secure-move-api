@@ -63,6 +63,32 @@ RSpec.describe FrameworkResponses::BulkUpdater do
         expect(response.reload.value).to be_nil
       end
     end
+
+    context 'with transaction failure' do
+      it 'raises an error if transaction fails twice' do
+        per = create(:person_escort_record)
+        response = create(:string_response, person_escort_record: per, value: nil)
+        allow(FrameworkResponse).to receive(:import).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+
+        expect { described_class.new(per, { response.id => 'Yes' }).call }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+      end
+
+      it 'retries the transaction if it fails only once and updates responses' do
+        per = create(:person_escort_record)
+        response = create(:string_response, person_escort_record: per, value: nil)
+
+        # Allow update to fail first time, and second time to complete transaction
+        return_values = [:raise, true]
+        allow(FrameworkResponse).to receive(:import).twice do
+          return_value = return_values.shift
+          return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
+        end
+
+        described_class.new(per, { response.id => 'Yes' }).call
+
+        expect(response.reload.value).to eq('Yes')
+      end
+    end
   end
 
   context 'with validation error' do

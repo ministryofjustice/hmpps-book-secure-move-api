@@ -18,7 +18,7 @@ module FrameworkResponses
       return if updated_responses.empty?
 
       # Ensure atomic behaviour as we don't want partial inconsistent updates
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.retriable_transaction do
         apply_bulk_response_changes(updated_responses)
         apply_person_escort_record_changes
       end
