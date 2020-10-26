@@ -3,11 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe Moves::Finder do
-  subject(:results) { described_class.new(
+  subject(:results) do
+    described_class.new(
       filter_params: filter_params,
       ability: ability,
       order_params: order_params,
-      active_record_relationships: active_record_relationships).call }
+      active_record_relationships: active_record_relationships,
+    ).call
+  end
 
   let(:filter_params) { {} }
   let(:application) { Doorkeeper::Application.new(name: 'test') }

@@ -113,14 +113,14 @@ module Moves
     end
 
     def apply_ready_for_transit_filters(scope)
-      return scope unless filter_params.key?(:ready_for_transit) && ['true', 'false'].include?(filter_params[:ready_for_transit])
+      return scope unless filter_params.key?(:ready_for_transit) && %w[true false].include?(filter_params[:ready_for_transit])
 
       scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
-      if filter_params[:ready_for_transit] == 'true'
-        scope = scope.where('person_escort_records.status' => 'confirmed')
-      else
-        scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
-      end
+      scope = if filter_params[:ready_for_transit] == 'true'
+                scope.where('person_escort_records.status' => 'confirmed')
+              else
+                scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
+              end
       scope
     end
   end
