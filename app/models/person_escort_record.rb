@@ -62,7 +62,7 @@ class PersonEscortRecord < VersionedModel
   end
 
   def build_responses!
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.retriable_transaction do
       save!
 
       questions = framework_questions.includes(:dependents).index_by(&:id)
