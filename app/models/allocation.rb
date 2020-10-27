@@ -96,10 +96,10 @@ class Allocation < VersionedModel
     # Isolate this query from any higher level query that may include existing joins on moves
     rows = unscoped.where(id: pluck(:id).uniq)
       # Join with matching (non cancelled) moves within the allocation (if any) so we can count them
-      .joins("LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id AND moves.status <> 'cancelled'")
+      .joins('LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id')
       .group('allocations.id')
       # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(
-      .pluck(Arel.sql('allocations.id, count(moves), count(moves) filter (where moves.profile_id is not null), count(moves) filter (where moves.profile_id is null)'))
+      .pluck(Arel.sql("allocations.id, COUNT(moves), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NOT NULL), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NULL)"))
 
     # Map array of returned rows/columns into a nicer hash structure keyed by id
     rows.each_with_object({}) do |row, totals_hash|
