@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.6.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.1) (2020-10-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.0...v2.6.1)
+
+**Merged pull requests:**
+
+- Changelog v2.6.0 [\#1083](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1083) ([cwrw](https://github.com/cwrw))
+
 ## [v2.6.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.0) (2020-10-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.9...v2.6.0)
