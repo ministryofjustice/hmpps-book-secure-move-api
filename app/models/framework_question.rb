@@ -22,14 +22,14 @@ class FrameworkQuestion < VersionedModel
   has_many :framework_responses
   has_and_belongs_to_many :framework_nomis_codes, autosave: true
 
-  def build_responses(question: self, person_escort_record:, questions:)
-    response = build_response(question, person_escort_record)
+  def build_responses(question: self, person_escort_record:, questions:, previous_responses: {})
+    response = build_response(question, person_escort_record, previous_responses[question.key])
     return response if question.dependents.empty? || question.question_type == 'add_multiple_items'
 
     question.dependents.each do |dependent_question|
       # NB: to avoid extra queries use original set of questions
-      dependent_response = build_responses(question: questions[dependent_question.id], person_escort_record: person_escort_record, questions: questions)
-      dependent_response_values = dependent_response.slice(:type, :framework_question_id, :dependents, :person_escort_record)
+      dependent_response = build_responses(question: questions[dependent_question.id], person_escort_record: person_escort_record, questions: questions, previous_responses: previous_responses)
+      dependent_response_values = dependent_response.slice(:type, :framework_question, :dependents, :person_escort_record, :value, :prefilled)
       response.dependents.build(dependent_response_values)
     end
 
@@ -49,7 +49,7 @@ class FrameworkQuestion < VersionedModel
     end
   end
 
-  def build_response(question, person_escort_record)
+  def build_response(question, person_escort_record, previous_response = nil)
     klass =
       case question.question_type
       when 'radio'
@@ -62,6 +62,6 @@ class FrameworkQuestion < VersionedModel
         FrameworkResponse::String
       end
 
-    klass.new(framework_question_id: question.id, person_escort_record: person_escort_record)
+    klass.new(framework_question: question, person_escort_record: person_escort_record, value: previous_response, prefilled: previous_response.present?)
   end
 end

@@ -32,6 +32,7 @@ RSpec.describe Api::AllocationsController do
                 'moves': {
                   'total': 1,
                   'filled': 1,
+                  'unfilled': 0,
                 },
               },
             },
