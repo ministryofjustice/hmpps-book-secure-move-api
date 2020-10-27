@@ -204,10 +204,12 @@ RSpec.describe Allocation do
           described_class.first.id => {
             total: 0,
             filled: 0,
+            unfilled: 0,
           },
           described_class.last.id => {
             total: 0,
             filled: 0,
+            unfilled: 0,
           },
         })
       end
@@ -225,10 +227,12 @@ RSpec.describe Allocation do
           described_class.first.id => {
             total: 2,
             filled: 1,
+            unfilled: 1,
           },
           described_class.last.id => {
             total: 2,
             filled: 2,
+            unfilled: 0,
           },
         })
       end
