@@ -27,7 +27,7 @@ class FrameworkResponse
     end
 
     def prefill_value
-      return [] unless multiple_items?
+      return super unless multiple_items?
 
       value.each_with_object([]) do |item, prefill_items|
         item['responses'] = responses_to_prefill(item['responses'])

@@ -334,10 +334,17 @@ RSpec.describe FrameworkResponse::Collection do
   end
 
   describe '#prefill_value' do
-    it 'returns nothing if collection not multiple items' do
+    it 'returns default if collection not multiple items and question is not to be prefilled' do
       response = create(:collection_response, :details)
 
-      expect(response.prefill_value).to be_empty
+      expect(response.prefill_value).to be_nil
+    end
+
+    it 'returns default if collection not multiple items and question is to be prefilled' do
+      framework_question = create(:framework_question, followup_comment: true, prefill: true)
+      response = create(:collection_response, :details, framework_question: framework_question)
+
+      expect(response.prefill_value).to eq([{ 'details' => 'some comment', 'option' => 'Level 1' }, { 'details' => 'another comment', 'option' => 'Level 2' }])
     end
 
     it 'returns nothing if no multiple item dependent questions should be prefilled' do
