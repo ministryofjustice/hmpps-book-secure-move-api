@@ -1,5 +1,24 @@
 # Changelog
 
+## [v2.5.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.9) (2020-10-26)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.8...v2.5.9)
+
+**Merged pull requests:**
+
+- include person\_escort\_record relationship in moves serializer [\#1078](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1078) ([martyn-w](https://github.com/martyn-w))
+- Fix ECR cleanup job [\#1077](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1077) ([mafonso](https://github.com/mafonso))
+- IM-60 Retry long transactions if they fail [\#1076](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1076) ([cwrw](https://github.com/cwrw))
+- Bump simplecov from 0.19.0 to 0.19.1 [\#1075](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1075) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update ENV variables to latest NOMIS envs [\#1074](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1074) ([cwrw](https://github.com/cwrw))
+- Add log warn to OAuth2::Errors [\#1073](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1073) ([Thource](https://github.com/Thource))
+- Add support for custom move count metadata on `GET /allocations` [\#1070](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1070) ([smoothcontract](https://github.com/smoothcontract))
+- Ensure that metadata is only provided for paginated subset of locations [\#1069](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1069) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1068](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1068) ([martyn-w](https://github.com/martyn-w))
+- P4 2338 import prisoner category [\#1067](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1067) ([martyn-w](https://github.com/martyn-w))
+- P4-2355 Add feature flag ability to the API [\#1065](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1065) ([cwrw](https://github.com/cwrw))
+- P4 2379 moves index serializer deploydev [\#1056](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1056) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.5.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.8) (2020-10-22)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.7...v2.5.8)
