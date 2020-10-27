@@ -70,6 +70,10 @@ class Move < VersionedModel
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
   ].freeze
 
+  # NB: prisoner categories A, High (H), Extremely High (E) are prevented from using this service
+  # there may be a future requirement to also prevent: P (provisional A), Q (female) and V (YOI)
+  UNSUPPORTED_PRISONER_CATEGORIES = %w[A H E].freeze
+
   belongs_to :supplier
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location', optional: true
@@ -109,6 +113,7 @@ class Move < VersionedModel
   validates :rejection_reason, absence: true, unless: :rejected?
 
   validate :date_to_after_date_from
+  validate :validate_prisoner_category
 
   before_validation :set_reference
   before_validation :set_move_type
@@ -245,5 +250,11 @@ private
       .where.not(id: id) # When updating an existing move, don't consider self a duplicate
 
     errors.add(:date, :taken) if existing_moves.any?
+  end
+
+  def validate_prisoner_category
+    if profile&.category_code.present? && UNSUPPORTED_PRISONER_CATEGORIES.include?(profile.category_code)
+      errors.add(:profile, :unsupported_prisoner_category, message: "person is a category '#{profile.category_code}' prisoner and cannot be moved using this service")
+    end
   end
 end

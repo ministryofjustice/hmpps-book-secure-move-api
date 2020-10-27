@@ -519,6 +519,50 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'when the profile is for a Cat A prisoner' do
+      let(:cat_a_profile) { create(:profile, :category_a) }
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: { profile: { data: { id: cat_a_profile.id, type: 'profiles' } } },
+        }
+      end
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Profile person is a category 'a' prisoner and cannot be moved using this service",
+            'source' => { 'pointer' => '/data/attributes/profile' },
+            'code' => 'unsupported_prisoner_category',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_patch }
+      end
+    end
+
+    context 'when the profile is for a Cat B prisoner' do
+      let(:cat_b_profile) { create(:profile, :category_b) }
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: { profile: { data: { id: cat_b_profile.id, type: 'profiles' } } },
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before { do_patch }
+      end
+    end
+
     def do_patch
       patch "/api/moves/#{move_id}", params: patch_params, headers: headers, as: :json
     end
