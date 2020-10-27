@@ -13,6 +13,16 @@ RSpec.describe FrameworkResponses::BulkUpdater do
     expect(response2.reload).to be_responded
   end
 
+  it 'marks values as responded if they have been prefilled' do
+    per = create(:person_escort_record)
+    response1 = create(:string_response, person_escort_record: per, value: 'Yes', prefilled: true, responded: false)
+    response2 = create(:string_response, person_escort_record: per, value: 'No', prefilled: true, responded: false)
+    described_class.new(per, { response1.id => 'Yes', response2.id => 'No' }).call
+
+    expect(response1.reload).to be_responded
+    expect(response2.reload).to be_responded
+  end
+
   it 'updates response values' do
     per = create(:person_escort_record)
     response1 = create(:string_response, person_escort_record: per, value: nil)

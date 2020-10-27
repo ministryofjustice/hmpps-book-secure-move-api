@@ -39,6 +39,12 @@ class FrameworkResponse < VersionedModel
     self.framework_flags = framework_question.framework_flags.select { |flag| option_selected?(flag.question_value) }
   end
 
+  def prefill_value
+    return unless framework_question.prefill
+
+    value
+  end
+
   def self.requires_value?(value, record)
     return false if value.present? || !record.framework_question.required
 
@@ -62,6 +68,7 @@ class FrameworkResponse < VersionedModel
       descendant.assign_attributes(
         value: nil,
         responded: false,
+        prefilled: false,
         framework_flags: [],
       )
 
@@ -69,7 +76,7 @@ class FrameworkResponse < VersionedModel
     end
 
     # Retain the class to avoid any clashes in implementation as this is utilising STI
-    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
+    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded prefilled])
   end
 
   def self.descendants_tree(ids)

@@ -26,6 +26,16 @@ class FrameworkResponse
       value.map { |v| v['option'] }.include?(option)
     end
 
+    def prefill_value
+      return super unless multiple_items?
+
+      value.each_with_object([]) do |item, prefill_items|
+        item['responses'] = responses_to_prefill(item['responses'])
+
+        prefill_items << item unless item['responses'].empty?
+      end
+    end
+
   private
 
     def details_collection(collection)
@@ -73,6 +83,13 @@ class FrameworkResponse
 
     def value_type_valid?(raw_value)
       raw_value.is_a?(::Array) && raw_value.all?(::Hash)
+    end
+
+    def responses_to_prefill(responses)
+      responses.select do |response|
+        question = framework_question.dependents.find { |dependent| dependent.id == response['framework_question_id'] }
+        question&.prefill
+      end
     end
   end
 end

@@ -6,7 +6,8 @@ RSpec.describe Person do
   subject(:person) { create(:person) }
 
   it { is_expected.to have_many(:profiles) }
-  it { is_expected.to have_many(:moves) }
+  it { is_expected.to have_many(:moves).through(:profiles) }
+  it { is_expected.to have_many(:person_escort_records).through(:profiles) }
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:first_names) }
@@ -74,6 +75,36 @@ RSpec.describe Person do
 
     it 'generates a feed document' do
       expect(person.for_feed).to include_json(expected_json)
+    end
+  end
+
+  describe '#latest_person_escort_record' do
+    it 'does not return anything if no person escort record found for person' do
+      expect(person.latest_person_escort_record).to be_nil
+    end
+
+    it 'does not return anything if no confirmed person escort record found for person' do
+      create(:person_escort_record, profile: person.profiles.first)
+
+      expect(person.latest_person_escort_record).to be_nil
+    end
+
+    it 'returns a confirmed person escort record for a person' do
+      profile1 = create(:profile, person: person)
+      profile2 = create(:profile, person: person)
+      confirmed_person_escort_record = create(:person_escort_record, :confirmed, profile: profile1)
+      create(:person_escort_record, profile: profile2)
+
+      expect(person.latest_person_escort_record).to eq(confirmed_person_escort_record)
+    end
+
+    it 'returns the newest confirmed person escort record for a person' do
+      profile1 = create(:profile, person: person)
+      profile2 = create(:profile, person: person)
+      newest_person_escort_record = create(:person_escort_record, :confirmed, confirmed_at: Time.zone.today, profile: profile1)
+      create(:person_escort_record, :confirmed, confirmed_at: Time.zone.yesterday, profile: profile2)
+
+      expect(person.latest_person_escort_record).to eq(newest_person_escort_record)
     end
   end
 end
