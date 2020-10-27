@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.6.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.0) (2020-10-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.9...v2.6.0)
+
+**Merged pull requests:**
+
+- Changelog v2.5.9 [\#1082](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1082) ([cwrw](https://github.com/cwrw))
+- Add unfilled moves count to allocations meta [\#1081](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1081) ([smoothcontract](https://github.com/smoothcontract))
+- P4-2354 Prefill Person Escort Records on Creation [\#1071](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1071) ([cwrw](https://github.com/cwrw))
+
 ## [v2.5.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.5.9) (2020-10-26)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.5.8...v2.5.9)
