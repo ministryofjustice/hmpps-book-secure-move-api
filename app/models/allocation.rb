@@ -99,13 +99,13 @@ class Allocation < VersionedModel
       .joins('LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id')
       .group('allocations.id')
       # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(
-      .pluck(Arel.sql("allocations.id, COUNT(moves), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NOT NULL), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NULL)"))
+      .pluck(Arel.sql("allocations.id, allocations.status, COUNT(moves), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled'), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NOT NULL), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NULL)"))
 
     # Map array of returned rows/columns into a nicer hash structure keyed by id
     rows.each_with_object({}) do |row, totals_hash|
-      allocation_id, total_moves, filled_moves, unfilled_moves = *row
+      allocation_id, allocation_status, total_moves, uncancelled_moves, filled_moves, unfilled_moves = *row
       totals_hash[allocation_id] = {
-        total: total_moves,
+        total: (allocation_status == ALLOCATION_STATUS_CANCELLED ? total_moves : uncancelled_moves),
         filled: filled_moves,
         unfilled: unfilled_moves,
       }

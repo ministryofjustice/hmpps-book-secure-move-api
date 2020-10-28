@@ -176,7 +176,7 @@ Allocation:
             total:
               type: integer
               example: 10
-              description: Total number of moves associated with this allocation, irrespective of move status (i.e. includes cancelled moves)
+              description: Total number of moves associated with this allocation. If the allocation is cancelled, this returns all moves irrespective of move status (i.e. includes cancelled moves). If the allocation is not yet cancelled then this total excludes cancelled moves that are part of the allocation.
             filled:
               type: integer
               example: 6
