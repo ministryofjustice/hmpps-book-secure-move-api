@@ -719,3 +719,45 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/422"
+  "/categories":
+    get:
+      summary: Retrieves the prisoner's category from the prison-API for prisoners with a booking in NOMIS
+      description: |
+        This method calls the `GET /booking/{booking_id}` in the Prison-API and returns a prisoner's category, if available.
+        It also returns a boolean flag indicating whether the prisoner category is suitable for the Book a Secure Move
+        service. Note that prisoner categories A, H and E should not be moved via this service.
+
+        You must specify the person_id as a filter parameter, e.g. `GET /api/categories?filter[person_id]=1234`
+      tags:
+        - Categories
+      parameters:
+        - name: filter[person_id]
+          description:
+            Filters results to only include the category of the specified person UUID
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+          required: true
+      responses:
+        "404":
+          description: not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/404"
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/200"
+        "504":
+          description: Nomis Timeout Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_people_responses.yaml#/504"

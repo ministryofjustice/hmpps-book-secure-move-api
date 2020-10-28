@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         post 'cancel', controller: 'allocation_events'
       end
     end
+    resources :categories, only: %i[index]
     resources :court_hearings, only: %i[create]
     resources :documents, only: %i[create]
     resources :people, only: %i[index create update] do
