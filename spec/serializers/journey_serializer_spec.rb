@@ -66,41 +66,4 @@ RSpec.describe JourneySerializer do
       expect(result[:included]).to(include_json(expected_json))
     end
   end
-
-  describe 'generic_events' do
-    let(:adapter_options) { { include: %i[events] } }
-
-    context 'with generic events' do
-      let(:now) { Time.zone.now }
-      let!(:first_event) { create(:event_journey_uncancel, eventable: journey, occurred_at: now + 2.seconds) }
-      let!(:second_event) { create(:event_journey_cancel, eventable: journey, occurred_at: now + 1.second) }
-      let!(:third_event) { create(:event_journey_start, eventable: journey, occurred_at: now) }
-
-      let(:expected_event_relationships) do
-        [
-          { id: third_event.id, type: 'events' },
-          { id: second_event.id, type: 'events' },
-          { id: first_event.id, type: 'events' },
-        ]
-      end
-
-      it 'contains event relationships in the correct order' do
-        expect(result[:data][:relationships][:events]).to eq(data: expected_event_relationships)
-      end
-
-      it 'contains included events in the correct order' do
-        expect(result[:included].map { |event| event[:id] }).to match_array([third_event.id, second_event.id, first_event.id])
-      end
-    end
-
-    context 'without generic events' do
-      it 'contains an empty allocation' do
-        expect(result[:data][:relationships][:events]).to eq(data: [])
-      end
-
-      it 'does not contain an included event' do
-        expect(result[:included]).to be_blank
-      end
-    end
-  end
 end

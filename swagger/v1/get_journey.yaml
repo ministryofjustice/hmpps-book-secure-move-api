@@ -62,6 +62,3 @@ GetJourney:
         to_location:
           $ref: location_reference.yaml#/LocationReference
           description: The location that the journey is going to
-        events:
-          $ref: event_reference.yaml#/EventReference
-          description: Event about this record

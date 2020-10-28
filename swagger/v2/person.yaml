@@ -69,6 +69,3 @@ Person:
         ethnicity:
           $ref: "../v1/ethnicity_reference.yaml#/EthnicityReference"
           description: Person's ethnicity
-        events:
-          $ref: "../v1/event_reference.yaml#/EventReference"
-          description: Event about this record
