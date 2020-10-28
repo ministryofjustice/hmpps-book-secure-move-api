@@ -222,7 +222,7 @@ RSpec.describe Allocation do
         described_class.first.moves.first.update(profile: nil)
       end
 
-      it 'contains correct total and filled move counts' do
+      it 'contains correct total, filled and unfilled move counts' do
         expect(move_totals).to eq({
           described_class.first.id => {
             total: 2,
@@ -232,6 +232,48 @@ RSpec.describe Allocation do
           described_class.last.id => {
             total: 2,
             filled: 2,
+            unfilled: 0,
+          },
+        })
+      end
+    end
+
+    context 'with cancelled moves on a current allocation' do
+      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
+
+      before do
+        described_class.first.moves.first.update(status: 'cancelled', cancellation_reason: 'other')
+        described_class.last.moves.first.update(profile: nil, status: 'cancelled', cancellation_reason: 'other')
+      end
+
+      it 'excludes cancelled moves from all move counts' do
+        expect(move_totals).to eq({
+          described_class.first.id => {
+            total: 1,
+            filled: 1, # Excludes filled cancelled move
+            unfilled: 0,
+          },
+          described_class.last.id => {
+            total: 1,
+            filled: 1,
+            unfilled: 0, # Excludes unfilled cancelled move
+          },
+        })
+      end
+    end
+
+    context 'with cancelled moves on a cancelled allocation' do
+      let!(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
+
+      before do
+        described_class.first.moves.update_all(status: 'cancelled', cancellation_reason: 'other')
+      end
+
+      it 'includes cancelled moves in total count' do
+        expect(move_totals).to eq({
+          described_class.first.id => {
+            total: 2, # Still two moves in total, ignoring status
+            filled: 0,
             unfilled: 0,
           },
         })
