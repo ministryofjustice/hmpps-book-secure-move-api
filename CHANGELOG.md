@@ -1,5 +1,22 @@
 # Changelog
 
+## [v2.6.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.2) (2020-10-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.1...v2.6.2)
+
+**Merged pull requests:**
+
+- Add capability of running every/each feed on a specific date [\#1092](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1092) ([willfish](https://github.com/willfish))
+- Bump puma from 5.0.2 to 5.0.4 [\#1088](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1088) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump elastic-apm from 3.10.1 to 3.11.0 [\#1087](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1087) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog 2.6.1 [\#1086](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1086) ([cwrw](https://github.com/cwrw))
+- P4 2339 validate prisoner category [\#1085](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1085) ([martyn-w](https://github.com/martyn-w))
+- Tweak totals count for allocations metadata [\#1084](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1084) ([smoothcontract](https://github.com/smoothcontract))
+- Bump bootsnap from 1.4.8 to 1.4.9 [\#1080](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1080) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add log warn to OAuth2::Errors [\#1073](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1073) ([Thource](https://github.com/Thource))
+- \[P4-1976\] Support include alias for event timeline [\#1072](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1072) ([willfish](https://github.com/willfish))
+- Remove profile from creation of person escort record [\#1045](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1045) ([cwrw](https://github.com/cwrw))
+
 ## [v2.6.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.1) (2020-10-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.0...v2.6.1)
