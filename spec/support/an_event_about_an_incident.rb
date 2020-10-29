@@ -6,7 +6,7 @@ RSpec.shared_examples 'an event about an incident' do
 
   let(:fault_classifications) do
     %w[
-      not_supplier
+      was_not_supplier
       supplier
       investigation
     ]
