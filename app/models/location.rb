@@ -12,6 +12,7 @@ class Location < ApplicationRecord
   LOCATION_TYPE_FOREIGN_NATIONAL_PRISON = 'foreign_national_prison'
   LOCATION_TYPE_VOLUNTARY_HOSTEL = 'voluntary_hostel'
   LOCATION_TYPE_HIGH_SECURITY_HOSPITAL = 'high_security_hospital'
+  LOCATION_TYPE_HOSPITAL = 'hospital'
   LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE = 'immigration_detention_centre'
 
   enum location_type: {
@@ -26,6 +27,7 @@ class Location < ApplicationRecord
     foreign_national_prison: LOCATION_TYPE_FOREIGN_NATIONAL_PRISON,
     voluntary_hostel: LOCATION_TYPE_VOLUNTARY_HOSTEL,
     high_security_hospital: LOCATION_TYPE_HIGH_SECURITY_HOSPITAL,
+    hospital: LOCATION_TYPE_HOSPITAL,
     immigration_detention_centre: LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE,
   }
 
@@ -41,6 +43,7 @@ class Location < ApplicationRecord
     'FNP' => LOCATION_TYPE_FOREIGN_NATIONAL_PRISON,
     'HOST' => LOCATION_TYPE_VOLUNTARY_HOSTEL,
     'HSHOSP' => LOCATION_TYPE_HIGH_SECURITY_HOSPITAL,
+    'HOSPITAL' => LOCATION_TYPE_HOSPITAL,
     'IMDC' => LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE,
   }.freeze
 

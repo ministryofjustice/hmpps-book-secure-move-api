@@ -41,6 +41,7 @@ Location:
           - community_rehabilitation_company
           - foreign_national_prison
           - voluntary_hostel
+          - hospital
           - high_security_hospital
           - immigration_detention_centre
           example: court
