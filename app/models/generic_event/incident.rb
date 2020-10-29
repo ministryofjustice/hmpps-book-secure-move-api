@@ -7,7 +7,7 @@ class GenericEvent
       child.relationship_attributes :location_id
       child.eventable_types 'Move', 'Person'
       child.enum fault_classification: {
-        not_supplier: 'not_supplier',
+        was_not_supplier: 'was_not_supplier',
         supplier: 'supplier',
         investigation: 'investigation',
       }
