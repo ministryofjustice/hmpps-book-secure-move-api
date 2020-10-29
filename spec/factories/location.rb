@@ -24,11 +24,18 @@ FactoryBot.define do
       nomis_agency_id { 'GUICCT' }
     end
 
-    trait :hospital do
+    trait :high_security_hospital do
       sequence(:key) { |x| "secure_hospital_#{x}" }
       title { "#{Faker::Address.city} Secure Hospital" }
       location_type { Location::LOCATION_TYPE_HIGH_SECURITY_HOSPITAL }
       nomis_agency_id { 'GUISH' }
+    end
+
+    trait :hospital do
+      sequence(:key) { |x| "hospital_#{x}" }
+      title { "#{Faker::Address.city} Hospital" }
+      location_type { Location::LOCATION_TYPE_HOSPITAL }
+      nomis_agency_id { 'GUIHOSP' }
     end
 
     trait :police do

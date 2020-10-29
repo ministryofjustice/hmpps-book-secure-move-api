@@ -82,7 +82,7 @@ RSpec.describe Api::MoveEventsController do
 
     context 'with a hospital move' do
       let(:move) { create(:move, :hospital) }
-      let(:new_location) { create(:location, :hospital) }
+      let(:new_location) { create(:location, :high_security_hospital) }
 
       it 'updates the move to_location' do
         expect(move.reload.to_location).to eql(new_location)

@@ -70,7 +70,7 @@ RSpec.describe Moves::MoveTypeValidator do
     let(:move_type) { 'hospital' }
 
     it 'validates `to_location` is a high_security_hospital' do
-      target.to_location = build(:location, :hospital)
+      target.to_location = build(:location, :high_security_hospital)
       expect(target).to be_valid
     end
 
