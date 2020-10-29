@@ -292,7 +292,7 @@ RSpec.describe Api::MovesController do
 
     context 'with explicit court_other `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'court_other') }
-      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+      let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -311,7 +311,7 @@ RSpec.describe Api::MovesController do
 
     context 'with explicit hospital `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
-      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+      let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
