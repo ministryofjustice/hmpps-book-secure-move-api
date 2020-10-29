@@ -40,7 +40,13 @@ class ApiController < ApplicationController
   end
 
   def user_for_paper_trail
+    return headers['X-Current-User'] if headers['X-Current-User'].present?
+
     current_user.owner_id
+  end
+
+  def info_for_paper_trail
+    { user_type: headers['X-Current-User'].present? ? 'user' : 'supplier' }
   end
 
 private

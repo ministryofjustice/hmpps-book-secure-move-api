@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_22_072140) do
+ActiveRecord::Schema.define(version: 2020_10_29_093313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -587,6 +587,7 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
+    t.string "user_type"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
