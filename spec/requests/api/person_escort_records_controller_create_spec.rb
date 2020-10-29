@@ -27,10 +27,10 @@ RSpec.describe Api::PersonEscortRecordsController do
             "version": framework_version,
           },
           "relationships": {
-            "profile": {
+            "move": {
               "data": {
-                "id": profile_id,
-                "type": 'profiles',
+                "id": move_id,
+                "type": 'moves',
               },
             },
           },
@@ -41,86 +41,6 @@ RSpec.describe Api::PersonEscortRecordsController do
     before { post_person_escort_record }
 
     context 'when successful' do
-      let(:schema) { load_yaml_schema('post_person_escort_record_responses.yaml') }
-      let(:data) do
-        {
-          "id": PersonEscortRecord.last.id,
-          "type": 'person_escort_records',
-          "attributes": {
-            "version": framework_version,
-            "status": 'not_started',
-            "confirmed_at": nil,
-            "nomis_sync_status": [],
-          },
-          "meta": {
-            'section_progress' => [
-              {
-                "key": 'risk-information',
-                "status": 'not_started',
-              },
-            ],
-          },
-          "relationships": {
-            "profile": {
-              "data": {
-                "id": profile_id,
-                "type": 'profiles',
-              },
-            },
-            "move": {
-              "data": {},
-            },
-            "framework": {
-              "data": {
-                "id": framework.id,
-                "type": 'frameworks',
-              },
-            },
-            "responses": {
-              "data": [
-                {
-                  "id": FrameworkResponse.last.id,
-                  "type": 'framework_responses',
-                },
-              ],
-            },
-            "flags": {
-              "data": [],
-            },
-            "prefill_source": {
-              "data": nil,
-            },
-          },
-        }
-      end
-
-      it_behaves_like 'an endpoint that responds with success 201'
-
-      it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
-      end
-    end
-
-    # TODO: Remove profile id and transition to Move id, for now accept both
-    context 'when successful with move' do
-      let(:person_escort_record_params) do
-        {
-          data: {
-            "type": 'person_escort_records',
-            "attributes": {
-              "version": framework_version,
-            },
-            "relationships": {
-              "move": {
-                "data": {
-                  "id": move_id,
-                  "type": 'moves',
-                },
-              },
-            },
-          },
-        }
-      end
       let(:schema) { load_yaml_schema('post_person_escort_record_responses.yaml') }
       let(:data) do
         {
@@ -290,9 +210,9 @@ RSpec.describe Api::PersonEscortRecordsController do
         it_behaves_like 'an endpoint that responds with error 400'
       end
 
-      context 'when the profile is not found' do
-        let(:profile_id) { 'foo-bar' }
-        let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
+      context 'when the move is not found' do
+        let(:move_id) { 'foo-bar' }
+        let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
@@ -353,10 +273,10 @@ RSpec.describe Api::PersonEscortRecordsController do
             data: {
               "type": 'person_escort_records',
               "relationships": {
-                "profile": {
+                "move": {
                   "data": {
-                    "id": profile_id,
-                    "type": 'profiles',
+                    "id": move_id,
+                    "type": 'moves',
                   },
                 },
               },

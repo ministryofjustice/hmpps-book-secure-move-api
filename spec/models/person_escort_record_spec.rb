@@ -41,10 +41,6 @@ RSpec.describe PersonEscortRecord do
   end
 
   describe '.save_with_responses!' do
-    it 'returns error if profile does not exist' do
-      expect { described_class.save_with_responses!(profile_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
     it 'returns error if move does not exist' do
       expect { described_class.save_with_responses!(move_id: 'some-id', version: '1.2') }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -65,37 +61,29 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns framework with version specified' do
       framework = create(:framework, version: '1.2.1')
-      profile = create(:profile)
-      described_class.save_with_responses!(profile_id: profile.id, version: '1.2.1')
+      move = create(:move)
+      described_class.save_with_responses!(move_id: move.id, version: '1.2.1')
 
       expect(described_class.last.framework).to eq(framework)
     end
 
     it 'returns error if wrong framework version passed' do
       create(:framework, version: '1.2.1')
-      profile = create(:profile)
+      move = create(:move)
 
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { described_class.save_with_responses!(move_id: move.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if no framework version passed' do
       create(:framework, version: '1.0.0')
-      profile = create(:profile)
-      expect { described_class.save_with_responses!(profile_id: profile.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      move = create(:move)
+      expect { described_class.save_with_responses!(move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if nil framework version passed' do
       create(:framework, version: '1.0.0')
-      profile = create(:profile)
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it 'does not allow multiple person_escort_records on a profile' do
-      profile = create(:profile)
-      framework = create(:framework)
-      described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
-
-      expect { described_class.save_with_responses!(profile_id: profile.id, version: framework.version) }.to raise_error(ActiveRecord::RecordInvalid)
+      move = create(:move)
+      expect { described_class.save_with_responses!(move_id: move.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'does not allow multiple person_escort_records on a profile through move' do
@@ -108,18 +96,18 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'sets initial status to unstarted' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
 
-      expect(described_class.save_with_responses!(profile_id: profile.id, version: framework.version).status).to eq('unstarted')
+      expect(described_class.save_with_responses!(move_id: move.id, version: framework.version).status).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       create(:framework_question, :checkbox, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_responses.count).to eq(2)
     end
@@ -151,10 +139,10 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'sets correct response for framework questions' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       checkbox_question = create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: checkbox_question.id,
@@ -163,10 +151,10 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'allows access to framework question through person escort record' do
-      profile = create(:profile)
+      move = create(:move)
       framework = create(:framework)
       create(:framework_question, :checkbox, framework: framework)
-      person_escort_record = described_class.save_with_responses!(profile_id: profile.id, version: framework.version)
+      person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(person_escort_record.framework_questions.count).to eq(1)
     end
@@ -179,10 +167,12 @@ RSpec.describe PersonEscortRecord do
         person = create(:person)
         profile1 = create(:profile, person: person)
         profile2 = create(:profile, person: person)
+        move1 = create(:move, profile: profile1)
+        move2 = create(:move, profile: profile2)
         framework = create(:framework)
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first.value).to be_nil
       end
@@ -192,6 +182,8 @@ RSpec.describe PersonEscortRecord do
       let(:person) { create(:person) }
       let(:profile1) { create(:profile, person: person) }
       let(:profile2) { create(:profile, person: person) }
+      let(:move1) { create(:move, profile: profile1) }
+      let(:move2) { create(:move, profile: profile2) }
       let(:framework) { create(:framework) }
 
       before do
@@ -200,41 +192,42 @@ RSpec.describe PersonEscortRecord do
 
       it 'sets prefill_source on person escort record' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        prefill_source = create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        prefill_source = create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.prefill_source).to eq(prefill_source)
       end
 
       it 'does not prefill responses if no previous confirmed person_escort_record exists for person' do
-        other_profile = create(:profile)
+        move = create(:move)
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: other_profile.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first.value).to be_nil
       end
 
       it 'prefills responses from confirmed previous person escort record' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first.value).to eq('No')
       end
 
       it 'maintains responded value as false after prefill' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first).not_to be_responded
       end
 
       it 'sets prefilled value as true on responses' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first).to be_prefilled
       end
@@ -242,16 +235,16 @@ RSpec.describe PersonEscortRecord do
       it 'maps values correctly to question response' do
         framework_question1 = create(:framework_question, framework: framework, prefill: true)
         framework_question2 = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No'), create(:string_response, framework_question: framework_question2, value: 'Yes')])
-        described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No'), create(:string_response, framework_question: framework_question2, value: 'Yes')])
+        described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(framework_question2.reload.framework_responses.first.value).to eq('Yes')
       end
 
       it 'does not prefill responses with previous empty values' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question, value: nil)])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: nil)])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first.value).to be_nil
       end
@@ -260,8 +253,8 @@ RSpec.describe PersonEscortRecord do
         framework2 = create(:framework, version: '1.1.0')
         framework_question1 = create(:framework_question, framework: framework, prefill: true)
         framework_question2 = create(:framework_question, framework: framework2, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No')])
-        described_class.save_with_responses!(profile_id: profile2.id, version: framework2.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No')])
+        described_class.save_with_responses!(move_id: move2.id, version: framework2.version)
 
         expect(framework_question2.reload.framework_responses.first.value).to be_nil
       end
@@ -270,8 +263,8 @@ RSpec.describe PersonEscortRecord do
         dependent_framework_question = create(:framework_question, :checkbox, framework: framework, prefill: true)
         framework_question = create(:framework_question, :add_multiple_items, framework: framework, dependents: [dependent_framework_question])
         value = [{ 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => framework_question.dependents.first.id }] }.with_indifferent_access]
-        create(:person_escort_record, :confirmed, profile: profile1, framework_responses: [create(:collection_response, :multiple_items, framework_question: framework_question, value: value)])
-        person_escort_record = described_class.save_with_responses!(profile_id: profile2.id, version: framework.version)
+        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:collection_response, :multiple_items, framework_question: framework_question, value: value)])
+        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(person_escort_record.framework_responses.first.value).to eq(value)
       end
