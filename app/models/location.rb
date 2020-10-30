@@ -49,6 +49,7 @@ class Location < ApplicationRecord
 
   NOMIS_TYPES_WITH_DOCUMENTS = %w[STC SCH].freeze
 
+  belongs_to :category, optional: true
   has_many :supplier_locations
   has_many :suppliers, through: :supplier_locations
   has_and_belongs_to_many :regions
