@@ -22,10 +22,7 @@ module V2
     # NB without lazy_load_data: true this relationship will trigger an N+1 database query,
     # unless it is included in the includes list
     has_many :profiles, serializer: ProfileSerializer, lazy_load_data: true
-    has_many :events, serializer: GenericEventSerializer do |object|
-      object.generic_events.applied_order
-    end
 
-    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles events].freeze
+    SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles].freeze
   end
 end

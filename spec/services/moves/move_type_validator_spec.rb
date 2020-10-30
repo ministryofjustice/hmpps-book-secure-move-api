@@ -70,6 +70,11 @@ RSpec.describe Moves::MoveTypeValidator do
     let(:move_type) { 'hospital' }
 
     it 'validates `to_location` is a high_security_hospital' do
+      target.to_location = build(:location, :high_security_hospital)
+      expect(target).to be_valid
+    end
+
+    it 'validates `to_location` is a hospital' do
       target.to_location = build(:location, :hospital)
       expect(target).to be_valid
     end
@@ -79,10 +84,10 @@ RSpec.describe Moves::MoveTypeValidator do
       expect(target).not_to be_valid
     end
 
-    it 'has an error if `to_location` is not a high security hospital' do
+    it 'has an error if `to_location` is not a high security hospital or hospital' do
       target.to_location = build(:location, :court)
       expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
-      expect(target.errors[:to_location]).to match_array('must be a high security hospital location for hospital move')
+      expect(target.errors[:to_location]).to match_array('must be a hospital or high security hospital location for hospital move')
     end
   end
 

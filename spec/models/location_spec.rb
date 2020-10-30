@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Location do
+  it { is_expected.to belong_to(:category).optional }
   it { is_expected.to have_many(:supplier_locations) }
   it { is_expected.to have_many(:suppliers).through(:supplier_locations) }
   it { is_expected.to have_many(:moves_from) }

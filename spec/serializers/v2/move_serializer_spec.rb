@@ -78,35 +78,32 @@ RSpec.describe V2::MoveSerializer do
   end
 
   describe 'generic_events' do
-    let(:adapter_options) { { include: %i[events] } }
+    let(:adapter_options) { { include: %i[timeline_events] } }
 
     context 'with generic events' do
       let(:move) { create(:move) }
       let(:now) {  Time.zone.now }
-      let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
-      let!(:second_event) { create(:event_move_start, eventable: move, occurred_at: now + 1.second) }
-      let!(:third_event) { create(:event_move_approve, eventable: move, occurred_at: now) }
+
+      let!(:event) { create(:event_move_cancel, eventable: move, occurred_at: now + 1.second) }
 
       let(:expected_event_relationships) do
         [
-          { id: third_event.id, type: 'events' },
-          { id: second_event.id, type: 'events' },
-          { id: first_event.id, type: 'events' },
+          { id: event.id, type: 'events' },
         ]
       end
 
-      it 'contains event relationships in the correct order' do
-        expect(result[:data][:relationships][:events]).to eq(data: expected_event_relationships)
+      it 'contains timeline_events relationship in the correct order' do
+        expect(result[:data][:relationships][:timeline_events]).to eq(data: expected_event_relationships)
       end
 
       it 'contains included events in the correct order' do
-        expect(result[:included].map { |event| event[:id] }).to match_array([third_event.id, second_event.id, first_event.id])
+        expect(result[:included].map { |event| event[:id] }).to eq([event.id])
       end
     end
 
     context 'without generic events' do
       it 'contains an empty allocation' do
-        expect(result[:data][:relationships][:events]).to eq(data: [])
+        expect(result[:data][:relationships][:timeline_events]).to eq(data: [])
       end
 
       it 'does not contain an included event' do

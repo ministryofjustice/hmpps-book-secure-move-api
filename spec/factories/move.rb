@@ -52,7 +52,7 @@ FactoryBot.define do
     trait :hospital do
       move_type { 'hospital' }
       association(:from_location, :police, factory: :location)
-      association(:to_location, :hospital, factory: :location)
+      association(:to_location, :high_security_hospital, factory: :location)
     end
 
     # Move statuses
@@ -131,6 +131,12 @@ FactoryBot.define do
           date: move.date,
           moves: [move],
         )
+      end
+    end
+
+    trait :with_journey do
+      after(:create) do |move|
+        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move)
       end
     end
 

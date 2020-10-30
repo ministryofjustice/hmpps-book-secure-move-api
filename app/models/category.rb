@@ -1,13 +1,24 @@
-class Category
-  TYPE = 'Category'.freeze
+# frozen_string_literal: true
 
-  attr_reader :id, :title, :move_supported
+class Category < ApplicationRecord
+  has_many :locations
+  has_many :profiles
 
-  def build_from_nomis(booking_details)
-    @id = booking_details[:category_code]
-    @title = booking_details[:category]
-    @move_supported = Move::UNSUPPORTED_PRISONER_CATEGORIES.exclude?(id)
+  validates :key, presence: true, uniqueness: true
+  validates :title, presence: true
+  validates :move_supported, presence: true
 
-    self
-  end
 end
+
+#
+# TYPE = 'Category'.freeze
+#
+# attr_reader :id, :title, :move_supported
+#
+# def build_from_nomis(booking_details)
+#   @id = booking_details[:category_code]
+#   @title = booking_details[:category]
+#   @move_supported = Move::UNSUPPORTED_PRISONER_CATEGORIES.exclude?(id)
+#
+#   self
+# end

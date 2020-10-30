@@ -22,16 +22,14 @@ module V2
                :time_due,
                :updated_at
 
-    has_one :profile, serializer: V2::ProfileSerializer
-    has_one :from_location, serializer: LocationSerializer
-    has_one :to_location, serializer: LocationSerializer
+    has_one :from_location,          serializer: LocationSerializer
     has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
-    has_one :supplier, serializer: SupplierSerializer
+    has_one :profile,                serializer: V2::ProfileSerializer
+    has_one :supplier,               serializer: SupplierSerializer
+    has_one :to_location,            serializer: LocationSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
-    has_many :events, serializer: GenericEventSerializer do |object|
-      object.generic_events.applied_order
-    end
+    has_many :timeline_events, serializer: GenericEventSerializer, &:all_events_for_timeline
 
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
@@ -57,7 +55,7 @@ module V2
       allocation
       original_move
       supplier
-      events
+      timeline_events
     ].freeze
 
     INCLUDED_FIELDS = {
