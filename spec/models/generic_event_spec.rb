@@ -74,4 +74,36 @@ RSpec.describe GenericEvent, type: :model do
       expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
     end
   end
+
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected events' do
+      create(:event_move_cancel, updated_at: updated_at_from - 1.second)
+      create(:event_move_accept, updated_at: updated_at_to + 1.second)
+      on_start_event = create(:event_move_approve, updated_at: updated_at_from)
+      on_end_event = create(:event_move_start, updated_at: updated_at_to)
+
+      actual_events = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_events).to eq([on_start_event, on_end_event])
+    end
+  end
+
+  describe '.created_at_range scope' do
+    let(:created_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:created_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected events' do
+      create(:event_move_cancel, created_at: created_at_from - 1.second)
+      create(:event_move_accept, created_at: created_at_to + 1.second)
+      on_start_event = create(:event_move_approve, created_at: created_at_from)
+      on_end_event = create(:event_move_start, created_at: created_at_to)
+
+      actual_events = described_class.created_at_range(created_at_from, created_at_to)
+
+      expect(actual_events).to eq([on_start_event, on_end_event])
+    end
+  end
 end
