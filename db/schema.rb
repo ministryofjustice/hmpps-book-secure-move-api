@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_22_072140) do
+ActiveRecord::Schema.define(version: 2020_10_30_095815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -73,6 +73,15 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
     t.datetime "updated_at", null: false
     t.string "key", null: false
     t.datetime "disabled_at"
+  end
+
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "title", null: false
+    t.boolean "move_supported", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_categories_on_key", unique: true
   end
 
   create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -309,6 +318,8 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
     t.string "key", null: false
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
+    t.uuid "category_id"
+    t.index ["category_id"], name: "index_locations_on_category_id"
   end
 
   create_table "locations_regions", id: false, force: :cascade do |t|
@@ -531,7 +542,9 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
     t.integer "latest_nomis_booking_id"
     t.string "category"
     t.string "category_code"
+    t.uuid "category_id"
     t.index ["category_code"], name: "index_profiles_on_category_code"
+    t.index ["category_id"], name: "index_profiles_on_category_id"
     t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
@@ -605,6 +618,7 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"
   add_foreign_key "journeys", "suppliers"
+  add_foreign_key "locations", "categories"
   add_foreign_key "locations_regions", "locations"
   add_foreign_key "locations_regions", "regions"
   add_foreign_key "moves", "allocations"
@@ -620,6 +634,7 @@ ActiveRecord::Schema.define(version: 2020_10_22_072140) do
   add_foreign_key "person_escort_records", "moves"
   add_foreign_key "person_escort_records", "profiles"
   add_foreign_key "populations", "locations"
+  add_foreign_key "profiles", "categories"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
   add_foreign_key "supplier_locations", "locations"

@@ -24,6 +24,8 @@ class Profile < VersionedModel
 
   before_validation :set_assessment_answers
 
+  # TODO: uncomment this when category attribute is removed from model
+  # belongs_to :category, optional: true
   belongs_to :person, touch: true
 
   has_many :moves, dependent: :nullify
