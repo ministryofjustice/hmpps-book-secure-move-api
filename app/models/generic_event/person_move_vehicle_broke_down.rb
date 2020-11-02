@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
 
     details_attributes :supplier_personnel_numbers, :vehicle_reg, :reported_at, :postcode
-    relationship_attributes :location_id
+    relationship_attributes location_id: :locations
     eventable_types 'Move', 'Person'
 
     include LocationValidations

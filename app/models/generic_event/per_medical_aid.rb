@@ -4,7 +4,7 @@ class GenericEvent
 
     details_attributes :advised_at, :advised_by, :treated_at, :treated_by, :supplier_personnel_number, :vehicle_reg
 
-    relationship_attributes :location_id
+    relationship_attributes location_id: :locations
 
     include LocationValidations
     include PersonEscortRecordEventValidations
