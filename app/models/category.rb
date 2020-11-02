@@ -6,5 +6,5 @@ class Category < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
   validates :title, presence: true
-  validates :move_supported, presence: true
+  validates :move_supported, inclusion: { in: [true, false] }
 end
