@@ -587,7 +587,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_093313) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
-    t.string "user_type"
+    t.string "supplier_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 

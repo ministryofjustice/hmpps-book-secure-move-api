@@ -96,12 +96,13 @@ RSpec.describe Api::AllocationsController do
       end
 
       context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
 
         it 'audits the supplier' do
           post_allocations
-          expect(allocation.versions.map(&:whodunnit)).to eq([supplier.id])
+          expect(allocation.versions.map(&:whodunnit)).to eq([nil])
+          expect(allocation.versions.map(&:supplier_id)).to eq([supplier.id])
         end
 
         it 'sets the application owner as the supplier on allocation moves' do
