@@ -59,7 +59,7 @@ RSpec.describe Categories::Importer do
     it 'does not link to missing locations' do
       importer.call
 
-      expect(categoryC.locations.map(&:nomis_agency_id)).to match %w[BAZ]
+      expect(categoryC.locations.map(&:nomis_agency_id)).to match_array %w[BAZ]
     end
 
     it 'does not link to nil locations' do
@@ -94,7 +94,7 @@ RSpec.describe Categories::Importer do
 
     it 'updates links to correct locations' do
       importer.call
-      expect(existing.reload.locations.map(&:nomis_agency_id)).to match %w[BAZ]
+      expect(existing.reload.locations.map(&:nomis_agency_id)).to match_array %w[BAZ]
     end
   end
 end
