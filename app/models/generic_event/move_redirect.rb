@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :to_location_id
 
     details_attributes :move_type, :reason
-    relationship_attributes :to_location_id
+    relationship_attributes to_location_id: :locations
 
     enum reason: {
       no_space: 'no_space',
@@ -18,10 +18,6 @@ class GenericEvent
     include LocationValidations
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
-
-    def to_location
-      Location.find_by(id: to_location_id)
-    end
 
     def trigger
       eventable.to_location = to_location

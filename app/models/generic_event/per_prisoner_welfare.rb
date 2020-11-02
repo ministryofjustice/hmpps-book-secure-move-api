@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
 
     details_attributes :given_at, :outcome, :subtype, :vehicle_reg, :supplier_personnel_number
-    relationship_attributes :location_id
+    relationship_attributes location_id: :locations
 
     enum outcome: {
       accepted: 'accepted',

@@ -16,7 +16,7 @@ RSpec.describe GenericEvent::MoveLockout do
   end
 
   it_behaves_like 'an event with details', :authorised_at, :authorised_by, :reason
-  it_behaves_like 'an event with relationships', :from_location_id
+  it_behaves_like 'an event with relationships', from_location_id: :locations
   it_behaves_like 'a move event'
   it_behaves_like 'an authorised event'
   it_behaves_like 'an event requiring a location', :from_location_id
