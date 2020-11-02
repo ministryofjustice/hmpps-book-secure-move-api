@@ -600,7 +600,7 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
-    t.string "supplier_id"
+    t.uuid "supplier_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
@@ -640,4 +640,5 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
   add_foreign_key "subscriptions", "suppliers"
   add_foreign_key "supplier_locations", "locations"
   add_foreign_key "supplier_locations", "suppliers"
+  add_foreign_key "versions", "suppliers"
 end
