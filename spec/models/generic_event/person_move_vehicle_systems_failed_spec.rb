@@ -2,7 +2,7 @@ RSpec.describe GenericEvent::PersonMoveVehicleSystemsFailed do
   subject(:generic_event) { build(:event_person_move_vehicle_systems_failed) }
 
   it_behaves_like 'an event with details', :supplier_personnel_numbers, :vehicle_reg, :reported_at, :postcode
-  it_behaves_like 'an event with relationships', :location_id
+  it_behaves_like 'an event with relationships', location_id: :locations
   it_behaves_like 'an event with eventable types', 'Person', 'Move'
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event that specifies a vehicle registration'

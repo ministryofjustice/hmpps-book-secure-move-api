@@ -4,7 +4,7 @@ class GenericEvent
 
     details_attributes :is_virtual, :is_trial, :court_listing_at, :started_at, :ended_at, :agreed_at, :court_outcome
 
-    relationship_attributes :location_id
+    relationship_attributes location_id: :locations
 
     eventable_types 'PersonEscortRecord'
 

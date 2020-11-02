@@ -44,6 +44,36 @@ RSpec.describe GenericEvent, type: :model do
     end
   end
 
+  describe '#relationships' do
+    context 'when the event defines relationships' do
+      subject(:generic_event) { build(:event_move_redirect) }
+
+      it 'returns the correct json:api relationships' do
+        expect(generic_event.relationships).to eq('to_location' => { type: :locations, id: generic_event.details['to_location_id'] })
+      end
+    end
+
+    context 'when the event does not define relationships' do
+      subject(:generic_event) { build(:event_move_cancel) }
+
+      it 'returns no relationships' do
+        expect(generic_event.relationships).to eq({})
+      end
+    end
+
+    context 'when the event defines relationships that are missing from the details' do
+      subject(:generic_event) { build(:event_move_redirect) }
+
+      before do
+        generic_event.details.delete(:to_location_id)
+      end
+
+      it 'returns no relationships' do
+        expect(generic_event.relationships).to eq({})
+      end
+    end
+  end
+
   describe '#for_feed' do
     subject(:generic_event) { create(:event_move_cancel, supplier: create(:supplier, key: 'serco')) }
 

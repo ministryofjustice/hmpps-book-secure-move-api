@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :from_location_id
 
     details_attributes :authorised_at, :authorised_by, :reason
-    relationship_attributes :from_location_id
+    relationship_attributes from_location_id: :locations
 
     include MoveEventValidations
     include AuthoriserValidations

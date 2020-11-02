@@ -2,14 +2,10 @@ class GenericEvent
   class JourneyLodging < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :to_location_id
 
-    relationship_attributes :to_location_id
+    relationship_attributes to_location_id: :locations
 
     include JourneyEventValidations
     include LocationValidations
-
-    def to_location
-      Location.find_by(id: to_location_id)
-    end
 
     def for_feed
       super.tap do |common_feed_attributes|
