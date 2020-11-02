@@ -1,8 +1,8 @@
 class GenericEvent
   class MoveApprove < GenericEvent
     details_attributes :date, :create_in_nomis
+    eventable_types 'Move'
 
-    include MoveEventValidations
     validates :date, presence: true
 
     validates_each :date do |record, attr, value|
@@ -26,13 +26,14 @@ class GenericEvent
     end
 
     def self.from_event(event)
-      new(event.generic_event_attributes
-              .merge(
-                details: {
-                  date: event.event_params&.dig(:attributes, :date),
-                  create_in_nomis: event.event_params&.dig(:attributes, :create_in_nomis) || false,
-                },
-              ))
+      new(
+        event.generic_event_attributes.merge(
+          details: {
+            date: event.event_params&.dig(:attributes, :date),
+            create_in_nomis: event.event_params&.dig(:attributes, :create_in_nomis) || false,
+          },
+        ),
+      )
     end
   end
 end

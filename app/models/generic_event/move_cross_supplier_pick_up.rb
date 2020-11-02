@@ -6,7 +6,5 @@ class GenericEvent
     validates_each :previous_move_id do |_record, _attr, value|
       Move.find(value)
     end
-
-    include MoveEventValidations
   end
 end
