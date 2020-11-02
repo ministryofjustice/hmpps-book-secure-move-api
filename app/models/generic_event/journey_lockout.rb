@@ -3,8 +3,8 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :from_location_id
 
     relationship_attributes from_location_id: :locations
+    eventable_types 'Journey'
 
-    include JourneyEventValidations
     include LocationValidations
 
     def for_feed

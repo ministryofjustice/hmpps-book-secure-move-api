@@ -1,6 +1,6 @@
 class GenericEvent
   class JourneyStart < GenericEvent
-    include JourneyEventValidations
+    eventable_types 'Journey'
 
     def trigger
       eventable.start
