@@ -8,7 +8,7 @@ RSpec.describe CategorySerializer do
   let(:serializer) { described_class.new(category) }
 
   let(:category) do
-    Category.new.build_from_nomis(
+    Category.build_from_nomis(
       category: 'Cat A',
       category_code: 'A',
     )

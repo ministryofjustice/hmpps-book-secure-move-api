@@ -20,7 +20,7 @@ module Api
       booking_details = NomisClient::BookingDetails.get(person.latest_nomis_booking_id)
 
       if booking_details[:category_code].present?
-        [Category.new.build_from_nomis(booking_details)]
+        [Category.build_from_nomis(booking_details)]
       else
         []
       end
