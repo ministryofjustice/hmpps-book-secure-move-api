@@ -14,9 +14,29 @@ RSpec.describe Api::CategoriesController do
   end
   let(:filter_params) { { filter: { person_id: person.id } } }
   let(:person) { create(:person, latest_nomis_booking_id: 123) }
+  let(:cat_a) { create(:category, :not_supported, key: 'A', title: 'Cat A') }
+  let(:cat_b) { create(:category, key: 'B', title: 'Cat B') }
+
+  describe 'GET /categories' do
+    before do
+      cat_a
+      cat_b
+    end
+
+    it 'returns 200' do
+      get '/api/categories', headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response_json).to eql({ 'data' => [
+        { 'attributes' => { 'move_supported' => false, 'title' => 'Cat A' }, 'id' => 'A', 'type' => 'categories' },
+        { 'attributes' => { 'move_supported' => true, 'title' => 'Cat B' }, 'id' => 'B', 'type' => 'categories' },
+      ] })
+    end
+  end
 
   describe 'GET /categories?filter[person_id]={person with category}' do
     before do
+      cat_a
       allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: 'Cat A', category_code: 'A' })
     end
 
@@ -55,19 +75,6 @@ RSpec.describe Api::CategoriesController do
 
       expect(response).to have_http_status(:not_found)
       expect(response_json).to eql({ 'errors' => [{ 'detail' => "Couldn't find Person with 'id'=missing-person-id", 'title' => 'Resource not found' }] })
-    end
-  end
-
-  describe 'GET /categories' do
-    before do
-      allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: nil, category_code: nil })
-    end
-
-    it 'returns 404' do
-      get '/api/categories', headers: headers
-
-      expect(response).to have_http_status(:not_found)
-      expect(response_json).to eql({ 'errors' => [{ 'detail' => "Couldn't find Person without an ID", 'title' => 'Resource not found' }] })
     end
   end
 end
