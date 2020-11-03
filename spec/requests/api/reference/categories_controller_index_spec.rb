@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::CategoriesController do
+RSpec.describe Api::Reference::CategoriesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { 'spoofed-token' }
   let(:headers) do
@@ -17,14 +17,14 @@ RSpec.describe Api::CategoriesController do
   let(:cat_a) { create(:category, :not_supported, key: 'A', title: 'Cat A') }
   let(:cat_b) { create(:category, key: 'B', title: 'Cat B') }
 
-  describe 'GET /categories' do
+  describe 'GET /reference/categories' do
     before do
       cat_a
       cat_b
     end
 
     it 'returns 200' do
-      get '/api/categories', headers: headers
+      get '/api/reference/categories', headers: headers
 
       expect(response).to have_http_status(:ok)
       expect(response_json).to eql({ 'data' => [
@@ -41,7 +41,7 @@ RSpec.describe Api::CategoriesController do
     end
 
     it 'returns 200' do
-      get '/api/categories', params: filter_params, headers: headers
+      get '/api/reference/categories', params: filter_params, headers: headers
 
       expect(response).to have_http_status(:ok)
       expect(response_json).to eql(
@@ -56,7 +56,7 @@ RSpec.describe Api::CategoriesController do
     end
 
     it 'returns 200' do
-      get '/api/categories', params: filter_params, headers: headers
+      get '/api/reference/categories', params: filter_params, headers: headers
 
       expect(response).to have_http_status(:ok)
       expect(response_json).to eql({ 'data' => [] })
@@ -71,7 +71,7 @@ RSpec.describe Api::CategoriesController do
     end
 
     it 'returns 404' do
-      get '/api/categories', params: filter_params, headers: headers
+      get '/api/reference/categories', params: filter_params, headers: headers
 
       expect(response).to have_http_status(:not_found)
       expect(response_json).to eql({ 'errors' => [{ 'detail' => "Couldn't find Person with 'id'=missing-person-id", 'title' => 'Resource not found' }] })

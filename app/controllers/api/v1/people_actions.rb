@@ -33,6 +33,10 @@ module Api::V1
       paginate people, serializer: PersonSerializer, include: included_relationships
     end
 
+    def show_and_render
+      raise NotSupportedInOldVersionError
+    end
+
     def create_and_render
       creator.call
       render_person(creator.person, 201)

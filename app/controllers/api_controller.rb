@@ -24,6 +24,7 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
+  rescue_from NotSupportedInOldVersionError, with: :render_not_supported_in_old_version_error
 
   # Nomis connection errors:
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
@@ -219,6 +220,20 @@ private
       },
       # NB: The json:api specification requires this is a 400
       status: :bad_request,
+    )
+  end
+
+  def render_not_supported_in_old_version_error
+    render(
+      json: {
+        errors: [{
+          title: 'Not Supported In Old Version Error',
+          detail: "Not supported in version v#{api_version} - please upgrade to a newer version"
+        }]
+      },
+      # NB: 406 Not Acceptable (The resource identified by the request is only capable of generating response entities
+      # which have content characteristics not acceptable according to the accept headers sent in the request.)
+      status: :not_acceptable,
     )
   end
 

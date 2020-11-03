@@ -96,3 +96,12 @@ NomisTimeoutError:
     detail:
       type: string
       example: "Faraday::TimeoutError: Nomis Connection Error"
+NotSupported:
+  type: object
+  properties:
+    title:
+      type: string
+      example: Not Supported In Old Version Error
+    detail:
+      type: string
+      example: Not supported in version v1 - please upgrade to a newer version

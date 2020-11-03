@@ -11,6 +11,9 @@ module Api
       index_and_render
     end
 
+    def show
+      show_and_render
+    end
     def create
       create_and_render
     end

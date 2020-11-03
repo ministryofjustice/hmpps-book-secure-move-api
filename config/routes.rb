@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     resources :categories, only: %i[index]
     resources :court_hearings, only: %i[create]
     resources :documents, only: %i[create]
-    resources :people, only: %i[index create update] do
+    resources :people, only: %i[index show create update] do
       get 'images', to: 'people#image'
       get 'court_cases', to: 'people#court_cases'
       get 'timetable', to: 'people#timetable'

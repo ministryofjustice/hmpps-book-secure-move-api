@@ -14,6 +14,10 @@ module Api::V2
       render_person(person, :created)
     end
 
+    def show_and_render
+      render_person(person, :ok)
+    end
+
     def update_and_render
       person = Person.find(params[:id])
 
