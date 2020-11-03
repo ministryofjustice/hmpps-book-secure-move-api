@@ -4,8 +4,8 @@ class GenericEvent
 
     details_attributes :reason
     relationship_attributes location_id: :locations
+    eventable_types 'Move'
 
-    include MoveEventValidations
     include LocationValidations
 
     enum reason: {

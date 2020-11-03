@@ -1,13 +1,7 @@
 class GenericEvent
   class MoveCancel < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      cancellation_reason
-      cancellation_reason_comment
-    ].freeze
-
     details_attributes :cancellation_reason, :cancellation_reason_comment
-
-    include MoveEventValidations
+    eventable_types 'Move'
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
 
@@ -27,13 +21,14 @@ class GenericEvent
     end
 
     def self.from_event(event)
-      new(event.generic_event_attributes
-                .merge(
-                  details: {
-                    cancellation_reason: event.event_params&.dig(:attributes, :cancellation_reason),
-                    cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
-                  },
-                ))
+      new(
+        event.generic_event_attributes.merge(
+          details: {
+            cancellation_reason: event.event_params&.dig(:attributes, :cancellation_reason),
+            cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
+          },
+        ),
+      )
     end
   end
 end

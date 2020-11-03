@@ -130,10 +130,6 @@
     title: Cat A Hi
     move_supported: false
     locations:
-  HI:
-    title: High
-    move_supported: true
-    locations:
   I:
     title: YOI Closed
     move_supported: true

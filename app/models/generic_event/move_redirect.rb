@@ -4,6 +4,7 @@ class GenericEvent
 
     details_attributes :move_type, :reason
     relationship_attributes to_location_id: :locations
+    eventable_types 'Move'
 
     enum reason: {
       no_space: 'no_space',
@@ -14,7 +15,6 @@ class GenericEvent
       other: 'other',
     }
 
-    include MoveEventValidations
     include LocationValidations
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
@@ -32,12 +32,14 @@ class GenericEvent
     end
 
     def self.from_event(event)
-      new(event.generic_event_attributes.merge(
-            details: {
-              to_location_id: event.event_params&.dig(:relationships, :to_location, :data, :id),
-              move_type: event.event_params&.dig(:attributes, :move_type),
-            },
-          ))
+      new(
+        event.generic_event_attributes.merge(
+          details: {
+            to_location_id: event.event_params&.dig(:relationships, :to_location, :data, :id),
+            move_type: event.event_params&.dig(:attributes, :move_type),
+          },
+        ),
+      )
     end
   end
 end

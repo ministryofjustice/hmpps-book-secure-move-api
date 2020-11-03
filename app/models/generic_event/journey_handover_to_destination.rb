@@ -1,7 +1,6 @@
 class GenericEvent
   class JourneyHandoverToDestination < GenericEvent
     details_attributes :supplier_personnel_number
-
-    include JourneyEventValidations
+    eventable_types 'Journey'
   end
 end
