@@ -1,6 +1,6 @@
 class GenericEvent
   class MoveComplete < GenericEvent
-    include MoveEventValidations
+    eventable_types 'Move'
 
     def trigger
       eventable.status = Move::MOVE_STATUS_COMPLETED

@@ -2,14 +2,10 @@ class GenericEvent
   class JourneyLockout < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :from_location_id
 
-    relationship_attributes :from_location_id
+    relationship_attributes from_location_id: :locations
+    eventable_types 'Journey'
 
-    include JourneyEventValidations
     include LocationValidations
-
-    def from_location
-      Location.find_by(id: from_location_id)
-    end
 
     def for_feed
       super.tap do |common_feed_attributes|

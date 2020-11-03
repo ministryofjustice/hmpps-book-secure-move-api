@@ -2,7 +2,7 @@ class GenericEvent
   class MoveNotifyPremisesOfExpectedCollectionTime < GenericEvent
     details_attributes :expected_at
 
-    include MoveEventValidations
+    eventable_types 'Move'
 
     validates :expected_at, presence: true
 

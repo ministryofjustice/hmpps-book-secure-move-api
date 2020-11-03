@@ -16,7 +16,7 @@ RSpec.describe GenericEvent::PerPrisonerWelfare do
   end
 
   it_behaves_like 'an event with details', :given_at, :outcome, :subtype, :vehicle_reg, :supplier_personnel_number
-  it_behaves_like 'an event with relationships', :location_id
+  it_behaves_like 'an event with relationships', location_id: :locations
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event with a supplier personnel number'
 

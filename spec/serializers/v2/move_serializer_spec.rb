@@ -68,7 +68,7 @@ RSpec.describe V2::MoveSerializer do
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers events])
+        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers events moves])
     end
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them

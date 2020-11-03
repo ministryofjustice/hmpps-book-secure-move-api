@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :court_location_id
 
     details_attributes :subtype
-    relationship_attributes :court_location_id
+    relationship_attributes court_location_id: :locations
 
     include PersonEscortRecordEventValidations
     include LocationValidations

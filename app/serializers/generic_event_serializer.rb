@@ -9,7 +9,7 @@ class GenericEventSerializer
 
   has_one :eventable, polymorphic: true
 
-  SUPPORTED_RELATIONSHIPS = %w[].freeze
+  SUPPORTED_RELATIONSHIPS = %w[eventable].freeze
 
   attribute :event_type do |object|
     object.type.try(:gsub, 'GenericEvent::', '')

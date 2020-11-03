@@ -1,6 +1,6 @@
 class GenericEvent
   class JourneyUncancel < GenericEvent
-    include JourneyEventValidations
+    eventable_types 'Journey'
 
     def trigger
       eventable.uncancel

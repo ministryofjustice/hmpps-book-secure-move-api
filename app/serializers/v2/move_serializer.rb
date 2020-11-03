@@ -56,6 +56,7 @@ module V2
       original_move
       supplier
       timeline_events
+      timeline_events.eventable
     ].freeze
 
     INCLUDED_FIELDS = {

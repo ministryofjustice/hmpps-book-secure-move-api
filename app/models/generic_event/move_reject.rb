@@ -1,8 +1,7 @@
 class GenericEvent
   class MoveReject < GenericEvent
     details_attributes :rejection_reason, :cancellation_reason_comment, :rebook
-
-    include MoveEventValidations
+    eventable_types 'Move'
 
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }
 
@@ -21,14 +20,15 @@ class GenericEvent
     end
 
     def self.from_event(event)
-      new(event.generic_event_attributes
-              .merge(
-                details: {
-                  rejection_reason: event.event_params&.dig(:attributes, :rejection_reason),
-                  cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
-                  rebook: event.event_params&.dig(:attributes, :rebook) || false,
-                },
-              ))
+      new(
+        event.generic_event_attributes.merge(
+          details: {
+            rejection_reason: event.event_params&.dig(:attributes, :rejection_reason),
+            cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
+            rebook: event.event_params&.dig(:attributes, :rebook) || false,
+          },
+        ),
+      )
     end
   end
 end

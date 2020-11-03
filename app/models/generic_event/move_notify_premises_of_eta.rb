@@ -1,8 +1,7 @@
 class GenericEvent
   class MoveNotifyPremisesOfEta < GenericEvent
     details_attributes :expected_at
-
-    include MoveEventValidations
+    eventable_types 'Move'
 
     validates :expected_at, presence: true
 

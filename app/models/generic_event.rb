@@ -1,5 +1,4 @@
 class GenericEvent < ApplicationRecord
-  DETAILS_ATTRIBUTES = %w[].freeze
   FEED_ATTRIBUTES = %w[
     id
     notes
@@ -107,6 +106,19 @@ class GenericEvent < ApplicationRecord
     feed
   end
 
+  def relationships
+    return {} unless self.class.instance_variable_defined?(:@relationship_attributes)
+
+    self.class.relationship_attributes.each_with_object({}) do |(attribute_key, attribute_type), acc|
+      id = details[attribute_key]
+      named_relationship_key = attribute_key.to_s.sub('_id', '')
+
+      next if id.blank?
+
+      acc[named_relationship_key] = { type: attribute_type, id: id }
+    end
+  end
+
   def self.from_event(event)
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
@@ -133,19 +145,27 @@ class GenericEvent < ApplicationRecord
 
   # Relationship attributes live against the details but are expected in the json:api relationship section
   # so are defined separately
-  def self.relationship_attributes(*attributes)
+  def self.relationship_attributes(attributes)
     define_singleton_method(:relationship_attributes) do
       instance_variable_get('@relationship_attributes')
     end
     instance_variable_set('@relationship_attributes', attributes)
 
-    attributes.each do |attribute_key|
+    attributes.each do |attribute_key, attribute_type|
+      named_relationship_key = attribute_key.to_s.sub('_id', '')
+
       define_method(attribute_key) do
         details[attribute_key]
       end
 
       define_method("#{attribute_key}=") do |attribute_value|
         details[attribute_key] = attribute_value
+      end
+
+      define_method(named_relationship_key) do
+        id = details[attribute_key]
+        model = attribute_type.to_s.singularize.camelize
+        model.constantize.find_by(id: id)
       end
     end
   end
