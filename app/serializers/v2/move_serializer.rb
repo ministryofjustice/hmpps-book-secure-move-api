@@ -29,7 +29,8 @@ module V2
     has_one :to_location,            serializer: LocationSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
-    has_many :timeline_events, serializer: GenericEventSerializer, &:all_events_for_timeline
+
+    has_many :timeline_events, serializer: ->(record, _params) { record.class.serializer }, &:all_events_for_timeline
 
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
