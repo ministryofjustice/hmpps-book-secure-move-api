@@ -228,8 +228,8 @@ private
       json: {
         errors: [{
           title: 'Not Supported In Old Version Error',
-          detail: "Not supported in version v#{api_version} - please upgrade to a newer version"
-        }]
+          detail: "This endpoint is not supported in version v#{api_version} - please change the ACCEPT header to a newer version",
+        }],
       },
       # NB: 406 Not Acceptable (The resource identified by the request is only capable of generating response entities
       # which have content characteristics not acceptable according to the accept headers sent in the request.)

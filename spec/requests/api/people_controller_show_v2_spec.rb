@@ -11,9 +11,10 @@ RSpec.describe Api::PeopleController do
   let(:query_params) { '' }
   let(:params) { {} }
 
-  let(:person) { create(:person, profiles: profiles) }
-  let(:profiles) { create_list(:profile, 2, category: category) }
+  let(:person) { create(:person, profiles: profiles, latest_nomis_booking_id: latest_nomis_booking_id) }
+  let(:profiles) { create_list(:profile, 2) }
   let(:category) { create(:category) }
+  let(:latest_nomis_booking_id) { nil }
 
   let(:resource_to_json) do
     JSON.parse(V2::PersonSerializer.new(person).serializable_hash.to_json)
@@ -29,6 +30,8 @@ RSpec.describe Api::PeopleController do
 
   describe 'GET /people/:id' do
     before do
+      allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ category: category.title, category_code: category.key })
+      allow(NomisClient::BookingDetails).to receive(:get).with(456).and_return({})
       get "/api/people/#{person.id}#{query_params}", params: params, headers: headers
     end
 
@@ -52,6 +55,30 @@ RSpec.describe Api::PeopleController do
         it 'includes the requested includes in the response' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
           expect(returned_types).to contain_exactly('profiles')
+        end
+      end
+
+      context 'when including the category relationship' do
+        let(:query_params) { '?include=category' }
+
+        context 'when the category exists in Nomis' do
+          let(:latest_nomis_booking_id) { 123 }
+
+          it 'includes the requested includes in the response' do
+            returned_types = response_json['included'].map { |r| r['type'] }.uniq
+            expect(returned_types).to contain_exactly('categories')
+
+            returned_titles = response_json['included'].map { |r| r['attributes']['title'] }
+            expect(returned_titles).to contain_exactly(category.title)
+          end
+        end
+
+        context 'when the category does not exist in Nomis' do
+          let(:latest_nomis_booking_id) { 456 }
+
+          it 'requested includes is empty' do
+            expect(response_json['included']).to be_empty
+          end
         end
       end
 

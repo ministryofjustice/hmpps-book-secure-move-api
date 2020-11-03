@@ -4,7 +4,7 @@ RSpec.shared_examples 'an endpoint that responds with error 406' do
   let(:errors_406) do
     [{
       'title' => 'Not Supported In Old Version Error',
-      'detail' => 'Not supported in version v1 - please upgrade to a newer version',
+      'detail' => 'This endpoint is not supported in version v1 - please change the ACCEPT header to a newer version',
     }]
   end
 

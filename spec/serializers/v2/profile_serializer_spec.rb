@@ -67,7 +67,7 @@ RSpec.describe V2::ProfileSerializer do
     let(:profile) { create(:profile, documents: [create(:document)]) }
     let(:adapter_options) { { include: %i[documents person] } }
     let(:serialized_person) do
-      serializer = V2::PersonSerializer.new(profile.person)
+      serializer = V2::PeopleSerializer.new(profile.person)
 
       JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
     end

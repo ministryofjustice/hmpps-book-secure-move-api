@@ -22,7 +22,6 @@ Rails.application.routes.draw do
         post 'cancel', controller: 'allocation_events'
       end
     end
-    resources :categories, only: %i[index]
     resources :court_hearings, only: %i[create]
     resources :documents, only: %i[create]
     resources :people, only: %i[index show create update] do
@@ -73,6 +72,7 @@ Rails.application.routes.draw do
     namespace :reference do
       resources :allocation_complex_cases, only: :index
       resources :assessment_questions, only: :index
+      resources :categories, only: %i[index]
       resources :ethnicities, only: :index
       resources :genders, only: :index
       resources :identifier_types, only: :index
