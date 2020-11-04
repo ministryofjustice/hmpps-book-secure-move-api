@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_02_120213) do
+ActiveRecord::Schema.define(version: 2020_11_04_112723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -227,7 +227,6 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
   end
 
   create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "person_escort_record_id", null: false
     t.uuid "framework_question_id", null: false
     t.text "value_text"
     t.jsonb "value_json"
@@ -237,9 +236,11 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "responded", default: false, null: false
     t.boolean "prefilled", default: false, null: false
+    t.uuid "assessmentable_id"
+    t.string "assessmentable_type"
+    t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
-    t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
     t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
@@ -604,6 +605,22 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "youth_risk_assessments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.uuid "profile_id", null: false
+    t.uuid "move_id", null: false
+    t.uuid "prefill_source_id"
+    t.string "status", null: false
+    t.jsonb "nomis_sync_status", default: [], null: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
+    t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"
+    t.index ["prefill_source_id"], name: "index_youth_risk_assessments_on_prefill_source_id"
+    t.index ["profile_id"], name: "index_youth_risk_assessments_on_profile_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "allocations", "locations", column: "from_location_id", name: "fk_rails_allocations_from_location_id"
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
@@ -613,7 +630,6 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
-  add_foreign_key "framework_responses", "person_escort_records"
   add_foreign_key "generic_events", "suppliers"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
@@ -641,4 +657,7 @@ ActiveRecord::Schema.define(version: 2020_11_02_120213) do
   add_foreign_key "supplier_locations", "locations"
   add_foreign_key "supplier_locations", "suppliers"
   add_foreign_key "versions", "suppliers"
+  add_foreign_key "youth_risk_assessments", "frameworks"
+  add_foreign_key "youth_risk_assessments", "moves"
+  add_foreign_key "youth_risk_assessments", "profiles"
 end

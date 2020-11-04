@@ -30,7 +30,7 @@ module FrameworkResponses
       [].tap do |updated_responses|
         validator = ActiveRecord::Import::Validator.new(FrameworkResponse)
 
-        FrameworkResponse.includes(framework_question: %i[framework_flags]).where(person_escort_record: person_escort_record).find(response_values_hash.keys).each do |response|
+        FrameworkResponse.includes(framework_question: %i[framework_flags]).where(assessmentable: person_escort_record).find(response_values_hash.keys).each do |response|
           new_value = response_values_hash[response.id]
           next if response.value == new_value && response.responded == true
 

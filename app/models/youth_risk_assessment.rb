@@ -1,18 +1,18 @@
-class PersonEscortRecord < VersionedModel
+class YouthRiskAssessment < VersionedModel
   include StateMachineable
 
   # "not_started" cannot be used as the name of the enum due to warnings in the model
   # that it starts with a "not_".
-  PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
-  PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
-  PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
-  PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
+  YOUTH_ASSESSMENT_NOT_STARTED = 'not_started'.freeze
+  YOUTH_ASSESSMENT_IN_PROGRESS = 'in_progress'.freeze
+  YOUTH_ASSESSMENT_COMPLETED = 'completed'.freeze
+  YOUTH_ASSESSMENT_CONFIRMED = 'confirmed'.freeze
 
   enum statuses: {
-    unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
-    in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
-    completed: PERSON_ESCORT_RECORD_COMPLETED,
-    confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
+    unstarted: YOUTH_ASSESSMENT_NOT_STARTED,
+    in_progress: YOUTH_ASSESSMENT_IN_PROGRESS,
+    completed: YOUTH_ASSESSMENT_COMPLETED,
+    confirmed: YOUTH_ASSESSMENT_CONFIRMED,
   }
 
   validates :status, presence: true, inclusion: { in: statuses }
@@ -27,9 +27,9 @@ class PersonEscortRecord < VersionedModel
   has_many :framework_flags, through: :framework_responses
   belongs_to :profile
   belongs_to :move, optional: true
-  belongs_to :prefill_source, class_name: 'PersonEscortRecord', optional: true
+  belongs_to :prefill_source, class_name: 'YouthRiskAssessment', optional: true
 
-  has_state_machine PersonEscortRecordStateMachine, on: :status
+  has_state_machine YouthRiskAssessmentStateMachine, on: :status
 
   delegate :calculate,
            :confirm,
@@ -43,7 +43,7 @@ class PersonEscortRecord < VersionedModel
     move = Move.find(move_id)
     profile = move.profile
 
-    framework = Framework.find_by!(version: version, name: 'person-escort-record')
+    framework = Framework.find_by!(version: version, name: 'youth-risk-assessment')
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
@@ -57,7 +57,7 @@ class PersonEscortRecord < VersionedModel
 
   def build_responses!
     ApplicationRecord.retriable_transaction do
-      self.prefill_source = previous_per
+      self.prefill_source = previous_youth_assessment
       save!
 
       questions = framework_questions.includes(:dependents).index_by(&:id)
@@ -68,7 +68,7 @@ class PersonEscortRecord < VersionedModel
         framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled))
       end
 
-      PersonEscortRecord.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
+      YouthRiskAssessment.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
     end
 
     self
@@ -97,7 +97,7 @@ class PersonEscortRecord < VersionedModel
   end
 
   def confirm!(new_status)
-    return unless new_status == PERSON_ESCORT_RECORD_CONFIRMED
+    return unless new_status == YOUTH_ASSESSMENT_CONFIRMED
 
     state_machine.confirm!
     save!
@@ -119,10 +119,10 @@ private
   def set_progress(responses)
     responded = responses.pluck(:responded)
 
-    return PERSON_ESCORT_RECORD_COMPLETED if responded.all?(true)
-    return PERSON_ESCORT_RECORD_NOT_STARTED if responded.all?(false)
+    return YOUTH_ASSESSMENT_COMPLETED if responded.all?(true)
+    return YOUTH_ASSESSMENT_NOT_STARTED if responded.all?(false)
 
-    PERSON_ESCORT_RECORD_IN_PROGRESS
+    YOUTH_ASSESSMENT_IN_PROGRESS
   end
 
   def required_responses
@@ -131,15 +131,15 @@ private
     end
   end
 
-  def previous_per
-    @previous_per ||= profile.person.latest_person_escort_record if Flipper.enabled?(:prefill)
+  def previous_youth_assessment
+    @previous_youth_assessment ||= profile.person.latest_youth_assessment if Flipper.enabled?(:prefill)
   end
 
   def previous_responses
     @previous_responses ||= begin
-      return {} unless previous_per
+      return {} unless previous_youth_assessment
 
-      previous_per.framework_responses.includes(framework_question: :dependents).each_with_object({}) do |response, hash|
+      previous_youth_assessment.framework_responses.includes(framework_question: :dependents).each_with_object({}) do |response, hash|
         value = response.prefill_value
         next if value.blank?
 

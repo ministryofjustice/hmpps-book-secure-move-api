@@ -66,6 +66,12 @@ Rails.application.routes.draw do
     end
     resources :framework_responses, only: %i[update]
 
+    resources :youth_risk_assessments, only: %i[create show update] do
+      member do
+        patch 'framework_responses', to: 'framework_responses#bulk_update'
+      end
+    end
+
     get 'locations_free_spaces', to: 'populations#index'
     resources :populations, only: %i[show create update]
 

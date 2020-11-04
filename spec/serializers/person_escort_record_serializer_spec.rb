@@ -79,7 +79,7 @@ RSpec.describe PersonEscortRecordSerializer do
 
   it 'contains a`flags` relationship with framework response flags' do
     flag = create(:framework_flag)
-    create(:string_response, person_escort_record: person_escort_record, framework_flags: [flag])
+    create(:string_response, assessmentable: person_escort_record, framework_flags: [flag])
 
     expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
       id: flag.id,
@@ -105,7 +105,7 @@ RSpec.describe PersonEscortRecordSerializer do
   describe 'meta' do
     it 'includes section progress' do
       question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
-      create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, framework_question: question, assessmentable: person_escort_record)
 
       expect(result[:data][:meta][:section_progress]).to contain_exactly(
         key: 'risk-information',

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :framework_response do
     association(:framework_question)
-    association(:person_escort_record)
+    assessmentable { |f| f.association(:person_escort_record) }
   end
 
   factory :object_response, parent: :framework_response, class: 'FrameworkResponse::Object' do

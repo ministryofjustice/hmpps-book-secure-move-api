@@ -59,7 +59,7 @@ module Api
     end
 
     def person_escort_record
-      @person_escort_record ||= PersonEscortRecord.find(params[:id])
+      @person_escort_record ||= PersonEscortRecord.find_by(id: params[:id]) || YouthRiskAssessment.find_by(id: params[:id])
     end
 
     def render_value_type_error(exception)

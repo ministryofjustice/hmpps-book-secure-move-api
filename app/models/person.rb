@@ -19,6 +19,7 @@ class Person < VersionedModel
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
   has_many :person_escort_records, through: :profiles
+  has_many :youth_risk_assessments, through: :profiles
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :ethnicity, optional: true
@@ -65,5 +66,9 @@ class Person < VersionedModel
 
   def latest_person_escort_record
     person_escort_records.where(status: 'confirmed').order(confirmed_at: :desc).first
+  end
+
+  def latest_youth_assessment
+    youth_risk_assessments.where(status: 'confirmed').order(confirmed_at: :desc).first
   end
 end
