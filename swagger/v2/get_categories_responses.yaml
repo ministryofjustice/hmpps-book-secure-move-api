@@ -7,7 +7,7 @@
       type: array
       items:
         $ref: "../v2/category.yaml#/Category"
-"404":
+"401":
   type: object
   required:
     - errors
@@ -15,8 +15,8 @@
     errors:
       type: array
       items:
-        $ref: "../v1/errors.yaml#/ResourceNotFound"
-"422":
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
+"415":
   type: object
   required:
     - errors
@@ -24,4 +24,4 @@
     errors:
       type: array
       items:
-        $ref: "../v1/errors.yaml#/UnprocessableEntity"
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"
