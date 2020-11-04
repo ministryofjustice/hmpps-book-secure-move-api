@@ -7,7 +7,7 @@ class V2::ProfileSerializer
 
   attributes :assessment_answers
 
-  belongs_to :person, serializer: ::V2::PeopleSerializer
+  belongs_to :person, serializer: ::V2::PersonSerializer
   has_many :documents, serializer: DocumentSerializer
   has_one :person_escort_record, serializer: PersonEscortRecordSerializer
 

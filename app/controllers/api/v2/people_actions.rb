@@ -5,7 +5,7 @@ module Api::V2
 
       people = V2::People::Finder.new(filter_params).call
 
-      paginate people, serializer: ::V2::PeopleSerializer, include: included_relationships
+      paginate people, serializer: ::V2::PersonSerializer, include: included_relationships
     end
 
     def create_and_render
@@ -81,14 +81,14 @@ module Api::V2
     end
 
     def render_person(person, status)
-      render_json person, serializer: ::V2::PersonSerializer, include: included_relationships, status: status
+      render_json person, serializer: ::V2::PersonWithCategorySerializer, include: included_relationships, status: status
     end
 
     def supported_relationships
       if action_name == 'index'
-        ::V2::PeopleSerializer::SUPPORTED_RELATIONSHIPS
-      else
         ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        ::V2::PersonWithCategorySerializer::SUPPORTED_RELATIONSHIPS
       end
     end
 

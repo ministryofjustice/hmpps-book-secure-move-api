@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::PersonSerializer do
   subject(:serializer) { described_class.new(person, adapter_options) }
 
-  let(:person) { create :person, gender_additional_information: 'additional information', latest_nomis_booking_id: latest_nomis_booking_id }
-  let(:latest_nomis_booking_id) { 123 }
+  let(:person) { create :person, gender_additional_information: 'additional information' }
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
@@ -107,36 +106,6 @@ RSpec.describe V2::PersonSerializer do
       let(:person) { create(:person, profiles: []) }
 
       it 'does not contain included profiles' do
-        expect(result[:included]).to be_empty
-      end
-    end
-  end
-
-  describe 'category' do
-    let(:adapter_options) { { include: %i[category] } }
-    let(:category) { create(:category) }
-    let(:latest_nomis_booking_id) { 123 }
-
-    before do
-      allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ category: category.title, category_code: category.key })
-      allow(NomisClient::BookingDetails).to receive(:get).with(456).and_return({})
-    end
-
-    it 'contains a relationship to category' do
-      expect(result[:data][:relationships]).to include(:category)
-    end
-
-    context 'with category' do
-      it 'contains an included category' do
-        expect(result[:included].map { |r| r[:type] }).to contain_exactly('categories')
-        expect(result[:included].map { |r| r[:attributes][:title] }).to contain_exactly(category.title)
-      end
-    end
-
-    context 'without category' do
-      let(:latest_nomis_booking_id) { 456 }
-
-      it 'does not contain included categories' do
         expect(result[:included]).to be_empty
       end
     end

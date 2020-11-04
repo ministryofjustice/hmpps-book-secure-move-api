@@ -17,7 +17,7 @@ RSpec.describe Api::PeopleController do
   let(:latest_nomis_booking_id) { nil }
 
   let(:resource_to_json) do
-    JSON.parse(V2::PersonSerializer.new(person).serializable_hash.to_json)
+    JSON.parse(V2::PersonWithCategorySerializer.new(person).serializable_hash.to_json)
   end
 
   let(:headers) do
