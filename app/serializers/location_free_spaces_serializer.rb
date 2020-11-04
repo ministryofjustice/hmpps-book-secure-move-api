@@ -7,9 +7,13 @@ class LocationFreeSpacesSerializer
 
   attributes :title
 
+  belongs_to :category
+
   meta do |object, params|
     {
       populations: params[object.id],
     }
   end
+
+  SUPPORTED_RELATIONSHIPS = %w[category].freeze
 end

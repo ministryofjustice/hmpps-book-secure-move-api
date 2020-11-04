@@ -173,9 +173,12 @@ RSpec.describe Api::Reference::LocationsController do
 
       it 'delegates the query execution to Locations::Finder with the correct filters' do
         expect(Locations::Finder).to have_received(:new).with(
-          location_type: location.location_type,
-          nomis_agency_id: location.nomis_agency_id,
-          supplier_id: supplier.id,
+          filter_params: {
+            location_type: location.location_type,
+            nomis_agency_id: location.nomis_agency_id,
+            supplier_id: supplier.id,
+          },
+          active_record_relationships: nil,
         )
       end
 

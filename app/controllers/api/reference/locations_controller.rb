@@ -4,7 +4,7 @@ module Api
   module Reference
     class LocationsController < ApiController
       def index
-        locations = Locations::Finder.new(filter_params).call
+        locations = Locations::Finder.new(filter_params: filter_params, active_record_relationships: active_record_relationships).call
         paginate locations, serializer: LocationSerializer, include: included_relationships
       end
 

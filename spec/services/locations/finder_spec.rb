@@ -3,7 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Locations::Finder do
-  subject(:location_finder) { described_class.new(filter_params, sort_params) }
+  subject(:location_finder) do
+    described_class.new(
+      filter_params: filter_params,
+      sort_params: sort_params,
+      active_record_relationships: active_record_relationships,
+    )
+  end
 
   let(:supplier) { create(:supplier) }
   let(:region) { create(:region) }
@@ -13,10 +19,12 @@ RSpec.describe Locations::Finder do
 
   let(:sort_params) { {} }
   let(:filter_params) { {} }
+  let(:active_record_relationships) { [] }
 
   describe 'filtering' do
     context 'with a supplier' do
       let(:filter_params) { { supplier_id: supplier.id } }
+      let(:active_record_relationships) { %i[suppliers] }
 
       before do
         create(:location) # Not linked to supplier
@@ -53,13 +61,31 @@ RSpec.describe Locations::Finder do
   end
 
   describe 'sorting' do
-    let!(:location1) { create :location, title: 'LOCATION1' }
-    let!(:location2) { create :location, title: 'Location2' }
-    let!(:location3) { create :location, title: 'LOCATION3' }
-    let(:sort_params) { { by: :title, direction: :asc } }
+    context 'when by title' do
+      let!(:location1) { create :location, title: 'LOCATION1' }
+      let!(:location2) { create :location, title: 'Location2' }
+      let!(:location3) { create :location, title: 'LOCATION3' }
 
-    it 'orders by location title (case-sensitive)' do
-      expect(location_finder.call.pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order
+      let(:sort_params) { { by: :title, direction: :asc } }
+
+      it 'orders by location title (case-sensitive)' do
+        expect(location_finder.call.pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order
+      end
+    end
+
+    context 'when by category' do
+      let!(:category1) { create :category, title: 'Category A' }
+      let!(:category2) { create :category, title: 'Category B' }
+      let!(:category1_first_location) { create :location, title: 'Location1', category: category1 }
+      let!(:category2_location) { create :location, title: 'Location2', category: category2 }
+      let!(:category1_second_location) { create :location, title: 'Location3', category: category1 }
+      let!(:location_without_category) { create :location, title: 'Location4' }
+
+      let(:sort_params) { { by: :category, direction: :asc } }
+
+      it 'orders by category title then location title' do
+        expect(location_finder.call.pluck(:title)).to eql(%w[Location1 Location3 Location2 Location4])
+      end
     end
   end
 end

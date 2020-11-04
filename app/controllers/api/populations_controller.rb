@@ -5,7 +5,7 @@ module Api
     before_action :validate_date_range_params, only: %i[index]
 
     def index
-      paginate locations, serializer: LocationFreeSpacesSerializer do |paginated_locations, options|
+      paginate locations, serializer: LocationFreeSpacesSerializer, include: included_relationships do |paginated_locations, options|
         options[:params] = Population.free_spaces_date_range(paginated_locations, (date_from..date_to))
       end
     end
@@ -63,7 +63,11 @@ module Api
     end
 
     def locations
-      @locations ||= Locations::Finder.new(filter_params, sort_params).call
+      @locations ||= Locations::Finder.new(
+        filter_params: filter_params,
+        sort_params: sort_params,
+        active_record_relationships: active_record_relationships,
+      ).call
     end
 
     def location_id
@@ -89,7 +93,11 @@ module Api
     end
 
     def supported_relationships
-      PopulationSerializer::SUPPORTED_RELATIONSHIPS
+      if action_name == 'index'
+        LocationFreeSpacesSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        PopulationSerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
   end
 end
