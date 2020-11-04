@@ -11,8 +11,4 @@ RSpec.describe Category do
   it { is_expected.to validate_presence_of(:key) }
   it { is_expected.to validate_uniqueness_of(:key) }
   it { is_expected.to validate_presence_of(:title) }
-
-  # NB: it is not recommended to test that :move_supported is a boolean field - see warning from shoulda-matchers:
-  # Be aware that it is not possible to fully test this, as boolean columns will automatically convert non-boolean
-  # values to boolean ones.
 end
