@@ -76,7 +76,11 @@ RSpec.describe Api::PopulationsController do
 
         it 'delegates the query execution to Locations::Finder with the correct filters' do
           get_locations_free_spaces
-          expect(Locations::Finder).to have_received(:new).with({ region_id: region.id, location_id: location.id }, {})
+          expect(Locations::Finder).to have_received(:new).with(
+            filter_params: { region_id: region.id, location_id: location.id },
+            sort_params: {},
+            active_record_relationships: nil,
+          )
         end
       end
 
@@ -93,7 +97,44 @@ RSpec.describe Api::PopulationsController do
 
         it 'delegates the query execution to Locations::Finder with the correct sorting' do
           get_locations_free_spaces
-          expect(Locations::Finder).to have_received(:new).with({}, { by: 'title', direction: 'desc' })
+          expect(Locations::Finder).to have_received(:new).with(
+            filter_params: {},
+            sort_params: { by: 'title', direction: 'desc' },
+            active_record_relationships: nil,
+          )
+        end
+      end
+    end
+
+    describe 'included relationships' do
+      let!(:category) { create :category }
+      let!(:location) { create :location, category: category }
+
+      before { get_locations_free_spaces }
+
+      context 'when not including the include query param' do
+        let(:params) { {} }
+
+        it 'returns no included relationships ' do
+          expect(response_json).not_to include('included')
+        end
+      end
+
+      context 'when including the include param' do
+        let(:params) { { include: 'category' } }
+
+        it 'returns the valid provided includes' do
+          returned_types = response_json['included'].map { |r| r['type'] }.uniq
+          expect(returned_types).to contain_exactly('categories')
+        end
+      end
+
+      context 'when including an empty include param' do
+        let(:params) { { include: '' } }
+
+        it 'returns none of the includes' do
+          returned_types = response_json['included']
+          expect(returned_types).to be_nil
         end
       end
     end

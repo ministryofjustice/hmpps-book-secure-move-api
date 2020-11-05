@@ -5,5 +5,5 @@ class CategorySerializer
 
   set_type :categories
 
-  attributes :key, :title, :move_supported
+  attributes :key, :title, :move_supported, :created_at, :updated_at
 end

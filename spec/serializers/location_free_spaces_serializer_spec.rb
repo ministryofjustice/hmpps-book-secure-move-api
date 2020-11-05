@@ -42,4 +42,31 @@ RSpec.describe LocationFreeSpacesSerializer do
       expect(meta).to eql({ populations: { foo: 'bar' } })
     end
   end
+
+  describe 'category' do
+    let(:adapter_options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
+
+    context 'with a category' do
+      let(:category) { create(:category) }
+      let(:location) { create(:location, category: category) }
+
+      it 'contains a category relationship' do
+        expect(result_data[:relationships][:category]).to eq(data: { id: category.id, type: 'categories' })
+      end
+
+      it 'contains an included category' do
+        expect(result[:included].map { |r| r[:type] }).to match_array(%w[categories])
+      end
+    end
+
+    context 'without a category' do
+      it 'contains an empty category' do
+        expect(result_data[:relationships][:category]).to eq(data: nil)
+      end
+
+      it 'does not contain an included category' do
+        expect(result[:included]).to be_empty
+      end
+    end
+  end
 end

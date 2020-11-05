@@ -2,25 +2,29 @@
 
 module Locations
   class Finder
-    attr_accessor :filter_params, :order_by, :order_direction
+    attr_accessor :filter_params, :order_by, :order_direction, :active_record_relationships
 
-    def initialize(filter_params, sort_params = {})
+    def initialize(filter_params:, sort_params: {}, active_record_relationships: [])
       self.filter_params = filter_params
       self.order_by = (sort_params[:by] || 'title').to_sym
       self.order_direction = (sort_params[:direction] || 'asc').to_sym
+      self.active_record_relationships = active_record_relationships
     end
 
     def call
       scope = apply_filters(Location)
+      scope = scope.includes(active_record_relationships)
       apply_ordering(scope)
     end
 
   private
 
     def apply_ordering(scope)
-      case @order_by
+      case order_by
       when :title
-        scope.order(@order_by => @order_direction)
+        scope.order(title: order_direction)
+      when :category
+        scope.left_joins(:category).order('categories.title' => order_direction, 'locations.title' => order_direction)
       else
         scope
       end
