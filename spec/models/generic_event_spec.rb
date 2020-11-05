@@ -136,4 +136,55 @@ RSpec.describe GenericEvent, type: :model do
       expect(actual_events).to eq([on_start_event, on_end_event])
     end
   end
+
+  describe '.serializer' do
+    let(:relation_serializer) { event.class.serializer.relationships_to_serialize[relation_serializer_key].serializer }
+
+    context 'when the event STI defines relationships' do
+      context 'with no supported V2 version' do
+        let(:event) do
+          create(
+            :event_move_lockout,
+            details: {
+              from_location_id: create(:location).id,
+              reason: 'no_space',
+              authorised_at: Time.zone.now.iso8601,
+              authorised_by: 'PMU',
+            },
+          )
+        end
+
+        let(:relation_serializer_key) { :from_location }
+
+        it 'falls back to the non-V2 version of the relation serializer' do
+          expect(relation_serializer).to eq(LocationSerializer)
+        end
+      end
+
+      context 'with a supported V2 version' do
+        let(:event) do
+          create(
+            :event_move_cross_supplier_pick_up,
+            details: {
+              previous_move_id: create(:move).id,
+            },
+          )
+        end
+
+        let(:relation_serializer_key) { :previous_move }
+
+        it 'uses the V2 version of the relation serializer' do
+          expect(relation_serializer).to eq(V2::MoveSerializer)
+        end
+      end
+    end
+
+    context 'when the event STI does not define relationships' do
+      let(:event) { create(:event_per_generic, details: {}) }
+
+      it 'defaults to the GenericEventSerializer' do
+        expect(event.class.serializer).to eq(GenericEventSerializer)
+      end
+    end
+  end
 end

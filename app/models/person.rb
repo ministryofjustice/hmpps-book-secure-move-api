@@ -66,4 +66,14 @@ class Person < VersionedModel
   def latest_person_escort_record
     person_escort_records.where(status: 'confirmed').order(confirmed_at: :desc).first
   end
+
+  def category
+    if latest_nomis_booking_id.present?
+      @category ||= begin
+                      booking_details = NomisClient::BookingDetails.get(latest_nomis_booking_id)
+                      Category.find_by(key: booking_details[:category_code])
+                    end
+
+    end
+  end
 end

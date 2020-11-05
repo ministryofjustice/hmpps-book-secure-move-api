@@ -1,0 +1,69 @@
+"200":
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      $ref: "../v2/person.yaml#/Person"
+    included:
+      type: array
+      items:
+        anyOf:
+          - $ref: "../v1/gender.yaml#/Gender"
+          - $ref: "../v1/ethnicity.yaml#/Ethnicity"
+          - $ref: "../v1/profile.yaml#/Profile"
+          - $ref: "../v2/category.yaml#/Category"
+"400":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/BadRequest"
+"401":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"
+"404":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
+"415":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/UnprocessableEntity"
+"502":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NomisBadGatewayError"
+"504":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NomisTimeoutError"
