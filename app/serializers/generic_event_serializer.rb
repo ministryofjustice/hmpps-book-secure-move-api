@@ -7,7 +7,7 @@ class GenericEventSerializer
 
   attributes :occurred_at, :recorded_at, :notes, :details
 
-  has_one :eventable, polymorphic: true
+  has_one :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
 
   SUPPORTED_RELATIONSHIPS = %w[eventable].freeze
 

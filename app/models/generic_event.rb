@@ -159,19 +159,12 @@ class GenericEvent < ApplicationRecord
 
     define_singleton_method(:serializer) do
       @serializer ||=
-        Class.new(GenericEventSerializer).tap do |serializer|
+        Class.new(GenericEventSerializer).tap do |new_serializer_class|
           relationship_attributes.each do |attribute_key, attribute_type|
-            # NB: Default to V2 relationship serializer and fallback to unversioned serializer. Never support v1
-            relation_serializer = "V2::#{attribute_type.to_s.singularize.camelize}Serializer"
-            relation_serializer = if const_defined?(relation_serializer)
-                                    relation_serializer
-                                  else
-                                    relation_serializer.gsub('V2::', '')
-                                  end
-
             named_relationship_key = attribute_key.to_s.sub('_id', '')
-            serializer.set_type :events
-            serializer.has_one named_relationship_key, serializer: relation_serializer.constantize
+
+            new_serializer_class.set_type :events
+            new_serializer_class.has_one named_relationship_key, serializer: SerializerVersionChooser.call(attribute_type.to_s.singularize.camelize)
           end
         end
     end
