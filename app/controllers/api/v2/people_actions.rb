@@ -14,6 +14,10 @@ module Api::V2
       render_person(person, :created)
     end
 
+    def show_and_render
+      render_person(person, :ok)
+    end
+
     def update_and_render
       person = Person.find(params[:id])
 
@@ -77,11 +81,15 @@ module Api::V2
     end
 
     def render_person(person, status)
-      render_json person, serializer: ::V2::PersonSerializer, include: included_relationships, status: status
+      render_json person, serializer: ::V2::PersonWithCategorySerializer, include: included_relationships, status: status
     end
 
     def supported_relationships
-      ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+      if action_name == 'index'
+        ::V2::PersonSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        ::V2::PersonWithCategorySerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
 
     def other_included_relationships

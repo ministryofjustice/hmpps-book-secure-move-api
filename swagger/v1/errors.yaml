@@ -84,6 +84,18 @@ UnprocessableEntity:
         pointer:
           type: string
           example: /data/attributes/property
+NomisBadGatewayError:
+  type: object
+  required:
+    - title
+    - detail
+  properties:
+    title:
+      type: string
+      example: Bad Gateway Error
+    detail:
+      type: string
+      example: "OAuth2::Error Nomis Bad Gateway Error"
 NomisTimeoutError:
   type: object
   required:
@@ -96,3 +108,12 @@ NomisTimeoutError:
     detail:
       type: string
       example: "Faraday::TimeoutError: Nomis Connection Error"
+NotSupported:
+  type: object
+  properties:
+    title:
+      type: string
+      example: Not Supported In Old Version Error
+    detail:
+      type: string
+      example: Not supported in version v1 - please upgrade to a newer version

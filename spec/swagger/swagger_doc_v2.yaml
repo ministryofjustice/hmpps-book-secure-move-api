@@ -40,6 +40,8 @@
           :tokenUrl: "/oauth/token/"
           :scopes: {}
   :schemas:
+    :Category:
+      :$ref: "../v2/category.yaml#/Category"
     :Ethnicity:
       :$ref: "../v1/ethnicity.yaml#/Ethnicity"
     :Gender:
@@ -179,6 +181,54 @@
               schema:
                 "$ref": "../v2/post_people_responses.yaml#/422"
   "/people/{person_id}":
+    get:
+      summary: Returns a person
+      tags:
+        - People
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - name: person_id
+          in: path
+          required: true
+          description: The ID of the person
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+        - "$ref": "../v2/person_category_include_parameter.yaml#/PersonCategoryIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/415"
+        "502":
+          description: Nomis Bad Gateway Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/502"
+        "504":
+          description: Nomis Timeout Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/504"
     patch:
       summary: "Updates an existing person."
       tags:
@@ -667,6 +717,34 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+  "/reference/categories":
+    get:
+      summary: Retrieves a list of prisoner and establishment categories
+      description: |
+        This method returns a list of categories
+      tags:
+        - Categories
+      consumes:
+        - application/vnd.api+json
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/415"
   "/events":
     post:
       summary: DRAFT Creates a new event for a given eventable DRAFT

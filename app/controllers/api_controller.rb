@@ -24,10 +24,12 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
+  rescue_from NotSupportedInOldVersionError, with: :render_not_supported_in_old_version_error
 
   # Nomis connection errors:
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
   rescue_from Faraday::TimeoutError, with: :render_timeout_error
+  rescue_from OAuth2::Error, with: :nomis_bad_gateway
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -177,6 +179,16 @@ private
     )
   end
 
+  def render_nomis_bad_gateway(exception)
+    render(
+      json: { errors: [{
+        title: 'Nomis Bad Gateway Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :bad_gateway,
+    )
+  end
+
   def validation_errors(record)
     errors = record.errors
     errors.keys.flat_map do |field|
@@ -219,6 +231,18 @@ private
       },
       # NB: The json:api specification requires this is a 400
       status: :bad_request,
+    )
+  end
+
+  def render_not_supported_in_old_version_error
+    render(
+      json: {
+        errors: [{
+          title: 'Not Supported In Old Version Error',
+          detail: "This endpoint is not supported in version v#{api_version} - please change the ACCEPT header to a newer version",
+        }],
+      },
+      status: :not_acceptable,
     )
   end
 

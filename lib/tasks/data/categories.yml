@@ -178,6 +178,9 @@
     - CFI
     - SWI
     - NWI
+  U:
+    title: Unsentenced
+    move_supported: true
   YJB:
     title: YJB
     move_supported: true
