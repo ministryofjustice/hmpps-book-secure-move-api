@@ -189,6 +189,16 @@ RSpec.describe Api::GenericEventsController do
         }
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
       end
+
+      it 'excludes the from_location from the details in the response' do
+        do_post
+
+        event = GenericEvent.last
+        resource_to_json = JSON.parse(event.class.serializer.new(event).serializable_hash.to_json)
+
+        expected_details = { 'authorised_at' => event.authorised_at, 'authorised_by' => 'PMU', 'reason' => 'no_space' }
+        expect(resource_to_json.dig('data', 'attributes', 'details')).to eq(expected_details)
+      end
     end
 
     context 'when the event has an additional relationship with a v2 implementation' do
@@ -239,6 +249,16 @@ RSpec.describe Api::GenericEventsController do
           'supplier' => { 'data' => nil },
         }
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
+      end
+
+      it 'excludes the previous_move from the details in the response' do
+        do_post
+
+        event = GenericEvent.last
+        resource_to_json = JSON.parse(event.class.serializer.new(event).serializable_hash.to_json)
+
+        expected_details = {}
+        expect(resource_to_json.dig('data', 'attributes', 'details')).to eq(expected_details)
       end
     end
 
