@@ -84,6 +84,18 @@ UnprocessableEntity:
         pointer:
           type: string
           example: /data/attributes/property
+NomisBadGatewayError:
+  type: object
+  required:
+    - title
+    - detail
+  properties:
+    title:
+      type: string
+      example: Bad Gateway Error
+    detail:
+      type: string
+      example: "OAuth2::Error Nomis Bad Gateway Error"
 NomisTimeoutError:
   type: object
   required:

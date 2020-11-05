@@ -217,6 +217,18 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/get_person_responses.yaml#/415"
+        "502":
+          description: Nomis Bad Gateway Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/502"
+        "504":
+          description: Nomis Timeout Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/504"
     patch:
       summary: "Updates an existing person."
       tags:

@@ -29,6 +29,7 @@ class ApiController < ApplicationController
   # Nomis connection errors:
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
   rescue_from Faraday::TimeoutError, with: :render_timeout_error
+  rescue_from OAuth2::Error, with: :nomis_bad_gateway
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -178,6 +179,16 @@ private
     )
   end
 
+  def render_nomis_bad_gateway(exception)
+    render(
+      json: { errors: [{
+        title: 'Nomis Bad Gateway Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :bad_gateway,
+    )
+  end
+
   def validation_errors(record)
     errors = record.errors
     errors.keys.flat_map do |field|
@@ -231,8 +242,6 @@ private
           detail: "This endpoint is not supported in version v#{api_version} - please change the ACCEPT header to a newer version",
         }],
       },
-      # NB: 406 Not Acceptable (The resource identified by the request is only capable of generating response entities
-      # which have content characteristics not acceptable according to the accept headers sent in the request.)
       status: :not_acceptable,
     )
   end

@@ -12,6 +12,7 @@
           - $ref: "../v1/gender.yaml#/Gender"
           - $ref: "../v1/ethnicity.yaml#/Ethnicity"
           - $ref: "../v1/profile.yaml#/Profile"
+          - $ref: "../v2/category.yaml#/Category"
 "400":
   type: object
   required:
@@ -48,3 +49,21 @@
       type: array
       items:
         $ref: "../v1/errors.yaml#/UnprocessableEntity"
+"502":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NomisBadGatewayError"
+"504":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NomisTimeoutError"

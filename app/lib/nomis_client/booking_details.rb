@@ -12,7 +12,13 @@ module NomisClient
       end
 
       def get_response(nomis_booking_id)
-        NomisClient::Base.get("/bookings/#{nomis_booking_id}").parsed
+        path = "/bookings/#{nomis_booking_id}"
+        begin
+          NomisClient::Base.get(path).parsed
+        rescue OAuth2::Error => e
+          log_exception('Get BookingDetails Error', path, {}, e)
+          raise e
+        end
       end
 
       def attributes_for(details)
