@@ -106,19 +106,6 @@ class GenericEvent < ApplicationRecord
     feed
   end
 
-  def relationships
-    return {} unless self.class.instance_variable_defined?(:@relationship_attributes)
-
-    self.class.relationship_attributes.each_with_object({}) do |(attribute_key, attribute_type), acc|
-      id = details[attribute_key]
-      named_relationship_key = attribute_key.to_s.sub('_id', '')
-
-      next if id.blank?
-
-      acc[named_relationship_key] = { type: attribute_type, id: id }
-    end
-  end
-
   def self.from_event(event)
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
