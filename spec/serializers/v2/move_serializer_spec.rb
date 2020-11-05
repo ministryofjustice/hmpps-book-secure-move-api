@@ -83,8 +83,7 @@ RSpec.describe V2::MoveSerializer do
     context 'with generic events' do
       let(:move) { create(:move) }
       let(:now) {  Time.zone.now }
-
-      let!(:event) { create(:event_move_cancel, eventable: move, occurred_at: now + 1.second) }
+      let(:included_event) { result[:included].find { |include| include[:id] == event.id } }
 
       let(:expected_event_relationships) do
         [
@@ -92,12 +91,43 @@ RSpec.describe V2::MoveSerializer do
         ]
       end
 
-      it 'contains timeline_events relationship in the correct order' do
-        expect(result[:data][:relationships][:timeline_events]).to eq(data: expected_event_relationships)
+      context 'when the event has no additional relationships' do
+        let!(:event) { create(:event_move_cancel, eventable: move, occurred_at: now) }
+
+        it 'contains timeline_events relationship' do
+          expect(result[:data][:relationships][:timeline_events]).to eq(data: expected_event_relationships)
+        end
+
+        it 'contains included events' do
+          expect(included_event).to be_present
+        end
+
+        it 'contains the correct relationships for the event include' do
+          event_relationships = { eventable: { data: { id: event.eventable_id, type: 'moves' } } }
+
+          expect(included_event[:relationships]).to eq(event_relationships)
+        end
       end
 
-      it 'contains included events in the correct order' do
-        expect(result[:included].map { |event| event[:id] }).to eq([event.id])
+      context 'when the event has additional relationships' do
+        let!(:event) { create(:event_move_redirect, eventable: move, occurred_at: now) }
+
+        it 'contains timeline_events relationship' do
+          expect(result[:data][:relationships][:timeline_events]).to eq(data: expected_event_relationships)
+        end
+
+        it 'contains included events' do
+          expect(included_event).to be_present
+        end
+
+        it 'contains the correct relationships for the event include' do
+          event_relationships = {
+            to_location: { data: { id: event.to_location.id, type: 'locations' } },
+            eventable: { data: { id: event.eventable_id, type: 'moves' } },
+          }
+
+          expect(included_event[:relationships]).to eq(event_relationships)
+        end
       end
     end
 

@@ -143,13 +143,38 @@ class GenericEvent < ApplicationRecord
     end
   end
 
+  # NB: Majority of events will use this serializer rather than the anonymous class.
+  def self.serializer
+    GenericEventSerializer
+  end
+
   # Relationship attributes live against the details but are expected in the json:api relationship section
   # so are defined separately
   def self.relationship_attributes(attributes)
     define_singleton_method(:relationship_attributes) do
       instance_variable_get('@relationship_attributes')
     end
+
     instance_variable_set('@relationship_attributes', attributes)
+
+    define_singleton_method(:serializer) do
+      @serializer ||=
+        Class.new(GenericEventSerializer).tap do |serializer|
+          relationship_attributes.each do |attribute_key, attribute_type|
+            # NB: Default to V2 relationship serializer and fallback to unversioned serializer. Never support v1
+            relation_serializer = "V2::#{attribute_type.to_s.singularize.camelize}Serializer"
+            relation_serializer = if const_defined?(relation_serializer)
+                                    relation_serializer
+                                  else
+                                    relation_serializer.gsub('V2::', '')
+                                  end
+
+            named_relationship_key = attribute_key.to_s.sub('_id', '')
+            serializer.set_type :events
+            serializer.has_one named_relationship_key, serializer: relation_serializer.constantize
+          end
+        end
+    end
 
     attributes.each do |attribute_key, attribute_type|
       named_relationship_key = attribute_key.to_s.sub('_id', '')
