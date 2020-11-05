@@ -7,7 +7,7 @@ module V2
     set_type :people
 
     # NB: we need to lazy load the category to prevent an unnecessary call to Nomis
-    has_one :category, serializer: CategorySerializer, id_method_name: :key, lazy_load_data: true, &:category
+    has_one :category, serializer: CategorySerializer, lazy_load_data: true, &:category
 
     SUPPORTED_RELATIONSHIPS = %w[ethnicity gender profiles category].freeze
   end

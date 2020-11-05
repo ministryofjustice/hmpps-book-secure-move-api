@@ -6,8 +6,9 @@ Category:
   properties:
     id:
       type: string
-      example: 'B'
-      description: The unique category-code of the object
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
     type:
       type: string
       example: categories
@@ -17,9 +18,14 @@ Category:
     attributes:
       type: object
       required:
+        - key
         - title
         - move_supported
       properties:
+        key:
+          type: string
+          example: 'B'
+          description: The category_code
         title:
           type: string
           example: 'Cat B'
