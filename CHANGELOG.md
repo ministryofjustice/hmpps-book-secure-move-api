@@ -1,5 +1,28 @@
 # Changelog
 
+## [v2.6.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.3) (2020-11-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.2...v2.6.3)
+
+**Merged pull requests:**
+
+- Ensure the right version of tzdata is used in the docker container [\#1110](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1110) ([Nimphal](https://github.com/Nimphal))
+- Remove inclusion test for boolean column on categories [\#1108](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1108) ([cwrw](https://github.com/cwrw))
+- Bump bootsnap from 1.4.9 to 1.5.0 [\#1106](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1106) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove unused category [\#1105](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1105) ([smoothcontract](https://github.com/smoothcontract))
+- P4 1776 add user info to papertrail [\#1104](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1104) ([Thource](https://github.com/Thource))
+- Finalise non-functional refactor of eventable validations [\#1103](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1103) ([willfish](https://github.com/willfish))
+- Add new service and YAML file to import category reference data [\#1102](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1102) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-2423\] Support eventable include when pulling on move timeline [\#1101](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1101) ([willfish](https://github.com/willfish))
+- P4 1776 add user info to papertrail [\#1100](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1100) ([Thource](https://github.com/Thource))
+- \[P4-2422\] Surface event relationships: part 1 [\#1099](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1099) ([willfish](https://github.com/willfish))
+- Don't create fake data that should be reference data [\#1098](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1098) ([smoothcontract](https://github.com/smoothcontract))
+- Add schema migration and model for categories [\#1097](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1097) ([smoothcontract](https://github.com/smoothcontract))
+- Use created\_at field in range query when retrieving immutable resources [\#1096](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1096) ([willfish](https://github.com/willfish))
+- P4 2409 import hospitals [\#1095](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1095) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1094](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1094) ([martyn-w](https://github.com/martyn-w))
+- Removes negation prefixing on one of the enum options on incidents [\#1093](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1093) ([willfish](https://github.com/willfish))
+
 ## [v2.6.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.2) (2020-10-29)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.1...v2.6.2)
