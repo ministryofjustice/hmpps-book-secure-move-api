@@ -30,7 +30,7 @@ RSpec.describe Api::Reference::CategoriesController do
               title: 'Cat A',
               created_at: cat_a.created_at.iso8601,
               updated_at: cat_a.updated_at.iso8601,
-            }
+            },
           },
           {
             id: cat_b.id,
@@ -41,9 +41,9 @@ RSpec.describe Api::Reference::CategoriesController do
               title: 'Cat B',
               created_at: cat_b.created_at.iso8601,
               updated_at: cat_b.updated_at.iso8601,
-            }
+            },
           },
-        ]
+        ],
       }
     end
 
