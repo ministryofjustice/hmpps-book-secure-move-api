@@ -28,7 +28,8 @@ RSpec.describe GenericEventSerializer do
           },
         },
         relationships: {
-          eventable: { data: { type: 'moves', id: move.id } },
+          eventable: { data: { type: 'moves', id: event.eventable.id } },
+          supplier: { data: { type: 'suppliers', id: event.supplier.id } },
         },
       },
     }
@@ -36,7 +37,6 @@ RSpec.describe GenericEventSerializer do
 
   context 'with no options' do
     let(:adapter_options) { {} }
-    let(:move) { event.eventable }
 
     it { expect(result).to include_json(expected_json) }
     it { expect(result[:included]).to be_nil }
@@ -50,7 +50,6 @@ RSpec.describe GenericEventSerializer do
 
   context 'with include eventable' do
     let(:adapter_options) { { include: [:eventable] } }
-    let(:move) { event.eventable }
 
     it { expect(result).to include_json(expected_json) }
     it { expect(result[:included].map { |include| include[:type] }).to eq(%w[moves]) }

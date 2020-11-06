@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :generic_event do
     eventable { association(:move) }
+    supplier { association(:supplier) }
     occurred_at { Time.zone.now }
     recorded_at { Time.zone.now }
     notes { 'Flibble' }

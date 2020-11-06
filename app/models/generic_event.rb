@@ -164,7 +164,7 @@ class GenericEvent < ApplicationRecord
             named_relationship_key = attribute_key.to_s.sub('_id', '')
 
             new_serializer_class.set_type :events
-            new_serializer_class.has_one named_relationship_key, serializer: SerializerVersionChooser.call(attribute_type.to_s.singularize.camelize)
+            new_serializer_class.has_one named_relationship_key, serializer: SerializerVersionChooser.call(attribute_type)
           end
         end
     end
