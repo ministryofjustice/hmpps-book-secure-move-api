@@ -134,6 +134,7 @@ RSpec.describe Api::GenericEventsController do
 
         expected_relationships = {
           'eventable' => { 'data' => { 'id' => event.eventable.id, 'type' => 'moves' } },
+          'supplier' => { 'data' => nil },
         }
 
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
@@ -184,6 +185,7 @@ RSpec.describe Api::GenericEventsController do
         expected_relationships = {
           'eventable' => { 'data' => { 'id' => event.eventable.id, 'type' => 'moves' } },
           'from_location' => { 'data' => { 'id' => event.from_location.id, 'type' => 'locations' } },
+          'supplier' => { 'data' => nil },
         }
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
       end
@@ -234,6 +236,7 @@ RSpec.describe Api::GenericEventsController do
         expected_relationships = {
           'eventable' => { 'data' => { 'id' => event.eventable.id, 'type' => 'moves' } },
           'previous_move' => { 'data' => { 'id' => event.previous_move.id, 'type' => 'moves' } },
+          'supplier' => { 'data' => nil },
         }
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
       end
@@ -258,6 +261,20 @@ RSpec.describe Api::GenericEventsController do
         do_post
         event = GenericEvent.find(response_json.dig('data', 'id'))
         expect(event.supplier).to eq(supplier)
+      end
+
+      it 'returns the supplier of the event in the relationships' do
+        do_post
+
+        event = GenericEvent.last
+        resource_to_json = JSON.parse(event.class.serializer.new(event).serializable_hash.to_json)
+
+        expected_relationships = {
+          'eventable' => { 'data' => { 'id' => event.eventable.id, 'type' => 'moves' } },
+          'from_location' => { 'data' => { 'id' => event.from_location.id, 'type' => 'locations' } },
+          'supplier' => { 'data' => { 'id' => event.supplier.id, 'type' => 'suppliers' } },
+        }
+        expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
       end
     end
 
