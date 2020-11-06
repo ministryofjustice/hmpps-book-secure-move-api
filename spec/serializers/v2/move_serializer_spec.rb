@@ -103,7 +103,10 @@ RSpec.describe V2::MoveSerializer do
         end
 
         it 'contains the correct relationships for the event include' do
-          event_relationships = { eventable: { data: { id: event.eventable_id, type: 'moves' } } }
+          event_relationships = {
+            eventable: { data: { id: event.eventable.id, type: 'moves' } },
+            supplier: { data: { id: event.supplier.id, type: 'suppliers' } },
+          }
 
           expect(included_event[:relationships]).to eq(event_relationships)
         end
@@ -124,6 +127,7 @@ RSpec.describe V2::MoveSerializer do
           event_relationships = {
             to_location: { data: { id: event.to_location.id, type: 'locations' } },
             eventable: { data: { id: event.eventable_id, type: 'moves' } },
+            supplier: { data: { id: event.supplier.id, type: 'suppliers' } },
           }
 
           expect(included_event[:relationships]).to eq(event_relationships)
