@@ -6,7 +6,12 @@ namespace :prisoner_category do
 
     puts "Refreshing #{count} profiles"
     profiles.find_each.with_index do |profile, i|
-      Profiles::ImportPrisonerCategory.new(profile).call
+      latest_nomis_booking_id = profile&.person&.latest_nomis_booking_id
+      if latest_nomis_booking_id.present?
+        profile.category = Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
+        profile.save(touch: false) # NB: don't mass-update the updated_at timestamp to prevent a catastrophe in JPC/CDI reports
+      end
+
       puts "processed #{i + 1} of #{count}: #{profile.id} -> #{profile.category}"
     end
   end

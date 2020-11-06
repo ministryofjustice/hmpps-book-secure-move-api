@@ -50,12 +50,12 @@ module Api
     def profile_attributes
       profile_attributes = profile_params.fetch(:attributes, {})
       profile_attributes[:documents] = documents unless document_attributes.nil?
-      profile_attributes[:category] = category if person.latest_nomis_booking_id.present?
+      profile_attributes[:category] = category
       profile_attributes
     end
 
     def category
-      Category.find_by(key: NomisClient::BookingDetails.get(person.latest_nomis_booking_id)[:category_code])
+      Categories::FindByNomisBookingId.new(person.latest_nomis_booking_id).call
     end
 
     def documents
