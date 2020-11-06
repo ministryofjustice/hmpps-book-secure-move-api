@@ -106,19 +106,6 @@ class GenericEvent < ApplicationRecord
     feed
   end
 
-  def relationships
-    return {} unless self.class.instance_variable_defined?(:@relationship_attributes)
-
-    self.class.relationship_attributes.each_with_object({}) do |(attribute_key, attribute_type), acc|
-      id = details[attribute_key]
-      named_relationship_key = attribute_key.to_s.sub('_id', '')
-
-      next if id.blank?
-
-      acc[named_relationship_key] = { type: attribute_type, id: id }
-    end
-  end
-
   def self.from_event(event)
     type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
 
@@ -159,19 +146,12 @@ class GenericEvent < ApplicationRecord
 
     define_singleton_method(:serializer) do
       @serializer ||=
-        Class.new(GenericEventSerializer).tap do |serializer|
+        Class.new(GenericEventSerializer).tap do |new_serializer_class|
           relationship_attributes.each do |attribute_key, attribute_type|
-            # NB: Default to V2 relationship serializer and fallback to unversioned serializer. Never support v1
-            relation_serializer = "V2::#{attribute_type.to_s.singularize.camelize}Serializer"
-            relation_serializer = if const_defined?(relation_serializer)
-                                    relation_serializer
-                                  else
-                                    relation_serializer.gsub('V2::', '')
-                                  end
-
             named_relationship_key = attribute_key.to_s.sub('_id', '')
-            serializer.set_type :events
-            serializer.has_one named_relationship_key, serializer: relation_serializer.constantize
+
+            new_serializer_class.set_type :events
+            new_serializer_class.has_one named_relationship_key, serializer: SerializerVersionChooser.call(attribute_type)
           end
         end
     end
