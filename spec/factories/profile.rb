@@ -51,43 +51,11 @@ FactoryBot.define do
     end
   end
 
-  trait :category_a do
-    category { 'Cat A' }
-    category_code { 'A' }
+  trait :category_supported do
+    association(:category)
   end
 
-  trait :category_h do
-    category { 'Cat A-Hi' }
-    category_code { 'H' }
-  end
-
-  trait :category_e do
-    category { 'Cat A-Ex' }
-    category_code { 'E' }
-  end
-
-  trait :category_b do
-    category { 'Cat B' }
-    category_code { 'B' }
-  end
-
-  trait :category_c do
-    category { 'Cat C' }
-    category_code { 'C' }
-  end
-
-  trait :category_d do
-    category { 'Cat D' }
-    category_code { 'D' }
-  end
-
-  trait :category_u do
-    category { 'Unsentenced' }
-    category_code { 'U' }
-  end
-
-  trait :category_unknown do
-    category { nil }
-    category_code { nil }
+  trait :category_not_supported do
+    association(:category, :not_supported)
   end
 end

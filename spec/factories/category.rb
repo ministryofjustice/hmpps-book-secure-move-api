@@ -9,5 +9,11 @@ FactoryBot.define do
     trait :not_supported do
       move_supported { false }
     end
+
+    trait :cat_c do
+      key { 'C' }
+      title { 'Cat C' }
+      move_supported { true }
+    end
   end
 end

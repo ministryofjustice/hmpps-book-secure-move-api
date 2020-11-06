@@ -68,12 +68,6 @@ class Person < VersionedModel
   end
 
   def category
-    if latest_nomis_booking_id.present?
-      @category ||= begin
-                      booking_details = NomisClient::BookingDetails.get(latest_nomis_booking_id)
-                      Category.find_by(key: booking_details[:category_code])
-                    end
-
-    end
+    @category ||= Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
   end
 end

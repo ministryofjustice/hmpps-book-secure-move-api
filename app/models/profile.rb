@@ -20,12 +20,13 @@ class Profile < VersionedModel
     profile_identifiers
     gender_additional_information
     latest_nomis_booking_id
+    category
+    category_code
   ]
 
   before_validation :set_assessment_answers
 
-  # TODO: uncomment this when category attribute is removed from model
-  # belongs_to :category, optional: true
+  belongs_to :category, optional: true
   belongs_to :person, touch: true
 
   has_many :moves, dependent: :nullify
