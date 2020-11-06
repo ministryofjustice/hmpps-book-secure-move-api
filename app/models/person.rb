@@ -10,6 +10,9 @@ class Person < VersionedModel
     police_national_computer
     prison_number
     latest_nomis_booking_id
+    first_names
+    last_name
+    date_of_birth
   ].freeze
 
   IDENTIFIER_TYPES = %i[
