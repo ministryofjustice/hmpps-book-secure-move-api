@@ -6,12 +6,13 @@ RSpec.describe Profiles::ImportPrisonerCategory do
   let(:call) { described_class.new(profile).call }
   let(:person) { create(:person, latest_nomis_booking_id: latest_nomis_booking_id) }
   let(:profile) { create(:profile, person: person) }
+  let(:category) { create(:category) }
 
   context 'with a person who has a latest_nomis_booking_id' do
     let(:latest_nomis_booking_id) { 123 }
 
     before do
-      allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: 'Cat B', category_code: 'B' })
+      allow(NomisClient::BookingDetails).to receive(:get).and_return({ category: category.title, category_code: category.key })
     end
 
     it 'calls GetPrisonerCategoryAttributes with the latest_nomis_booking_id' do
@@ -21,8 +22,7 @@ RSpec.describe Profiles::ImportPrisonerCategory do
 
     it 'sets the profile category' do
       call
-      expect(profile.category).to eql('Cat B')
-      expect(profile.category_code).to eql('B')
+      expect(profile.category).to eql(category)
     end
   end
 
@@ -41,7 +41,6 @@ RSpec.describe Profiles::ImportPrisonerCategory do
     it 'does not set the profile category' do
       call
       expect(profile.category).to be_nil
-      expect(profile.category_code).to be_nil
     end
   end
 end

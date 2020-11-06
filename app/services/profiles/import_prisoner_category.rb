@@ -6,7 +6,10 @@ module Profiles
     end
 
     def call
-      @profile.update(NomisClient::BookingDetails.get(@nomis_booking_id))
+      booking_details = NomisClient::BookingDetails.get(@nomis_booking_id)
+      category = Category.find_by(key: booking_details[:category_code])
+
+      @profile.update(category: category)
     end
   end
 end

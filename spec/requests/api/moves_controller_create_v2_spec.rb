@@ -515,13 +515,14 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when the profile is for a Cat A prisoner' do
-      let(:profile) { create(:profile, :category_a) }
+    context 'when the profile is for an unsupported prisoner category' do
+      let(:profile) { create(:profile, :category_not_supported) }
+      let(:category_key) { profile.category.key.humanize.downcase }
       let(:errors_422) do
         [
           {
             'title' => 'Unprocessable entity',
-            'detail' => "Profile person is a category 'a' prisoner and cannot be moved using this service",
+            'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
             'source' => { 'pointer' => '/data/attributes/profile' },
             'code' => 'unsupported_prisoner_category',
           },
@@ -533,8 +534,8 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when the profile is for a Cat B prisoner' do
-      let(:profile) { create(:profile, :category_b) }
+    context 'when the profile is for a supported prisoner category' do
+      let(:profile) { create(:profile, :category_supported) }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }

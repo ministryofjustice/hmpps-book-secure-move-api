@@ -519,22 +519,23 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when the profile is for a Cat A prisoner' do
-      let(:cat_a_profile) { create(:profile, :category_a) }
+    context 'when the profile is for an unsupported prisoner category' do
+      let(:new_profile) { create(:profile, :category_not_supported) }
+      let(:category_key) { new_profile.category.key.humanize.downcase }
       let(:move_params) do
         {
           type: 'moves',
           attributes: {
             status: 'requested',
           },
-          relationships: { profile: { data: { id: cat_a_profile.id, type: 'profiles' } } },
+          relationships: { profile: { data: { id: new_profile.id, type: 'profiles' } } },
         }
       end
       let(:errors_422) do
         [
           {
             'title' => 'Unprocessable entity',
-            'detail' => "Profile person is a category 'a' prisoner and cannot be moved using this service",
+            'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
             'source' => { 'pointer' => '/data/attributes/profile' },
             'code' => 'unsupported_prisoner_category',
           },
@@ -546,15 +547,15 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when the profile is for a Cat B prisoner' do
-      let(:cat_b_profile) { create(:profile, :category_b) }
+    context 'when the profile is for a supported prisoner category' do
+      let(:new_profile) { create(:profile, :category_supported) }
       let(:move_params) do
         {
           type: 'moves',
           attributes: {
             status: 'requested',
           },
-          relationships: { profile: { data: { id: cat_b_profile.id, type: 'profiles' } } },
+          relationships: { profile: { data: { id: new_profile.id, type: 'profiles' } } },
         }
       end
 

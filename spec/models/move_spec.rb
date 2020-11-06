@@ -173,36 +173,12 @@ RSpec.describe Move do
   end
 
   context 'when the profile has a prisoner category' do
-    it 'prevents a category A prisoner from being moved' do
-      expect(build(:move, profile: build(:profile, :category_a))).not_to be_valid
+    it 'prevents an unsupported category from being moved' do
+      expect(build(:move, profile: build(:profile, :category_not_supported))).not_to be_valid
     end
 
-    it 'prevents a category A-Hi prisoner from being moved' do
-      expect(build(:move, profile: build(:profile, :category_h))).not_to be_valid
-    end
-
-    it 'prevents a category A-Ex prisoner from being moved' do
-      expect(build(:move, profile: build(:profile, :category_e))).not_to be_valid
-    end
-
-    it 'allows a category B prisoner' do
-      expect(build(:move, profile: build(:profile, :category_b))).to be_valid
-    end
-
-    it 'allows a category C prisoner' do
-      expect(build(:move, profile: build(:profile, :category_c))).to be_valid
-    end
-
-    it 'allows a category D prisoner' do
-      expect(build(:move, profile: build(:profile, :category_d))).to be_valid
-    end
-
-    it 'allows an unsentenced category prisoner' do
-      expect(build(:move, profile: build(:profile, :category_u))).to be_valid
-    end
-
-    it 'allows an unknown category prisoner' do
-      expect(build(:move, profile: build(:profile, :category_unknown))).to be_valid
+    it 'allows a supported category to be moved' do
+      expect(build(:move, profile: build(:profile, :category_supported))).to be_valid
     end
   end
 
