@@ -106,7 +106,6 @@ RSpec.describe Api::PersonEscortRecordsController do
 
     context 'when prefilling from previous person escort record' do
       subject(:post_person_escort_record) do
-        enable_feature!(:prefill)
         previous_pesron_escort_record
 
         post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json

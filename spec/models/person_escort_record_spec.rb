@@ -159,36 +159,13 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record.framework_questions.count).to eq(1)
     end
 
-    # TODO: remove when prefill flag removed
-    context 'with prefill feature flag disabled' do
-      it 'does not prefill responses from confirmed previous person escort record' do
-        disable_feature!(:prefill)
-
-        person = create(:person)
-        profile1 = create(:profile, person: person)
-        profile2 = create(:profile, person: person)
-        move1 = create(:move, profile: profile1)
-        move2 = create(:move, profile: profile2)
-        framework = create(:framework)
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(:person_escort_record, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
-        person_escort_record = described_class.save_with_responses!(move_id: move2.id, version: framework.version)
-
-        expect(person_escort_record.framework_responses.first.value).to be_nil
-      end
-    end
-
-    context 'with prefill feature flag enabled' do
+    context 'when prefilling' do
       let(:person) { create(:person) }
       let(:profile1) { create(:profile, person: person) }
       let(:profile2) { create(:profile, person: person) }
       let(:move1) { create(:move, profile: profile1) }
       let(:move2) { create(:move, profile: profile2) }
       let(:framework) { create(:framework) }
-
-      before do
-        enable_feature!(:prefill)
-      end
 
       it 'sets prefill_source on person escort record' do
         framework_question = create(:framework_question, framework: framework, prefill: true)
