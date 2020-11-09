@@ -70,7 +70,7 @@ module Api
         filters: filter_params,
         ordering: sort_params,
         search: search_params,
-        active_record_relationships: active_record_relationships
+        active_record_relationships: active_record_relationships,
       ).call
     end
 

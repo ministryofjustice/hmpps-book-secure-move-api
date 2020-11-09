@@ -8,7 +8,7 @@ RSpec.describe Allocations::Finder do
       filters: filter_params,
       ordering: sort_params,
       search: search_params,
-      active_record_relationships: active_record_relationships
+      active_record_relationships: active_record_relationships,
     )
   end
 

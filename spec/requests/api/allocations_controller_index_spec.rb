@@ -74,7 +74,7 @@ RSpec.describe Api::AllocationsController do
             filters: { date_from: date_from.to_s, from_locations: location.id, status: 'unfilled' },
             ordering: {},
             search: {},
-            active_record_relationships: nil
+            active_record_relationships: nil,
           )
         end
       end
@@ -97,7 +97,7 @@ RSpec.describe Api::AllocationsController do
             filters: {},
             ordering: { by: 'moves_count', direction: 'desc' },
             search: {},
-            active_record_relationships: nil
+            active_record_relationships: nil,
           )
         end
       end
@@ -119,7 +119,7 @@ RSpec.describe Api::AllocationsController do
             filters: {},
             ordering: {},
             search: { location: 'nott' },
-            active_record_relationships: nil
+            active_record_relationships: nil,
           )
         end
       end
