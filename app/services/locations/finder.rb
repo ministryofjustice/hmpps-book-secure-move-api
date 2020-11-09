@@ -12,8 +12,8 @@ module Locations
     end
 
     def call
-      scope = apply_filters(Location)
-      scope = scope.includes(active_record_relationships)
+      scope = Location.includes(active_record_relationships)
+      scope = apply_filters(scope)
       apply_ordering(scope)
     end
 

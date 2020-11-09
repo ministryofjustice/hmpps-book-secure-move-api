@@ -211,7 +211,7 @@
           schema:
             type: string
           example: Bloggs
-        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
+        - "$ref": "../v1/allocations_include_parameter.yaml#/AllocationsIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
