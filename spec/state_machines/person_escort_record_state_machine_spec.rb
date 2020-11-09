@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PersonEscortRecordStateMachine do
   let(:machine) { described_class.new(target) }
-  let(:target) { Struct.new(:status, :confirmed_at).new(initial_status) }
+  let(:target) { Struct.new(:status, :confirmed_at, :completed_at).new(initial_status) }
   let(:initial_status) { :unstarted }
 
   before { machine.restore!(initial_status) }
@@ -57,9 +57,26 @@ RSpec.describe PersonEscortRecordStateMachine do
     end
 
     context 'when the complete event is fired and it is completed' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
+      let(:completed_at_timestamp) { Time.zone.now }
+
+      before do
+        allow(Time).to receive(:now).and_return(completed_at_timestamp)
+        machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED)
+      end
 
       it_behaves_like 'state_machine target status', :completed
+
+      it 'sets the current timestamp to completed_at' do
+        expect(target.completed_at).to eq(completed_at_timestamp)
+      end
+
+      it 'maintains first completed at timestamp and does not update it' do
+        new_completed_at_timstamp = Time.zone.now + 1.day
+        allow(Time).to receive(:now).and_return(new_completed_at_timstamp)
+        machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED)
+
+        expect(target.completed_at).to eq(completed_at_timestamp)
+      end
     end
 
     context 'when the confirm event is fired' do

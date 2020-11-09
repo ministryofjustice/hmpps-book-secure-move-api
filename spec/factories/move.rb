@@ -151,6 +151,7 @@ FactoryBot.define do
           profile: move.profile,
           status: evaluator.person_escort_record_status,
           confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
+          completed_at: evaluator.person_escort_record_status == 'completed' ? Time.zone.now : nil,
         )
       end
     end
