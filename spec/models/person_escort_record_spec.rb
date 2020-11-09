@@ -603,6 +603,16 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record).to be_completed
     end
 
+    it 'sets `completed_at` timestamp when status transitions to `completed`' do
+      completed_at_timestamp = Time.zone.now
+      allow(Time).to receive(:now).and_return(completed_at_timestamp)
+      person_escort_record = create(:person_escort_record, :in_progress)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      person_escort_record.update_status!
+
+      expect(person_escort_record.completed_at).to eq(completed_at_timestamp)
+    end
+
     it 'sets status back to `in_progress` from `completed` if response cleared' do
       person_escort_record = create(:person_escort_record, :completed)
       create(:string_response, responded: true, person_escort_record: person_escort_record)
@@ -610,6 +620,20 @@ RSpec.describe PersonEscortRecord do
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
+    end
+
+    it 'sets `completed_at` timestamp only on first occurence' do
+      old_completed_at_timestamp = Time.zone.now - 1.day
+      new_completed_at_timestamp = Time.zone.now
+      allow(Time).to receive(:now).and_return(new_completed_at_timestamp)
+      person_escort_record = create(:person_escort_record, :completed, completed_at: old_completed_at_timestamp)
+      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      response = create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      person_escort_record.update_status!
+      response.update(value: 'Yes')
+      person_escort_record.update_status!
+
+      expect(person_escort_record.completed_at).to eq(old_completed_at_timestamp)
     end
 
     it 'sets status to `in_progress` from itself if response changed' do
@@ -636,12 +660,12 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'sets `confirmed` timestamp to `confirmed_at`' do
-      confirmed_at_timstamp = Time.zone.now
+      confirmed_at_timestamp = Time.zone.now
       person_escort_record = create(:person_escort_record, :completed)
-      allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
+      allow(Time).to receive(:now).and_return(confirmed_at_timestamp)
       person_escort_record.confirm!('confirmed')
 
-      expect(person_escort_record.confirmed_at).to eq(confirmed_at_timstamp)
+      expect(person_escort_record.confirmed_at).to eq(confirmed_at_timestamp)
     end
 
     it 'does not update status if status is wrong value' do

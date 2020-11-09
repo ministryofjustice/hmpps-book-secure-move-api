@@ -26,6 +26,7 @@ FactoryBot.define do
 
     trait :completed do
       status { PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED }
+      completed_at { Time.zone.now }
     end
 
     trait :confirmed do

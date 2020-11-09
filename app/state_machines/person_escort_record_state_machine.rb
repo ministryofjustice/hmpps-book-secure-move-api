@@ -11,6 +11,10 @@ class PersonEscortRecordStateMachine < FiniteMachine::Definition
     target.status = event.to
   end
 
+  on_after :calculate do
+    target.completed_at = Time.zone.now if completed? && target.completed_at.nil?
+  end
+
   on_after :confirm do
     target.confirmed_at = Time.zone.now
   end
