@@ -132,7 +132,7 @@ private
   end
 
   def previous_per
-    @previous_per ||= profile.person.latest_person_escort_record if Flipper.enabled?(:prefill)
+    @previous_per ||= profile&.person&.latest_person_escort_record
   end
 
   def previous_responses
