@@ -2,11 +2,9 @@
 
 module Allocations
   class Finder
-    attr_reader :filter_params, :search_params
+    attr_reader :filter_params, :search_params, :active_record_relationships
 
-    ALLOCATION_INCLUDES = [from_location: :suppliers, to_location: :suppliers, moves: [:from_location, :to_location, :court_hearings, person: %i[gender ethnicity profiles], profile: %i[person_escort_record documents]]].freeze
-
-    def initialize(filters: {}, ordering: {}, search: {})
+    def initialize(filters: {}, ordering: {}, search: {}, active_record_relationships: [])
       @search_params = search
       @filter_params = filters
       @order_by = (ordering[:by] || 'date').to_sym
@@ -16,10 +14,12 @@ module Allocations
                            # default if no 'by' parameter is date descending
                            :desc
                          end
+      @active_record_relationships = active_record_relationships
     end
 
     def call
-      scope = apply_filters(Allocation.includes(ALLOCATION_INCLUDES))
+      scope = Allocation.includes(active_record_relationships)
+      scope = apply_filters(scope)
       scope = apply_search(scope)
       apply_ordering(scope)
     end

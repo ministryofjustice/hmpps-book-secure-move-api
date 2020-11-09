@@ -69,7 +69,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct filters' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: { date_from: date_from.to_s, from_locations: location.id, status: 'unfilled' }, ordering: {}, search: {})
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: { date_from: date_from.to_s, from_locations: location.id, status: 'unfilled' },
+            ordering: {},
+            search: {},
+            active_record_relationships: nil
+          )
         end
       end
 
@@ -86,7 +92,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: {}, ordering: { by: 'moves_count', direction: 'desc' }, search: {})
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: {},
+            ordering: { by: 'moves_count', direction: 'desc' },
+            search: {},
+            active_record_relationships: nil
+          )
         end
       end
 
@@ -102,7 +114,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: {}, ordering: {}, search: { location: 'nott' })
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: {},
+            ordering: {},
+            search: { location: 'nott' },
+            active_record_relationships: nil
+          )
         end
       end
     end

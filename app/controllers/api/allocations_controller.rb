@@ -7,8 +7,7 @@ module Api
     def index
       allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
       if allocations_params.valid?
-        allocations = Allocations::Finder.new(filters: filter_params, ordering: sort_params, search: search_params).call
-        paginate allocations, serializer: AllocationsSerializer, include: included_relationships do |paginated_allocations, options|
+        paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
           options[:params] = paginated_allocations.move_totals
         end
       else
@@ -23,7 +22,7 @@ module Api
     end
 
     def show
-      allocation = find_allocation
+      allocation = Allocation.find(params[:id])
 
       render_allocation(allocation, :ok)
     end
@@ -66,8 +65,13 @@ module Api
       render_json allocation, serializer: AllocationSerializer, include: included_relationships, status: status
     end
 
-    def find_allocation
-      Allocation.find(params[:id])
+    def allocations
+      Allocations::Finder.new(
+        filters: filter_params,
+        ordering: sort_params,
+        search: search_params,
+        active_record_relationships: active_record_relationships
+      ).call
     end
 
     def creator
@@ -85,7 +89,12 @@ module Api
     end
 
     def supported_relationships
-      AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      # for performance reasons, we support fewer include relationships on the index action
+      if action_name == 'index'
+        AllocationsSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
   end
 end
