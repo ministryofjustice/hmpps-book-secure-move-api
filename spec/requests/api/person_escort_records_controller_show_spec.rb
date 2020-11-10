@@ -79,7 +79,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
 
-      context "when attempting to access another move's journey" do
+      context 'when attempting to access an unknown person escort record' do
         let(:person_escort_record_id) { SecureRandom.uuid }
         let(:detail_404) { "Couldn't find PersonEscortRecord with 'id'=#{person_escort_record_id}" }
 
