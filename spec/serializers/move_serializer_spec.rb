@@ -165,6 +165,13 @@ RSpec.describe MoveSerializer do
               moves_count: move.allocation.moves_count,
               created_at: move.allocation.created_at.iso8601,
             },
+            meta: {
+              moves: {
+                total: 1,
+                filled: 1,
+                unfilled: 0,
+              },
+            },
             relationships: {
               from_location: {
                 data: {

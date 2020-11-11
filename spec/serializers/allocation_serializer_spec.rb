@@ -94,6 +94,16 @@ RSpec.describe AllocationSerializer do
     it 'contains an updated_at attribute' do
       expect(attributes[:updated_at]).to eql allocation.updated_at.iso8601
     end
+
+    it 'contains expected meta data' do
+      expect(result_data[:meta]).to eq({
+        moves: {
+          total: 0,
+          filled: 0,
+          unfilled: 0,
+        },
+      })
+    end
   end
 
   describe 'locations' do

@@ -4,5 +4,11 @@
     - data
   properties:
     data:
-      data:
-        "$ref": allocation.yaml#/Allocation
+      $ref: allocation.yaml#/Allocation
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: location.yaml#/Location
+        - $ref: move.yaml#/Move
+        - $ref: person.yaml#/Person
