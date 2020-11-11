@@ -15,6 +15,7 @@ group :production do
 end
 
 gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
+gem 'auto_strip_attributes', '~> 2.6'
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
