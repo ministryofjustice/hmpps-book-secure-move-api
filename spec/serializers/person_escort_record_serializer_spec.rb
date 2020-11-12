@@ -64,8 +64,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a`responses` relationship with framework responses' do
-    question = create(:framework_question)
-    response = person_escort_record.framework_responses.create!(type: 'FrameworkResponse::String', framework_question: question)
+    response = create(:string_response, assessmentable: person_escort_record)
 
     expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
       id: response.id,
@@ -123,10 +122,12 @@ RSpec.describe PersonEscortRecordSerializer do
   context 'with include options' do
     let(:includes) { ['responses', 'prefill_source', 'responses.question', 'responses.nomis_mappings'] }
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
-    let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
-      create(:person_escort_record, :prefilled, framework_responses: [framework_response])
+      person_escort_record = create(:person_escort_record, :prefilled)
+      create(:object_response, framework_nomis_mappings: [framework_nomis_mapping], assessmentable: person_escort_record)
+      person_escort_record
     end
+    let(:framework_response) { person_escort_record.framework_responses.first }
 
     let(:expected_json) do
       UnorderedArray(

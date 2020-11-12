@@ -32,6 +32,7 @@ RSpec.describe FrameworkQuestion do
       expect(response.framework_question).to eq(question2)
     end
 
+    # TODO: remove once transition to assessment complete
     it 'builds response associated to correct person_escort_record' do
       question = create(:framework_question)
       person_escort_record = create(:person_escort_record)
@@ -41,6 +42,17 @@ RSpec.describe FrameworkQuestion do
       )
 
       expect(response.person_escort_record).to eq(person_escort_record)
+    end
+
+    it 'builds response associated to correct assessment' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_responses(
+        person_escort_record: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.assessmentable).to eq(person_escort_record)
     end
 
     it 'builds response and defaults to current question' do
@@ -90,6 +102,7 @@ RSpec.describe FrameworkQuestion do
       expect(response.dependents).to be_empty
     end
 
+    # TODO: remove once transition to assessment complete
     it 'sets person_escort_record on dependent responses' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
@@ -100,6 +113,18 @@ RSpec.describe FrameworkQuestion do
       )
 
       expect(response.dependents.first.person_escort_record).to eq(person_escort_record)
+    end
+
+    it 'sets assessment on dependent responses' do
+      person_escort_record = create(:person_escort_record)
+      question = create(:framework_question)
+      create(:framework_question, :checkbox, parent: question)
+      response = question.build_responses(
+        person_escort_record: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.dependents.first.assessmentable).to eq(person_escort_record)
     end
 
     it 'sets correct types on dependent responses' do
