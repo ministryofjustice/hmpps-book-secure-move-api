@@ -77,7 +77,7 @@ class PersonEscortRecord < VersionedModel
   def import_nomis_mappings!
     return unless move&.from_location&.prison?
 
-    FrameworkNomisMappings::Importer.new(person_escort_record: self).call
+    FrameworkNomisMappings::Importer.new(assessmentable: self).call
   end
 
   def section_progress

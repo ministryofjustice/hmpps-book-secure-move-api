@@ -99,12 +99,12 @@ RSpec.describe FrameworkNomisMappings::Importer do
   it 'persists all alerts, reasonable adjustments and personal care needs from NOMIS clients as NOMIS mappings' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
-    expect { described_class.new(person_escort_record: person_escort_record).call }.to change(FrameworkNomisMapping, :count).by(6)
+    expect { described_class.new(assessmentable: person_escort_record).call }.to change(FrameworkNomisMapping, :count).by(6)
   end
 
   it 'associates NOMIS mappings correctly to framework responses' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI', 'VI')
   end
@@ -114,7 +114,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     question = create(:framework_question, framework_nomis_codes: [alert_code])
     framework_response2 = create(:string_response, framework_question: question)
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(framework_response1.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert], %w[VI alert])
     expect(framework_response2.framework_nomis_mappings.pluck(:code, :code_type)).to contain_exactly(%w[VI alert], %w[VI alert])
@@ -122,14 +122,14 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'associates multiple NOMIS mappings to a fallback question response' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(framework_response2.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI', 'DA', 'PEEP', 'BA')
   end
 
   it 'associates NOMIS mapping codes to responses scoped to NOMIS mapping type' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(framework_response1.framework_nomis_mappings.pluck(:code_type).uniq).to contain_exactly('alert')
     expect(framework_response2.framework_nomis_mappings.pluck(:code_type).uniq).to contain_exactly('reasonable_adjustment', 'personal_care_need')
@@ -137,7 +137,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'does not associate NOMIS mappings mapped to a fallback if none exist' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(framework_response1.framework_nomis_mappings.pluck(:code)).to contain_exactly('VI', 'VI')
   end
@@ -147,7 +147,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
-    expect { described_class.new(person_escort_record: person_escort_record).call }.to change(FrameworkNomisMapping, :count).by(4)
+    expect { described_class.new(assessmentable: person_escort_record).call }.to change(FrameworkNomisMapping, :count).by(4)
   end
 
   it 'does nothing if no NOMIS mappings present for a person' do
@@ -156,29 +156,29 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([])
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
-    expect { described_class.new(person_escort_record: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
+    expect { described_class.new(assessmentable: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
   it 'does nothing if no person_escort_record present' do
-    expect { described_class.new(person_escort_record: nil).call }.not_to change(FrameworkNomisMapping, :count)
+    expect { described_class.new(assessmentable: nil).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
   it 'does nothing if no framework responses present' do
     person_escort_record = create(:person_escort_record, framework_responses: [], profile: person.profiles.first)
 
-    expect { described_class.new(person_escort_record: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
+    expect { described_class.new(assessmentable: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
   it 'does nothing if no framework NOMIS codes present' do
     person_escort_record = create(:person_escort_record, framework_responses: [create(:string_response)], profile: person.profiles.first)
 
-    expect { described_class.new(person_escort_record: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
+    expect { described_class.new(assessmentable: person_escort_record).call }.not_to change(FrameworkNomisMapping, :count)
   end
 
   it 'persists the NOMIS status sync attribute on the person escort record' do
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(person_escort_record.nomis_sync_status).to include_json(
       [
@@ -194,7 +194,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
 
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(person_escort_record.nomis_sync_status).to include_json(
       [
@@ -207,7 +207,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'does not set a status if no importing attempted' do
     person_escort_record = create(:person_escort_record, framework_responses: [create(:string_response)], profile: person.profiles.first)
-    described_class.new(person_escort_record: person_escort_record).call
+    described_class.new(assessmentable: person_escort_record).call
 
     expect(person_escort_record.nomis_sync_status).to be_empty
   end
@@ -219,7 +219,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
       allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
 
       person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-      described_class.new(person_escort_record: person_escort_record).call
+      described_class.new(assessmentable: person_escort_record).call
 
       raven_args = [
         'FrameworkNomisMapping import validation Error',
@@ -236,7 +236,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     it 'pushes an error warning to Sentry when a NOMIS resource is new' do
       allow(Raven).to receive(:capture_message)
       person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-      described_class.new(person_escort_record: person_escort_record).call
+      described_class.new(assessmentable: person_escort_record).call
       personal_care_need = [
         'New NOMIS codes imported',
         extra: {
@@ -256,7 +256,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
       allow(person_escort_record).to receive(:update).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
 
-      expect { described_class.new(person_escort_record: person_escort_record).call }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+      expect { described_class.new(assessmentable: person_escort_record).call }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
     end
 
     it 'retries the transaction if it fails only once and updates person_escort_record' do
@@ -272,7 +272,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
         return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : person_escort_record.update!(nomis_sync_status: nomis_sync_status)
       end
 
-      described_class.new(person_escort_record: person_escort_record).call
+      described_class.new(assessmentable: person_escort_record).call
 
       expect(person_escort_record.nomis_sync_status).to eq(nomis_sync_status)
     end
