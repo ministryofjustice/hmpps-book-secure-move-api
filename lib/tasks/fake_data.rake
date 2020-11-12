@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'fake_data/journeys'
+require_relative 'fake_data/city'
 
 namespace :fake_data do
   desc 'create fake people'
@@ -201,6 +202,15 @@ namespace :fake_data do
         )
       end
     end
+  end
+
+  desc 'create fake GPS track'
+  task create_gps_track: :environment do
+    puts 'creating GPS track'
+    c = Tasks::FakeData::City.new
+
+
+
   end
 
   desc 'drop all the fake data - CAUTION: this deletes all existing transactional data'
