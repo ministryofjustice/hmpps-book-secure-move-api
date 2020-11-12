@@ -12,10 +12,10 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
     let(:person_escort_record) do
       person_escort_record = create(:person_escort_record)
-      create(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag], assessmentable: person_escort_record, person_escort_record: person_escort_record)
+      create(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
 
-       person_escort_record
-     end
+      person_escort_record
+    end
     let(:person_escort_record_id) { person_escort_record.id }
 
     before do

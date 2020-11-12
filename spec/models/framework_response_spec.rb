@@ -391,7 +391,7 @@ RSpec.describe FrameworkResponse do
 
       it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
-        create(:string_response, value: nil, person_escort_record: response1.person_escort_record)
+        create(:string_response, value: nil, assessmentable: response1.person_escort_record)
         response1.update_with_flags!('Yes')
 
         expect(response1.person_escort_record).to be_in_progress
