@@ -64,7 +64,7 @@ class PersonEscortRecord < VersionedModel
       questions.values.each do |question|
         next unless question.parent_id.nil?
 
-        response = question.build_responses(person_escort_record: self, questions: questions, previous_responses: previous_responses)
+        response = question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses)
         framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :person_escort_record, :assessmentable))
       end
 
