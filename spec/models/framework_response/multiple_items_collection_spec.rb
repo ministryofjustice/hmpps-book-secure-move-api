@@ -14,7 +14,7 @@ RSpec.describe FrameworkResponse::MultipleItemsCollection, type: :model do
       response2 = { value: 'Yes', framework_question_id: question2.id }
       collection = [{ item: 1, responses: [response2] }, { item: 2, responses: [response1, response2] }]
 
-      collection = described_class.new(collection: collection, person_escort_record: person_escort_record, questions: questions)
+      collection = described_class.new(collection: collection, assessmentable: person_escort_record, questions: questions)
 
       expect(collection).not_to be_valid
       expect(collection.errors.messages[:"items[1].responses[0].value"]).to eq(['Level 3 are not valid options'])
@@ -25,7 +25,7 @@ RSpec.describe FrameworkResponse::MultipleItemsCollection, type: :model do
       response = { value: 'Level 3', framework_question_id: question.id }
       collection = [{ item: 1, responses: [response] }]
 
-      collection = described_class.new(collection: collection, person_escort_record: person_escort_record, questions: [question])
+      collection = described_class.new(collection: collection, assessmentable: person_escort_record, questions: [question])
 
       expect { collection.valid? }.to raise_error(FrameworkResponse::ValueTypeError)
     end
@@ -37,7 +37,7 @@ RSpec.describe FrameworkResponse::MultipleItemsCollection, type: :model do
       response = { value: ['Level 1'], framework_question_id: question.id }
       collection = [{ item: 1, responses: [response] }]
 
-      collection = described_class.new(collection: collection, person_escort_record: person_escort_record, questions: [question])
+      collection = described_class.new(collection: collection, assessmentable: person_escort_record, questions: [question])
       expect(collection.to_a.first).to be_a(FrameworkResponse::MultipleItemObject)
     end
 
@@ -47,12 +47,12 @@ RSpec.describe FrameworkResponse::MultipleItemsCollection, type: :model do
       response2 = { value: ['Level 2'], framework_question_id: question.id }
       collection = [{ item: 1, responses: [response2] }, { item: 2, responses: [response1] }]
 
-      collection = described_class.new(collection: collection, person_escort_record: person_escort_record, questions: [question])
+      collection = described_class.new(collection: collection, assessmentable: person_escort_record, questions: [question])
       expect(collection.to_a.count).to eq(2)
     end
 
     it 'returns an empty array if collection is empty' do
-      collection = described_class.new(collection: [], person_escort_record: person_escort_record)
+      collection = described_class.new(collection: [], assessmentable: person_escort_record)
 
       expect(collection.to_a).to be_empty
     end

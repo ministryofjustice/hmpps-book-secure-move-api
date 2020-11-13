@@ -9,7 +9,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'ignores other keys passed in' do
       questions = [create(:framework_question)]
       attributes = { items: 1, responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:item]).to eq(["can't be blank", 'is not a number'])
@@ -18,7 +18,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates the presence of an item' do
       questions = [create(:framework_question)]
       attributes = { responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:item]).to eq(["can't be blank", 'is not a number'])
@@ -27,7 +27,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates that item attribute is a number' do
       questions = [create(:framework_question)]
       attributes = { item: 'some-item', responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:item]).to eq(['is not a number'])
@@ -36,7 +36,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates that item attribute is an integer' do
       questions = [create(:framework_question)]
       attributes = { item: 1.1, responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:item]).to eq(['must be an integer'])
@@ -45,7 +45,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates the presence of a responses key' do
       questions = [create(:framework_question)]
       attributes = { item: 1, response: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:responses]).to eq(["can't be blank"])
@@ -56,7 +56,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:responses]).to eq(["can't be blank"])
@@ -66,7 +66,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       questions = [create(:framework_question)]
       attributes = { item: 1, responses: { value: 'Yes', framework_question_id: questions.first.id } }
 
-      expect { described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record) }.to raise_error(FrameworkResponse::ValueTypeError)
+      expect { described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record) }.to raise_error(FrameworkResponse::ValueTypeError)
     end
 
     it 'validates responses include value key if multiple responses supplied and question required' do
@@ -74,7 +74,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }, { framework_question_id: question1.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:"responses[1].value"]).to eq(["can't be blank"])
@@ -85,7 +85,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }, { framework_question_id: question1.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -95,7 +95,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }, { value: ['Level 1'] }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:responses]).to eq(['provide a value for all required questions'])
@@ -106,7 +106,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }, { value: ['Level 1'] }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -116,7 +116,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }, { value: ['Level 1'], framework_question_id: 'some-id' }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -126,7 +126,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id, values: 'Some value' }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -134,7 +134,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates response if value for response is invalid' do
       questions = [create(:framework_question, :checkbox)]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect { object.valid? }.to raise_error(FrameworkResponse::ValueTypeError)
     end
@@ -142,7 +142,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'does not validate the response if value for response is valid' do
       questions = [create(:framework_question, :checkbox)]
       attributes = { item: 1, responses: [{ value: ['Level 1'], framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -150,7 +150,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
     it 'validates response if value for response is required' do
       questions = [create(:framework_question, :checkbox, required: true)]
       attributes = { item: 1, responses: [{ value: nil, framework_question_id: questions.first.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:"responses[0].value"]).to eq(["can't be blank"])
@@ -161,7 +161,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).not_to be_valid
       expect(object.errors.messages[:responses]).to eq(['provide a value for all required questions'])
@@ -172,7 +172,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
       question2 = create(:framework_question)
       questions = [question1, question2]
       attributes = { item: 1, responses: [{ value: 'Yes', framework_question_id: question2.id }] }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object).to be_valid
     end
@@ -190,14 +190,14 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
           { value: 'No', framework_question_id: question2.id },
         ],
       }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to eq(attributes)
     end
 
     it 'returns an empty hash if nothing passed in' do
       questions = [create(:framework_question, :checkbox, required: true)]
-      object = described_class.new(attributes: {}, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: {}, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to be_empty
     end
@@ -208,7 +208,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
         item: nil,
         responses: nil,
       }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to be_empty
     end
@@ -221,7 +221,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
         item: 1,
         responses: [{ value: ['Level 1'], framework_question_id: question1.id }, { framework_question_id: question2.id }],
       }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to eq({
         item: 1,
@@ -240,7 +240,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
         item: 1,
         responses: [{ value: ['Level 1'], framework_question_id: question1.id }, { value: 'Yes' }],
       }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to eq({
         item: 1,
@@ -258,7 +258,7 @@ RSpec.describe FrameworkResponse::MultipleItemObject, type: :model do
         item: 1,
         responses: [{ value: ['Level 1'], framework_question_id: question1.id }, { value: 'Yes', framework_question_id: 'some-id' }],
       }
-      object = described_class.new(attributes: attributes, questions: questions, person_escort_record: person_escort_record)
+      object = described_class.new(attributes: attributes, questions: questions, assessmentable: person_escort_record)
 
       expect(object.as_json).to eq({
         item: 1,

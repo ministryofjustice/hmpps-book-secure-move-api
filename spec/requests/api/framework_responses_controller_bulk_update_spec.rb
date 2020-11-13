@@ -15,8 +15,8 @@ RSpec.describe Api::FrameworkResponsesController do
     let(:person_escort_record) { create(:person_escort_record, :in_progress) }
     let(:per_id) { person_escort_record.id }
 
-    let(:framework_response) { create(:string_response, person_escort_record: person_escort_record, value: 'No') }
-    let(:other_framework_response) { create(:string_response, person_escort_record: person_escort_record, value: 'Yes') }
+    let(:framework_response) { create(:string_response, assessmentable: person_escort_record, value: 'No') }
+    let(:other_framework_response) { create(:string_response, assessmentable: person_escort_record, value: 'Yes') }
     let(:framework_response_id) { framework_response.id }
     let(:other_framework_response_id) { other_framework_response.id }
 
@@ -62,11 +62,11 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when responses are combined' do
-        let(:string_response) { create(:string_response, person_escort_record: person_escort_record, value: 'No') }
-        let(:array_response) { create(:array_response, person_escort_record: person_escort_record) }
-        let(:object_response) { create(:object_response, :details, person_escort_record: person_escort_record) }
-        let(:details_response) { create(:collection_response, :details, person_escort_record: person_escort_record) }
-        let(:multiple_items_response) { create(:collection_response, :multiple_items, framework_question: multiple_question, value: nil, person_escort_record: person_escort_record) }
+        let(:string_response) { create(:string_response, assessmentable: person_escort_record, value: 'No') }
+        let(:array_response) { create(:array_response, assessmentable: person_escort_record) }
+        let(:object_response) { create(:object_response, :details, assessmentable: person_escort_record) }
+        let(:details_response) { create(:collection_response, :details, assessmentable: person_escort_record) }
+        let(:multiple_items_response) { create(:collection_response, :multiple_items, framework_question: multiple_question, value: nil, assessmentable: person_escort_record) }
 
         let(:question1) { create(:framework_question) }
         let(:question2) { create(:framework_question, :checkbox) }
@@ -201,9 +201,9 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'with a nested invalid value' do
-        let(:framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
+        let(:framework_response) { create(:collection_response, :multiple_items, assessmentable: person_escort_record) }
         let(:framework_question) { framework_response.framework_question.dependents.first }
-        let(:other_framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
+        let(:other_framework_response) { create(:collection_response, :multiple_items, assessmentable: person_escort_record) }
         let(:other_framework_question) { other_framework_response.framework_question.dependents.first }
 
         let(:value) do
@@ -240,9 +240,9 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'with a nested incorrect value type' do
-        let(:framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
+        let(:framework_response) { create(:collection_response, :multiple_items, assessmentable: person_escort_record) }
         let(:framework_question) { framework_response.framework_question.dependents.first }
-        let(:other_framework_response) { create(:collection_response, :multiple_items, person_escort_record: person_escort_record) }
+        let(:other_framework_response) { create(:collection_response, :multiple_items, assessmentable: person_escort_record) }
         let(:other_framework_question) { other_framework_response.framework_question.dependents.first }
 
         let(:value) do
@@ -282,7 +282,7 @@ RSpec.describe Api::FrameworkResponsesController do
 
       context 'when person_escort_record confirmed' do
         let(:person_escort_record) { create(:person_escort_record, :confirmed) }
-        let(:detail_403) { "Can't update framework_responses because person_escort_record is confirmed" }
+        let(:detail_403) { "Can't update framework_responses because assessment is confirmed" }
 
         it_behaves_like 'an endpoint that responds with error 403'
       end
