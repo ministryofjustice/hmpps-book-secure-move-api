@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.6.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.5) (2020-11-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.4...v2.6.5)
+
+**Merged pull requests:**
+
+- Use PER instead of assessmentable for updating framework responses [\#1137](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1137) ([cwrw](https://github.com/cwrw))
+- new locations for suppliers [\#1136](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1136) ([martyn-w](https://github.com/martyn-w))
+- Keep old implementation to rely on person escort record relationship [\#1135](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1135) ([cwrw](https://github.com/cwrw))
+- P4-2447 Add `assessmentable` association to responses [\#1134](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1134) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1133](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1133) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.6.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.4) (2020-11-12)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.3...v2.6.4)
