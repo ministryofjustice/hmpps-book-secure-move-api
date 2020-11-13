@@ -19,7 +19,7 @@ class PersonEscortRecord < VersionedModel
   validates :profile, uniqueness: true
   validates :confirmed_at, presence: { if: :confirmed? }
 
-  has_many :framework_responses, as: :assessmentable, dependent: :destroy
+  has_many :framework_responses, dependent: :destroy
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :framework
