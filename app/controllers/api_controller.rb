@@ -29,7 +29,7 @@ class ApiController < ApplicationController
   # Nomis connection errors:
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
   rescue_from Faraday::TimeoutError, with: :render_timeout_error
-  rescue_from OAuth2::Error, with: :nomis_bad_gateway
+  rescue_from OAuth2::Error, with: :render_nomis_bad_gateway
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?

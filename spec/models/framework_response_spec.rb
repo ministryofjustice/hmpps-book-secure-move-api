@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:framework_question) }
   it { is_expected.to belong_to(:person_escort_record) }
+  it { is_expected.to belong_to(:assessmentable).optional }
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
@@ -390,7 +391,7 @@ RSpec.describe FrameworkResponse do
 
       it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
-        create(:string_response, value: nil, person_escort_record: response1.person_escort_record)
+        create(:string_response, value: nil, assessmentable: response1.person_escort_record)
         response1.update_with_flags!('Yes')
 
         expect(response1.person_escort_record).to be_in_progress
