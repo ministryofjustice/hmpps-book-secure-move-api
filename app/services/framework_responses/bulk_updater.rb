@@ -2,10 +2,10 @@
 
 module FrameworkResponses
   class BulkUpdater
-    attr_accessor :person_escort_record, :response_values_hash, :errors
+    attr_accessor :assessment, :response_values_hash, :errors
 
-    def initialize(person_escort_record, response_values_hash)
-      self.person_escort_record = person_escort_record
+    def initialize(assessment, response_values_hash)
+      self.assessment = assessment
       self.response_values_hash = response_values_hash
       self.errors = {}
     end
@@ -20,7 +20,7 @@ module FrameworkResponses
       # Ensure atomic behaviour as we don't want partial inconsistent updates
       ApplicationRecord.retriable_transaction do
         apply_bulk_response_changes(updated_responses)
-        apply_person_escort_record_changes
+        apply_assessment_changes
       end
     end
 
@@ -30,7 +30,7 @@ module FrameworkResponses
       [].tap do |updated_responses|
         validator = ActiveRecord::Import::Validator.new(FrameworkResponse)
 
-        FrameworkResponse.includes(framework_question: %i[framework_flags]).where(person_escort_record: person_escort_record).find(response_values_hash.keys).each do |response|
+        FrameworkResponse.includes(framework_question: %i[framework_flags]).where(assessmentable: assessment).find(response_values_hash.keys).each do |response|
           new_value = response_values_hash[response.id]
           next if response.value == new_value && response.responded == true
 
@@ -57,11 +57,11 @@ module FrameworkResponses
       FrameworkResponse.clear_dependent_values_and_flags!(updated_responses)
     end
 
-    def apply_person_escort_record_changes
+    def apply_assessment_changes
       # Update PER progress with revised responses
-      person_escort_record.update_status!
+      assessment.update_status!
     rescue FiniteMachine::InvalidStateError
-      raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
+      raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because assessment is #{assessment.status}"
     end
   end
 end
