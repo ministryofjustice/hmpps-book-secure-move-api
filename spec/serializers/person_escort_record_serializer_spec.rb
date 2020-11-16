@@ -64,8 +64,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a`responses` relationship with framework responses' do
-    question = create(:framework_question)
-    response = person_escort_record.framework_responses.create!(type: 'FrameworkResponse::String', framework_question: question)
+    response = create(:string_response, assessmentable: person_escort_record)
 
     expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
       id: response.id,
@@ -79,7 +78,7 @@ RSpec.describe PersonEscortRecordSerializer do
 
   it 'contains a`flags` relationship with framework response flags' do
     flag = create(:framework_flag)
-    create(:string_response, person_escort_record: person_escort_record, framework_flags: [flag])
+    create(:string_response, assessmentable: person_escort_record, framework_flags: [flag])
 
     expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
       id: flag.id,
@@ -105,7 +104,7 @@ RSpec.describe PersonEscortRecordSerializer do
   describe 'meta' do
     it 'includes section progress' do
       question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
-      create(:string_response, value: nil, framework_question: question, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, framework_question: question, assessmentable: person_escort_record)
 
       expect(result[:data][:meta][:section_progress]).to contain_exactly(
         key: 'risk-information',
@@ -123,10 +122,12 @@ RSpec.describe PersonEscortRecordSerializer do
   context 'with include options' do
     let(:includes) { ['responses', 'prefill_source', 'responses.question', 'responses.nomis_mappings'] }
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
-    let(:framework_response) { build(:object_response, framework_nomis_mappings: [framework_nomis_mapping]) }
     let(:person_escort_record) do
-      create(:person_escort_record, :prefilled, framework_responses: [framework_response])
+      person_escort_record = create(:person_escort_record, :prefilled)
+      create(:object_response, framework_nomis_mappings: [framework_nomis_mapping], assessmentable: person_escort_record)
+      person_escort_record
     end
+    let(:framework_response) { person_escort_record.framework_responses.first }
 
     let(:expected_json) do
       UnorderedArray(

@@ -14,7 +14,7 @@ FactoryBot.define do
           create(
             :string_response,
             framework_question: question,
-            person_escort_record: person_escort_record,
+            assessmentable: person_escort_record,
           )
         end
       end

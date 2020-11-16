@@ -4,17 +4,17 @@ class FrameworkResponse
   class MultipleItemObject
     include ActiveModel::Validations
 
-    attr_accessor :questions, :item, :responses, :person_escort_record
+    attr_accessor :questions, :item, :responses, :assessmentable
 
     validates :item, presence: true, numericality: { only_integer: true }
     validates :responses, presence: true
     validate :multiple_response_objects
     validate :required_questions
 
-    def initialize(attributes: {}, questions: [], person_escort_record:)
+    def initialize(attributes: {}, questions: [], assessmentable:)
       attributes = attributes.presence || {}
       @questions = questions
-      @person_escort_record = person_escort_record
+      @assessmentable = assessmentable
 
       attributes.deep_symbolize_keys! if attributes.respond_to?(:deep_symbolize_keys!)
       @item = attributes[:item]
@@ -49,7 +49,7 @@ class FrameworkResponse
         framework_question = questions.find { |question| question.id == response[:framework_question_id] }
         next unless framework_question
 
-        framework_response = framework_question.build_response(framework_question, person_escort_record)
+        framework_response = framework_question.build_response(framework_question, assessmentable)
 
         framework_response.value = response[:value]
         framework_response
