@@ -34,6 +34,9 @@ class Profile < VersionedModel
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
 
+  # this is an optimisation to avoid serializing the whole PER record in order to retrieve the PER flags
+  has_many :person_escort_record_flags, through: :person_escort_record, source: :framework_flags
+
   validates :person, presence: true
 
   validate :validate_assessment_answers

@@ -25,6 +25,9 @@ RSpec.describe V2::ProfileSerializer do
           person_escort_record: {
             data: nil,
           },
+          person_escort_record_flags: {
+            data: [],
+          },
         },
       },
     }

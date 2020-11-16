@@ -10,6 +10,7 @@ class V2::ProfileSerializer
   belongs_to :person, serializer: ::V2::PersonSerializer
   has_many :documents, serializer: DocumentSerializer
   has_one :person_escort_record, serializer: PersonEscortRecordSerializer
+  has_many :person_escort_record_flags, serializer: FrameworkFlagSerializer
 
-  SUPPORTED_RELATIONSHIPS = %w[documents person person_escort_record].freeze
+  SUPPORTED_RELATIONSHIPS = %w[documents person person_escort_record person_escort_record_flags].freeze
 end
