@@ -3,12 +3,7 @@
 FactoryBot.define do
   factory :framework_response do
     association(:framework_question)
-    # TODO: remove once transition to assessment completed
-    before(:create) do |response, evaluator|
-      person_escort_record = evaluator.assessmentable || evaluator.person_escort_record || build(:person_escort_record)
-      response.person_escort_record = person_escort_record
-      response.assessmentable = person_escort_record
-    end
+    association(:assessmentable, factory: :person_escort_record)
   end
 
   factory :object_response, parent: :framework_response, class: 'FrameworkResponse::Object' do

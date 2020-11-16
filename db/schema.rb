@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_09_110657) do
+ActiveRecord::Schema.define(version: 2020_11_16_093301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -227,7 +227,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_110657) do
   end
 
   create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "person_escort_record_id", null: false
+    t.uuid "person_escort_record_id"
     t.uuid "framework_question_id", null: false
     t.text "value_text"
     t.jsonb "value_json"
