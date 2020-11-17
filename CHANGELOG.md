@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.6.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.6) (2020-11-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.5...v2.6.6)
+
+**Merged pull requests:**
+
+- Improve eager loading of Locations::Finder suppliers [\#1146](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1146) ([smoothcontract](https://github.com/smoothcontract))
+- Remove redundant move scope [\#1145](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1145) ([smoothcontract](https://github.com/smoothcontract))
+- Bump prometheus\_exporter from 0.5.3 to 0.6.0 [\#1143](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1143) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2248 Stop using `person\_escort\_record` relationship on framework responses [\#1139](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1139) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1138](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1138) ([martyn-w](https://github.com/martyn-w))
+- Bump elastic-apm from 3.11.1 to 3.12.0 [\#1129](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1129) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump listen from 3.2.1 to 3.3.0 [\#1127](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1127) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.6.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.5) (2020-11-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.4...v2.6.5)
