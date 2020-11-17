@@ -116,8 +116,6 @@ class Move < VersionedModel
 
   delegate :suppliers, to: :from_location
 
-  scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
-
   attr_accessor :version
 
   # TODO: Temporary method to apply correct validation rules when creating v2 move
