@@ -24,7 +24,6 @@ RSpec.describe Locations::Finder do
   describe 'filtering' do
     context 'with a supplier' do
       let(:filter_params) { { supplier_id: supplier.id } }
-      let(:active_record_relationships) { %i[suppliers] }
 
       before do
         create(:location) # Not linked to supplier
