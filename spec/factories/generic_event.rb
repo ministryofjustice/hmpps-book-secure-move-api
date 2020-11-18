@@ -20,6 +20,14 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_requested, parent: :generic_event, class: 'GenericEvent::MoveRequested' do
+    eventable { association(:move) }
+  end
+
+  factory :event_move_proposed, parent: :generic_event, class: 'GenericEvent::MoveProposed' do
+    eventable { association(:move) }
+  end
+
   factory :event_move_accept, parent: :generic_event, class: 'GenericEvent::MoveAccept' do
     eventable { association(:move) }
   end
