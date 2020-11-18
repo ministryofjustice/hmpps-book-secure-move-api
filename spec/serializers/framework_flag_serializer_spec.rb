@@ -29,11 +29,8 @@ RSpec.describe FrameworkFlagSerializer do
     expect(result[:data][:attributes][:question_value]).to eq(framework_flag.question_value)
   end
 
-  it 'contains a `question` relationship' do
-    expect(result[:data][:relationships][:question][:data]).to eq(
-      id: framework_flag.framework_question.id,
-      type: 'framework_questions',
-    )
+  it 'contains an empty `question` relationship' do
+    expect(result[:data][:relationships][:question]).to eq({})
   end
 
   context 'with include options' do

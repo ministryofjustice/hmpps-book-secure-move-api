@@ -5,7 +5,7 @@ class FrameworkFlagSerializer
 
   set_type :framework_flags
 
-  belongs_to :question, serializer: FrameworkQuestionSerializer, &:framework_question
+  belongs_to :question, serializer: FrameworkQuestionSerializer, lazy_load_data: true, &:framework_question
 
   attributes :flag_type, :title, :question_value
 
