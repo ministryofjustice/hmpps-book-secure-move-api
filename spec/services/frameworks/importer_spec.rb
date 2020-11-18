@@ -13,11 +13,18 @@ RSpec.describe Frameworks::Importer do
         expect(Framework.count).to eq(2)
       end
 
-      it 'persists the version of the framework' do
+      it 'persists the same version across both frameworks' do
         described_class.new(filepath: filepath, version: '0.1').call
 
-        expect(Framework.find_by(name: 'person-escort-record-1')).to have_attributes(
-          version: '0.1',
+        expect(Framework.pluck(:version)).to contain_exactly('0.1', '0.1')
+      end
+
+      it 'persists the correct name for each framework' do
+        described_class.new(filepath: filepath, version: '0.1').call
+
+        expect(Framework.pluck(:name)).to contain_exactly(
+          'person-escort-record',
+          'youth-risk-assessment',
         )
       end
 
@@ -48,7 +55,7 @@ RSpec.describe Frameworks::Importer do
     context 'when creating framework questions' do
       it 'persists questions relative to a framework' do
         described_class.new(filepath: filepath, version: '0.1').call
-        framework = Framework.find_by(name: 'person-escort-record-1')
+        framework = Framework.find_by(name: 'person-escort-record')
         expect(framework.framework_questions.pluck(:key)).to contain_exactly(
           'medical-details-information',
           'medical-professional-referral',
@@ -64,14 +71,14 @@ RSpec.describe Frameworks::Importer do
 
       it 'persists all the different sections for questions under a framework' do
         described_class.new(filepath: filepath, version: '0.1').call
-        framework = Framework.find_by(name: 'person-escort-record-1')
+        framework = Framework.find_by(name: 'person-escort-record')
 
         expect(framework.framework_questions.pluck(:section).uniq).to contain_exactly('offence-details', 'health-information', 'property-information')
       end
 
       it 'maps the correct section to a question' do
         described_class.new(filepath: filepath, version: '0.1').call
-        framework_questions = Framework.find_by(name: 'person-escort-record-1').framework_questions
+        framework_questions = Framework.find_by(name: 'person-escort-record').framework_questions
 
         expect(framework_questions.where(section: 'health-information').pluck(:key)).to contain_exactly(
           'medical-details-information',
