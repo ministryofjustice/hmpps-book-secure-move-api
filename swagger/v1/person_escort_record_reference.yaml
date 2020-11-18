@@ -1,5 +1,7 @@
 PersonEscortRecordReference:
   type: object
+  required:
+    - data
   properties:
     data:
       oneOf:

@@ -30,10 +30,7 @@ Profile:
       properties:
         documents:
           $ref: document_reference.yaml#/DocumentReference
-          description: The documents associated with this Profile
+          description: The documents associated with this Move
         person_escort_record:
           $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
-          description: The person_escort_record associated with this Profile
-        person_escort_record_flags:
-          $ref: person_escort_record_flag_reference.yaml#/PersonEscortRecordFlagReference
-          description: The person_escort_record_flags associated with this Profile
+          description: The person_escort_record associated with this Move
