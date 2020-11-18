@@ -267,7 +267,6 @@ RSpec.describe PersonEscortRecord do
 
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: radio_question.id,
-        person_escort_record_id: person_escort_record.id,
         assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )
@@ -300,7 +299,6 @@ RSpec.describe PersonEscortRecord do
 
       expect(dependent_response).to have_attributes(
         framework_question_id: child_question.id,
-        person_escort_record_id: person_escort_record.id,
         assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::Array',
       )
@@ -329,7 +327,6 @@ RSpec.describe PersonEscortRecord do
 
       expect(dependent_response).to have_attributes(
         framework_question_id: grand_child_question.id,
-        person_escort_record_id: person_escort_record.id,
         assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )
@@ -398,7 +395,6 @@ RSpec.describe PersonEscortRecord do
 
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: radio_question.id,
-        person_escort_record_id: person_escort_record.id,
         assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )

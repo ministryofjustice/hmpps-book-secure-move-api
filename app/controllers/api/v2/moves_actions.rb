@@ -20,6 +20,8 @@ module Api::V2
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
+      create_event(move)
+
       render_move(move, :created)
     end
 
@@ -152,6 +154,27 @@ module Api::V2
         ::V2::MovesSerializer::SUPPORTED_RELATIONSHIPS
       else
         ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
+      end
+    end
+
+    def create_event(move)
+      now = Time.zone.now.iso8601
+
+      event_attributes = {
+        eventable: move,
+        occurred_at: now,
+        recorded_at: now,
+        notes: 'Automatically generated event',
+        details: {},
+        supplier_id: move.supplier_id,
+      }
+
+      if move.proposed?
+        GenericEvent::MoveProposed.create!(event_attributes)
+      end
+
+      if move.requested?
+        GenericEvent::MoveRequested.create!(event_attributes)
       end
     end
   end
