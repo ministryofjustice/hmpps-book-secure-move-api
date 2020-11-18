@@ -82,6 +82,19 @@ RSpec.describe Api::PeopleController do
         end
       end
 
+      context 'with a NOMIS error' do
+        let(:query_params) { '?include=category' }
+        let(:latest_nomis_booking_id) { 123 }
+
+        before do
+          oauth2_response = instance_double('OAuth2::Response', body: '{"error":"server_error","error_description":"Internal Server Error"}', parsed: {}, status: '', 'error=': '')
+          allow(NomisClient::BookingDetails).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
+          get "/api/people/#{person.id}#{query_params}", params: params, headers: headers
+        end
+
+        it_behaves_like 'an endpoint that responds with error 502'
+      end
+
       context 'when including an invalid include query param' do
         let(:query_params) { '?include=foo.bar,profiles' }
 

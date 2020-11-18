@@ -162,7 +162,7 @@ Allocation:
           description: In case 'other' is chosen as cancellation_reason, further details
             can be specified
     meta:
-      description: Metadata per allocation is included only when calling the endpoint to return a list of allocations, not for a single allocation.
+      description: Metadata for each allocation
       readOnly: true
       type: object
       properties:

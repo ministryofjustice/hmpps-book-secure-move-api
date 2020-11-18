@@ -92,6 +92,14 @@ class Allocation < VersionedModel
     save!
   end
 
+  def move_totals
+    {
+      total: (cancelled? ? moves.count : moves.not_cancelled.count),
+      filled: moves.not_cancelled.where.not(profile_id: nil).count,
+      unfilled: moves.not_cancelled.where(profile_id: nil).count,
+    }
+  end
+
   def self.move_totals
     # Isolate this query from any higher level query that may include existing joins on moves
     rows = unscoped.where(id: pluck(:id).uniq)

@@ -26,6 +26,12 @@ class AllocationSerializer
   has_one :to_location, serializer: LocationSerializer
   has_many :moves, serializer: V2::MoveSerializer
 
+  meta do |object|
+    {
+      moves: object.move_totals,
+    }
+  end
+
   SUPPORTED_RELATIONSHIPS = %w[
     from_location
     to_location

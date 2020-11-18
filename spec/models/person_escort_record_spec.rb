@@ -249,8 +249,9 @@ RSpec.describe PersonEscortRecord do
   end
 
   describe '#build_responses!' do
+    let(:framework) { create(:framework) }
+
     it 'persists the person_escort_record' do
-      framework = create(:framework)
       create(:framework_question, framework: framework)
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
@@ -259,7 +260,6 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'creates responses for a question' do
-      framework = create(:framework)
       radio_question = create(:framework_question, framework: framework)
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
@@ -268,12 +268,12 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: radio_question.id,
         person_escort_record_id: person_escort_record.id,
+        assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )
     end
 
     it 'creates responses for multiple questions' do
-      framework = create(:framework)
       create(:framework_question, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
       profile = create(:profile)
@@ -283,7 +283,6 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'creates responses for multiple items questions' do
-      framework = create(:framework)
       create(:framework_question, :add_multiple_items, framework: framework)
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
@@ -292,53 +291,51 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'creates responses for dependent questions' do
-      framework = create(:framework)
       parent_question = create(:framework_question, framework: framework)
       child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
 
       person_escort_record = build(:person_escort_record, framework: framework, profile: create(:profile))
       person_escort_record.build_responses!
-      dependent_response = FrameworkResponse.find_by(framework_question: child_question, person_escort_record: person_escort_record)
+      dependent_response = FrameworkResponse.find_by(framework_question: child_question, assessmentable: person_escort_record)
 
       expect(dependent_response).to have_attributes(
         framework_question_id: child_question.id,
         person_escort_record_id: person_escort_record.id,
+        assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::Array',
       )
     end
 
     it 'creates responses for multiple dependent questions' do
-      framework = create(:framework)
       parent_question = create(:framework_question, framework: framework)
       create(:framework_question, framework: framework, parent: parent_question)
       create(:framework_question, framework: framework, parent: parent_question)
 
       person_escort_record = build(:person_escort_record, framework: framework, profile: create(:profile))
       person_escort_record.build_responses!
-      dependent_responses = FrameworkResponse.find_by(framework_question: parent_question, person_escort_record: person_escort_record).dependents
+      dependent_responses = FrameworkResponse.find_by(framework_question: parent_question, assessmentable: person_escort_record).dependents
 
       expect(dependent_responses.count).to eq(2)
     end
 
     it 'creates responses for deeply nested dependent questions' do
-      framework = create(:framework)
       parent_question = create(:framework_question, framework: framework)
       child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
       grand_child_question = create(:framework_question, :text, framework: framework, parent: child_question)
 
       person_escort_record = build(:person_escort_record, framework: framework, profile: create(:profile))
       person_escort_record.build_responses!
-      dependent_response = FrameworkResponse.find_by(framework_question: grand_child_question, person_escort_record: person_escort_record)
+      dependent_response = FrameworkResponse.find_by(framework_question: grand_child_question, assessmentable: person_escort_record)
 
       expect(dependent_response).to have_attributes(
         framework_question_id: grand_child_question.id,
         person_escort_record_id: person_escort_record.id,
+        assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )
     end
 
     it 'creates responses for multiple deeply nested dependent questions' do
-      framework = create(:framework)
       parent_question = create(:framework_question, framework: framework)
       child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
       create(:framework_question, :text, framework: framework, parent: child_question)
@@ -346,13 +343,12 @@ RSpec.describe PersonEscortRecord do
 
       person_escort_record = build(:person_escort_record, framework: framework, profile: create(:profile))
       person_escort_record.build_responses!
-      dependent_responses = FrameworkResponse.find_by(framework_question: child_question, person_escort_record: person_escort_record).dependents
+      dependent_responses = FrameworkResponse.find_by(framework_question: child_question, assessmentable: person_escort_record).dependents
 
       expect(dependent_responses.count).to eq(2)
     end
 
     it 'returns person_escort_record validation error if record is not valid' do
-      framework = create(:framework)
       create(:framework_question, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
       person_escort_record = build(:person_escort_record, framework: framework, status: 'some-status', profile: create(:profile))
@@ -378,7 +374,6 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'raises an error if transaction fails twice' do
-      framework = create(:framework)
       create(:framework_question, framework: framework)
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
@@ -388,7 +383,6 @@ RSpec.describe PersonEscortRecord do
     end
 
     it 'retries the transaction if it fails only once and saves person_escort_record' do
-      framework = create(:framework)
       radio_question = create(:framework_question, framework: framework)
       profile = create(:profile)
       person_escort_record = build(:person_escort_record, framework: framework, profile: profile)
@@ -405,6 +399,7 @@ RSpec.describe PersonEscortRecord do
       expect(person_escort_record.framework_responses.first).to have_attributes(
         framework_question_id: radio_question.id,
         person_escort_record_id: person_escort_record.id,
+        assessmentable_id: person_escort_record.id,
         type: 'FrameworkResponse::String',
       )
     end
@@ -466,8 +461,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `not_started` if all responded values are false' do
       person_escort_record = create(:person_escort_record)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -479,8 +474,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `in_progress` if some responded values are true' do
       person_escort_record = create(:person_escort_record)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -493,14 +488,14 @@ RSpec.describe PersonEscortRecord do
     it 'returns a section as `in_progress` if not all required dependent responses responded' do
       person_escort_record = create(:person_escort_record)
       # Non dependent Responses
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
-      parent_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
       # Dependent responses on parent_response
-      child_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
+      child_response = create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
       # Dependent responses on child_response
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -512,8 +507,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `completed` if all responded values are true' do
       person_escort_record = create(:person_escort_record)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: true)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -527,14 +522,14 @@ RSpec.describe PersonEscortRecord do
       person_escort_record = create(:person_escort_record)
 
       # Non dependent Responses
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
-      parent_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true)
       # Dependent responses on parent_response
-      child_response = create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
+      child_response = create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
       # Dependent responses on child_response
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -546,7 +541,7 @@ RSpec.describe PersonEscortRecord do
 
     it 'returns a section as `not_started` if all responded values are false even if prefilled' do
       person_escort_record = create(:person_escort_record, :prefilled)
-      create_response(person_escort_record: person_escort_record, section: 'risk', value: 'No', responded: false, prefilled: true)
+      create_response(assessmentable: person_escort_record, section: 'risk', value: 'No', responded: false, prefilled: true)
 
       expect(person_escort_record.section_progress).to contain_exactly(
         {
@@ -560,8 +555,8 @@ RSpec.describe PersonEscortRecord do
   describe '#update_status!' do
     it 'sets initial status to `unstarted`' do
       person_escort_record = create(:person_escort_record)
-      create(:string_response, value: nil, person_escort_record: person_escort_record)
-      create(:string_response, value: nil, person_escort_record: person_escort_record)
+      create(:string_response, value: nil, assessmentable: person_escort_record)
+      create(:string_response, value: nil, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_unstarted
@@ -569,8 +564,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status to `in_progress` if at least one response provided' do
       person_escort_record = create(:person_escort_record)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      create(:string_response, value: nil, responded: false, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
@@ -578,8 +573,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status to `completed` if all responses provided from `unstarted`' do
       person_escort_record = create(:person_escort_record)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
@@ -587,8 +582,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status to `completed` if all responses provided from `in_progress`' do
       person_escort_record = create(:person_escort_record, :in_progress)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
@@ -596,8 +591,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status to `completed` from itself if response changed' do
       person_escort_record = create(:person_escort_record, :completed)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_completed
@@ -607,7 +602,7 @@ RSpec.describe PersonEscortRecord do
       completed_at_timestamp = Time.zone.now
       allow(Time).to receive(:now).and_return(completed_at_timestamp)
       person_escort_record = create(:person_escort_record, :in_progress)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record.completed_at).to eq(completed_at_timestamp)
@@ -615,8 +610,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status back to `in_progress` from `completed` if response cleared' do
       person_escort_record = create(:person_escort_record, :completed)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      create(:string_response, value: nil, responded: false, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
@@ -627,8 +622,8 @@ RSpec.describe PersonEscortRecord do
       new_completed_at_timestamp = Time.zone.now
       allow(Time).to receive(:now).and_return(new_completed_at_timestamp)
       person_escort_record = create(:person_escort_record, :completed, completed_at: old_completed_at_timestamp)
-      create(:string_response, responded: true, person_escort_record: person_escort_record)
-      response = create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      create(:string_response, responded: true, assessmentable: person_escort_record)
+      response = create(:string_response, value: nil, responded: false, assessmentable: person_escort_record)
       person_escort_record.update_status!
       response.update(value: 'Yes')
       person_escort_record.update_status!
@@ -638,8 +633,8 @@ RSpec.describe PersonEscortRecord do
 
     it 'sets status to `in_progress` from itself if response changed' do
       person_escort_record = create(:person_escort_record, :in_progress)
-      create(:string_response, value: 'No', responded: true, person_escort_record: person_escort_record)
-      create(:string_response, value: nil, responded: false, person_escort_record: person_escort_record)
+      create(:string_response, value: 'No', responded: true, assessmentable: person_escort_record)
+      create(:string_response, value: nil, responded: false, assessmentable: person_escort_record)
       person_escort_record.update_status!
 
       expect(person_escort_record).to be_in_progress
@@ -719,7 +714,7 @@ RSpec.describe PersonEscortRecord do
   end
 
   def create_response(options = {})
-    question = create(:framework_question, framework: options[:person_escort_record].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
-    create(:string_response, value: options[:value], framework_question: question, person_escort_record: options[:person_escort_record], responded: options[:responded], parent: options[:parent])
+    question = create(:framework_question, framework: options[:assessmentable].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
+    create(:string_response, value: options[:value], framework_question: question, assessmentable: options[:assessmentable], responded: options[:responded], parent: options[:parent])
   end
 end

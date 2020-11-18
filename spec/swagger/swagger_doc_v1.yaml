@@ -284,6 +284,48 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_allocations_responses.yaml#/422"
+  "/allocations/{allocation_id}":
+    get:
+      summary: Returns the details of an allocation
+      tags:
+        - Allocations
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/allocation_id_parameter.yaml#/AllocationId"
+        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_allocation_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
   "/allocations/{allocation_id}/cancel":
     post:
       summary: Cancels an allocation and all associated moves

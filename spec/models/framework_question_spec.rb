@@ -24,7 +24,7 @@ RSpec.describe FrameworkQuestion do
       question2 = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question1.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
         question: question2,
       )
@@ -32,22 +32,34 @@ RSpec.describe FrameworkQuestion do
       expect(response.framework_question).to eq(question2)
     end
 
+    # TODO: remove once transition to assessment complete
     it 'builds response associated to correct person_escort_record' do
       question = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
       expect(response.person_escort_record).to eq(person_escort_record)
     end
 
+    it 'builds response associated to correct assessment' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_responses(
+        assessmentable: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.assessmentable).to eq(person_escort_record)
+    end
+
     it 'builds response and defaults to current question' do
       question = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -60,7 +72,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :checkbox, parent: question)
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -72,7 +84,7 @@ RSpec.describe FrameworkQuestion do
       question = create(:framework_question)
       dependent_question = create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -83,23 +95,36 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question, :add_multiple_items)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
       expect(response.dependents).to be_empty
     end
 
+    # TODO: remove once transition to assessment complete
     it 'sets person_escort_record on dependent responses' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
       create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
       expect(response.dependents.first.person_escort_record).to eq(person_escort_record)
+    end
+
+    it 'sets assessment on dependent responses' do
+      person_escort_record = create(:person_escort_record)
+      question = create(:framework_question)
+      create(:framework_question, :checkbox, parent: question)
+      response = question.build_responses(
+        assessmentable: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.dependents.first.assessmentable).to eq(person_escort_record)
     end
 
     it 'sets correct types on dependent responses' do
@@ -108,7 +133,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :checkbox, followup_comment: true, parent: question)
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -125,7 +150,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, parent: child_question)
       create(:framework_question, parent: child_question)
       response = parent_question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -143,7 +168,7 @@ RSpec.describe FrameworkQuestion do
         }
         person_escort_record = create(:person_escort_record)
         response = question1.build_responses(
-          person_escort_record: person_escort_record,
+          assessmentable: person_escort_record,
           questions: questions,
           question: question2,
           previous_responses: previous_responses,
@@ -161,7 +186,7 @@ RSpec.describe FrameworkQuestion do
           dependent_question.key => ['Level 1'],
         }
         response = question.build_responses(
-          person_escort_record: person_escort_record,
+          assessmentable: person_escort_record,
           questions: questions,
           previous_responses: previous_responses,
         )
@@ -178,7 +203,7 @@ RSpec.describe FrameworkQuestion do
           dependent_question.key => ['Level 1'],
         }
         response = question.build_responses(
-          person_escort_record: person_escort_record,
+          assessmentable: person_escort_record,
           questions: questions,
           previous_responses: previous_responses,
         )
@@ -194,7 +219,7 @@ RSpec.describe FrameworkQuestion do
           question.key => value,
         }
         response = question.build_responses(
-          person_escort_record: person_escort_record,
+          assessmentable: person_escort_record,
           questions: questions,
           previous_responses: previous_responses,
         )

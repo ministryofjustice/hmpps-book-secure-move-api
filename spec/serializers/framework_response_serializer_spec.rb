@@ -33,9 +33,17 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:prefilled]).to eq(framework_response.prefilled)
   end
 
+  # TODO: remove once transition to assessment is complete
   it 'contains a `person_escort_record` relationship' do
     expect(result[:data][:relationships][:person_escort_record][:data]).to eq(
       id: framework_response.person_escort_record.id,
+      type: 'person_escort_records',
+    )
+  end
+
+  it 'contains a `assessment` relationship' do
+    expect(result[:data][:relationships][:assessment][:data]).to eq(
+      id: framework_response.assessmentable.id,
       type: 'person_escort_records',
     )
   end
@@ -77,16 +85,16 @@ RSpec.describe FrameworkResponseSerializer do
 
   context 'with include options' do
     let(:includes) do
-      %i[person_escort_record question]
+      %i[person_escort_record assessment question]
     end
     let(:framework_response) do
-      create(:string_response, person_escort_record: create(:person_escort_record))
+      create(:string_response, assessmentable: create(:person_escort_record))
     end
 
     let(:expected_json) do
       [
         {
-          id: framework_response.person_escort_record.id,
+          id: framework_response.assessmentable.id,
           type: 'person_escort_records',
           attributes: { status: 'not_started' },
         },

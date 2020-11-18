@@ -1,7 +1,7 @@
 effective_from: "2020-08-29"
 effective_to: null
 suppliers:
-  geoamey:	
+  geoamey:
     - ACI
     - AGI
     - BCI
@@ -37,6 +37,8 @@ suppliers:
     - DRB2
     - DRB3
     - DRB5
+    - DRB7
+    - DRB8
     - DTI
     - FBI
     - FHI
@@ -53,6 +55,7 @@ suppliers:
     - GMP7
     - GMP8
     - GMP9
+    - GMP13
     - GTI
     - GWN1
     - GWN2
@@ -75,6 +78,7 @@ suppliers:
     - LAN4
     - LAN5
     - LAN6
+    - LAN7
     - LCI
     - LCS1
     - LCS2
@@ -92,6 +96,8 @@ suppliers:
     - LNI
     - LPI
     - MDI
+    - MHI
+    - MLW051
     - MRI
     - MRS1
     - MRS2
@@ -106,7 +112,13 @@ suppliers:
     - NRU3
     - NRU4
     - NRU5
+    - NRU6
+    - NRU7
     - NSI
+    - NTH1
+    - NTH2
+    - NTH4
+    - NTH5
     - NTS1
     - NTS2
     - NTS3
@@ -114,11 +126,15 @@ suppliers:
     - NTT3
     - NWA1
     - NWA2
+    - NWA3
     - NWA4
     - NWA5
+    - NWA6
+    - NWA7
     - NYK1
     - NYK2
     - NYK3
+    - NYK4
     - ONI
     - OWI
     - PNI
@@ -140,7 +156,9 @@ suppliers:
     - STC2
     - STF1
     - STF2
+    - STF3
     - STF4
+    - STF5
     - STI
     - SUI
     - SWI
@@ -148,6 +166,7 @@ suppliers:
     - SWL2
     - SWL3
     - SWL4
+    - SWL17
     - SYP1
     - SYP2
     - SYP3
@@ -163,6 +182,8 @@ suppliers:
     - WMP5
     - WMP7
     - WMP8
+    - WMP13
+    - WMP23
     - WNI
     - WTI
     - WWM1
@@ -182,17 +203,37 @@ suppliers:
     - WYP7
     - WYP8
     - WYP9
+    - WYP19
   serco:
     - ASI
     - AVS1
     - AVS2
     - AVS3
     - AYI
+    - BAI
+    - BDS1
+    - BDS2
+    - BDS3
+    - BFI
     - BLI
     - BNI
+    - BRI
+    - BTP1
+    - BTP2
+    - BTP4
+    - BTP5
+    - BXI
     - BZI
+    - CAM1
+    - CAM3
+    - CAM4
+    - CAM5
+    - CDI
+    - CITWMC
     - CKI
     - CLI
+    - CLP1
+    - CLP3
     - CWI
     - DAI
     - DC1
@@ -201,6 +242,7 @@ suppliers:
     - DC4
     - DC5
     - DC6
+    - DC8
     - DST1
     - DST2
     - DST3
@@ -208,13 +250,24 @@ suppliers:
     - EEI
     - EHI
     - ESI
+    - ESX1
+    - ESX2
+    - ESX3
+    - ESX4
+    - ESX5
+    - ESX6
+    - ESX7
     - EWI
     - EXI
     - EYI
     - FDI
+    - FMI
+    - FYI
     - GCS1
+    - GCS5
     - GMI
     - GNI
+    - HBI
     - HCI
     - HNT1
     - HNT2
@@ -222,6 +275,10 @@ suppliers:
     - HNT4
     - HNT6
     - HOI
+    - HPI
+    - HRT1
+    - HRT2
+    - ISI
     - IWI
     - KNT1
     - KNT2
@@ -231,72 +288,9 @@ suppliers:
     - KNT6
     - KNT7
     - KNT8
+    - LTI
     - LWI
     - LYI
-    - MSI
-    - PDI
-    - RCI
-    - SCH9
-    - SDI
-    - SFCUSU
-    - SLI
-    - SPI
-    - SRY016
-    - SRY1
-    - SRY4
-    - STC3
-    - STCUSU
-    - SUS1
-    - SUS2
-    - SUS3
-    - SUS4
-    - SUS5
-    - TVP1
-    - TVP2
-    - TVP3
-    - TVP4
-    - TVP5
-    - TVP6
-    - TVP7
-    - TVP8
-    - VEI
-    - WCI
-    - WHI
-    - WLT1
-    - WLT4
-    - BAI
-    - BDS1
-    - BDS2
-    - BFI
-    - BRI
-    - BTP1
-    - BTP2
-    - BTP4
-    - BTP5
-    - BXI
-    - CAM1
-    - CAM3
-    - CAM4
-    - CAM5
-    - CDI
-    - CITWMC
-    - CLP1
-    - CLP3
-    - ESX1
-    - ESX2
-    - ESX3
-    - ESX4
-    - ESX5
-    - ESX6
-    - ESX7
-    - FMI
-    - FYI
-    - HBI
-    - HPI
-    - HRT1
-    - HRT2
-    - ISI
-    - LTI
     - MPS1
     - MPS10
     - MPS11
@@ -324,26 +318,60 @@ suppliers:
     - MPS31
     - MPS32
     - MPS33
+    - MPS34
     - MPS4
     - MPS5
     - MPS6
     - MPS7
     - MPS8
     - MPS9
+    - MSI
     - MTI
     - NFL1
     - NFL2
     - NFL3
     - NFL4
+    - NFL5
     - NWI
     - PBI
+    - PDI
     - PFI
     - PVI
+    - RCI
+    - SCH9
+    - SDI
+    - SFCUSU
     - SFL1
     - SFL2
+    - SLI
+    - SPI
+    - SRY016
+    - SRY1
+    - SRY4
+    - STC3
+    - STCUSU
+    - SUS1
+    - SUS2
+    - SUS3
+    - SUS4
+    - SUS5
+    - SUS7
     - TSI
+    - TVP1
+    - TVP2
+    - TVP3
+    - TVP4
+    - TVP5
+    - TVP6
+    - TVP7
+    - TVP8
+    - VEI
+    - WCI
+    - WHI
     - WII
     - WLI
+    - WLT1
+    - WLT4
     - WRI
     - WSI
     - WWI

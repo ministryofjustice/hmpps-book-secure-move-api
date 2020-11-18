@@ -2,17 +2,17 @@
 
 module FrameworkNomisMappings
   class Importer
-    attr_reader :person, :person_escort_record, :framework_responses, :framework_nomis_codes
+    attr_reader :person, :assessmentable, :framework_responses, :framework_nomis_codes
 
-    def initialize(person_escort_record:)
-      @person_escort_record = person_escort_record
-      @person = person_escort_record&.profile&.person
-      @framework_responses = person_escort_record&.framework_responses
+    def initialize(assessmentable:)
+      @assessmentable = assessmentable
+      @person = assessmentable&.profile&.person
+      @framework_responses = assessmentable&.framework_responses
       @framework_nomis_codes = framework_responses&.includes(:framework_nomis_codes)&.flat_map(&:framework_nomis_codes)
     end
 
     def call
-      return unless person_escort_record && framework_responses.any? && framework_nomis_codes.any?
+      return unless assessmentable && framework_responses.any? && framework_nomis_codes.any?
 
       ApplicationRecord.retriable_transaction do
         return unless persist_framework_nomis_mappings.any?
@@ -22,7 +22,7 @@ module FrameworkNomisMappings
           response.framework_nomis_mappings = nomis_code_ids_to_mappings.slice(*nomis_code_ids).values.flatten
         end
 
-        person_escort_record.update(nomis_sync_status: nomis_sync_status)
+        assessmentable.update(nomis_sync_status: nomis_sync_status)
       end
     end
 
@@ -96,7 +96,7 @@ module FrameworkNomisMappings
       Raven.capture_message(
         description,
         extra: {
-          id: person_escort_record&.id,
+          id: assessmentable&.id,
           params: params,
         },
         level: 'error',

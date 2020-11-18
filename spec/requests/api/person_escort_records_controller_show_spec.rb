@@ -9,9 +9,13 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_question) { build(:framework_question, section: 'risk-information') }
     let(:flag) { build(:framework_flag, framework_question: framework_question) }
-    let(:framework_response) { build(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag]) }
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
-    let(:person_escort_record) { create(:person_escort_record, framework_responses: [framework_response]) }
+    let(:person_escort_record) do
+      person_escort_record = create(:person_escort_record)
+      create(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
+
+      person_escort_record
+    end
     let(:person_escort_record_id) { person_escort_record.id }
 
     before do
@@ -52,7 +56,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             "responses": {
               "data": [
                 {
-                  "id": framework_response.id,
+                  "id": person_escort_record.framework_responses.first.id,
                   "type": 'framework_responses',
                 },
               ],
@@ -79,7 +83,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
 
-      context "when attempting to access another move's journey" do
+      context 'when attempting to access an unknown person escort record' do
         let(:person_escort_record_id) { SecureRandom.uuid }
         let(:detail_404) { "Couldn't find PersonEscortRecord with 'id'=#{person_escort_record_id}" }
 

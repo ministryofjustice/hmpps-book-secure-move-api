@@ -6,6 +6,7 @@ class FrameworkResponseSerializer
   set_type :framework_responses
 
   belongs_to :person_escort_record
+  belongs_to :assessment, polymorphic: true, &:assessmentable
   belongs_to :question, serializer: FrameworkQuestionSerializer, &:framework_question
   has_many :flags, serializer: FrameworkFlagSerializer, &:framework_flags
   has_many :nomis_mappings, serializer: FrameworkNomisMappingSerializer, &:framework_nomis_mappings
@@ -17,6 +18,7 @@ class FrameworkResponseSerializer
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
+    assessment
     person_escort_record
     nomis_mappings
     question.descendants

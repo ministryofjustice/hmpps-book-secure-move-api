@@ -51,7 +51,7 @@ class FrameworkResponse
       MultipleItemsCollection.new(
         collection: collection,
         questions: framework_question.dependents,
-        person_escort_record: person_escort_record,
+        assessmentable: assessmentable,
       )
     end
 

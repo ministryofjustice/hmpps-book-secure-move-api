@@ -10,7 +10,9 @@ class FrameworkResponse < VersionedModel
   end
 
   belongs_to :framework_question
+  # TODO: remove once transition to assessment completed
   belongs_to :person_escort_record
+  belongs_to :assessmentable, optional: true, polymorphic: true
   has_many :dependents, class_name: 'FrameworkResponse',
                         foreign_key: 'parent_id'
 
@@ -26,7 +28,7 @@ class FrameworkResponse < VersionedModel
 
     ApplicationRecord.retriable_transaction { update_response_transaction(new_value) }
   rescue FiniteMachine::InvalidStateError
-    raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
+    raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because assessment is #{assessmentable.status}"
   end
 
   def value=(raw_value)
@@ -117,8 +119,8 @@ private
     FrameworkResponse.clear_dependent_values_and_flags!([self])
 
     # lock the status update to avoid race condition on multiple response patches
-    person_escort_record.with_lock do
-      person_escort_record.update_status!
+    assessmentable.with_lock do
+      assessmentable.update_status!
     end
   end
 end

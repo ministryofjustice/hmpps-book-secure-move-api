@@ -8,12 +8,12 @@ class FrameworkResponse
 
     validate :multiple_item_objects
 
-    def initialize(collection:, person_escort_record:, questions: [])
+    def initialize(collection:, assessmentable:, questions: [])
       @collection = Array(collection).map do |item|
         MultipleItemObject.new(
           attributes: item,
           questions: questions,
-          person_escort_record: person_escort_record,
+          assessmentable: assessmentable,
         )
       end
     end

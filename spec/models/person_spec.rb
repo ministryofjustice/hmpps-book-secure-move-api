@@ -24,35 +24,51 @@ RSpec.describe Person do
   end
 
   describe '#police_national_computer' do
-    subject!(:person) { create(:person, police_national_computer: 'FLIBBLE') }
-
     it 'is case insensitive' do
+      person = create(:person, police_national_computer: 'FLIBBLE')
       expect(described_class.where(police_national_computer: 'flibble')).to include(person)
+    end
+
+    it 'stores blank values as nil' do
+      person = create(:person, police_national_computer: '')
+      expect(person.reload.police_national_computer).to be_nil
     end
   end
 
   describe '#criminal_records_office' do
-    subject!(:person) { create(:person, criminal_records_office: 'FLIBBLE') }
-
     it 'is case insensitive' do
+      person = create(:person, criminal_records_office: 'FLIBBLE')
       expect(described_class.where(criminal_records_office: 'flibble')).to include(person)
+    end
+
+    it 'stores blank values as nil' do
+      person = create(:person, criminal_records_office: '')
+      expect(person.reload.criminal_records_office).to be_nil
     end
   end
 
   describe '#prison_number' do
-    subject!(:person) { create(:person, prison_number: 'FLIBBLE') }
-
     it 'is case insensitive' do
+      person = create(:person, prison_number: 'FLIBBLE')
       expect(described_class.where(prison_number: 'flibble')).to include(person)
+    end
+
+    it 'stores blank values as nil' do
+      person = create(:person, prison_number: '')
+      expect(person.reload.prison_number).to be_nil
     end
   end
 
   # TODO: Remove nomis_prison_number once we remove v1 from our system
   describe '#nomis_prison_number' do
-    subject!(:person) { create(:person, nomis_prison_number: 'FLIBBLE') }
-
     it 'is case insensitive' do
+      person = create(:person, nomis_prison_number: 'FLIBBLE')
       expect(described_class.where(nomis_prison_number: 'flibble')).to include(person)
+    end
+
+    it 'stores blank values as nil' do
+      person = create(:person, nomis_prison_number: '')
+      expect(person.reload.nomis_prison_number).to be_nil
     end
   end
 

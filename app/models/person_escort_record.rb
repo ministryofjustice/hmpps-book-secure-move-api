@@ -19,7 +19,7 @@ class PersonEscortRecord < VersionedModel
   validates :profile, uniqueness: true
   validates :confirmed_at, presence: { if: :confirmed? }
 
-  has_many :framework_responses, dependent: :destroy
+  has_many :framework_responses, as: :assessmentable, dependent: :destroy
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :framework
@@ -43,7 +43,7 @@ class PersonEscortRecord < VersionedModel
     move = Move.find(move_id)
     profile = move.profile
 
-    framework = Framework.find_by!(version: version)
+    framework = Framework.find_by!(version: version, name: 'person-escort-record')
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!
@@ -64,8 +64,8 @@ class PersonEscortRecord < VersionedModel
       questions.values.each do |question|
         next unless question.parent_id.nil?
 
-        response = question.build_responses(person_escort_record: self, questions: questions, previous_responses: previous_responses)
-        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled))
+        response = question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses)
+        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :person_escort_record, :assessmentable))
       end
 
       PersonEscortRecord.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
@@ -77,7 +77,7 @@ class PersonEscortRecord < VersionedModel
   def import_nomis_mappings!
     return unless move&.from_location&.prison?
 
-    FrameworkNomisMappings::Importer.new(person_escort_record: self).call
+    FrameworkNomisMappings::Importer.new(assessmentable: self).call
   end
 
   def section_progress

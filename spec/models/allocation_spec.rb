@@ -193,6 +193,71 @@ RSpec.describe Allocation do
     end
   end
 
+  describe '#move_totals' do
+    subject(:move_totals) { allocation.move_totals }
+
+    context 'without associated moves' do
+      let(:allocation) { create(:allocation) }
+
+      it 'contains zero total and filled move counts' do
+        expect(move_totals).to eq({
+          total: 0,
+          filled: 0,
+          unfilled: 0,
+        })
+      end
+    end
+
+    context 'with associated moves' do
+      let(:allocation) { create(:allocation, :with_moves, moves_count: 2) }
+
+      before do
+        allocation.moves.first.update(profile: nil)
+      end
+
+      it 'contains correct total, filled and unfilled move counts' do
+        expect(move_totals).to eq({
+          total: 2,
+          filled: 1,
+          unfilled: 1,
+        })
+      end
+    end
+
+    context 'with cancelled moves on a current allocation' do
+      let(:allocation) { create(:allocation, :with_moves, moves_count: 3) }
+
+      before do
+        allocation.moves.first.update(status: 'cancelled', cancellation_reason: 'other')
+        allocation.moves.last.update(profile: nil, status: 'cancelled', cancellation_reason: 'other')
+      end
+
+      it 'excludes cancelled moves from all move counts' do
+        expect(move_totals).to eq({
+          total: 1,
+          filled: 1, # Excludes filled cancelled move
+          unfilled: 0, # Excludes unfilled cancelled move
+        })
+      end
+    end
+
+    context 'with cancelled moves on a cancelled allocation' do
+      let(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
+
+      before do
+        allocation.moves.update_all(status: 'cancelled', cancellation_reason: 'other')
+      end
+
+      it 'includes cancelled moves in total count' do
+        expect(move_totals).to eq({
+          total: 2, # Still two moves in total, ignoring status
+          filled: 0,
+          unfilled: 0,
+        })
+      end
+    end
+  end
+
   describe '.move_totals' do
     subject(:move_totals) { described_class.all.move_totals }
 

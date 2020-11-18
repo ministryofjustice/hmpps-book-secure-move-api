@@ -31,7 +31,6 @@ module Locations
     end
 
     def apply_filters(scope)
-      scope = scope.includes(:suppliers)
       scope = scope.where(filter_params.slice(:location_type, :nomis_agency_id))
       scope = apply_supplier_filters(scope)
       scope = apply_location_filters(scope)
@@ -46,7 +45,7 @@ module Locations
     def apply_supplier_filters(scope)
       return scope unless filter_params.key?(:supplier_id)
 
-      scope = scope.where(suppliers: { id: split_params(:supplier_id) })
+      scope = scope.includes(:suppliers).where(suppliers: { id: split_params(:supplier_id) })
       scope.merge(SupplierLocation.effective_on(Time.zone.today))
     end
 

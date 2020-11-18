@@ -32,6 +32,8 @@ class Person < VersionedModel
   validates :last_name, presence: true
   validates :first_names, presence: true
 
+  auto_strip_attributes :nomis_prison_number, :prison_number, :criminal_records_office, :police_national_computer
+
   def age
     # See: https://medium.com/@craigsheen/calculating-age-in-rails-9bb661f11303
     # rubocop:disable Rails/Date
