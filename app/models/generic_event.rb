@@ -46,8 +46,10 @@ class GenericEvent < ApplicationRecord
     MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
+    MoveProposed
     MoveRedirect
     MoveReject
+    MoveRequested
     MoveStart
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
