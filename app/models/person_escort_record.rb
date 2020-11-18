@@ -43,7 +43,7 @@ class PersonEscortRecord < VersionedModel
     move = Move.find(move_id)
     profile = move.profile
 
-    framework = Framework.find_by!(version: version)
+    framework = Framework.find_by!(version: version, name: 'person-escort-record')
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!

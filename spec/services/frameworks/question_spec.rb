@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Frameworks::Question do
   describe '#call' do
-    let(:fixture_path) { 'spec/fixtures/files/frameworks/person-escort-record-1/questions' }
+    let(:fixture_path) { 'spec/fixtures/files/frameworks/person-escort-record/questions' }
 
     it 'sets a question as required if required validation available' do
       filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
