@@ -7,7 +7,7 @@ RSpec.describe Frameworks::Manifest do
     let(:framework_path) { 'spec/fixtures/files/frameworks' }
 
     it 'returns a list of question keys mapped to questions' do
-      filepath = Rails.root.join(framework_path, 'person-escort-record-1/manifests/health-information.yml')
+      filepath = Rails.root.join(framework_path, 'person-escort-record/manifests/health-information.yml')
       questions = described_class.new(filepath: filepath).call
       expect(questions.keys).to contain_exactly(
         'sensitive-medication',
@@ -20,7 +20,7 @@ RSpec.describe Frameworks::Manifest do
     it 'sets the framework question section and key' do
       filepath = Rails.root.join(
         framework_path,
-        'person-escort-record-2/manifests/offence-details.yml',
+        'youth-risk-assessment/manifests/offence-details.yml',
       )
 
       questions = described_class.new(filepath: filepath).call
@@ -33,7 +33,7 @@ RSpec.describe Frameworks::Manifest do
     it 'attaches question dependency to correct dependent value' do
       filepath = Rails.root.join(
         framework_path,
-        'person-escort-record-1/manifests/health-information.yml',
+        'person-escort-record/manifests/health-information.yml',
       )
 
       questions = described_class.new(filepath: filepath).call
@@ -47,7 +47,7 @@ RSpec.describe Frameworks::Manifest do
     it 'marks all questions in a section as dependent if section is dependent on another question' do
       filepath = Rails.root.join(
         framework_path,
-        'person-escort-record-1/manifests/health-information.yml',
+        'person-escort-record/manifests/health-information.yml',
       )
 
       questions = described_class.new(filepath: filepath).call

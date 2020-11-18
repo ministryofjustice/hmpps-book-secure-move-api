@@ -19,7 +19,7 @@ class PersonEscortRecord < VersionedModel
   validates :profile, uniqueness: true
   validates :confirmed_at, presence: { if: :confirmed? }
 
-  has_many :framework_responses, dependent: :destroy
+  has_many :framework_responses, as: :assessmentable, dependent: :destroy
   has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
 
   belongs_to :framework
@@ -43,7 +43,7 @@ class PersonEscortRecord < VersionedModel
     move = Move.find(move_id)
     profile = move.profile
 
-    framework = Framework.find_by!(version: version)
+    framework = Framework.find_by!(version: version, name: 'person-escort-record')
 
     record = new(profile: profile, move: move, framework: framework)
     record.build_responses!

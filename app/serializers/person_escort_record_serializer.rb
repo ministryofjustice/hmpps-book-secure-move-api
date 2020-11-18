@@ -8,7 +8,7 @@ class PersonEscortRecordSerializer
   belongs_to :profile, serializer: V2::ProfileSerializer
   belongs_to :move, serializer: V2::MoveSerializer
   belongs_to :framework
-  belongs_to :prefill_source, serializer: PersonEscortRecordSerializer
+  belongs_to :prefill_source, serializer: PrefillSourceSerializer
 
   has_many :responses, serializer: FrameworkResponseSerializer do |object|
     object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
