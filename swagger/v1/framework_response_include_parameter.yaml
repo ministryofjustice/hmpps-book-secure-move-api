@@ -8,7 +8,7 @@ FrameworkResponseIncludeParameter:
     type: string
     enum:
       - flags
-      - person_escort_record
+      - assessment
       - question
       - nomis_mappings
       - question.descendants
