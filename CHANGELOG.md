@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.6.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.8) (2020-11-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.7...v2.6.8)
+
+**Merged pull requests:**
+
+- Changelog 2.6.7 [\#1155](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1155) ([cwrw](https://github.com/cwrw))
+- P4-2248 Remove person\_escort\_record\_id from framework responses [\#1141](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1141) ([cwrw](https://github.com/cwrw))
+
 ## [v2.6.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.7) (2020-11-18)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.6...v2.6.7)
