@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.6.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.7) (2020-11-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.6...v2.6.7)
+
+**Merged pull requests:**
+
+- \[P4-2424\] Add MoveRequested and MoveProposed events for timeline [\#1153](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1153) ([willfish](https://github.com/willfish))
+- P4-2446 Use exact Framework name on creation of PER [\#1152](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1152) ([cwrw](https://github.com/cwrw))
+- Bump redis from 4.2.2 to 4.2.3 [\#1151](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1151) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump elastic-apm from 3.12.0 to 3.12.1 [\#1150](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1150) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump listen from 3.3.0 to 3.3.1 [\#1149](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1149) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add custom serializer for prefill source with fewer fields [\#1148](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1148) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog v2.6.6 [\#1147](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1147) ([cwrw](https://github.com/cwrw))
+- P4-2248 Stop writing to person\_escort\_record\_id in responses [\#1140](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1140) ([cwrw](https://github.com/cwrw))
+
 ## [v2.6.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.6) (2020-11-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.5...v2.6.6)
