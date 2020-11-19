@@ -10,8 +10,6 @@ class FrameworkResponse < VersionedModel
   end
 
   belongs_to :framework_question
-  # TODO: remove once transition to assessment completed
-  belongs_to :person_escort_record, optional: true
   belongs_to :assessmentable, optional: true, polymorphic: true
   has_many :dependents, class_name: 'FrameworkResponse',
                         foreign_key: 'parent_id'

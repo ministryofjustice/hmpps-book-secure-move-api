@@ -77,9 +77,6 @@ FrameworkResponse:
       required:
       - assessment
       properties:
-        person_escort_record:
-          $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
-          description: (Deprecated) The person_escort_record the responses refer to
         assessment:
           $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
           description: The assessment the responses refer to, current assessments supported include the Person Escort Record
