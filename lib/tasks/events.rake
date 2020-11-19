@@ -18,7 +18,7 @@ namespace :events do
 
     puts "Deleting #{generic_event_ids.count} generic_events..."
     GenericEvent.where(id: generic_event_ids).delete_all
-end
+  end
 
   desc 'tweak supplier to be based on doorkeeper token rather than the move supplier for initial state events'
   task tweak_supplier: :environment do
@@ -29,7 +29,7 @@ end
 
     events = GenericEvent.joins(
       # Handle polymorphic event model join
-      'INNER JOIN moves ON moves.id = generic_events.eventable_id'
+      'INNER JOIN moves ON moves.id = generic_events.eventable_id',
     ).load.where(type: ['GenericEvent::MoveProposed', 'GenericEvent::MoveRequested'])
 
     report = {
@@ -42,7 +42,7 @@ end
 
     events.find_each do |event|
       # PaperTrail::Version model rows have an event column which is always one of "create" or "update" (only ever one create)
-      initial_version =  event.eventable.versions.find_by(event: "create")
+      initial_version =  event.eventable.versions.find_by(event: 'create')
 
       supplier_different = initial_version.supplier_id != event.supplier_id
 
@@ -57,7 +57,7 @@ end
       if supplier_different
         report[:events_changed] += 1
       else
-        report[:events_unchanged] += 1 
+        report[:events_unchanged] += 1
       end
 
       if supplier_different

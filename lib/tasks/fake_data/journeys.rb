@@ -33,7 +33,7 @@ module Tasks
           # make some intermediate journeys which might or might not be billable
           intermediate_location = random_location(current_location)
           create_initial_move_event(timestamp, intermediate_location)
- 
+
           # randomly create some events with intermediate journeys
           case random_event # add some random events to the journeys
           when :redirect_move_billable # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
@@ -76,7 +76,7 @@ module Tasks
         )
       end
 
-      def create_initial_move_event(timestamp, location)
+      def create_initial_move_event(timestamp, _location)
         initial_transition_events = [GenericEvent::MoveProposed, GenericEvent::MoveRequested]
         initial_transition_events.sample.create(
           eventable: move,

@@ -147,11 +147,11 @@ module Api
         supplier_id: supplier.id,
       }
 
-      if action_name == "update"
+      if action_name == 'update'
         GenericEvent::JourneyUpdate.create!(event_attributes)
       end
 
-      if action_name == "create"
+      if action_name == 'create'
         GenericEvent::JourneyCreate.create!(event_attributes)
       end
     end
