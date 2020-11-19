@@ -166,7 +166,7 @@ module Api::V2
         recorded_at: now,
         notes: 'Automatically generated event',
         details: {},
-        supplier_id: move.supplier_id,
+        supplier_id: doorkeeper_application_owner&.id,
       }
 
       if move.proposed?
