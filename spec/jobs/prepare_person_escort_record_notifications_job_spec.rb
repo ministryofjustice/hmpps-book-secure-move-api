@@ -23,9 +23,18 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
       expect { perform }.to change(Notification.webhooks, :count).by(1)
     end
 
+    it 'creates an email notification' do
+      expect { perform }.to change(Notification.emails, :count).by(1)
+    end
+
     it 'schedules a NotifyWebhookJob' do
       perform
       expect(NotifyWebhookJob).to have_received(:perform_later).with(notification_id: Notification.webhooks.last.id, queue_as: :notifications_high)
+    end
+
+    it 'schedules a NotifyEmailJob' do
+      perform
+      expect(NotifyEmailJob).to have_received(:perform_later).with(notification_id: Notification.emails.last.id, queue_as: :notifications_high)
     end
   end
 
@@ -39,6 +48,11 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
     it 'does not schedule a NotifyWebhookJob' do
       perform
       expect(NotifyWebhookJob).not_to have_received(:perform_later)
+    end
+
+    it 'does not schedule a NotifyEmailJob' do
+      perform
+      expect(NotifyEmailJob).not_to have_received(:perform_later)
     end
   end
 end

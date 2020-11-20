@@ -116,7 +116,8 @@ RSpec.describe Api::PersonEscortRecordsController do
 
       before do
         allow(Faraday).to receive(:new).and_return(faraday_client)
-        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob]) do
+        allow(MoveMailer).to receive(:notify).and_return(notify_response)
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
           patch_person_escort_record
         end
       end
@@ -127,6 +128,16 @@ RSpec.describe Api::PersonEscortRecordsController do
         expect(notification).to have_attributes(
           topic: person_escort_record.move,
           notification_type: notification_type_webhook,
+          event_type: 'confirm_person_escort_record',
+        )
+      end
+
+      it 'creates an email notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record.move,
+          notification_type: notification_type_email,
           event_type: 'confirm_person_escort_record',
         )
       end
