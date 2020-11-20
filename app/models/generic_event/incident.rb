@@ -14,6 +14,7 @@ class GenericEvent
 
       child.include LocationValidations
       child.include SupplierPersonnelNumberValidations
+      child.include LocationFeed
 
       child.validates :reported_at, iso_date_time: true
       child.validates :fault_classification, presence: true, inclusion: { in: child.fault_classifications }

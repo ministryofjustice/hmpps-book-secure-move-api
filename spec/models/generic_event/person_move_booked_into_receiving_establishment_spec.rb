@@ -6,4 +6,5 @@ RSpec.describe GenericEvent::PersonMoveBookedIntoReceivingEstablishment do
   it_behaves_like 'an event with eventable types', 'Person', 'Move'
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event with a supplier personnel number'
+  it_behaves_like 'an event with a location in the feed', :location_id
 end

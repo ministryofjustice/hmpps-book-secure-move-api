@@ -6,11 +6,5 @@ class GenericEvent
     eventable_types 'Journey'
 
     include LocationValidations
-
-    def for_feed
-      super.tap do |common_feed_attributes|
-        common_feed_attributes['details'] = from_location.for_feed(prefix: 'from')
-      end
-    end
   end
 end

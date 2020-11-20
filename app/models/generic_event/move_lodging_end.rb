@@ -6,5 +6,6 @@ class GenericEvent
     eventable_types 'Move'
 
     include LocationValidations
+    include LocationFeed
   end
 end

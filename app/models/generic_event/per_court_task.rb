@@ -8,5 +8,6 @@ class GenericEvent
     include PersonEscortRecordEventValidations
     include LocationValidations
     include SupplierPersonnelNumberValidations
+    include LocationFeed
   end
 end

@@ -9,6 +9,7 @@ class GenericEvent
     include LocationValidations
     include PersonEscortRecordEventValidations
     include SupplierPersonnelNumberValidations
+    include LocationFeed
 
     validates :advised_at, presence: true, iso_date_time: true
     validates :advised_by, presence: true
