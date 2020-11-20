@@ -36,7 +36,8 @@ module Api
       @moves ||= Moves::Finder.new(filter_params: filter_params,
                                    ability: current_ability,
                                    order_params: params[:sort] || {},
-                                   active_record_relationships: active_record_relationships).call
+                                   active_record_relationships: active_record_relationships,
+                                   included_relationships: included_relationships).call
     end
 
     def validate_filter_params

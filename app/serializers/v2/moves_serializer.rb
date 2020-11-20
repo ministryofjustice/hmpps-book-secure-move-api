@@ -25,7 +25,7 @@ module V2
     INCLUDED_FIELDS = {
       moves: attributes_to_serialize.keys +
         %i[profile from_location to_location prison_transfer_reason supplier],
-      profiles: ::V2::ProfileSerializer.attributes_to_serialize.keys + %i[person person_escort_record person_escort_record_flags],
+      profiles: ::V2::ProfileSerializer.attributes_to_serialize.keys + %i[person person_escort_record_flags],
       people: ::V2::PersonSerializer.attributes_to_serialize.keys + %i[gender ethnicity],
       locations: ::LocationSerializer.attributes_to_serialize.keys,
       prison_transfer_reasons: ::PrisonTransferReasonSerializer.attributes_to_serialize.keys,

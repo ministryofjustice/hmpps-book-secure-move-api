@@ -2,9 +2,9 @@
 
 module Moves
   class Finder
-    attr_reader :filter_params, :ability, :active_record_relationships
+    attr_reader :filter_params, :ability, :active_record_relationships, :included_relationships
 
-    def initialize(filter_params:, ability:, order_params:, active_record_relationships:)
+    def initialize(filter_params:, ability:, order_params:, active_record_relationships:, included_relationships: nil)
       @filter_params = filter_params
       @ability = ability
       @order_by = (order_params[:by] || 'date').to_sym
@@ -15,15 +15,29 @@ module Moves
                            :desc
                          end
       @active_record_relationships = active_record_relationships
+      @included_relationships = included_relationships
     end
 
     def call
       scope = apply_filters(Move)
+      scope = scope.eager_load(eager_load_relationships)
       scope = scope.includes(active_record_relationships)
       apply_ordering(scope)
     end
 
   private
+
+    def eager_load_relationships
+      if included_relationships.present? &&
+          included_relationships.exclude?('profile.person_escort_record.flags') &&
+          included_relationships.any? { |inc| inc.starts_with?('profile') }
+        # NB: this helps prevent N+1 loading of person_escort_record and framework_flags if the profile is in the list
+        # of includes. The eager load optimisation does _not_ help if profile.person_escort_record.flags is included.
+        [{ profile: :person_escort_record_flags }]
+      else
+        []
+      end
+    end
 
     def apply_ordering(scope)
       case @order_by

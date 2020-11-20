@@ -48,6 +48,32 @@ RSpec.describe Api::MovesController do
             person: %i[gender ethnicity],
           ]
         end
+        let(:v1_included_relationships) do
+          [
+            'profile.documents',
+            'person.ethnicity',
+            'person.gender',
+            'profile.person.ethnicity',
+            'profile.person.gender',
+            'profile.person_escort_record',
+            'profile.person_escort_record.flags',
+            'profile.person_escort_record.framework',
+            'profile.person_escort_record.prefill_source',
+            'profile.person_escort_record.responses',
+            'profile.person_escort_record.responses.nomis_mappings',
+            'profile.person_escort_record.responses.question',
+            'profile.person_escort_record.responses.question.descendants.**',
+            'from_location',
+            'from_location.suppliers',
+            'to_location',
+            'to_location.suppliers',
+            'documents',
+            'prison_transfer_reason',
+            'court_hearings',
+            'allocation',
+            'original_move',
+          ]
+        end
 
         it 'delegates the query execution to Moves::Finder with the correct filters' do
           allow(Ability).to receive(:new).and_return(ability)
@@ -62,6 +88,7 @@ RSpec.describe Api::MovesController do
             ability: ability,
             order_params: {},
             active_record_relationships: v1_active_record_relationships,
+            included_relationships: v1_included_relationships,
           )
         end
 

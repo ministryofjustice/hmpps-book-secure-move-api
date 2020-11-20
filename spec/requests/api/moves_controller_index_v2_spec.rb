@@ -51,6 +51,7 @@ RSpec.describe Api::MovesController do
           ability: ability,
           order_params: {},
           active_record_relationships: nil,
+          included_relationships: nil,
         )
       end
 

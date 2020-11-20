@@ -6,7 +6,7 @@ class IncludeParamHandler
   end
 
   def included_relationships
-    @params[:include]&.split(SEPARATOR)
+    @included_relationships ||= @params[:include]&.split(SEPARATOR)
   end
 
   def active_record_relationships
