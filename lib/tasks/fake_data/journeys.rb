@@ -32,22 +32,19 @@ module Tasks
         while journey_counter < number_of_journeys
           # make some intermediate journeys which might or might not be billable
           intermediate_location = random_location(current_location)
+          create_initial_move_event(timestamp, intermediate_location)
 
           # randomly create some events with intermediate journeys
           case random_event # add some random events to the journeys
           when :redirect_move_billable # billable redirect move (not journey) to intermediate_location, e.g. "PMU requested redirect whilst en route"
-            create_redirect_move_event(
-              timestamp,
-              ['requested by PMU for operational reasons', 'requested by prison because no space', 'requested by police because of security concerns'].sample,
-              intermediate_location,
-            )
+            create_redirect_move_event(timestamp, intermediate_location)
 
             # billable journey for redirection to intermediate_location
             create_journey(timestamp, current_location, intermediate_location, true)
 
             # subsequent redirect event back to to_location to make sure events remain consistent with move record; no journey record is required
             timestamp += rand(30..90).minutes
-            create_redirect_move_event(timestamp, 'redirecting back to original destination following earlier redirect', to_location)
+            create_redirect_move_event(timestamp, to_location)
           else
             # 50% chance of a conventional intermediate journey
             create_journey(timestamp, current_location, intermediate_location, true)
@@ -79,22 +76,31 @@ module Tasks
         )
       end
 
-      def create_redirect_move_event(timestamp, notes, location)
-        move.events.create!(
-          event_name: 'redirect',
-          client_timestamp: timestamp,
+      def create_initial_move_event(timestamp, _location)
+        initial_transition_events = [GenericEvent::MoveProposed, GenericEvent::MoveRequested]
+        initial_transition_events.sample.create(
+          eventable: move,
+          occurred_at: timestamp,
+          recorded_at: timestamp,
+          notes: 'Created from fake data',
+          details: { fake: true },
+          supplier_id: supplier.id,
+        )
+      end
+
+      def create_redirect_move_event(timestamp, location)
+        GenericEvent::MoveRedirect.create(
+          eventable: move,
+          occurred_at: timestamp,
+          recorded_at: timestamp,
+          notes: 'Created from fake data',
           details: {
             fake: true,
-            supplier_id: supplier.id,
-            event_params: {
-              attributes: {
-                notes: notes,
-              },
-              relationships: {
-                to_location: { data: { id: location.id } },
-              },
-            },
+            to_location_id: location.id,
+            reason: GenericEvent::MoveRedirect.reasons.keys.sample,
+            move_type: Move.move_types.keys.sample,
           },
+          supplier_id: supplier.id,
         )
       end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_16_093301) do
+ActiveRecord::Schema.define(version: 2020_11_16_095539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -227,7 +227,6 @@ ActiveRecord::Schema.define(version: 2020_11_16_093301) do
   end
 
   create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "person_escort_record_id"
     t.uuid "framework_question_id", null: false
     t.text "value_text"
     t.jsonb "value_json"
@@ -242,7 +241,6 @@ ActiveRecord::Schema.define(version: 2020_11_16_093301) do
     t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
-    t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
     t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
@@ -617,7 +615,6 @@ ActiveRecord::Schema.define(version: 2020_11_16_093301) do
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
-  add_foreign_key "framework_responses", "person_escort_records"
   add_foreign_key "generic_events", "suppliers"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"

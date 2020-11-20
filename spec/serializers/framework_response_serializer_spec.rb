@@ -77,7 +77,7 @@ RSpec.describe FrameworkResponseSerializer do
 
   context 'with include options' do
     let(:includes) do
-      %i[person_escort_record assessment question]
+      %i[assessment question]
     end
     let(:framework_response) do
       create(:string_response, assessmentable: create(:person_escort_record))
