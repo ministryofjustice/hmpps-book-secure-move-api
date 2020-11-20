@@ -74,10 +74,6 @@ RSpec.describe Api::JourneysController do
           expect(journey.client_timestamp).to eql Time.zone.parse('2020-05-04T08:00:00Z')
         end
 
-        it 'creates a `update` event' do
-          expect { do_patch }.to change { Event.where(event_name: 'update', eventable_type: 'Journey').count }.by(1)
-        end
-
         it 'creates a JourneyUpdate generic event' do
           expect { do_patch }.to change(GenericEvent::JourneyUpdate, :count).by(1)
         end

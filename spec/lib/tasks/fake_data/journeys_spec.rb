@@ -32,7 +32,8 @@ RSpec.describe Tasks::FakeData::Journeys do
     end
 
     it 'creates a redirect event' do
-      expect(move.events.where(event_name: 'redirect').exists?).to be true
+      event = GenericEvent::MoveRedirect.find_by(eventable_type: 'Move', eventable_id: move.id)
+      expect(event).to be_a(GenericEvent::MoveRedirect)
     end
   end
 end
