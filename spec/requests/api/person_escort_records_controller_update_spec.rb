@@ -91,8 +91,10 @@ RSpec.describe Api::PersonEscortRecordsController do
       let!(:subscription) { create(:subscription, supplier: supplier) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-      let!(:move) { create(:move, profile: person_escort_record.profile, from_location: from_location, supplier: supplier) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
+      let(:person_escort_record) { create(:person_escort_record, :with_responses, :completed, move: move) }
+
       let(:faraday_client) do
         class_double(
           Faraday,
@@ -114,8 +116,7 @@ RSpec.describe Api::PersonEscortRecordsController do
 
       before do
         allow(Faraday).to receive(:new).and_return(faraday_client)
-        allow(MoveMailer).to receive(:notify).and_return(notify_response)
-        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob]) do
           patch_person_escort_record
         end
       end
@@ -124,19 +125,9 @@ RSpec.describe Api::PersonEscortRecordsController do
         notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
         expect(notification).to have_attributes(
-          topic: person_escort_record.profile.moves.first,
+          topic: person_escort_record.move,
           notification_type: notification_type_webhook,
-          event_type: 'update_move',
-        )
-      end
-
-      it 'creates an email notification' do
-        notification = subscription.notifications.find_by(notification_type: notification_type_email)
-
-        expect(notification).to have_attributes(
-          topic: person_escort_record.profile.moves.first,
-          notification_type: notification_type_email,
-          event_type: 'update_move',
+          event_type: 'confirm_person_escort_record',
         )
       end
 

@@ -61,7 +61,7 @@ RSpec.describe Notifier do
     let(:topic) { create(:person_escort_record) }
 
     it 'queues a job' do
-      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, queue_as: :notifications_medium)
     end
   end
 
