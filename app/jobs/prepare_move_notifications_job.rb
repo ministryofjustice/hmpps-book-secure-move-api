@@ -56,6 +56,6 @@ private
       'update' => 'update_move',
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
-    }[action_name]
+    }[action_name] || action_name
   end
 end
