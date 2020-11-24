@@ -86,6 +86,9 @@ RSpec.describe Person do
         'prison_number' => person.prison_number,
         'latest_nomis_booking_id' => person.latest_nomis_booking_id,
         'age' => person.age,
+        'first_names' => person.first_names,
+        'last_name' => person.last_name,
+        'date_of_birth' => be_a(Date),
       }
     end
 
