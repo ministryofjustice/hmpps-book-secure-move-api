@@ -97,6 +97,15 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
   end
 
+  context 'when confirming a person escort record' do
+    let(:action_name) { 'confirm_person_escort_record' }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
+  end
+
   context 'when creating a back-dated move' do
     let(:move) { create :move, from_location: location, date: 2.days.ago, supplier: supplier }
 
