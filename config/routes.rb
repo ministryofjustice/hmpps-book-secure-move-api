@@ -61,7 +61,7 @@ Rails.application.routes.draw do
 
     resources :person_escort_records, only: %i[create show update] do
       member do
-        patch 'framework_responses', to: 'framework_responses#bulk_update'
+        patch 'framework_responses', to: 'framework_responses#bulk_update', assessment_class: PersonEscortRecord
       end
     end
     resources :framework_responses, only: %i[update]

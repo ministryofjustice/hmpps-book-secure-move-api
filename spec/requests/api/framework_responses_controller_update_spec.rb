@@ -283,7 +283,7 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
-      context 'when person_escort_record confirmed' do
+      context 'when assessment confirmed' do
         let(:person_escort_record) { create(:person_escort_record, :confirmed) }
         let(:framework_response) { create(:string_response, assessmentable: person_escort_record) }
         let(:detail_403) do
