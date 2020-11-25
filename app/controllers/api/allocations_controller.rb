@@ -8,7 +8,7 @@ module Api
       allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
       if allocations_params.valid?
         paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
-          options[:params] = paginated_allocations.move_totals
+          options[:params] = { totals: paginated_allocations.move_totals }
         end
       else
         render json: { error: allocations_params.errors }, status: :bad_request

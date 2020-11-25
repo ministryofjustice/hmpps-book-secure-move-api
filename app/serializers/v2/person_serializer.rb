@@ -19,6 +19,7 @@ module V2
     has_one :ethnicity, serializer: EthnicitySerializer
     has_one :gender, serializer: GenderSerializer
 
+    # TODO: replace this with has_many_if_included - lazy loading is buggy for nested resources
     # NB without lazy_load_data: true this relationship will trigger an N+1 database query,
     # unless it is included in the includes list
     has_many :profiles, serializer: ProfileSerializer, lazy_load_data: true

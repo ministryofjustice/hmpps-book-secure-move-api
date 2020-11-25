@@ -3,6 +3,7 @@
 module V2
   class MovesSerializer
     include JSONAPI::Serializer
+    include JSONAPI::ConditionalRelationships
 
     attributes  :additional_information,
                 :cancellation_reason,
@@ -23,11 +24,9 @@ module V2
     set_type :moves
 
     INCLUDED_FIELDS = {
-      moves: attributes_to_serialize.keys +
-        %i[profile from_location to_location prison_transfer_reason],
+      # TODO: remove these and replace with conditional relationships in relevant serializer
       people: ::V2::PersonSerializer.attributes_to_serialize.keys + %i[gender ethnicity],
       locations: ::LocationSerializer.attributes_to_serialize.keys,
-      prison_transfer_reasons: ::PrisonTransferReasonSerializer.attributes_to_serialize.keys,
     }.freeze
 
     SUPPORTED_RELATIONSHIPS = %w[
@@ -41,9 +40,9 @@ module V2
       prison_transfer_reason
     ].freeze
 
-    has_one :profile, serializer: V2::ProfilesSerializer
-    has_one :from_location, serializer: ::LocationSerializer
-    has_one :to_location, serializer: ::LocationSerializer
-    has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
+    has_one_if_included :profile, serializer: V2::ProfilesSerializer
+    has_one_if_included :from_location, serializer: ::LocationSerializer
+    has_one_if_included :to_location, serializer: ::LocationSerializer
+    has_one_if_included :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
   end
 end

@@ -23,7 +23,7 @@ RSpec.describe Api::MovesController do
     let!(:moves) { create_list :move, 2 }
 
     it_behaves_like 'an endpoint that responds with success 200' do
-      before { do_get }
+      before { do_get('?include=from_location') }
     end
 
     describe 'filtering results' do
@@ -169,9 +169,7 @@ RSpec.describe Api::MovesController do
       let(:to_location) { create(:location, suppliers: [supplier]) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
 
-      before do
-        get "/api/moves#{query_params}", params: params, headers: headers
-      end
+      before { do_get(query_params) }
 
       context 'when not including the include query param' do
         let(:query_params) { '' }
@@ -213,7 +211,7 @@ RSpec.describe Api::MovesController do
     end
   end
 
-  def do_get
-    get '/api/moves', params: params, headers: headers
+  def do_get(query_params = nil)
+    get "/api/moves#{query_params}", params: params, headers: headers
   end
 end
