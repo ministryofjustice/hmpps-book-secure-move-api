@@ -3,16 +3,16 @@ class PersonEscortRecord < VersionedModel
 
   # "not_started" cannot be used as the name of the enum due to warnings in the model
   # that it starts with a "not_".
-  PERSON_ESCORT_RECORD_NOT_STARTED = 'not_started'.freeze
-  PERSON_ESCORT_RECORD_IN_PROGRESS = 'in_progress'.freeze
-  PERSON_ESCORT_RECORD_COMPLETED = 'completed'.freeze
-  PERSON_ESCORT_RECORD_CONFIRMED = 'confirmed'.freeze
+  ASSESSMENT_NOT_STARTED = 'not_started'.freeze
+  ASSESSMENT_IN_PROGRESS = 'in_progress'.freeze
+  ASSESSMENT_COMPLETED = 'completed'.freeze
+  ASSESSMENT_CONFIRMED = 'confirmed'.freeze
 
   enum statuses: {
-    unstarted: PERSON_ESCORT_RECORD_NOT_STARTED,
-    in_progress: PERSON_ESCORT_RECORD_IN_PROGRESS,
-    completed: PERSON_ESCORT_RECORD_COMPLETED,
-    confirmed: PERSON_ESCORT_RECORD_CONFIRMED,
+    unstarted: ASSESSMENT_NOT_STARTED,
+    in_progress: ASSESSMENT_IN_PROGRESS,
+    completed: ASSESSMENT_COMPLETED,
+    confirmed: ASSESSMENT_CONFIRMED,
   }
 
   validates :status, presence: true, inclusion: { in: statuses }
@@ -97,7 +97,7 @@ class PersonEscortRecord < VersionedModel
   end
 
   def confirm!(new_status)
-    return unless new_status == PERSON_ESCORT_RECORD_CONFIRMED
+    return unless new_status == ASSESSMENT_CONFIRMED
 
     state_machine.confirm!
     save!
@@ -119,10 +119,10 @@ private
   def set_progress(responses)
     responded = responses.pluck(:responded)
 
-    return PERSON_ESCORT_RECORD_COMPLETED if responded.all?(true)
-    return PERSON_ESCORT_RECORD_NOT_STARTED if responded.all?(false)
+    return ASSESSMENT_COMPLETED if responded.all?(true)
+    return ASSESSMENT_NOT_STARTED if responded.all?(false)
 
-    PERSON_ESCORT_RECORD_IN_PROGRESS
+    ASSESSMENT_IN_PROGRESS
   end
 
   def required_responses

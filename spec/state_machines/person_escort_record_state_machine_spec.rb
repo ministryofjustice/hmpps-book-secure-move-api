@@ -15,13 +15,13 @@ RSpec.describe PersonEscortRecordStateMachine do
     it_behaves_like 'state_machine target status', :unstarted
 
     context 'when the calculate event is fired and it is in progress' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
+      before { machine.calculate(PersonEscortRecord::ASSESSMENT_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
     end
 
     context 'when the complete event is fired and it is completed' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
+      before { machine.calculate(PersonEscortRecord::ASSESSMENT_COMPLETED) }
 
       it_behaves_like 'state_machine target status', :completed
     end
@@ -33,13 +33,13 @@ RSpec.describe PersonEscortRecordStateMachine do
     it_behaves_like 'state_machine target status', :in_progress
 
     context 'when the calculate event is fired and it is in progress' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
+      before { machine.calculate(PersonEscortRecord::ASSESSMENT_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
     end
 
     context 'when the complete event is fired and it is completed' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED) }
+      before { machine.calculate(PersonEscortRecord::ASSESSMENT_COMPLETED) }
 
       it_behaves_like 'state_machine target status', :completed
     end
@@ -51,7 +51,7 @@ RSpec.describe PersonEscortRecordStateMachine do
     it_behaves_like 'state_machine target status', :completed
 
     context 'when the calculate event is fired and it is in progress' do
-      before { machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS) }
+      before { machine.calculate(PersonEscortRecord::ASSESSMENT_IN_PROGRESS) }
 
       it_behaves_like 'state_machine target status', :in_progress
     end
@@ -61,7 +61,7 @@ RSpec.describe PersonEscortRecordStateMachine do
 
       before do
         allow(Time).to receive(:now).and_return(completed_at_timestamp)
-        machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED)
+        machine.calculate(PersonEscortRecord::ASSESSMENT_COMPLETED)
       end
 
       it_behaves_like 'state_machine target status', :completed
@@ -73,7 +73,7 @@ RSpec.describe PersonEscortRecordStateMachine do
       it 'maintains first completed at timestamp and does not update it' do
         new_completed_at_timstamp = Time.zone.now + 1.day
         allow(Time).to receive(:now).and_return(new_completed_at_timstamp)
-        machine.calculate(PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED)
+        machine.calculate(PersonEscortRecord::ASSESSMENT_COMPLETED)
 
         expect(target.completed_at).to eq(completed_at_timestamp)
       end
