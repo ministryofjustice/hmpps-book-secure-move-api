@@ -31,7 +31,9 @@ RSpec.describe AllocationsSerializer do
   context 'with custom params' do
     let(:adapter_options) do
       { params: {
-        allocation.id => { foo: 'bar' },
+        totals: {
+          allocation.id => { foo: 'bar' },
+        },
       } }
     end
 

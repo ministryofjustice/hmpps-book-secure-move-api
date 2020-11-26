@@ -23,15 +23,16 @@ class MoveSerializer
              :date_to
 
   has_one :person
-  has_one :profile
+  belongs_to :profile
+  belongs_to :from_location, serializer: LocationSerializer
+  belongs_to :to_location, serializer: LocationSerializer
+  belongs_to :prison_transfer_reason
 
-  has_one :from_location, serializer: LocationSerializer
-  has_one :to_location, serializer: LocationSerializer
-  has_one :prison_transfer_reason
   has_many :documents do |object|
     object.profile&.documents
   end
   has_many :court_hearings
+
   belongs_to :allocation
   belongs_to :original_move, serializer: MoveSerializer
 

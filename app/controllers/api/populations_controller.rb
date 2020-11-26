@@ -6,7 +6,7 @@ module Api
 
     def index
       paginate locations, serializer: LocationFreeSpacesSerializer, include: included_relationships do |paginated_locations, options|
-        options[:params] = Population.free_spaces_date_range(paginated_locations, (date_from..date_to))
+        options[:params] = { spaces: Population.free_spaces_date_range(paginated_locations, (date_from..date_to)) }
       end
     end
 

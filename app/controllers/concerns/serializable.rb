@@ -10,8 +10,8 @@ module Serializable
 
     yield(paginated_collection, options) if block_given?
 
-    options[:meta] = meta(paginated_collection, options)
-    options[:links] = links(paginated_collection, options)
+    options[:meta] = pagination_meta(paginated_collection, options)
+    options[:links] = pagination_links(paginated_collection, options)
     options[:json] = build_serializer(paginated_collection, options)
 
     render options.slice(:json, :status)
@@ -34,7 +34,20 @@ private
     serializer_class = options.delete(:serializer)
     raise ArgumentError, 'serializer option must be specified' unless serializer_class
 
+    options[:params] = merge_included_params(options)
+
     serializer_class.new(serializable, options.slice(:include, :fields, :meta, :links, :params))
+  end
+
+  def merge_included_params(options)
+    # This converts a string or array of includes to a unique list of individual symbols for each level
+    # e.g. "profile.person,profile.person_escort_record" => [:profile, :person, :person_escort_record]
+    includes_list = [options[:include]].flatten.compact
+    unique_resources = includes_list.map { |i| i.split('.') }.flatten.uniq.map(&:to_sym)
+
+    options.fetch(:params, {}).merge(
+      included: unique_resources,
+    )
   end
 
   def paginate_collection(collection, options)
@@ -44,7 +57,7 @@ private
     collection.page(options[:page]).per(options[:per_page])
   end
 
-  def meta(collection, options)
+  def pagination_meta(collection, options)
     options.fetch(:meta, {}).merge(
       pagination:
       {
@@ -56,7 +69,7 @@ private
   end
 
   # Based on https://github.com/rails-api/active_model_serializers
-  def links(collection, options)
+  def pagination_links(collection, options)
     no_pages = collection.total_pages.zero?
 
     options.fetch(:links, {}).merge(
