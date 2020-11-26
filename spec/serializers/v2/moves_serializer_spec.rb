@@ -38,6 +38,7 @@ RSpec.describe V2::MovesSerializer do
             to_location: { data: { id: move.to_location_id, type: 'locations' } },
             prison_transfer_reason: { data: { id: move.prison_transfer_reason_id, type: 'prison_transfer_reasons' } },
             supplier: { data: { id: move.supplier_id, type: 'suppliers' } },
+            allocation: { data: nil },
           },
         },
       }
@@ -48,11 +49,21 @@ RSpec.describe V2::MovesSerializer do
   end
 
   context 'with all supported includes' do
-    let(:options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
+    let(:options) do
+      {
+        include: described_class::SUPPORTED_RELATIONSHIPS,
+        params: { included: %i[person_escort_record flags] },
+      }
+    end
+
+    let!(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
+    let!(:flag) { create(:framework_flag) }
+    let!(:response) { create(:string_response, assessmentable: person_escort_record, framework_flags: [flag]) }
+    let!(:allocation) { create(:allocation, moves: [move]) }
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers])
+        .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers person_escort_records framework_flags allocations])
     end
   end
 end

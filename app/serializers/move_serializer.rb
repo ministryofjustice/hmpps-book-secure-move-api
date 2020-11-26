@@ -22,7 +22,7 @@ class MoveSerializer
              :date_from,
              :date_to
 
-  belongs_to :person
+  has_one :person
   belongs_to :profile
   belongs_to :from_location, serializer: LocationSerializer
   belongs_to :to_location, serializer: LocationSerializer
