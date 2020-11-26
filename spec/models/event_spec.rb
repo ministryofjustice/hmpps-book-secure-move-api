@@ -70,22 +70,4 @@ RSpec.describe Event, type: :model do
       expect(event.for_feed).to eq(expected_json)
     end
   end
-
-  describe '#generic_event_attributes' do
-    subject(:event) { build(:event, details: { supplier_id: '111' }) }
-
-    it 'returns the correct attributes' do
-      expected = {
-        created_at: nil,
-        created_by: 'unknown',
-        details: {},
-        eventable: be_a(Move),
-        recorded_at: be_a(Time),
-        supplier_id: '111',
-        updated_at: nil,
-      }
-
-      expect(event.generic_event_attributes).to include_json(expected)
-    end
-  end
 end
