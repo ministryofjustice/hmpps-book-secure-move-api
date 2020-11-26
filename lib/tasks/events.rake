@@ -38,6 +38,8 @@ namespace :events do
       events_unchanged: 0,
       move_proposed_events: 0,
       move_requested_events: 0,
+      event_updated_at_changed: 0,
+      eventable_updated_at_changed: 0,
     }
 
     events.find_each do |event|
@@ -61,7 +63,17 @@ namespace :events do
       end
 
       if supplier_different
-        event.update(supplier_id: initial_version&.supplier_id) unless dry_run
+        event.record_timestamps = false
+        ActiveRecord::Base.no_touching do
+          event_updated_at = event.updated_at
+          eventable_updated_at = event.eventable.updated_at
+
+          event.update(supplier_id: initial_version&.supplier_id) unless dry_run
+
+          report[:event_updated_at_changed]     += 1 unless event.reload.updated_at == event_updated_at
+          report[:eventable_updated_at_changed] += 1 unless event.reload.eventable.updated_at == eventable_updated_at
+        end
+        event.record_timestamps = true
       end
     end
 
