@@ -21,16 +21,16 @@ FactoryBot.define do
     end
 
     trait :in_progress do
-      status { PersonEscortRecord::PERSON_ESCORT_RECORD_IN_PROGRESS }
+      status { FrameworkAssessmentable::ASSESSMENT_IN_PROGRESS }
     end
 
     trait :completed do
-      status { PersonEscortRecord::PERSON_ESCORT_RECORD_COMPLETED }
+      status { FrameworkAssessmentable::ASSESSMENT_COMPLETED }
       completed_at { Time.zone.now }
     end
 
     trait :confirmed do
-      status { PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED }
+      status { FrameworkAssessmentable::ASSESSMENT_CONFIRMED }
       confirmed_at { Time.zone.now }
     end
 
