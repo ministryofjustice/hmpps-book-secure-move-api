@@ -55,18 +55,4 @@ class Event < ApplicationRecord
   def for_feed
     attributes.as_json
   end
-
-  def generic_event_attributes
-    {
-      occurred_at: client_timestamp,
-      recorded_at: client_timestamp,
-      created_at: created_at,
-      updated_at: updated_at,
-      notes: notes || '',
-      eventable: eventable,
-      details: {},
-      created_by: 'unknown',
-      supplier_id: supplier_id,
-    }
-  end
 end

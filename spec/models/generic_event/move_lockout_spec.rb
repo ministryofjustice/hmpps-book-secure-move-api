@@ -66,46 +66,4 @@ RSpec.describe GenericEvent::MoveLockout do
       expect(generic_event.for_feed).to include_json(expected_json)
     end
   end
-
-  describe '.from_event' do
-    let(:move) { create(:move) }
-
-    let(:event) do
-      create(:event, :lockout, eventable: move,
-                               details: {
-                                 event_params: {
-                                   attributes: {
-                                     notes: 'notes',
-                                   },
-                                   relationships: {
-                                     from_location: { data: { id: move.from_location.id } },
-                                   },
-                                 },
-                               })
-    end
-
-    let(:expected_generic_event_attributes) do
-      {
-        'id' => nil,
-        'eventable_id' => move.id,
-        'eventable_type' => 'Move',
-        'type' => 'GenericEvent::MoveLockout',
-        'notes' => 'notes',
-        'details' => {
-          'from_location_id' => move.from_location.id,
-        },
-        'created_by' => 'unknown',
-        'occurred_at' => eq(event.client_timestamp),
-        'recorded_at' => eq(event.client_timestamp),
-        'created_at' => be_within(0.1.seconds).of(event.created_at),
-        'updated_at' => be_within(0.1.seconds).of(event.updated_at),
-      }
-    end
-
-    it 'builds a generic_event with the correct attributes' do
-      expect(
-        described_class.from_event(event).attributes,
-      ).to include_json(expected_generic_event_attributes)
-    end
-  end
 end

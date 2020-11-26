@@ -66,15 +66,6 @@ RSpec.describe GenericEvent, type: :model do
     end
   end
 
-  describe '.from_event' do
-    let(:event) { create(:event, :cancel, eventable: eventable) }
-    let(:eventable) { create(:journey) }
-
-    it 'returns an initialized JournalCancel event' do
-      expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
-    end
-  end
-
   describe '.updated_at_range scope' do
     let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
     let(:updated_at_to) { Time.zone.yesterday.end_of_day }

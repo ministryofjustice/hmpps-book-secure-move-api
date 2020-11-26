@@ -49,44 +49,6 @@ RSpec.describe GenericEvent::MoveCancel do
     end
   end
 
-  describe '.from_event' do
-    let(:move) { create(:move) }
-    let(:event) do
-      create(:event, :cancel, :locations, eventable: move,
-                                          details: {
-                                            event_params: {
-                                              attributes: {
-                                                cancellation_reason: 'aaa',
-                                                cancellation_reason_comment: 'bbb',
-                                                notes: 'foo',
-                                              },
-                                            },
-                                          })
-    end
-
-    let(:expected_generic_event_attributes) do
-      {
-        'id' => nil,
-        'eventable_id' => move.id,
-        'eventable_type' => 'Move',
-        'type' => 'GenericEvent::MoveCancel',
-        'notes' => 'foo',
-        'created_by' => 'unknown',
-        'details' => { 'cancellation_reason' => 'aaa', 'cancellation_reason_comment' => 'bbb' },
-        'occurred_at' => eq(event.client_timestamp),
-        'recorded_at' => eq(event.client_timestamp),
-        'created_at' => be_within(0.1.seconds).of(event.created_at),
-        'updated_at' => be_within(0.1.seconds).of(event.updated_at),
-      }
-    end
-
-    it 'builds a generic_event with the correct attributes' do
-      expect(
-        described_class.from_event(event).attributes,
-      ).to include_json(expected_generic_event_attributes)
-    end
-  end
-
   describe '#for_feed' do
     subject(:generic_event) { create(:event_move_cancel, details: details) }
 

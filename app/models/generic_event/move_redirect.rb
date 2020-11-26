@@ -30,16 +30,5 @@ class GenericEvent
         common_feed_attributes['details']['move_type'] = move_type if move_type.present?
       end
     end
-
-    def self.from_event(event)
-      new(
-        event.generic_event_attributes.merge(
-          details: {
-            to_location_id: event.event_params&.dig(:relationships, :to_location, :data, :id),
-            move_type: event.event_params&.dig(:attributes, :move_type),
-          },
-        ),
-      )
-    end
   end
 end

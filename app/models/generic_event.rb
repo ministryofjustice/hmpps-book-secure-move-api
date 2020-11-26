@@ -108,12 +108,6 @@ class GenericEvent < ApplicationRecord
     feed
   end
 
-  def self.from_event(event)
-    type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
-
-    type.constantize.from_event(event)
-  end
-
   def self.details_attributes(*attributes)
     define_singleton_method(:details_attributes) do
       instance_variable_get('@details_attributes')
