@@ -3,5 +3,5 @@
 require 'rails_helper'
 
 RSpec.describe PersonEscortRecord do
-  it_behaves_like 'a framework assessment', :person_escort_record
+  it_behaves_like 'a framework assessment', :person_escort_record, described_class
 end
