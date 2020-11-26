@@ -23,7 +23,7 @@ RSpec.describe Api::MovesController do
     let!(:moves) { create_list :move, 2 }
 
     it_behaves_like 'an endpoint that responds with success 200' do
-      before { do_get('?include=from_location') }
+      before { do_get }
     end
 
     describe 'filtering results' do

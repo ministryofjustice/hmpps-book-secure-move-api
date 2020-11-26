@@ -22,11 +22,11 @@ module V2
                :time_due,
                :updated_at
 
-    has_one :from_location,          serializer: LocationSerializer
-    has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
-    has_one :profile,                serializer: V2::ProfileSerializer
-    has_one :supplier,               serializer: SupplierSerializer
-    has_one :to_location,            serializer: LocationSerializer
+    belongs_to :from_location,          serializer: LocationSerializer
+    belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
+    belongs_to :profile,                serializer: V2::ProfileSerializer
+    belongs_to :supplier,               serializer: SupplierSerializer
+    belongs_to :to_location,            serializer: LocationSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
 

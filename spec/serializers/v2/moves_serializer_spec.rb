@@ -33,6 +33,11 @@ RSpec.describe V2::MovesSerializer do
             updated_at: move.updated_at.iso8601,
           },
           relationships: {
+            profile: { data: { id: move.profile_id, type: 'profiles' } },
+            from_location: { data: { id: move.from_location_id, type: 'locations' } },
+            to_location: { data: { id: move.to_location_id, type: 'locations' } },
+            prison_transfer_reason: { data: { id: move.prison_transfer_reason_id, type: 'prison_transfer_reasons' } },
+            supplier: { data: { id: move.supplier_id, type: 'suppliers' } },
           },
         },
       }
@@ -42,47 +47,12 @@ RSpec.describe V2::MovesSerializer do
     it { expect(result[:included]).to be_nil }
   end
 
-  context 'with included profile' do
-    let(:options) { { params: { included: %i[profile] } } }
+  context 'with all supported includes' do
+    let(:options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
 
-    it 'contains a `profile` relationship with profile' do
-      expect(result[:data][:relationships][:profile][:data]).to eq({
-        id: move.profile.id,
-        type: 'profiles',
-      })
-    end
-  end
-
-  context 'with included from location' do
-    let(:options) { { params: { included: %i[from_location] } } }
-
-    it 'contains a `from_location` relationship with location' do
-      expect(result[:data][:relationships][:from_location][:data]).to eq({
-        id: move.from_location.id,
-        type: 'locations',
-      })
-    end
-  end
-
-  context 'with included to location' do
-    let(:options) { { params: { included: %i[to_location] } } }
-
-    it 'contains a `to_location` relationship with location' do
-      expect(result[:data][:relationships][:to_location][:data]).to eq({
-        id: move.to_location.id,
-        type: 'locations',
-      })
-    end
-  end
-
-  context 'with included prison transfer reason' do
-    let(:options) { { params: { included: %i[prison_transfer_reason] } } }
-
-    it 'contains a `prison_transfer_reason` relationship with prison transfer reason' do
-      expect(result[:data][:relationships][:prison_transfer_reason][:data]).to eq({
-        id: move.prison_transfer_reason.id,
-        type: 'prison_transfer_reasons',
-      })
+    it 'contains all included relationships' do
+      expect(result[:included].map { |r| r[:type] })
+        .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers])
     end
   end
 end

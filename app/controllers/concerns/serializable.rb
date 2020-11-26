@@ -34,12 +34,14 @@ private
     serializer_class = options.delete(:serializer)
     raise ArgumentError, 'serializer option must be specified' unless serializer_class
 
-    options[:params] = included_params(options)
+    options[:params] = merge_included_params(options)
 
     serializer_class.new(serializable, options.slice(:include, :fields, :meta, :links, :params))
   end
 
-  def included_params(options)
+  def merge_included_params(options)
+    # This converts a string or array of includes to a unique list of individual symbols for each level
+    # e.g. "profile.person,profile.person_escort_record" => [:profile, :person, :person_escort_record]
     includes_list = [options[:include]].flatten.compact
     unique_resources = includes_list.map { |i| i.split('.') }.flatten.uniq.map(&:to_sym)
 
