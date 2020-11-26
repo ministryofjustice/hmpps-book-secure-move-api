@@ -1,5 +1,23 @@
 # Changelog
 
+## [v2.7.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.0) (2020-11-26)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.9...v2.7.0)
+
+**Merged pull requests:**
+
+- \[P4-2507\] Avoid timestamp changes to events and eventables when tweaking supplier [\#1167](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1167) ([willfish](https://github.com/willfish))
+- P4-2449 Support multiple assessments [\#1166](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1166) ([cwrw](https://github.com/cwrw))
+- Bump faker from 2.14.0 to 2.15.1 [\#1165](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1165) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove superfluous relationships and attributes from GET /moves endpoint [\#1164](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1164) ([smoothcontract](https://github.com/smoothcontract))
+- Bump aws-sdk-s3 from 1.84.1 to 1.85.0 [\#1163](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1163) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 4.2.4 to 4.2.5 [\#1162](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1162) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Use custom event type for PER completion notifications [\#1160](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1160) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-2507\] Adjust supplier on move initial status events [\#1159](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1159) ([willfish](https://github.com/willfish))
+- Bumps changelog [\#1158](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1158) ([willfish](https://github.com/willfish))
+- Bump redis from 4.2.3 to 4.2.4 [\#1154](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1154) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[P4-2430\] Surface PII in person feed [\#1119](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1119) ([willfish](https://github.com/willfish))
+
 ## [v2.6.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.6.9) (2020-11-19)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.8...v2.6.9)
