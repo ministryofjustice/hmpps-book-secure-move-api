@@ -6,5 +6,6 @@ class GenericEvent
     eventable_types 'Journey'
 
     include LocationValidations
+    include LocationFeed
   end
 end
