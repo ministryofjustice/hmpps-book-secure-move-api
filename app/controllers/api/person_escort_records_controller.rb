@@ -5,11 +5,11 @@ module Api
   private
 
     def assessment_class
-      @assessment_class ||= PersonEscortRecord
+      PersonEscortRecord
     end
 
     def assessment_serializer
-      @assessment_serializer ||= PersonEscortRecordSerializer
+      PersonEscortRecordSerializer
     end
   end
 end

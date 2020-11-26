@@ -6,7 +6,7 @@ module FrameworkAssessments
 
     attr_reader :status
 
-    validates :status, inclusion: { in: %w[confirmed] }
+    validates :status, inclusion: { in: [FrameworkAssessmentable::ASSESSMENT_CONFIRMED] }
 
     def initialize(status)
       @status = status

@@ -7,7 +7,7 @@ module FrameworkAssessmentable
   ASSESSMENT_COMPLETED = 'completed'.freeze
   ASSESSMENT_CONFIRMED = 'confirmed'.freeze
 
-  included do |assessment_klass|
+  included do
     # "not_started" cannot be used as the name of the enum due to warnings in the model
     # that it starts with a "not_".
     enum statuses: {
@@ -29,7 +29,6 @@ module FrameworkAssessmentable
     has_many :framework_flags, through: :framework_responses
     belongs_to :profile
     belongs_to :move, optional: true
-    belongs_to :prefill_source, class_name: assessment_klass.to_s, optional: true # rubocop:disable Rails/ReflectionClassName
 
     has_state_machine FrameworkAssessmentStateMachine, on: :status
 

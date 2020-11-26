@@ -1,6 +1,8 @@
 class PersonEscortRecord < VersionedModel
   include FrameworkAssessmentable
 
+  belongs_to :prefill_source, class_name: 'PersonEscortRecord', optional: true
+
   def self.framework_name
     'person-escort-record'
   end
