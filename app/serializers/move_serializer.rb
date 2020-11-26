@@ -33,7 +33,6 @@ class MoveSerializer
   end
   has_many :court_hearings
 
-  belongs_to :allocation
   belongs_to :original_move, serializer: MoveSerializer
 
   SUPPORTED_RELATIONSHIPS = %w[
@@ -57,11 +56,6 @@ class MoveSerializer
     documents
     prison_transfer_reason
     court_hearings
-    allocation
     original_move
   ].freeze
-
-  INCLUDED_FIELDS = {
-    allocations: %i[to_location from_location moves_count created_at],
-  }.freeze
 end

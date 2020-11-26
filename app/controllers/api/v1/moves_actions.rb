@@ -3,8 +3,7 @@ module Api::V1
     def index_and_render
       paginate moves,
                serializer: MoveSerializer,
-               include: included_relationships - %w[court_hearings],
-               fields: MoveSerializer::INCLUDED_FIELDS
+               include: included_relationships - %w[court_hearings]
     end
 
     def show_and_render
@@ -102,7 +101,7 @@ module Api::V1
     end
 
     def render_move(move, status)
-      render_json move, serializer: MoveSerializer, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS, status: status
+      render_json move, serializer: MoveSerializer, include: included_relationships, status: status
     end
 
     def move
