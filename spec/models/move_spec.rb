@@ -525,8 +525,47 @@ RSpec.describe Move do
   context 'with versioning' do
     let(:move) { create(:move) }
 
-    it 'has a version record for the create' do
+    it 'has a version record for creating the move' do
       expect(move.versions.map(&:event)).to eq(%w[create])
+    end
+
+    it 'does not create a profile version record if move is touched' do
+      expect {
+        move.touch
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'does not create a move version record if move is touched' do
+      move.touch
+      expect(move.versions.count).to eq 1
+    end
+
+    it 'does not create a profile version record if only changing move updated_at timestamp' do
+      expect {
+        move.update(updated_at: Time.now)
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'does not create a move version record if only changing move updated_at timestamp' do
+      move.update(updated_at: Time.now)
+      expect(move.versions.count).to eq 1
+    end
+
+    it 'does not create a profile version record if other move attributes are changed' do
+      expect {
+        move.update(additional_information: 'Foo')
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'creates a move version record if other move attributes are changed' do
+      move.update(additional_information: 'Bar')
+      expect(move.versions.count).to eq 2
+    end
+
+    it 'stores original move attributes in new version record when other move attributes are changed' do
+      previous_move_attributes = move.attributes
+      move.update(additional_information: 'Bar')
+      expect(move.versions.last.reify.attributes).to eq previous_move_attributes
     end
   end
 
