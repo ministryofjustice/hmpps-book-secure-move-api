@@ -109,10 +109,8 @@ RSpec.describe Api::MovesController do
       it 'audits the supplier' do
         do_post
 
-        # NB: Creation of the move and the associated event for the timeline generates multiple
-        # entries in the versions table.
-        expect(move.versions.map(&:whodunnit)).to eq([nil, nil])
-        expect(move.versions.map(&:supplier_id)).to eq([supplier.id, supplier.id])
+        expect(move.versions.map(&:whodunnit)).to eq([nil])
+        expect(move.versions.map(&:supplier_id)).to eq([supplier.id])
       end
 
       it 'sets the application owner as the supplier on the move' do

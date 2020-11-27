@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FrameworkResponse < VersionedModel
+class FrameworkResponse < ApplicationRecord
   ValueTypeError = Class.new(StandardError)
 
   validates :type, presence: true

@@ -13,6 +13,8 @@ RSpec.describe Person do
   it { is_expected.to validate_presence_of(:first_names) }
 
   it 'has an audit' do
+    expect(person.versions.map(&:event)).to eq(%w[create])
+    person.update(first_names: 'Finbarr', last_name: 'Saunders')
     expect(person.versions.map(&:event)).to eq(%w[create update])
   end
 
