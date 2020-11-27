@@ -18,49 +18,49 @@ module Api
 
     def accept
       MoveEvents::ParamsValidator.new(common_params).validate!
-      process_event(move, Event::ACCEPT, common_params)
+      process_event(move, GenericEvent::MoveAccept, common_params)
       render status: :no_content
     end
 
     def approve
       MoveEvents::ParamsValidator.new(approve_params).validate!
-      process_event(move, Event::APPROVE, approve_params)
+      process_event(move, GenericEvent::MoveApprove, approve_params)
       render status: :no_content
     end
 
     def cancel
       MoveEvents::ParamsValidator.new(cancel_params).validate!
-      process_event(move, Event::CANCEL, cancel_params)
+      process_event(move, GenericEvent::MoveCancel, cancel_params)
       render status: :no_content
     end
 
     def complete
       MoveEvents::ParamsValidator.new(common_params).validate!
-      process_event(move, Event::COMPLETE, common_params)
+      process_event(move, GenericEvent::MoveComplete, common_params)
       render status: :no_content
     end
 
     def lockouts
       MoveEvents::ParamsValidator.new(lockout_params).validate!
-      process_event(move, Event::LOCKOUT, lockout_params)
+      process_event(move, GenericEvent::MoveLockout, lockout_params)
       render status: :no_content
     end
 
     def redirects
       MoveEvents::ParamsValidator.new(redirect_params).validate!
-      process_event(move, Event::REDIRECT, redirect_params)
+      process_event(move, GenericEvent::MoveRedirect, redirect_params)
       render status: :no_content
     end
 
     def reject
       MoveEvents::ParamsValidator.new(reject_params).validate!
-      process_event(move, Event::REJECT, reject_params)
+      process_event(move, GenericEvent::MoveReject, reject_params)
       render status: :no_content
     end
 
     def start
       MoveEvents::ParamsValidator.new(common_params).validate!
-      process_event(move, Event::START, common_params)
+      process_event(move, GenericEvent::MoveStart, common_params)
       render status: :no_content
     end
 

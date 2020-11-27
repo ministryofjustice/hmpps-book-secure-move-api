@@ -330,13 +330,13 @@ RSpec.describe Api::GenericEventsController do
       let(:errors_422) do
         [
           {
-            'title' => 'Invalid occurred_at, recorded_at, event_type, eventable_type',
-            'detail' => "Validation failed: Occurred at can't be blank, Occurred at must be formatted as a valid ISO-8601 date-time, Recorded at can't be blank, Recorded at must be formatted as a valid ISO-8601 date-time, Event type 'Event::FooBar' is not a valid event_type, Eventable type 'movess' is not a valid eventable type",
+            'title' => 'Invalid event_type, eventable_type',
+            'detail' => "Validation failed: Event type can't be blank, Event type '' is not a valid event_type, Eventable type 'movess' is not a valid eventable type",
           },
         ]
       end
 
-      let(:event_attributes) { attributes_for(:event).merge(event_type: 'Event::FooBar') }
+      let(:event_attributes) { attributes_for(:generic_event).merge(type: 'Event::FooBar') }
 
       it_behaves_like 'an endpoint that responds with error 422' do
         before { do_post }
