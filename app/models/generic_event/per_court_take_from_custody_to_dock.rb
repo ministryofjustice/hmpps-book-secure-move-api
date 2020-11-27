@@ -6,5 +6,6 @@ class GenericEvent
 
     include PersonEscortRecordEventValidations
     include LocationValidations
+    include LocationFeed
   end
 end

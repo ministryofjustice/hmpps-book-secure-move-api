@@ -7,6 +7,7 @@ class GenericEvent
     eventable_types 'Move'
 
     include LocationValidations
+    include LocationFeed
 
     enum reason: {
       overnight_lodging: 'overnight_lodging',

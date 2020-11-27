@@ -9,6 +9,7 @@ class GenericEvent
     include LocationValidations
     include SupplierPersonnelNumberValidations
     include VehicleRegValidations
+    include LocationFeed
 
     validates :postcode, presence: true, postcode: true
     validates :reported_at, iso_date_time: true

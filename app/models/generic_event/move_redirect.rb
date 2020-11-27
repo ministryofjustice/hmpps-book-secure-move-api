@@ -16,19 +16,13 @@ class GenericEvent
     }
 
     include LocationValidations
+    include LocationFeed
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
 
     def trigger
       eventable.to_location = to_location
       eventable.move_type = move_type if move_type.present?
-    end
-
-    def for_feed
-      super.tap do |common_feed_attributes|
-        common_feed_attributes['details'] = to_location.for_feed(prefix: 'to')
-        common_feed_attributes['details']['move_type'] = move_type if move_type.present?
-      end
     end
   end
 end

@@ -7,6 +7,7 @@ class GenericEvent
 
     include PersonEscortRecordEventValidations
     include LocationValidations
+    include LocationFeed
 
     enum subtype: {
       extradition_order: 'extradition_order',

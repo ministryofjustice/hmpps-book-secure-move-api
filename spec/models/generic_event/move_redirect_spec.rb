@@ -16,6 +16,7 @@ RSpec.describe GenericEvent::MoveRedirect do
   it_behaves_like 'an event with relationships', to_location_id: :locations
   it_behaves_like 'a move event'
   it_behaves_like 'an event requiring a location', :to_location_id
+  it_behaves_like 'an event with a location in the feed', :to_location_id
 
   it { is_expected.to validate_inclusion_of(:reason).in_array(redirect_reasons) }
 
@@ -68,72 +69,6 @@ RSpec.describe GenericEvent::MoveRedirect do
 
       it 'sets the eventable `move_type' do
         expect { generic_event.trigger }.to change { generic_event.eventable.move_type }.from('prison_transfer').to('court_appearance')
-      end
-    end
-  end
-
-  describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_redirect, details: details) }
-
-    let(:to_location) { create(:location) }
-
-    context 'when the move_type is present' do
-      let(:details) do
-        {
-          to_location_id: to_location.id,
-          move_type: 'court_appearance',
-        }
-      end
-      let(:expected_json) do
-        {
-          'id' => generic_event.id,
-          'type' => 'MoveRedirect',
-          'notes' => 'Flibble',
-          'created_at' => be_a(Time),
-          'updated_at' => be_a(Time),
-          'occurred_at' => be_a(Time),
-          'recorded_at' => be_a(Time),
-          'eventable_id' => generic_event.eventable_id,
-          'eventable_type' => 'Move',
-          'details' => {
-            'to_location_type' => to_location.location_type,
-            'to_location' => to_location.nomis_agency_id,
-            'move_type' => 'court_appearance',
-          },
-        }
-      end
-
-      it 'generates a feed document' do
-        expect(generic_event.for_feed).to include_json(expected_json)
-      end
-    end
-
-    context 'when the move_type is absent' do
-      let(:details) do
-        {
-          to_location_id: to_location.id,
-        }
-      end
-      let(:expected_json) do
-        {
-          'id' => generic_event.id,
-          'type' => 'MoveRedirect',
-          'notes' => 'Flibble',
-          'created_at' => be_a(Time),
-          'updated_at' => be_a(Time),
-          'occurred_at' => be_a(Time),
-          'recorded_at' => be_a(Time),
-          'eventable_id' => generic_event.eventable_id,
-          'eventable_type' => 'Move',
-          'details' => {
-            'to_location_type' => to_location.location_type,
-            'to_location' => to_location.nomis_agency_id,
-          },
-        }
-      end
-
-      it 'generates a feed document' do
-        expect(generic_event.for_feed).to include_json(expected_json)
       end
     end
   end
