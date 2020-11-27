@@ -8,7 +8,7 @@ module Api
       validate_params!(cancel_params)
 
       allocation.transaction do
-        allocation.cancel(cancellation_details)
+        allocation.cancel(**cancellation_details)
         process_event(allocation.moves, GenericEvent::MoveCancel, cancel_move_params)
       end
 
