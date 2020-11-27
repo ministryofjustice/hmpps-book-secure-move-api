@@ -38,6 +38,7 @@ RSpec.describe V2::MovesSerializer do
             to_location: { data: { id: move.to_location_id, type: 'locations' } },
             prison_transfer_reason: { data: { id: move.prison_transfer_reason_id, type: 'prison_transfer_reasons' } },
             supplier: { data: { id: move.supplier_id, type: 'suppliers' } },
+            allocation: { data: nil },
           },
         },
       }

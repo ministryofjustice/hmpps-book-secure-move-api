@@ -33,6 +33,7 @@ class MoveSerializer
   end
   has_many :court_hearings
 
+  belongs_to :allocation
   belongs_to :original_move, serializer: MoveSerializer
 
   SUPPORTED_RELATIONSHIPS = %w[

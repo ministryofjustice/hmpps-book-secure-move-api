@@ -45,5 +45,6 @@ module V2
     belongs_to :profile, serializer: V2::ProfilesSerializer
     belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
     belongs_to :supplier, serializer: SupplierSerializer
+    belongs_to :allocation, serializer: AllocationSerializer
   end
 end

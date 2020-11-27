@@ -150,6 +150,17 @@ RSpec.describe MoveSerializer do
     end
   end
 
+  describe 'allocation' do
+    context 'with an allocation' do
+      let(:adapter_options) { {} }
+      let(:move) { create(:move, :with_allocation) }
+
+      it 'contains an allocation relationship' do
+        expect(result_data[:relationships][:allocation]).to eq(data: { id: move.allocation.id, type: 'allocations' })
+      end
+    end
+  end
+
   describe 'original_move' do
     let(:adapter_options) { { include: MoveSerializer::SUPPORTED_RELATIONSHIPS } }
 
