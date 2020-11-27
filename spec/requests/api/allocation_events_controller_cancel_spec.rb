@@ -101,10 +101,6 @@ RSpec.describe Api::AllocationEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) { [{ 'title' => 'Unprocessable entity', 'detail' => 'Cancellation reason is not included in the list' }] }
         end
-
-        it 'does not create an event' do
-          expect(Event.count).to eq(0)
-        end
       end
 
       context 'with a missing cancellation_reason' do

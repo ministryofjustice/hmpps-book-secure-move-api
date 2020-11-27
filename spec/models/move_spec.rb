@@ -10,7 +10,6 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
-  it { is_expected.to have_many(:events) }
   it { is_expected.to have_one(:person_escort_record) }
 
   it { is_expected.to validate_presence_of(:from_location) }
