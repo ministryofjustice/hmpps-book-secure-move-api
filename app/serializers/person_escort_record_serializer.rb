@@ -17,7 +17,7 @@ class PersonEscortRecordSerializer
     object.framework_flags.includes(framework_question: :dependents)
   end
 
-  attributes :confirmed_at, :created_at, :nomis_sync_status, :editable
+  attributes :confirmed_at, :created_at, :nomis_sync_status
 
   attribute :version do |object|
     object.framework.version
@@ -26,6 +26,8 @@ class PersonEscortRecordSerializer
   attribute :status do |object|
     object.status == 'unstarted' ? 'not_started' : object.status
   end
+
+  attribute :editable, &:editable?
 
   meta do |object|
     { section_progress: object.section_progress }

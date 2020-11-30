@@ -27,7 +27,7 @@ RSpec.describe PersonEscortRecordSerializer do
   end
 
   it 'contains a `editable` attribute' do
-    expect(result[:data][:attributes][:editable]).to eq(person_escort_record.editable)
+    expect(result[:data][:attributes][:editable]).to eq(person_escort_record.editable?)
   end
 
   it 'contains a `confirmed_at` attribute' do

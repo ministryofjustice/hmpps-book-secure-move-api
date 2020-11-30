@@ -96,7 +96,7 @@ module FrameworkAssessmentable
     save if changed? && valid?
   end
 
-  def editable
+  def editable?
     return false if confirmed?
 
     move_status_editable?

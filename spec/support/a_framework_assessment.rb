@@ -705,53 +705,53 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
   end
 
-  describe '#editable' do
+  describe '#editable?' do
     it 'is editable if a move is requested' do
       move = create(:move, :requested)
       assessment = create(assessment_type, move: move)
 
-      expect(assessment.editable).to eq(true)
+      expect(assessment).to be_editable
     end
 
     it 'is editable if a move is booked' do
       move = create(:move, :booked)
       assessment = create(assessment_type, move: move)
 
-      expect(assessment.editable).to eq(true)
+      expect(assessment).to be_editable
     end
 
     it 'is not editable if a move is not booked or requested' do
       move = create(:move, :in_transit)
       assessment = create(assessment_type, move: move)
 
-      expect(assessment.editable).to eq(false)
+      expect(assessment).not_to be_editable
     end
 
     it 'is editable if a PER is not confirmed' do
       move = create(:move, :booked)
       assessment = create(assessment_type, :with_responses, move: move)
 
-      expect(assessment.editable).to eq(true)
+      expect(assessment).to be_editable
     end
 
     it 'is not editable if a PER is confirmed' do
       move = create(:move, :booked)
       assessment = create(assessment_type, :confirmed, :with_responses, move: move)
 
-      expect(assessment.editable).to eq(false)
+      expect(assessment).not_to be_editable
     end
 
     context 'when no move associated' do
       it 'is editable if a PER is not confirmed' do
         assessment = create(assessment_type, :with_responses, move: nil)
 
-        expect(assessment.editable).to eq(true)
+        expect(assessment).to be_editable
       end
 
       it 'is not editable if a PER is confirmed' do
         assessment = create(assessment_type, :confirmed, :with_responses, move: nil)
 
-        expect(assessment.editable).to eq(false)
+        expect(assessment).not_to be_editable
       end
     end
   end
