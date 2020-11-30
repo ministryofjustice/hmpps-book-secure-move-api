@@ -34,7 +34,9 @@ RSpec.describe LocationFreeSpacesSerializer do
   context 'with custom params' do
     let(:adapter_options) do
       { params: {
-        location.id => { foo: 'bar' },
+        spaces: {
+          location.id => { foo: 'bar' },
+        },
       } }
     end
 

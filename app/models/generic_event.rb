@@ -46,8 +46,10 @@ class GenericEvent < ApplicationRecord
     MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
+    MoveProposed
     MoveRedirect
     MoveReject
+    MoveRequested
     MoveStart
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
@@ -104,12 +106,6 @@ class GenericEvent < ApplicationRecord
     feed.merge!('type' => type.sub('GenericEvent::', ''))
     feed.merge!(supplier&.for_feed) if supplier_id
     feed
-  end
-
-  def self.from_event(event)
-    type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
-
-    type.constantize.from_event(event)
   end
 
   def self.details_attributes(*attributes)

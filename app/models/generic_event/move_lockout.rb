@@ -4,10 +4,11 @@ class GenericEvent
 
     details_attributes :authorised_at, :authorised_by, :reason
     relationship_attributes from_location_id: :locations
-
     eventable_types 'Move'
+
     include AuthoriserValidations
     include LocationValidations
+    include LocationFeed
 
     enum reason: {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
@@ -25,25 +26,6 @@ class GenericEvent
 
     def from_location
       Location.find_by(id: from_location_id)
-    end
-
-    def for_feed
-      super.tap do |common_feed_attributes|
-        common_feed_attributes['details'] = from_location.for_feed(prefix: 'from')
-        common_feed_attributes['details'].merge!(
-          'authorised_at' => authorised_at,
-          'authorised_by' => authorised_by,
-          'reason' => reason,
-        )
-      end
-    end
-
-    def self.from_event(event)
-      new(event.generic_event_attributes.merge(
-            details: {
-              from_location_id: event.event_params&.dig(:relationships, :from_location, :data, :id),
-            },
-          ))
     end
   end
 end

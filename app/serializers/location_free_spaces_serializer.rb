@@ -11,7 +11,7 @@ class LocationFreeSpacesSerializer
 
   meta do |object, params|
     {
-      populations: params[object.id],
+      populations: params.dig(:spaces, object.id),
     }
   end
 

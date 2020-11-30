@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:framework_question) }
-  it { is_expected.to belong_to(:person_escort_record) }
   it { is_expected.to belong_to(:assessmentable).optional }
   it { is_expected.to belong_to(:parent).optional }
 
@@ -386,15 +385,15 @@ RSpec.describe FrameworkResponse do
         response = create(:string_response, value: nil)
 
         expect { response.update_with_flags!(%w[Yes]) }.to raise_error(FrameworkResponse::ValueTypeError)
-        expect(response.person_escort_record).to be_unstarted
+        expect(response.assessmentable).to be_unstarted
       end
 
       it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
-        create(:string_response, value: nil, assessmentable: response1.person_escort_record)
+        create(:string_response, value: nil, assessmentable: response1.assessmentable)
         response1.update_with_flags!('Yes')
 
-        expect(response1.person_escort_record).to be_in_progress
+        expect(response1.assessmentable).to be_in_progress
       end
 
       it 'does not allow updating responses if person_escort_record status is confirmed' do

@@ -3,7 +3,7 @@
 class AllocationsSerializer < AllocationSerializer
   meta do |object, params|
     {
-      moves: params[object.id],
+      moves: params.dig(:totals, object.id),
     }
   end
 

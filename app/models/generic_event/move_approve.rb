@@ -24,16 +24,5 @@ class GenericEvent
         common_feed_attributes['details']['create_in_nomis'] = create_in_nomis || false
       end
     end
-
-    def self.from_event(event)
-      new(
-        event.generic_event_attributes.merge(
-          details: {
-            date: event.event_params&.dig(:attributes, :date),
-            create_in_nomis: event.event_params&.dig(:attributes, :create_in_nomis) || false,
-          },
-        ),
-      )
-    end
   end
 end

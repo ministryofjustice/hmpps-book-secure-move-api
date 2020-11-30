@@ -19,16 +19,5 @@ class GenericEvent
         common_feed_attributes['details']['cancellation_reason_comment'] = cancellation_reason_comment || ''
       end
     end
-
-    def self.from_event(event)
-      new(
-        event.generic_event_attributes.merge(
-          details: {
-            cancellation_reason: event.event_params&.dig(:attributes, :cancellation_reason),
-            cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
-          },
-        ),
-      )
-    end
   end
 end

@@ -28,12 +28,13 @@ RSpec.describe Api::MovesController do
       {
         date: Date.today,
         time_due: Time.now,
-        status: 'requested',
+        status: status,
         additional_information: 'some more info',
         move_type: 'court_appearance',
       }
     end
 
+    let(:status) { 'requested' }
     let(:profile) { create(:profile) }
     let(:another_supplier) { create(:supplier) }
     let(:from_location) { create :location, suppliers: [another_supplier] }
@@ -62,6 +63,39 @@ RSpec.describe Api::MovesController do
       expect { do_post } .to change(Move, :count).by(1)
     end
 
+    it 'creates a GenericEvent without a supplier' do
+      do_post
+      expect(GenericEvent.last.supplier).to be(nil)
+    end
+
+    context 'when the new move status is `proposed`' do
+      before do
+        move_attributes[:date_from] = Date.today.iso8601
+      end
+
+      let(:status) { 'proposed' }
+
+      it 'creates a MoveProposed event' do
+        expect { do_post }.to change(GenericEvent::MoveProposed, :count).by(1)
+      end
+    end
+
+    context 'when the new move status is `requested`' do
+      let(:status) { 'requested' }
+
+      it 'creates a MoveRequested event' do
+        expect { do_post }.to change(GenericEvent::MoveRequested, :count).by(1)
+      end
+    end
+
+    context 'when the new move status is `cancelled`' do
+      let(:status) { 'cancelled' }
+
+      it 'does not create any new events' do
+        expect { do_post }.not_to change(GenericEvent, :count)
+      end
+    end
+
     it 'sets the from_location supplier as the supplier on the move' do
       do_post
 
@@ -83,6 +117,11 @@ RSpec.describe Api::MovesController do
         do_post
 
         expect(move.supplier).to eq(application.owner)
+      end
+
+      it 'creates a GenericEvent with a supplier' do
+        do_post
+        expect(GenericEvent::MoveRequested.last.supplier).to be_a(Supplier)
       end
     end
 

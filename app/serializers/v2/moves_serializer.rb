@@ -23,13 +23,9 @@ module V2
     set_type :moves
 
     INCLUDED_FIELDS = {
-      moves: attributes_to_serialize.keys +
-        %i[profile from_location to_location prison_transfer_reason supplier],
-      profiles: ::V2::ProfileSerializer.attributes_to_serialize.keys + %i[person person_escort_record],
+      # TODO: remove these and replace with conditional relationships in relevant serializer
       people: ::V2::PersonSerializer.attributes_to_serialize.keys + %i[gender ethnicity],
       locations: ::LocationSerializer.attributes_to_serialize.keys,
-      prison_transfer_reasons: ::PrisonTransferReasonSerializer.attributes_to_serialize.keys,
-      suppliers: ::SupplierSerializer.attributes_to_serialize.keys,
       allocations: ::AllocationSerializer.attributes_to_serialize.keys,
     }.freeze
 
@@ -39,8 +35,6 @@ module V2
       profile.person.gender
       profile.person_escort_record
       profile.person_escort_record.flags
-      profile.person_escort_record.framework
-      profile.person_escort_record.responses
       from_location
       to_location
       prison_transfer_reason
@@ -48,11 +42,11 @@ module V2
       allocation
     ].freeze
 
-    has_one :profile, serializer: V2::ProfileSerializer
-    has_one :from_location, serializer: ::LocationSerializer
-    has_one :to_location, serializer: ::LocationSerializer
-    has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
-    has_one :supplier, serializer: SupplierSerializer
-    has_one :allocation, serializer: AllocationSerializer
+    belongs_to :from_location, serializer: ::LocationSerializer
+    belongs_to :to_location, serializer: ::LocationSerializer
+    belongs_to :profile, serializer: V2::ProfilesSerializer
+    belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
+    belongs_to :supplier, serializer: SupplierSerializer
+    belongs_to :allocation, serializer: AllocationSerializer
   end
 end

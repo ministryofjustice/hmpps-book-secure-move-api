@@ -18,17 +18,5 @@ class GenericEvent
         common_feed_attributes['details']['rebook'] = rebook || false
       end
     end
-
-    def self.from_event(event)
-      new(
-        event.generic_event_attributes.merge(
-          details: {
-            rejection_reason: event.event_params&.dig(:attributes, :rejection_reason),
-            cancellation_reason_comment: event.event_params&.dig(:attributes, :cancellation_reason_comment),
-            rebook: event.event_params&.dig(:attributes, :rebook) || false,
-          },
-        ),
-      )
-    end
   end
 end

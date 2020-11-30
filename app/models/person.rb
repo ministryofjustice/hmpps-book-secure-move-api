@@ -10,6 +10,9 @@ class Person < VersionedModel
     police_national_computer
     prison_number
     latest_nomis_booking_id
+    first_names
+    last_name
+    date_of_birth
   ].freeze
 
   IDENTIFIER_TYPES = %i[
@@ -19,7 +22,7 @@ class Person < VersionedModel
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
   has_many :person_escort_records, through: :profiles
-  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
+  has_many :generic_events, as: :eventable, dependent: :destroy
 
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true

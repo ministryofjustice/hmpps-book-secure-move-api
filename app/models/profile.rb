@@ -9,6 +9,7 @@ class Profile < VersionedModel
     assessment_answers
   ].freeze
 
+  # TODO: drop these columns from existing databases
   self.ignored_columns = %w[
     last_name
     first_names

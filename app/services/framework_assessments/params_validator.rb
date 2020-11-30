@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module PersonEscortRecords
+module FrameworkAssessments
   class ParamsValidator
     include ActiveModel::Validations
 
     attr_reader :status
 
-    validates :status, inclusion: { in: [PersonEscortRecord::PERSON_ESCORT_RECORD_CONFIRMED] }
+    validates :status, inclusion: { in: [FrameworkAssessmentable::ASSESSMENT_CONFIRMED] }
 
     def initialize(status)
       @status = status

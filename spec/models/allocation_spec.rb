@@ -7,7 +7,6 @@ RSpec.describe Allocation do
   it { is_expected.to belong_to(:to_location) }
 
   it { is_expected.to have_many(:moves) }
-  it { is_expected.to have_many(:events) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:to_location) }

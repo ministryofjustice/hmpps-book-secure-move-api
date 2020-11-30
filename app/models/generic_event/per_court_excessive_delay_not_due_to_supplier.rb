@@ -8,6 +8,7 @@ class GenericEvent
     include PersonEscortRecordEventValidations
     include AuthoriserValidations
     include LocationValidations
+    include LocationFeed
 
     enum subtype: {
       making_prisoner_available_for_loading: 'making_prisoner_available_for_loading',

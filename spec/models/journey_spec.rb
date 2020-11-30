@@ -7,7 +7,6 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to belong_to(:supplier) }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location) }
-  it { is_expected.to have_many(:events) }
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to validate_presence_of(:move) }
   it { is_expected.to validate_presence_of(:supplier) }

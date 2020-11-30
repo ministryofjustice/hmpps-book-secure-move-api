@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FrameworkResponse < VersionedModel
+class FrameworkResponse < ApplicationRecord
   ValueTypeError = Class.new(StandardError)
 
   validates :type, presence: true
@@ -10,8 +10,6 @@ class FrameworkResponse < VersionedModel
   end
 
   belongs_to :framework_question
-  # TODO: remove once transition to assessment completed
-  belongs_to :person_escort_record
   belongs_to :assessmentable, optional: true, polymorphic: true
   has_many :dependents, class_name: 'FrameworkResponse',
                         foreign_key: 'parent_id'
