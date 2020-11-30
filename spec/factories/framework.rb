@@ -7,6 +7,10 @@ FactoryBot.define do
 
     initialize_with { Framework.find_or_create_by(name: name, version: version) }
 
+    trait :youth_risk_assessment do
+      name { 'youth-risk-assessment' }
+    end
+
     trait :with_questions do
       after(:create) do |framework|
         create_list(:framework_question, 2, framework: framework)

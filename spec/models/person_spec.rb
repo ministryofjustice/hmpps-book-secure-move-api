@@ -8,6 +8,7 @@ RSpec.describe Person do
   it { is_expected.to have_many(:profiles) }
   it { is_expected.to have_many(:moves).through(:profiles) }
   it { is_expected.to have_many(:person_escort_records).through(:profiles) }
+  it { is_expected.to have_many(:youth_risk_assessments).through(:profiles) }
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:first_names) }
@@ -126,6 +127,36 @@ RSpec.describe Person do
       create(:person_escort_record, :confirmed, confirmed_at: Time.zone.yesterday, profile: profile2)
 
       expect(person.latest_person_escort_record).to eq(newest_person_escort_record)
+    end
+  end
+
+  describe '#latest_youth_risk_assessment' do
+    it 'does not return anything if no youth risk assessment found for person' do
+      expect(person.latest_youth_risk_assessment).to be_nil
+    end
+
+    it 'does not return anything if no confirmed youth risk assessment found for person' do
+      create(:youth_risk_assessment, profile: person.profiles.first)
+
+      expect(person.latest_youth_risk_assessment).to be_nil
+    end
+
+    it 'returns a confirmed youth risk assessment for a person' do
+      profile1 = create(:profile, person: person)
+      profile2 = create(:profile, person: person)
+      confirmed_youth_risk_assessment = create(:youth_risk_assessment, :confirmed, profile: profile1)
+      create(:youth_risk_assessment, profile: profile2)
+
+      expect(person.latest_youth_risk_assessment).to eq(confirmed_youth_risk_assessment)
+    end
+
+    it 'returns the newest confirmed youth risk assessment for a person' do
+      profile1 = create(:profile, person: person)
+      profile2 = create(:profile, person: person)
+      newest_youth_risk_assessment = create(:youth_risk_assessment, :confirmed, confirmed_at: Time.zone.today, profile: profile1)
+      create(:youth_risk_assessment, :confirmed, confirmed_at: Time.zone.yesterday, profile: profile2)
+
+      expect(person.latest_youth_risk_assessment).to eq(newest_youth_risk_assessment)
     end
   end
 end

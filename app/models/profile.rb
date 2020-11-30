@@ -32,6 +32,7 @@ class Profile < VersionedModel
 
   has_many :moves, dependent: :nullify
   has_one :person_escort_record
+  has_one :youth_risk_assessment
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
 

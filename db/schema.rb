@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_16_095539) do
+ActiveRecord::Schema.define(version: 2020_11_30_140655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -606,6 +606,23 @@ ActiveRecord::Schema.define(version: 2020_11_16_095539) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "youth_risk_assessments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.uuid "profile_id", null: false
+    t.uuid "move_id", null: false
+    t.uuid "prefill_source_id"
+    t.string "status", null: false
+    t.jsonb "nomis_sync_status", default: [], null: false
+    t.datetime "confirmed_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
+    t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"
+    t.index ["prefill_source_id"], name: "index_youth_risk_assessments_on_prefill_source_id"
+    t.index ["profile_id"], name: "index_youth_risk_assessments_on_profile_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "allocations", "locations", column: "from_location_id", name: "fk_rails_allocations_from_location_id"
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
@@ -642,4 +659,7 @@ ActiveRecord::Schema.define(version: 2020_11_16_095539) do
   add_foreign_key "supplier_locations", "locations"
   add_foreign_key "supplier_locations", "suppliers"
   add_foreign_key "versions", "suppliers"
+  add_foreign_key "youth_risk_assessments", "frameworks"
+  add_foreign_key "youth_risk_assessments", "moves"
+  add_foreign_key "youth_risk_assessments", "profiles"
 end
