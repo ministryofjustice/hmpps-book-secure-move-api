@@ -27,6 +27,8 @@ class PersonEscortRecordSerializer
     object.status == 'unstarted' ? 'not_started' : object.status
   end
 
+  attribute :editable, &:editable?
+
   meta do |object|
     { section_progress: object.section_progress }
   end
