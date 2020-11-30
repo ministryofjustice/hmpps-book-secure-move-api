@@ -26,7 +26,6 @@ module V2
       # TODO: remove these and replace with conditional relationships in relevant serializer
       people: ::V2::PersonSerializer.attributes_to_serialize.keys + %i[gender ethnicity],
       locations: ::LocationSerializer.attributes_to_serialize.keys,
-      allocations: ::AllocationSerializer.attributes_to_serialize.keys,
     }.freeze
 
     SUPPORTED_RELATIONSHIPS = %w[
@@ -39,7 +38,6 @@ module V2
       to_location
       prison_transfer_reason
       supplier
-      allocation
     ].freeze
 
     belongs_to :from_location, serializer: ::LocationSerializer

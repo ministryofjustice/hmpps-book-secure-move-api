@@ -7,7 +7,6 @@ MovesIncludeParameter:
   schema:
     type: string
     enum:
-      - allocation
       - from_location
       - prison_transfer_reason
       - profile.person

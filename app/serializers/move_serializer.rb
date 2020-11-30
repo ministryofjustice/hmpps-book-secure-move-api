@@ -57,11 +57,6 @@ class MoveSerializer
     documents
     prison_transfer_reason
     court_hearings
-    allocation
     original_move
   ].freeze
-
-  INCLUDED_FIELDS = {
-    allocations: %i[to_location from_location moves_count created_at],
-  }.freeze
 end
