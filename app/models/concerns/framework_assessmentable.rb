@@ -96,6 +96,12 @@ module FrameworkAssessmentable
     save if changed? && valid?
   end
 
+  def editable
+    return false if confirmed?
+
+    move_status_editable?
+  end
+
   class_methods do
     def save_with_responses!(version: nil, move_id: nil)
       move = Move.find(move_id)
@@ -154,5 +160,11 @@ module FrameworkAssessmentable
         hash[response.framework_question.key] = value
       end
     end
+  end
+
+  def move_status_editable?
+    return true if move.blank?
+
+    move.requested? || move.booked?
   end
 end
