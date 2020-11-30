@@ -33,6 +33,10 @@ PersonEscortRecord:
           type: string
           example: '1.0.1'
           description: Determines the version of framework questions of the `person_escort_record`
+        editable:
+          type: boolean
+          example: true
+          description: Determines if a person escort record's responses can be amended. A person escort record is editable if the associated move's status is `requested` or `booked`, and the status of the person escort record is not `confirmed`
         nomis_sync_status:
           type: array
           items:
