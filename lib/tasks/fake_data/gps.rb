@@ -1,4 +1,4 @@
-require_relative 'city.rb'
+require_relative 'city'
 require 'json'
 
 module Tasks
