@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'fake_data/journeys'
+require_relative 'fake_data/gps'
 
 namespace :fake_data do
   desc 'create fake people'
@@ -201,6 +202,19 @@ namespace :fake_data do
         )
       end
     end
+  end
+
+  desc 'create fake GPS track'
+  task :create_gps_track, [:id_or_ref] => :environment do |_, args|
+    abort "Please specify a journey id or move reference, e.g. $ rake 'fake_data:create_gps_track[ABC1234X]'" if args[:id_or_ref].blank?
+
+    journey = Journey.find_by(id: args[:id_or_ref])
+    journey ||= Move.find_by(id: args[:id_or_ref])&.journeys&.first
+    journey ||= Move.find_by(reference: args[:id_or_ref])&.journeys&.first
+
+    abort "Could not find journey record with id or move reference: #{args[:id_or_ref]}" if journey.blank?
+
+    Tasks::FakeData::GPS.new(journey).call
   end
 
   desc 'drop all the fake data - CAUTION: this deletes all existing transactional data'
