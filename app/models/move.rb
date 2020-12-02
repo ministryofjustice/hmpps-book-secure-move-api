@@ -153,7 +153,7 @@ class Move < VersionedModel
   end
 
   def existing_moves
-    Move
+    @existing_moves ||= Move
         .joins(:profile)
         .where('profiles.person_id = ?', profile.person_id)
         .not_cancelled
