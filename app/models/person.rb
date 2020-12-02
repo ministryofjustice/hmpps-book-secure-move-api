@@ -22,6 +22,7 @@ class Person < VersionedModel
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
   has_many :person_escort_records, through: :profiles
+  has_many :youth_risk_assessments, through: :profiles
   has_many :generic_events, as: :eventable, dependent: :destroy
 
   belongs_to :ethnicity, optional: true
@@ -69,7 +70,11 @@ class Person < VersionedModel
   end
 
   def latest_person_escort_record
-    person_escort_records.where(status: 'confirmed').order(confirmed_at: :desc).first
+    person_escort_records.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
+  end
+
+  def latest_youth_risk_assessment
+    youth_risk_assessments.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
   end
 
   def category

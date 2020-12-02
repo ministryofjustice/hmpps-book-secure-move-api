@@ -76,6 +76,7 @@ class Move < VersionedModel
   belongs_to :profile, optional: true, touch: true
   has_one :person, through: :profile
   has_one :person_escort_record
+  has_one :youth_risk_assessment
 
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
@@ -151,12 +152,23 @@ class Move < VersionedModel
     cancellation_reason == CANCELLATION_REASON_REJECTED
   end
 
-  def existing
-    self.class.not_cancelled.find_by(date: date, profile_id: profile_id, from_location_id: from_location_id, to_location_id: to_location_id)
+  def existing_moves
+    Move
+        .joins(:profile)
+        .where('profiles.person_id = ?', profile.person_id)
+        .not_cancelled
+        .not_proposed
+        .where(
+          from_location_id: from_location_id,
+          to_location_id: to_location_id,
+          date: date,
+        )
+        .where.not(profile: nil)
+        .where.not(id: id) # When updating an existing move, don't consider self a duplicate
   end
 
   def existing_id
-    existing&.id
+    existing_moves&.first&.id
   end
 
   def current?
@@ -241,16 +253,6 @@ private
   end
 
   def validate_move_uniqueness
-    existing_moves = Move.joins(:profile)
-      .where('profiles.person_id = ?', profile.person_id)
-      .where(
-        status: status,
-        from_location_id: from_location_id,
-        to_location_id: to_location_id,
-        date: date,
-      )
-      .where.not(id: id) # When updating an existing move, don't consider self a duplicate
-
     errors.add(:date, :taken) if existing_moves.any?
   end
 
