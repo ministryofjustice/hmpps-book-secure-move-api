@@ -5,8 +5,8 @@ FactoryBot.define do
     after(:build, &:initialize_state)
 
     trait :with_responses do
-      association(:framework, :with_questions)
       after(:create) do |assessment|
+        create_list(:framework_question, 2, framework: assessment.framework)
         assessment.framework_questions.each do |question|
           create(
             :string_response,

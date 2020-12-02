@@ -70,11 +70,11 @@ class Person < VersionedModel
   end
 
   def latest_person_escort_record
-    person_escort_records.where(status: 'confirmed').order(confirmed_at: :desc).first
+    person_escort_records.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
   end
 
   def latest_youth_risk_assessment
-    youth_risk_assessments.where(status: 'confirmed').order(confirmed_at: :desc).first
+    youth_risk_assessments.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
   end
 
   def category
