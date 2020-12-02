@@ -83,6 +83,12 @@ class GenericEvent < ApplicationRecord
     PersonMoveVehicleSystemsFailed
   ].freeze
 
+  enum classification: {
+    default: 'default',
+    critical: 'critical',
+    medical: 'medical',
+  }
+
   belongs_to :eventable, polymorphic: true, touch: true
   belongs_to :supplier,  optional: true
 
@@ -91,12 +97,24 @@ class GenericEvent < ApplicationRecord
   validates :occurred_at,    presence: true # When did a human think the event occurred
   validates :recorded_at,    presence: true # When did supplier/frontend record the event
 
+  validates :classification, inclusion: { in: classifications }
+
   # This scope is used to determine the apply order of events as they were determined to have occurred.
   # The order is important as far as the eventable state machine sequencing, the correctness
   # of any attributes of the eventable and for reporting purposes.
   scope :applied_order, -> { order(occurred_at: :asc) }
 
   serialize :details, HashWithIndifferentAccessSerializer
+
+  before_validation :set_classification
+
+  def event_type
+    type&.gsub('GenericEvent::', '')
+  end
+
+  def event_classification
+    :default
+  end
 
   # Default trigger behaviour for all events is to do nothing
   def trigger; end
@@ -179,5 +197,11 @@ class GenericEvent < ApplicationRecord
     validates :eventable_type, inclusion: { in: types }
 
     instance_variable_set('@eventable_types', types)
+  end
+
+private
+
+  def set_classification
+    self.classification = event_classification if classification.blank?
   end
 end

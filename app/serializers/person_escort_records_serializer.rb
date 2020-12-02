@@ -7,6 +7,7 @@ class PersonEscortRecordsSerializer
   set_type :person_escort_records
 
   has_many_if_included :flags, serializer: FrameworkFlagsSerializer, &:framework_flags
+  has_many_if_included :medical_events, serializer: ImportantEventsSerializer
 
   attributes :confirmed_at, :created_at, :nomis_sync_status
 end

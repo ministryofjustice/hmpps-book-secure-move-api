@@ -36,4 +36,19 @@ namespace :data_maintenance do
     Person.where(criminal_records_office: '').update_all(criminal_records_office: nil)
     Person.where(police_national_computer: '').update_all(police_national_computer: nil)
   end
+
+  desc 'fix generic event classification for existing data'
+  task fix_generic_event_classifications: :environment do
+    GenericEvent.where(eventable_type: 'GenericEvent::PerMedicalAid').update_all(classification: 'medical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveAssault').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveDeathInCustody').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveMajorIncidentOther').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveMinorIncidentOther').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMovePersonEscapedKpi').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMovePersonEscaped').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveReleasedError').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveRoadTrafficAccident').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveSeriousInjury').update_all(classification: 'critical')
+    GenericEvent.where(eventable_type: 'GenericEvent::PersonMoveUsedForce').update_all(classification: 'critical')
+  end
 end

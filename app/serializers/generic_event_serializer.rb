@@ -5,16 +5,14 @@ class GenericEventSerializer
 
   set_type :events
 
-  attributes :occurred_at, :recorded_at, :notes
+  attributes :event_type, :occurred_at, :recorded_at, :notes
 
+  # TODO: should this/these be a belongs_to instead?
+  # TODO consider using has_one_if_included to lazy load these associations
   has_one :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
   has_one :supplier
 
   SUPPORTED_RELATIONSHIPS = %w[eventable].freeze
-
-  attribute :event_type do |object|
-    object.type.try(:gsub, 'GenericEvent::', '')
-  end
 
   attribute :details do |record, _params|
     record.details.deep_dup.tap do |details|
