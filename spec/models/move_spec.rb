@@ -312,28 +312,62 @@ RSpec.describe Move do
     end
   end
 
-  describe '#existing' do
+  describe '#existing_moves' do
     let!(:move) { create :move }
-    let(:duplicate) { described_class.new(move.attributes) }
 
-    context 'when querying for existing moves' do
-      it 'finds the right move' do
-        expect(duplicate.existing).to eq(move)
+    context 'with a duplicate move with the same profile' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_moves.first).to eq(move)
+        expect(duplicate.existing_moves.count).to eq(1)
       end
+    end
+
+    context 'with a duplicate move with a different profile' do
+      let(:other_profile) { create(:profile, person: move.person) }
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, profile: other_profile)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_moves.first).to eq(move)
+        expect(duplicate.existing_moves.count).to eq(1)
+      end
+    end
+
+    context 'with a cancelled duplicate move' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
 
       it 'ignores cancelled moves' do
         move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
-        expect(duplicate.existing).to be_nil
+        expect(duplicate.existing_moves).to be_empty
+      end
+    end
+
+    context 'with a proposed duplicate move' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
+
+      it 'ignores proposed moves' do
+        move.update!(status: :proposed)
+        expect(duplicate.existing_moves).to be_empty
       end
     end
   end
 
   describe '#existing_id' do
-    let!(:move) { build :move }
-
     context 'when there is no existing move' do
+      let!(:move) { build :move }
+
       it 'returns nil' do
         expect(move.existing_id).to be_nil
+      end
+    end
+
+    context 'when there is an existing move' do
+      let!(:move) { create :move }
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_id).to eq(move.id)
       end
     end
   end
