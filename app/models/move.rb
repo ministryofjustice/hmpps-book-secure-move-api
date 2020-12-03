@@ -211,6 +211,10 @@ class Move < VersionedModel
     GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids).applied_order
   end
 
+  def important_events
+    critical_events + (profile&.person_escort_record&.medical_events || [])
+  end
+
 private
 
   def date_to_after_date_from

@@ -2,15 +2,14 @@
 
 class GenericEventSerializer
   include JSONAPI::Serializer
+  include JSONAPI::ConditionalRelationships
 
   set_type :events
 
-  attributes :event_type, :occurred_at, :recorded_at, :notes
+  attributes :event_type, :classification, :occurred_at, :recorded_at, :notes
 
-  # TODO: should this/these be a belongs_to instead?
-  # TODO consider using has_one_if_included to lazy load these associations
-  has_one :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
-  has_one :supplier
+  belongs_to :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
+  belongs_to :supplier
 
   SUPPORTED_RELATIONSHIPS = %w[eventable].freeze
 
