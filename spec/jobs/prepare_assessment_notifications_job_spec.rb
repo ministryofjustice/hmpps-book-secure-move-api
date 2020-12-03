@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
-  subject(:perform) { described_class.new.perform(topic_id: person_escort_record.id, action_name: 'update') }
+RSpec.describe PrepareAssessmentNotificationsJob, type: :job do
+  subject(:perform) { described_class.new.perform(topic_id: person_escort_record.id, topic_class: person_escort_record.class.name, action_name: 'update') }
 
   let(:subscription) { create(:subscription) }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
