@@ -3,8 +3,6 @@
 class FrameworkAssessmentSerializer
   include JSONAPI::Serializer
 
-  belongs_to :profile, serializer: V2::ProfileSerializer
-  belongs_to :move, serializer: V2::MoveSerializer
   belongs_to :framework
 
   has_many :responses, serializer: FrameworkResponseSerializer do |object|

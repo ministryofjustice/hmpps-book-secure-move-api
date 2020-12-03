@@ -13,6 +13,20 @@ RSpec.describe YouthRiskAssessmentSerializer do
     expect(result[:data][:type]).to eq('youth_risk_assessments')
   end
 
+  it 'contains a `profile` relationship' do
+    expect(result[:data][:relationships][:profile][:data]).to eq(
+      id: youth_risk_assessment.profile.id,
+      type: 'profiles',
+    )
+  end
+
+  it 'contains a `move` relationship' do
+    expect(result[:data][:relationships][:move][:data]).to eq(
+      id: youth_risk_assessment.move.id,
+      type: 'moves',
+    )
+  end
+
   it 'contains a nil `prefill_source` relationship if no prefill_source present' do
     expect(result[:data][:relationships][:prefill_source][:data]).to be_nil
   end

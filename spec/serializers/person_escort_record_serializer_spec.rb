@@ -5,12 +5,27 @@ require 'rails_helper'
 RSpec.describe PersonEscortRecordSerializer do
   subject(:serializer) { described_class.new(person_escort_record, include: includes) }
 
-  let(:person_escort_record) { create(:person_escort_record) }
+  let(:move) { create(:move) }
+  let(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('person_escort_records')
+  end
+
+  it 'contains a `profile` relationship' do
+    expect(result[:data][:relationships][:profile][:data]).to eq(
+      id: person_escort_record.profile.id,
+      type: 'profiles',
+    )
+  end
+
+  it 'contains a `move` relationship' do
+    expect(result[:data][:relationships][:move][:data]).to eq(
+      id: person_escort_record.move.id,
+      type: 'moves',
+    )
   end
 
   it 'contains a nil `prefill_source` relationship if no prefill_source present' do

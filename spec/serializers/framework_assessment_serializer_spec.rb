@@ -38,20 +38,6 @@ RSpec.describe FrameworkAssessmentSerializer do
     expect(result[:data][:attributes][:nomis_sync_status]).to eq(assessment.nomis_sync_status)
   end
 
-  it 'contains a `profile` relationship' do
-    expect(result[:data][:relationships][:profile][:data]).to eq(
-      id: assessment.profile.id,
-      type: 'profiles',
-    )
-  end
-
-  it 'contains a `move` relationship' do
-    expect(result[:data][:relationships][:move][:data]).to eq(
-      id: assessment.move.id,
-      type: 'moves',
-    )
-  end
-
   it 'contains a `framework` relationship' do
     expect(result[:data][:relationships][:framework][:data]).to eq(
       id: assessment.framework.id,
