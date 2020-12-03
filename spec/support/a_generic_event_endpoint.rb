@@ -1,4 +1,4 @@
-RSpec.shared_examples 'a generic event endpoint' do |event, event_type|
+RSpec.shared_examples 'a generic event endpoint' do |event_type|
   let(:headers) do
     {
       'CONTENT_TYPE': ApiController::CONTENT_TYPE,
@@ -42,7 +42,7 @@ RSpec.shared_examples 'a generic event endpoint' do |event, event_type|
     end
   end
 
-  let(:factory) { "event_#{event}" }
+  let(:factory) { "event_#{event_type.underscore}" }
 
   describe 'POST /events' do
     it "creates a GenericEvent::#{event_type}" do

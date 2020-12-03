@@ -109,7 +109,7 @@ FactoryBot.define do
     end
   end
 
-  factory :event_move_notify_premises_of_arrival_in_30_mins, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins' do
+  factory :event_move_notify_premises_of_arrival_in30_mins, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins' do
     eventable { association(:move) }
   end
 
