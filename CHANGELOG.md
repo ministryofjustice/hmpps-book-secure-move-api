@@ -1,5 +1,27 @@
 # Changelog
 
+## [v2.7.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.1) (2020-12-02)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.0...v2.7.1)
+
+**Merged pull requests:**
+
+- P4-2415 fix duplicate move validation [\#1182](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1182) ([martyn-w](https://github.com/martyn-w))
+- Bump aws-sdk-s3 from 1.85.0 to 1.86.0 [\#1181](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1181) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2450 Add Youth Risk assessment table and model [\#1180](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1180) ([cwrw](https://github.com/cwrw))
+- Bump listen from 3.3.2 to 3.3.3 [\#1178](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1178) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4 2459 fake gps data generator [\#1177](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1177) ([martyn-w](https://github.com/martyn-w))
+- P4-2520 Add editable field to Person Escort Record [\#1176](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1176) ([cwrw](https://github.com/cwrw))
+- Bump simplecov from 0.19.1 to 0.20.0 [\#1175](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1175) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump listen from 3.3.1 to 3.3.2 [\#1174](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1174) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Reduce spam logging of Papertrail versions [\#1173](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1173) ([smoothcontract](https://github.com/smoothcontract))
+- \[P4-2507\] Removes unused rake task [\#1172](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1172) ([willfish](https://github.com/willfish))
+- Removes now-unused event model [\#1171](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1171) ([willfish](https://github.com/willfish))
+- Removes unused code [\#1170](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1170) ([willfish](https://github.com/willfish))
+- Remove support for including allocation on v1/v2 GET /moves and v1 GET /move [\#1169](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1169) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog 2.7.0 [\#1168](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1168) ([cwrw](https://github.com/cwrw))
+- \[P4-1981\] Adds location relationships for the event feed [\#1161](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1161) ([willfish](https://github.com/willfish))
+
 ## [v2.7.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.0) (2020-11-26)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.6.9...v2.7.0)
