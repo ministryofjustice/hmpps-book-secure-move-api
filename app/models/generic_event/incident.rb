@@ -3,7 +3,7 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
 
     def event_classification
-      :critical
+      :incident
     end
 
     def self.inherited(child)

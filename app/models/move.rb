@@ -87,7 +87,7 @@ class Move < VersionedModel
   has_many :court_hearings, dependent: :restrict_with_exception
 
   has_many :generic_events, as: :eventable, dependent: :destroy
-  has_many :critical_events, -> { where classification: :critical }, as: :eventable, class_name: 'GenericEvent'
+  has_many :incident_events, -> { where classification: :incident }, as: :eventable, class_name: 'GenericEvent'
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
@@ -212,7 +212,7 @@ class Move < VersionedModel
   end
 
   def important_events
-    critical_events + (profile&.person_escort_record&.medical_events || [])
+    incident_events + (profile&.person_escort_record&.medical_events || [])
   end
 
 private

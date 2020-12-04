@@ -9,7 +9,7 @@ FactoryBot.define do
   end
 
   factory :incident, parent: :generic_event do
-    classification { 'critical' }
+    classification { 'incident' }
     details do
       {
         location_id: create(:location).id,

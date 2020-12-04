@@ -85,7 +85,7 @@ class GenericEvent < ApplicationRecord
 
   enum classification: {
     default: 'default',
-    critical: 'critical',
+    incident: 'incident',
     medical: 'medical',
   }
 

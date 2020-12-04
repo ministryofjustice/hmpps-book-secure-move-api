@@ -38,7 +38,7 @@ private
     when 'timeline_events'
       :generic_events
     when 'important_events'
-      { critical_events: {}, profile: { person_escort_record: :medical_events } }
+      { incident_events: {}, profile: { person_escort_record: :medical_events } }
     else
       name.to_sym
     end
