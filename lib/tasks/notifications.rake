@@ -56,8 +56,7 @@ namespace :notifications do
 
     puts 'Processing assigned moves...'
     moves_assigned.find_each do |move|
-      # TODO: update this line with queue_as: when https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/902 is merged
-      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: action_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
+      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: action_name, queue_as: :notifications_low, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
       sleep(rand(0..0.4)) # small random delay to allow servers to recover
     end
 

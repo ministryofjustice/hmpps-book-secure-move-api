@@ -28,8 +28,8 @@ PostPersonEscortRecord:
     relationships:
       type: object
       required:
-        - profile
+        - move
       properties:
-        profile:
-          $ref: profile_reference.yaml#/ProfileReference
-          description: The profile of the person being moved
+        move:
+          $ref: move_reference.yaml#/MoveReference
+          description: The move of the person being moved, already associated to the profile.

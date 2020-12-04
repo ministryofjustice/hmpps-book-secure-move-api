@@ -146,6 +146,7 @@ RSpec.describe 'court to prison move', type: :request, api_story: true do
 
     # Assign location court to Serco supplier
     create :supplier_location, location: court, supplier: serco_supplier
+    create :category, :cat_c
   end
 
   # rubocop:disable RSpec/MultipleExpectations

@@ -48,7 +48,6 @@ class Allocation < VersionedModel
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
   has_many :moves, inverse_of: :allocation, dependent: :destroy, autosave: true
-  has_many :events, as: :eventable, dependent: :destroy
 
   validates :status, presence: true, inclusion: { in: states }
 
@@ -90,5 +89,33 @@ class Allocation < VersionedModel
     self.moves_count = current_moves.count
 
     save!
+  end
+
+  def move_totals
+    {
+      total: (cancelled? ? moves.count : moves.not_cancelled.count),
+      filled: moves.not_cancelled.where.not(profile_id: nil).count,
+      unfilled: moves.not_cancelled.where(profile_id: nil).count,
+    }
+  end
+
+  def self.move_totals
+    # Isolate this query from any higher level query that may include existing joins on moves
+    rows = unscoped.where(id: pluck(:id).uniq)
+      # Join with matching (non cancelled) moves within the allocation (if any) so we can count them
+      .joins('LEFT OUTER JOIN moves ON moves.allocation_id = allocations.id')
+      .group('allocations.id')
+      # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(
+      .pluck(Arel.sql("allocations.id, allocations.status, COUNT(moves), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled'), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NOT NULL), COUNT(moves) FILTER (WHERE moves.status <> 'cancelled' AND moves.profile_id IS NULL)"))
+
+    # Map array of returned rows/columns into a nicer hash structure keyed by id
+    rows.each_with_object({}) do |row, totals_hash|
+      allocation_id, allocation_status, total_moves, uncancelled_moves, filled_moves, unfilled_moves = *row
+      totals_hash[allocation_id] = {
+        total: (allocation_status == ALLOCATION_STATUS_CANCELLED ? total_moves : uncancelled_moves),
+        filled: filled_moves,
+        unfilled: unfilled_moves,
+      }
+    end
   end
 end

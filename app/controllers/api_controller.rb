@@ -2,6 +2,7 @@
 
 class ApiController < ApplicationController
   include ActiveStorage::SetCurrent # Sets host for service_url
+  include Serializable
 
   DEFAULT_API_VERSION = '1'
 
@@ -23,10 +24,12 @@ class ApiController < ApplicationController
   rescue_from CanCan::AccessDenied, with: :render_unauthorized_error
   rescue_from ActiveModel::ValidationError, with: :render_validation_error
   rescue_from IncludeParamsValidator::ValidationError, with: :render_include_validation_error
+  rescue_from NotSupportedInOldVersionError, with: :render_not_supported_in_old_version_error
 
   # Nomis connection errors:
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
   rescue_from Faraday::TimeoutError, with: :render_timeout_error
+  rescue_from OAuth2::Error, with: :render_nomis_bad_gateway
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -39,7 +42,11 @@ class ApiController < ApplicationController
   end
 
   def user_for_paper_trail
-    current_user.owner_id
+    request.headers['X-Current-User']
+  end
+
+  def info_for_paper_trail
+    { supplier_id: doorkeeper_application_owner&.id }
   end
 
 private
@@ -172,6 +179,16 @@ private
     )
   end
 
+  def render_nomis_bad_gateway(exception)
+    render(
+      json: { errors: [{
+        title: 'Nomis Bad Gateway Error',
+        detail: "#{exception.exception.class}: #{exception.message}",
+      }] },
+      status: :bad_gateway,
+    )
+  end
+
   def validation_errors(record)
     errors = record.errors
     errors.keys.flat_map do |field|
@@ -217,12 +234,32 @@ private
     )
   end
 
+  def render_not_supported_in_old_version_error
+    render(
+      json: {
+        errors: [{
+          title: 'Not Supported In Old Version Error',
+          detail: "This endpoint is not supported in version v#{api_version} - please change the ACCEPT header to a newer version",
+        }],
+      },
+      status: :not_acceptable,
+    )
+  end
+
   def validate_include_params
     include_params_validator.fully_validate!
   end
 
+  def include_params_handler
+    @include_params_handler ||= IncludeParamHandler.new(params)
+  end
+
   def included_relationships
-    IncludeParamHandler.new(params).call
+    @included_relationships ||= include_params_handler.included_relationships
+  end
+
+  def active_record_relationships
+    @active_record_relationships ||= include_params_handler.active_record_relationships
   end
 
   def include_params_validator

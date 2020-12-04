@@ -1,11 +1,12 @@
-class TimetableSerializer < ActiveModel::Serializer
-  type 'timetable_entries'
+# frozen_string_literal: true
 
-  attributes :start_time, :reason, :nomis_type
+class TimetableSerializer
+  include JSONAPI::Serializer
 
-  belongs_to :location, serializer: LocationSerializer
+  set_type :timetable_entries
 
-  def nomis_type
-    object.type
-  end
+  attributes :start_time, :reason
+  attribute :nomis_type, &:type
+
+  belongs_to :location, &:location
 end

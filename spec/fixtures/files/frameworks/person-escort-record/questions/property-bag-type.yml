@@ -1,0 +1,33 @@
+type: checkbox
+question: What type of property is in this bag?
+description: Property type
+prefill: true
+options:
+  -
+    label: Medication
+    value: Medication
+    followup_comment:
+      label: Give details
+  -
+    label: UK currency
+    value: UK currency
+    followup_comment:
+      label: Total amount
+      validations:
+        -
+          type: required
+          message: Enter the total amount
+  -
+    label: Other currency
+    value: Other currency
+    followup_comment:
+      label: Give details of currencies and amounts
+  -
+    label: Valuables
+    value: Valuables
+    followup_comment:
+      label: Give details
+validations:
+  -
+    type: required
+    message: Select property types

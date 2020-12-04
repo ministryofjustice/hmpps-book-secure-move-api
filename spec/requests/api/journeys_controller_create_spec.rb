@@ -86,10 +86,6 @@ RSpec.describe Api::JourneysController do
         expect(response_json).to include_json(data: data)
       end
 
-      it 'creates a `create` event' do
-        expect { do_post }.to change { Event.where(event_name: 'create', eventable_type: 'Journey').count }.by(1)
-      end
-
       it 'creates a JourneyCreate generic event' do
         expect { do_post }.to change(GenericEvent::JourneyCreate, :count).by(1)
       end

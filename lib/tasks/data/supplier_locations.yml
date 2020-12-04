@@ -283,6 +283,7 @@ suppliers:
     - CDI
     - CITWMC
     - CLP1
+    - CLP3
     - ESX1
     - ESX2
     - ESX3

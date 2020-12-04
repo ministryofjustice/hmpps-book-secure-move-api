@@ -3,13 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe PersonSerializer do
-  subject(:serializer) { described_class.new(person) }
+  subject(:serializer) { described_class.new(person, adapter_options) }
 
   let(:person) { create :person }
   let(:adapter_options) { {} }
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'people'
@@ -106,7 +104,7 @@ RSpec.describe PersonSerializer do
   end
 
   describe 'ethnicity' do
-    let(:adapter_options) { { include: { ethnicity: %I[key title description] } } }
+    let(:adapter_options) { { include: %i[ethnicity] } }
     let(:ethnicity) { person.ethnicity }
     let(:expected_json) do
       [
@@ -134,7 +132,7 @@ RSpec.describe PersonSerializer do
       end
 
       it 'does not contain an included ethnicity' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end
@@ -144,7 +142,7 @@ RSpec.describe PersonSerializer do
       person.update(gender_additional_information: gender_additional_information)
     end
 
-    let(:adapter_options) { { include: { gender: %I[title description] } } }
+    let(:adapter_options) { { include: %i[gender] } }
     let(:gender) { person.gender }
     let(:gender_additional_information) { 'more info about the person' }
     let(:expected_json) do

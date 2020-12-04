@@ -58,5 +58,10 @@
     "agencyId":"DRP1",
     "description":"An example DRP",
     "agencyType":"DRRPROV"
+  },
+  {
+    "agencyId":"HOSP1",
+    "description":"An example hospital",
+    "agencyType":"HOSPITAL"
   }
 ]

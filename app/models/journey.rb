@@ -36,8 +36,7 @@ class Journey < ApplicationRecord
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
 
-  has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
-  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
+  has_many :generic_events, as: :eventable, dependent: :destroy
 
   enum states: {
     proposed: 'proposed',
@@ -82,6 +81,10 @@ class Journey < ApplicationRecord
 
   def vehicle_registration
     vehicle['registration'] if vehicle
+  end
+
+  def vehicle_registration=(reg)
+    (self.vehicle ||= {})['registration'] = reg
   end
 
   def handle_event_run

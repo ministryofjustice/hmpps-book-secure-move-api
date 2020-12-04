@@ -1,0 +1,27 @@
+"200":
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "../v2/category.yaml#/Category"
+"401":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/UnsupportedMediaType"
+"415":
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: "../v1/errors.yaml#/NotAuthorisedError"

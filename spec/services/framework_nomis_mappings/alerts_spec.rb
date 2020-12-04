@@ -61,6 +61,42 @@ RSpec.describe FrameworkNomisMappings::Alerts do
     expect(mappings).to be_empty
   end
 
+  context 'with NOMIS sync status' do
+    it 'sets the NOMIS sync status as successful if NOMIS client is successful' do
+      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+      mappings = described_class.new(prison_number: 'A9127EK')
+      mappings.call
+
+      expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::SUCCESS)
+    end
+
+    it 'sets the NOMIS sync status as successful if NOMIS client is successful but no alerts returned' do
+      allow(NomisClient::Alerts).to receive(:get).and_return([])
+      mappings = described_class.new(prison_number: 'A9127EK')
+      mappings.call
+
+      expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::SUCCESS)
+    end
+
+    it 'sets the NOMIS sync status as failed if NOMIS client throws an error' do
+      oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '', 'error=': '')
+      allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
+      mappings = described_class.new(prison_number: 'A9127EK')
+      mappings.call
+
+      expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::FAILED)
+    end
+
+    it 'sets the NOMIS sync failure message if NOMIS client throws an error' do
+      oauth2_response = instance_double('OAuth2::Response', body: '{"error": "BOOM"}', parsed: {}, status: '', 'error=': '')
+      allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
+      mappings = described_class.new(prison_number: 'A9127EK')
+      mappings.call
+
+      expect(mappings.nomis_sync_status.message).to match(/BOOM/)
+    end
+  end
+
   def nomis_alert(expired: false, active: true)
     {
       alert_id: 2,

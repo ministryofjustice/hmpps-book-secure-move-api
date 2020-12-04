@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe FrameworkResponse do
   it { is_expected.to belong_to(:framework_question) }
-  it { is_expected.to belong_to(:person_escort_record) }
+  it { is_expected.to belong_to(:assessmentable).optional }
   it { is_expected.to belong_to(:parent).optional }
 
   it { is_expected.to have_many(:dependents) }
@@ -92,72 +92,6 @@ RSpec.describe FrameworkResponse do
     end
   end
 
-  describe '.requires_value?' do
-    it 'returns false if value present' do
-      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
-      response = create(:string_response, value: 'some value', parent: create(:string_response), framework_question: question)
-
-      expect(described_class.requires_value?(response.value, response)).to be(false)
-    end
-
-    it 'returns false if question not required' do
-      question = create(:framework_question, options: [], required: false)
-      response = create(:string_response, value: nil, framework_question: question)
-
-      expect(described_class.requires_value?(response.value, response)).to be(false)
-    end
-
-    it 'returns true if question required, value is empty and is not dependent' do
-      question = create(:framework_question, options: [], required: true)
-      response = create(:string_response, value: nil, framework_question: question)
-
-      expect(described_class.requires_value?(response.value, response)).to be(true)
-    end
-
-    it 'returns true if record is dependent, required and missing value' do
-      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
-      response = create(:string_response, value: nil, parent: create(:string_response), framework_question: question)
-
-      expect(described_class.requires_value?(response.value, response)).to be(true)
-    end
-
-    it 'returns false if record is dependent but parent response does not match' do
-      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
-      parent_response = create(:string_response, value: 'No')
-      response = create(:string_response, value: nil, parent: parent_response, framework_question: question)
-
-      expect(described_class.requires_value?(response.value, response)).to be(false)
-    end
-  end
-
-  describe '#responded' do
-    it 'sets the responded value to false on creation with empty value' do
-      response = create(:string_response, value: nil)
-
-      expect(response.responded).to be(false)
-    end
-
-    it 'sets the responded value to false on creation with value' do
-      response = create(:string_response, value: 'Yes')
-
-      expect(response.responded).to be(false)
-    end
-
-    it 'sets the responded value to true on update with empty value' do
-      response = create(:string_response, value: nil)
-      response.update(value: 'Yes')
-
-      expect(response.responded).to be(true)
-    end
-
-    it 'sets the responded value to update on update with value' do
-      response = create(:string_response, value: 'Yes')
-      response.update(value: nil)
-
-      expect(response.responded).to be(true)
-    end
-  end
-
   describe '#update_with_flags!' do
     it 'updates response value' do
       response = create(:string_response, value: nil)
@@ -242,6 +176,28 @@ RSpec.describe FrameworkResponse do
       response.update_with_flags!('No')
 
       expect(response.framework_flags).to contain_exactly(flag2)
+    end
+
+    it 'raises an error if transaction fails twice' do
+      response = create(:string_response, value: nil)
+      allow(response).to receive(:update!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+
+      expect { response.update_with_flags!('Yes') }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+    end
+
+    it 'retries the transaction if it fails only once and saves response' do
+      response = create(:string_response, value: nil)
+
+      # Allow update to fail first time, and second time to complete transaction
+      return_values = [:raise, true]
+      allow(response).to receive(:update!).twice do
+        return_value = return_values.shift
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
+      end
+
+      response.update_with_flags!('Yes')
+
+      expect(response.value).to eq('Yes')
     end
 
     context 'when dependent responses' do
@@ -404,6 +360,24 @@ RSpec.describe FrameworkResponse do
 
         expect(child_response.reload.responded).to be(true)
       end
+
+      it 'sets prefilled to false on dependent responses if value changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
+        parent_response.update_with_flags!([option: 'Level 2'])
+
+        expect(child_response.reload.prefilled).to be(false)
+      end
+
+      it 'does not set prefilled to false on dependent responses if value not changed' do
+        parent_response = create(:collection_response, :details)
+        child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
+        child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
+        parent_response.update_with_flags!([option: 'Level 1'])
+
+        expect(child_response.reload.prefilled).to be(true)
+      end
     end
 
     context 'with person_escort_record status' do
@@ -411,15 +385,15 @@ RSpec.describe FrameworkResponse do
         response = create(:string_response, value: nil)
 
         expect { response.update_with_flags!(%w[Yes]) }.to raise_error(FrameworkResponse::ValueTypeError)
-        expect(response.person_escort_record).to be_unstarted
+        expect(response.assessmentable).to be_unstarted
       end
 
       it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
-        create(:string_response, value: nil, person_escort_record: response1.person_escort_record)
+        create(:string_response, value: nil, assessmentable: response1.assessmentable)
         response1.update_with_flags!('Yes')
 
-        expect(response1.person_escort_record).to be_in_progress
+        expect(response1.assessmentable).to be_in_progress
       end
 
       it 'does not allow updating responses if person_escort_record status is confirmed' do
@@ -429,6 +403,94 @@ RSpec.describe FrameworkResponse do
         expect { response.update_with_flags!('No') }.to raise_error(ActiveRecord::ReadOnlyRecord)
         expect(response.reload.value).to eq('Yes')
       end
+    end
+  end
+
+  describe '#prefill_value' do
+    it 'returns the value of the response if response should be prefilled' do
+      question = create(:framework_question, prefill: true)
+      response = create(:string_response, framework_question: question, value: 'No')
+
+      expect(response.prefill_value).to eq('No')
+    end
+
+    it 'does not return the value of the response if response should not be prefilled' do
+      response = create(:string_response, value: 'No')
+
+      expect(response.prefill_value).to be_nil
+    end
+  end
+
+  describe '#responded' do
+    it 'sets the responded value to false on creation with empty value' do
+      response = create(:string_response, value: nil)
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to false on creation with value' do
+      response = create(:string_response, value: 'Yes')
+
+      expect(response.responded).to be(false)
+    end
+
+    it 'sets the responded value to true on update with empty value' do
+      response = create(:string_response, value: nil)
+      response.update(value: 'Yes')
+
+      expect(response.responded).to be(true)
+    end
+
+    it 'sets the responded value to true on update with value' do
+      response = create(:string_response, value: 'Yes')
+      response.update(value: nil)
+
+      expect(response.responded).to be(true)
+    end
+
+    it 'sets the responded value to true on update with a prefilled value' do
+      response = create(:string_response, value: 'Yes', prefilled: true, responded: false)
+      response.update(value: 'Yes')
+
+      expect(response.responded).to be(true)
+    end
+  end
+
+  describe '.requires_value?' do
+    it 'returns false if value present' do
+      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
+      response = create(:string_response, value: 'some value', parent: create(:string_response), framework_question: question)
+
+      expect(described_class.requires_value?(response.value, response)).to be(false)
+    end
+
+    it 'returns false if question not required' do
+      question = create(:framework_question, options: [], required: false)
+      response = create(:string_response, value: nil, framework_question: question)
+
+      expect(described_class.requires_value?(response.value, response)).to be(false)
+    end
+
+    it 'returns true if question required, value is empty and is not dependent' do
+      question = create(:framework_question, options: [], required: true)
+      response = create(:string_response, value: nil, framework_question: question)
+
+      expect(described_class.requires_value?(response.value, response)).to be(true)
+    end
+
+    it 'returns true if record is dependent, required and missing value' do
+      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
+      response = create(:string_response, value: nil, parent: create(:string_response), framework_question: question)
+
+      expect(described_class.requires_value?(response.value, response)).to be(true)
+    end
+
+    it 'returns false if record is dependent but parent response does not match' do
+      question = create(:framework_question, dependent_value: 'Yes', options: [], required: true)
+      parent_response = create(:string_response, value: 'No')
+      response = create(:string_response, value: nil, parent: parent_response, framework_question: question)
+
+      expect(described_class.requires_value?(response.value, response)).to be(false)
     end
   end
 end

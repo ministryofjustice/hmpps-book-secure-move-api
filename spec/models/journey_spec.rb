@@ -7,7 +7,6 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to belong_to(:supplier) }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location) }
-  it { is_expected.to have_many(:events) }
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to validate_presence_of(:move) }
   it { is_expected.to validate_presence_of(:supplier) }
@@ -162,6 +161,32 @@ RSpec.describe Journey, type: :model do
         journey.handle_event_run
 
         expect(journey.reload.state).to eq('in_progress')
+      end
+    end
+  end
+
+  describe '#vehicle_registration=' do
+    subject(:journey) { build(:journey) }
+
+    let(:new_registration) { 'AB12 CDF' }
+
+    context 'when vehicle was already present' do
+      before do
+        journey.vehicle = { id: '12345678ABC', registration: 'AB12 CDE' }
+      end
+
+      it 'assigns the new vehicle registration value' do
+        expect { journey.vehicle_registration = new_registration }.to change(journey, :vehicle_registration).from('AB12 CDE').to('AB12 CDF')
+      end
+    end
+
+    context 'when vehicle was not already present' do
+      before do
+        journey.vehicle = nil
+      end
+
+      it 'assigns the new registration' do
+        expect { journey.vehicle_registration = new_registration }.to change(journey, :vehicle_registration).from(nil).to('AB12 CDF')
       end
     end
   end

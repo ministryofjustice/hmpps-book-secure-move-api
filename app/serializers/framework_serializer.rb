@@ -1,5 +1,11 @@
-class FrameworkSerializer < ActiveModel::Serializer
-  has_many :framework_questions, key: :questions
+# frozen_string_literal: true
+
+class FrameworkSerializer
+  include JSONAPI::Serializer
+
+  set_type :frameworks
+
+  has_many :questions, &:framework_questions
 
   attributes :name, :version
 

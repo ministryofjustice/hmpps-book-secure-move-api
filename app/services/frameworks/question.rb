@@ -15,6 +15,7 @@ module Frameworks
     def call
       question.question_type = source['type']
       question.required = true if required?(source.fetch('validations', []))
+      question.prefill = source['prefill']
 
       build_options(source.fetch('options', []))
       build_followup_questions(followups: source.fetch('questions', []), value: nil)
@@ -26,7 +27,7 @@ module Frameworks
 
     def required?(validations)
       validation_types = validations.flat_map { |validation| validation['type'] }
-      validation_types.any?('required')
+      validation_types.any?('required') || validation_types.any?('required_unless_nomis_mappings')
     end
 
     def build_options(options)

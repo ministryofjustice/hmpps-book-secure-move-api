@@ -10,14 +10,3 @@ Pagination:
     total_objects:
       type: integer
       example: 1977
-    links:
-      type: object
-      properties:
-        first:
-          type: string
-          format: uri
-          example: http://localhost:3000/api/v1/moves?page=3&per_page=20
-        last:
-          type: string
-          format: uri
-          example: http://localhost:3000/api/v1/moves?page=99&per_page=20

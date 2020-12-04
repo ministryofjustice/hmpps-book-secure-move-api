@@ -306,4 +306,40 @@ RSpec.describe NomisClient::Base do
       end
     end
   end
+
+  describe '.token_request' do
+    let(:response) { described_class.get(api_endpoint) }
+    let(:api_endpoint) { '/movements/transfers/BXI' }
+    let(:token_expires_at) { 1.hour.from_now.to_i }
+
+    [
+      { error: OAuth2::Error, log_text: 'Nomis OAuth Client Error:' },
+      { error: Faraday::ConnectionFailed, log_text: 'Nomis Connection Error:' },
+      { error: Faraday::TimeoutError, log_text: 'Nomis Connection Error:' },
+    ].each do |error_data|
+      context "when an #{error_data[:error]} is raised" do
+        let(:response_body) { 'Test error text' }
+        let(:response_status) { 500 }
+        let(:oauth2_error) { error_data[:error].new(OAuth2::Response.new(Faraday::Response.new)) }
+
+        before do
+          allow(oauth2_error).to receive(:message).and_return('Test error text')
+          allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
+        end
+
+        %i[post put get].each do |method|
+          context "when the request type is #{method}" do
+            before do
+              allow(token).to receive(method).and_raise(oauth2_error)
+            end
+
+            it 'logs additional info, describing what the error is' do
+              expect { described_class.send(:token_request, method, api_endpoint, {}) }.to raise_exception(oauth2_error)
+              expect(Rails.logger).to have_received(:warn).once.with("#{error_data[:log_text]} Test error text")
+            end
+          end
+        end
+      end
+    end
+  end
 end

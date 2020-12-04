@@ -6,7 +6,7 @@ module Api
 
     def create
       document = Document.create!(document_attributes)
-      render json: document, status: :created
+      render_json document, serializer: DocumentSerializer, status: :created
     rescue ActiveSupport::MessageVerifier::InvalidSignature
       # A call to this action with an empty file raises an InvalidSignature exception and
       # and not a RecordInvalid one, this is the only way I found to have a behaviour that

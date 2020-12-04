@@ -7,9 +7,8 @@ RSpec.describe Api::AllocationsController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    resource = JSON.parse(ActionController::Base.render(json: allocation, include: AllocationSerializer::SUPPORTED_RELATIONSHIPS))
+    resource = JSON.parse(AllocationSerializer.new(allocation).serializable_hash.to_json)
     resource['data']['relationships']['moves']['data'] = UnorderedArray(*resource.dig('data', 'relationships', 'moves', 'data'))
-    resource['included'] = UnorderedArray(*resource['included'])
     resource
   end
 
@@ -97,12 +96,13 @@ RSpec.describe Api::AllocationsController do
       end
 
       context 'with a real access token' do
-        let(:application) { create(:application, owner_id: supplier.id) }
+        let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
 
         it 'audits the supplier' do
           post_allocations
-          expect(allocation.versions.map(&:whodunnit)).to eq([supplier.id])
+          expect(allocation.versions.map(&:whodunnit)).to eq([nil])
+          expect(allocation.versions.map(&:supplier_id)).to eq([supplier.id])
         end
 
         it 'sets the application owner as the supplier on allocation moves' do

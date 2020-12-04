@@ -14,49 +14,49 @@ module Api
 
     def cancel
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::CANCEL, common_params)
+      process_event(journey, GenericEvent::JourneyCancel, common_params)
       render status: :no_content
     end
 
     def complete
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::COMPLETE, common_params)
+      process_event(journey, GenericEvent::JourneyComplete, common_params)
       render status: :no_content
     end
 
     def lockouts
       JourneyEvents::ParamsValidator.new(lockout_params).validate!
-      process_event(journey, Event::LOCKOUT, lockout_params)
+      process_event(journey, GenericEvent::JourneyLockout, lockout_params)
       render status: :no_content
     end
 
     def lodgings
       JourneyEvents::ParamsValidator.new(lodging_params).validate!
-      process_event(journey, Event::LODGING, lodging_params)
+      process_event(journey, GenericEvent::JourneyLodging, lodging_params)
       render status: :no_content
     end
 
     def reject
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::REJECT, common_params)
+      process_event(journey, GenericEvent::JourneyReject, common_params)
       render status: :no_content
     end
 
     def start
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::START, common_params)
+      process_event(journey, GenericEvent::JourneyStart, common_params)
       render status: :no_content
     end
 
     def uncancel
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::UNCANCEL, common_params)
+      process_event(journey, GenericEvent::JourneyUncancel, common_params)
       render status: :no_content
     end
 
     def uncomplete
       JourneyEvents::ParamsValidator.new(common_params).validate!
-      process_event(journey, Event::UNCOMPLETE, common_params)
+      process_event(journey, GenericEvent::JourneyUncomplete, common_params)
       render status: :no_content
     end
 

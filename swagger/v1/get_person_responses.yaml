@@ -1,0 +1,9 @@
+'406':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotSupported

@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-class MoveSerializer < ActiveModel::Serializer
-  attributes :id,
-             :reference,
+class MoveSerializer
+  include JSONAPI::Serializer
+
+  set_type :moves
+
+  attributes :reference,
              :status,
              :updated_at,
              :created_at,
@@ -19,15 +22,18 @@ class MoveSerializer < ActiveModel::Serializer
              :date_from,
              :date_to
 
-  has_one :person, serializer: PersonSerializer
-  has_one :profile, serializer: ProfileSerializer # <- TODO: update the serializer
+  has_one :person
+  belongs_to :profile
+  belongs_to :from_location, serializer: LocationSerializer
+  belongs_to :to_location, serializer: LocationSerializer
+  belongs_to :prison_transfer_reason
 
-  has_one :from_location, serializer: LocationSerializer
-  has_one :to_location, serializer: LocationSerializer
-  has_one :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
-  has_many :documents, serializer: DocumentSerializer
-  has_many :court_hearings, serializer: CourtHearingSerializer
-  belongs_to :allocation, serializer: AllocationSerializer
+  has_many :documents do |object|
+    object.profile&.documents
+  end
+  has_many :court_hearings
+
+  belongs_to :allocation
   belongs_to :original_move, serializer: MoveSerializer
 
   SUPPORTED_RELATIONSHIPS = %w[
@@ -39,6 +45,7 @@ class MoveSerializer < ActiveModel::Serializer
     profile.person_escort_record
     profile.person_escort_record.flags
     profile.person_escort_record.framework
+    profile.person_escort_record.prefill_source
     profile.person_escort_record.responses
     profile.person_escort_record.responses.nomis_mappings
     profile.person_escort_record.responses.question
@@ -50,15 +57,6 @@ class MoveSerializer < ActiveModel::Serializer
     documents
     prison_transfer_reason
     court_hearings
-    allocation
     original_move
   ].freeze
-
-  INCLUDED_FIELDS = {
-    allocation: %i[to_location from_location moves_count created_at],
-  }.freeze
-
-  def documents
-    object&.profile&.documents
-  end
 end

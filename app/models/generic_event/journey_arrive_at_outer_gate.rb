@@ -1,5 +1,5 @@
 class GenericEvent
   class JourneyArriveAtOuterGate < GenericEvent
-    include JourneyEventValidations
+    eventable_types 'Journey'
   end
 end

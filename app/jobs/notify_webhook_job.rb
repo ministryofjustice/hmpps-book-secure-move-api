@@ -13,7 +13,7 @@ class NotifyWebhookJob < ApplicationJob
     return if notification.delivered_at.present?
 
     begin
-      data = ActiveModelSerializers::Adapter.create(NotificationSerializer.new(notification)).to_json
+      data = NotificationSerializer.new(notification).serializable_hash.to_json
       hmac = Encryptor.hmac(subscription.secret, data)
       client = get_client(subscription)
       response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)

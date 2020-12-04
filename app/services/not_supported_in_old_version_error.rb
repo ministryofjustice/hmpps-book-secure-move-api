@@ -1,0 +1,2 @@
+class NotSupportedInOldVersionError < StandardError
+end

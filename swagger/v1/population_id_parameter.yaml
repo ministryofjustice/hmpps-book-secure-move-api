@@ -1,0 +1,9 @@
+PopulationId:
+  name: population_id
+  in: path
+  required: true
+  description: The ID of the population
+  schema:
+    type: string
+    format: uuid
+  example: 5b61f755-0fd7-4a91-b7a3-a33d751f985f

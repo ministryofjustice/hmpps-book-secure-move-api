@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
     resources :court_hearings, only: %i[create]
     resources :documents, only: %i[create]
-    resources :people, only: %i[index create update] do
+    resources :people, only: %i[index show create update] do
       get 'images', to: 'people#image'
       get 'court_cases', to: 'people#court_cases'
       get 'timetable', to: 'people#timetable'
@@ -61,14 +61,18 @@ Rails.application.routes.draw do
 
     resources :person_escort_records, only: %i[create show update] do
       member do
-        patch 'framework_responses', to: 'framework_responses#bulk_update'
+        patch 'framework_responses', to: 'framework_responses#bulk_update', assessment_class: PersonEscortRecord
       end
     end
     resources :framework_responses, only: %i[update]
 
+    get 'locations_free_spaces', to: 'populations#index'
+    resources :populations, only: %i[show create update]
+
     namespace :reference do
       resources :allocation_complex_cases, only: :index
       resources :assessment_questions, only: :index
+      resources :categories, only: %i[index]
       resources :ethnicities, only: :index
       resources :genders, only: :index
       resources :identifier_types, only: :index

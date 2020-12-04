@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class LocationSerializer < ActiveModel::Serializer
-  type 'locations'
+class LocationSerializer
+  include JSONAPI::Serializer
+
+  set_type :locations
 
   attributes :key,
              :title,
@@ -10,7 +12,7 @@ class LocationSerializer < ActiveModel::Serializer
              :can_upload_documents,
              :disabled_at
 
-  has_many :suppliers, serializer: SupplierSerializer
+  has_many :suppliers
 
   SUPPORTED_RELATIONSHIPS = %w[suppliers].freeze
 end

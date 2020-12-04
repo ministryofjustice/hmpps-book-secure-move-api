@@ -30,7 +30,11 @@ module Api::V1
 
       people = People::Finder.new(filter_params).call
 
-      paginate people, include: included_relationships
+      paginate people, serializer: PersonSerializer, include: included_relationships
+    end
+
+    def show_and_render
+      raise NotSupportedInOldVersionError
     end
 
     def create_and_render
@@ -49,7 +53,7 @@ module Api::V1
   private
 
     def render_person(person, status)
-      render json: person, status: status, include: included_relationships
+      render_json person, serializer: PersonSerializer, include: included_relationships, status: status
     end
 
     def creator
@@ -76,12 +80,12 @@ module Api::V1
     end
 
     def included_relationships
-      IncludeParamHandler.new(params).call || PersonSerializer::SUPPORTED_RELATIONSHIPS
+      include_params_handler.included_relationships || PersonSerializer::SUPPORTED_RELATIONSHIPS
     end
 
     def other_included_relationships
       # Custom included relationships to avoid the people actions relationships
-      @other_included_relationships ||= IncludeParamHandler.new(params).call || Api::PeopleController::OTHER_SUPPORTED_RELATIONSHIPS
+      @other_included_relationships ||= include_params_handler.included_relationships || Api::PeopleController::OTHER_SUPPORTED_RELATIONSHIPS
     end
   end
 end

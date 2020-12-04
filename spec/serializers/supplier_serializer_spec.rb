@@ -7,9 +7,7 @@ RSpec.describe SupplierSerializer do
 
   let(:supplier) { create(:supplier, name: 'foo', key: 'bar') }
 
-  let(:actual_document) do
-    ActiveModelSerializers::Adapter.create(serializer).serializable_hash
-  end
+  let(:actual_document) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:expected_document) do
     {
       data: {

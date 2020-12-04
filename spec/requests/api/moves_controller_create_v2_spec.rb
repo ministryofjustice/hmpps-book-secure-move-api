@@ -12,7 +12,7 @@ RSpec.describe Api::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move, serializer: V2::MoveSerializer))
+    JSON.parse(V2::MoveSerializer.new(move).serializable_hash.to_json)
   end
 
   let(:headers) do
@@ -28,12 +28,13 @@ RSpec.describe Api::MovesController do
       {
         date: Date.today,
         time_due: Time.now,
-        status: 'requested',
+        status: status,
         additional_information: 'some more info',
         move_type: 'court_appearance',
       }
     end
 
+    let(:status) { 'requested' }
     let(:profile) { create(:profile) }
     let(:another_supplier) { create(:supplier) }
     let(:from_location) { create :location, suppliers: [another_supplier] }
@@ -62,6 +63,39 @@ RSpec.describe Api::MovesController do
       expect { do_post } .to change(Move, :count).by(1)
     end
 
+    it 'creates a GenericEvent without a supplier' do
+      do_post
+      expect(GenericEvent.last.supplier).to be(nil)
+    end
+
+    context 'when the new move status is `proposed`' do
+      before do
+        move_attributes[:date_from] = Date.today.iso8601
+      end
+
+      let(:status) { 'proposed' }
+
+      it 'creates a MoveProposed event' do
+        expect { do_post }.to change(GenericEvent::MoveProposed, :count).by(1)
+      end
+    end
+
+    context 'when the new move status is `requested`' do
+      let(:status) { 'requested' }
+
+      it 'creates a MoveRequested event' do
+        expect { do_post }.to change(GenericEvent::MoveRequested, :count).by(1)
+      end
+    end
+
+    context 'when the new move status is `cancelled`' do
+      let(:status) { 'cancelled' }
+
+      it 'does not create any new events' do
+        expect { do_post }.not_to change(GenericEvent, :count)
+      end
+    end
+
     it 'sets the from_location supplier as the supplier on the move' do
       do_post
 
@@ -75,13 +109,19 @@ RSpec.describe Api::MovesController do
       it 'audits the supplier' do
         do_post
 
-        expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+        expect(move.versions.map(&:whodunnit)).to eq([nil])
+        expect(move.versions.map(&:supplier_id)).to eq([supplier.id])
       end
 
       it 'sets the application owner as the supplier on the move' do
         do_post
 
         expect(move.supplier).to eq(application.owner)
+      end
+
+      it 'creates a GenericEvent with a supplier' do
+        do_post
+        expect(GenericEvent::MoveRequested.last.supplier).to be_a(Supplier)
       end
     end
 
@@ -292,7 +332,7 @@ RSpec.describe Api::MovesController do
 
     context 'with explicit court_other `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'court_other') }
-      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+      let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -311,7 +351,7 @@ RSpec.describe Api::MovesController do
 
     context 'with explicit hospital `move_type`' do
       let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
-      let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+      let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
       it_behaves_like 'an endpoint that responds with success 201' do
         before { do_post }
@@ -455,6 +495,34 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'when no attributes specified' do
+      let(:move_attributes) { nil }
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
+    context 'when no attributes or relationships specified' do
+      let(:data) { { type: 'moves' } }
+      let(:errors_422) do
+        [
+          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable entity', 'detail' => 'From location must exist', 'source' => { 'pointer' => '/data/attributes/from_location' }, 'code' => 'blank' },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
     context 'when a move is a duplicate' do
       let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
@@ -483,6 +551,33 @@ RSpec.describe Api::MovesController do
         it_behaves_like 'an endpoint that responds with error 422' do
           before { do_post }
         end
+      end
+    end
+
+    context 'when the profile is for an unsupported prisoner category' do
+      let(:profile) { create(:profile, :category_not_supported) }
+      let(:category_key) { profile.category.key.humanize.downcase }
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
+            'source' => { 'pointer' => '/data/attributes/profile' },
+            'code' => 'unsupported_prisoner_category',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
+    context 'when the profile is for a supported prisoner category' do
+      let(:profile) { create(:profile, :category_supported) }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
       end
     end
   end

@@ -1,0 +1,14 @@
+type: radio
+question: Does the detainee need or have they been prescribed any medication?
+prefill: true
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+  -
+    label: 'No'
+    value: 'No'
+validations:
+  -
+    type: 'required'
+    message: You must select an option

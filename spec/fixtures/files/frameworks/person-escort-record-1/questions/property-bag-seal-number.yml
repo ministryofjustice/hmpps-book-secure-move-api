@@ -1,6 +1,0 @@
-type: text
-question: Seal number
-validations:
-  -
-    type: required
-    message: Enter the seal number

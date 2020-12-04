@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_01_043655) do
+ActiveRecord::Schema.define(version: 2020_11_30_140655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -75,6 +75,15 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.datetime "disabled_at"
   end
 
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "title", null: false
+    t.boolean "move_supported", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_categories_on_key", unique: true
+  end
+
   create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id"
     t.datetime "start_time", null: false
@@ -128,6 +137,22 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
     t.index ["generic_event_id"], name: "index_events_on_generic_event_id"
     t.index ["updated_at"], name: "index_events_on_updated_at"
+  end
+
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
   create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -196,12 +221,12 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.uuid "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "prefill"
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
   end
 
   create_table "framework_responses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "person_escort_record_id", null: false
     t.uuid "framework_question_id", null: false
     t.text "value_text"
     t.jsonb "value_json"
@@ -210,9 +235,12 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "responded", default: false, null: false
+    t.boolean "prefilled", default: false, null: false
+    t.uuid "assessmentable_id"
+    t.string "assessmentable_type"
+    t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
-    t.index ["person_escort_record_id"], name: "index_framework_responses_on_person_escort_record_id"
     t.index ["value_json"], name: "index_framework_responses_on_value_json", using: :gin
   end
 
@@ -291,6 +319,8 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.string "key", null: false
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
+    t.uuid "category_id"
+    t.index ["category_id"], name: "index_locations_on_category_id"
   end
 
   create_table "locations_regions", id: false, force: :cascade do |t|
@@ -462,9 +492,32 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "confirmed_at"
     t.uuid "move_id"
+    t.jsonb "nomis_sync_status", default: [], null: false
+    t.uuid "prefill_source_id"
+    t.datetime "completed_at"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
+    t.index ["prefill_source_id"], name: "index_person_escort_records_on_prefill_source_id"
     t.index ["profile_id"], name: "index_person_escort_records_on_profile_id", unique: true
+  end
+
+  create_table "populations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "location_id", null: false
+    t.date "date", null: false
+    t.integer "operational_capacity", null: false
+    t.integer "usable_capacity", null: false
+    t.integer "unlock", null: false
+    t.integer "bedwatch", null: false
+    t.integer "overnights_in", null: false
+    t.integer "overnights_out", null: false
+    t.integer "out_of_area_courts", null: false
+    t.integer "discharges", null: false
+    t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["date"], name: "index_populations_on_date"
+    t.index ["location_id", "date"], name: "index_on_population_uniqueness", unique: true
+    t.index ["location_id"], name: "index_populations_on_location_id"
   end
 
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -489,6 +542,11 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
     t.integer "latest_nomis_booking_id"
+    t.string "category"
+    t.string "category_code"
+    t.uuid "category_id"
+    t.index ["category_code"], name: "index_profiles_on_category_code"
+    t.index ["category_id"], name: "index_profiles_on_category_id"
     t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
@@ -544,7 +602,25 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
+    t.uuid "supplier_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
+  create_table "youth_risk_assessments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "framework_id", null: false
+    t.uuid "profile_id", null: false
+    t.uuid "move_id", null: false
+    t.uuid "prefill_source_id"
+    t.string "status", null: false
+    t.jsonb "nomis_sync_status", default: [], null: false
+    t.datetime "confirmed_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
+    t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"
+    t.index ["prefill_source_id"], name: "index_youth_risk_assessments_on_prefill_source_id"
+    t.index ["profile_id"], name: "index_youth_risk_assessments_on_profile_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -556,12 +632,12 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
-  add_foreign_key "framework_responses", "person_escort_records"
   add_foreign_key "generic_events", "suppliers"
   add_foreign_key "journeys", "locations", column: "from_location_id"
   add_foreign_key "journeys", "locations", column: "to_location_id"
   add_foreign_key "journeys", "moves"
   add_foreign_key "journeys", "suppliers"
+  add_foreign_key "locations", "categories"
   add_foreign_key "locations_regions", "locations"
   add_foreign_key "locations_regions", "regions"
   add_foreign_key "moves", "allocations"
@@ -576,8 +652,14 @@ ActiveRecord::Schema.define(version: 2020_10_01_043655) do
   add_foreign_key "person_escort_records", "frameworks"
   add_foreign_key "person_escort_records", "moves"
   add_foreign_key "person_escort_records", "profiles"
+  add_foreign_key "populations", "locations"
+  add_foreign_key "profiles", "categories"
   add_foreign_key "profiles", "people", name: "profiles_person_id"
   add_foreign_key "subscriptions", "suppliers"
   add_foreign_key "supplier_locations", "locations"
   add_foreign_key "supplier_locations", "suppliers"
+  add_foreign_key "versions", "suppliers"
+  add_foreign_key "youth_risk_assessments", "frameworks"
+  add_foreign_key "youth_risk_assessments", "moves"
+  add_foreign_key "youth_risk_assessments", "profiles"
 end

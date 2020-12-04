@@ -116,6 +116,18 @@ references:
       command: |
         echo "Loading wiremock mappings..."
         find spec/wiremock/prison-api/mappings/*.json -exec curl --request POST --url http://localhost:8888/__admin/mappings/ --header 'content-type: application/json' --data-binary "@{}" \;
+  _notify_sentry_release: &notify_sentry_release
+    run:
+      name: Create release and notify Sentry of deploy
+      command: |
+        curl -sL https://sentry.io/get-cli/ | bash
+        export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+        sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+        sentry-cli releases set-commits $SENTRY_RELEASE --auto
+        sentry-cli releases finalize $SENTRY_RELEASE
+        sentry-cli releases deploys $SENTRY_RELEASE new -e $SENTRY_ENVIRONMENT
+      environment:
+        SENTRY_ENVIRONMENT: <<parameters.env>>
   _rspec: &rspec
     run:
       name: Run rspec tests
@@ -147,7 +159,7 @@ executors:
   test-executor:
     docker:
       # Check https://circleci.com/docs/2.0/language-ruby/ for more details
-      - image: circleci/ruby:2.7.1
+      - image: circleci/ruby:2.7.2
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
@@ -276,6 +288,7 @@ commands:
             kubectl annotate -n hmpps-book-secure-move-api-<< parameters.env >> \
                     deployment/hmpps-book-secure-move-api-<< parameters.env >>-sidekiq \
                     kubernetes.io/change-cause="${BUILD_DATE} set image ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} via CircleCI"
+      - *notify_sentry_release
       - when:
           condition: <<parameters.notify_slack>>
           steps:
@@ -432,7 +445,7 @@ jobs:
             echo "Deleting:"
             aws ecr batch-delete-image \
             --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-            --image-ids ${TO_DELETE}
+            --image-ids "${TO_DELETE}"
       - run:
           name: Confirm live latest images
           command: |

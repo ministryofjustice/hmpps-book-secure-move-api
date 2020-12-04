@@ -12,7 +12,7 @@ RSpec.describe Api::MovesController do
   let(:supplier) { create(:supplier) }
 
   let(:resource_to_json) do
-    JSON.parse(ActionController::Base.render(json: move.reload, serializer: V2::MoveSerializer))
+    JSON.parse(V2::MoveSerializer.new(move.reload, serializer: V2::MoveSerializer).serializable_hash.to_json)
   end
 
   let(:headers) do
@@ -515,6 +515,51 @@ RSpec.describe Api::MovesController do
       end
 
       it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_patch }
+      end
+    end
+
+    context 'when the profile is for an unsupported prisoner category' do
+      let(:new_profile) { create(:profile, :category_not_supported) }
+      let(:category_key) { new_profile.category.key.humanize.downcase }
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: { profile: { data: { id: new_profile.id, type: 'profiles' } } },
+        }
+      end
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
+            'source' => { 'pointer' => '/data/attributes/profile' },
+            'code' => 'unsupported_prisoner_category',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_patch }
+      end
+    end
+
+    context 'when the profile is for a supported prisoner category' do
+      let(:new_profile) { create(:profile, :category_supported) }
+      let(:move_params) do
+        {
+          type: 'moves',
+          attributes: {
+            status: 'requested',
+          },
+          relationships: { profile: { data: { id: new_profile.id, type: 'profiles' } } },
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200' do
         before { do_patch }
       end
     end

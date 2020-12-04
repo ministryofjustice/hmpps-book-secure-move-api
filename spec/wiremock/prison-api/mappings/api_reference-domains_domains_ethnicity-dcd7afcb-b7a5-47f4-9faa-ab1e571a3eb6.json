@@ -1,0 +1,30 @@
+{
+  "id" : "dcd7afcb-b7a5-47f4-9faa-ab1e571a3eb6",
+  "name" : "api_reference-domains_domains_ethnicity",
+  "request" : {
+    "url" : "/api/reference-domains/domains/ETHNICITY",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"domain\":\"ETHNICITY\",\"code\":\"A1\",\"description\":\"Asian/Asian British: Indian\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"A2\",\"description\":\"Asian/Asian British: Pakistani\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"A3\",\"description\":\"Asian/Asian British: Bangladeshi\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"A4\",\"description\":\"Asian/Asian British: Chinese\",\"activeFlag\":\"Y\",\"listSeq\":99,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"A9\",\"description\":\"Asian/Asian British: Any other backgr'nd\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"B1\",\"description\":\"Black/Black British: Caribbean\",\"activeFlag\":\"Y\",\"listSeq\":4,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"B2\",\"description\":\"Black/Black British: African\",\"activeFlag\":\"Y\",\"listSeq\":4,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"B9\",\"description\":\"Black/Black British: Any other Backgr'nd\",\"activeFlag\":\"Y\",\"listSeq\":4,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"M1\",\"description\":\"Mixed: White and Black Caribbean\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"M2\",\"description\":\"Mixed: White and Black African\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"M3\",\"description\":\"Mixed: White and Asian\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"M9\",\"description\":\"Mixed: Any other background\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"MERGE\",\"description\":\"Needs to be confirmed following Merge\",\"activeFlag\":\"Y\",\"listSeq\":99,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"NS\",\"description\":\"Prefer not to say\",\"activeFlag\":\"Y\",\"listSeq\":7,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"O1\",\"description\":\"Chinese\",\"activeFlag\":\"N\",\"listSeq\":5,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"O2\",\"description\":\"Other: Arab\",\"activeFlag\":\"Y\",\"listSeq\":99,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"O9\",\"description\":\"Other: Any other background\",\"activeFlag\":\"Y\",\"listSeq\":6,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"W1\",\"description\":\"White: Eng./Welsh/Scot./N.Irish/British\",\"activeFlag\":\"Y\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"W2\",\"description\":\"White : Irish\",\"activeFlag\":\"Y\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"W3\",\"description\":\"White: Gypsy or Irish Traveller\",\"activeFlag\":\"Y\",\"listSeq\":99,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"W8\",\"description\":\"White : Irish Traveller/Gypsy\",\"activeFlag\":\"N\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"expiredDate\":\"2009-10-09\",\"subCodes\":[]},{\"domain\":\"ETHNICITY\",\"code\":\"W9\",\"description\":\"White: Any other background\",\"activeFlag\":\"Y\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"subCodes\":[]}]",
+    "headers" : {
+      "Date" : "Thu, 22 Oct 2020 09:50:33 GMT",
+      "Content-Type" : "application/json",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "Total-Records" : "22",
+      "Page-Offset" : "0",
+      "Page-Limit" : "1000",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "dcd7afcb-b7a5-47f4-9faa-ab1e571a3eb6",
+  "persistent" : true,
+  "insertionIndex" : 10
+}

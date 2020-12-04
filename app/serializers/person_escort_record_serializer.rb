@@ -1,34 +1,36 @@
-class PersonEscortRecordSerializer < ActiveModel::Serializer
-  belongs_to :profile, record_type: :profile
-  belongs_to :move, record_type: :move
-  belongs_to :framework, record_type: :framework
-  has_many :framework_responses, serializer: FrameworkResponseSerializer, key: :responses
-  has_many :framework_flags, key: :flags
+# frozen_string_literal: true
 
-  attributes :version, :status, :confirmed_at, :created_at
+class PersonEscortRecordSerializer
+  include JSONAPI::Serializer
 
-  meta do
-    { section_progress: object.section_progress }
+  set_type :person_escort_records
+
+  belongs_to :profile, serializer: V2::ProfileSerializer
+  belongs_to :move, serializer: V2::MoveSerializer
+  belongs_to :framework
+  belongs_to :prefill_source, serializer: PrefillSourceSerializer
+
+  has_many :responses, serializer: FrameworkResponseSerializer do |object|
+    object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
   end
-
-  def version
-    object.framework.version
-  end
-
-  def framework_flags
+  has_many :flags, serializer: FrameworkFlagSerializer do |object|
     object.framework_flags.includes(framework_question: :dependents)
   end
 
-  def framework_responses
-    object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
+  attributes :confirmed_at, :created_at, :nomis_sync_status
+
+  attribute :version do |object|
+    object.framework.version
   end
 
-  def status
-    if object.status == 'unstarted'
-      'not_started'
-    else
-      object.status
-    end
+  attribute :status do |object|
+    object.status == 'unstarted' ? 'not_started' : object.status
+  end
+
+  attribute :editable, &:editable?
+
+  meta do |object|
+    { section_progress: object.section_progress }
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
@@ -39,5 +41,6 @@ class PersonEscortRecordSerializer < ActiveModel::Serializer
     responses.nomis_mappings
     responses.question.descendants.**
     flags
+    prefill_source
   ].freeze
 end

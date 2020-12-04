@@ -6,7 +6,7 @@ RSpec.describe FrameworkSerializer do
   subject(:serializer) { described_class.new(framework) }
 
   let(:framework) { create :framework }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('frameworks')

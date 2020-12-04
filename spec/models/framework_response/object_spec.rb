@@ -121,6 +121,41 @@ RSpec.describe FrameworkResponse::Object do
         expect(response).to be_valid
       end
     end
+
+    context 'with NOMIS mappings' do
+      it 'does not validate required followup comments if mappings present' do
+        question = create(
+          :framework_question,
+          followup_comment: true,
+          followup_comment_options: %w[Yes],
+        )
+        response = create(:object_response, :details, value: { 'option' => 'Yes' }, framework_question: question, framework_nomis_mappings: [create(:framework_nomis_mapping)])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate optional followup comments if mappings present' do
+        question = create(
+          :framework_question,
+          followup_comment: true,
+          followup_comment_options: [],
+        )
+        response = create(:object_response, :details, value: { 'option' => 'Yes' }, framework_question: question, framework_nomis_mappings: [create(:framework_nomis_mapping)])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate optional followup comments if no mappings present' do
+        question = create(
+          :framework_question,
+          followup_comment: true,
+          followup_comment_options: [],
+        )
+        response = create(:object_response, :details, value: { 'option' => 'Yes' }, framework_question: question)
+
+        expect(response).to be_valid
+      end
+    end
   end
 
   describe '#value' do

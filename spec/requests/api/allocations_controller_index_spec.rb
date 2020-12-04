@@ -20,6 +20,32 @@ RSpec.describe Api::AllocationsController do
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
+    describe 'meta data' do
+      let!(:allocation) { create(:allocation, :with_moves) }
+      let(:expected_json) do
+        {
+          data: [
+            {
+              'id': allocation.id,
+              'type': 'allocations',
+              'meta': {
+                'moves': {
+                  'total': 1,
+                  'filled': 1,
+                  'unfilled': 0,
+                },
+              },
+            },
+          ],
+        }
+      end
+
+      it 'includes total and filled moves count' do
+        get_allocations
+        expect(response_json).to include_json(expected_json)
+      end
+    end
+
     describe 'finding results' do
       before do
         allocations_finder = instance_double('Allocations::Finder', call: Allocation.all)
@@ -43,7 +69,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct filters' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: { date_from: date_from.to_s, from_locations: location.id, status: 'unfilled' }, ordering: {}, search: {})
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: { date_from: date_from.to_s, from_locations: location.id, status: 'unfilled' },
+            ordering: {},
+            search: {},
+            active_record_relationships: nil,
+          )
         end
       end
 
@@ -60,7 +92,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: {}, ordering: { by: 'moves_count', direction: 'desc' }, search: {})
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: {},
+            ordering: { by: 'moves_count', direction: 'desc' },
+            search: {},
+            active_record_relationships: nil,
+          )
         end
       end
 
@@ -76,7 +114,13 @@ RSpec.describe Api::AllocationsController do
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations
-          expect(Allocations::Finder).to have_received(:new).with(filters: {}, ordering: {}, search: { location: 'nott' })
+
+          expect(Allocations::Finder).to have_received(:new).with(
+            filters: {},
+            ordering: {},
+            search: { location: 'nott' },
+            active_record_relationships: nil,
+          )
         end
       end
     end
@@ -88,11 +132,15 @@ RSpec.describe Api::AllocationsController do
           per_page: 5,
           total_pages: 2,
           total_objects: 6,
-          links: {
-            first: '/api/v1/allocations?page=1',
-            last: '/api/v1/allocations?page=2',
-            next: '/api/v1/allocations?page=2',
-          },
+        }
+      end
+      let(:pagination_links) do
+        {
+          self: 'http://www.example.com/api/v1/allocations?page=1&per_page=5',
+          first: 'http://www.example.com/api/v1/allocations?page=1&per_page=5',
+          prev: nil,
+          next: 'http://www.example.com/api/v1/allocations?page=2&per_page=5',
+          last: 'http://www.example.com/api/v1/allocations?page=2&per_page=5',
         }
       end
 
@@ -146,10 +194,12 @@ RSpec.describe Api::AllocationsController do
 
       before { get_allocations }
 
-      context 'when not including the include param' do
-        it 'returns the default minimum includes' do
-          returned_types = response_json['included'].map { |r| r['type'] }.uniq
-          expect(returned_types).to contain_exactly('profiles', 'people', 'moves', 'locations', 'ethnicities', 'genders')
+      context 'when not including the include query param' do
+        let!(:allocation) { create(:allocation, :with_moves) }
+        let(:params) { {} }
+
+        it 'returns no included relationships ' do
+          expect(response_json).not_to include('included')
         end
       end
 

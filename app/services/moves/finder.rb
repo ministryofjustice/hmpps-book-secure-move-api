@@ -2,11 +2,9 @@
 
 module Moves
   class Finder
-    attr_reader :filter_params, :ability
+    attr_reader :filter_params, :ability, :active_record_relationships
 
-    MOVE_INCLUDES = [:allocation, :supplier, :court_hearings, :prison_transfer_reason, :original_move, profile: [documents: { file_attachment: :blob }, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]], person: %i[gender ethnicity], from_location: %i[supplier_locations], to_location: %i[supplier_locations]].freeze
-
-    def initialize(filter_params, ability, order_params)
+    def initialize(filter_params:, ability:, order_params:, active_record_relationships:)
       @filter_params = filter_params
       @ability = ability
       @order_by = (order_params[:by] || 'date').to_sym
@@ -16,10 +14,12 @@ module Moves
                            # default if no 'by' parameter is date descending
                            :desc
                          end
+      @active_record_relationships = active_record_relationships
     end
 
     def call
       scope = apply_filters(Move)
+      scope = scope.includes(active_record_relationships)
       apply_ordering(scope)
     end
 
@@ -44,7 +44,6 @@ module Moves
 
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
-      scope = scope.includes(MOVE_INCLUDES)
       scope = apply_date_range_filters(scope)
       scope = apply_date_of_birth_filters(scope)
       scope = apply_location_type_filters(scope)
@@ -114,11 +113,14 @@ module Moves
     end
 
     def apply_ready_for_transit_filters(scope)
-      return scope unless filter_params.key?(:ready_for_transit)
+      return scope unless filter_params.key?(:ready_for_transit) && %w[true false].include?(filter_params[:ready_for_transit])
 
-      scope = scope.where('person_escort_records.status' => 'confirmed') if filter_params[:ready_for_transit] == 'true'
-      scope = scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil)) if filter_params[:ready_for_transit] == 'false'
-
+      scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
+      scope = if filter_params[:ready_for_transit] == 'true'
+                scope.where('person_escort_records.status' => 'confirmed')
+              else
+                scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
+              end
       scope
     end
   end

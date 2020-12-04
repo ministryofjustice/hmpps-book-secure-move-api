@@ -1,0 +1,7 @@
+type: text
+question: Seal number
+prefill: true
+validations:
+  -
+    type: required
+    message: Enter the seal number

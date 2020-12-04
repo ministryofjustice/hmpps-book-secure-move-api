@@ -1,13 +1,14 @@
 class GenericEvent
   class MoveLockout < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      authorised_at
-      authorised_by
-      reason
-    ].freeze
+    LOCATION_ATTRIBUTE_KEY = :from_location_id
 
-    include MoveEventValidations
+    details_attributes :authorised_at, :authorised_by, :reason
+    relationship_attributes from_location_id: :locations
+    eventable_types 'Move'
+
     include AuthoriserValidations
+    include LocationValidations
+    include LocationFeed
 
     enum reason: {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
@@ -21,46 +22,10 @@ class GenericEvent
       other: 'other',
     }
 
-    validates :from_location_id, presence: true
     validates :reason, inclusion: { in: reasons }, if: -> { reason }
-
-    def reason=(reason)
-      details['reason'] = reason
-    end
-
-    def reason
-      details['reason']
-    end
-
-    def from_location_id=(id)
-      details['from_location_id'] = id
-    end
-
-    def from_location_id
-      details['from_location_id']
-    end
 
     def from_location
       Location.find_by(id: from_location_id)
-    end
-
-    def for_feed
-      super.tap do |common_feed_attributes|
-        common_feed_attributes['details'] = from_location.for_feed(prefix: 'from')
-        common_feed_attributes['details'].merge!(
-          'authorised_at' => authorised_at,
-          'authorised_by' => authorised_by,
-          'reason' => reason,
-        )
-      end
-    end
-
-    def self.from_event(event)
-      new(event.generic_event_attributes.merge(
-            details: {
-              from_location_id: event.event_params&.dig(:relationships, :from_location, :data, :id),
-            },
-          ))
     end
   end
 end

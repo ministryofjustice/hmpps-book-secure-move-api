@@ -6,10 +6,21 @@ RSpec.describe Api::GenericEventsController do
   let(:eventable_type) { 'person_escort_records' }
   let(:eventable_id) { create(:person_escort_record).id }
 
-  it_behaves_like 'a generic event endpoint', 'per_court_all_documentation_provided_to_supplier', 'PerCourtAllDocumentationProvidedToSupplier'
-  it_behaves_like 'a generic event endpoint', 'per_court_assign_cell_in_custody', 'PerCourtAssignCellInCustody'
-  it_behaves_like 'a generic event endpoint', 'per_court_cell_share_risk_assessment', 'PerCourtCellShareRiskAssessment'
-  it_behaves_like 'a generic event endpoint', 'per_court_excessive_delay_not_due_to_supplier', 'PerCourtExcessiveDelayNotDueToSupplier'
-  it_behaves_like 'a generic event endpoint', 'per_court_ready_in_custody', 'PerCourtReadyInCustody'
-  it_behaves_like 'a generic event endpoint', 'per_court_return_to_custody_area_from_dock', 'PerCourtReturnToCustodyAreaFromDock'
+  it_behaves_like 'a generic event endpoint', 'PerCourtAllDocumentationProvidedToSupplier'
+  it_behaves_like 'a generic event endpoint', 'PerCourtAssignCellInCustody'
+  it_behaves_like 'a generic event endpoint', 'PerCourtCellShareRiskAssessment'
+  it_behaves_like 'a generic event endpoint', 'PerCourtExcessiveDelayNotDueToSupplier'
+  it_behaves_like 'a generic event endpoint', 'PerCourtHearing'
+  it_behaves_like 'a generic event endpoint', 'PerCourtReadyInCustody'
+  it_behaves_like 'a generic event endpoint', 'PerCourtReturnToCustodyAreaFromDock'
+  it_behaves_like 'a generic event endpoint', 'PerCourtPreReleaseChecksCompleted'
+  it_behaves_like 'a generic event endpoint', 'PerCourtRelease'
+  it_behaves_like 'a generic event endpoint', 'PerCourtReleaseOnBail'
+  it_behaves_like 'a generic event endpoint', 'PerCourtReturnToCustodyAreaFromVisitorArea'
+  it_behaves_like 'a generic event endpoint', 'PerCourtTakeFromCustodyToDock'
+  it_behaves_like 'a generic event endpoint', 'PerCourtTakeToSeeVisitors'
+  it_behaves_like 'a generic event endpoint', 'PerCourtTask'
+  it_behaves_like 'a generic event endpoint', 'PerGeneric'
+  it_behaves_like 'a generic event endpoint', 'PerMedicalAid'
+  it_behaves_like 'a generic event endpoint', 'PerPrisonerWelfare'
 end

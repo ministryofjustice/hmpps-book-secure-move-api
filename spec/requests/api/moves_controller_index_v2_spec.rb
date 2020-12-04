@@ -46,7 +46,12 @@ RSpec.describe Api::MovesController do
 
         do_get
 
-        expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {})
+        expect(Moves::Finder).to have_received(:new).with(
+          filter_params: { from_location_id: from_location_id },
+          ability: ability,
+          order_params: {},
+          active_record_relationships: nil,
+        )
       end
 
       it 'filters the results' do
@@ -112,11 +117,15 @@ RSpec.describe Api::MovesController do
           per_page: 5,
           total_pages: 2,
           total_objects: 6,
-          links: {
-            first: '/api/moves?page=1',
-            last: '/api/moves?page=2',
-            next: '/api/moves?page=2',
-          },
+        }
+      end
+      let(:pagination_links) do
+        {
+          self: 'http://www.example.com/api/moves?page=1&per_page=5',
+          first: 'http://www.example.com/api/moves?page=1&per_page=5',
+          prev: nil,
+          next: 'http://www.example.com/api/moves?page=2&per_page=5',
+          last: 'http://www.example.com/api/moves?page=2&per_page=5',
         }
       end
 
@@ -160,9 +169,7 @@ RSpec.describe Api::MovesController do
       let(:to_location) { create(:location, suppliers: [supplier]) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
 
-      before do
-        get "/api/moves#{query_params}", params: params, headers: headers
-      end
+      before { do_get(query_params) }
 
       context 'when not including the include query param' do
         let(:query_params) { '' }
@@ -204,7 +211,7 @@ RSpec.describe Api::MovesController do
     end
   end
 
-  def do_get
-    get '/api/moves', params: params, headers: headers
+  def do_get(query_params = nil)
+    get "/api/moves#{query_params}", params: params, headers: headers
   end
 end

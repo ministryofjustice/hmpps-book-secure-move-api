@@ -66,7 +66,8 @@ RSpec.describe Api::MovesController do
         before { post_moves }
 
         it 'audits the supplier' do
-          expect(move.versions.map(&:whodunnit)).to eq([supplier.id])
+          expect(move.versions.map(&:whodunnit)).to eq([nil])
+          expect(move.versions.map(&:supplier_id)).to eq([supplier.id])
         end
 
         it 'sets the application owner as the supplier on the move' do
@@ -89,7 +90,7 @@ RSpec.describe Api::MovesController do
 
         it 'returns the correct data' do
           ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
-          expected_response_json = JSON.parse(ActionController::Base.render(json: move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS))
+          expected_response_json = JSON.parse(MoveSerializer.new(move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
 
           # Now, URL is a S3 url (not activestorage) hence it changes everytime we call the endpoint
           # The following updates the URL matcher for all the documents
@@ -279,7 +280,7 @@ RSpec.describe Api::MovesController do
 
       context 'with explicit court_other `move_type`' do
         let(:move_attributes) { attributes_for(:move, move_type: 'court_other') }
-        let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+        let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { post_moves }
@@ -297,7 +298,7 @@ RSpec.describe Api::MovesController do
 
       context 'with explicit hospital `move_type`' do
         let(:move_attributes) { attributes_for(:move, move_type: 'hospital') }
-        let(:to_location) { create :location, :hospital, suppliers: [supplier] }
+        let(:to_location) { create :location, :high_security_hospital, suppliers: [supplier] }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { post_moves }

@@ -50,7 +50,12 @@ module Api
     def profile_attributes
       profile_attributes = profile_params.fetch(:attributes, {})
       profile_attributes[:documents] = documents unless document_attributes.nil?
+      profile_attributes[:category] = category
       profile_attributes
+    end
+
+    def category
+      Categories::FindByNomisBookingId.new(person.latest_nomis_booking_id).call
     end
 
     def documents
@@ -78,7 +83,7 @@ module Api
     end
 
     def render_profile(profile, status)
-      render json: profile, status: status, include: included_relationships, serializer: ProfileSerializer
+      render_json profile, serializer: ProfileSerializer, include: included_relationships, status: status
     end
   end
 end

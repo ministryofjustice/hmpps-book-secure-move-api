@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Frameworks::Question do
   describe '#call' do
-    let(:fixture_path) { 'spec/fixtures/files/frameworks/person-escort-record-1/questions' }
+    let(:fixture_path) { 'spec/fixtures/files/frameworks/person-escort-record/questions' }
 
     it 'sets a question as required if required validation available' do
       filepath = Rails.root.join(fixture_path, 'medical-details-information.yml')
@@ -55,6 +55,14 @@ RSpec.describe Frameworks::Question do
     end
 
     it 'allows followup comments to be required on an option' do
+      filepath = Rails.root.join(fixture_path, 'property-bag-type.yml')
+      question = FrameworkQuestion.new(section: 'property-information', key: 'property-bag-type')
+      described_class.new(filepath: filepath, questions: { 'property-bag-type' => question }).call
+
+      expect(question.followup_comment_options).to contain_exactly('UK currency')
+    end
+
+    it 'allows followup comments to be required on an option if there are no NOMIS mappings' do
       filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath: filepath, questions: { 'medical-professional-referral' => question }).call
@@ -128,6 +136,24 @@ RSpec.describe Frameworks::Question do
       )
     end
 
+    it 'sets the prefill value on a question to true if prefill field value set to true' do
+      filepath = Rails.root.join(fixture_path, 'regular-medication.yml')
+      question = FrameworkQuestion.new(section: 'health', key: 'regular-medication')
+      questions = { 'regular-medication' => question }
+      described_class.new(filepath: filepath, questions: questions).call
+
+      expect(question).to be_prefill
+    end
+
+    it 'sets the prefill value on a question to false if prefill field value set to false' do
+      filepath = Rails.root.join(fixture_path, 'medical-professional-referral.yml')
+      question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
+      questions = { 'medical-professional-referral' => question }
+      described_class.new(filepath: filepath, questions: questions).call
+
+      expect(question).not_to be_prefill
+    end
+
     context 'when question type is add_multiple_items' do
       it 'sets a question as required if required validation available' do
         filepath = Rails.root.join(fixture_path, 'property-bags.yml')
@@ -161,6 +187,25 @@ RSpec.describe Frameworks::Question do
         described_class.new(filepath: filepath, questions: questions).call
 
         expect(dependent_question.parent).to eq(question)
+      end
+
+      it 'does not set the prefill value on parent questions' do
+        filepath = Rails.root.join(fixture_path, 'property-bags.yml')
+        question = FrameworkQuestion.new(section: 'property-information', key: 'property-bags')
+        described_class.new(filepath: filepath, questions: { 'property-bags' => question }).call
+
+        expect(question.prefill).to be_nil
+      end
+
+      it 'sets prefill value on dependent questions' do
+        filepath = Rails.root.join(fixture_path, 'property-bag-type.yml')
+        question = FrameworkQuestion.new(section: 'property-information', key: 'property-bag-type')
+        questions = {
+          'property-bag-type' => question,
+        }
+        described_class.new(filepath: filepath, questions: questions).call
+
+        expect(question).to be_prefill
       end
     end
 

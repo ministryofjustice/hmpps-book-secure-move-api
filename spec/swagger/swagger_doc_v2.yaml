@@ -40,6 +40,8 @@
           :tokenUrl: "/oauth/token/"
           :scopes: {}
   :schemas:
+    :Category:
+      :$ref: "../v2/category.yaml#/Category"
     :Ethnicity:
       :$ref: "../v1/ethnicity.yaml#/Ethnicity"
     :Gender:
@@ -179,6 +181,54 @@
               schema:
                 "$ref": "../v2/post_people_responses.yaml#/422"
   "/people/{person_id}":
+    get:
+      summary: Returns a person
+      tags:
+        - People
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - name: person_id
+          in: path
+          required: true
+          description: The ID of the person
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+        - "$ref": "../v2/person_category_include_parameter.yaml#/PersonCategoryIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/415"
+        "502":
+          description: Nomis Bad Gateway Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/502"
+        "504":
+          description: Nomis Timeout Error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_person_responses.yaml#/504"
     patch:
       summary: "Updates an existing person."
       tags:
@@ -478,7 +528,7 @@
             enum:
               - asc
               - desc
-        - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
+        - "$ref": "../v2/moves_include_parameter.yaml#/MovesIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -667,6 +717,34 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/415"
+  "/reference/categories":
+    get:
+      summary: Retrieves a list of prisoner and establishment categories
+      description: |
+        This method returns a list of categories
+      tags:
+        - Categories
+      consumes:
+        - application/vnd.api+json
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_categories_responses.yaml#/415"
   "/events":
     post:
       summary: DRAFT Creates a new event for a given eventable DRAFT
@@ -719,107 +797,3 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/422"
-    get:
-      summary: DRAFT Returns a list of events DRAFT
-      description: |
-        Returns a list of events that by default are sorted by their client supplied timestamp.
-
-        This api is paginated using our standard pagination query params.
-      tags:
-        - Events
-      consumes:
-        - application/vnd.api+json
-      parameters:
-        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
-        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
-        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
-        - name: filter[timestamp_from]
-          in: query
-          description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string
-
-            Filters results to only include events on and after the given
-            date-time.
-
-            This filter runs against the client supplied timestamp field.
-          schema:
-            type: string
-            format: date-time
-            example: "filter[timestamp_to]=2020-06-16T00:00:00+01:00"
-          format: date
-          explode: false
-        - name: filter[timestamp_to]
-          in: query
-          description: |
-            A [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6) timestamp string
-
-            Filters results to only include events up to and including the given
-            date-time.
-
-            This filter runs against the client supplied timestamp field.
-          schema:
-            type: string
-            format: date-time
-            example: "filter[timestamp_to]=2020-06-17T23:59:59+01:00"
-          explode: false
-        - name: filter[eventable_type]
-          in: query
-          description: |
-            Filters results to only include events of the provided eventable_type/s.
-
-            This filter has a single- and a multiple- eventable mode.
-
-            In multiple mode the filter will filter events of the eventable_type (e.g. filter[eventable_type]=moves,people will return all events that are about moves or people).
-
-            In single eventable mode the filter will check to see whether the eventable_id filter is supplied.
-            When the eventable_id is supplied it will return all events for that single eventable. Otherwise it will return eventables of the supplied type.
-
-            For example:
-              `?filter[eventable_type]=moves&filter[eventable_id]=3561f372-9f1c-4e13-997e-b11e1647cce1`
-
-            Will return the events for the Move indicated by the eventable_id filter.
-
-            Whereas:
-              `?filter[eventable_type]=moves`
-
-            Will return all events with an eventable_type of `moves`
-          schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - people
-                - moves
-                - journeys
-            example: "filter[eventable_type]=people,moves"
-        - name: filter[eventable_id]
-          in: query
-          description: |
-            Filters results to only include events of the provided eventable.
-
-            Must be supplied with an eventable_type filter in single mode (see eventable_type filter description) to uniquely identify a common subject for events.
-          schema:
-            type: string
-            example: "?filter[eventable_id]=3561f372-9f1c-4e13-997e-b11e1647cce1&filter[eventable_type]=moves"
-            explode: false
-        - "$ref": "../v1/pagination_parameters.yaml#/Page"
-        - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
-      responses:
-        "200":
-          description: success
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v2/get_events_responses.yaml#/200"
-        "401":
-          description: unauthorized
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v2/get_events_responses.yaml#/401"
-        "415":
-          description: invalid media type
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v2/get_events_responses.yaml#/415"

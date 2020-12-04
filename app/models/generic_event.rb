@@ -1,5 +1,4 @@
 class GenericEvent < ApplicationRecord
-  DETAILS_ATTRIBUTES = %w[].freeze
   FEED_ATTRIBUTES = %w[
     id
     notes
@@ -16,6 +15,7 @@ class GenericEvent < ApplicationRecord
     JourneyAdmitThroughOuterGate
     JourneyArriveAtOuterGate
     JourneyCancel
+    JourneyChangeVehicle
     JourneyComplete
     JourneyCreate
     JourneyExitThroughOuterGate
@@ -35,6 +35,8 @@ class GenericEvent < ApplicationRecord
     MoveCancel
     MoveCollectionByEscort
     MoveComplete
+    MoveCrossSupplierDropOff
+    MoveCrossSupplierPickUp
     MoveLockout
     MoveLodgingEnd
     MoveLodgingStart
@@ -44,15 +46,41 @@ class GenericEvent < ApplicationRecord
     MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
+    MoveProposed
     MoveRedirect
     MoveReject
+    MoveRequested
     MoveStart
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment
     PerCourtExcessiveDelayNotDueToSupplier
+    PerCourtHearing
+    PerCourtPreReleaseChecksCompleted
     PerCourtReadyInCustody
+    PerCourtRelease
+    PerCourtReleaseOnBail
     PerCourtReturnToCustodyAreaFromDock
+    PerCourtReturnToCustodyAreaFromVisitorArea
+    PerCourtTakeFromCustodyToDock
+    PerCourtTakeToSeeVisitors
+    PerCourtTask
+    PerGeneric
+    PerMedicalAid
+    PerPrisonerWelfare
+    PersonMoveAssault
+    PersonMoveBookedIntoReceivingEstablishment
+    PersonMoveDeathInCustody
+    PersonMoveMajorIncidentOther
+    PersonMoveMinorIncidentOther
+    PersonMovePersonEscaped
+    PersonMovePersonEscapedKpi
+    PersonMoveReleasedError
+    PersonMoveRoadTrafficAccident
+    PersonMoveSeriousInjury
+    PersonMoveUsedForce
+    PersonMoveVehicleBrokeDown
+    PersonMoveVehicleSystemsFailed
   ].freeze
 
   belongs_to :eventable, polymorphic: true, touch: true
@@ -80,9 +108,76 @@ class GenericEvent < ApplicationRecord
     feed
   end
 
-  def self.from_event(event)
-    type = "GenericEvent::#{event.eventable_type}#{event.event_name.capitalize}"
+  def self.details_attributes(*attributes)
+    define_singleton_method(:details_attributes) do
+      instance_variable_get('@details_attributes')
+    end
 
-    type.constantize.from_event(event)
+    instance_variable_set('@details_attributes', attributes)
+
+    attributes.each do |attribute_key|
+      define_method(attribute_key) do
+        details[attribute_key]
+      end
+
+      define_method("#{attribute_key}=") do |attribute_value|
+        details[attribute_key] = attribute_value
+      end
+    end
+  end
+
+  # NB: Majority of events will use this serializer rather than the anonymous class.
+  def self.serializer
+    GenericEventSerializer
+  end
+
+  # Relationship attributes live against the details but are expected in the json:api relationship section
+  # so are defined separately
+  def self.relationship_attributes(attributes)
+    define_singleton_method(:relationship_attributes) do
+      instance_variable_get('@relationship_attributes')
+    end
+
+    instance_variable_set('@relationship_attributes', attributes)
+
+    define_singleton_method(:serializer) do
+      @serializer ||=
+        Class.new(GenericEventSerializer).tap do |new_serializer_class|
+          relationship_attributes.each do |attribute_key, attribute_type|
+            named_relationship_key = attribute_key.to_s.sub('_id', '')
+
+            new_serializer_class.set_type :events
+            new_serializer_class.has_one named_relationship_key, serializer: SerializerVersionChooser.call(attribute_type)
+          end
+        end
+    end
+
+    attributes.each do |attribute_key, attribute_type|
+      named_relationship_key = attribute_key.to_s.sub('_id', '')
+
+      define_method(attribute_key) do
+        details[attribute_key]
+      end
+
+      define_method("#{attribute_key}=") do |attribute_value|
+        details[attribute_key] = attribute_value
+      end
+
+      define_method(named_relationship_key) do
+        id = details[attribute_key]
+        model = attribute_type.to_s.singularize.camelize
+        model.constantize.find_by(id: id)
+      end
+    end
+  end
+
+  def self.eventable_types(*types)
+    define_singleton_method(:eventable_types) do
+      instance_variable_get('@eventable_types')
+    end
+
+    validates :eventable_type, inclusion: { in: types }
+
+    instance_variable_set('@eventable_types', types)
   end
 end

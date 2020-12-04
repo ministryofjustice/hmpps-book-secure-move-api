@@ -24,7 +24,7 @@ RSpec.describe FrameworkQuestion do
       question2 = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question1.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
         question: question2,
       )
@@ -32,22 +32,22 @@ RSpec.describe FrameworkQuestion do
       expect(response.framework_question).to eq(question2)
     end
 
-    it 'builds response associated to correct person_escort_record' do
+    it 'builds response associated to correct assessment' do
       question = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
-      expect(response.person_escort_record).to eq(person_escort_record)
+      expect(response.assessmentable).to eq(person_escort_record)
     end
 
     it 'builds response and defaults to current question' do
       question = create(:framework_question)
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -60,7 +60,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :checkbox, parent: question)
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -72,7 +72,7 @@ RSpec.describe FrameworkQuestion do
       question = create(:framework_question)
       dependent_question = create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -83,23 +83,23 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question, :add_multiple_items)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
       expect(response.dependents).to be_empty
     end
 
-    it 'sets person_escort_record on dependent responses' do
+    it 'sets assessment on dependent responses' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
       create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
-      expect(response.dependents.first.person_escort_record).to eq(person_escort_record)
+      expect(response.dependents.first.assessmentable).to eq(person_escort_record)
     end
 
     it 'sets correct types on dependent responses' do
@@ -108,7 +108,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :checkbox, followup_comment: true, parent: question)
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
@@ -125,12 +125,82 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, parent: child_question)
       create(:framework_question, parent: child_question)
       response = parent_question.build_responses(
-        person_escort_record: person_escort_record,
+        assessmentable: person_escort_record,
         questions: questions,
       )
 
       dependent_responses = response.dependents
       expect(dependent_responses.first.dependents.size).to eq(2)
+    end
+
+    context 'with previous_responses' do
+      it 'builds response with correct value' do
+        question1 = create(:framework_question)
+        question2 = create(:framework_question)
+        previous_responses = {
+          question1.key => 'Yes',
+          question2.key => 'No',
+        }
+        person_escort_record = create(:person_escort_record)
+        response = question1.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          question: question2,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.value).to eq('No')
+      end
+
+      it 'builds response dependents with correct value' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question)
+        dependent_question = create(:framework_question, :checkbox, parent: question)
+        previous_responses = {
+          question.key => 'Yes',
+          dependent_question.key => ['Level 1'],
+        }
+        response = question.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.dependents.first.value).to contain_exactly('Level 1')
+      end
+
+      it 'sets prefilled value on dependents' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question)
+        dependent_question = create(:framework_question, :checkbox, parent: question)
+        previous_responses = {
+          question.key => 'Yes',
+          dependent_question.key => ['Level 1'],
+        }
+        response = question.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.dependents.first).to be_prefilled
+      end
+
+      it 'builds response for multiple item question with correct value' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question, :add_multiple_items)
+        value = [{ 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => question.dependents.first.id }] }.with_indifferent_access]
+        previous_responses = {
+          question.key => value,
+        }
+        response = question.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.value).to eq(value)
+      end
     end
   end
 
@@ -210,6 +280,55 @@ RSpec.describe FrameworkQuestion do
       )
 
       expect(response).to be_a(FrameworkResponse::Collection)
+    end
+
+    it 'sets prefilled value to false if no value set' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response).not_to be_prefilled
+    end
+
+    context 'with previous response value' do
+      it 'builds a response with the value set' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          'Yes',
+        )
+
+        expect(response.value).to eq('Yes')
+      end
+
+      it 'sets prefilled value to true' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          'Yes',
+        )
+
+        expect(response).to be_prefilled
+      end
+
+      it 'sets prefilled value to false if empty value supplied' do
+        question = create(:framework_question, :checkbox, followup_comment: true)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          [],
+        )
+
+        expect(response).not_to be_prefilled
+      end
     end
   end
 

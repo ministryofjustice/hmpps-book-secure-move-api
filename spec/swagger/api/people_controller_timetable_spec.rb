@@ -84,7 +84,7 @@ RSpec.describe Api::PeopleController, :with_client_authentication, :rswag, type:
           OpenStruct.new(success?: true, content: [activity, court_hearing], error: nil)
         end
         let(:resource_to_json) do
-          rendered = ActionController::Base.render(json: timetable, include: :location)
+          rendered = TimetableSerializer.new(timetable, include: :location).serializable_hash.to_json
 
           JSON.parse(rendered)
         end

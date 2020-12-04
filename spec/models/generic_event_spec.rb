@@ -28,10 +28,10 @@ RSpec.describe GenericEvent, type: :model do
   it 'defines the correct STI classes for validation' do
     expected_sti_classes = Dir['app/models/generic_event/*'].map { |file|
       file
-        .gsub('app/models/generic_event/', '')
+        .sub('app/models/generic_event/', '')
         .sub('.rb', '')
         .camelcase
-    }.freeze
+    } - %w[Incident]
 
     expect(described_class::STI_CLASSES).to match_array(expected_sti_classes)
   end
@@ -66,12 +66,86 @@ RSpec.describe GenericEvent, type: :model do
     end
   end
 
-  describe '.from_event' do
-    let(:event) { create(:event, :cancel, eventable: eventable) }
-    let(:eventable) { create(:journey) }
+  describe '.updated_at_range scope' do
+    let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:updated_at_to) { Time.zone.yesterday.end_of_day }
 
-    it 'returns an initialized JournalCancel event' do
-      expect(described_class.from_event(event)).to be_a(GenericEvent::JourneyCancel)
+    it 'returns the expected events' do
+      create(:event_move_cancel, updated_at: updated_at_from - 1.second)
+      create(:event_move_accept, updated_at: updated_at_to + 1.second)
+      on_start_event = create(:event_move_approve, updated_at: updated_at_from)
+      on_end_event = create(:event_move_start, updated_at: updated_at_to)
+
+      actual_events = described_class.updated_at_range(updated_at_from, updated_at_to)
+
+      expect(actual_events).to eq([on_start_event, on_end_event])
+    end
+  end
+
+  describe '.created_at_range scope' do
+    let(:created_at_from) { Time.zone.yesterday.beginning_of_day }
+    let(:created_at_to) { Time.zone.yesterday.end_of_day }
+
+    it 'returns the expected events' do
+      create(:event_move_cancel, created_at: created_at_from - 1.second)
+      create(:event_move_accept, created_at: created_at_to + 1.second)
+      on_start_event = create(:event_move_approve, created_at: created_at_from)
+      on_end_event = create(:event_move_start, created_at: created_at_to)
+
+      actual_events = described_class.created_at_range(created_at_from, created_at_to)
+
+      expect(actual_events).to eq([on_start_event, on_end_event])
+    end
+  end
+
+  describe '.serializer' do
+    let(:relation_serializer) { event.class.serializer.relationships_to_serialize[relation_serializer_key].serializer }
+
+    context 'when the event STI defines relationships' do
+      context 'with no supported V2 version' do
+        let(:event) do
+          create(
+            :event_move_lockout,
+            details: {
+              from_location_id: create(:location).id,
+              reason: 'no_space',
+              authorised_at: Time.zone.now.iso8601,
+              authorised_by: 'PMU',
+            },
+          )
+        end
+
+        let(:relation_serializer_key) { :from_location }
+
+        it 'falls back to the non-V2 version of the relation serializer' do
+          expect(relation_serializer).to eq(LocationSerializer)
+        end
+      end
+
+      context 'with a supported V2 version' do
+        let(:event) do
+          create(
+            :event_move_cross_supplier_pick_up,
+            details: {
+              previous_move_id: create(:move).id,
+            },
+          )
+        end
+
+        let(:relation_serializer_key) { :previous_move }
+
+        it 'uses the V2 version of the relation serializer' do
+          expect(relation_serializer).to eq(V2::MoveSerializer)
+        end
+      end
+    end
+
+    context 'when the event STI does not define relationships' do
+      let(:event) { create(:event_per_generic, details: {}) }
+
+      it 'defaults to the GenericEventSerializer' do
+        expect(event.class.serializer).to eq(GenericEventSerializer)
+      end
     end
   end
 end

@@ -28,4 +28,12 @@ namespace :data_maintenance do
   task fix_nil_allocations_estate: :environment do
     Allocation.where(estate: nil).update_all(estate: :adult_male)
   end
+
+  desc 'fix blank (empty string) person references that should be stored as null'
+  task fix_blank_person_references: :environment do
+    Person.where(nomis_prison_number: '').update_all(nomis_prison_number: nil)
+    Person.where(prison_number: '').update_all(prison_number: nil)
+    Person.where(criminal_records_office: '').update_all(criminal_records_office: nil)
+    Person.where(police_national_computer: '').update_all(police_national_computer: nil)
+  end
 end

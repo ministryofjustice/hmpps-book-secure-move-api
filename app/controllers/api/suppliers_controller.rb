@@ -3,7 +3,7 @@
 module Api
   class SuppliersController < ApiController
     def locations
-      paginate locations_from_supplier_moves, include: included_relationships
+      paginate locations_from_supplier_moves, serializer: LocationSerializer, include: included_relationships
     end
 
   private

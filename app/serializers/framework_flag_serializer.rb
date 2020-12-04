@@ -1,5 +1,11 @@
-class FrameworkFlagSerializer < ActiveModel::Serializer
-  belongs_to :framework_question, key: :question
+# frozen_string_literal: true
+
+class FrameworkFlagSerializer
+  include JSONAPI::Serializer
+
+  set_type :framework_flags
+
+  belongs_to :question, serializer: FrameworkQuestionSerializer, &:framework_question
 
   attributes :flag_type, :title, :question_value
 

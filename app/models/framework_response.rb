@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FrameworkResponse < VersionedModel
+class FrameworkResponse < ApplicationRecord
   ValueTypeError = Class.new(StandardError)
 
   validates :type, presence: true
@@ -10,7 +10,7 @@ class FrameworkResponse < VersionedModel
   end
 
   belongs_to :framework_question
-  belongs_to :person_escort_record
+  belongs_to :assessmentable, optional: true, polymorphic: true
   has_many :dependents, class_name: 'FrameworkResponse',
                         foreign_key: 'parent_id'
 
@@ -24,18 +24,9 @@ class FrameworkResponse < VersionedModel
   def update_with_flags!(new_value)
     return unless value != new_value
 
-    ActiveRecord::Base.transaction do
-      update!(value: new_value)
-      rebuild_flags!
-      FrameworkResponse.clear_dependent_values_and_flags!([self])
-
-      # lock the status update to avoid race condition on multiple response patches
-      person_escort_record.with_lock do
-        person_escort_record.update_status!
-      end
-    end
+    ApplicationRecord.retriable_transaction { update_response_transaction(new_value) }
   rescue FiniteMachine::InvalidStateError
-    raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because person_escort_record is #{person_escort_record.status}"
+    raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because assessment is #{assessmentable.status}"
   end
 
   def value=(raw_value)
@@ -46,6 +37,12 @@ class FrameworkResponse < VersionedModel
 
   def rebuild_flags!
     self.framework_flags = framework_question.framework_flags.select { |flag| option_selected?(flag.question_value) }
+  end
+
+  def prefill_value
+    return unless framework_question.prefill
+
+    value
   end
 
   def self.requires_value?(value, record)
@@ -71,6 +68,7 @@ class FrameworkResponse < VersionedModel
       descendant.assign_attributes(
         value: nil,
         responded: false,
+        prefilled: false,
         framework_flags: [],
       )
 
@@ -78,7 +76,7 @@ class FrameworkResponse < VersionedModel
     end
 
     # Retain the class to avoid any clashes in implementation as this is utilising STI
-    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded])
+    FrameworkResponse.import(descendants, validate: false, recursive: true, all_or_none: true, on_duplicate_key_update: %i[value_json value_text responded prefilled])
   end
 
   def self.descendants_tree(ids)
@@ -111,5 +109,16 @@ private
 
   def set_responded_value
     self.responded = true
+  end
+
+  def update_response_transaction(new_value)
+    update!(value: new_value)
+    rebuild_flags!
+    FrameworkResponse.clear_dependent_values_and_flags!([self])
+
+    # lock the status update to avoid race condition on multiple response patches
+    assessmentable.with_lock do
+      assessmentable.update_status!
+    end
   end
 end

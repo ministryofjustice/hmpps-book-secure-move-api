@@ -2,52 +2,64 @@
 
 module FrameworkNomisMappings
   class Importer
-    attr_reader :person, :framework_responses, :framework_nomis_codes
+    attr_reader :person, :assessmentable, :framework_responses, :framework_nomis_codes
 
-    def initialize(person:, framework_responses:, framework_nomis_codes:)
-      @person = person
-      @framework_responses = framework_responses
-      @framework_nomis_codes = framework_nomis_codes
+    def initialize(assessmentable:)
+      @assessmentable = assessmentable
+      @person = assessmentable&.profile&.person
+      @framework_responses = assessmentable&.framework_responses
+      @framework_nomis_codes = framework_responses&.includes(:framework_nomis_codes)&.flat_map(&:framework_nomis_codes)
     end
 
     def call
-      return unless person && framework_responses.any? && framework_nomis_codes.any?
+      return unless assessmentable && framework_responses.any? && framework_nomis_codes.any?
 
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.retriable_transaction do
         return unless persist_framework_nomis_mappings.any?
 
         framework_responses.includes(:framework_nomis_mappings).each do |response|
           nomis_code_ids = responses_to_codes[response.id]&.pluck(:nomis_code_id)
           response.framework_nomis_mappings = nomis_code_ids_to_mappings.slice(*nomis_code_ids).values.flatten
         end
+
+        assessmentable.update(nomis_sync_status: nomis_sync_status)
       end
     end
 
   private
 
+    def nomis_sync_status
+      [
+        alert_mappings.nomis_sync_status,
+        personal_care_need_mappings.nomis_sync_status,
+        reasonable_adjust_mappings.nomis_sync_status,
+      ]
+    end
+
     def persist_framework_nomis_mappings
       @persist_framework_nomis_mappings ||= begin
-        mappings = alert_mappings + personal_care_need_mappings + reasonable_adjust_mappings
-        # TODO: log any validation failures
+        mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call
         import = FrameworkNomisMapping.import(mappings, all_or_none: true)
+
+        log_exception('FrameworkNomisMapping import validation Error', import.failed_instances.map { |mapping| mapping.errors.messages }) if import.failed_instances.any?
 
         FrameworkNomisMapping.where(id: import.ids)
       end
     end
 
     def alert_mappings
-      FrameworkNomisMappings::Alerts.new(prison_number: person.prison_number).call
+      @alert_mappings ||= FrameworkNomisMappings::Alerts.new(prison_number: person.prison_number)
     end
 
     def personal_care_need_mappings
-      FrameworkNomisMappings::PersonalCareNeeds.new(prison_number: person.prison_number).call
+      @personal_care_need_mappings ||= FrameworkNomisMappings::PersonalCareNeeds.new(prison_number: person.prison_number)
     end
 
     def reasonable_adjust_mappings
-      FrameworkNomisMappings::ReasonableAdjustments.new(
+      @reasonable_adjust_mappings ||= FrameworkNomisMappings::ReasonableAdjustments.new(
         booking_id: person.latest_nomis_booking_id,
         nomis_codes: grouped_framework_nomis_codes['reasonable_adjustment'],
-      ).call
+      )
     end
 
     def grouped_framework_nomis_codes
@@ -70,6 +82,7 @@ module FrameworkNomisMappings
             end
           elsif mapping_nomis_fallback
             hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]
+            log_exception('New NOMIS codes imported', [{ code: mapping.code, type: mapping_nomis_fallback.code_type }])
           end
         end
       end
@@ -77,6 +90,17 @@ module FrameworkNomisMappings
 
     def responses_to_codes
       @responses_to_codes ||= framework_responses.joins(:framework_nomis_codes).select('framework_responses.id as id, framework_nomis_codes.id as nomis_code_id').group_by(&:id)
+    end
+
+    def log_exception(description, params)
+      Raven.capture_message(
+        description,
+        extra: {
+          id: assessmentable&.id,
+          params: params,
+        },
+        level: 'error',
+      )
     end
   end
 end

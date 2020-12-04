@@ -10,8 +10,8 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
-  it { is_expected.to have_many(:events) }
   it { is_expected.to have_one(:person_escort_record) }
+  it { is_expected.to have_one(:youth_risk_assessment) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
@@ -172,6 +172,16 @@ RSpec.describe Move do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
   end
 
+  context 'when the profile has a prisoner category' do
+    it 'prevents an unsupported category from being moved' do
+      expect(build(:move, profile: build(:profile, :category_not_supported))).not_to be_valid
+    end
+
+    it 'allows a supported category to be moved' do
+      expect(build(:move, profile: build(:profile, :category_supported))).to be_valid
+    end
+  end
+
   context 'when a Move for a Person has already been created' do
     let(:move) { create(:move) }
 
@@ -302,28 +312,62 @@ RSpec.describe Move do
     end
   end
 
-  describe '#existing' do
+  describe '#existing_moves' do
     let!(:move) { create :move }
-    let(:duplicate) { described_class.new(move.attributes) }
 
-    context 'when querying for existing moves' do
-      it 'finds the right move' do
-        expect(duplicate.existing).to eq(move)
+    context 'with a duplicate move with the same profile' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_moves.first).to eq(move)
+        expect(duplicate.existing_moves.count).to eq(1)
       end
+    end
+
+    context 'with a duplicate move with a different profile' do
+      let(:other_profile) { create(:profile, person: move.person) }
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, profile: other_profile)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_moves.first).to eq(move)
+        expect(duplicate.existing_moves.count).to eq(1)
+      end
+    end
+
+    context 'with a cancelled duplicate move' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
 
       it 'ignores cancelled moves' do
         move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
-        expect(duplicate.existing).to be_nil
+        expect(duplicate.existing_moves).to be_empty
+      end
+    end
+
+    context 'with a proposed duplicate move' do
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
+
+      it 'ignores proposed moves' do
+        move.update!(status: :proposed)
+        expect(duplicate.existing_moves).to be_empty
       end
     end
   end
 
   describe '#existing_id' do
-    let!(:move) { build :move }
-
     context 'when there is no existing move' do
+      let!(:move) { build :move }
+
       it 'returns nil' do
         expect(move.existing_id).to be_nil
+      end
+    end
+
+    context 'when there is an existing move' do
+      let!(:move) { create :move }
+      let(:duplicate) { described_class.new(move.attributes.merge(id: nil)) }
+
+      it 'finds the existing_moves' do
+        expect(duplicate.existing_id).to eq(move.id)
       end
     end
   end
@@ -516,8 +560,47 @@ RSpec.describe Move do
   context 'with versioning' do
     let(:move) { create(:move) }
 
-    it 'has a version record for the create' do
+    it 'has a version record for creating the move' do
       expect(move.versions.map(&:event)).to eq(%w[create])
+    end
+
+    it 'does not create a profile version record if move is touched' do
+      expect {
+        move.touch
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'does not create a move version record if move is touched' do
+      move.touch
+      expect(move.versions.count).to eq 1
+    end
+
+    it 'does not create a profile version record if only changing move updated_at timestamp' do
+      expect {
+        move.update(updated_at: Time.now)
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'does not create a move version record if only changing move updated_at timestamp' do
+      move.update(updated_at: Time.now)
+      expect(move.versions.count).to eq 1
+    end
+
+    it 'does not create a profile version record if other move attributes are changed' do
+      expect {
+        move.update(additional_information: 'Foo')
+      }.not_to change(move.profile.versions, :count)
+    end
+
+    it 'creates a move version record if other move attributes are changed' do
+      move.update(additional_information: 'Bar')
+      expect(move.versions.count).to eq 2
+    end
+
+    it 'stores original move attributes in new version record when other move attributes are changed' do
+      previous_move_attributes = move.attributes
+      move.update(additional_information: 'Bar')
+      expect(move.versions.last.reify.attributes).to eq previous_move_attributes
     end
   end
 
@@ -635,6 +718,40 @@ RSpec.describe Move do
         move.handle_event_run
 
         expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
+      end
+    end
+  end
+
+  describe '#all_events_for_timeline' do
+    subject(:all_events_for_timeline) { move.all_events_for_timeline }
+
+    let(:move) { create(:move, :with_journey, profile: create(:profile, :with_person_escort_record)) }
+    let(:now) { Time.zone.now }
+
+    context 'when there are no events' do
+      it 'returns an empty Array' do
+        expect(move.all_events_for_timeline).to eq([])
+      end
+    end
+
+    context 'when there are events for each eventable' do
+      let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
+      let!(:second_event) { create(:event_person_move_death_in_custody, eventable: move.profile.person, occurred_at: now + 1.second) }
+      let!(:third_event) { create(:event_move_approve, eventable: move, occurred_at: now) }
+      let!(:fourth_event) { create(:event_per_court_cell_share_risk_assessment, eventable: move.profile.person_escort_record, occurred_at: now - 1.second) }
+      let!(:fifth_event) { create(:event_journey_person_boards_vehicle, eventable: move.journeys.first, occurred_at: now - 2.seconds) }
+
+      it 'returns generic events in the correct order' do
+        expect(all_events_for_timeline.pluck(:id)).to eq([fifth_event, fourth_event, third_event, second_event, first_event].map(&:id))
+      end
+    end
+
+    context 'when there are events for only one eventable' do
+      let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
+      let!(:second_event) { create(:event_move_approve, eventable: move, occurred_at: now) }
+
+      it 'returns generic events in the correct order' do
+        expect(all_events_for_timeline.pluck(:id)).to eq([second_event, first_event].map(&:id))
       end
     end
   end

@@ -1,25 +1,16 @@
-class CourtCaseSerializer < ActiveModel::Serializer
-  attributes :nomis_case_id,
-             :nomis_case_status,
-             :case_start_date,
-             :case_type,
-             :case_number
+# frozen_string_literal: true
 
-  belongs_to :location, serializer: LocationSerializer
+class CourtCaseSerializer
+  include JSONAPI::Serializer
 
-  def nomis_case_id
-    object.case_id
-  end
+  set_type :court_cases
 
-  def nomis_case_status
-    object.case_status
-  end
+  attributes :case_type
 
-  def case_start_date
-    object.begin_date
-  end
+  attribute :nomis_case_id, &:case_id
+  attribute :nomis_case_status, &:case_status
+  attribute :case_start_date, &:begin_date
+  attribute :case_number, &:case_info_number
 
-  def case_number
-    object.case_info_number
-  end
+  belongs_to :location, &:location
 end

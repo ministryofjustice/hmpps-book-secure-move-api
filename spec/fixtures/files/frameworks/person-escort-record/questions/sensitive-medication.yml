@@ -1,0 +1,16 @@
+type: radio
+question: Does the detainee have any sensitive medical or medication information that needs to be shared
+prefill: false
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+    followup:
+      - medication-while-moving
+  -
+    label: 'No'
+    value: 'No'
+validations:
+  -
+    type: 'required'
+    message: You must select an option

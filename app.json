@@ -23,7 +23,7 @@
       "description": "Name of the storage bucket to use on AWS S3",
       "required": true
     },
-    "NOMIS_SITE": {
+    "NOMIS_SITE_FOR_API": {
       "description": "Base URL for NOMIS API",
       "required": true
     },
@@ -39,12 +39,12 @@
       "description": "Authentication scheme to use with NOMIS API",
       "required": true
     },
-    "NOMIS_API_PATH_PREFIX": {
+    "NOMIS_PRISON_API_PATH_PREFIX": {
       "description": "Namespace for general NOMIS API endpoints",
       "required": true
     },
-    "NOMIS_AUTH_PATH_PREFIX": {
-      "description": "Namespace for authentication NOMIS API endpoints",
+    "NOMIS_SITE_FOR_AUTH": {
+      "description": "Authentication NOMIS API endpoint",
       "required": true
     },
     "SERVE_API_DOCS": {

@@ -41,7 +41,7 @@ module Moves
     end
 
     def validate_hospital_to_location
-      record.errors.add(:to_location, "must be a high security hospital location for #{human_move_type} move") unless record.to_location&.high_security_hospital?
+      record.errors.add(:to_location, "must be a hospital or high security hospital location for #{human_move_type} move") unless record.to_location&.high_security_hospital? || record.to_location&.hospital?
     end
 
     def validate_not_detained_to_location

@@ -5,14 +5,14 @@ module Api
     class SuppliersController < ApiController
       def index
         suppliers = Supplier.all
-        render json: suppliers
+        render_json suppliers, serializer: SupplierSerializer
       end
 
       def show
         supplier = find_supplier
         raise ::ActiveRecord::RecordNotFound, "Couldn't find Supplier with #{params[:id]}" if supplier.nil?
 
-        render json: supplier, status: :ok
+        render_json supplier, serializer: SupplierSerializer, status: :ok
       end
 
     private

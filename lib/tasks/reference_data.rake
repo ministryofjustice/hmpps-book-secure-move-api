@@ -31,6 +31,12 @@ namespace :reference_data do
     AllocationComplexCases::Importer.new.call
   end
 
+  desc 'create categories'
+  task create_categories: :environment do
+    categories = YAML.safe_load(File.read('./lib/tasks/data/categories.yml'))
+    Categories::Importer.new(categories).call
+  end
+
   desc 'create NOMIS alert mappings'
   task create_nomis_alerts: :environment do
     NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
@@ -74,6 +80,7 @@ namespace :reference_data do
        reference_data:create_assessment_questions
        reference_data:create_allocation_complex_cases
        reference_data:create_nomis_alerts
+       reference_data:create_categories
        reference_data:create_regions
        reference_data:create_suppliers
        reference_data:create_supplier_locations

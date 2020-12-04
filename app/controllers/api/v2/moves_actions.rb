@@ -2,9 +2,9 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves,
-               each_serializer: ::V2::MoveSerializer,
+               serializer: ::V2::MovesSerializer,
                include: included_relationships,
-               fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+               fields: ::V2::MovesSerializer::INCLUDED_FIELDS
     end
 
     def show_and_render
@@ -19,6 +19,8 @@ module Api::V2
       move.save!
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
+
+      create_event(move)
 
       render_move(move, :created)
     end
@@ -73,7 +75,7 @@ module Api::V2
     end
 
     def common_move_attributes
-      move_params[:attributes].tap do |attributes|
+      move_params.fetch(:attributes, {}).tap do |attributes|
         attributes[:profile] = profile unless profile_attributes.nil?
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
         attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
@@ -134,11 +136,7 @@ module Api::V2
     end
 
     def render_move(move, status)
-      render serializer: ::V2::MoveSerializer,
-             json: move,
-             status: status,
-             include: included_relationships,
-             fields: ::V2::MoveSerializer::INCLUDED_FIELDS
+      render_json move, serializer: ::V2::MoveSerializer, include: included_relationships, fields: ::V2::MoveSerializer::INCLUDED_FIELDS, status: status
     end
 
     def move
@@ -150,12 +148,34 @@ module Api::V2
         .find(params[:id])
     end
 
-    def included_relationships
-      IncludeParamHandler.new(params).call
+    def supported_relationships
+      # for performance reasons, we support fewer include relationships on the index action
+      if action_name == 'index'
+        ::V2::MovesSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
 
-    def supported_relationships
-      ::V2::MoveSerializer::SUPPORTED_RELATIONSHIPS
+    def create_event(move)
+      now = Time.zone.now.iso8601
+
+      event_attributes = {
+        eventable: move,
+        occurred_at: now,
+        recorded_at: now,
+        notes: 'Automatically generated event',
+        details: {},
+        supplier_id: doorkeeper_application_owner&.id,
+      }
+
+      if move.proposed?
+        GenericEvent::MoveProposed.create!(event_attributes)
+      end
+
+      if move.requested?
+        GenericEvent::MoveRequested.create!(event_attributes)
+      end
     end
   end
 end

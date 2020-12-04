@@ -1,10 +1,13 @@
 class GenericEvent
   class PerCourtAllDocumentationProvidedToSupplier < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      subtype
-    ].freeze
+    LOCATION_ATTRIBUTE_KEY = :court_location_id
+
+    details_attributes :subtype
+    relationship_attributes court_location_id: :locations
 
     include PersonEscortRecordEventValidations
+    include LocationValidations
+    include LocationFeed
 
     enum subtype: {
       extradition_order: 'extradition_order',
@@ -13,22 +16,5 @@ class GenericEvent
     }
 
     validates :subtype, inclusion: { in: subtypes }
-    validates :court_location_id, presence: true
-
-    def court_location_id=(court_location_id)
-      details['court_location_id'] = court_location_id
-    end
-
-    def court_location_id
-      details['court_location_id']
-    end
-
-    def subtype=(subtype)
-      details['subtype'] = subtype
-    end
-
-    def subtype
-      details['subtype']
-    end
   end
 end

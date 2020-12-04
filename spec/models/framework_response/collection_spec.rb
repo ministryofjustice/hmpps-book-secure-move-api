@@ -174,6 +174,44 @@ RSpec.describe FrameworkResponse::Collection do
         expect(response).to be_valid
       end
     end
+
+    context 'with NOMIS mappings' do
+      it 'does not validate required followup comments if mappings present' do
+        question = create(
+          :framework_question,
+          :checkbox,
+          followup_comment: true,
+          followup_comment_options: %w[Level 1],
+        )
+        response = create(:collection_response, :details, value: [{ 'option' => 'Level 1' }], framework_question: question, framework_nomis_mappings: [create(:framework_nomis_mapping)])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate optional followup comments if mappings present' do
+        question = create(
+          :framework_question,
+          :checkbox,
+          followup_comment: true,
+          followup_comment_options: [],
+        )
+        response = create(:collection_response, :details, value: [{ 'option' => 'Level 1' }], framework_question: question, framework_nomis_mappings: [create(:framework_nomis_mapping)])
+
+        expect(response).to be_valid
+      end
+
+      it 'does not validate optional followup comments if no mappings present' do
+        question = create(
+          :framework_question,
+          :checkbox,
+          followup_comment: true,
+          followup_comment_options: [],
+        )
+        response = create(:collection_response, :details, value: [{ 'option' => 'Level 1' }], framework_question: question)
+
+        expect(response).to be_valid
+      end
+    end
   end
 
   describe '#value' do
@@ -292,6 +330,66 @@ RSpec.describe FrameworkResponse::Collection do
       response = create(:collection_response, :multiple_items)
 
       expect(response.option_selected?('Level 3')).to be(false)
+    end
+  end
+
+  describe '#prefill_value' do
+    it 'returns default if collection not multiple items and question is not to be prefilled' do
+      response = create(:collection_response, :details)
+
+      expect(response.prefill_value).to be_nil
+    end
+
+    it 'returns default if collection not multiple items and question is to be prefilled' do
+      framework_question = create(:framework_question, followup_comment: true, prefill: true)
+      response = create(:collection_response, :details, framework_question: framework_question)
+
+      expect(response.prefill_value).to eq([{ 'details' => 'some comment', 'option' => 'Level 1' }, { 'details' => 'another comment', 'option' => 'Level 2' }])
+    end
+
+    it 'returns nothing if no multiple item dependent questions should be prefilled' do
+      dependent_question = create(:framework_question, :checkbox, prefill: false)
+      question = create(:framework_question, :add_multiple_items, dependents: [dependent_question])
+      response = create(
+        :collection_response,
+        :multiple_items,
+        framework_question: question,
+        value: [{ 'item' => '1', responses: [{ 'value' => ['Level 1'], framework_question_id: dependent_question.id }] }],
+      )
+
+      expect(response.prefill_value).to be_empty
+    end
+
+    it 'returns response value if all multiple item dependent questions should be prefilled' do
+      dependent_question = create(:framework_question, :checkbox, prefill: true)
+      question = create(:framework_question, :add_multiple_items, dependents: [dependent_question])
+      value = [{ 'item' => '1', responses: [{ 'value' => ['Level 1'], framework_question_id: dependent_question.id }] }.with_indifferent_access]
+      response = create(
+        :collection_response,
+        :multiple_items,
+        framework_question: question,
+        value: value,
+      )
+
+      expect(response.prefill_value).to eq(value)
+    end
+
+    it 'returns the response value of the multiple item dependent questions that should be prefilled' do
+      dependent_question1 = create(:framework_question, :checkbox, prefill: true)
+      dependent_question2 = create(:framework_question, prefill: false)
+      question = create(:framework_question, :add_multiple_items, dependents: [dependent_question1, dependent_question2])
+      value = [
+        { 'item' => '1', responses: [{ 'value' => ['Level 1'], framework_question_id: dependent_question1.id }] },
+        { 'item' => '2', responses: [{ 'value' => ['Level 2'], framework_question_id: dependent_question1.id }, { 'value' => 'Yes', framework_question_id: dependent_question2.id }] },
+      ]
+      response = create(:collection_response, :multiple_items, framework_question: question, value: value)
+
+      expect(response.prefill_value).to eq(
+        [
+          { 'item' => '1', responses: [{ 'value' => ['Level 1'], framework_question_id: dependent_question1.id }] }.with_indifferent_access,
+          { 'item' => '2', responses: [{ 'value' => ['Level 2'], framework_question_id: dependent_question1.id }] }.with_indifferent_access,
+        ],
+      )
     end
   end
 end

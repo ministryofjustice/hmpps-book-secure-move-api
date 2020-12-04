@@ -1,0 +1,30 @@
+{
+  "id" : "ec6ed755-68b2-485b-a8d9-d58c44209342",
+  "name" : "api_reference-domains_domains_alert",
+  "request" : {
+    "url" : "/api/reference-domains/domains/ALERT",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"domain\":\"ALERT\",\"code\":\"A\",\"description\":\"Social Care\",\"activeFlag\":\"Y\",\"listSeq\":13,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"C\",\"description\":\"Child Communication Measures\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"CSIP\",\"description\":\"CSIP\",\"activeFlag\":\"Y\",\"listSeq\":20,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"D\",\"description\":\"Security. Do not share with offender\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"DB\",\"description\":\"Dom's test alert type\",\"activeFlag\":\"Y\",\"listSeq\":14,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"F1\",\"description\":\"Ex Armed Forces\",\"activeFlag\":\"Y\",\"listSeq\":21,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"H\",\"description\":\"Self Harm\",\"activeFlag\":\"Y\",\"listSeq\":1,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"L\",\"description\":\"Care Leaver\",\"activeFlag\":\"Y\",\"listSeq\":11,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"M\",\"description\":\"Medical\",\"activeFlag\":\"Y\",\"listSeq\":5,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"O\",\"description\":\"Other\",\"activeFlag\":\"Y\",\"listSeq\":10,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"P\",\"description\":\"MAPPP Case\",\"activeFlag\":\"Y\",\"listSeq\":4,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"R\",\"description\":\"Risk\",\"activeFlag\":\"Y\",\"listSeq\":3,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"RCDR\",\"description\":\"Quarantined – Communicable Disease Risk\",\"activeFlag\":\"Y\",\"listSeq\":99,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"RCS\",\"description\":\"Stalking Perpetrator\",\"activeFlag\":\"N\",\"listSeq\":12,\"systemDataFlag\":\"N\",\"expiredDate\":\"2012-11-27\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"RLG\",\"description\":\"Risk to LGBT\",\"activeFlag\":\"Y\",\"listSeq\":18,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"RTP\",\"description\":\"Risk to LGBT\",\"activeFlag\":\"Y\",\"listSeq\":17,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"S\",\"description\":\"Sexual Offence\",\"activeFlag\":\"Y\",\"listSeq\":7,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"T\",\"description\":\"Hold Against Transfer\",\"activeFlag\":\"Y\",\"listSeq\":8,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"U\",\"description\":\"COVID unit management\",\"activeFlag\":\"Y\",\"listSeq\":22,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"V\",\"description\":\"Vulnerability\",\"activeFlag\":\"Y\",\"listSeq\":6,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"W\",\"description\":\"Warrant\",\"activeFlag\":\"Y\",\"listSeq\":9,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"X\",\"description\":\"Security\",\"activeFlag\":\"Y\",\"listSeq\":2,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"XCA\",\"description\":\"Chemical attacker\",\"activeFlag\":\"Y\",\"listSeq\":16,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"XCI\",\"description\":\"Concerted indiscipline\",\"activeFlag\":\"Y\",\"listSeq\":19,\"systemDataFlag\":\"N\",\"subCodes\":[]},{\"domain\":\"ALERT\",\"code\":\"XCO\",\"description\":\"Corruptor\",\"activeFlag\":\"Y\",\"listSeq\":15,\"systemDataFlag\":\"N\",\"subCodes\":[]}]",
+    "headers" : {
+      "Date" : "Thu, 22 Oct 2020 09:50:33 GMT",
+      "Content-Type" : "application/json",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "Total-Records" : "25",
+      "Page-Offset" : "0",
+      "Page-Limit" : "1000",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "ec6ed755-68b2-485b-a8d9-d58c44209342",
+  "persistent" : true,
+  "insertionIndex" : 13
+}

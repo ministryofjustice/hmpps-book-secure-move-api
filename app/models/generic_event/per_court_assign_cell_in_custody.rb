@@ -1,20 +1,12 @@
 class GenericEvent
   class PerCourtAssignCellInCustody < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      court_cell_number
-    ].freeze
+    LOCATION_ATTRIBUTE_KEY = :location_id
+
+    details_attributes :court_cell_number
+    relationship_attributes location_id: :locations
 
     include PersonEscortRecordEventValidations
     include CourtCellValidations
-
-    validates :location_id, presence: true
-
-    def location_id=(location_id)
-      details['location_id'] = location_id
-    end
-
-    def location_id
-      details['location_id']
-    end
+    include LocationValidations
   end
 end

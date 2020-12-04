@@ -10,7 +10,8 @@ module Mock
     end
 
     def data
-      render json: Gender.all, status: :ok
+      genders = Gender.all
+      render_json genders, serializer: GenderSerializer, status: :ok
     end
   end
 

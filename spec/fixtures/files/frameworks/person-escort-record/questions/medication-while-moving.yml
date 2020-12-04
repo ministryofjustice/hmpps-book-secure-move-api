@@ -1,0 +1,14 @@
+type: radio
+question: Will the detainee need to take this medication while moving?
+prefill: false
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+  -
+    label: 'No'
+    value: 'No'
+validations:
+  -
+    type: 'required'
+    message: You must select an option

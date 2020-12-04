@@ -3,13 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe V2::PersonSerializer do
-  subject(:serializer) { described_class.new(person) }
+  subject(:serializer) { described_class.new(person, adapter_options) }
 
   let(:person) { create :person, gender_additional_information: 'additional information' }
   let(:adapter_options) { {} }
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'people'
@@ -48,7 +46,7 @@ RSpec.describe V2::PersonSerializer do
   end
 
   describe 'ethnicity' do
-    let(:adapter_options) { { include: :ethnicity } }
+    let(:adapter_options) { { include: %i[ethnicity] } }
 
     it 'contains a relationship to ethnicity' do
       expect(result[:data][:relationships]).to include(:ethnicity)
@@ -64,13 +62,13 @@ RSpec.describe V2::PersonSerializer do
       let(:person) { create(:person, ethnicity: nil) }
 
       it 'does not contain an included ethnicity' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end
 
   describe 'gender' do
-    let(:adapter_options) { { include: :gender } }
+    let(:adapter_options) { { include: %i[gender] } }
 
     it 'contains a relationship to gender' do
       expect(result[:data][:relationships]).to include(:gender)
@@ -86,20 +84,20 @@ RSpec.describe V2::PersonSerializer do
       let(:person) { create(:person, gender: nil) }
 
       it 'does not contain an included gender' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end
 
   describe 'profiles' do
-    let(:adapter_options) { { include: :profiles } }
+    let(:adapter_options) { { include: %i[profiles] } }
 
     it 'contains a relationship to profiles' do
       expect(result[:data][:relationships]).to include(:profiles)
     end
 
     context 'with profiles' do
-      it 'contains an included gender' do
+      it 'contains an included profile' do
         expect(result[:included].map { |r| r[:type] }).to contain_exactly('profiles')
       end
     end
@@ -108,7 +106,7 @@ RSpec.describe V2::PersonSerializer do
       let(:person) { create(:person, profiles: []) }
 
       it 'does not contain included profiles' do
-        expect(result[:included]).to be_nil
+        expect(result[:included]).to be_empty
       end
     end
   end

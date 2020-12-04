@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkResponseSerializer do
-  subject(:serializer) { described_class.new(framework_response) }
+  subject(:serializer) { described_class.new(framework_response, include: includes) }
 
   let(:framework_response) { create(:string_response) }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -29,9 +29,13 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:value_type]).to eq(framework_response.framework_question.response_type)
   end
 
-  it 'contains a `person_escort_record` relationship' do
-    expect(result[:data][:relationships][:person_escort_record][:data]).to eq(
-      id: framework_response.person_escort_record.id,
+  it 'contains a `prefilled` attribute' do
+    expect(result[:data][:attributes][:prefilled]).to eq(framework_response.prefilled)
+  end
+
+  it 'contains a `assessment` relationship' do
+    expect(result[:data][:relationships][:assessment][:data]).to eq(
+      id: framework_response.assessmentable.id,
       type: 'person_escort_records',
     )
   end
@@ -73,19 +77,16 @@ RSpec.describe FrameworkResponseSerializer do
 
   context 'with include options' do
     let(:includes) do
-      {
-        person_escort_record: :status,
-        question: :key,
-      }
+      %i[assessment question]
     end
     let(:framework_response) do
-      create(:string_response, person_escort_record: create(:person_escort_record))
+      create(:string_response, assessmentable: create(:person_escort_record))
     end
 
     let(:expected_json) do
       [
         {
-          id: framework_response.person_escort_record.id,
+          id: framework_response.assessmentable.id,
           type: 'person_escort_records',
           attributes: { status: 'not_started' },
         },

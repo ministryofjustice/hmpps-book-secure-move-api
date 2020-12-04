@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-class JourneySerializer < ActiveModel::Serializer
-  attributes :id, :state, :billable, :vehicle
-  attribute :client_timestamp, key: :timestamp
+class JourneySerializer
+  include JSONAPI::Serializer
 
-  has_one :from_location
-  has_one :to_location
+  set_type :journeys
+
+  attributes :state, :billable, :vehicle
+  attribute :timestamp, &:client_timestamp
+
+  has_one :from_location, serializer: LocationSerializer
+  has_one :to_location, serializer: LocationSerializer
 
   SUPPORTED_RELATIONSHIPS = %w[
     from_location

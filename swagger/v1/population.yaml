@@ -1,0 +1,98 @@
+Population:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: populations
+      enum:
+      - populations
+      description: The type of this object - always `populations`
+    attributes:
+      type: object
+      required:
+      - date
+      - operational_capacity
+      - usable_capacity
+      - unlock
+      - bedwatch
+      - overnights_in
+      - overnights_out
+      - out_of_area_courts
+      - discharges
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2020-05-17'
+          description: Date for which population information applies
+        operational_capacity:
+          type: integer
+          example: 500
+          description: The designed maximum prisoner capacity for this location and date.
+        usable_capacity:
+          type: integer
+          example: 490
+          description: The current maximum prisoner capacity for this location and date.
+        unlock:
+          type: integer
+          example: 485
+          description: The current prisoner occupancy for this location and date (reduces availabilty).
+        bedwatch:
+          type: integer
+          example: 5
+          description: The number of watched beds for this location and date (reduces availabilty).
+        overnights_in:
+          type: integer
+          example: 2
+          description: The number of overnight arrivals for this location and date (reduces availabilty).
+        overnights_out:
+          type: integer
+          example: 1
+          description: The number of overnight departures for this location and date (increases availabilty).
+        out_of_area_courts:
+          type: integer
+          example: 3
+          description: The number of out of area court appearances for this location and date (increases availabilty).
+        discharges:
+          type: integer
+          example: 4
+          description: The of prisoners being discharged (released) for this location and date (increases availabilty).
+        updated_by:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: Optional name of the person providing population information
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the population was last created or updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the population was created
+          readOnly: true
+    relationships:
+      type: object
+      required:
+      - location
+      properties:
+        location:
+          $ref: location_reference.yaml#/LocationReference
+          description: The location (prison) that the population information relates to
+        moves_from:
+          $ref: move_reference.yaml#/MoveReference
+          description: The current scheduled prison transfers out of this location on the specified date
+          readOnly: true
+        moves_to:
+          $ref: move_reference.yaml#/MoveReference
+          description: The current scheduled prison transfers into this location on the specified date
+          readOnly: true

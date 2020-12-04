@@ -1,11 +1,8 @@
 class GenericEvent
   class JourneyPersonBoardsVehicle < GenericEvent
-    DETAILS_ATTRIBUTES = %w[
-      vehicle_type
-      vehicle_reg
-    ].freeze
+    details_attributes :vehicle_type, :vehicle_reg
+    eventable_types 'Journey'
 
-    include JourneyEventValidations
     include VehicleTypeValidations
     include VehicleRegValidations
   end

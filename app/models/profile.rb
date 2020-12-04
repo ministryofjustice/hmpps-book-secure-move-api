@@ -9,6 +9,7 @@ class Profile < VersionedModel
     assessment_answers
   ].freeze
 
+  # TODO: drop these columns from existing databases
   self.ignored_columns = %w[
     last_name
     first_names
@@ -20,14 +21,18 @@ class Profile < VersionedModel
     profile_identifiers
     gender_additional_information
     latest_nomis_booking_id
+    category
+    category_code
   ]
 
   before_validation :set_assessment_answers
 
+  belongs_to :category, optional: true
   belongs_to :person, touch: true
 
   has_many :moves, dependent: :nullify
   has_one :person_escort_record
+  has_one :youth_risk_assessment
 
   has_many :documents, -> { kept }, as: :documentable, dependent: :destroy, inverse_of: :documentable
 
@@ -40,15 +45,15 @@ class Profile < VersionedModel
   # full of update records where nothing actually changes - making the audit next to useless.
   def merge_assessment_answers!(new_assessment_answers, category)
     new_list =
-      assessment_answers.reject { |a| a.category == category } +
-      manually_created_assessment_answers.select { |a| a.category == category } +
+      assessment_answers.reject { |answer| answer.category == category } +
+      manually_created_assessment_answers.select { |answer| answer.category == category } +
       new_assessment_answers
 
-    deleted = assessment_answers.reject { |a| new_list.map(&:assessment_question_id).include?(a.assessment_question_id) }
-    inserted = new_list.reject { |a| assessment_answers.map(&:assessment_question_id).include?(a.assessment_question_id) }
-    changed = new_list.select do |a|
-      answer = assessment_answers.detect { |aa| aa.assessment_question_id == a.assessment_question_id }
-      answer && answer.attributes != a.attributes
+    deleted = assessment_answers.reject { |answer| new_list.map(&:assessment_question_id).include?(answer.assessment_question_id) }
+    inserted = new_list.reject { |answer| assessment_answers.map(&:assessment_question_id).include?(answer.assessment_question_id) }
+    changed = new_list.select do |answer|
+      matching_answer = assessment_answers.detect { |assessment_answer| assessment_answer.assessment_question_id == answer.assessment_question_id }
+      matching_answer && matching_answer.as_json != answer.as_json
     end
 
     unless deleted.empty? && inserted.empty? && changed.empty?

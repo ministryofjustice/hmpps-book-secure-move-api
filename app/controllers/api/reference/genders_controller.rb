@@ -5,7 +5,7 @@ module Api
     class GendersController < ApiController
       def index
         genders = Gender.all
-        render json: genders
+        render_json genders, serializer: GenderSerializer
       end
     end
   end

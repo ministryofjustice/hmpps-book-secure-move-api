@@ -1,15 +1,11 @@
 class GenericEvent
   class MoveLodgingEnd < GenericEvent
-    include MoveEventValidations
+    LOCATION_ATTRIBUTE_KEY = :location_id
 
-    validates :location_id, presence: true
+    relationship_attributes location_id: :locations
+    eventable_types 'Move'
 
-    def location_id=(location_id)
-      details['location_id'] = location_id
-    end
-
-    def location_id
-      details['location_id']
-    end
+    include LocationValidations
+    include LocationFeed
   end
 end

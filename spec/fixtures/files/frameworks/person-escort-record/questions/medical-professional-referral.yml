@@ -1,0 +1,30 @@
+type: radio
+question: Has the detainee been referred to a medical professional?
+prefill: false
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+    flags:
+      -
+        type: alert
+        label: Physical Health
+      -
+        type: information
+        label: Medication
+    followup_comment:
+      label: Please give details
+      validations:
+      -
+        type: 'required_unless_nomis_mappings'
+        message: You must add more information
+  -
+    label: 'No'
+    value: 'No'
+    followup_comment:
+      label: Please give details
+nomis_fallback_mappings:
+  -
+    type: alert
+  -
+    type: personal_care_need

@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe V2::ProfileSerializer do
-  subject(:serializer) { described_class.new(profile) }
+  subject(:serializer) { described_class.new(profile, adapter_options) }
 
   let(:profile) { create(:profile) }
   let(:adapter_options) { {} }
-  let(:result) { JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   let(:expected_document) do
     {
@@ -65,17 +65,17 @@ RSpec.describe V2::ProfileSerializer do
 
   describe 'with supported includes' do
     let(:profile) { create(:profile, documents: [create(:document)]) }
-    let(:adapter_options) { { include: 'documents,person' } }
+    let(:adapter_options) { { include: %i[documents person] } }
     let(:serialized_person) do
       serializer = V2::PersonSerializer.new(profile.person)
 
-      JSON.parse(ActiveModelSerializers::Adapter.create(serializer, {}).to_json).deep_symbolize_keys
+      JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
     end
 
     let(:serialized_document) do
       serializer = DocumentSerializer.new(profile.documents.first)
 
-      JSON.parse(ActiveModelSerializers::Adapter.create(serializer, {}).to_json).deep_symbolize_keys
+      JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
     end
 
     let(:expected_document) do
@@ -91,7 +91,7 @@ RSpec.describe V2::ProfileSerializer do
             documents: { data: [{ id: profile.documents.first.id, type: 'documents' }] },
           },
         },
-        included: [serialized_person[:data], serialized_document[:data]],
+        included: UnorderedArray(serialized_person[:data], serialized_document[:data]),
       }
     end
 

@@ -1,4 +1,4 @@
-FROM ruby:2.7.1-alpine as build-stage
+FROM ruby:2.7.2-alpine as build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -18,7 +18,7 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:2.7.1-alpine
+FROM ruby:2.7.2-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE ${APP_BUILD_DATE}
@@ -42,6 +42,10 @@ RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
 RUN apk add --update --no-cache git tzdata postgresql-dev
+
+# Fix incompatibility with slim tzdata from 2020b onwards
+RUN wget https://data.iana.org/time-zones/tzdb/tzdata.zi -O /usr/share/zoneinfo/tzdata.zi && \
+    /usr/sbin/zic -b fat /usr/share/zoneinfo/tzdata.zi
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle

@@ -141,11 +141,15 @@ RSpec.describe Api::Reference::LocationsController do
           per_page: 5,
           total_pages: 2,
           total_objects: 6,
-          links: {
-            first: '/api/v1/reference/locations?page=1',
-            last: '/api/v1/reference/locations?page=2',
-            next: '/api/v1/reference/locations?page=2',
-          },
+        }
+      end
+      let(:pagination_links) do
+        {
+          self: 'http://www.example.com/api/v1/reference/locations?page=1&per_page=5',
+          first: 'http://www.example.com/api/v1/reference/locations?page=1&per_page=5',
+          prev: nil,
+          next: 'http://www.example.com/api/v1/reference/locations?page=2&per_page=5',
+          last: 'http://www.example.com/api/v1/reference/locations?page=2&per_page=5',
         }
       end
 
@@ -169,9 +173,12 @@ RSpec.describe Api::Reference::LocationsController do
 
       it 'delegates the query execution to Locations::Finder with the correct filters' do
         expect(Locations::Finder).to have_received(:new).with(
-          location_type: location.location_type,
-          nomis_agency_id: location.nomis_agency_id,
-          supplier_id: supplier.id,
+          filter_params: {
+            location_type: location.location_type,
+            nomis_agency_id: location.nomis_agency_id,
+            supplier_id: supplier.id,
+          },
+          active_record_relationships: nil,
         )
       end
 

@@ -5,6 +5,12 @@ FactoryBot.define do
     association(:person, factory: :person_without_profiles)
   end
 
+  trait :with_person_escort_record do
+    after(:create) do |profile|
+      create(:person_escort_record, profile: profile)
+    end
+  end
+
   trait :with_documents do
     after(:create) do |profile|
       create_list(:document, 1, documentable: profile)
@@ -43,5 +49,13 @@ FactoryBot.define do
         ),
       ]
     end
+  end
+
+  trait :category_supported do
+    association(:category)
+  end
+
+  trait :category_not_supported do
+    association(:category, :not_supported)
   end
 end

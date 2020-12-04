@@ -1,0 +1,46 @@
+Category:
+  type: object
+  required:
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: categories
+      enum:
+        - categories
+      description: The type of this object - always `categories`
+    attributes:
+      type: object
+      required:
+        - key
+        - title
+        - move_supported
+      properties:
+        key:
+          type: string
+          example: 'B'
+          description: The category code
+        title:
+          type: string
+          example: 'Cat B'
+          description: The title of the category
+        move_supported:
+          type: boolean
+          example: 'true'
+          description: Whether the prisoner category is supported by the Book a Secure Move service
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the category was last created or updated
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the category was created
+          readOnly: true

@@ -67,14 +67,19 @@ FrameworkResponse:
           example: 'true'
           description: Indicates if response has been answered
           readOnly: true
+        prefilled:
+          type: boolean
+          example: 'true'
+          description: Indicates if a response has been prefilled on creation by an existing, confirmed person escort record's similar response
+          readOnly: true
     relationships:
       type: object
       required:
-      - person_escort_record
+      - assessment
       properties:
-        person_escort_record:
+        assessment:
           $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
-          description: The person_escort_record the responses refer to
+          description: The assessment the responses refer to, current assessments supported include the Person Escort Record
         question:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
           description: The question this response is for

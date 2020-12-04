@@ -3,7 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe Allocations::Finder do
-  subject(:allocation_finder) { described_class.new(filters: filter_params, ordering: sort_params, search: search_params) }
+  subject(:allocation_finder) do
+    described_class.new(
+      filters: filter_params,
+      ordering: sort_params,
+      search: search_params,
+      active_record_relationships: active_record_relationships,
+    )
+  end
 
   let(:from_location) { create :location }
   let(:to_location) { create :location }
@@ -12,6 +19,7 @@ RSpec.describe Allocations::Finder do
   let(:filter_params) { {} }
   let(:sort_params) { {} }
   let(:search_params) { {} }
+  let(:active_record_relationships) { [] }
 
   describe 'filtering' do
     context 'with matching date range' do
@@ -47,6 +55,7 @@ RSpec.describe Allocations::Finder do
     context 'with matching from_locations' do
       let!(:other_allocation) { create(:allocation, to_location: to_location) }
       let(:filter_params) { { from_locations: from_location.id } }
+      let(:active_record_relationships) { %i[from_location] }
 
       it 'returns allocations matching specified from_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -56,6 +65,7 @@ RSpec.describe Allocations::Finder do
     context 'with matching to_locations' do
       let!(:other_allocation) { create(:allocation, from_location: from_location) }
       let(:filter_params) { { to_locations: to_location.id } }
+      let(:active_record_relationships) { %i[to_location] }
 
       it 'returns allocations matching specified to_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)

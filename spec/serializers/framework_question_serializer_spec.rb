@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkQuestionSerializer do
-  subject(:serializer) { described_class.new(framework_question) }
+  subject(:serializer) { described_class.new(framework_question, include: includes) }
 
   let(:dependent_question) { create :framework_question }
   let(:framework_question) { create :framework_question, dependents: [dependent_question] }
-  let(:result) { ActiveModelSerializers::Adapter.create(serializer, include: includes).serializable_hash }
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 
   it 'contains a `type` property' do
@@ -53,7 +53,7 @@ RSpec.describe FrameworkQuestionSerializer do
   end
 
   context 'with include options' do
-    let(:includes) { { framework: :name, descendants: :question_type } }
+    let(:includes) { %w[framework descendants] }
 
     let(:expected_json) do
       [

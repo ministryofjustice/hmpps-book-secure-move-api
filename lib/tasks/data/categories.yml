@@ -1,0 +1,210 @@
+---
+  A:
+    title: Category A
+    move_supported: false
+    locations:
+  B:
+    title: Category B
+    move_supported: true
+    locations:
+    - FKI
+    - FNI
+    - GHI
+    - GTI
+    - IWI
+    - LLI
+    - LGI
+    - RHI
+    - SLI
+    - WDI
+    - WRI
+    - MRI
+    - WHI
+  BTH:
+    title: Category B Therapeutic
+    move_supported: true
+    locations:
+    - GNI
+  C:
+    title: Category C
+    move_supported: true
+    locations:
+    - HCI
+    - MSI
+    - CWI
+    - BXI
+    - BRI
+    - HPI
+    - ISI
+    - LTI
+    - MTI
+    - WII
+    - WLI
+    - FSI
+    - HMI
+    - LHI
+    - MDI
+    - OWI
+    - ONI
+    - RNI
+    - SFI
+    - SKI
+    - SNI
+    - WEI
+    - BCI
+    - HHI
+    - LFI
+    - NLI
+    - RSI
+    - WMI
+    - CLI
+    - DAI
+    - EEI
+    - GMI
+  CVPU:
+    title: Category C VPU
+    move_supported: true
+    locations:
+    - WTI
+    - ASI
+    - VEI
+    - UKI
+  CYOI:
+    title: Category C / YOI
+    move_supported: true
+    locations:
+    - SHI
+    - HII
+    - PDI
+    - RCI
+  D:
+    title: Category D
+    move_supported: true
+    locations:
+    - HBI
+    - HDI
+    - NSI
+    - SUI
+    - HVI
+    - KMI
+    - KVI
+    - TCI
+    - FDI
+    - LYI
+    - SPI
+    - EHI
+    - UPI
+  E:
+    title: Category A Ex
+    move_supported: false
+    locations:
+  EL:
+    title: Eligible
+    move_supported: true
+    locations:
+  FEM:
+    title: Female
+    move_supported: true
+    locations:
+    - BZI
+    - DWI
+    - DHI
+    - EWI
+    - FHI
+    - LNI
+    - NHI
+    - PFI
+    - SDI
+    - STI
+  FEMO:
+    title: Female Open
+    move_supported: true
+    locations:
+    - ESI
+    - AGI
+  GRANTED:
+    title: Parole Granted
+    move_supported: true
+    locations:
+  H:
+    title: Cat A Hi
+    move_supported: false
+    locations:
+  I:
+    title: YOI Closed
+    move_supported: true
+    locations:
+  IMM:
+    title: Immigration
+    move_supported: true
+    locations:
+    - MHI
+  LOC:
+    title: Local
+    move_supported: true
+    locations:
+    - BFI
+    - BAI
+    - CDI
+    - HOI
+    - PVI
+    - PBI
+    - TSI
+    - WWI
+    - WSI
+    - MRI
+    - WHI
+    - BMI
+    - DNI
+    - DGI
+    - HEI
+    - HLI
+    - LEI
+    - LCI
+    - LII
+    - NMI
+    - ACI
+    - DMI
+    - FBI
+    - LPI
+    - PNI
+    - BLI
+    - BNI
+    - EYI
+    - EXI
+    - LWI
+    - WCI
+    - BWI
+    - CFI
+    - SWI
+    - NWI
+  R:
+    title: Fem Closed
+    move_supported: true
+  U:
+    title: Unsentenced
+    move_supported: true
+  YJB:
+    title: YJB
+    move_supported: true
+    locations:
+    - WYI
+    - WNI
+    - CKI
+  YOI:
+    title: YOI
+    move_supported: true
+    locations:
+    - FMI
+    - AYI
+    - DTI
+  YOIA:
+    title: Adult and YOI
+    move_supported: true
+    locations:
+    - PRI
+  YOIL:
+    title: Local YOI
+    move_supported: true
+    locations:
+    - BSI

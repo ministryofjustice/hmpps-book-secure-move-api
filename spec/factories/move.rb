@@ -52,7 +52,7 @@ FactoryBot.define do
     trait :hospital do
       move_type { 'hospital' }
       association(:from_location, :police, factory: :location)
-      association(:to_location, :hospital, factory: :location)
+      association(:to_location, :high_security_hospital, factory: :location)
     end
 
     # Move statuses
@@ -134,6 +134,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_journey do
+      after(:create) do |move|
+        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move)
+      end
+    end
+
     trait :with_person_escort_record do
       transient do
         person_escort_record_status { 'unstarted' }
@@ -145,6 +151,7 @@ FactoryBot.define do
           profile: move.profile,
           status: evaluator.person_escort_record_status,
           confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
+          completed_at: evaluator.person_escort_record_status == 'completed' ? Time.zone.now : nil,
         )
       end
     end

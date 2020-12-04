@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe AllocationSerializer do
-  subject(:serializer) { described_class.new(allocation) }
+  subject(:serializer) { described_class.new(allocation, adapter_options) }
 
   let(:complex_case) { create(:allocation_complex_case) }
   let(:complex_case_answer_attributes) do
@@ -16,9 +16,7 @@ RSpec.describe AllocationSerializer do
   end
   let(:complex_case_answer) { Allocation::ComplexCaseAnswer.new(complex_case_answer_attributes) }
   let(:allocation) { create(:allocation, complex_cases: [complex_case_answer]) }
-  let(:result) do
-    JSON.parse(ActiveModelSerializers::Adapter.create(serializer, adapter_options).to_json).deep_symbolize_keys
-  end
+  let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
 
@@ -96,15 +94,22 @@ RSpec.describe AllocationSerializer do
     it 'contains an updated_at attribute' do
       expect(attributes[:updated_at]).to eql allocation.updated_at.iso8601
     end
+
+    it 'contains expected meta data' do
+      expect(result_data[:meta]).to eq({
+        moves: {
+          total: 0,
+          filled: 0,
+          unfilled: 0,
+        },
+      })
+    end
   end
 
   describe 'locations' do
     let(:adapter_options) do
       {
-        include: {
-          from_location: %I[location_type title],
-          to_location: %I[location_type title],
-        },
+        include: %i[from_location to_location],
       }
     end
     let(:expected_json) do

@@ -2,8 +2,8 @@ module Api::V1
   module MovesActions
     def index_and_render
       paginate moves,
-               include: included_relationships - %w[court_hearings],
-               fields: MoveSerializer::INCLUDED_FIELDS
+               serializer: MoveSerializer,
+               include: included_relationships - %w[court_hearings]
     end
 
     def show_and_render
@@ -101,7 +101,7 @@ module Api::V1
     end
 
     def render_move(move, status)
-      render json: move, status: status, include: included_relationships, fields: MoveSerializer::INCLUDED_FIELDS
+      render_json move, serializer: MoveSerializer, include: included_relationships, status: status
     end
 
     def move
@@ -118,7 +118,22 @@ module Api::V1
     end
 
     def included_relationships
-      IncludeParamHandler.new(params).call || MoveSerializer::SUPPORTED_RELATIONSHIPS
+      include_params_handler.included_relationships || MoveSerializer::SUPPORTED_RELATIONSHIPS
+    end
+
+    def active_record_relationships
+      # NB: v1 API needs a hardcoded active_record_relationships as they are not usually provided in the request
+      [
+        :allocation,
+        :supplier,
+        :court_hearings,
+        :prison_transfer_reason,
+        :original_move,
+        :from_location,
+        :to_location,
+        profile: [:documents, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]],
+        person: %i[gender ethnicity],
+      ]
     end
 
     def supported_relationships

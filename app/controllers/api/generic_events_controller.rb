@@ -17,7 +17,7 @@ module Api
       event = event_type.constantize.create!(event_attributes)
       run_event_logs
 
-      render json: event, status: :created, serializer: ::GenericEventSerializer
+      render_json event, serializer: event.class.serializer, status: :created
     end
 
   private
@@ -30,7 +30,7 @@ module Api
 
         attributes.merge!('supplier' => doorkeeper_application_owner) if doorkeeper_application_owner
         attributes.merge!('eventable' => eventable) if eventable_params
-        attributes['details'] = attributes['details'].slice(*event_type.constantize::DETAILS_ATTRIBUTES)
+        attributes['details'] = attributes['details']&.slice(*event_type.constantize.details_attributes) || {}
 
         attributes['details'].merge!(event_specific_relationships) if event_specific_relationships.any?
       end

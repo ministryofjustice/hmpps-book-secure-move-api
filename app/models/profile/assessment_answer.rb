@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class Profile
-  class AssessmentAnswer < ActiveModelSerializers::Model
-    attributes(
+  class AssessmentAnswer
+    include ActiveModel::Model
+
+    attr_accessor(
       :title,
       :comments,
       :assessment_question_id,
-      :created_at,
-      :expires_at,
       :category,
       :key,
       :nomis_alert_code,
@@ -15,6 +15,10 @@ class Profile
       :nomis_alert_description,
       :nomis_alert_type_description,
       :imported_from_nomis,
+    )
+    attr_reader(
+      :created_at,
+      :expires_at,
     )
 
     validates :assessment_question_id, presence: true
@@ -37,23 +41,6 @@ class Profile
 
     def empty?
       assessment_question_id.blank?
-    end
-
-    def as_json(_options = {})
-      {
-        title: title,
-        comments: comments,
-        created_at: created_at,
-        expires_at: expires_at,
-        assessment_question_id: assessment_question_id,
-        category: category,
-        key: key,
-        nomis_alert_type: nomis_alert_type,
-        nomis_alert_code: nomis_alert_code,
-        nomis_alert_type_description: nomis_alert_type_description,
-        nomis_alert_description: nomis_alert_description,
-        imported_from_nomis: imported_from_nomis,
-      }
     end
 
     def copy_question_attributes

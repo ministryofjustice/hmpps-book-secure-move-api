@@ -1,0 +1,30 @@
+{
+  "id" : "540f8556-39ad-4c95-839a-188616fdb933",
+  "name" : "api_bookings_889765",
+  "request" : {
+    "url" : "/api/bookings/889765",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"offenderNo\":\"G8133UA\",\"bookingId\":889765,\"bookingNo\":\"M76508\",\"offenderId\":2235479,\"rootOffenderId\":2235479,\"firstName\":\"DOMSANIGH\",\"lastName\":\"CASEDY\",\"dateOfBirth\":\"1995-11-17\",\"age\":24,\"activeFlag\":true,\"facialImageId\":1375279,\"agencyId\":\"BAI\",\"assignedLivingUnitId\":186372,\"religion\":\"Religion - Muslim\",\"alertsCodes\":[\"P\",\"R\"],\"activeAlertCount\":2,\"inactiveAlertCount\":1,\"alerts\":[{\"alertId\":3,\"alertType\":\"P\",\"alertTypeDescription\":\"MAPPP Case\",\"alertCode\":\"PC2\",\"alertCodeDescription\":\"MAPPA Cat 2\",\"comment\":\"HRErJMfhUuLHisGPkEhGRpvHSvjfHHRErJMfhUuLHisGPkEhGRpvHSvjfH\",\"dateCreated\":\"2017-02-03\",\"expired\":false,\"active\":true,\"addedByFirstName\":\"OMCHIJOHN\",\"addedByLastName\":\"DANTEXIA\",\"expiredByFirstName\":\"ADMIN&ONB\",\"expiredByLastName\":\"CNOMIS\"},{\"alertId\":2,\"alertType\":\"R\",\"alertTypeDescription\":\"Risk\",\"alertCode\":\"ROM\",\"alertCodeDescription\":\"OASys Serious Harm-Medium\",\"dateCreated\":\"2015-02-22\",\"expired\":false,\"active\":true,\"addedByFirstName\":\"EHICEY\",\"addedByLastName\":\"CAITLARIAH\",\"expiredByFirstName\":\"ADMIN&ONB\",\"expiredByLastName\":\"CNOMIS\"},{\"alertId\":1,\"alertType\":\"P\",\"alertTypeDescription\":\"MAPPP Case\",\"alertCode\":\"P0\",\"alertCodeDescription\":\"MAPPA Nominal\",\"comment\":\"lAzCdJPxAuYiYJlAzCdJPxAuYiYJ\",\"dateCreated\":\"2014-10-17\",\"dateExpires\":\"2015-11-04\",\"expired\":true,\"active\":false,\"addedByFirstName\":\"EHICEY\",\"addedByLastName\":\"LANORIA\",\"expiredByFirstName\":\"ADMIN&ONB\",\"expiredByLastName\":\"CNOMIS\"}],\"assignedLivingUnit\":{\"agencyId\":\"BAI\",\"locationId\":186372,\"description\":\"HB4-3-033\",\"agencyName\":\"Belmarsh (HMP)\"},\"physicalAttributes\":{\"gender\":\"Male\",\"raceCode\":\"B2\",\"ethnicity\":\"Black/Black British: African\",\"heightFeet\":5,\"heightInches\":11,\"heightMetres\":1.80,\"heightCentimetres\":180,\"weightPounds\":189,\"weightKilograms\":86,\"sexCode\":\"M\"},\"physicalCharacteristics\":[{\"type\":\"HAIR\",\"characteristic\":\"Hair Colour\",\"detail\":\"Black\"},{\"type\":\"R_EYE_C\",\"characteristic\":\"Right Eye Colour\",\"detail\":\"Brown\"},{\"type\":\"L_EYE_C\",\"characteristic\":\"Left Eye Colour\",\"detail\":\"Brown\"},{\"type\":\"FACIAL_HAIR\",\"characteristic\":\"Facial Hair\",\"detail\":\"Clean Shaven\"},{\"type\":\"FACE\",\"characteristic\":\"Shape of Face\",\"detail\":\"Oval\"},{\"type\":\"BUILD\",\"characteristic\":\"Build\",\"detail\":\"Medium\"},{\"type\":\"SHOESIZE\",\"characteristic\":\"Shoe Size\",\"detail\":\"9\"}],\"profileInformation\":[{\"type\":\"YOUTH\",\"question\":\"Youth Offender?\",\"resultValue\":\"Yes\"},{\"type\":\"MARITAL\",\"question\":\"Domestic Status\",\"resultValue\":\"Single-not married/in civil partnership\"},{\"type\":\"SMOKE\",\"question\":\"Is the Offender a smoker?\",\"resultValue\":\"Yes\"},{\"type\":\"TAT\",\"question\":\"Warned about tattooing?\",\"resultValue\":\"Yes\"},{\"type\":\"APPEAR\",\"question\":\"Warned not to change appearance?\",\"resultValue\":\"Yes\"},{\"type\":\"SEXO\",\"question\":\"Sexual Orientation\",\"resultValue\":\"Heterosexual / Straight\"},{\"type\":\"RELF\",\"question\":\"Religion\",\"resultValue\":\"Religion - Muslim\"},{\"type\":\"NAT\",\"question\":\"Nationality?\",\"resultValue\":\"British\"}],\"physicalMarks\":[{\"type\":\"Other\",\"bodyPart\":\"Face\",\"comment\":\"ctJQPNKctJQPN\"}],\"assessments\":[{\"bookingId\":889765,\"classificationCode\":\"STANDARD\",\"classification\":\"Standard\",\"assessmentCode\":\"CSR1\",\"assessmentDescription\":\"CSR Reception\",\"cellSharingAlertFlag\":true,\"assessmentDate\":\"2014-07-18\",\"nextReviewDate\":\"2015-07-18\",\"assessmentStatus\":\"A\",\"assessmentSeq\":1},{\"bookingId\":889765,\"classificationCode\":\"STANDARD\",\"classification\":\"Standard\",\"assessmentCode\":\"CSR\",\"assessmentDescription\":\"CSR Rating\",\"cellSharingAlertFlag\":true,\"assessmentDate\":\"2017-02-01\",\"nextReviewDate\":\"2017-07-06\",\"assessmentStatus\":\"A\",\"assessmentSeq\":10,\"assessmentComment\":\"fSCKWZFbRxWyWfSCKWZFbRxWyW\"},{\"bookingId\":889765,\"classificationCode\":\"C\",\"classification\":\"Cat C\",\"assessmentCode\":\"CATEGORY\",\"assessmentDescription\":\"Categorisation\",\"cellSharingAlertFlag\":false,\"assessmentDate\":\"2017-01-07\",\"nextReviewDate\":\"2017-07-06\",\"assessmentStatus\":\"A\",\"assessmentSeq\":11},{\"bookingId\":889765,\"classificationCode\":\"HI\",\"classification\":\"High\",\"assessmentCode\":\"CSRREV\",\"assessmentDescription\":\"CSR Review\",\"cellSharingAlertFlag\":true,\"assessmentDate\":\"2016-06-28\",\"nextReviewDate\":\"2017-09-26\",\"assessmentStatus\":\"A\",\"assessmentSeq\":8}],\"csra\":\"Standard\",\"category\":\"Cat C\",\"categoryCode\":\"C\",\"birthPlace\":\"LONDON\",\"birthCountryCode\":\"ENG\",\"inOutStatus\":\"IN\",\"status\":\"ACTIVE IN\"}",
+    "headers" : {
+      "Date" : "Thu, 22 Oct 2020 09:50:34 GMT",
+      "Content-Type" : "application/json",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "540f8556-39ad-4c95-839a-188616fdb933",
+  "persistent" : true,
+  "scenarioName" : "scenario-1-api-bookings-889765",
+  "requiredScenarioState" : "Started",
+  "newScenarioState" : "scenario-1-api-bookings-889765-2",
+  "insertionIndex" : 15
+}

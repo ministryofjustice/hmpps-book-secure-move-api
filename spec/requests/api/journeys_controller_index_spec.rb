@@ -43,18 +43,21 @@ RSpec.describe Api::JourneysController do
       end
 
       describe 'paginating results' do
-        let(:url) { "/api/v1/moves/#{move.id}/journeys?page=#{page}&per_page=#{per_page}" }
         let(:intermediate_journeys_count) { 4 }
         let(:meta_pagination) do
           {
             per_page: 5,
             total_pages: 2,
             total_objects: 6,
-            links: {
-              first: "/api/v1/moves/#{move.id}/journeys?page=1&per_page=#{per_page}",
-              last: "/api/v1/moves/#{move.id}/journeys?page=2&per_page=#{per_page}",
-              next: "/api/v1/moves/#{move.id}/journeys?page=2&per_page=#{per_page}",
-            },
+          }
+        end
+        let(:pagination_links) do
+          {
+            self: "http://www.example.com/api/v1/moves/#{move.id}/journeys?page=1&per_page=5",
+            first: "http://www.example.com/api/v1/moves/#{move.id}/journeys?page=1&per_page=5",
+            prev: nil,
+            next: "http://www.example.com/api/v1/moves/#{move.id}/journeys?page=2&per_page=5",
+            last: "http://www.example.com/api/v1/moves/#{move.id}/journeys?page=2&per_page=5",
           }
         end
 

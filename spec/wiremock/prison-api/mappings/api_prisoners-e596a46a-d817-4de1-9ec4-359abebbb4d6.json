@@ -1,0 +1,35 @@
+{
+  "id" : "e596a46a-d817-4de1-9ec4-359abebbb4d6",
+  "name" : "api_prisoners",
+  "request" : {
+    "url" : "/api/prisoners",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"offenderNos\":[\"G8133UA\"]}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"offenderNo\":\"G8133UA\",\"firstName\":\"DOMSANIGH\",\"lastName\":\"CASEDY\",\"dateOfBirth\":\"1995-11-17\",\"gender\":\"Male\",\"sexCode\":\"M\",\"nationalities\":\"British\",\"currentlyInPrison\":\"Y\",\"latestBookingId\":889765,\"latestLocationId\":\"BAI\",\"latestLocation\":\"Belmarsh (HMP)\",\"internalLocation\":\"BAI-HB4-3-033\",\"pncNumber\":\"14/120018R\",\"croNumber\":\"351774/14D\",\"ethnicity\":\"Black/Black British: African\",\"ethnicityCode\":\"B2\",\"birthCountry\":\"England\",\"religion\":\"Religion - Muslim\",\"religionCode\":\"MOS\",\"convictedStatus\":\"Convicted\",\"legalStatus\":\"SENTENCED\",\"imprisonmentStatus\":\"SENT03\",\"imprisonmentStatusDesc\":\"Adult Imprisonment Without Option CJA03\",\"receptionDate\":\"2014-07-18\",\"maritalStatus\":\"Single-not married/in civil partnership\"}]",
+    "headers" : {
+      "Date" : "Thu, 22 Oct 2020 09:50:34 GMT",
+      "Content-Type" : "application/json",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "Total-Records" : "1",
+      "Page-Offset" : "0",
+      "Page-Limit" : "1",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "e596a46a-d817-4de1-9ec4-359abebbb4d6",
+  "persistent" : true,
+  "insertionIndex" : 14
+}

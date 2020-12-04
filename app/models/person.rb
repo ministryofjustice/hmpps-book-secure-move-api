@@ -10,6 +10,9 @@ class Person < VersionedModel
     police_national_computer
     prison_number
     latest_nomis_booking_id
+    first_names
+    last_name
+    date_of_birth
   ].freeze
 
   IDENTIFIER_TYPES = %i[
@@ -18,6 +21,10 @@ class Person < VersionedModel
 
   has_many :profiles, dependent: :destroy
   has_many :moves, through: :profiles
+  has_many :person_escort_records, through: :profiles
+  has_many :youth_risk_assessments, through: :profiles
+  has_many :generic_events, as: :eventable, dependent: :destroy
+
   belongs_to :ethnicity, optional: true
   belongs_to :gender, optional: true
 
@@ -28,6 +35,8 @@ class Person < VersionedModel
 
   validates :last_name, presence: true
   validates :first_names, presence: true
+
+  auto_strip_attributes :nomis_prison_number, :prison_number, :criminal_records_office, :police_national_computer
 
   def age
     # See: https://medium.com/@craigsheen/calculating-age-in-rails-9bb661f11303
@@ -58,5 +67,17 @@ class Person < VersionedModel
     feed_attributes.merge!('age' => age) if age
 
     feed_attributes
+  end
+
+  def latest_person_escort_record
+    person_escort_records.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
+  end
+
+  def latest_youth_risk_assessment
+    youth_risk_assessments.where(status: FrameworkAssessmentable::ASSESSMENT_CONFIRMED).order(confirmed_at: :desc).first
+  end
+
+  def category
+    @category ||= Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
   end
 end

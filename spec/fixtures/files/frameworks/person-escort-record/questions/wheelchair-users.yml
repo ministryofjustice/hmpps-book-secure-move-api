@@ -1,0 +1,21 @@
+type: radio
+question: Are they a wheelchair user?
+prefill: true
+options:
+  -
+    label: 'Yes'
+    value: 'Yes'
+  -
+    label: 'No'
+    value: 'No'
+validations:
+  -
+    type: 'required'
+    message: You must select an option
+nomis_mappings:
+  -
+    code: PEEP
+    type: personal_care_need
+  -
+    code: WHEELCHR_ACC
+    type: reasonable_adjustment

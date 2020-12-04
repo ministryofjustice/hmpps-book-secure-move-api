@@ -161,6 +161,30 @@ Allocation:
           - type: 'null'
           description: In case 'other' is chosen as cancellation_reason, further details
             can be specified
+    meta:
+      description: Metadata for each allocation
+      readOnly: true
+      type: object
+      properties:
+        moves:
+          type: object
+          required:
+            - total
+            - filled
+            - unfilled
+          properties:
+            total:
+              type: integer
+              example: 10
+              description: Total number of moves associated with this allocation. If the allocation is cancelled, this returns all moves irrespective of move status (i.e. includes cancelled moves). If the allocation is not yet cancelled then this total excludes cancelled moves that are part of the allocation.
+            filled:
+              type: integer
+              example: 6
+              description: Number of non cancelled moves for this allocation with person/profile attached (i.e. excludes filled but cancelled moves)
+            unfilled:
+              type: integer
+              example: 4
+              description: Number of non cancelled moves for this allocation without person/profile attached (i.e. excludes unfilled but cancelled moves)
     relationships:
       type: object
       required:

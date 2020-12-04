@@ -21,11 +21,11 @@ module Api
     def update
       framework_response.update_with_flags!(update_framework_response_attributes)
 
-      render json: framework_response, status: :ok, include: included_relationships
+      render_json framework_response, serializer: FrameworkResponseSerializer, include: included_relationships, status: :ok
     end
 
     def bulk_update
-      FrameworkResponses::BulkUpdater.new(person_escort_record, bulk_update_framework_response_values).call
+      FrameworkResponses::BulkUpdater.new(assessment, bulk_update_framework_response_values).call
 
       render status: :no_content
     end
@@ -58,8 +58,8 @@ module Api
       @framework_response ||= FrameworkResponse.find(params[:id])
     end
 
-    def person_escort_record
-      @person_escort_record ||= PersonEscortRecord.find(params[:id])
+    def assessment
+      @assessment ||= params['assessment_class'].find(params[:id])
     end
 
     def render_value_type_error(exception)

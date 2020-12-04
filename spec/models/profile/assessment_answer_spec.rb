@@ -77,12 +77,6 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  describe '#as_json' do
-    it 'returns a hash of all values' do
-      expect(assessment_answer.as_json).to eql attribute_values
-    end
-  end
-
   describe '#created_at=' do
     it 'converts strings to dates' do
       assessment_answer.created_at = '2019-05-30'
@@ -215,8 +209,8 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         assessment_question_id: 'bar',
         category: 'foo',
         comments: nil,
-        created_at: Date.parse('2010-06-21'),
-        expires_at: Date.parse('2010-06-21'),
+        created_at: Date.parse('2010-06-21').iso8601,
+        expires_at: Date.parse('2010-06-21').iso8601,
         imported_from_nomis: true,
         key: 'baz',
         nomis_alert_code: 'bar',
@@ -230,7 +224,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     it 'instantiates an expected AssessmentAnswer' do
       result = described_class.from_nomis_personal_care_need(personal_care_need, assessment_question, alert_type_description)
 
-      expect(result.as_json).to eq(expected_assessment_answer)
+      expect(result.as_json.symbolize_keys).to eq(expected_assessment_answer)
     end
   end
 end

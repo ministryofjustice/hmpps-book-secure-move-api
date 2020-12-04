@@ -1,10 +1,11 @@
 module FrameworkNomisMappings
   class PersonalCareNeeds
     PERSONAL_CARE_NEED_CODES = 'SC,MATSTAT,PHY,PSYCH,DISAB'.freeze
-    attr_reader :prison_number
+    attr_reader :prison_number, :nomis_sync_status
 
-    def initialize(prison_number:)
+    def initialize(prison_number:, nomis_sync_status: FrameworkNomisMappings::NomisSyncStatus.new(resource_type: 'personal_care_needs'))
       @prison_number = prison_number
+      @nomis_sync_status = nomis_sync_status
     end
 
     def call
@@ -16,9 +17,12 @@ module FrameworkNomisMappings
   private
 
     def imported_personal_care_needs
-      @imported_personal_care_needs ||= NomisClient::PersonalCareNeeds.get(nomis_offender_numbers: [prison_number], personal_care_types: PERSONAL_CARE_NEED_CODES)
+      @imported_personal_care_needs ||= NomisClient::PersonalCareNeeds.get(nomis_offender_numbers: [prison_number], personal_care_types: PERSONAL_CARE_NEED_CODES).tap do
+        nomis_sync_status.set_success
+      end
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e
       Rails.logger.warn "Importing Framework personal care needs mappings Error: #{e.message}"
+      nomis_sync_status.set_failure(message: e.message)
 
       []
     end

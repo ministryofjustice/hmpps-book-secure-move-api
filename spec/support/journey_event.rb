@@ -1,7 +1,5 @@
 RSpec.shared_examples 'a journey event' do |transition|
-  it 'validates eventable_type' do
-    expect(generic_event).to validate_inclusion_of(:eventable_type).in_array(%w[Journey])
-  end
+  it_behaves_like 'an event with eventable types', 'Journey'
 
   describe '#trigger' do
     it 'does not persist changes to the eventable' do

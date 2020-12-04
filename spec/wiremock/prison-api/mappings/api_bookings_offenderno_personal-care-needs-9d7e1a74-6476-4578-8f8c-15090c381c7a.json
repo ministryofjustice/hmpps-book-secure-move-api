@@ -1,0 +1,32 @@
+{
+  "id" : "9d7e1a74-6476-4578-8f8c-15090c381c7a",
+  "name" : "api_bookings_offenderno_personal-care-needs",
+  "request" : {
+    "url" : "/api/bookings/offenderNo/personal-care-needs?type=MATSTAT%2CPHY%2CDISAB",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "[\"G8133UA\"]",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"offenderNo\":\"G8133UA\",\"personalCareNeeds\":[{\"problemType\":\"DISAB\",\"problemCode\":\"ND\",\"problemStatus\":\"ON\",\"problemDescription\":\"No Disability\",\"commentText\":null,\"startDate\":\"2014-07-28\",\"endDate\":null},{\"problemType\":\"DISAB\",\"problemCode\":\"ND\",\"problemStatus\":\"ON\",\"problemDescription\":\"No Disability\",\"commentText\":null,\"startDate\":\"2014-07-31\",\"endDate\":null},{\"problemType\":\"DISAB\",\"problemCode\":\"ND\",\"problemStatus\":\"ON\",\"problemDescription\":\"No Disability\",\"commentText\":null,\"startDate\":\"2014-10-16\",\"endDate\":null}]}]",
+    "headers" : {
+      "Date" : "Thu, 22 Oct 2020 09:50:35 GMT",
+      "Content-Type" : "application/json",
+      "Request-Context" : "appId=cid-v1:0d5d6f09-1d07-47f5-9d3a-f9f473544e78",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "9d7e1a74-6476-4578-8f8c-15090c381c7a",
+  "persistent" : true,
+  "insertionIndex" : 18
+}

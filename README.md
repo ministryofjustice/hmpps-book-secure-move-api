@@ -73,16 +73,6 @@ We use Rubocop for code linting, to run the checks:
 bundle exec rubocop
 ```
 
-### Create fake data
-
-To create fake data to use for testing and in a development environment run:
-
-```
-bundle exec rails fake_data:recreate_all
-```
-
-**WARNING:** This will delete all existing data
-
 ### Create reference data
 
 To create reference data (seed data) needed in production run the
@@ -97,6 +87,16 @@ environment variables configured with the relevant security credentials.
 
 These tasks are designed to be non-destructive. They can be run multiple
 times and will only modify data if the original data source has changed.
+
+### Create fake transactional data
+
+To optionally create fake transactional data to use for testing and in a development environment run:
+
+```
+bundle exec rails fake_data:create_all
+```
+
+**NOTE:** This requires all reference data to be loaded before running using the above `reference_data:create_all` task.
 
 ### Populate Framework data
 
@@ -155,6 +155,10 @@ Platform with the following namespace names:
 
 `preprod`, `uat` and `production` can be deployed by generating a new tag
 following [semantic versioning](https://semver.org/) pointing to the current commit. We typically do this locally with:
+
+Deployments and associated commits are tracked in the service Sentry project.
+The Git SHA is used to identify the release and is tracked  by means of the `SENTRY_RELEASE` environment variable in Dockerfile.
+The associated commits are tracked by a CircleCI integration triggered on the deployment stage.
 
 ```bash
 # Get a list of tags

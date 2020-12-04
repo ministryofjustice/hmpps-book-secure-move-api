@@ -35,6 +35,19 @@ RSpec.describe Api::MovesController do
         end
         let(:params) { { filter: filters } }
         let(:ability) { Ability.new }
+        let(:v1_active_record_relationships) do
+          [
+            :allocation,
+            :supplier,
+            :court_hearings,
+            :prison_transfer_reason,
+            :original_move,
+            :from_location,
+            :to_location,
+            profile: [:documents, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]],
+            person: %i[gender ethnicity],
+          ]
+        end
 
         it 'delegates the query execution to Moves::Finder with the correct filters' do
           allow(Ability).to receive(:new).and_return(ability)
@@ -44,7 +57,12 @@ RSpec.describe Api::MovesController do
 
           get_moves
 
-          expect(Moves::Finder).to have_received(:new).with({ from_location_id: from_location_id }, ability, {})
+          expect(Moves::Finder).to have_received(:new).with(
+            filter_params: { from_location_id: from_location_id },
+            ability: ability,
+            order_params: {},
+            active_record_relationships: v1_active_record_relationships,
+          )
         end
 
         it 'filters the results' do
@@ -118,11 +136,15 @@ RSpec.describe Api::MovesController do
             per_page: 5,
             total_pages: 2,
             total_objects: 6,
-            links: {
-              first: '/api/v1/moves?page=1',
-              last: '/api/v1/moves?page=2',
-              next: '/api/v1/moves?page=2',
-            },
+          }
+        end
+        let(:pagination_links) do
+          {
+            self: 'http://www.example.com/api/v1/moves?page=1&per_page=5',
+            first: 'http://www.example.com/api/v1/moves?page=1&per_page=5',
+            prev: nil,
+            next: 'http://www.example.com/api/v1/moves?page=2&per_page=5',
+            last: 'http://www.example.com/api/v1/moves?page=2&per_page=5',
           }
         end
 

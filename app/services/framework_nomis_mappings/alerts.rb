@@ -1,9 +1,10 @@
 module FrameworkNomisMappings
   class Alerts
-    attr_reader :prison_number
+    attr_reader :prison_number, :nomis_sync_status
 
-    def initialize(prison_number:)
+    def initialize(prison_number:, nomis_sync_status: FrameworkNomisMappings::NomisSyncStatus.new(resource_type: 'alerts'))
       @prison_number = prison_number
+      @nomis_sync_status = nomis_sync_status
     end
 
     def call
@@ -15,9 +16,10 @@ module FrameworkNomisMappings
   private
 
     def imported_alerts
-      @imported_alerts ||= NomisClient::Alerts.get([prison_number])
+      @imported_alerts ||= NomisClient::Alerts.get([prison_number]).tap { nomis_sync_status.set_success }
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e
       Rails.logger.warn "Importing Framework alert mappings Error: #{e.message}"
+      nomis_sync_status.set_failure(message: e.message)
 
       []
     end

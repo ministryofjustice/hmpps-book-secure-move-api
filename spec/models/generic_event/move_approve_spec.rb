@@ -14,6 +14,8 @@ RSpec.describe GenericEvent::MoveApprove do
 
   it { is_expected.to validate_presence_of(:date) }
 
+  it_behaves_like 'an event with details', :date, :create_in_nomis
+
   context 'when the date format is not an iso8601 date' do
     let(:date) { '2019/01/01' }
 
@@ -85,47 +87,6 @@ RSpec.describe GenericEvent::MoveApprove do
 
     it 'generates a feed document' do
       expect(generic_event.for_feed).to include_json(expected_json)
-    end
-  end
-
-  describe '.from_event' do
-    let(:move) { create(:move, date: Date.new(2020, 1, 30)) }
-    let(:event) do
-      create(:event, :approve, :locations, eventable: move,
-                                           details: {
-                                             event_params: {
-                                               attributes: {
-                                                 date: move.date,
-                                                 create_in_nomis: true,
-                                                 notes: 'foo',
-                                               },
-                                             },
-                                           })
-    end
-
-    let(:expected_generic_event_attributes) do
-      {
-        'id' => nil,
-        'eventable_id' => move.id,
-        'eventable_type' => 'Move',
-        'type' => 'GenericEvent::MoveApprove',
-        'notes' => 'foo',
-        'created_by' => 'unknown',
-        'details' => {
-          'date' => '2020-01-30',
-          'create_in_nomis' => true,
-        },
-        'occurred_at' => eq(event.client_timestamp),
-        'recorded_at' => eq(event.client_timestamp),
-        'created_at' => be_within(0.1.seconds).of(event.created_at),
-        'updated_at' => be_within(0.1.seconds).of(event.updated_at),
-      }
-    end
-
-    it 'builds a generic_event with the correct attributes' do
-      expect(
-        described_class.from_event(event).attributes,
-      ).to include_json(expected_generic_event_attributes)
     end
   end
 end

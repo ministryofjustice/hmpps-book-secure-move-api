@@ -38,7 +38,7 @@ RSpec.describe Api::Reference::PrisonTransferReasonsController, :rswag, :with_cl
 
       response '200', 'success' do
         let(:resource_to_json) do
-          JSON.parse(ActionController::Base.render(json: reasons))
+          JSON.parse(PrisonTransferReasonSerializer.new(reasons).serializable_hash.to_json)
         end
 
         schema '$ref' => 'get_prison_transfer_reasons_responses.yaml#/200'

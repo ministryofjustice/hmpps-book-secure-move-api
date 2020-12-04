@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-class AllocationSerializer < ActiveModel::Serializer
+class AllocationSerializer
+  include JSONAPI::Serializer
+
+  set_type :allocations
+
   attributes :moves_count,
              :date,
              :estate,
@@ -18,9 +22,15 @@ class AllocationSerializer < ActiveModel::Serializer
              :created_at,
              :updated_at
 
-  has_one :from_location
-  has_one :to_location
-  has_many :moves
+  has_one :from_location, serializer: LocationSerializer
+  has_one :to_location, serializer: LocationSerializer
+  has_many :moves, serializer: V2::MoveSerializer
+
+  meta do |object|
+    {
+      moves: object.move_totals,
+    }
+  end
 
   SUPPORTED_RELATIONSHIPS = %w[
     from_location

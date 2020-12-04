@@ -86,6 +86,8 @@
       :$ref: "../v1/person_reference.yaml#/PersonReference"
     :PersonEscortRecord:
       :$ref: "../v1/person_escort_record.yaml#/PersonEscortRecord"
+    :Population:
+      :$ref: "../v1/population.yaml#/Population"
     :PrisonTransferReason:
       :$ref: "../v1/prison_transfer_reason.yaml#/PrisonTransferReason"
     :ProfileIdentifier:
@@ -209,7 +211,7 @@
           schema:
             type: string
           example: Bloggs
-        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
+        - "$ref": "../v1/allocations_include_parameter.yaml#/AllocationsIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"
       responses:
@@ -282,6 +284,48 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_allocations_responses.yaml#/422"
+  "/allocations/{allocation_id}":
+    get:
+      summary: Returns the details of an allocation
+      tags:
+        - Allocations
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/allocation_id_parameter.yaml#/AllocationId"
+        - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_allocation_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
   "/allocations/{allocation_id}/cancel":
     post:
       summary: Cancels an allocation and all associated moves
@@ -2622,7 +2666,7 @@
       - name: body
         in: body
         required: true
-        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `profile` of the person.
+        description: The `person_escort_record` object to be created. Requires the `version` of the framework of questions, as well as the `move` already associated to a `profile` for a person.
         schema:
           "$ref": "../v1/post_person_escort_record.yaml#/PostPersonEscortRecord"
       responses:
@@ -2812,6 +2856,145 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/error_responses.yaml#/422"
+  "/populations":
+    post:
+      summary: Creates a new population
+      tags:
+        - Populations
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The population object to be created
+          schema:
+            "$ref": "../v1/population.yaml#/Population"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "201":
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/201"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_populations_responses.yaml#/422"
+  "/populations/{population_id}":
+    get:
+      summary: Returns population details for a given date and location
+      tags:
+        - Populations
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/population_id_parameter.yaml#/PopulationId"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_population_responses.yaml#/200"
+        "401":
+          description: unauthorised
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid content type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
+    patch:
+      summary: Updates existing population details
+      tags:
+        - Populations
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: The population details to be updated
+          schema:
+            "$ref": "../v1/population.yaml#/Population"
+        - "$ref": "../v1/population_id_parameter.yaml#/PopulationId"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_population_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases
@@ -2964,6 +3147,7 @@
               - community_rehabilitation_company
               - foreign_national_prison
               - voluntary_hostel
+              - hospital
               - high_security_hospital
               - immigration_detention_centre
         - name: filter[nomis_agency_id]

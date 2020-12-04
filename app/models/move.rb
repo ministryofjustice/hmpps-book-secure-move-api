@@ -76,6 +76,7 @@ class Move < VersionedModel
   belongs_to :profile, optional: true, touch: true
   has_one :person, through: :profile
   has_one :person_escort_record
+  has_one :youth_risk_assessment
 
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
@@ -85,8 +86,7 @@ class Move < VersionedModel
   has_many :journeys, -> { default_order }, dependent: :restrict_with_exception, inverse_of: :move
   has_many :court_hearings, dependent: :restrict_with_exception
 
-  has_many :events, as: :eventable, dependent: :destroy # NB: polymorphic association
-  has_many :generic_events, as: :eventable, dependent: :destroy # NB: polymorphic association
+  has_many :generic_events, as: :eventable, dependent: :destroy
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
@@ -109,13 +109,12 @@ class Move < VersionedModel
   validates :rejection_reason, absence: true, unless: :rejected?
 
   validate :date_to_after_date_from
+  validate :validate_prisoner_category
 
   before_validation :set_reference
   before_validation :set_move_type
 
   delegate :suppliers, to: :from_location
-
-  scope :not_cancelled, -> { where.not(status: MOVE_STATUS_CANCELLED) }
 
   attr_accessor :version
 
@@ -153,12 +152,23 @@ class Move < VersionedModel
     cancellation_reason == CANCELLATION_REASON_REJECTED
   end
 
-  def existing
-    self.class.not_cancelled.find_by(date: date, profile_id: profile_id, from_location_id: from_location_id, to_location_id: to_location_id)
+  def existing_moves
+    Move
+        .joins(:profile)
+        .where('profiles.person_id = ?', profile.person_id)
+        .not_cancelled
+        .not_proposed
+        .where(
+          from_location_id: from_location_id,
+          to_location_id: to_location_id,
+          date: date,
+        )
+        .where.not(profile: nil)
+        .where.not(id: id) # When updating an existing move, don't consider self a duplicate
   end
 
   def existing_id
-    existing&.id
+    existing_moves&.first&.id
   end
 
   def current?
@@ -189,6 +199,15 @@ class Move < VersionedModel
     else
       false
     end
+  end
+
+  def all_events_for_timeline
+    eventable_ids = [id, profile&.person_escort_record_id, profile&.person_id].compact
+    eventable_ids += journeys.pluck(:id)
+
+    eventable_types = %w[Move PersonEscortRecord Person Journey]
+
+    GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids).applied_order
   end
 
 private
@@ -234,16 +253,12 @@ private
   end
 
   def validate_move_uniqueness
-    existing_moves = Move.joins(:profile)
-      .where('profiles.person_id = ?', profile.person_id)
-      .where(
-        status: status,
-        from_location_id: from_location_id,
-        to_location_id: to_location_id,
-        date: date,
-      )
-      .where.not(id: id) # When updating an existing move, don't consider self a duplicate
-
     errors.add(:date, :taken) if existing_moves.any?
+  end
+
+  def validate_prisoner_category
+    if profile&.category&.move_supported == false
+      errors.add(:profile, :unsupported_prisoner_category, message: "person is a category '#{profile.category.key}' prisoner and cannot be moved using this service")
+    end
   end
 end

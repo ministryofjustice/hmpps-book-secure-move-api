@@ -19,6 +19,6 @@ class CourtCase
   end
 
   def location
-    Location.find_by nomis_agency_id: @agency_id
+    @location ||= Location.find_by nomis_agency_id: @agency_id
   end
 end
