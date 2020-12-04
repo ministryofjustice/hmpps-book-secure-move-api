@@ -296,4 +296,77 @@ RSpec.describe Api::FrameworkResponsesController do
       end
     end
   end
+
+  describe 'PATCH /youth_risk_assessments/:youth_risk_assessment_id/framework_responses' do
+    include_context 'with supplier with spoofed access token'
+
+    subject(:bulk_update_framework_responses) do
+      patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}/framework_responses", params: bulk_youth_risk_assessment_params, headers: headers, as: :json
+    end
+
+    let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:youth_risk_assessment) { create(:youth_risk_assessment, :in_progress) }
+    let(:youth_risk_assessment_id) { youth_risk_assessment.id }
+
+    let(:framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'No') }
+    let(:other_framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'Yes') }
+    let(:framework_response_id) { framework_response.id }
+    let(:other_framework_response_id) { other_framework_response.id }
+
+    let!(:flag) { create(:framework_flag, framework_question: framework_response.framework_question, question_value: 'Yes') }
+    let!(:other_flag) { create(:framework_flag, framework_question: other_framework_response.framework_question, question_value: 'No') }
+
+    let(:value) { 'Yes' }
+    let(:other_value) { 'No' }
+
+    let(:bulk_youth_risk_assessment_params) do
+      {
+        data: [
+          {
+            id: framework_response_id,
+            type: 'framework_responses',
+            attributes: {
+              value: value,
+            },
+          },
+          {
+            id: other_framework_response_id,
+            type: 'framework_responses',
+            attributes: {
+              value: other_value,
+            },
+          },
+        ],
+      }
+    end
+
+    context 'when successful' do
+      before { bulk_update_framework_responses }
+
+      it_behaves_like 'an endpoint that responds with success 204'
+
+      it 'updates youth_risk_assessment status' do
+        expect(youth_risk_assessment.reload.status).to eq('completed')
+      end
+    end
+
+    context 'when unsuccessful' do
+      before { bulk_update_framework_responses }
+
+      context 'when the youth_risk_assessment_id is not found' do
+        let(:youth_risk_assessment_id) { 'foo-bar' }
+        let(:detail_404) { "Couldn't find YouthRiskAssessment with 'id'=foo-bar" }
+
+        it_behaves_like 'an endpoint that responds with error 404'
+      end
+
+      context 'when youth_risk_assessment confirmed' do
+        let(:youth_risk_assessment) { create(:youth_risk_assessment, :confirmed) }
+        let(:detail_403) { "Can't update framework_responses because assessment is confirmed" }
+
+        it_behaves_like 'an endpoint that responds with error 403'
+      end
+    end
+  end
 end

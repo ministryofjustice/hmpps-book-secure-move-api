@@ -98,6 +98,8 @@
       :$ref: "../v1/supplier.yaml#/Supplier"
     :TimetableEntry:
       :$ref: "../v1/timetable_entry.yaml#/TimetableEntry"
+    :YouthRiskAssessment:
+      :$ref: "../v1/youth_risk_assessment.yaml#/YouthRiskAssessment"
 :paths:
   "/allocations":
     get:
@@ -2995,6 +2997,208 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/patch_population_responses.yaml#/422"
+  "/youth_risk_assessments":
+    post:
+      summary: Creates a new youth risk assessment
+      tags:
+      - Youth risk assessments
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/youth_risk_assessment_include_parameter.yaml#/YouthRiskAssessmentIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The `youth_risk_assessment` object to be created. Requires the `version` of the framework of questions, as well as the `move` already associated to a `profile` for a person.
+        schema:
+          "$ref": "../v1/post_youth_risk_assessment.yaml#/PostYouthRiskAssessment"
+      responses:
+        '201':
+          description: created
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/201"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/401"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/post_youth_risk_assessment_responses.yaml#/422"
+  "/youth_risk_assessments/{youth_risk_assessment_id}":
+    get:
+      summary: Gets a youth_risk_assessment
+      description:
+        "This method gets the specified youth_risk_assessment"
+      tags:
+        - Youth risk assessments
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/youth_risk_assessment_id_parameter.yaml#/YouthRiskAssessmentId"
+        - "$ref": "../v1/youth_risk_assessment_include_parameter.yaml#/YouthRiskAssessmentIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_youth_risk_assessment_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
+    patch:
+      summary: Updates a youth_risk_assessment's status
+      tags:
+      - Youth risk assessments
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v1/youth_risk_assessment_id_parameter.yaml#/YouthRiskAssessmentId"
+      - "$ref": "../v1/youth_risk_assessment_include_parameter.yaml#/YouthRiskAssessmentIncludeParameter"
+      - name: body
+        in: body
+        required: true
+        description: The `youth_risk_assessment` object to be modified. Sets the current status of the `youth_risk_assessment` as `confirmed` after a `youth_risk_assessment` is `completed`.
+        schema:
+          "$ref": "../v1/patch_youth_risk_assessment.yaml#/PatchYouthRiskAssessment"
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/200"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/401"
+        '404':
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/404"
+        '415':
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/415"
+        '422':
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/patch_youth_risk_assessment_responses.yaml#/422"
+  "/youth_risk_assessments/{youth_risk_assessment_id}/framework_responses":
+    patch:
+      summary: Bulk updates multiple framework response values for a youth_risk_assessment
+      description:
+        "This method updates multiple framework response values for the specified youth_risk_assessment"
+      tags:
+        - Framework Responses
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v1/youth_risk_assessment_id_parameter.yaml#/YouthRiskAssessmentId"
+        - name: body
+          in: body
+          required: true
+          description: __Array__ of framework_response objects to be modified
+          schema:
+            type: array
+            items:
+              "$ref": "../v1/patch_framework_response.yaml#/PatchFrameworkResponse"
+      responses:
+        "204":
+          description: no content
+          content:
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/422"
   "/reference/allocation_complex_cases":
     get:
       summary: Returns a list of allocation complex cases

@@ -284,8 +284,8 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when assessment confirmed' do
-        let(:person_escort_record) { create(:person_escort_record, :confirmed) }
-        let(:framework_response) { create(:string_response, assessmentable: person_escort_record) }
+        let(:assessment) { create(:person_escort_record, :confirmed) }
+        let(:framework_response) { create(:string_response, assessmentable: assessment) }
         let(:detail_403) do
           "Can't update framework_responses because assessment is confirmed"
         end

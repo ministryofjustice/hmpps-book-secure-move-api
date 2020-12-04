@@ -10,6 +10,7 @@ class ProfileSerializer
   belongs_to :person
   has_many :documents
   has_one :person_escort_record
+  has_one :youth_risk_assessment
 
   SUPPORTED_RELATIONSHIPS = %w[documents person].freeze
 end

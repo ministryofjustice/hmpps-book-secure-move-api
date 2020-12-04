@@ -1,0 +1,29 @@
+PatchYouthRiskAssessment:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: youth_risk_assessments
+      enum:
+      - youth_risk_assessments
+      description: The type of this object - always `youth_risk_assessments`
+    attributes:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          example: confirmed
+          type: string
+          enum:
+            - confirmed
+          description: Sets the current status of the `youth_risk_assessment`

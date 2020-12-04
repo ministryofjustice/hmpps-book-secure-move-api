@@ -64,6 +64,13 @@ Rails.application.routes.draw do
         patch 'framework_responses', to: 'framework_responses#bulk_update', assessment_class: PersonEscortRecord
       end
     end
+
+    resources :youth_risk_assessments, only: %i[create show update] do
+      member do
+        patch 'framework_responses', to: 'framework_responses#bulk_update', assessment_class: YouthRiskAssessment
+      end
+    end
+
     resources :framework_responses, only: %i[update]
 
     get 'locations_free_spaces', to: 'populations#index'

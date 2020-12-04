@@ -1,0 +1,127 @@
+YouthRiskAssessment:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: youth_risk_assessments
+      enum:
+      - youth_risk_assessments
+      description: The type of this object - always `youth_risk_assessments`
+    attributes:
+      type: object
+      required:
+      - version
+      properties:
+        status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - completed
+            - confirmed
+          description: Determines the current status of the `youth_risk_assessment`
+        version:
+          type: string
+          example: '1.0.1'
+          description: Determines the version of framework questions of the `youth_risk_assessment`
+        editable:
+          type: boolean
+          example: true
+          description: Determines if a youth risk assessment's responses can be amended. A youth risk assessment is editable if the associated move's status is `requested` or `booked`, and the status of the youth risk assessment is not `confirmed`
+        nomis_sync_status:
+          type: array
+          items:
+            type: object
+            properties:
+              resource_type:
+                type: string
+                enum:
+                  - alerts
+                  - personal_care_needs
+                  - reasonable_adjustments
+              status:
+                type: string
+                enum:
+                  - success
+                  - failed
+              synced_at:
+                type: string
+                format: date-time
+              message:
+                type: string
+          readOnly: true
+          description: A list of all NOMIS resources imported when creating the youth risk assessment, and the status of the import, either successful or failed. The timestamp and error message are also included.
+        confirmed_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the youth_risk_assessment was confirmed
+            readOnly: true
+        created_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the youth_risk_assessment was created
+            readOnly: true
+    meta:
+      readOnly: true
+      type: object
+      properties:
+        section_progress:
+          type: array
+          description: Determines the current progress of all responses in each `section` in the youth_risk_assessment
+          items:
+            type: object
+            required:
+              - key
+              - status
+            properties:
+              key:
+                type: string
+                example: risk-information
+                description: identifier of section
+              status:
+                type: string
+                example: not_started
+                enum:
+                  - not_started
+                  - in_progress
+                  - completed
+                description: status of progress of a section
+    relationships:
+      type: object
+      required:
+        - move
+        - framework
+      properties:
+        profile:
+          $ref: profile_reference.yaml#/ProfileReference
+          description: The profile of the person being moved
+        move:
+          $ref: move_reference.yaml#/MoveReference
+          description: The move of the person being moved
+        framework:
+          $ref: framework_reference.yaml#/FrameworkReference
+          description: The framework associated with this youth_risk_assessment
+        prefill_source:
+          $ref: youth_risk_assessment_reference.yaml#/YouthRiskAssessmentReference
+          description: The youth_risk_assessment the current youth_risk_assessment has been prefilled from
+        responses:
+          $ref: framework_response_reference.yaml#/FrameworkResponseReference
+          description: The framework response associated with this youth_risk_assessment
+        flags:
+          $ref: framework_flag_reference.yaml#/FrameworkFlagReference
+          description: The framework flags associated with this youth_risk_assessment

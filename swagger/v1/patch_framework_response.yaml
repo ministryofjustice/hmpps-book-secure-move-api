@@ -22,7 +22,7 @@ PatchFrameworkResponse:
       - value
       properties:
         value:
-          description: the answer value to the person_escort_record question
+          description: the answer value to the assessment question
           example: 'Yes'
           oneOf:
           - type: string
