@@ -1,0 +1,26 @@
+YouthRiskAssessmentReference:
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      oneOf:
+      - type: object
+      - type: 'null'
+      required:
+        - type
+        - id
+      properties:
+        type:
+          type: string
+          example: youth_risk_assessments
+          enum:
+            - youth_risk_assessments
+          description: The type of this object - always `youth_risk_assessments`
+        id:
+          type: string
+          format: uuid
+          example: ea5ace8e-e9ad-4ca3-9977-9bf69e3b6154
+          description:
+            The unique identifier (UUID) of the object that this reference
+            points to

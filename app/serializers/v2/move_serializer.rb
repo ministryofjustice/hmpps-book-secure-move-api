@@ -47,6 +47,14 @@ module V2
       profile.person_escort_record.responses.nomis_mappings
       profile.person_escort_record.responses.question
       profile.person_escort_record.responses.question.descendants.**
+      profile.youth_risk_assessment
+      profile.youth_risk_assessment.flags
+      profile.youth_risk_assessment.framework
+      profile.youth_risk_assessment.responses
+      profile.youth_risk_assessment.prefill_source
+      profile.youth_risk_assessment.responses.nomis_mappings
+      profile.youth_risk_assessment.responses.question
+      profile.youth_risk_assessment.responses.question.descendants.**
       from_location
       from_location.suppliers
       to_location

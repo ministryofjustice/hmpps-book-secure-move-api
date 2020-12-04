@@ -23,7 +23,7 @@ FrameworkResponse:
       properties:
         value:
           example: 'yes'
-          description: the answer value to the person_escort_record question
+          description: the answer value to the assessment question
           oneOf:
           - type: string
             example: 'Yes'
@@ -78,8 +78,8 @@ FrameworkResponse:
       - assessment
       properties:
         assessment:
-          $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
-          description: The assessment the responses refer to, current assessments supported include the Person Escort Record
+          $ref: assessment_reference.yaml#/AssessmentReference
+          description: The assessment the responses refer to, current assessments supported include the Person Escort Record and Youth risk assessment
         question:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
           description: The question this response is for
