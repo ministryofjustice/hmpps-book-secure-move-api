@@ -1,14 +1,23 @@
 require 'csv'
+require 'json'
 
 module Metrics
   module BaseMetric
-    attr_reader :metric_label, :interval, :timestamp,
+    attr_reader :label, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
                 :rows_name, :rows_field, :rows,
                 :values
 
+    FORMATS = {
+      to_csv: 'data.csv',
+      to_fixed_key_json: 'data-fixed_key.json',
+      to_datasette_json: 'data-datasette.json',
+      to_d3_json: 'data-d3.json',
+    }.freeze
+
     def setup_metric(metric)
-      @metric_label = metric[:label]
+      @label = metric[:label]
+      @file = metric[:file]
       @interval = metric[:interval]
       @timestamp = nil
       @columns_name = metric[:columns][:name]
@@ -23,7 +32,7 @@ module Metrics
     def to_csv
       calculate_all_values
       CSV.generate do |csv|
-        csv << [metric_label] + columns.map { |column| column_key(column) }
+        csv << [label] + columns.map { |column| column_key(column) }
         rows.each do |row|
           csv << [row_key(row)] + columns.map { |column| value(column, row) }
         end
@@ -32,8 +41,8 @@ module Metrics
 
     def to_fixed_key_json
       calculate_all_values
-      {
-        label: metric_label,
+      JSON.pretty_generate({
+        label: label,
         timestamp: timestamp.iso8601,
         data: rows.map do |row|
           {
@@ -41,26 +50,26 @@ module Metrics
             values: columns.map { |column| { column: column_key(column), value: value(column, row) } },
           }
         end,
-      }
+      })
     end
 
     def to_datasette_json
       calculate_all_values
-      {
-        database: metric_label,
+      JSON.pretty_generate({
+        database: label,
         timestamp: timestamp.iso8601,
         columns: columns.map { |column| column_key(column) },
         rows: rows.map { |row| columns.map { |column| value(column, row) } },
-      }
+      })
     end
 
     def to_d3_json
       calculate_all_values
-      {
-        label: metric_label,
+      JSON.pretty_generate({
+        label: label,
         timestamp: timestamp.iso8601,
         data: rows.map { |row| ([[rows_name, row_key(row)]] + columns.map { |column| [column_key(column), value(column, row)] }).to_h },
-      }
+      })
     end
 
   private
@@ -79,6 +88,8 @@ module Metrics
           columns.each do |column|
             rows.each do |row|
               v[value_key(column, row)] = calculate(column, row)
+              # sleep for a very short while to avoid overloading the system
+              sleep(rand(0..0.1).round(2))
             end
           end
         end

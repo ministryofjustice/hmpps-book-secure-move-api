@@ -2,15 +2,15 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics::MoveCountsTimeTotal do
+RSpec.describe Metrics::Moves::CountsByTimeBin do
   subject(:metric) { described_class.new }
 
   it 'includes the BaseMetric module' do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
   end
 
-  it 'initializes metric_label' do
-    expect(metric.metric_label).to eql(described_class::METRIC[:label])
+  it 'initializes label' do
+    expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
   describe 'calculate' do

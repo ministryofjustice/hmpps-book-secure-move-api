@@ -51,29 +51,29 @@ RSpec.describe MockBaseMetric do
   end
 
   describe 'to_fixed_key_json' do
-    subject(:json) { described_class.new.to_fixed_key_json }
+    subject(:json) { JSON.parse(described_class.new.to_fixed_key_json) }
 
     it {
       expect(json).to eql({
-        label: 'label',
-        timestamp: '2020-10-07T01:02:03+01:00',
-        data: [
-          { row: 'row', values: [{ column: 'col', value: 0 }, { column: 'none', value: 0 }] },
-          { row: 'none', values: [{ column: 'col', value: 0 }, { column: 'none', value: 0 }] },
+        'label' => 'label',
+        'timestamp' => '2020-10-07T01:02:03+01:00',
+        'data' => [
+          { 'row' => 'row', 'values' => [{ 'column' => 'col', 'value' => 0 }, { 'column' => 'none', 'value' => 0 }] },
+          { 'row' => 'none', 'values' => [{ 'column' => 'col', 'value' => 0 }, { 'column' => 'none', 'value' => 0 }] },
         ],
       })
     }
   end
 
   describe 'to_datasette_json' do
-    subject(:json) { described_class.new.to_datasette_json }
+    subject(:json) { JSON.parse(described_class.new.to_datasette_json) }
 
     it {
       expect(json).to eql({
-        database: 'label',
-        timestamp: '2020-10-07T01:02:03+01:00',
-        columns: %w[col none],
-        rows: [
+        'database' => 'label',
+        'timestamp' => '2020-10-07T01:02:03+01:00',
+        'columns' => %w[col none],
+        'rows' => [
           [0, 0],
           [0, 0],
         ],
@@ -82,13 +82,13 @@ RSpec.describe MockBaseMetric do
   end
 
   describe 'to_d3_json' do
-    subject(:json) { described_class.new.to_d3_json }
+    subject(:json) { JSON.parse(described_class.new.to_d3_json) }
 
     it {
       expect(json).to eql({
-        label: 'label',
-        timestamp: '2020-10-07T01:02:03+01:00',
-        data: [
+        'label' => 'label',
+        'timestamp' => '2020-10-07T01:02:03+01:00',
+        'data' => [
           { 'row' => 'row', 'col' => 0, 'none' => 0 },
           { 'row' => 'none', 'col' => 0, 'none' => 0 },
         ],
