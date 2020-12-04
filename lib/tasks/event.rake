@@ -2,7 +2,7 @@
 
 namespace :events do
   INITIAL_STATE_EVENTS = %w[GenericEvent::MoveProposed GenericEvent::MoveRequested].freeze
-  INITIAL_STATUSES = %[proposed requested]
+  INITIAL_STATUSES = %(proposed requested)
 
   desc 'Backfills MoveProposed and MoveRequested events since start of time'
   task add_missing_initial_state_events: :environment do
@@ -31,7 +31,7 @@ namespace :events do
           # The first time PaperTrail stores the initial version is on the first update event
           # And if there have been no updates then the initial version is the current version of the Move stored in the database moves table
           initial_move = move.versions.find_by(event: 'update')&.reify
-          initial_move = move unless initial_move.present?
+          initial_move = move if initial_move.blank?
 
           # We take the create event supplier_id to reflect the user that initially created the first move
           initial_version = move.versions.find_by(event: 'create')
@@ -53,7 +53,7 @@ namespace :events do
             recorded_at: initial_move.created_at,
             notes: 'Automatically generated event',
             details: {},
-            supplier_id: initial_supplier
+            supplier_id: initial_supplier,
           }
 
           if initial_move.proposed?
@@ -70,7 +70,7 @@ namespace :events do
             report[:requested_events_to_be_created] += 1
 
             unless dry_run
-              GenericEvent::MoveRequested.create!(event_attributes) 
+              GenericEvent::MoveRequested.create!(event_attributes)
 
               report[:events_created] += 1
             end
