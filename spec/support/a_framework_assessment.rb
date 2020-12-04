@@ -42,21 +42,21 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns error if move is not associated to a profile' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move, profile: nil)
+      move = create(:move, from_location: from_location, profile: nil)
 
       expect { assessment_class.save_with_responses!(move_id: move.id, version: '1.2.1') }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'returns error if no move is passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      create(:move)
+      create(:move, from_location: from_location)
 
       expect { assessment_class.save_with_responses!(move_id: nil, version: '1.2.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns framework with version specified' do
       framework = create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       assessment_class.save_with_responses!(move_id: move.id, version: '1.2.1')
 
       expect(assessment_class.last.framework).to eq(framework)
@@ -64,26 +64,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns error if wrong framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move)
+      move = create(:move, from_location: from_location)
 
       expect { assessment_class.save_with_responses!(move_id: move.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if no framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.0.0')
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       expect { assessment_class.save_with_responses!(move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if nil framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.0.0')
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       expect { assessment_class.save_with_responses!(move_id: move.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'does not allow multiple assessments on a profile through move' do
       profile = create(:profile)
-      move = create(:move, profile: profile)
+      move = create(:move, from_location: from_location, profile: profile)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
@@ -91,14 +91,14 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'sets initial status to unstarted' do
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
 
       expect(assessment_class.save_with_responses!(move_id: move.id, version: framework.version).status).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       create(:framework_question, :checkbox, framework: framework)
       create(:framework_question, :checkbox, framework: framework)
@@ -107,34 +107,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       expect(assessment.framework_responses.count).to eq(2)
     end
 
-    it 'creates NOMIS mappings for framework responses' do
-      move = create(:move)
-      framework = create(:framework, name: assessment_type.to_s.dasherize)
-      alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-      create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
-      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
-      assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
-
-      expect(assessment.framework_responses.first.framework_nomis_mappings.count).to eq(1)
-    end
-
-    it 'updates nomis sync status if successful' do
-      move = create(:move)
-      framework = create(:framework, name: assessment_type.to_s.dasherize)
-      alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-      create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
-      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
-      assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
-
-      expect(assessment.nomis_sync_status).to include_json(
-        [
-          { 'resource_type' => 'alerts', 'status' => 'success' },
-        ],
-      )
-    end
-
     it 'sets correct response for framework questions' do
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       checkbox_question = create(:framework_question, :checkbox, framework: framework)
       assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
@@ -146,7 +120,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'allows access to framework question through assessment' do
-      move = create(:move)
+      move = create(:move, from_location: from_location)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       create(:framework_question, :checkbox, framework: framework)
       assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
@@ -158,8 +132,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       let(:person) { create(:person) }
       let(:profile1) { create(:profile, person: person) }
       let(:profile2) { create(:profile, person: person) }
-      let(:move1) { create(:move, profile: profile1) }
-      let(:move2) { create(:move, profile: profile2) }
+      let(:move1) { create(:move, from_location: from_location, profile: profile1) }
+      let(:move2) { create(:move, from_location: from_location, profile: profile2) }
       let(:framework) { create(:framework, name: assessment_type.to_s.dasherize) }
 
       it 'sets prefill_source on assessment' do
@@ -172,7 +146,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       end
 
       it 'does not prefill responses if no previous confirmed assessment exists for person' do
-        move = create(:move)
+        move = create(:move, from_location: from_location)
         framework_question = create(:framework_question, framework: framework, prefill: true)
         create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
         assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
@@ -403,24 +377,13 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'does nothing if move is not from a prison' do
       framework = create(:framework, name: assessment_type.to_s.dasherize)
-      move = create(:move, :video_remand)
+      move = create(:move, :from_stc_to_court)
       alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
       question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
       response = create(:string_response, framework_question: question)
       assessment = create(assessment_type, framework: framework, move: move, framework_responses: [response])
 
       expect { assessment.import_nomis_mappings! }.not_to change(FrameworkNomisMapping, :count)
-    end
-
-    it 'imports nomis mappings if move is a prison' do
-      framework = create(:framework, name: assessment_type.to_s.dasherize)
-      move = create(:move)
-      alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-      question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
-      response = create(:string_response, framework_question: question)
-      assessment = create(assessment_type, framework: framework, move: move, framework_responses: [response])
-
-      expect { assessment.import_nomis_mappings! }.to change(FrameworkNomisMapping, :count).by(1)
     end
   end
 
@@ -695,35 +658,35 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
   describe '#editable?' do
     it 'is editable if a move is requested' do
-      move = create(:move, :requested)
+      move = create(:move, :requested, from_location: from_location)
       assessment = create(assessment_type, move: move)
 
       expect(assessment).to be_editable
     end
 
     it 'is editable if a move is booked' do
-      move = create(:move, :booked)
+      move = create(:move, :booked, from_location: from_location)
       assessment = create(assessment_type, move: move)
 
       expect(assessment).to be_editable
     end
 
     it 'is not editable if a move is not booked or requested' do
-      move = create(:move, :in_transit)
+      move = create(:move, :in_transit, from_location: from_location)
       assessment = create(assessment_type, move: move)
 
       expect(assessment).not_to be_editable
     end
 
     it 'is editable if an assessment is not confirmed' do
-      move = create(:move, :booked)
+      move = create(:move, :booked, from_location: from_location)
       assessment = create(assessment_type, :with_responses, move: move)
 
       expect(assessment).to be_editable
     end
 
     it 'is not editable if an assessment is confirmed' do
-      move = create(:move, :booked)
+      move = create(:move, :booked, from_location: from_location)
       assessment = create(assessment_type, :confirmed, :with_responses, move: move)
 
       expect(assessment).not_to be_editable

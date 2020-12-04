@@ -91,7 +91,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       let!(:subscription) { create(:subscription, supplier: supplier) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-      let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:from_location) { create(:location, :stc, suppliers: [supplier]) }
       let(:move) { create(:move, from_location: from_location, supplier: supplier) }
       let(:youth_risk_assessment) { create(:youth_risk_assessment, :with_responses, :completed, move: move) }
 
