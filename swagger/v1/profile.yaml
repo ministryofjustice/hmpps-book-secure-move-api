@@ -34,3 +34,6 @@ Profile:
         person_escort_record:
           $ref: person_escort_record_reference.yaml#/PersonEscortRecordReference
           description: The person_escort_record associated with this Move
+        youth_risk_assessment:
+          $ref: youth_risk_assessment_reference.yaml#/YouthRiskAssessmentReference
+          description: The youth_risk_assessment associated with this Move

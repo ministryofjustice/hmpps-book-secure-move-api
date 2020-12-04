@@ -1,0 +1,9 @@
+YouthRiskAssessmentId:
+  name: youth_risk_assessment_id
+  in: path
+  required: true
+  description: The ID of the youth_risk_assessment
+  schema:
+    type: string
+    format: uuid
+  example: 5b61f755-0fd7-4a91-b7a3-a33d751f985f
