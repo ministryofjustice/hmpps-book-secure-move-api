@@ -108,7 +108,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       subject(:post_youth_risk_assessment) do
         previous_pesron_escort_record
 
-        post '/api/v1/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+        post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
       end
 
       let(:previous_profile) { create(:profile, person: person) }
@@ -229,8 +229,8 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         end
 
         before do
-          post '/api/v1/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
-          post '/api/v1/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -253,7 +253,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
           allow(YouthRiskAssessment).to receive(:new).and_return(youth_risk_assessment)
           allow(youth_risk_assessment).to receive(:build_responses!).and_raise(PG::UniqueViolation, 'duplicate key value violates unique constraint')
 
-          post '/api/v1/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'

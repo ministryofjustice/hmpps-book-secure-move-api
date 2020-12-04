@@ -19,7 +19,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     let(:youth_risk_assessment_id) { youth_risk_assessment.id }
 
     before do
-      get "/api/v1/youth_risk_assessments/#{youth_risk_assessment_id}", headers: headers, as: :json
+      get "/api/youth_risk_assessments/#{youth_risk_assessment_id}", headers: headers, as: :json
     end
 
     context 'when successful' do

@@ -18,6 +18,8 @@ class FrameworkAssessmentSerializer
     object.framework.version
   end
 
+  # "not_started" cannot be used as the name of the enum due to warnings in the model
+  # that it starts with a "not_", however we surface this as "not_started" for readability.
   attribute :status do |object|
     object.status == 'unstarted' ? 'not_started' : object.status
   end
