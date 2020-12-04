@@ -62,7 +62,7 @@ RSpec.describe FrameworkAssessmentSerializer do
     expect(result[:data][:relationships][:flags][:data]).to be_empty
   end
 
-  it 'contains a`flags` relationship with framework response flags' do
+  it 'contains a `flags` relationship with framework response flags' do
     flag = create(:framework_flag)
     create(:string_response, assessmentable: assessment, framework_flags: [flag])
 

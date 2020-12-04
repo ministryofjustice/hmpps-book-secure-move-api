@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PersonEscortRecordSerializer < FrameworkAssessmentSerializer
+  # Due to autoloading issues, have mirrored relationships in children classes
+  # TODO: when moving off versions, move this back into framework assessment serializer
   belongs_to :profile, serializer: V2::ProfileSerializer
   belongs_to :move, serializer: V2::MoveSerializer
 

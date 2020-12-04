@@ -40,7 +40,7 @@ RSpec.describe PersonEscortRecordsSerializer do
       expect(result[:data][:relationships][:flags][:data]).to be_empty
     end
 
-    it 'contains a`flags` relationship with framework response flags' do
+    it 'contains a `flags` relationship with framework response flags' do
       flag = create(:framework_flag)
       create(:string_response, assessmentable: person_escort_record, framework_flags: [flag])
 
