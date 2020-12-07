@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.7.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.3) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.2...v2.7.3)
+
+**Merged pull requests:**
+
+- Changelog v2.7.2 [\#1198](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1198) ([cwrw](https://github.com/cwrw))
+- P4-2521 Switch to using generic assessment job on assessment confirm action [\#1194](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1194) ([cwrw](https://github.com/cwrw))
+
 ## [v2.7.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.2) (2020-12-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.1...v2.7.2)
