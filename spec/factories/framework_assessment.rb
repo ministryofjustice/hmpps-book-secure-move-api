@@ -46,7 +46,7 @@ FactoryBot.define do
     association(:framework, :youth_risk_assessment)
 
     after(:build) do |youth_risk_assessment|
-      youth_risk_assessment.profile = youth_risk_assessment.move.profile if youth_risk_assessment.profile.blank?
+      youth_risk_assessment.profile = youth_risk_assessment.move&.profile if youth_risk_assessment.profile.blank?
     end
 
     trait :prefilled do
