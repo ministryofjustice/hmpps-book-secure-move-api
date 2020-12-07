@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.7.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.2) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.1...v2.7.2)
+
+**Merged pull requests:**
+
+- Re-enable categories on profile test [\#1196](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1196) ([cwrw](https://github.com/cwrw))
+- P4-2521 Add new generic assessment job [\#1193](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1193) ([cwrw](https://github.com/cwrw))
+- Bump flipper-active\_record from 0.19.0 to 0.19.1 [\#1190](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1190) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove MPS28 \(West End Custody Suite\) from Serco [\#1187](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1187) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1186](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1186) ([martyn-w](https://github.com/martyn-w))
+- Tidy event specs [\#1185](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1185) ([willfish](https://github.com/willfish))
+- P4-2451 Add Youth Risk Assessment routes and controllers [\#1184](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1184) ([cwrw](https://github.com/cwrw))
+
 ## [v2.7.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.1) (2020-12-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.0...v2.7.1)
