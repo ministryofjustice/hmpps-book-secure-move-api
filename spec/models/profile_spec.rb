@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Profile, type: :model do
-  xit { is_expected.to belong_to(:category).optional }
+  it { is_expected.to belong_to(:category).optional }
   it { is_expected.to belong_to(:person).required }
   it { is_expected.to have_many(:documents) }
   it { is_expected.to have_many(:moves) } # NB: a profile can be re-used across multiple moves
