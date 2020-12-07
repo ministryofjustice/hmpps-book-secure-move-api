@@ -202,6 +202,6 @@ class GenericEvent < ApplicationRecord
 private
 
   def set_classification
-    self.classification = event_classification if classification.blank?
+    self.classification = event_classification
   end
 end
