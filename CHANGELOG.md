@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.7.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.4) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.3...v2.7.4)
+
+**Merged pull requests:**
+
+- Changelog v2.7.3 [\#1199](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1199) ([cwrw](https://github.com/cwrw))
+- P4-2521 Remove old deprecated PER notifier [\#1195](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1195) ([cwrw](https://github.com/cwrw))
+
 ## [v2.7.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.3) (2020-12-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.2...v2.7.3)
