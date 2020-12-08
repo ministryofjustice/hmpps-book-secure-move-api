@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.7.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.5) (2020-12-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.4...v2.7.5)
+
+**Merged pull requests:**
+
+- Surface the status on the PER serializer [\#1204](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1204) ([cwrw](https://github.com/cwrw))
+- Fix pluralisation of approves move endpoint [\#1203](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1203) ([martyn-w](https://github.com/martyn-w))
+- Temporary solution to eager load youth risk assessment in a move [\#1202](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1202) ([cwrw](https://github.com/cwrw))
+- Changelog v2.7.4 [\#1200](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1200) ([cwrw](https://github.com/cwrw))
+- Validate Youth Risk Assessment move `from\_location` on creation [\#1192](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1192) ([cwrw](https://github.com/cwrw))
+- Add support for medical and critical events [\#1183](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1183) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.7.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.4) (2020-12-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.3...v2.7.4)
