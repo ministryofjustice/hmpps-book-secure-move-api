@@ -19,6 +19,7 @@ RSpec.describe PersonEscortRecord do
   end
 
   it { is_expected.to belong_to(:move).optional }
+  it { is_expected.to have_many(:medical_events) }
 
   it 'creates NOMIS mappings for framework responses' do
     move = create(:move, from_location: from_location)
