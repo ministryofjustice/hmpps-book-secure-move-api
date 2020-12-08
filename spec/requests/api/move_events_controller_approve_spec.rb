@@ -15,7 +15,7 @@ RSpec.describe Api::MoveEventsController do
     let(:approve_params) do
       {
         data: {
-          type: 'approve',
+          type: 'approves',
           attributes: {
             timestamp: '2020-04-23T18:25:43.511Z',
             date: approved_date,
