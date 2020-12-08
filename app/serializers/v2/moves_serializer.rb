@@ -3,6 +3,7 @@
 module V2
   class MovesSerializer
     include JSONAPI::Serializer
+    include JSONAPI::ConditionalRelationships
 
     attributes  :additional_information,
                 :cancellation_reason,
@@ -38,6 +39,7 @@ module V2
       to_location
       prison_transfer_reason
       supplier
+      important_events
     ].freeze
 
     belongs_to :from_location, serializer: ::LocationSerializer
@@ -46,5 +48,7 @@ module V2
     belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
     belongs_to :supplier, serializer: SupplierSerializer
     belongs_to :allocation, serializer: AllocationSerializer
+
+    has_many_if_included :important_events, serializer: ImportantEventsSerializer, &:important_events
   end
 end
