@@ -3,7 +3,20 @@
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
-    Locations::Importer.new(NomisClient::Locations.get).call
+    puts 'Importing locations...'
+    importer = Locations::Importer.new(NomisClient::Locations.get)
+    importer.call
+
+    puts "NEW LOCATIONS (#{importer.added_locations.length}):"
+    puts importer.added_locations.sort.join(', ')
+    puts
+
+    puts "UPDATED LOCATIONS (#{importer.updated_locations.length}):"
+    puts importer.updated_locations.sort.join(', ')
+    puts
+
+    puts "DISABLED LOCATIONS (#{importer.disabled_locations.length}):"
+    puts importer.disabled_locations.sort.join(', ')
   end
 
   desc 'create ethnicities'
@@ -67,7 +80,6 @@ namespace :reference_data do
     SupplierLocation.transaction do
       SupplierLocation.delete_all
       SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations.yml').call
-      SupplierLocations::Importer.new('./lib/tasks/data/supplier_locations_go_live.yml').call
     end
   end
 
