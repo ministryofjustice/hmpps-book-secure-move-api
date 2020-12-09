@@ -65,18 +65,27 @@ RSpec.describe Locations::Importer do
 
     it 'does not import unknown location types' do
       importer.call
-
       expect(Location.find_by(input_data.last)).not_to be_present
+    end
+
+    it 'returns a list of new locations' do
+      importer.call
+      expect(importer.added_locations).to match_array(%w[ABDRCT ACI FOO1 HOSP1 SCH1 STC1])
     end
   end
 
-  context 'with one existing record' do
+  context 'with one existing record with no changes' do
     before do
       Location.create!(input_data[0])
     end
 
     it 'creates only the missing items' do
       expect { importer.call }.to change(Location, :count).by(4)
+    end
+
+    it 'does not return the existing location in the list of updated records' do
+      importer.call
+      expect(importer.updated_locations).to be_empty
     end
   end
 
@@ -85,9 +94,47 @@ RSpec.describe Locations::Importer do
       Location.create!(nomis_agency_id: 'ABDRCT', key: 'abdrct', title: 'Axxxx Cxxxx Court', location_type: :court)
     end
 
-    it 'updates the title of the existing record' do
+    it 'updates the title of the existing location' do
       importer.call
       expect(court.reload.title).to eq 'Aberdare County Court'
+    end
+
+    it 'returns the existing location in the list of updated records' do
+      importer.call
+      expect(importer.updated_locations).to match_array(%w[ABDRCT])
+    end
+  end
+
+  context 'with an existing record which should be disabled' do
+    let!(:court) do
+      Location.create!(nomis_agency_id: 'OLDEBAILEY', key: 'oldebailey', title: 'Ye Olde Bailey', location_type: :court)
+    end
+
+    it 'updates the disabled_at attribute of the existing location' do
+      importer.call
+      expect(court.reload.disabled_at).to be_present
+    end
+
+    it 'returns the existing location in the list of disabled records' do
+      importer.call
+      expect(importer.disabled_locations).to match_array(%w[OLDEBAILEY])
+    end
+  end
+
+  context 'with an existing disabled location which should not be disabled' do
+    let!(:court) do
+      Location.create!(input_data[0].merge(disabled_at: Time.zone.now))
+    end
+
+    it 'updates the disabled_at attribute of the existing record' do
+      importer.call
+      expect(court.reload.disabled_at).not_to be_present
+    end
+
+    it 'returns the existing record in the list of updated records' do
+      importer.call
+      expect(importer.disabled_locations).to be_empty
+      expect(importer.updated_locations).to match_array(%w[ABDRCT])
     end
   end
 end
