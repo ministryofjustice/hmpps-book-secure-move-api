@@ -3,10 +3,10 @@ namespace :feeds do
   task event: :environment do
     if ENV['REPORT_ON_DATE']
       report_on_date = Date.parse(ENV['REPORT_ON_DATE'])
-      created_at_from = report_on_date.beginning_of_day
-      created_at_to = report_on_date.end_of_day
+      updated_at_from = report_on_date.beginning_of_day
+      updated_at_to = report_on_date.end_of_day
 
-      feed = Feeds::Event.new(created_at_from, created_at_to).call
+      feed = Feeds::Event.new(updated_at_from, updated_at_to).call
       CloudDataFeed.new.write(feed, 'events.jsonl', report_on_date)
     else
       feed = Feeds::Event.new.call
