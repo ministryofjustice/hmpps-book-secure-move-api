@@ -14,7 +14,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     let(:person) { create(:person) }
     let(:profile) { create(:profile, person: person) }
     let(:profile_id) { profile.id }
-    let(:move) { create(:move, profile: profile) }
+    let(:move) { create(:move, :from_stc_to_court, profile: profile) }
     let(:move_id) { move.id }
     let(:framework) { create(:framework, :youth_risk_assessment, framework_questions: [build(:framework_question, section: 'risk-information', prefill: true)]) }
     let(:framework_version) { framework.version }
@@ -214,6 +214,21 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404'
+      end
+
+      context 'when move location is not from sch or stc' do
+        let(:move) { create(:move, profile: profile) }
+        let(:errors_422) do
+          [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => "Move 'from location' must be from either a secure training centre or a secure children's home",
+              'source' => { 'pointer' => '/data/attributes/move' },
+            },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422'
       end
 
       context 'when a youth risk assessment already exists on a profile' do

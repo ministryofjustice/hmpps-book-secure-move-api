@@ -3,6 +3,7 @@
 module V2
   class MoveSerializer
     include JSONAPI::Serializer
+    include JSONAPI::ConditionalRelationships
 
     set_type :moves
 
@@ -30,7 +31,8 @@ module V2
 
     has_many :court_hearings, serializer: CourtHearingSerializer
 
-    has_many :timeline_events, serializer: ->(record, _params) { record.class.serializer }, &:all_events_for_timeline
+    has_many_if_included :timeline_events, serializer: ->(record, _params) { record.class.serializer }, &:all_events_for_timeline
+    has_many_if_included :important_events, serializer: ImportantEventsSerializer, &:important_events
 
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
@@ -64,6 +66,7 @@ module V2
       allocation
       original_move
       supplier
+      important_events
       timeline_events
       timeline_events.eventable
     ].freeze

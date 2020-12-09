@@ -16,4 +16,5 @@ MovesIncludeParameter:
       - profile.person_escort_record.flags
       - supplier
       - to_location
+      - important_events
   example: from_location

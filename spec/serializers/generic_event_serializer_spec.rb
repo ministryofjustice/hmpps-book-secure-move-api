@@ -18,6 +18,7 @@ RSpec.describe GenericEventSerializer do
         id: event.id,
         type: 'events',
         attributes: {
+          classification: 'default',
           occurred_at: event.occurred_at.iso8601,
           recorded_at: event.recorded_at.iso8601,
           notes: 'Flibble',
@@ -73,6 +74,7 @@ RSpec.describe GenericEventSerializer do
           id: event.id,
           type: 'events',
           attributes: {
+            classification: 'default',
             occurred_at: event.occurred_at.iso8601,
             recorded_at: event.recorded_at.iso8601,
             notes: 'Flibble',

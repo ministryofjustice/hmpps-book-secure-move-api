@@ -169,6 +169,13 @@ FactoryBot.define do
         create_list(:court_hearing, 1, move: move)
       end
     end
+
+    trait :from_stc_to_court do
+      association(:from_location, :stc, factory: :location)
+      association(:to_location, :court, factory: :location)
+
+      move_type { 'court_appearance' }
+    end
   end
 
   factory :from_prison_to_court, class: 'Move' do

@@ -140,6 +140,9 @@ Move:
         prison_transfer_reason:
           $ref: "../v1/prison_transfer_reason_reference.yaml#/PrisonTransferReasonReference"
           description: The reason for this prison transfer
+        important_events:
+          $ref: "../v1/event_reference.yaml#/EventReference"
+          description: Brief details of incident and medical events related to this move
         timeline_events:
           $ref: "../v1/event_reference.yaml#/EventReference"
           description: Aliased events about this record and its nested relationships

@@ -36,7 +36,9 @@ private
     when 'responses'
       :framework_responses
     when 'timeline_events'
-      :events
+      :generic_events
+    when 'important_events'
+      { incident_events: {}, profile: { person_escort_record: :medical_events } }
     else
       name.to_sym
     end

@@ -9,6 +9,7 @@ FactoryBot.define do
   end
 
   factory :incident, parent: :generic_event do
+    classification { 'incident' }
     details do
       {
         location_id: create(:location).id,
@@ -445,6 +446,7 @@ FactoryBot.define do
 
   factory :event_per_medical_aid, parent: :generic_event, class: 'GenericEvent::PerMedicalAid' do
     eventable { association(:person_escort_record) }
+    classification { 'medical' }
     details do
       {
         advised_by: Faker::Name.name,
