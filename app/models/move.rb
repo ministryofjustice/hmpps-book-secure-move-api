@@ -87,6 +87,7 @@ class Move < VersionedModel
   has_many :court_hearings, dependent: :restrict_with_exception
 
   has_many :generic_events, as: :eventable, dependent: :destroy
+  has_many :incident_events, -> { where classification: :incident }, as: :eventable, class_name: 'GenericEvent'
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
@@ -208,6 +209,10 @@ class Move < VersionedModel
     eventable_types = %w[Move PersonEscortRecord Person Journey]
 
     GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids).applied_order
+  end
+
+  def important_events
+    incident_events + (profile&.person_escort_record&.medical_events || [])
   end
 
 private

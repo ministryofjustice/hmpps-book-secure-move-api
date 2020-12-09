@@ -10,6 +10,8 @@ RSpec.describe Move do
   it { is_expected.to belong_to(:allocation).optional }
   it { is_expected.to have_many(:notifications) }
   it { is_expected.to have_many(:journeys) }
+  it { is_expected.to have_many(:generic_events) }
+  it { is_expected.to have_many(:incident_events) }
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
 
@@ -730,7 +732,7 @@ RSpec.describe Move do
 
     context 'when there are no events' do
       it 'returns an empty Array' do
-        expect(move.all_events_for_timeline).to eq([])
+        expect(all_events_for_timeline).to eq([])
       end
     end
 
@@ -752,6 +754,47 @@ RSpec.describe Move do
 
       it 'returns generic events in the correct order' do
         expect(all_events_for_timeline.pluck(:id)).to eq([second_event, first_event].map(&:id))
+      end
+    end
+  end
+
+  describe '#important_events' do
+    subject(:important_events) { move.important_events }
+
+    let(:move) { create(:move, profile: create(:profile, :with_person_escort_record)) }
+
+    context 'when there are no events' do
+      it 'returns an empty Array' do
+        expect(important_events).to eq([])
+      end
+    end
+
+    context 'when there are move incident events' do
+      let!(:first_event) { create(:event_person_move_assault, eventable: move) }
+      let!(:second_event) { create(:event_move_approve, eventable: move) }
+
+      it 'returns correct events' do
+        expect(important_events.pluck(:id)).to eq([first_event.id])
+      end
+    end
+
+    context 'when there are PER medical events' do
+      let(:person_escort_record) { move.profile.person_escort_record }
+      let!(:first_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
+      let!(:second_event) { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
+
+      it 'returns correct events' do
+        expect(important_events.pluck(:id)).to eq([first_event.id])
+      end
+    end
+
+    context 'when there are move incident and PER medical events' do
+      let(:person_escort_record) { move.profile.person_escort_record }
+      let!(:first_event) { create(:event_person_move_assault, eventable: move) }
+      let!(:second_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
+
+      it 'returns correct events' do
+        expect(important_events.pluck(:id)).to eq([first_event.id, second_event.id])
       end
     end
   end

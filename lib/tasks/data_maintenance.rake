@@ -36,4 +36,24 @@ namespace :data_maintenance do
     Person.where(criminal_records_office: '').update_all(criminal_records_office: nil)
     Person.where(police_national_computer: '').update_all(police_national_computer: nil)
   end
+
+  desc 'fix generic event classification for existing data'
+  task fix_generic_event_classifications: :environment do
+    medical_event_type = 'GenericEvent::PerMedicalAid'
+    incident_event_types = [
+      'GenericEvent::PersonMoveRoadTrafficAccident',
+      'GenericEvent::PersonMovePersonEscaped',
+      'GenericEvent::PersonMoveUsedForce',
+      'GenericEvent::PersonMoveMajorIncidentOther',
+      'GenericEvent::PersonMoveSeriousInjury',
+      'GenericEvent::PersonMoveMinorIncidentOther',
+      'GenericEvent::PersonMoveDeathInCustody',
+      'GenericEvent::PersonMoveAssault',
+      'GenericEvent::PersonMovePersonEscapedKpi',
+      'GenericEvent::PersonMoveReleasedError',
+    ]
+
+    GenericEvent.where(eventable_type: medical_event_type).update_all(classification: 'medical')
+    GenericEvent.where(eventable_type: incident_event_types).update_all(classification: 'incident')
+  end
 end

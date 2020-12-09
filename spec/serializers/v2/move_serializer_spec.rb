@@ -60,7 +60,6 @@ RSpec.describe V2::MoveSerializer do
         supplier: create(:supplier),
       )
     end
-    let!(:event) { create(:event_move_cancel, eventable: move) }
 
     let(:adapter_options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
 
@@ -68,7 +67,7 @@ RSpec.describe V2::MoveSerializer do
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers events moves])
+        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers])
     end
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them
@@ -77,8 +76,45 @@ RSpec.describe V2::MoveSerializer do
     end
   end
 
-  describe 'generic_events' do
-    let(:adapter_options) { { include: %i[timeline_events] } }
+  describe 'important_events' do
+    let(:includes) { %i[important_events] }
+    let(:adapter_options) { { include: includes, params: { included: includes } } }
+
+    context 'with generic events' do
+      let(:move) { create(:move) }
+      let(:included_event) { result[:included].find { |include| include[:id] == event.id } }
+
+      let(:expected_event_relationships) do
+        [
+          { id: event.id, type: 'events' },
+        ]
+      end
+
+      let!(:event) { create(:event_person_move_assault, eventable: move) }
+
+      it 'contains important_events relationship' do
+        expect(result[:data][:relationships][:important_events]).to eq(data: expected_event_relationships)
+      end
+
+      it 'contains included events' do
+        expect(included_event).to be_present
+      end
+    end
+
+    context 'without generic events' do
+      it 'contains an empty relationship' do
+        expect(result[:data][:relationships][:important_events]).to eq(data: [])
+      end
+
+      it 'does not contain an included event' do
+        expect(result[:included]).to be_blank
+      end
+    end
+  end
+
+  describe 'timeline_events' do
+    let(:includes) { %i[timeline_events timeline_events.eventable] }
+    let(:adapter_options) { { include: includes, params: { included: includes } } }
 
     context 'with generic events' do
       let(:move) { create(:move) }
@@ -136,7 +172,7 @@ RSpec.describe V2::MoveSerializer do
     end
 
     context 'without generic events' do
-      it 'contains an empty allocation' do
+      it 'contains an empty relationship' do
         expect(result[:data][:relationships][:timeline_events]).to eq(data: [])
       end
 

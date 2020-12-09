@@ -36,6 +36,28 @@ RSpec.describe GenericEvent, type: :model do
     expect(described_class::STI_CLASSES).to match_array(expected_sti_classes)
   end
 
+  describe '#event_type' do
+    it 'returns nil when type is missing' do
+      event = described_class.new
+
+      expect(event.event_type).to be_nil
+    end
+  end
+
+  describe '#event_classification' do
+    it 'returns :default' do
+      event = described_class.new
+
+      expect(event.event_classification).to eq :default
+    end
+
+    it 'is automatically assigned on creation' do
+      event = create(:event_move_cancel, classification: nil)
+
+      expect(event.classification).to eq 'default'
+    end
+  end
+
   describe '#trigger' do
     subject(:generic_event) { create(:event_move_cancel) }
 

@@ -3,7 +3,49 @@
 require 'rails_helper'
 
 RSpec.describe PersonEscortRecord do
+  let(:from_location) { create(:location, :prison) }
+  let(:nomis_alert) do
+    {
+      alert_id: 2,
+      alert_code: 'VI',
+      alert_code_description: 'Hold separately',
+      comment: 'Some comment',
+      created_at: '2013-03-29',
+      expires_at: '2100-06-08',
+      expired: false,
+      active: true,
+      offender_no: 'A9127EK',
+    }
+  end
+
   it { is_expected.to belong_to(:move).optional }
+  it { is_expected.to have_many(:medical_events) }
+
+  it 'creates NOMIS mappings for framework responses' do
+    move = create(:move, from_location: from_location)
+    framework = create(:framework)
+    alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
+    create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+    allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
+
+    expect(person_escort_record.framework_responses.first.framework_nomis_mappings.count).to eq(1)
+  end
+
+  it 'updates nomis sync status if successful' do
+    move = create(:move, from_location: from_location)
+    framework = create(:framework)
+    alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
+    create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+    allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
+
+    expect(person_escort_record.nomis_sync_status).to include_json(
+      [
+        { 'resource_type' => 'alerts', 'status' => 'success' },
+      ],
+    )
+  end
 
   # To support legacy PERs without a move
   context 'when no move associated' do
@@ -32,6 +74,23 @@ RSpec.describe PersonEscortRecord do
 
         expect { person_escort_record.import_nomis_mappings! }.not_to change(FrameworkNomisMapping, :count)
       end
+    end
+  end
+
+  describe '#import_nomis_mappings!' do
+    before do
+      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    end
+
+    it 'imports nomis mappings if move is a prison' do
+      framework = create(:framework)
+      move = create(:move, from_location: from_location)
+      alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
+      question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+      response = create(:string_response, framework_question: question)
+      person_escort_record = create(:person_escort_record, framework: framework, move: move, framework_responses: [response])
+
+      expect { person_escort_record.import_nomis_mappings! }.to change(FrameworkNomisMapping, :count).by(1)
     end
   end
 

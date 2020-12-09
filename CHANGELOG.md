@@ -1,5 +1,50 @@
 # Changelog
 
+## [v2.7.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.5) (2020-12-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.4...v2.7.5)
+
+**Merged pull requests:**
+
+- Surface the status on the PER serializer [\#1204](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1204) ([cwrw](https://github.com/cwrw))
+- Fix pluralisation of approves move endpoint [\#1203](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1203) ([martyn-w](https://github.com/martyn-w))
+- Temporary solution to eager load youth risk assessment in a move [\#1202](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1202) ([cwrw](https://github.com/cwrw))
+- Changelog v2.7.4 [\#1200](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1200) ([cwrw](https://github.com/cwrw))
+- Validate Youth Risk Assessment move `from\_location` on creation [\#1192](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1192) ([cwrw](https://github.com/cwrw))
+- Add support for medical and critical events [\#1183](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1183) ([smoothcontract](https://github.com/smoothcontract))
+
+## [v2.7.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.4) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.3...v2.7.4)
+
+**Merged pull requests:**
+
+- Changelog v2.7.3 [\#1199](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1199) ([cwrw](https://github.com/cwrw))
+- P4-2521 Remove old deprecated PER notifier [\#1195](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1195) ([cwrw](https://github.com/cwrw))
+
+## [v2.7.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.3) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.2...v2.7.3)
+
+**Merged pull requests:**
+
+- Changelog v2.7.2 [\#1198](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1198) ([cwrw](https://github.com/cwrw))
+- P4-2521 Switch to using generic assessment job on assessment confirm action [\#1194](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1194) ([cwrw](https://github.com/cwrw))
+
+## [v2.7.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.2) (2020-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.1...v2.7.2)
+
+**Merged pull requests:**
+
+- Re-enable categories on profile test [\#1196](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1196) ([cwrw](https://github.com/cwrw))
+- P4-2521 Add new generic assessment job [\#1193](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1193) ([cwrw](https://github.com/cwrw))
+- Bump flipper-active\_record from 0.19.0 to 0.19.1 [\#1190](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1190) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove MPS28 \(West End Custody Suite\) from Serco [\#1187](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1187) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1186](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1186) ([martyn-w](https://github.com/martyn-w))
+- Tidy event specs [\#1185](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1185) ([willfish](https://github.com/willfish))
+- P4-2451 Add Youth Risk Assessment routes and controllers [\#1184](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1184) ([cwrw](https://github.com/cwrw))
+
 ## [v2.7.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.1) (2020-12-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.0...v2.7.1)

@@ -45,7 +45,13 @@ RSpec.describe IncludeParamHandler do
     context 'when the include param needs aliasing' do
       let(:include) { 'foo.flags,bar.bla.questions,responses,timeline_events' }
 
-      it { is_expected.to eq([{ foo: :framework_flags }, { bar: { bla: :framework_questions } }, :framework_responses, :events]) }
+      it { is_expected.to eq([{ foo: :framework_flags }, { bar: { bla: :framework_questions } }, :framework_responses, :generic_events]) }
+    end
+
+    context 'when the include param needs expanding to include multiple relationships' do
+      let(:include) { 'foo,important_events' }
+
+      it { is_expected.to eq([:foo, { incident_events: {}, profile: { person_escort_record: :medical_events } }]) }
     end
 
     context 'when the include param is an empty string' do

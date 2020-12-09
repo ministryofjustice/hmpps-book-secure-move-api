@@ -42,11 +42,11 @@ FactoryBot.define do
   end
 
   factory :youth_risk_assessment, class: 'YouthRiskAssessment', parent: :framework_assessmentable do
-    association(:move)
+    association(:move, :from_stc_to_court, factory: :move)
     association(:framework, :youth_risk_assessment)
 
     after(:build) do |youth_risk_assessment|
-      youth_risk_assessment.profile = youth_risk_assessment.move.profile if youth_risk_assessment.profile.blank?
+      youth_risk_assessment.profile = youth_risk_assessment.move&.profile if youth_risk_assessment.profile.blank?
     end
 
     trait :prefilled do

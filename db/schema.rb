@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_140655) do
+ActiveRecord::Schema.define(version: 2020_11_30_142628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -274,6 +274,8 @@ ActiveRecord::Schema.define(version: 2020_11_30_140655) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "supplier_id"
+    t.string "classification", default: "default"
+    t.index ["eventable_id", "eventable_type", "classification"], name: "index_on_generic_event_classification"
     t.index ["eventable_id", "eventable_type"], name: "index_generic_events_on_eventable_id_and_eventable_type"
     t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
     t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
