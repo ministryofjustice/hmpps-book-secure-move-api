@@ -23,9 +23,9 @@ module Metrics
         setup_metric(METRIC)
       end
 
-      def calculate(column_supplier, _row)
+      def calculate_row(_row)
         Move
-          .where(supplier: column_supplier)
+          .group(:supplier)
           .count
       end
     end

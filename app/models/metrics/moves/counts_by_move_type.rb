@@ -23,9 +23,9 @@ module Metrics
         setup_metric(METRIC)
       end
 
-      def calculate(column_move_type, _row)
+      def calculate_row(_row)
         Move
-          .where(move_type: column_move_type)
+          .group(:move_type)
           .count
       end
     end

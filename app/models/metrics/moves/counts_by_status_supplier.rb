@@ -1,21 +1,21 @@
 module Metrics
   module Moves
-    class CountsBySupplierMoveType
+    class CountsByStatusSupplier
       include BaseMetric
 
       METRIC = {
-        label: 'Move counts by supplier and move type',
-        file: 'moves/counts_by_supplier_move_type',
+        label: 'Move counts by status and supplier',
+        file: 'moves/counts_by_status_supplier',
         interval: 5.minutes,
         columns: {
+          name: 'status',
+          field: :itself,
+          values: Move.statuses.values,
+        },
+        rows: {
           name: 'supplier',
           field: :key,
           values: -> { Supplier.all + [nil] }, # NB: use lambda to delay evaluation until metric is used
-        },
-        rows: {
-          name: 'move_type',
-          field: :itself,
-          values: Move.move_types.values,
         },
       }.freeze
 
@@ -23,10 +23,10 @@ module Metrics
         setup_metric(METRIC)
       end
 
-      def calculate(column_supplier, row_move_type)
+      def calculate_row(row_supplier)
         Move
-          .where(supplier: column_supplier)
-          .where(move_type: row_move_type)
+          .where(supplier: row_supplier)
+          .group(:status)
           .count
       end
     end

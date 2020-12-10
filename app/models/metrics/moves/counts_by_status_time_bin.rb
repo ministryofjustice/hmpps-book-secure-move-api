@@ -1,11 +1,12 @@
 module Metrics
   module Moves
-    class CountsByStatus
+    class CountsByStatusTimeBin
       include BaseMetric
+      include TimeBins
 
       METRIC = {
-        label: 'Move counts by status',
-        file: 'moves/counts_by_status',
+        label: 'Move counts by time bin and status',
+        file: 'moves/counts_by_time_bin_status',
         interval: 5.minutes,
         columns: {
           name: 'status',
@@ -13,9 +14,9 @@ module Metrics
           values: Move.statuses.values,
         },
         rows: {
-          name: 'total',
-          field: :itself,
-          values: %w[total],
+          name: 'time',
+          field: :title,
+          values: COMMON_TIME_BINS,
         },
       }.freeze
 
@@ -23,8 +24,8 @@ module Metrics
         setup_metric(METRIC)
       end
 
-      def calculate_row(_row)
-        Move
+      def calculate_row(row_time_bin)
+        apply_time_bin(Move, row_time_bin)
           .group(:status)
           .count
       end
