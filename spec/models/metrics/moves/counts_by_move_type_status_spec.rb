@@ -13,9 +13,8 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeStatus do
     expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
-  describe 'calculate' do
-    let(:supplier1) { create(:supplier) }
-    let(:supplier2) { create(:supplier) }
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(:requested) }
 
     before do
       create(:move, :proposed, :prison_recall)
@@ -25,8 +24,12 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeStatus do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate(:prison_recall, :proposed)).to be(1)
-      expect(metric.calculate(:hospital, :requested)).to be(0)
+      expect(calculate_row).to eql(
+        {
+          'prison_recall' => 1,
+          'prison_transfer' => 1,
+        },
+      )
     end
   end
 end

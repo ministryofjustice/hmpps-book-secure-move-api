@@ -15,7 +15,7 @@ RSpec.describe Metrics::Moves::CountsByTimeBin do
 
   describe 'calculate' do
     let(:yesterday) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'yesterday' } }
-    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days' } }
+    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days inc today' } }
 
     before do
       create(:move, date: 4.days.ago)
@@ -27,8 +27,8 @@ RSpec.describe Metrics::Moves::CountsByTimeBin do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate(yesterday, 'total')).to be(1)
-      expect(metric.calculate(next_7_days, 'total')).to be(3)
+      expect(metric.calculate('total', yesterday)).to be(1)
+      expect(metric.calculate('total', next_7_days)).to be(3)
     end
   end
 end

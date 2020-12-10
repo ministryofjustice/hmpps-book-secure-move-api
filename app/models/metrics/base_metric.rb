@@ -86,7 +86,6 @@ module Metrics
       if values.nil? || timestamp.nil? || timestamp + interval < Time.zone.now
         @values = {}.tap do |v|
           rows.each do |row|
-
             if respond_to?(:calculate_row)
               # do calculation a row at a time
               row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))

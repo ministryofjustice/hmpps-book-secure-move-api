@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics::Moves::CountsByTimeBinMoveType do
+RSpec.describe Metrics::Moves::CountsByMoveTypeTimeBin do
   subject(:metric) { described_class.new }
 
   it 'includes the BaseMetric module' do
@@ -13,9 +13,11 @@ RSpec.describe Metrics::Moves::CountsByTimeBinMoveType do
     expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
-  describe 'calculate' do
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(next_7_days) }
+
     let(:yesterday) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'yesterday' } }
-    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days' } }
+    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days inc today' } }
 
     before do
       create(:move, :prison_transfer, date: 4.days.ago)
@@ -28,8 +30,12 @@ RSpec.describe Metrics::Moves::CountsByTimeBinMoveType do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate(yesterday, :prison_transfer)).to be(1)
-      expect(metric.calculate(next_7_days, :hospital)).to be(2)
+      expect(calculate_row).to eql(
+        {
+          'hospital' => 2,
+          'prison_recall' => 1,
+        },
+      )
     end
   end
 end

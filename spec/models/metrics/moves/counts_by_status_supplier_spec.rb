@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics::Moves::CountsBySupplierStatus do
+RSpec.describe Metrics::Moves::CountsByStatusSupplier do
   subject(:metric) { described_class.new }
 
   it 'includes the BaseMetric module' do
@@ -13,19 +13,26 @@ RSpec.describe Metrics::Moves::CountsBySupplierStatus do
     expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
-  describe 'calculate' do
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(supplier1) }
+
     let(:supplier1) { create(:supplier) }
     let(:supplier2) { create(:supplier) }
 
     before do
-      create(:move, :proposed)
+      create(:move, :proposed, supplier: supplier1)
       create(:move, :proposed, supplier: supplier1)
       create(:move, :in_transit, supplier: supplier1)
       create(:move, :proposed, supplier: supplier2)
     end
 
     it 'computes the metric' do
-      expect(metric.calculate(supplier1, 'proposed')).to be(1)
+      expect(calculate_row).to eql(
+        {
+          'in_transit' => 1,
+          'proposed' => 2,
+        },
+      )
     end
   end
 end

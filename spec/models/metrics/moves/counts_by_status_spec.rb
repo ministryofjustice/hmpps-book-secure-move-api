@@ -13,7 +13,9 @@ RSpec.describe Metrics::Moves::CountsByStatus do
     expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
-  describe 'calculate' do
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(nil) }
+
     before do
       create(:move, :proposed)
       create(:move, :requested)
@@ -22,8 +24,13 @@ RSpec.describe Metrics::Moves::CountsByStatus do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate('proposed', 'total')).to be(1)
-      expect(metric.calculate('requested', 'total')).to be(2)
+      expect(calculate_row).to eql(
+        {
+          'completed' => 1,
+          'proposed' => 1,
+          'requested' => 2,
+        },
+      )
     end
   end
 end

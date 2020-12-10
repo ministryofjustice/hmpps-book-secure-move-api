@@ -13,7 +13,9 @@ RSpec.describe Metrics::Moves::CountsByMoveType do
     expect(metric.label).to eql(described_class::METRIC[:label])
   end
 
-  describe 'calculate' do
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(nil) }
+
     before do
       create(:move, :court_appearance)
       create(:move, :prison_recall)
@@ -22,8 +24,13 @@ RSpec.describe Metrics::Moves::CountsByMoveType do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate(:court_appearance, 'total')).to be(1)
-      expect(metric.calculate(:hospital, 'total')).to be(2)
+      expect(calculate_row).to eql(
+        {
+          'court_appearance' => 1,
+          'prison_recall' => 1,
+          'hospital' => 2,
+        },
+      )
     end
   end
 end
