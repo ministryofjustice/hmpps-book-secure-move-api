@@ -17,6 +17,10 @@ RSpec.describe PersonEscortRecordsSerializer do
     expect(result[:data][:id]).to eq(person_escort_record.id)
   end
 
+  it 'contains a `status` attribute' do
+    expect(result[:data][:attributes][:status]).to eq('not_started')
+  end
+
   it 'contains a `confirmed_at` attribute' do
     expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
   end

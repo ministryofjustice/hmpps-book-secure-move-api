@@ -2,19 +2,16 @@
 
 class GenericEventSerializer
   include JSONAPI::Serializer
+  include JSONAPI::ConditionalRelationships
 
   set_type :events
 
-  attributes :occurred_at, :recorded_at, :notes
+  attributes :event_type, :classification, :occurred_at, :recorded_at, :notes
 
-  has_one :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
-  has_one :supplier
+  belongs_to :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
+  belongs_to :supplier
 
   SUPPORTED_RELATIONSHIPS = %w[eventable].freeze
-
-  attribute :event_type do |object|
-    object.type.try(:gsub, 'GenericEvent::', '')
-  end
 
   attribute :details do |record, _params|
     record.details.deep_dup.tap do |details|

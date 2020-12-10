@@ -1,6 +1,6 @@
 MoveIncludeParameter:
   name: include
-  description: Returns a specific list of related resources to the move
+  description: Returns a specific list of related resources to the move. Note that timeline_events and important_events are mutually exclusive and may not be included together.
   in: query
   style: form
   explode: false
@@ -34,4 +34,7 @@ MoveIncludeParameter:
       - profile.youth_risk_assessment.responses.nomis_mappings
       - profile.youth_risk_assessment.responses.question
       - profile.youth_risk_assessment.responses.question.descendants.\*\*
+      - important_events
+      - timeline_events
+      - timeline_events.eventable
   example: from_location

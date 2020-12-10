@@ -33,4 +33,18 @@ RSpec.describe GenericEvent::PerMedicalAid do
 
     it { is_expected.not_to be_valid }
   end
+
+  describe '#event_classification' do
+    it 'returns :medical' do
+      event = described_class.new
+
+      expect(event.event_classification).to eq :medical
+    end
+
+    it 'is automatically assigned on creation' do
+      event = create(:event_per_medical_aid, classification: nil)
+
+      expect(event.classification).to eq 'medical'
+    end
+  end
 end
