@@ -205,6 +205,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
         expect(framework_question2.reload.framework_responses.first.value).to be_nil
       end
 
+      it 'does not prefill response if type of question changed' do
+        old_framework = create(:framework, name: assessment_type.to_s.dasherize, version: '0.01')
+        framework_question = create(:framework_question, framework: old_framework, followup_comment: true, prefill: true, key: 'same-question')
+        create(:framework_question, framework: framework, prefill: true, key: 'same-question')
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question: framework_question)])
+        assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
+
+        expect(assessment.framework_responses.first.value).to be_nil
+      end
+
+      it 'sets prefilled value to false if type of question changed' do
+        old_framework = create(:framework, name: assessment_type.to_s.dasherize, version: '0.01')
+        framework_question = create(:framework_question, framework: old_framework, followup_comment: true, prefill: true, key: 'same-question')
+        create(:framework_question, framework: framework, prefill: true, key: 'same-question')
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question: framework_question)])
+        assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
+
+        expect(assessment.framework_responses.first).not_to be_prefilled
+      end
+
       it 'prefills responses for add_multiple_items questions' do
         dependent_framework_question = create(:framework_question, :checkbox, framework: framework, prefill: true)
         framework_question = create(:framework_question, :add_multiple_items, framework: framework, dependents: [dependent_framework_question])
