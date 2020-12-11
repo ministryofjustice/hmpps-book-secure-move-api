@@ -2,8 +2,12 @@ module CloudData
   class MetricsFeed
     attr_reader :bucket
 
-    def initialize(bucket, client = Aws::S3::Client.new)
-      @client = client
+    def initialize(bucket, client = nil)
+      @client = client || Aws::S3::Client.new(
+        region: ENV['S3_METRICS_REGION'],
+        access_key_id: ENV['S3_METRICS_ACCESS_KEY_ID'],
+        secret_access_key: ENV['S3_METRICS_SECRET_ACCESS_KEY'],
+      )
       @bucket = bucket
     end
 

@@ -1,7 +1,10 @@
 namespace :metrics do
   desc 'Exports metrics in all the popular formats to s3'
   task export: :environment do
-    abort 'Please set the env-var S3_METRICS_BUCKET_NAME' if ENV['S3_METRICS_BUCKET_NAME'].blank?
+    abort 'Please set S3_METRICS_ACCESS_KEY_ID' if ENV['S3_METRICS_ACCESS_KEY_ID'].blank?
+    abort 'Please set S3_METRICS_SECRET_ACCESS_KEY' if ENV['S3_METRICS_SECRET_ACCESS_KEY'].blank?
+    abort 'Please set S3_METRICS_REGION' if ENV['S3_METRICS_REGION'].blank?
+    abort 'Please set S3_METRICS_BUCKET_NAME' if ENV['S3_METRICS_BUCKET_NAME'].blank?
 
     # get list of all available metrics
     METRIC_CLASSES = [Metrics::Moves].map { |namespace|
