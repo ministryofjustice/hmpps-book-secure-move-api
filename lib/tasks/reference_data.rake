@@ -19,6 +19,12 @@ namespace :reference_data do
     puts importer.disabled_locations.sort.join(', ')
   end
 
+  desc 'update locations'
+  task update_locations: :environment do
+    puts 'Updating locations...'
+    Locations::Updater.call
+  end
+
   desc 'create ethnicities'
   task create_ethnicities: :environment do
     Ethnicities::Importer.new(NomisClient::Ethnicities.get).call

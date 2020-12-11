@@ -10,6 +10,7 @@ class LocationSerializer
              :location_type,
              :nomis_agency_id,
              :can_upload_documents,
+             :yoi,
              :disabled_at
 
   has_many :suppliers

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_135224) do
+ActiveRecord::Schema.define(version: 2020_12_10_180043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -322,7 +322,9 @@ ActiveRecord::Schema.define(version: 2020_12_10_135224) do
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
     t.uuid "category_id"
+    t.boolean "yoi", default: false
     t.index ["category_id"], name: "index_locations_on_category_id"
+    t.index ["yoi"], name: "index_locations_on_yoi"
   end
 
   create_table "locations_regions", id: false, force: :cascade do |t|

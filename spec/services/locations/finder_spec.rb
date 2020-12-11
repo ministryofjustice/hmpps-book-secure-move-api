@@ -57,6 +57,32 @@ RSpec.describe Locations::Finder do
         expect(location_finder.call.pluck(:id)).to contain_exactly(location1.id)
       end
     end
+
+    context 'with yoi true' do
+      let(:filter_params) { { yoi: true } }
+
+      before do
+        create(:location, yoi: true, title: 'YOI Location')
+        create(:location, yoi: false, title: 'Non YOI')
+      end
+
+      it 'returns YOI only locations' do
+        expect(location_finder.call.pluck(:title)).to contain_exactly('YOI Location')
+      end
+    end
+
+    context 'with yoi false' do
+      let(:filter_params) { { yoi: false } }
+
+      before do
+        create(:location, yoi: true, title: 'YOI Location')
+        create(:location, yoi: false, title: 'Non YOI')
+      end
+
+      it 'returns YOI only locations' do
+        expect(location_finder.call.pluck(:title)).to contain_exactly('Non YOI')
+      end
+    end
   end
 
   describe 'sorting' do

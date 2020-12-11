@@ -35,6 +35,7 @@ module Locations
       scope = apply_supplier_filters(scope)
       scope = apply_location_filters(scope)
       scope = apply_region_filters(scope)
+      scope = apply_yoi_filters(scope)
       scope
     end
 
@@ -56,6 +57,12 @@ module Locations
 
     def apply_region_filters(scope)
       scope = scope.joins(:regions).where(regions: { id: split_params(:region_id) }) if filter_params.key?(:region_id)
+      scope
+    end
+
+    def apply_yoi_filters(scope)
+      scope = scope.where(yoi: true) if filter_params[:yoi].to_s == 'true'
+      scope = scope.where(yoi: false) if filter_params[:yoi].to_s == 'false'
       scope
     end
   end

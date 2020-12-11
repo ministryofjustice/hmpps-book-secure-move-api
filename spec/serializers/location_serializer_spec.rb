@@ -40,6 +40,10 @@ RSpec.describe LocationSerializer do
     expect(attributes[:nomis_agency_id]).to eql 'PEI'
   end
 
+  it 'contains a yoi attribute' do
+    expect(attributes[:yoi]).to eql location.yoi
+  end
+
   it 'contains a disabled_at attribute' do
     expect(attributes[:disabled_at]).to eql disabled_at.iso8601
   end
