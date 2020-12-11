@@ -18,6 +18,12 @@ Profile:
     attributes:
       type: object
       properties:
+        requires_youth_risk_assessment:
+          oneOf:
+            - type: boolean
+            - type: 'null'
+          example: 'true'
+          description: Indicates if the person requires a youth risk assessment or not
         assessment_answers:
           type: array
           items:

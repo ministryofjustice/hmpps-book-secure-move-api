@@ -14,7 +14,7 @@ RSpec.describe Api::MovesController do
 
     let(:move_attributes) do
       { date: Date.today,
-        time_due: Time.now,
+        time_due: Time.zone.now,
         status: 'requested',
         additional_information: 'some more info',
         move_type: 'court_appearance' }
@@ -222,7 +222,7 @@ RSpec.describe Api::MovesController do
             type: 'moves',
             attributes: {
               date: Date.today,
-              time_due: Time.now,
+              time_due: Time.zone.now,
               status: 'requested',
               additional_information: 'some more info',
               move_type: nil,

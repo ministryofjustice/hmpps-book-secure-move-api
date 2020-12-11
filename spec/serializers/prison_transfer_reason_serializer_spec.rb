@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe PrisonTransferReasonSerializer do
   subject(:serializer) { described_class.new(reason) }
 
-  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:disabled_at) { Time.zone.local(2019, 1, 1) }
   let(:reason) { create :prison_transfer_reason, disabled_at: disabled_at }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 

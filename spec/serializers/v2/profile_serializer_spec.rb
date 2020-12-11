@@ -14,7 +14,7 @@ RSpec.describe V2::ProfileSerializer do
       data: {
         id: profile.id,
         type: 'profiles',
-        attributes: { assessment_answers: [] },
+        attributes: { assessment_answers: [], requires_youth_risk_assessment: nil },
         relationships: {
           person: {
             data: { id: profile.person.id, type: 'people' },

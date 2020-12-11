@@ -68,7 +68,6 @@ Rails/Date:
 # The anonymiser isn't production code, and is going away soon
 Rails/TimeZone:
   Exclude:
-    - "spec/**/**/*"
     - "app/services/moves/anonymiser.rb"
 
 Lint/AmbiguousBlockAssociation:
