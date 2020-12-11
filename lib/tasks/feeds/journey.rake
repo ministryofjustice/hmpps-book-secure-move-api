@@ -8,11 +8,11 @@ namespace :feeds do
 
       feed = Feeds::Journey.new(updated_at_from, updated_at_to).call
 
-      CloudDataFeed.new.write(feed, 'journeys.jsonl', report_on_date)
+      CloudData::ReportsFeed.new.write(feed, 'journeys.jsonl', report_on_date)
     else
       feed = Feeds::Journey.new.call
 
-      CloudDataFeed.new.write(feed, 'journeys.jsonl')
+      CloudData::ReportsFeed.new.write(feed, 'journeys.jsonl')
     end
   end
 end

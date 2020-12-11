@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CloudDataFeed do
+RSpec.describe CloudData::ReportsFeed do
   before do
     Aws.config.update(stub_responses: true)
     Timecop.freeze(Time.zone.local(2020, 1, 30))
