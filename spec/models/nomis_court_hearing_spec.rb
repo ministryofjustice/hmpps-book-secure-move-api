@@ -21,7 +21,7 @@ RSpec.describe NomisCourtHearing do
     let(:expected_attributes) do
       {
         id: nomis_court_hearing['id'],
-        start_time: Time.parse(nomis_court_hearing['dateTime']),
+        start_time: Time.zone.parse(nomis_court_hearing['dateTime']),
         type: 'Court',
         reason: 'Court appearance',
         agency_id: nomis_court_hearing['location']['agencyId'],
