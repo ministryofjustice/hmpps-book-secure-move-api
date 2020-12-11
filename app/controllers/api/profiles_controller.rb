@@ -26,6 +26,7 @@ module Api
     PROFILE_ATTRIBUTES = [
       :type,
       attributes: [
+        :requires_youth_risk_assessment,
         assessment_answers: [
           %i[
             key

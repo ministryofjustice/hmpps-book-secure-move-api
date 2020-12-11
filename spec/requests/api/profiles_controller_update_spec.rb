@@ -227,6 +227,48 @@ RSpec.describe Api::ProfilesController do
       end
     end
 
+    context 'when updating requires_youth_risk_assessment' do
+      let(:profile) { create(:profile) }
+      let(:profile_params) do
+        {
+          data: {
+            type: 'profiles',
+            attributes: {
+              requires_youth_risk_assessment: true,
+            },
+          },
+        }
+      end
+
+      let(:expected_data) do
+        {
+          type: 'profiles',
+          attributes: {
+            requires_youth_risk_assessment: true,
+          },
+        }
+      end
+
+      before do
+        allow(Notifier).to receive(:prepare_notifications)
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200'
+
+      it 'updates the assessment_answers on the profile' do
+        expect(profile.reload.requires_youth_risk_assessment).to eq(true)
+      end
+
+      it 'returns the correct data' do
+        expect(response_json['data']).to include_json(expected_data)
+      end
+
+      it 'calls the notifier' do
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: profile, action_name: 'update')
+      end
+    end
+
     context 'with a bad request' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
       let(:profile_params) { nil }

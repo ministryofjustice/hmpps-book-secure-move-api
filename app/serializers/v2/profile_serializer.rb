@@ -5,7 +5,7 @@ class V2::ProfileSerializer
 
   set_type :profiles
 
-  attributes :assessment_answers
+  attributes :requires_youth_risk_assessment, :assessment_answers
 
   belongs_to :person, serializer: ::V2::PersonSerializer
   has_many :documents, serializer: DocumentSerializer
