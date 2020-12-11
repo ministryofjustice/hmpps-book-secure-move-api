@@ -5,8 +5,8 @@ module Metrics
       include TimeBins
 
       METRIC = {
-        label: 'Move counts by time bin and status',
-        file: 'moves/counts_by_time_bin_status',
+        label: 'Move counts by status and time bin',
+        file: 'moves/counts_by_status_time_bin',
         interval: 5.minutes,
         columns: {
           name: 'status',

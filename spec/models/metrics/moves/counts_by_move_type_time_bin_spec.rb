@@ -17,13 +17,13 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeTimeBin do
     subject(:calculate_row) { metric.calculate_row(next_7_days) }
 
     let(:yesterday) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'yesterday' } }
-    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days inc today' } }
+    let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days exc today' } }
 
     before do
       create(:move, :prison_transfer, date: 4.days.ago)
       create(:move, :prison_transfer, date: Date.yesterday)
-      create(:move, :prison_recall, date: Date.yesterday)
       create(:move, :prison_recall, date: Date.today)
+      create(:move, :prison_recall, date: Date.tomorrow)
       create(:move, :hospital, date: Date.tomorrow)
       create(:move, :hospital, date: 4.days.from_now)
       create(:move, :hospital, date: 8.days.from_now)

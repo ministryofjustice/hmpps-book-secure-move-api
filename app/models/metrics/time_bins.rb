@@ -9,9 +9,9 @@ module Metrics
       TimeBin.new('yesterday', -1, -1),
       TimeBin.new('today', 0, 0),
       TimeBin.new('tomorrow', 1, 1),
-      TimeBin.new('next 7 days inc today', 0, 6),
-      TimeBin.new('next 30 days inc today', 0, 30),
-      TimeBin.new('the future inc today', 0, nil),
+      TimeBin.new('next 7 days exc today', 1, 7),
+      TimeBin.new('next 30 days exc today', 1, 30),
+      TimeBin.new('the future exc today', 1, nil),
     ].freeze
 
     def apply_time_bin(obj, time_bin)
