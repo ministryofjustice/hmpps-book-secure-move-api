@@ -117,7 +117,7 @@ RSpec.describe Subscription do
     subject(:subscription) { build(:subscription, discarded_at: discarded_at) }
 
     context 'when subscription is discarded' do
-      let(:discarded_at) { Time.now }
+      let(:discarded_at) { Time.zone.now }
 
       it { expect(subscription.kept?).to be false }
     end

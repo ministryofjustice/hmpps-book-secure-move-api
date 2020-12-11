@@ -32,7 +32,7 @@ RSpec.describe Activity do
     let(:expected_attributes) do
       {
         id: nomis_scheduled_event['eventId'],
-        start_time: Time.parse(nomis_scheduled_event['startTime']),
+        start_time: Time.parse(nomis_scheduled_event['startTime']), # rubocop:disable Rails/TimeZone
         type: 'Prison Activities',
         reason: nomis_scheduled_event['eventTypeDesc'],
         agency_id: nomis_scheduled_event['locationCode'],
