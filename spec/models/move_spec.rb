@@ -579,12 +579,12 @@ RSpec.describe Move do
 
     it 'does not create a profile version record if only changing move updated_at timestamp' do
       expect {
-        move.update(updated_at: Time.now)
+        move.update(updated_at: Time.zone.now)
       }.not_to change(move.profile.versions, :count)
     end
 
     it 'does not create a move version record if only changing move updated_at timestamp' do
-      move.update(updated_at: Time.now)
+      move.update(updated_at: Time.zone.now)
       expect(move.versions.count).to eq 1
     end
 

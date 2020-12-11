@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe EthnicitySerializer do
   subject(:serializer) { described_class.new(ethnicity) }
 
-  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:disabled_at) { Time.zone.local(2019, 1, 1) }
   let(:ethnicity) { create :ethnicity, disabled_at: disabled_at }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 

@@ -21,7 +21,7 @@ RSpec.describe CourtHearings::CreateInNomis do
     let(:nomis_case_id) { 1_111_111 }
     let(:from_nomis_agency_id) { 'LEI' }
     let(:to_nomis_agency_id) { 'LEEDCC' }
-    let(:hearing_date_time) { Time.parse('2020-04-15T17:36:02+01:00') }
+    let(:hearing_date_time) { Time.zone.parse('2020-04-15T17:36:02+01:00') }
     let(:comments) { 'Restricted access to parking level.' }
     let(:booking_id) { 123 }
 

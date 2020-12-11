@@ -12,10 +12,10 @@ RSpec.describe Notification, type: :model do
     subject(:notification) { build(:notification, :webhook, subscription: subscription, discarded_at: discarded_at) }
 
     context 'when parent subscription is discarded' do
-      let(:subscription) { create(:subscription, discarded_at: Time.now) }
+      let(:subscription) { create(:subscription, discarded_at: Time.zone.now) }
 
       context 'when notification is discarded' do
-        let(:discarded_at) { Time.now }
+        let(:discarded_at) { Time.zone.now }
 
         it { expect(notification.kept?).to be false }
       end
@@ -31,7 +31,7 @@ RSpec.describe Notification, type: :model do
       let(:subscription) { build(:subscription, discarded_at: nil) }
 
       context 'when notification is discarded' do
-        let(:discarded_at) { Time.now }
+        let(:discarded_at) { Time.zone.now }
 
         it { expect(notification.kept?).to be false }
       end

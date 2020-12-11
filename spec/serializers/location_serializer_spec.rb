@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe LocationSerializer do
   subject(:serializer) { described_class.new(location, include: %i[suppliers]) }
 
-  let(:disabled_at) { Time.new(2019, 1, 1) }
+  let(:disabled_at) { Time.zone.local(2019, 1, 1) }
   let(:supplier) { create(:supplier) }
   let(:location) { create :location, disabled_at: disabled_at, suppliers: [supplier] }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
