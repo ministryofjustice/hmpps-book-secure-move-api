@@ -8,17 +8,17 @@ namespace :metrics do
       namespace.constants.map { |c| namespace.const_get(c) if namespace.const_get(c).is_a? Class }.compact
     }.flatten
 
-    s3 = Aws::S3::Resource.new
-    bucket = s3.bucket(ENV['S3_METRICS_BUCKET_NAME'])
+    feed = CloudData::MetricsFeed.new(ENV['S3_METRICS_BUCKET_NAME'])
 
     METRIC_CLASSES.each do |metric_class|
       metric_class.new.tap do |metric|
         puts metric.label
         metric_class::FORMATS.each do |format_key, format_file|
-          bucket.object("#{metric.file}/#{format_file}").tap do |obj|
-            if !obj.exists? || obj.last_modified + metric.interval < Time.zone.now
-              obj.put(body: metric.send(format_key))
-            end
+          key = "#{metric.file}/#{format_file}"
+          expired_before = Time.zone.now - (metric.interval || 0)
+
+          if feed.stale?(key, expired_before)
+            feed.update(key, metric.send(format_key))
           end
         end
 

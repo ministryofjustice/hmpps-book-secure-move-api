@@ -8,11 +8,11 @@ namespace :feeds do
 
       feed = Feeds::Notification.new(updated_at_from, updated_at_to).call
 
-      CloudDataFeed.new.write(feed, 'notifications.jsonl', report_on_date)
+      CloudData::ReportsFeed.new.write(feed, 'notifications.jsonl', report_on_date)
     else
       feed = Feeds::Notification.new.call
 
-      CloudDataFeed.new.write(feed, 'notifications.jsonl')
+      CloudData::ReportsFeed.new.write(feed, 'notifications.jsonl')
     end
   end
 end

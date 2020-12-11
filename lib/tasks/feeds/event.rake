@@ -7,10 +7,10 @@ namespace :feeds do
       updated_at_to = report_on_date.end_of_day
 
       feed = Feeds::Event.new(updated_at_from, updated_at_to).call
-      CloudDataFeed.new.write(feed, 'events.jsonl', report_on_date)
+      CloudData::ReportsFeed.new.write(feed, 'events.jsonl', report_on_date)
     else
       feed = Feeds::Event.new.call
-      CloudDataFeed.new.write(feed, 'events.jsonl')
+      CloudData::ReportsFeed.new.write(feed, 'events.jsonl')
     end
   end
 end
