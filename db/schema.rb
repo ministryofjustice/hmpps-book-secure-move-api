@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_142628) do
+ActiveRecord::Schema.define(version: 2020_12_10_135224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -547,6 +547,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_142628) do
     t.string "category"
     t.string "category_code"
     t.uuid "category_id"
+    t.boolean "requires_youth_risk_assessment"
     t.index ["category_code"], name: "index_profiles_on_category_code"
     t.index ["category_id"], name: "index_profiles_on_category_id"
     t.index ["updated_at"], name: "index_profiles_on_updated_at"
