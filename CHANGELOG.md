@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.7.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.6) (2020-12-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.5...v2.7.6)
+
+**Merged pull requests:**
+
+- Add fake data rake tasks to create move incidents and PER medical events [\#1206](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1206) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog 2.7.5 [\#1205](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1205) ([cwrw](https://github.com/cwrw))
+- P4 2555 location importer disabled at [\#1201](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1201) ([martyn-w](https://github.com/martyn-w))
+- Revert change to filtering immutable feed resources [\#1189](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1189) ([willfish](https://github.com/willfish))
+- Bump puma from 5.0.4 to 5.1.0 [\#1179](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1179) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.7.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.5) (2020-12-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.4...v2.7.5)

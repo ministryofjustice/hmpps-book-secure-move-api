@@ -2,6 +2,8 @@
 
 require_relative 'fake_data/journeys'
 require_relative 'fake_data/gps'
+require_relative 'fake_data/incident_events'
+require_relative 'fake_data/medical_events'
 
 namespace :fake_data do
   desc 'create fake people'
@@ -168,6 +170,31 @@ namespace :fake_data do
         complete_in_full: Faker::Boolean.boolean,
         complex_cases: fake_complex_case_answers,
       )
+    end
+  end
+
+  desc 'create fake incident events'
+  task create_incident_events: :environment do
+    puts 'create_incident_events...'
+    Move
+        .where(status: %w[completed booked requested])
+        .where.not(to_location_id: nil)
+        .order(Arel.sql('RANDOM()'))
+        .limit(1000)
+        .find_each do |move|
+      Tasks::FakeData::IncidentEvents.new(move).call
+    end
+  end
+
+  desc 'create fake medical events'
+  task create_medical_events: :environment do
+    puts 'create_medical_events...'
+    PersonEscortRecord
+        .where.not(move_id: nil)
+        .order(Arel.sql('RANDOM()'))
+        .limit(100)
+        .find_each do |per|
+      Tasks::FakeData::MedicalEvents.new(per).call
     end
   end
 
