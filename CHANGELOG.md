@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.7.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.7) (2020-12-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.6...v2.7.7)
+
+**Merged pull requests:**
+
+- Small rename of metrics S3 env vars [\#1214](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1214) ([martyn-w](https://github.com/martyn-w))
+- P4-2558 Guard against question type change on pre-filling assessments [\#1213](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1213) ([cwrw](https://github.com/cwrw))
+- Add new `yoi` attribute to locations [\#1212](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1212) ([smoothcontract](https://github.com/smoothcontract))
+- Make sure tests use timezones in time specific tests [\#1211](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1211) ([cwrw](https://github.com/cwrw))
+- P4-2378 Add `requires\_youth\_risk\_assessment` attribute to profiles [\#1210](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1210) ([cwrw](https://github.com/cwrw))
+- Bump puma from 5.1.0 to 5.1.1 [\#1209](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1209) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add framework responses back to the version model [\#1208](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1208) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1207](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1207) ([martyn-w](https://github.com/martyn-w))
+- P4 2318 metrics generator spike [\#1197](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1197) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.7.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.6) (2020-12-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.5...v2.7.6)
