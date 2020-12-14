@@ -23,7 +23,7 @@ module Api
         render_json location, serializer: LocationSerializer, include: included_relationships, status: status
       end
 
-      PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id].freeze
+      PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id young_offender_institution].freeze
 
       def filter_params
         params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h

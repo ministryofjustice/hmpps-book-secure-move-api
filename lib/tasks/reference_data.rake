@@ -17,6 +17,15 @@ namespace :reference_data do
 
     puts "DISABLED LOCATIONS (#{importer.disabled_locations.length}):"
     puts importer.disabled_locations.sort.join(', ')
+
+    puts 'Updating locations...'
+    Locations::Updater.call
+  end
+
+  desc 'update locations'
+  task update_locations: :environment do
+    puts 'Updating locations...'
+    Locations::Updater.call
   end
 
   desc 'create ethnicities'
