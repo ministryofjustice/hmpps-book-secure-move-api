@@ -58,12 +58,12 @@ RSpec.describe Locations::Finder do
       end
     end
 
-    context 'with yoi true' do
-      let(:filter_params) { { yoi: true } }
+    context 'with young_offender_institution true' do
+      let(:filter_params) { { young_offender_institution: true } }
 
       before do
-        create(:location, yoi: true, title: 'YOI Location')
-        create(:location, yoi: false, title: 'Non YOI')
+        create(:location, young_offender_institution: true, title: 'YOI Location')
+        create(:location, young_offender_institution: false, title: 'Non YOI')
       end
 
       it 'returns YOI only locations' do
@@ -71,12 +71,12 @@ RSpec.describe Locations::Finder do
       end
     end
 
-    context 'with yoi false' do
-      let(:filter_params) { { yoi: false } }
+    context 'with young_offender_institution false' do
+      let(:filter_params) { { young_offender_institution: false } }
 
       before do
-        create(:location, yoi: true, title: 'YOI Location')
-        create(:location, yoi: false, title: 'Non YOI')
+        create(:location, young_offender_institution: true, title: 'YOI Location')
+        create(:location, young_offender_institution: false, title: 'Non YOI')
       end
 
       it 'returns YOI only locations' do

@@ -51,7 +51,7 @@ Location:
           type: string
           example: BAI
           description: The NOMIS `agency_id`, for prisons this is a 3-letter code
-        yoi:
+        young_offender_institution:
           type: boolean
           example: false
           description: Indicates that the location is a Youth Offenders Institute (note that some locations may have mixed populations so have a differing location type).

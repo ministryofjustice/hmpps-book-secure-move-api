@@ -322,9 +322,9 @@ ActiveRecord::Schema.define(version: 2020_12_10_180043) do
     t.datetime "disabled_at"
     t.boolean "can_upload_documents", default: false, null: false
     t.uuid "category_id"
-    t.boolean "yoi", default: false
+    t.boolean "young_offender_institution", default: false
     t.index ["category_id"], name: "index_locations_on_category_id"
-    t.index ["yoi"], name: "index_locations_on_yoi"
+    t.index ["young_offender_institution"], name: "index_locations_on_young_offender_institution"
   end
 
   create_table "locations_regions", id: false, force: :cascade do |t|

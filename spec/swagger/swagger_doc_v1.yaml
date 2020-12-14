@@ -3366,7 +3366,7 @@
             type: string
           format: uuid
           example: 950ef512-a25f-46d7-8ced-7ad09510659b
-        - name: filter[yoi]
+        - name: filter[young_offender_institution]
           in: query
           explode: false
           description: Filters results to only include (when true) or exclude (when false) Youth Offender Institutions
