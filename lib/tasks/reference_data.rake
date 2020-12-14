@@ -17,6 +17,9 @@ namespace :reference_data do
 
     puts "DISABLED LOCATIONS (#{importer.disabled_locations.length}):"
     puts importer.disabled_locations.sort.join(', ')
+
+    puts 'Updating locations...'
+    Locations::Updater.call
   end
 
   desc 'update locations'
