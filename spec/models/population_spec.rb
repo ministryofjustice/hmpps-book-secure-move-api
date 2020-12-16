@@ -154,9 +154,12 @@ RSpec.describe Population do
   describe '.free_spaces_date_range' do
     let!(:prison1) { create(:location, :prison) }
     let!(:prison2) { create(:location, :prison) }
-    let!(:move1) { create(:move, :prison_transfer, from_location: prison1, date: Date.today) }
-    let!(:move2) { create(:move, :prison_transfer, to_location: prison2, date: Date.today) }
-    let!(:move3) { create(:move, :prison_transfer, from_location: prison1, date: Date.tomorrow) }
+    let!(:move1) { create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday) }
+    let!(:move2) { create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday) }
+    let!(:move3) { create(:move, :prison_transfer, to_location: prison1, date: Date.yesterday) }
+    let!(:move4) { create(:move, :prison_transfer, from_location: prison1, date: Date.today) }
+    let!(:move5) { create(:move, :prison_transfer, to_location: prison2, date: Date.today) }
+    let!(:move6) { create(:move, :prison_transfer, from_location: prison1, date: Date.tomorrow) }
     let!(:population1) { create(:population, location: prison1, date: Date.today) } # Included
     let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
     let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) } # Included
@@ -168,25 +171,45 @@ RSpec.describe Population do
     let(:expected_hash) do
       {
         prison1.id => [
-          nil, # No population data for yesterday
+          {
+            # No population data for yesterday
+            free_spaces: nil,
+            id: nil,
+            transfers_in: 1,
+            transfers_out: 2,
+          },
           {
             free_spaces: population1.free_spaces,
             id: population1.id,
+            transfers_in: 0,
+            transfers_out: 1,
           },
           {
             free_spaces: population3.free_spaces,
             id: population3.id,
+            transfers_in: 0,
+            transfers_out: 1,
           },
         ],
         prison2.id => [
-          nil, # No population data for yesterday
+          {
+            # No population data for yesterday
+            free_spaces: nil,
+            id: nil,
+            transfers_in: 0,
+            transfers_out: 0,
+          },
           {
             free_spaces: population2.free_spaces,
             id: population2.id,
+            transfers_in: 1,
+            transfers_out: 0,
           },
           {
             free_spaces: population4.free_spaces,
             id: population4.id,
+            transfers_in: 0,
+            transfers_out: 0,
           },
         ],
       }
