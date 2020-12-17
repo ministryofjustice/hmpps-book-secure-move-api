@@ -17,6 +17,6 @@ private
   end
 
   def move_from_location
-    errors.add(:move, "'from_location' must be from either a secure training centre or a secure children's home") unless move&.from_location&.secure_training_centre? || move&.from_location&.secure_childrens_home?
+    errors.add(:move, "'from_location' must be from either a secure training centre or a secure children's home") unless move&.from_location&.secure_training_centre? || move&.from_location&.secure_childrens_home? || move&.from_location&.young_offender_institution
   end
 end
