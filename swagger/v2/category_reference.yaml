@@ -1,0 +1,27 @@
+CategoryReference:
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      oneOf:
+        - type: object
+        - type: array
+        - type: "null"
+      required:
+        - type
+        - id
+      properties:
+        type:
+          type: string
+          example: categories
+          enum:
+            - categories
+          description: The type of this object - always `categories`
+        id:
+          type: string
+          format: uuid
+          example: c8415c5a-1e16-4fbd-9b03-54b27089bb1a
+          description:
+            The unique identifier (UUID) of the object that this reference
+            points to

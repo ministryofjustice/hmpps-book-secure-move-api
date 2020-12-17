@@ -43,3 +43,6 @@ Profile:
         youth_risk_assessment:
           $ref: youth_risk_assessment_reference.yaml#/YouthRiskAssessmentReference
           description: The youth_risk_assessment associated with this Move
+        category:
+          $ref: ../v2/category_reference.yaml#/CategoryReference
+          description: The recorded prisoner category associated with this Move

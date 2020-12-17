@@ -39,6 +39,7 @@ module V2
 
     SUPPORTED_RELATIONSHIPS = %w[
       profile.documents
+      profile.category
       profile.person.ethnicity
       profile.person.gender
       profile.person_escort_record
