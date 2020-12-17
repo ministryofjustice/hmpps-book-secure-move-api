@@ -40,8 +40,15 @@ RSpec.describe Api::PopulationsController do
                   {
                     "id": population.id,
                     "free_spaces": population.free_spaces,
+                    "transfers_in": 0,
+                    "transfers_out": 0,
                   },
-                  nil,
+                  {
+                    "id": nil,
+                    "free_spaces": nil,
+                    "transfers_in": 0,
+                    "transfers_out": 0,
+                  },
                 ],
               },
             },
