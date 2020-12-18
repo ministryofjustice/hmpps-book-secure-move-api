@@ -10,35 +10,65 @@ suppliers:
     - BWI
     - CFI
     - CHE1
+    - CHE10
     - CHE2
     - CHE3
+    - CHE4
+    - CHE5
+    - CHE6
+    - CHE7
+    - CHE8
+    - CHE9
+    - CHS009
+    - CLV1
+    - CLV2
     - CMB1
     - CMB2
     - CMB3
     - CMB4
+    - CMB5
+    - CMB6
+    - CMB7
+    - CMB8
     - CVL3
+    - D20BM1
+    - D20HW
+    - DBS009
     - DGI
     - DHI
     - DHM1
+    - DHM10
+    - DHM11
     - DHM2
     - DHM3
     - DHM4
     - DHM5
     - DHM6
+    - DHM7
+    - DHM8
+    - DHM9
     - DMI
     - DNI
     - DP1
+    - DP10
+    - DP11
+    - DP12
+    - DP13
     - DP2
     - DP3
     - DP4
     - DP5
     - DP6
     - DP7
+    - DP9
     - DRB2
     - DRB3
     - DRB5
+    - DRB6
     - DRB7
     - DRB8
+    - DRB9
+    - DSW03
     - DTI
     - FBI
     - FHI
@@ -46,8 +76,22 @@ suppliers:
     - FNI
     - FSI
     - GHI
+    - GMN9
     - GMP1
+    - GMP10
+    - GMP11
+    - GMP12
+    - GMP13
+    - GMP14
+    - GMP15
+    - GMP16
+    - GMP17
+    - GMP18
+    - GMP19
     - GMP2
+    - GMP20
+    - GMP21
+    - GMP22
     - GMP3
     - GMP4
     - GMP5
@@ -55,10 +99,18 @@ suppliers:
     - GMP7
     - GMP8
     - GMP9
-    - GMP13
     - GTI
     - GWN1
     - GWN2
+    - GWN3
+    - GWN4
+    - GWN5
+    - GWN6
+    - GWN7
+    - GWN8
+    - HBS017
+    - HBS019
+    - HBS020
     - HDI
     - HEI
     - HHI
@@ -68,17 +120,28 @@ suppliers:
     - HMB3
     - HMB4
     - HMB5
+    - HMB6
+    - HMB7
     - HMI
     - HVI
     - KMI
     - KVI
     - LAN1
+    - LAN10
+    - LAN11
+    - LAN12
+    - LAN13
+    - LAN14
+    - LAN15
+    - LAN16
     - LAN2
     - LAN3
     - LAN4
     - LAN5
     - LAN6
     - LAN7
+    - LAN8
+    - LAN9
     - LCI
     - LCS1
     - LCS2
@@ -97,14 +160,36 @@ suppliers:
     - LPI
     - MDI
     - MHI
+    - MLW039
+    - MLW047
     - MLW051
     - MRI
     - MRS1
+    - MRS10
     - MRS2
     - MRS3
     - MRS4
     - MRS5
+    - MRS6
+    - MRS7
+    - MRS8
+    - MRS9
+    - NBC1
+    - NBC10
+    - NBC11
+    - NBC12
+    - NBC2
+    - NBC3
+    - NBC4
+    - NBC5
+    - NBC6
+    - NBC7
+    - NBC8
+    - NBC9
+    - NBR033
+    - NBR038
     - NHI
+    - NHS013
     - NLI
     - NMI
     - NRU1
@@ -117,24 +202,40 @@ suppliers:
     - NSI
     - NTH1
     - NTH2
+    - NTH3
     - NTH4
     - NTH5
+    - NTH6
     - NTS1
     - NTS2
     - NTS3
+    - NTS4
+    - NTS5
+    - NTS6
+    - NTS7
     - NTT1
     - NTT3
     - NWA1
+    - NWA10
+    - NWA11
     - NWA2
     - NWA3
     - NWA4
     - NWA5
     - NWA6
     - NWA7
+    - NWA8
+    - NWA9
     - NYK1
+    - NYK10
     - NYK2
     - NYK3
     - NYK4
+    - NYK5
+    - NYK6
+    - NYK7
+    - NYK8
+    - NYK9
     - ONI
     - OWI
     - PNI
@@ -151,39 +252,95 @@ suppliers:
     - SCH8
     - SFI
     - SHI
+    - SHP1
     - SKI
     - SNI
     - STC2
+    - STF005
+    - STF039
+    - STF040
+    - STF041
+    - STF053
     - STF1
+    - STF10
+    - STF11
     - STF2
     - STF3
     - STF4
     - STF5
+    - STF6
+    - STF7
+    - STF8
+    - STF9
     - STI
     - SUI
+    - SWAD01
     - SWI
     - SWL1
+    - SWL10
+    - SWL11
+    - SWL12
+    - SWL13
+    - SWL14
+    - SWL15
+    - SWL16
+    - SWL17
+    - SWL18
     - SWL2
     - SWL3
     - SWL4
-    - SWL17
+    - SWL5
+    - SWL6
+    - SWL7
+    - SWL8
+    - SWL9
     - SYP1
+    - SYP10
     - SYP2
     - SYP3
+    - SYP4
+    - SYP5
+    - SYP6
+    - SYP7
+    - SYP8
+    - SYP9
     - TCI
     - UKI
     - UPI
     - WDI
     - WEI
+    - WILMCR
+    - WKS1
+    - WKS2
     - WMI
+    - WMP10
+    - WMP11
+    - WMP12
+    - WMP13
+    - WMP14
+    - WMP15
+    - WMP16
+    - WMP17
+    - WMP18
+    - WMP19
     - WMP2
+    - WMP20
+    - WMP21
+    - WMP22
+    - WMP23
+    - WMP24
+    - WMP25
+    - WMP26
+    - WMP27
+    - WMP28
+    - WMP29
     - WMP3
+    - WMP30
     - WMP4
     - WMP5
     - WMP7
     - WMP8
-    - WMP13
-    - WMP23
+    - WMP9
     - WNI
     - WTI
     - WWM1
@@ -193,9 +350,22 @@ suppliers:
     - WWM5
     - WWM6
     - WWM7
+    - WWM8
+    - WWM9
     - WYI
     - WYP1
+    - WYP10
+    - WYP11
+    - WYP12
+    - WYP14
+    - WYP15
+    - WYP16
+    - WYP17
+    - WYP18
+    - WYP19
     - WYP2
+    - WYP20
+    - WYP21
     - WYP3
     - WYP4
     - WYP5
@@ -203,7 +373,6 @@ suppliers:
     - WYP7
     - WYP8
     - WYP9
-    - WYP19
   serco:
     - ASI
     - AVS1
@@ -214,6 +383,7 @@ suppliers:
     - BDS1
     - BDS2
     - BDS3
+    - BDS4
     - BFI
     - BLI
     - BNI
@@ -229,7 +399,7 @@ suppliers:
     - CAM4
     - CAM5
     - CDI
-    - CITWMC
+    - CHIN01
     - CKI
     - CLI
     - CLP1
@@ -243,20 +413,40 @@ suppliers:
     - DC5
     - DC6
     - DC8
+    - DC9
     - DST1
+    - DST10
+    - DST11
+    - DST12
+    - DST13
     - DST2
     - DST3
+    - DST5
+    - DST7
+    - DST8
+    - DST9
     - DWI
     - EEI
     - EHI
     - ESI
     - ESX1
+    - ESX10
+    - ESX11
+    - ESX12
+    - ESX13
+    - ESX14
+    - ESX15
+    - ESX16
+    - ESX17
+    - ESX18
     - ESX2
     - ESX3
     - ESX4
     - ESX5
     - ESX6
     - ESX7
+    - ESX8
+    - ESX9
     - EWI
     - EXI
     - EYI
@@ -264,7 +454,11 @@ suppliers:
     - FMI
     - FYI
     - GCS1
+    - GCS2
+    - GCS3
+    - GCS4
     - GCS5
+    - GCS6
     - GMI
     - GNI
     - HBI
@@ -274,13 +468,32 @@ suppliers:
     - HNT3
     - HNT4
     - HNT6
+    - HNT7
     - HOI
     - HPI
+    - HPS046
+    - HRF1
+    - HRF2
     - HRT1
+    - HRT10
     - HRT2
+    - HRT3
+    - HRT4
+    - HRT5
+    - HRT6
+    - HRT7
+    - HRT8
+    - HRT9
+    - IOW1
     - ISI
     - IWI
     - KNT1
+    - KNT10
+    - KNT11
+    - KNT12
+    - KNT13
+    - KNT14
+    - KNT15
     - KNT2
     - KNT3
     - KNT4
@@ -288,6 +501,10 @@ suppliers:
     - KNT6
     - KNT7
     - KNT8
+    - KNT9
+    - LDM081
+    - LDM149
+    - LDM177
     - LTI
     - LWI
     - LYI
@@ -318,10 +535,50 @@ suppliers:
     - MPS32
     - MPS33
     - MPS34
+    - MPS35
+    - MPS36
+    - MPS37
+    - MPS38
+    - MPS39
     - MPS4
+    - MPS40
+    - MPS41
+    - MPS42
+    - MPS43
+    - MPS44
+    - MPS45
+    - MPS46
+    - MPS47
+    - MPS48
+    - MPS49
     - MPS5
+    - MPS50
+    - MPS51
+    - MPS52
+    - MPS53
+    - MPS54
+    - MPS55
+    - MPS56
+    - MPS57
+    - MPS58
+    - MPS59
     - MPS6
+    - MPS60
+    - MPS61
+    - MPS62
+    - MPS64
+    - MPS65
+    - MPS66
+    - MPS67
+    - MPS68
+    - MPS69
     - MPS7
+    - MPS70
+    - MPS71
+    - MPS72
+    - MPS73
+    - MPS74
+    - MPS75
     - MPS8
     - MPS9
     - MSI
@@ -331,6 +588,7 @@ suppliers:
     - NFL3
     - NFL4
     - NFL5
+    - NFL6
     - NWI
     - PBI
     - PDI
@@ -347,6 +605,10 @@ suppliers:
     - SRY016
     - SRY1
     - SRY4
+    - SRY5
+    - SRY6
+    - SRY7
+    - STC1
     - STC3
     - STCUSU
     - SUS1
@@ -354,6 +616,7 @@ suppliers:
     - SUS3
     - SUS4
     - SUS5
+    - SUS6
     - SUS7
     - TSI
     - TVP1
@@ -370,7 +633,12 @@ suppliers:
     - WII
     - WLI
     - WLT1
+    - WLT2
     - WLT4
+    - WLT5
+    - WLT6
+    - WLT8
     - WRI
     - WSI
+    - WSX1
     - WWI
