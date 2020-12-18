@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.7.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.8) (2020-12-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.7...v2.7.8)
+
+**Merged pull requests:**
+
+- New supplier locations [\#1224](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1224) ([martyn-w](https://github.com/martyn-w))
+- P4-2461 adding category to profile serializer [\#1223](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1223) ([martyn-w](https://github.com/martyn-w))
+- Add youth offender institution to list of accepted location for assessment [\#1221](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1221) ([cwrw](https://github.com/cwrw))
+- Update metadata for location free spaces endpoint [\#1219](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1219) ([smoothcontract](https://github.com/smoothcontract))
+- Bump aws-sdk-s3 from 1.86.1 to 1.86.2 [\#1218](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1218) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog 2.7.7 [\#1217](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1217) ([cwrw](https://github.com/cwrw))
+- Bump cancancan from 3.1.0 to 3.2.0 [\#1216](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1216) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.86.0 to 1.86.1 [\#1215](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1215) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.7.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.7) (2020-12-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.6...v2.7.7)
