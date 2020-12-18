@@ -9,6 +9,7 @@ MovesIncludeParameter:
     enum:
       - from_location
       - prison_transfer_reason
+      - profile.category
       - profile.person
       - profile.person.ethnicity
       - profile.person.gender

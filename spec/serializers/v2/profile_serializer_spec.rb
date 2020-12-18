@@ -16,6 +16,9 @@ RSpec.describe V2::ProfileSerializer do
         type: 'profiles',
         attributes: { assessment_answers: [], requires_youth_risk_assessment: nil },
         relationships: {
+          category: {
+            data: nil,
+          },
           person: {
             data: { id: profile.person.id, type: 'people' },
           },
@@ -67,8 +70,9 @@ RSpec.describe V2::ProfileSerializer do
   end
 
   describe 'with supported includes' do
-    let(:profile) { create(:profile, documents: [create(:document)]) }
-    let(:adapter_options) { { include: %i[documents person] } }
+    let(:category) { create(:category) }
+    let(:profile) { create(:profile, documents: [create(:document)], category: category) }
+    let(:adapter_options) { { include: %i[documents person category] } }
     let(:serialized_person) do
       serializer = V2::PersonSerializer.new(profile.person)
 
@@ -77,6 +81,12 @@ RSpec.describe V2::ProfileSerializer do
 
     let(:serialized_document) do
       serializer = DocumentSerializer.new(profile.documents.first)
+
+      JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
+    end
+
+    let(:serialized_category) do
+      serializer = CategorySerializer.new(profile.category)
 
       JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
     end
@@ -92,9 +102,12 @@ RSpec.describe V2::ProfileSerializer do
               data: { id: profile.person.id, type: 'people' },
             },
             documents: { data: [{ id: profile.documents.first.id, type: 'documents' }] },
+            category: {
+              data: { id: category.id, type: 'categories' },
+            },
           },
         },
-        included: UnorderedArray(serialized_person[:data], serialized_document[:data]),
+        included: UnorderedArray(serialized_person[:data], serialized_document[:data], serialized_category[:data]),
       }
     end
 
