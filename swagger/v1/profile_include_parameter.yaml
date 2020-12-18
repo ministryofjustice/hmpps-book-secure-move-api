@@ -9,4 +9,5 @@ ProfileIncludeParameter:
     enum:
       - documents
       - person
+      - category
   example: documents

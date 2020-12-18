@@ -15,6 +15,7 @@ MoveIncludeParameter:
       - to_location
       - supplier
       - profile.documents
+      - profile.category
       - profile.person
       - profile.person.gender
       - profile.person.ethnicity

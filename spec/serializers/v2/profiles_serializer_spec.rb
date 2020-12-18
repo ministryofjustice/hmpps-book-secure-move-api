@@ -19,6 +19,9 @@ RSpec.describe V2::ProfilesSerializer do
           person: {
             data: { id: profile.person.id, type: 'people' },
           },
+          category: {
+            data: nil,
+          },
         },
       },
     }
@@ -58,7 +61,9 @@ RSpec.describe V2::ProfilesSerializer do
   end
 
   context 'with included person escort record' do
-    let(:options) { { params: { included: %i[person_escort_record] } } }
+    let(:options) { { params: { included: %i[person_escort_record category] } } }
+    let(:category) { create(:category) }
+    let(:profile) { create(:profile, category: category) }
 
     it 'contains a nil `person_escort_record` relationship if no person escort record present' do
       expect(result[:data][:relationships][:person_escort_record][:data]).to be_nil
@@ -70,6 +75,13 @@ RSpec.describe V2::ProfilesSerializer do
       expect(result[:data][:relationships][:person_escort_record][:data]).to eq({
         id: person_escort_record.id,
         type: 'person_escort_records',
+      })
+    end
+
+    it 'contains a`category` relationship with category record' do
+      expect(result[:data][:relationships][:category][:data]).to eq({
+        id: category.id,
+        type: 'categories',
       })
     end
   end
