@@ -383,6 +383,7 @@ suppliers:
     - BDS1
     - BDS2
     - BDS3
+    - BDS4
     - BFI
     - BLI
     - BNI
@@ -398,7 +399,7 @@ suppliers:
     - CAM4
     - CAM5
     - CDI
-    - CITWMC
+    - CHIN01
     - CKI
     - CLI
     - CLP1
@@ -412,20 +413,40 @@ suppliers:
     - DC5
     - DC6
     - DC8
+    - DC9
     - DST1
+    - DST10
+    - DST11
+    - DST12
+    - DST13
     - DST2
     - DST3
+    - DST5
+    - DST7
+    - DST8
+    - DST9
     - DWI
     - EEI
     - EHI
     - ESI
     - ESX1
+    - ESX10
+    - ESX11
+    - ESX12
+    - ESX13
+    - ESX14
+    - ESX15
+    - ESX16
+    - ESX17
+    - ESX18
     - ESX2
     - ESX3
     - ESX4
     - ESX5
     - ESX6
     - ESX7
+    - ESX8
+    - ESX9
     - EWI
     - EXI
     - EYI
@@ -433,23 +454,47 @@ suppliers:
     - FMI
     - FYI
     - GCS1
+    - GCS2
+    - GCS3
+    - GCS4
     - GCS5
+    - GCS6
     - GMI
     - GNI
     - HBI
     - HCI
+    -
     - HNT1
     - HNT2
     - HNT3
     - HNT4
     - HNT6
+    - HNT7
     - HOI
     - HPI
+    - HPS046
+    - HRF1
+    - HRF2
     - HRT1
+    - HRT10
     - HRT2
+    - HRT3
+    - HRT4
+    - HRT5
+    - HRT6
+    - HRT7
+    - HRT8
+    - HRT9
+    - IOW1
     - ISI
     - IWI
     - KNT1
+    - KNT10
+    - KNT11
+    - KNT12
+    - KNT13
+    - KNT14
+    - KNT15
     - KNT2
     - KNT3
     - KNT4
@@ -457,6 +502,10 @@ suppliers:
     - KNT6
     - KNT7
     - KNT8
+    - KNT9
+    - LDM081
+    - LDM149
+    - LDM177
     - LTI
     - LWI
     - LYI
@@ -487,10 +536,50 @@ suppliers:
     - MPS32
     - MPS33
     - MPS34
+    - MPS35
+    - MPS36
+    - MPS37
+    - MPS38
+    - MPS39
     - MPS4
+    - MPS40
+    - MPS41
+    - MPS42
+    - MPS43
+    - MPS44
+    - MPS45
+    - MPS46
+    - MPS47
+    - MPS48
+    - MPS49
     - MPS5
+    - MPS50
+    - MPS51
+    - MPS52
+    - MPS53
+    - MPS54
+    - MPS55
+    - MPS56
+    - MPS57
+    - MPS58
+    - MPS59
     - MPS6
+    - MPS60
+    - MPS61
+    - MPS62
+    - MPS64
+    - MPS65
+    - MPS66
+    - MPS67
+    - MPS68
+    - MPS69
     - MPS7
+    - MPS70
+    - MPS71
+    - MPS72
+    - MPS73
+    - MPS74
+    - MPS75
     - MPS8
     - MPS9
     - MSI
@@ -500,6 +589,7 @@ suppliers:
     - NFL3
     - NFL4
     - NFL5
+    - NFL6
     - NWI
     - PBI
     - PDI
@@ -516,6 +606,10 @@ suppliers:
     - SRY016
     - SRY1
     - SRY4
+    - SRY5
+    - SRY6
+    - SRY7
+    - STC1
     - STC3
     - STCUSU
     - SUS1
@@ -523,6 +617,7 @@ suppliers:
     - SUS3
     - SUS4
     - SUS5
+    - SUS6
     - SUS7
     - TSI
     - TVP1
@@ -539,7 +634,12 @@ suppliers:
     - WII
     - WLI
     - WLT1
+    - WLT2
     - WLT4
+    - WLT5
+    - WLT6
+    - WLT8
     - WRI
     - WSI
+    - WSX1
     - WWI
