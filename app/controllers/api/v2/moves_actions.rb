@@ -167,6 +167,7 @@ module Api::V2
         notes: 'Automatically generated event',
         details: {},
         supplier_id: doorkeeper_application_owner&.id,
+        created_by: user_for_paper_trail || doorkeeper_application_owner&.name,
       }
 
       if move.proposed?

@@ -65,6 +65,7 @@ RSpec.describe GenericEvent::MoveCancel do
           'id' => generic_event.id,
           'type' => 'MoveCancel',
           'notes' => 'Flibble',
+          'created_by' => 'TEST_USER',
           'created_at' => be_a(Time),
           'updated_at' => be_a(Time),
           'occurred_at' => be_a(Time),

@@ -5,6 +5,7 @@ module Api
       attributes: [
         :event_type,
         :occurred_at,
+        :created_by,
         :recorded_at,
         :notes,
         details: {},

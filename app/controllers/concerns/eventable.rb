@@ -6,6 +6,10 @@ module Eventable
     @supplier_id ||= current_user.owner&.id
   end
 
+  def created_by
+    user_for_paper_trail || current_user&.owner&.name || 'unknown'
+  end
+
   def process_event(eventables, event_sti_class, event_params)
     [eventables].flatten.each do |eventable|
       create_generic_event(eventable, event_sti_class, event_params)
@@ -35,6 +39,7 @@ private
     attributes[:recorded_at] = timestamp
     attributes[:notes]       = event_params.dig(:attributes, :notes)
     attributes[:supplier_id] = supplier_id
+    attributes[:created_by]  = created_by
   end
 
   def assign_specific_attributes!(attributes, event_params, event_sti_class)

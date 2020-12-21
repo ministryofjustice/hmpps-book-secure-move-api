@@ -12,7 +12,7 @@ module GenericEvents
       journeys
     ].freeze
 
-    attr_reader :occurred_at, :recorded_at, :event_type, :eventable_type
+    attr_reader :occurred_at, :recorded_at, :event_type, :eventable_type, :created_by
 
     validates :occurred_at,    presence: true, iso_date_time: true
     validates :recorded_at,    presence: true, iso_date_time: true
@@ -24,6 +24,7 @@ module GenericEvents
 
     def initialize(event_params, event_relationships)
       @occurred_at = event_params.dig('attributes', 'occurred_at')
+      @created_by = event_params.dig('attributes', 'created_by')
       @recorded_at = event_params.dig('attributes', 'recorded_at')
       @event_type = event_params.dig('attributes', 'event_type')
       @eventable_type = event_relationships.dig('eventable', 'data', 'type')

@@ -20,6 +20,7 @@ RSpec.describe GenericEventSerializer do
         attributes: {
           classification: 'default',
           occurred_at: event.occurred_at.iso8601,
+          created_by: 'TEST_USER',
           recorded_at: event.recorded_at.iso8601,
           notes: 'Flibble',
           event_type: 'MoveCancel',
@@ -76,6 +77,7 @@ RSpec.describe GenericEventSerializer do
           attributes: {
             classification: 'default',
             occurred_at: event.occurred_at.iso8601,
+            created_by: 'TEST_USER',
             recorded_at: event.recorded_at.iso8601,
             notes: 'Flibble',
             event_type: 'MoveRedirect',

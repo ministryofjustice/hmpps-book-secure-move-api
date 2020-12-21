@@ -20,6 +20,7 @@ RSpec.describe Api::MovesController do
       'CONTENT_TYPE': content_type,
       'Accept': 'application/vnd.api+json; version=2',
       'Authorization' => "Bearer #{access_token}",
+      'X-Current-User' => 'TEST_USER',
     }
   end
 
@@ -68,6 +69,11 @@ RSpec.describe Api::MovesController do
       expect(GenericEvent.last.supplier).to be(nil)
     end
 
+    it 'sets the created by on the GenericEvent' do
+      do_post
+      expect(GenericEvent.last.created_by).to eq('TEST_USER')
+    end
+
     context 'when the new move status is `proposed`' do
       before do
         move_attributes[:date_from] = Date.today.iso8601
@@ -109,7 +115,7 @@ RSpec.describe Api::MovesController do
       it 'audits the supplier' do
         do_post
 
-        expect(move.versions.map(&:whodunnit)).to eq([nil])
+        expect(move.versions.map(&:whodunnit)).to eq(%w[TEST_USER])
         expect(move.versions.map(&:supplier_id)).to eq([supplier.id])
       end
 
