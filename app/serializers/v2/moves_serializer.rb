@@ -41,6 +41,7 @@ module V2
       prison_transfer_reason
       supplier
       important_events
+      journeys
     ].freeze
 
     belongs_to :from_location, serializer: ::LocationSerializer
@@ -51,5 +52,6 @@ module V2
     belongs_to :allocation, serializer: AllocationSerializer
 
     has_many_if_included :important_events, serializer: ImportantEventsSerializer, &:important_events
+    has_many_if_included :journeys, serializer: V2::JourneysSerializer
   end
 end

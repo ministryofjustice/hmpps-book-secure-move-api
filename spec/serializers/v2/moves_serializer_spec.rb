@@ -52,17 +52,18 @@ RSpec.describe V2::MovesSerializer do
     let(:options) do
       {
         include: described_class::SUPPORTED_RELATIONSHIPS,
-        params: { included: %i[person_escort_record flags] },
+        params: { included: %i[person_escort_record flags journeys] },
       }
     end
 
     let!(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
     let!(:flag) { create(:framework_flag) }
     let!(:response) { create(:string_response, assessmentable: person_escort_record, framework_flags: [flag]) }
+    let!(:journey) { create(:journey, move: move) }
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers person_escort_records framework_flags])
+        .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers person_escort_records framework_flags journeys])
     end
   end
 end

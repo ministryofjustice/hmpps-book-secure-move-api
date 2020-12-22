@@ -146,3 +146,6 @@ Move:
         timeline_events:
           $ref: "../v1/event_reference.yaml#/EventReference"
           description: Aliased events about this record and its nested relationships
+        journeys:
+          $ref: "../v1/journey_reference.yaml#/JourneyReference"
+          description: The journeys associated with this move
