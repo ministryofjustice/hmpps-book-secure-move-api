@@ -45,6 +45,10 @@ class ApiController < ApplicationController
     request.headers['X-Current-User']
   end
 
+  def created_by
+    user_for_paper_trail || doorkeeper_application_owner&.name
+  end
+
   def info_for_paper_trail
     { supplier_id: doorkeeper_application_owner&.id }
   end

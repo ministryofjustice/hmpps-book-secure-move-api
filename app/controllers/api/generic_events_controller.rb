@@ -5,7 +5,6 @@ module Api
       attributes: [
         :event_type,
         :occurred_at,
-        :created_by,
         :recorded_at,
         :notes,
         details: {},
@@ -31,6 +30,7 @@ module Api
 
         attributes.merge!('supplier' => doorkeeper_application_owner) if doorkeeper_application_owner
         attributes.merge!('eventable' => eventable) if eventable_params
+        attributes.merge!('created_by' => created_by) if created_by
         attributes['details'] = attributes['details']&.slice(*event_type.constantize.details_attributes) || {}
 
         attributes['details'].merge!(event_specific_relationships) if event_specific_relationships.any?
@@ -58,10 +58,6 @@ module Api
 
     def event_type
       @event_type ||= 'GenericEvent::' + event_params.dig('attributes', 'event_type')
-    end
-
-    def created_by
-      current_user&.owner&.name || 'unknown'
     end
 
     def event_specific_relationships

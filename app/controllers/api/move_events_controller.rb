@@ -8,13 +8,13 @@ module Api
     before_action :validate_idempotency_key
     around_action :idempotent_action
 
-    APPROVE_PARAMS = [:type, attributes: %i[timestamp date create_in_nomis created_by]].freeze
-    CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes created_by]].freeze
-    LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes created_by], relationships: { from_location: {} }].freeze
-    REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes move_type created_by], relationships: { to_location: {} }].freeze
-    REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook created_by]].freeze
+    APPROVE_PARAMS = [:type, attributes: %i[timestamp date create_in_nomis]].freeze
+    CANCEL_PARAMS = [:type, attributes: %i[timestamp cancellation_reason cancellation_reason_comment notes]].freeze
+    LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
+    REDIRECT_PARAMS = [:type, attributes: %i[timestamp notes move_type], relationships: { to_location: {} }].freeze
+    REJECT_PARAMS = [:type, attributes: %i[timestamp rejection_reason cancellation_reason_comment rebook]].freeze
 
-    COMMON_PARAMS = [:type, attributes: %i[timestamp notes created_by]].freeze # for accept, complete and start move events
+    COMMON_PARAMS = [:type, attributes: %i[timestamp notes]].freeze # for accept, complete and start move events
 
     def accept
       MoveEvents::ParamsValidator.new(common_params).validate!
