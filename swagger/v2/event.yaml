@@ -20,6 +20,7 @@ EventResponseBody:
       required:
         - event_type
         - occurred_at
+        - created_by
         - recorded_at
       properties:
         event_type:
@@ -43,6 +44,13 @@ EventResponseBody:
             This is **mandatory**.
           format: date-time
           example: "2020-06-16T10:20:30+01:00"
+        created_by:
+          type: string
+          description: |
+            The username of the user who either triggered the event or performed an action in the UI which resulted in an event being triggered.
+
+            When the event is triggered by a supplier, this will return the supplier name. Otherwise it will return the username of the user who performed the relevant action in the UI.
+          example: "TEST_USER"
         recorded_at:
           type: string
           description: |

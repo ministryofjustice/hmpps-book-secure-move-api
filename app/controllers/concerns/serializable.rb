@@ -22,6 +22,7 @@ module Serializable
     renderable = args.first
 
     options[:json] = build_serializer(renderable, options)
+
     render options.slice(:json, :status)
   end
 

@@ -6,10 +6,6 @@ module Eventable
     @supplier_id ||= current_user.owner&.id
   end
 
-  def created_by
-    user_for_paper_trail || current_user&.owner&.name || 'unknown'
-  end
-
   def process_event(eventables, event_sti_class, event_params)
     [eventables].flatten.each do |eventable|
       create_generic_event(eventable, event_sti_class, event_params)
