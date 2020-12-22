@@ -13,6 +13,7 @@ module Tasks
           random_event.create!(
             eventable: move,
             occurred_at: Time.zone.now,
+            created_by: 'TEST_USER',
             recorded_at: Time.zone.now,
             details: {
               reported_at: Time.zone.now,

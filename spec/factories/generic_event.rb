@@ -3,6 +3,7 @@ FactoryBot.define do
     eventable { association(:move) }
     supplier { association(:supplier) }
     occurred_at { Time.zone.now }
+    created_by { 'TEST_USER' }
     recorded_at { Time.zone.now }
     notes { 'Flibble' }
     details { {} }

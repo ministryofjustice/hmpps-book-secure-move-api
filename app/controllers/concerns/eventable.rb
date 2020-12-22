@@ -35,6 +35,7 @@ private
     attributes[:recorded_at] = timestamp
     attributes[:notes]       = event_params.dig(:attributes, :notes)
     attributes[:supplier_id] = supplier_id
+    attributes[:created_by]  = created_by
   end
 
   def assign_specific_attributes!(attributes, event_params, event_sti_class)

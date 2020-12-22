@@ -15,6 +15,7 @@ RSpec.describe Api::GenericEventsController do
       'CONTENT_TYPE': content_type,
       'Accept': 'application/vnd.api+json; version=2',
       'Authorization' => "Bearer #{access_token}",
+      'X-Current-User' => 'TEST_USER',
     }
   end
 
@@ -97,6 +98,7 @@ RSpec.describe Api::GenericEventsController do
       let(:event_attributes) do
         {
           occurred_at: '2020-11-04T14:25:48+00:00',
+          created_by: 'TEST_USER',
           recorded_at: '2020-11-04T14:25:48+00:00',
           notes: 'Flibble',
           details: {
@@ -145,6 +147,7 @@ RSpec.describe Api::GenericEventsController do
       let(:event_attributes) do
         {
           occurred_at: '2020-11-04T14:31:51+00:00',
+          created_by: 'TEST_USER',
           recorded_at: '2020-11-04T14:31:51+00:00',
           notes: 'Flibble',
           details: {
@@ -212,6 +215,7 @@ RSpec.describe Api::GenericEventsController do
         {
           occurred_at: '2020-11-04T14:31:51+00:00',
           recorded_at: '2020-11-04T14:31:51+00:00',
+          created_by: 'TEST_USER',
           notes: 'Flibble',
           event_type: 'MoveCrossSupplierPickUp',
         }
@@ -295,6 +299,14 @@ RSpec.describe Api::GenericEventsController do
           'supplier' => { 'data' => { 'id' => event.supplier.id, 'type' => 'suppliers' } },
         }
         expect(resource_to_json.dig('data', 'relationships')).to eq(expected_relationships)
+      end
+
+      it 'returns the created_by of the event' do
+        do_post
+
+        event = GenericEvent.last
+        resource_to_json = JSON.parse(event.class.serializer.new(event).serializable_hash.to_json)
+        expect(resource_to_json.dig('data', 'attributes', 'created_by')).to eq('TEST_USER')
       end
     end
 

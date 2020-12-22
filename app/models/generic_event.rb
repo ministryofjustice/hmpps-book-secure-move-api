@@ -3,6 +3,7 @@ class GenericEvent < ApplicationRecord
     id
     notes
     created_at
+    created_by
     updated_at
     occurred_at
     recorded_at

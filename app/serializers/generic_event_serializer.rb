@@ -6,7 +6,7 @@ class GenericEventSerializer
 
   set_type :events
 
-  attributes :event_type, :classification, :occurred_at, :recorded_at, :notes
+  attributes :event_type, :classification, :occurred_at, :recorded_at, :notes, :created_by
 
   belongs_to :eventable, serializer: ->(record, _params) { SerializerVersionChooser.call(record.class) }
   belongs_to :supplier
