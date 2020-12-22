@@ -81,6 +81,7 @@ module Tasks
         initial_transition_events.sample.create(
           eventable: move,
           occurred_at: timestamp,
+          created_by: 'TEST_USER',
           recorded_at: timestamp,
           notes: 'Created from fake data',
           details: { fake: true },
@@ -92,6 +93,7 @@ module Tasks
         GenericEvent::MoveRedirect.create(
           eventable: move,
           occurred_at: timestamp,
+          created_by: 'TEST_USER',
           recorded_at: timestamp,
           notes: 'Created from fake data',
           details: {

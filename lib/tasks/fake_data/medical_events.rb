@@ -12,6 +12,7 @@ module Tasks
         GenericEvent::PerMedicalAid.create!(
           eventable: per,
           occurred_at: Time.zone.now,
+          created_by: 'TEST_USER',
           recorded_at: Time.zone.now,
           details: {
             advised_at: Time.zone.now,

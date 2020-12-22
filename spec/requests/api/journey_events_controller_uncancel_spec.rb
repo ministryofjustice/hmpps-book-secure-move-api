@@ -44,6 +44,12 @@ RSpec.describe Api::JourneyEventsController do
       it 'writes a journey uncancel event' do
         expect { do_post }.to change { GenericEvent::JourneyUncancel.count }.by(1)
       end
+
+      it 'sets the correct created_by' do
+        do_post
+        event = GenericEvent.last
+        expect(event.created_by).to eq('TEST_USER')
+      end
     end
 
     context 'with unhappy params' do
