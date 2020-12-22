@@ -78,6 +78,11 @@ RSpec.describe Api::JourneysController do
           expect { do_patch }.to change(GenericEvent::JourneyUpdate, :count).by(1)
         end
 
+        it 'sets the created_by from the header' do
+          do_patch
+          expect(GenericEvent.last.created_by).to eq('TEST_USER')
+        end
+
         context 'when attempting to update the from_location or to_location' do
           let(:journey_params) do
             {
