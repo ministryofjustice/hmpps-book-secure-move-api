@@ -88,6 +88,7 @@ class Move < VersionedModel
 
   has_many :generic_events, as: :eventable, dependent: :destroy
   has_many :incident_events, -> { where classification: :incident }, as: :eventable, class_name: 'GenericEvent'
+  has_many :notification_events, -> { where classification: :notification }, as: :eventable, class_name: 'GenericEvent'
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }

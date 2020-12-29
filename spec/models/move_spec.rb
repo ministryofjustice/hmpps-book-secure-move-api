@@ -12,6 +12,7 @@ RSpec.describe Move do
   it { is_expected.to have_many(:journeys) }
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to have_many(:incident_events) }
+  it { is_expected.to have_many(:notification_events) }
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
 

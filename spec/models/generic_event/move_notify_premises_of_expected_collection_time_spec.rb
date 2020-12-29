@@ -15,4 +15,18 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime do
     generic_event.expected_at = '16-06-2020 10:20:30+01:00'
     expect(generic_event).not_to be_valid
   end
+
+  describe '#event_classification' do
+    it 'returns :notification' do
+      event = described_class.new
+
+      expect(event.event_classification).to eq :notification
+    end
+
+    it 'is automatically assigned on creation' do
+      event = create(:event_move_notify_premises_of_expected_collection_time, classification: nil)
+
+      expect(event.classification).to eq 'notification'
+    end
+  end
 end
