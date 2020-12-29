@@ -1,10 +1,9 @@
 module Api::V2
   module MovesActions
     def index_and_render
-      paginate moves,
-               serializer: ::V2::MovesSerializer,
-               include: included_relationships,
-               fields: ::V2::MovesSerializer::INCLUDED_FIELDS
+      paginate moves, serializer: ::V2::MovesSerializer, include: included_relationships, fields: ::V2::MovesSerializer::INCLUDED_FIELDS do |_, options|
+        options[:params] = { vehicle_registration: meta_fields&.include?('vehicle_registration') }
+      end
     end
 
     def show_and_render
