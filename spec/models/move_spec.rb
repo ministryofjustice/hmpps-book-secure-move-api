@@ -798,4 +798,32 @@ RSpec.describe Move do
       end
     end
   end
+
+  describe '#vehicle_registration' do
+    it 'returns nothing if no journeys present' do
+      move = create(:move)
+
+      expect(move.vehicle_registration).to be_nil
+    end
+
+    it 'returns nothing if a journey is present but no vehicle registration available' do
+      move = create(:move, journeys: [create(:journey, vehicle: {})])
+
+      expect(move.vehicle_registration).to be_nil
+    end
+
+    it 'returns the vehicle registration number of a journey' do
+      move = create(:move, :with_journey)
+
+      expect(move.vehicle_registration).to eq('AB12 CDE')
+    end
+
+    it 'returns the latest vehicle registration number if multiple journeys present' do
+      journey1 = create(:journey, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '12345', registration: 'AB12 CDE' })
+      journey2 = create(:journey, client_timestamp: Time.zone.now - 2.days, vehicle: { id: '6789', registration: 'CD12 ABC' })
+      move = create(:move, journeys: [journey1, journey2])
+
+      expect(move.vehicle_registration).to eq('AB12 CDE')
+    end
+  end
 end

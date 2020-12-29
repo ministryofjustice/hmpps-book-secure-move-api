@@ -215,6 +215,10 @@ class Move < VersionedModel
     incident_events + (profile&.person_escort_record&.medical_events || [])
   end
 
+  def vehicle_registration
+    journeys.max_by(&:client_timestamp)&.vehicle&.dig('registration')
+  end
+
 private
 
   def date_to_after_date_from
