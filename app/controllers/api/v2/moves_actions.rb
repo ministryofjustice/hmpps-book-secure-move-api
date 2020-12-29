@@ -8,14 +8,10 @@ module Api::V2
     end
 
     def filter_and_render
-      p = { include: create_filter_params[:attributes][:include]&.join(',') }
-      include_params_handler = IncludeParamHandler.new(p)
-      included_relationships = include_params_handler.included_relationships
-      active_record_relationships = include_params_handler.active_record_relationships
-      moves = Moves::Finder.new(filter_params: create_filter_params[:attributes][:filter] || {},
+      moves = Moves::Finder.new(filter_params: create_filter_params[:attributes] || {},
                                 ability: current_ability,
-                                order_params: create_filter_params[:attributes][:sort] || {},
-                                active_record_relationships: active_record_relationships || {}).call
+                                order_params: params[:sort] || {},
+                                active_record_relationships: active_record_relationships).call
       paginate moves,
                serializer: ::V2::MovesSerializer,
                include: included_relationships,
@@ -75,7 +71,7 @@ module Api::V2
 
     PERMITTED_CREATE_FILTER_PARAMS = [
       :type,
-      attributes: [filter: {}, include: [], sort: {}],
+      attributes: {},
     ].freeze
 
     def create_in_nomis?

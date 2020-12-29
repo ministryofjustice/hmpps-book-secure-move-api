@@ -29,15 +29,10 @@ module Api
 
     def filter
       allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
-      p = { include: create_filter_params[:attributes][:include]&.join(',') }
-      include_params_handler = IncludeParamHandler.new(p)
-      included_relationships = include_params_handler.included_relationships
-      active_record_relationships = include_params_handler.active_record_relationships
-
-      allocations = Allocations::Finder.new(filters: create_filter_params[:attributes][:filter] || {},
-                                ordering: create_filter_params[:attributes][:sort] || {},
-                                search: create_filter_params[:attributes][:search] || {},
-                                active_record_relationships: active_record_relationships || {}).call
+      allocations = Allocations::Finder.new(filters: create_filter_params[:attributes] || {},
+                                ordering: sort_params,
+                                search: search_params,
+                                active_record_relationships: active_record_relationships).call
 
       if allocations_params.valid?
         paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
@@ -64,7 +59,7 @@ module Api
 
     PERMITTED_CREATE_FILTER_PARAMS = [
       :type,
-      attributes: [filter: {}, include: [], sort: {}, search: {}],
+      attributes: {},
     ].freeze
 
     def sort_params
