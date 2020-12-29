@@ -47,6 +47,7 @@ Rails.application.routes.draw do
           post 'uncomplete', controller: 'journey_events'
         end
       end
+
       member do
         post 'accept', controller: 'move_events'
         post 'approve', controller: 'move_events'
@@ -58,6 +59,8 @@ Rails.application.routes.draw do
         post 'start', controller: 'move_events'
       end
     end
+
+    post 'moves/filtered', to: 'moves#filter'
 
     resources :person_escort_records, only: %i[create show update] do
       member do

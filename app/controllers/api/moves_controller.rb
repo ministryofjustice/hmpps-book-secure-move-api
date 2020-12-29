@@ -30,6 +30,10 @@ module Api
       update_and_render
     end
 
+    def filter
+      filter_and_render
+    end
+
   private
 
     def moves

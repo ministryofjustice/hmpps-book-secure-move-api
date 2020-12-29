@@ -7,6 +7,21 @@ module Api::V2
                fields: ::V2::MovesSerializer::INCLUDED_FIELDS
     end
 
+    def filter_and_render
+      p = { include: create_filter_params[:attributes][:include]&.join(',') }
+      include_params_handler = IncludeParamHandler.new(p)
+      included_relationships = include_params_handler.included_relationships
+      active_record_relationships = include_params_handler.active_record_relationships
+      moves = Moves::Finder.new(filter_params: create_filter_params[:attributes][:filter] || {},
+                                ability: current_ability,
+                                order_params: create_filter_params[:attributes][:sort] || {},
+                                active_record_relationships: active_record_relationships || {}).call
+      paginate moves,
+               serializer: ::V2::MovesSerializer,
+               include: included_relationships,
+               fields: ::V2::MovesSerializer::INCLUDED_FIELDS
+    end
+
     def show_and_render
       render_move(move, :ok)
     end
@@ -58,12 +73,21 @@ module Api::V2
       relationships: {},
     ].freeze
 
+    PERMITTED_CREATE_FILTER_PARAMS = [
+      :type,
+      attributes: [filter: {}, include: [], sort: {}],
+    ].freeze
+
     def create_in_nomis?
       move.allocation_id? && params[:create_in_nomis].to_s == 'true'
     end
 
     def move_params
       @move_params ||= params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h
+    end
+
+    def create_filter_params
+      @create_filter_params ||= params.require(:data).permit(PERMITTED_CREATE_FILTER_PARAMS).to_h
     end
 
     def move_attributes
