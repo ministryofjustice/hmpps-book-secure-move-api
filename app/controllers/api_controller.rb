@@ -262,6 +262,10 @@ private
     @included_relationships ||= include_params_handler.included_relationships
   end
 
+  def meta_fields
+    @meta_fields ||= include_params_handler.meta_fields
+  end
+
   def active_record_relationships
     @active_record_relationships ||= include_params_handler.active_record_relationships
   end
