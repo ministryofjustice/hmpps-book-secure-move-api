@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     end
 
     post 'moves/filtered', to: 'moves#filter'
+    post 'allocations/filtered', to: 'allocations#filter'
 
     resources :person_escort_records, only: %i[create show update] do
       member do

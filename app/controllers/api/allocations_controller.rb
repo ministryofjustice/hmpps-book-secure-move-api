@@ -27,6 +27,27 @@ module Api
       render_allocation(allocation, :ok)
     end
 
+    def filter
+      allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
+      p = { include: create_filter_params[:attributes][:include]&.join(',') }
+      include_params_handler = IncludeParamHandler.new(p)
+      included_relationships = include_params_handler.included_relationships
+      active_record_relationships = include_params_handler.active_record_relationships
+
+      allocations = Allocations::Finder.new(filters: create_filter_params[:attributes][:filter] || {},
+                                ordering: create_filter_params[:attributes][:sort] || {},
+                                search: create_filter_params[:attributes][:search] || {},
+                                active_record_relationships: active_record_relationships || {}).call
+
+      if allocations_params.valid?
+        paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
+          options[:params] = { totals: paginated_allocations.move_totals }
+        end
+      else
+        render json: { error: allocations_params.errors }, status: :bad_request
+      end
+    end
+
   private
 
     PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
@@ -41,6 +62,11 @@ module Api
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
+    PERMITTED_CREATE_FILTER_PARAMS = [
+      :type,
+      attributes: [filter: {}, include: [], sort: {}, search: {}],
+    ].freeze
+
     def sort_params
       @sort_params ||= params.fetch(:sort, {}).permit(PERMITTED_SORT_PARAMS).to_h
     end
@@ -48,6 +74,11 @@ module Api
     def filter_params
       @filter_params ||= params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
     end
+
+    def create_filter_params
+      @create_filter_params ||= params.require(:data).permit(PERMITTED_CREATE_FILTER_PARAMS).to_h
+    end
+
 
     def search_params
       params.fetch(:search, {}).permit(PERMITTED_SEARCH_PARAMS).to_h
