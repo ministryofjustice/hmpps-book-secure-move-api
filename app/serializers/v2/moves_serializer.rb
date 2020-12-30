@@ -26,6 +26,8 @@ module V2
     meta do |object, params|
       {}.tap do |metadata|
         metadata.merge!(vehicle_registration: object.vehicle_registration) if params[:vehicle_registration]
+        metadata.merge!(expected_time_of_arrival: object.expected_time_of_arrival) if params[:expected_time_of_arrival]
+        metadata.merge!(expected_collection_time: object.expected_collection_time) if params[:expected_collection_time]
       end
     end
 

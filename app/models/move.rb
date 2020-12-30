@@ -225,6 +225,14 @@ class Move < VersionedModel
       &.dig('registration')
   end
 
+  def expected_time_of_arrival
+    notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfEta' }.max_by(&:occurred_at)&.expected_at
+  end
+
+  def expected_collection_time
+    notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' }.max_by(&:occurred_at)&.expected_at
+  end
+
 private
 
   def date_to_after_date_from

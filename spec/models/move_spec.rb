@@ -835,4 +835,78 @@ RSpec.describe Move do
       expect(move.vehicle_registration).to eq('CD12 ABC')
     end
   end
+
+  describe '#expected_time_of_arrival' do
+    it 'returns nothing if no events present' do
+      move = create(:move)
+
+      expect(move.expected_time_of_arrival).to be_nil
+    end
+
+    it 'returns nothing if a different notification event is present' do
+      move = create(:move, notification_events: [create(:event_move_notify_premises_of_arrival_in30_mins)])
+
+      expect(move.expected_time_of_arrival).to be_nil
+    end
+
+    it 'returns the expected time of arrival for a vehicle' do
+      event = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00')
+      move = create(:move, notification_events: [event])
+
+      expect(move.expected_time_of_arrival).to eq('2019-06-16T10:20:30+01:00')
+    end
+
+    it 'returns the expected time of arrival for a vehicle if multiple different notification events exist' do
+      event1 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event2 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      move = create(:move, notification_events: [event2, event1])
+
+      expect(move.expected_time_of_arrival).to eq('2019-06-16T10:20:30+01:00')
+    end
+
+    it 'returns the latest expected time of arrival for a vehicle if multiple events present' do
+      event1 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event2 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      move = create(:move, notification_events: [event2, event1])
+
+      expect(move.expected_time_of_arrival).to eq('2019-06-17T10:20:30+01:00')
+    end
+  end
+
+  describe '#expected_collection_time' do
+    it 'returns nothing if no events present' do
+      move = create(:move)
+
+      expect(move.expected_collection_time).to be_nil
+    end
+
+    it 'returns nothing if a different notification event is present' do
+      move = create(:move, notification_events: [create(:event_move_notify_premises_of_arrival_in30_mins)])
+
+      expect(move.expected_collection_time).to be_nil
+    end
+
+    it 'returns the expected collection time for a vehicle' do
+      event = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00')
+      move = create(:move, notification_events: [event])
+
+      expect(move.expected_collection_time).to eq('2019-06-16T10:20:30+01:00')
+    end
+
+    it 'returns the expected collection time for a vehicle if multiple different notification events exist' do
+      event1 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event2 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      move = create(:move, notification_events: [event2, event1])
+
+      expect(move.expected_collection_time).to eq('2019-06-16T10:20:30+01:00')
+    end
+
+    it 'returns the latest expected collection time for a vehicle if multiple events present' do
+      event1 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event2 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      move = create(:move, notification_events: [event2, event1])
+
+      expect(move.expected_collection_time).to eq('2019-06-17T10:20:30+01:00')
+    end
+  end
 end
