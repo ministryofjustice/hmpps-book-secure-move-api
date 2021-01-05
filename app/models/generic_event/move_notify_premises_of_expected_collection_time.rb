@@ -1,5 +1,5 @@
 class GenericEvent
-  class MoveNotifyPremisesOfExpectedCollectionTime < GenericEvent
+  class MoveNotifyPremisesOfExpectedCollectionTime < Notification
     details_attributes :expected_at
 
     eventable_types 'Move'
@@ -7,9 +7,5 @@ class GenericEvent
     validates :expected_at, presence: true
 
     validates :expected_at, iso_date_time: true
-
-    def event_classification
-      :notification
-    end
   end
 end

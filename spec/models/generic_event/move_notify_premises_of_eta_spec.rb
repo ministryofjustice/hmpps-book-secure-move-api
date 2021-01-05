@@ -16,17 +16,5 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfEta do
     expect(generic_event).not_to be_valid
   end
 
-  describe '#event_classification' do
-    it 'returns :notification' do
-      event = described_class.new
-
-      expect(event.event_classification).to eq :notification
-    end
-
-    it 'is automatically assigned on creation' do
-      event = create(:event_move_notify_premises_of_eta, classification: nil)
-
-      expect(event.classification).to eq 'notification'
-    end
-  end
+  it_behaves_like 'an event about a notification', :event_move_notify_premises_of_eta
 end

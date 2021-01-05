@@ -226,10 +226,12 @@ class Move < VersionedModel
   end
 
   def expected_time_of_arrival
+    # Process in memory to avoid n+1 queries in serializers
     notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfEta' }.max_by(&:occurred_at)&.expected_at
   end
 
   def expected_collection_time
+    # Process in memory to avoid n+1 queries in serializers
     notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' }.max_by(&:occurred_at)&.expected_at
   end
 
