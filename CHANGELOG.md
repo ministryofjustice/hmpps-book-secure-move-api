@@ -1,5 +1,32 @@
 # Changelog
 
+## [v2.7.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.9) (2021-01-05)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.8...v2.7.9)
+
+**Merged pull requests:**
+
+- Bump simplecov from 0.21.0 to 0.21.1 [\#1246](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1246) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.10.10 to 1.11.0 [\#1245](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1245) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump simplecov from 0.20.0 to 0.21.0 [\#1244](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1244) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump git from 1.7.0 to 1.8.1 [\#1243](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1243) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.20.0 to 0.20.1 [\#1242](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1242) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump listen from 3.3.3 to 3.4.0 [\#1241](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1241) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.2.0 to 1.3.0 [\#1240](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1240) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2538 Surface ETA and collection time in moves meta data [\#1239](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1239) ([cwrw](https://github.com/cwrw))
+- Bump cancancan from 3.2.0 to 3.2.1 [\#1238](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1238) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2537 Add metadata section to moves resource [\#1237](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1237) ([cwrw](https://github.com/cwrw))
+- Bump prometheus\_exporter from 0.6.0 to 0.7.0 [\#1234](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1234) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rspec-rails from 4.0.1 to 4.0.2 [\#1233](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1233) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.1.0 to 1.2.0 [\#1232](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1232) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump elastic-apm from 3.12.1 to 3.13.0 [\#1231](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1231) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add Journey controller tests for events [\#1229](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1229) ([Nimphal](https://github.com/Nimphal))
+- Bump aws-sdk-s3 from 1.86.2 to 1.87.0 [\#1228](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1228) ([dependabot[bot]](https://github.com/apps/dependabot))
+- feature: Populate created\_by on events with current user or supplier [\#1227](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1227) ([Nimphal](https://github.com/Nimphal))
+- Bump flipper-active\_record from 0.19.1 to 0.20.0 [\#1226](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1226) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update CHANGELOG.md [\#1225](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1225) ([martyn-w](https://github.com/martyn-w))
+- Bump paper\_trail from 11.0.0 to 11.1.0 [\#1220](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1220) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.7.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.8) (2020-12-18)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.7...v2.7.8)
