@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.8.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.0) (2021-01-05)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.9...v2.8.0)
+
+**Merged pull requests:**
+
+- Change the type of a PER confirmed error to return a code in API response [\#1249](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1249) ([cwrw](https://github.com/cwrw))
+- Changelog 2.7.9 [\#1247](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1247) ([cwrw](https://github.com/cwrw))
+
 ## [v2.7.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.7.9) (2021-01-05)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.8...v2.7.9)
