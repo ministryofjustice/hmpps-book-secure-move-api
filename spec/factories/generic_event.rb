@@ -124,7 +124,7 @@ FactoryBot.define do
     end
   end
 
-  factory :event_move_notify_premises_of_expected_collection_time, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfEta' do
+  factory :event_move_notify_premises_of_expected_collection_time, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' do
     eventable { association(:move) }
     details do
       {

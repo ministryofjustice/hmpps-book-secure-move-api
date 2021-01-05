@@ -1,5 +1,5 @@
 class GenericEvent
-  class MoveNotifyPremisesOfExpectedCollectionTime < GenericEvent
+  class MoveNotifyPremisesOfExpectedCollectionTime < Notification
     details_attributes :expected_at
 
     eventable_types 'Move'

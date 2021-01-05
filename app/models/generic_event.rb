@@ -88,6 +88,7 @@ class GenericEvent < ApplicationRecord
     default: 'default',
     incident: 'incident',
     medical: 'medical',
+    notification: 'notification',
   }
 
   belongs_to :eventable, polymorphic: true, touch: true

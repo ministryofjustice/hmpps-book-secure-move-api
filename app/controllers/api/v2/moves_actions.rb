@@ -2,7 +2,11 @@ module Api::V2
   module MovesActions
     def index_and_render
       paginate moves, serializer: ::V2::MovesSerializer, include: included_relationships, fields: ::V2::MovesSerializer::INCLUDED_FIELDS do |_, options|
-        options[:params] = { vehicle_registration: meta_fields.include?('vehicle_registration') }
+        options[:params] = {
+          vehicle_registration: meta_fields.include?('vehicle_registration'),
+          expected_time_of_arrival: meta_fields.include?('expected_time_of_arrival'),
+          expected_collection_time: meta_fields.include?('expected_collection_time'),
+        }
       end
     end
 

@@ -47,6 +47,8 @@ private
       :generic_events
     when 'important_events'
       { incident_events: {}, profile: { person_escort_record: :medical_events } }
+    when 'expected_time_of_arrival', 'expected_collection_time'
+      :notification_events
     when 'vehicle_registration'
       :journeys
     else

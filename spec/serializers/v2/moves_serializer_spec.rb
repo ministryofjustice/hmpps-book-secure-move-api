@@ -68,7 +68,7 @@ RSpec.describe V2::MovesSerializer do
     end
   end
 
-  context 'with vehicle_registrations params set to true' do
+  context 'with vehicle_registration params set to true' do
     let(:move) { create :move, :with_journey }
     let(:options) do
       { params: { vehicle_registration: true } }
@@ -79,13 +79,61 @@ RSpec.describe V2::MovesSerializer do
     end
   end
 
-  context 'with vehicle_registrations params set to false' do
+  context 'with vehicle_registration params set to false' do
     let(:move) { create :move, :with_journey }
     let(:options) do
       { params: { vehicle_registration: false } }
     end
 
     it 'does not contain vehicle_registration meta data' do
+      expect(meta).to be_empty
+    end
+  end
+
+  context 'with expected_time_of_arrival params set to true' do
+    let(:event) { create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:move) { create :move, notification_events: [event] }
+    let(:options) do
+      { params: { expected_time_of_arrival: true } }
+    end
+
+    it 'contains expected_time_of_arrival meta data' do
+      expect(meta).to eq({ expected_time_of_arrival: '2019-06-16T10:20:30+01:00' })
+    end
+  end
+
+  context 'with expected_time_of_arrival params set to false' do
+    let(:event) { create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:move) { create :move, notification_events: [event] }
+    let(:options) do
+      { params: { expected_time_of_arrival: false } }
+    end
+
+    it 'does not contain expected_time_of_arrival meta data' do
+      expect(meta).to be_empty
+    end
+  end
+
+  context 'with expected_collection_time params set to true' do
+    let(:event) { create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:move) { create :move, notification_events: [event] }
+    let(:options) do
+      { params: { expected_collection_time: true } }
+    end
+
+    it 'contains expected_collection_time meta data' do
+      expect(meta).to eq({ expected_collection_time: '2019-06-16T10:20:30+01:00' })
+    end
+  end
+
+  context 'with expected_collection_time params set to false' do
+    let(:event) { create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:move) { create :move, notification_events: [event] }
+    let(:options) do
+      { params: { expected_collection_time: false } }
+    end
+
+    it 'does not contain expected_collection_time meta data' do
       expect(meta).to be_empty
     end
   end

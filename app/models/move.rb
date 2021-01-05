@@ -88,6 +88,7 @@ class Move < VersionedModel
 
   has_many :generic_events, as: :eventable, dependent: :destroy
   has_many :incident_events, -> { where classification: :incident }, as: :eventable, class_name: 'GenericEvent'
+  has_many :notification_events, -> { where classification: :notification }, as: :eventable, class_name: 'GenericEvent'
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
@@ -222,6 +223,16 @@ class Move < VersionedModel
       .max_by(&:client_timestamp)
       &.vehicle
       &.dig('registration')
+  end
+
+  def expected_time_of_arrival
+    # Process in memory to avoid n+1 queries in serializers
+    notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfEta' }.max_by(&:occurred_at)&.expected_at
+  end
+
+  def expected_collection_time
+    # Process in memory to avoid n+1 queries in serializers
+    notification_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' }.max_by(&:occurred_at)&.expected_at
   end
 
 private

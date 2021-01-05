@@ -52,8 +52,14 @@ namespace :data_maintenance do
       'GenericEvent::PersonMovePersonEscapedKpi',
       'GenericEvent::PersonMoveReleasedError',
     ]
+    notification_event_types = [
+      'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins',
+      'GenericEvent::MoveNotifyPremisesOfEta',
+      'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime',
+    ]
 
-    GenericEvent.where(eventable_type: medical_event_type).update_all(classification: 'medical')
-    GenericEvent.where(eventable_type: incident_event_types).update_all(classification: 'incident')
+    GenericEvent.where(type: medical_event_type).update_all(classification: 'medical')
+    GenericEvent.where(type: incident_event_types).update_all(classification: 'incident')
+    GenericEvent.where(type: notification_event_types).update_all(classification: 'notification')
   end
 end

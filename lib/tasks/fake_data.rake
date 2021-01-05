@@ -4,6 +4,7 @@ require_relative 'fake_data/journeys'
 require_relative 'fake_data/gps'
 require_relative 'fake_data/incident_events'
 require_relative 'fake_data/medical_events'
+require_relative 'fake_data/notification_events'
 
 namespace :fake_data do
   desc 'create fake people'
@@ -195,6 +196,19 @@ namespace :fake_data do
         .limit(100)
         .find_each do |per|
       Tasks::FakeData::MedicalEvents.new(per).call
+    end
+  end
+
+  desc 'create fake notification events'
+  task create_notification_events: :environment do
+    puts 'create_notification_events...'
+    Move
+        .where(status: %w[booked requested in_transit completed])
+        .where.not(to_location_id: nil)
+        .order(Arel.sql('RANDOM()'))
+        .limit(1000)
+        .find_each do |move|
+      Tasks::FakeData::NotificationEvents.new(move).call
     end
   end
 
