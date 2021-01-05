@@ -23,6 +23,12 @@ module V2
 
     set_type :moves
 
+    meta do |object, params|
+      {}.tap do |metadata|
+        metadata.merge!(vehicle_registration: object.vehicle_registration) if params[:vehicle_registration]
+      end
+    end
+
     INCLUDED_FIELDS = {
       # TODO: remove these and replace with conditional relationships in relevant serializer
       people: ::V2::PersonSerializer.attributes_to_serialize.keys + %i[gender ethnicity],

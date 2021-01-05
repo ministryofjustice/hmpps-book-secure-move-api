@@ -9,11 +9,19 @@ class IncludeParamHandler
     @params[:include]&.split(SEPARATOR)
   end
 
+  def meta_fields
+    @params[:meta]&.split(SEPARATOR)
+  end
+
   def active_record_relationships
-    @active_record_relationships ||= included_relationships.map { |value| to_active_record_include_hash(value) } if included_relationships.present?
+    @active_record_relationships ||= relationships_and_fields.map { |value| to_active_record_include_hash(value) } if relationships_and_fields.present?
   end
 
 private
+
+  def relationships_and_fields
+    included_relationships.to_a + meta_fields.to_a
+  end
 
   def to_active_record_include_hash(value)
     parts = value.split('.', 2)
@@ -39,6 +47,8 @@ private
       :generic_events
     when 'important_events'
       { incident_events: {}, profile: { person_escort_record: :medical_events } }
+    when 'vehicle_registration'
+      :journeys
     else
       name.to_sym
     end

@@ -7,6 +7,7 @@ RSpec.describe V2::MovesSerializer do
 
   let(:move) { create :move, :prison_transfer }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
+  let(:meta) { result[:data][:meta] }
 
   context 'with no options' do
     let(:options) { {} }
@@ -40,6 +41,7 @@ RSpec.describe V2::MovesSerializer do
             supplier: { data: { id: move.supplier_id, type: 'suppliers' } },
             allocation: { data: nil },
           },
+          meta: {},
         },
       }
     end
@@ -63,6 +65,28 @@ RSpec.describe V2::MovesSerializer do
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
         .to match_array(%w[people ethnicities genders locations locations profiles prison_transfer_reasons suppliers person_escort_records framework_flags])
+    end
+  end
+
+  context 'with vehicle_registrations params set to true' do
+    let(:move) { create :move, :with_journey }
+    let(:options) do
+      { params: { vehicle_registration: true } }
+    end
+
+    it 'contains vehicle_registration meta data' do
+      expect(meta).to eql({ vehicle_registration: 'AB12 CDE' })
+    end
+  end
+
+  context 'with vehicle_registrations params set to false' do
+    let(:move) { create :move, :with_journey }
+    let(:options) do
+      { params: { vehicle_registration: false } }
+    end
+
+    it 'does not contain vehicle_registration meta data' do
+      expect(meta).to be_empty
     end
   end
 end

@@ -209,6 +209,36 @@ RSpec.describe Api::MovesController do
         end
       end
     end
+
+    describe 'meta fields' do
+      let!(:moves) do
+        create_list(
+          :move,
+          1,
+          :with_journey,
+        )
+      end
+
+      before { do_get(query_params) }
+
+      context 'when not including the meta query param' do
+        let(:query_params) { '' }
+
+        it 'returns an empty meta section' do
+          move = response_json['data'].first
+          expect(move['meta']).to be_empty
+        end
+      end
+
+      context 'when including the meta query param' do
+        let(:query_params) { '?meta=vehicle_registration' }
+
+        it 'includes the requested meta fields in the response' do
+          move = response_json['data'].first
+          expect(move['meta']).to eq('vehicle_registration' => 'AB12 CDE')
+        end
+      end
+    end
   end
 
   def do_get(query_params = nil)

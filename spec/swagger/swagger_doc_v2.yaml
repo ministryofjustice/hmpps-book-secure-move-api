@@ -528,6 +528,15 @@
             enum:
               - asc
               - desc
+        - name: meta
+          description: list of meta section fields to include for specified resource
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - vehicle_registration
         - "$ref": "../v2/moves_include_parameter.yaml#/MovesIncludeParameter"
         - "$ref": "../v1/pagination_parameters.yaml#/Page"
         - "$ref": "../v1/pagination_parameters.yaml#/PerPage"

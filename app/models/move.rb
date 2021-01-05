@@ -215,6 +215,15 @@ class Move < VersionedModel
     incident_events + (profile&.person_escort_record&.medical_events || [])
   end
 
+  def vehicle_registration
+    # Process in memory to avoid n+1 queries in serializers
+    journeys
+      .reject(&:cancelled?)
+      .max_by(&:client_timestamp)
+      &.vehicle
+      &.dig('registration')
+  end
+
 private
 
   def date_to_after_date_from
