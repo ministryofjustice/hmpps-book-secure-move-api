@@ -24,10 +24,9 @@ module V2
     set_type :moves
 
     meta do |object, params|
-      metadata = {}
-
-      metadata.merge!(vehicle_registration: object.vehicle_registration) if params[:vehicle_registration]
-      metadata
+      {}.tap do |metadata|
+        metadata.merge!(vehicle_registration: object.vehicle_registration) if params[:vehicle_registration]
+      end
     end
 
     INCLUDED_FIELDS = {

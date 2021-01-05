@@ -825,5 +825,13 @@ RSpec.describe Move do
 
       expect(move.vehicle_registration).to eq('AB12 CDE')
     end
+
+    it 'returns latest vehicle registration for uncancelled journeys' do
+      journey1 = create(:journey, :cancelled, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '12345', registration: 'AB12 CDE' })
+      journey2 = create(:journey, client_timestamp: Time.zone.now - 2.days, vehicle: { id: '6789', registration: 'CD12 ABC' })
+      move = create(:move, journeys: [journey1, journey2])
+
+      expect(move.vehicle_registration).to eq('CD12 ABC')
+    end
   end
 end

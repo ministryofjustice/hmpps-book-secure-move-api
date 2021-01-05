@@ -216,7 +216,12 @@ class Move < VersionedModel
   end
 
   def vehicle_registration
-    journeys.max_by(&:client_timestamp)&.vehicle&.dig('registration')
+    # Process in memory to avoid n+1 queries in serializers
+    journeys
+      .reject(&:cancelled?)
+      .max_by(&:client_timestamp)
+      &.vehicle
+      &.dig('registration')
   end
 
 private

@@ -263,7 +263,7 @@ private
   end
 
   def meta_fields
-    @meta_fields ||= include_params_handler.meta_fields
+    @meta_fields ||= include_params_handler.meta_fields || []
   end
 
   def active_record_relationships
