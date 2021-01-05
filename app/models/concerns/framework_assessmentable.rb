@@ -87,8 +87,8 @@ module FrameworkAssessmentable
     state_machine.confirm!
     save!
   rescue FiniteMachine::InvalidStateError
-    errors.add(:status, "can't update to '#{new_status}' from '#{status}'")
-    raise ActiveModel::ValidationError, self
+    errors.add(:status, :invalid_status, message: "can't update to '#{new_status}' from '#{status}'")
+    raise ActiveRecord::RecordInvalid, self
   end
 
   def handle_event_run

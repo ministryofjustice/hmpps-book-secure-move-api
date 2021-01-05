@@ -73,8 +73,14 @@ RSpec.describe Api::YouthRiskAssessmentsController do
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
-            [{ 'title' => 'Invalid status',
-               'detail' => "Validation failed: Status can't update to 'confirmed' from 'in_progress'" }]
+            [
+              {
+                'title' => 'Unprocessable entity',
+                'detail' => "Status can't update to 'confirmed' from 'in progress'",
+                'source' => { 'pointer' => '/data/attributes/status' },
+                'code' => 'invalid_status',
+              },
+            ]
           end
         end
       end

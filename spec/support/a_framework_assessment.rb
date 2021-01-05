@@ -636,14 +636,14 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     it 'does not update status if previous status not valid' do
       assessment = create(assessment_type, :in_progress)
 
-      expect { assessment.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect { assessment.confirm!('confirmed') }.to raise_error(ActiveRecord::RecordInvalid)
       expect(assessment.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'in_progress'")
     end
 
     it 'does not update status if current status the same' do
       assessment = create(assessment_type, :confirmed)
 
-      expect { assessment.confirm!('confirmed') }.to raise_error(ActiveModel::ValidationError)
+      expect { assessment.confirm!('confirmed') }.to raise_error(ActiveRecord::RecordInvalid)
       expect(assessment.errors.messages[:status]).to contain_exactly("can't update to 'confirmed' from 'confirmed'")
     end
   end
