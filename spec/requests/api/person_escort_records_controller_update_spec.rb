@@ -156,5 +156,44 @@ RSpec.describe Api::PersonEscortRecordsController do
         end
       end
     end
+
+    context 'with confirmation event' do
+      it 'creates a per confirmation event' do
+        expect { patch_person_escort_record }.to change(GenericEvent, :count).by(1)
+      end
+
+      it 'persists correct attributes to a per confirmation event' do
+        recorded_timestamp = Time.zone.parse('2020-10-07 01:02:03')
+        Timecop.freeze(recorded_timestamp)
+        patch_person_escort_record
+        Timecop.return
+
+        event = GenericEvent.find_by(eventable: person_escort_record, type: 'GenericEvent::PerConfirmation')
+
+        expect(event).to have_attributes(
+          created_by: 'TEST_USER',
+          occurred_at: recorded_timestamp,
+          recorded_at: recorded_timestamp,
+          details: { 'confirmed_at' => person_escort_record.confirmed_at },
+          notes: 'Automatically generated event',
+        )
+      end
+
+      context 'when request is unsuccessful' do
+        let(:status) { 'foo-bar' }
+
+        it 'does not create confirmation event' do
+          expect { patch_person_escort_record }.not_to change(GenericEvent, :count)
+        end
+      end
+
+      context 'when Person Escort Record is already confirmed' do
+        it 'does not create confirmation event' do
+          patch_person_escort_record
+
+          expect { patch_person_escort_record }.not_to change(GenericEvent, :count)
+        end
+      end
+    end
   end
 end
