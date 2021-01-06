@@ -52,6 +52,7 @@ class GenericEvent < ApplicationRecord
     MoveReject
     MoveRequested
     MoveStart
+    PerConfirmation
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment

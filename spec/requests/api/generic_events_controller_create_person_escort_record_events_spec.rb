@@ -6,6 +6,7 @@ RSpec.describe Api::GenericEventsController do
   let(:eventable_type) { 'person_escort_records' }
   let(:eventable_id) { create(:person_escort_record).id }
 
+  it_behaves_like 'a generic event endpoint', 'PerConfirmation'
   it_behaves_like 'a generic event endpoint', 'PerCourtAllDocumentationProvidedToSupplier'
   it_behaves_like 'a generic event endpoint', 'PerCourtAssignCellInCustody'
   it_behaves_like 'a generic event endpoint', 'PerCourtCellShareRiskAssessment'

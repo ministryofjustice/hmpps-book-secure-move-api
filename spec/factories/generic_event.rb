@@ -475,6 +475,15 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_confirmation, parent: :generic_event, class: 'GenericEvent::PerConfirmation' do
+    eventable { association(:person_escort_record, :confirmed, confirmed_at: '2021-01-01') }
+    details do
+      {
+        confirmed_at: '2021-01-01',
+      }
+    end
+  end
+
   factory :event_person_move_assault, parent: :incident, class: 'GenericEvent::PersonMoveAssault' do
   end
 
