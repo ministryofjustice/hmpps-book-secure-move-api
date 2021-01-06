@@ -1,0 +1,13 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: population.yaml#/NewPopulation
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: location.yaml#/Location
+        - $ref: "../v2/move.yaml#/Move"

@@ -20,6 +20,8 @@ class Population < ApplicationRecord
   end
 
   def free_spaces
+    return unless persisted?
+
     usable_capacity - unlock - bedwatch - overnights_in - moves_to.count + overnights_out + out_of_area_courts + discharges + moves_from.count
   end
 
@@ -29,6 +31,22 @@ class Population < ApplicationRecord
   rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique
     errors.add(:date, :taken)
     raise ActiveRecord::RecordInvalid, self
+  end
+
+  def self.new_with_defaults(location:, date:)
+    # Find most recent population figures for specified location prior to requested date
+    previous_population = where(location_id: location.id).where('date < ?', date).order(date: :asc).last
+
+    new(location: location, date: date).tap do |new_population|
+      new_population.operational_capacity = previous_population&.operational_capacity
+      new_population.usable_capacity = previous_population&.usable_capacity
+      new_population.unlock = previous_population&.unlock
+      new_population.bedwatch = previous_population&.bedwatch
+      new_population.overnights_in = previous_population&.overnights_in
+      new_population.overnights_out = previous_population&.overnights_out
+      new_population.out_of_area_courts = previous_population&.out_of_area_courts
+      new_population.discharges = previous_population&.discharges
+    end
   end
 
   def self.free_spaces_date_range(locations, date_range)

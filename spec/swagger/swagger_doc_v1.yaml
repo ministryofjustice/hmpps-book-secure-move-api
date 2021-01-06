@@ -2910,6 +2910,40 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/post_populations_responses.yaml#/422"
+  "/populations/new":
+    get:
+      summary: Returns prepopulated default population details for a given date and location
+      tags:
+        - Populations
+      parameters:
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/population_include_parameter.yaml#/PopulationIncludeParameter"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_new_population_responses.yaml#/200"
+        "401":
+          description: unauthorised
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/401"
+        "404":
+          description: not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/404"
+        "415":
+          description: invalid content type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/error_responses.yaml#/415"
   "/populations/{population_id}":
     get:
       summary: Returns population details for a given date and location
