@@ -293,6 +293,17 @@ RSpec.describe FrameworkQuestion do
       expect(response).not_to be_prefilled
     end
 
+    it 'sets the value type from the question' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response.value_type).to eq('string')
+    end
+
     context 'with previous response value' do
       it 'builds a response with the value set' do
         question = create(:framework_question)
@@ -328,6 +339,42 @@ RSpec.describe FrameworkQuestion do
         )
 
         expect(response).not_to be_prefilled
+      end
+
+      it 'sets prefilled value to false if different question value type supplied' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          %w[Yes],
+        )
+
+        expect(response).not_to be_prefilled
+      end
+
+      it 'sets value to empty if different question value type supplied' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          %w[Yes],
+        )
+
+        expect(response.value).to be_nil
+      end
+
+      it 'sets the value type from the question if different question value type supplied' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          %w[Yes],
+        )
+
+        expect(response.value_type).to eq('string')
       end
     end
   end

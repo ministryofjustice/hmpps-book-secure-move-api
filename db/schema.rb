@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_180043) do
+ActiveRecord::Schema.define(version: 2021_01_07_140348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -238,6 +238,7 @@ ActiveRecord::Schema.define(version: 2020_12_10_180043) do
     t.boolean "prefilled", default: false, null: false
     t.uuid "assessmentable_id"
     t.string "assessmentable_type"
+    t.string "value_type"
     t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
