@@ -76,6 +76,7 @@ NewPopulation:
           oneOf:
           - type: string
           - type: 'null'
+          format: date-time
           description: Timestamp of when the population was created
           readOnly: true
     relationships:

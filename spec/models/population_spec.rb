@@ -158,9 +158,10 @@ RSpec.describe Population do
     let(:date) { Date.today }
 
     context 'with a previous population record for same location' do
+      let!(:older_population) { create(:population, location: location, date: date - 2.days) }
       let!(:previous_population) { create(:population, location: location, date: date - 1.day) }
 
-      it 'populates details from previous record' do
+      it 'populates details from most recent previous record' do
         expect(new_population).to have_attributes({
           id: nil,
           location_id: location.id,
