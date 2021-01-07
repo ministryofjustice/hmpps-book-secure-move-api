@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     resources :moves, only: %i[index show create update] do
       collection do
         post 'csv'
+        post 'filtered', to: 'moves_filtered#index'
       end
       resources :journeys, only: %i[index show create update] do
         member do
