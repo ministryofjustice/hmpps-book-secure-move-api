@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     resources :events, only: %i[create], controller: 'generic_events'
 
     resources :allocations, only: %i[create index show] do
+      collection do
+        post 'filtered', to: 'allocations_filtered#index'
+      end
       member do
         post 'cancel', controller: 'allocation_events'
       end
