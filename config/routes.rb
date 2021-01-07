@@ -74,7 +74,7 @@ Rails.application.routes.draw do
     resources :framework_responses, only: %i[update]
 
     get 'locations_free_spaces', to: 'populations#index'
-    resources :populations, only: %i[show create update]
+    resources :populations, only: %i[new show create update]
 
     namespace :reference do
       resources :allocation_complex_cases, only: :index

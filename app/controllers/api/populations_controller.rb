@@ -4,6 +4,14 @@ module Api
   class PopulationsController < ApiController
     before_action :validate_date_range_params, only: %i[index]
 
+    rescue_from Date::Error, with: :render_invalid_date_error
+
+    def new
+      new_population = Population.new_with_defaults(location: location, date: date)
+
+      render_population(new_population, :ok)
+    end
+
     def index
       paginate locations, serializer: LocationFreeSpacesSerializer, include: included_relationships do |paginated_locations, options|
         options[:params] = { spaces: Population.free_spaces_date_range(paginated_locations, (date_from..date_to)) }
@@ -50,16 +58,28 @@ module Api
       params.require(:data).require(:attributes).permit(PERMITTED_POPULATION_PARAMS)
     end
 
+    def parse_date(string_representation)
+      Date.strptime(string_representation.to_s, '%Y-%m-%d')
+    end
+
+    def date
+      parse_date(params[:date])
+    end
+
     def date_from
-      Date.strptime(date_range_params[:date_from], '%Y-%m-%d')
+      parse_date(date_range_params[:date_from])
     end
 
     def date_to
-      Date.strptime(date_range_params[:date_to], '%Y-%m-%d')
+      parse_date(date_range_params[:date_to])
     end
 
     def validate_date_range_params
       Populations::ParamsValidator.new(date_range_params, sort_params).validate!
+    end
+
+    def location
+      Location.find(params[:location_id])
     end
 
     def locations
@@ -98,6 +118,16 @@ module Api
       else
         PopulationSerializer::SUPPORTED_RELATIONSHIPS
       end
+    end
+
+    def render_invalid_date_error(_exception)
+      render(
+        json: { errors: [{
+          title: 'Invalid date',
+          detail: 'Date is not a valid date',
+        }] },
+        status: :unprocessable_entity,
+      )
     end
   end
 end

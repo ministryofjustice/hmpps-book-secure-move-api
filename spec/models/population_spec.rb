@@ -151,6 +151,52 @@ RSpec.describe Population do
     end
   end
 
+  describe '.new_with_defaults' do
+    subject(:new_population) { described_class.new_with_defaults(location: location, date: date) }
+
+    let(:location) { create(:location, :prison) }
+    let(:date) { Date.today }
+
+    context 'with a previous population record for same location' do
+      let!(:older_population) { create(:population, location: location, date: date - 2.days) }
+      let!(:previous_population) { create(:population, location: location, date: date - 1.day) }
+
+      it 'populates details from most recent previous record' do
+        expect(new_population).to have_attributes({
+          id: nil,
+          location_id: location.id,
+          date: date,
+          operational_capacity: previous_population.operational_capacity,
+          usable_capacity: previous_population.usable_capacity,
+          unlock: previous_population.unlock,
+          bedwatch: previous_population.bedwatch,
+          overnights_in: previous_population.overnights_in,
+          overnights_out: previous_population.overnights_out,
+          out_of_area_courts: previous_population.out_of_area_courts,
+          discharges: previous_population.discharges,
+        })
+      end
+    end
+
+    context 'without a previous population record' do
+      it 'only populates date and location' do
+        expect(new_population).to have_attributes({
+          id: nil,
+          location_id: location.id,
+          date: date,
+          operational_capacity: nil,
+          usable_capacity: nil,
+          unlock: nil,
+          bedwatch: nil,
+          overnights_in: nil,
+          overnights_out: nil,
+          out_of_area_courts: nil,
+          discharges: nil,
+        })
+      end
+    end
+  end
+
   describe '.free_spaces_date_range' do
     let!(:prison1) { create(:location, :prison) }
     let!(:prison2) { create(:location, :prison) }
