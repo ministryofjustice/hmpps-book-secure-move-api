@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.8.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.1) (2021-01-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.0...v2.8.1)
+
+**Merged pull requests:**
+
+- Update location categories [\#1253](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1253) ([smoothcontract](https://github.com/smoothcontract))
+- Bump nokogiri from 1.11.0 to 1.11.1 [\#1252](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1252) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog 2.8.0 [\#1250](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1250) ([cwrw](https://github.com/cwrw))
+- P4-2058 Add PER confirmation event [\#1248](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1248) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.0) (2021-01-05)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.7.9...v2.8.0)
