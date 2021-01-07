@@ -18,13 +18,17 @@
     - SLI
     - WDI
     - WRI
-    - MRI
-    - WHI
   BTH:
     title: Category B Therapeutic
     move_supported: true
     locations:
     - GNI
+  BTRN:
+    title: Category B Training
+    move_supported: true
+    locations:
+    - MRI
+    - WHI
   C:
     title: Category C
     move_supported: true
@@ -33,10 +37,8 @@
     - MSI
     - CWI
     - BXI
-    - BRI
     - HPI
     - ISI
-    - LTI
     - MTI
     - WII
     - WLI
@@ -47,7 +49,6 @@
     - OWI
     - ONI
     - RNI
-    - SFI
     - SKI
     - SNI
     - WEI
@@ -65,10 +66,13 @@
     title: Category C VPU
     move_supported: true
     locations:
-    - WTI
     - ASI
-    - VEI
+    - BRI
+    - LTI
+    - SFI
     - UKI
+    - VEI
+    - WTI
   CYOI:
     title: Category C / YOI
     move_supported: true
