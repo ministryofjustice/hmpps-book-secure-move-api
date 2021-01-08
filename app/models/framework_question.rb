@@ -62,8 +62,8 @@ class FrameworkQuestion < VersionedModel
         FrameworkResponse::String
       end
 
-    klass.new(framework_question: question, assessmentable: assessmentable, value: previous_response, prefilled: previous_response.present?)
+    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type, value: previous_response, prefilled: previous_response.present?)
   rescue FrameworkResponse::ValueTypeError
-    klass.new(framework_question: question, assessmentable: assessmentable)
+    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type)
   end
 end
