@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::AllocationsFilteredController do
+RSpec.describe Api::AllocationsController do
   include_context 'with supplier with spoofed access token'
   subject(:post_allocations) do
     post '/api/allocations/filtered', params: { data: data }.merge(params), headers: headers, as: :json

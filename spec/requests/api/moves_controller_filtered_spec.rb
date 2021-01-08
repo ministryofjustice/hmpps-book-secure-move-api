@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::MovesFilteredController do
+RSpec.describe Api::MovesController do
   subject(:post_moves) do
     post '/api/moves/filtered', params: { data: data }.merge(params), headers: headers, as: :json
   end
