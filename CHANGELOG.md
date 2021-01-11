@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.8.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.2) (2021-01-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.1...v2.8.2)
+
+**Merged pull requests:**
+
+- Bump simplecov from 0.21.1 to 0.21.2 [\#1258](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1258) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2589 Add new column value\_type to responses [\#1256](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1256) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1254](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1254) ([martyn-w](https://github.com/martyn-w))
+- Add endpoint to provide pre-populated defaults for new population record [\#1251](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1251) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.8.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.1) (2021-01-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.0...v2.8.1)
