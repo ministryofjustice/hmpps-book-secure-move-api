@@ -29,7 +29,7 @@ class FrameworkQuestion < VersionedModel
     question.dependents.each do |dependent_question|
       # NB: to avoid extra queries use original set of questions
       dependent_response = build_responses(question: questions[dependent_question.id], assessmentable: assessmentable, questions: questions, previous_responses: previous_responses)
-      dependent_response_values = dependent_response.slice(:type, :framework_question, :dependents, :assessmentable, :value, :prefilled)
+      dependent_response_values = dependent_response.slice(:type, :framework_question, :dependents, :assessmentable, :value, :prefilled, :value_type)
       response.dependents.build(dependent_response_values)
     end
 
