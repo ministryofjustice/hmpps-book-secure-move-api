@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :framework_response do
     association(:framework_question)
     association(:assessmentable, factory: :person_escort_record)
+    value_type { framework_question.response_type }
   end
 
   factory :object_response, parent: :framework_response, class: 'FrameworkResponse::Object' do

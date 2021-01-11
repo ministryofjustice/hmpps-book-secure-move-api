@@ -54,6 +54,17 @@ RSpec.describe FrameworkQuestion do
       expect(response.framework_question).to eq(question)
     end
 
+    it 'builds response with correct value type' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_responses(
+        assessmentable: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.value_type).to eq('string')
+    end
+
     it 'builds response dependents if question is dependent' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
@@ -184,6 +195,23 @@ RSpec.describe FrameworkQuestion do
         )
 
         expect(response.dependents.first).to be_prefilled
+      end
+
+      it 'sets value_type on dependents' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question)
+        dependent_question = create(:framework_question, :checkbox, parent: question)
+        previous_responses = {
+          question.key => 'Yes',
+          dependent_question.key => ['Level 1'],
+        }
+        response = question.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.dependents.first.value_type).to eq('array')
       end
 
       it 'builds response for multiple item question with correct value' do

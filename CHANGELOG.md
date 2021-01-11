@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.8.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.3) (2021-01-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.2...v2.8.3)
+
+**Merged pull requests:**
+
+- Set value type when creating framework responses [\#1261](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1261) ([cwrw](https://github.com/cwrw))
+- Changelog 2.8.2 [\#1260](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1260) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.2) (2021-01-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.1...v2.8.2)
