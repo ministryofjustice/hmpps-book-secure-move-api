@@ -5,14 +5,7 @@ module Api
     after_action :send_move_notifications, only: :create
 
     def index
-      allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
-      if allocations_params.valid?
-        paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
-          options[:params] = { totals: paginated_allocations.move_totals }
-        end
-      else
-        render json: { error: allocations_params.errors }, status: :bad_request
-      end
+      index_and_render
     end
 
     def create
@@ -25,6 +18,10 @@ module Api
       allocation = Allocation.find(params[:id])
 
       render_allocation(allocation, :ok)
+    end
+
+    def filtered
+      index_and_render
     end
 
   private
@@ -41,12 +38,27 @@ module Api
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
+    PERMITTED_FILTERED_PARAMS = [
+      :type,
+      attributes: [filter: PERMITTED_FILTER_PARAMS],
+    ].freeze
+
     def sort_params
       @sort_params ||= params.fetch(:sort, {}).permit(PERMITTED_SORT_PARAMS).to_h
     end
 
+    def filtered_params
+      @filtered_params ||= params.require(:data).permit(PERMITTED_FILTERED_PARAMS).to_h
+    end
+
     def filter_params
-      @filter_params ||= params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+      @filter_params ||= begin
+        if action_name == 'filtered'
+          filtered_params.dig(:attributes, :filter) || {}
+        else
+          params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+        end
+      end
     end
 
     def search_params
@@ -94,6 +106,17 @@ module Api
         AllocationsSerializer::SUPPORTED_RELATIONSHIPS
       else
         AllocationSerializer::SUPPORTED_RELATIONSHIPS
+      end
+    end
+
+    def index_and_render
+      allocations_params = Allocations::ParamsValidator.new(filter_params, sort_params)
+      if allocations_params.valid?
+        paginate allocations, serializer: AllocationsSerializer, include: included_relationships, fields: AllocationsSerializer::INCLUDED_FIELDS do |paginated_allocations, options|
+          options[:params] = { totals: paginated_allocations.move_totals }
+        end
+      else
+        render json: { error: allocations_params.errors }, status: :bad_request
       end
     end
   end
