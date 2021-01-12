@@ -1,0 +1,50 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      type: array
+      items:
+        $ref: allocation.yaml#/Allocation
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: location.yaml#/Location
+        - $ref: move.yaml#/Move
+        - $ref: person.yaml#/Person
+    links:
+      $ref: pagination_links.yaml#/PaginationLinks
+    meta:
+      type: object
+      properties:
+        pagination:
+          $ref: pagination.yaml#/Pagination
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnsupportedMediaType
+'400':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/BadRequest
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotAuthorisedError

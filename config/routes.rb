@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :events, only: %i[create], controller: 'generic_events'
 
     resources :allocations, only: %i[create index show] do
+      collection { post 'filtered' }
       member do
         post 'cancel', controller: 'allocation_events'
       end
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
     resources :moves, only: %i[index show create update] do
       collection do
         post 'csv'
+        post 'filtered'
       end
       resources :journeys, only: %i[index show create update] do
         member do
