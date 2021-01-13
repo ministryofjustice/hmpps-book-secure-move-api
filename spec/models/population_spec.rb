@@ -157,6 +157,10 @@ RSpec.describe Population do
     let(:location) { create(:location, :prison) }
     let(:date) { Date.today }
 
+    before do
+      allow(Populations::DefaultsFromNomis).to receive(:call).and_return({})
+    end
+
     context 'with a previous population record for same location' do
       let!(:older_population) { create(:population, location: location, date: date - 2.days) }
       let!(:previous_population) { create(:population, location: location, date: date - 1.day) }
@@ -168,12 +172,12 @@ RSpec.describe Population do
           date: date,
           operational_capacity: previous_population.operational_capacity,
           usable_capacity: previous_population.usable_capacity,
-          unlock: previous_population.unlock,
           bedwatch: previous_population.bedwatch,
           overnights_in: previous_population.overnights_in,
           overnights_out: previous_population.overnights_out,
           out_of_area_courts: previous_population.out_of_area_courts,
-          discharges: previous_population.discharges,
+          unlock: nil,
+          discharges: nil,
         })
       end
     end
@@ -192,6 +196,28 @@ RSpec.describe Population do
           overnights_out: nil,
           out_of_area_courts: nil,
           discharges: nil,
+        })
+      end
+    end
+
+    context 'with movement details from Nomis' do
+      before do
+        allow(Populations::DefaultsFromNomis).to receive(:call).and_return({
+          unlock: 200,
+          discharges: 20,
+        })
+      end
+
+      it 'calls Nomis service with correct location and date' do
+        new_population
+
+        expect(Populations::DefaultsFromNomis).to have_received(:call).with(location, date)
+      end
+
+      it 'populates unlock and discharges from Nomis' do
+        expect(new_population).to have_attributes({
+          unlock: 200,
+          discharges: 20,
         })
       end
     end

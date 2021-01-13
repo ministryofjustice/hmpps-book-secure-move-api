@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Population < ApplicationRecord
   belongs_to :location
 
@@ -37,15 +39,19 @@ class Population < ApplicationRecord
     # Find most recent population figures for specified location prior to requested date
     previous_population = where(location_id: location.id).where('date < ?', date).order(date: :asc).last
 
+    # Obtain unlock and discharge counts from Nomis
+    nomis_counts = Populations::DefaultsFromNomis.call(location, date)
+
     new(location: location, date: date).tap do |new_population|
       new_population.operational_capacity = previous_population&.operational_capacity
       new_population.usable_capacity = previous_population&.usable_capacity
-      new_population.unlock = previous_population&.unlock
       new_population.bedwatch = previous_population&.bedwatch
       new_population.overnights_in = previous_population&.overnights_in
       new_population.overnights_out = previous_population&.overnights_out
       new_population.out_of_area_courts = previous_population&.out_of_area_courts
-      new_population.discharges = previous_population&.discharges
+
+      new_population.unlock = nomis_counts[:unlock]
+      new_population.discharges = nomis_counts[:discharges]
     end
   end
 
