@@ -16,12 +16,12 @@ module Api
     ].freeze
 
     def create
-      assessment = assessment_class.save_with_responses!(
+      new_assessment = assessment_class.save_with_responses!(
         version: new_assessment_params.dig(:attributes, :version),
         move_id: new_assessment_params.dig(:relationships, :move, :data, :id),
       )
 
-      render_assessment(assessment, :created)
+      render_assessment(assessment(new_assessment.id), :created)
     end
 
     def update
@@ -53,10 +53,10 @@ module Api
       assessment_serializer::SUPPORTED_RELATIONSHIPS
     end
 
-    def assessment
+    def assessment(id = params[:id])
       @assessment ||= assessment_class
         .includes(active_record_relationships)
-        .find(params[:id])
+        .find(id)
     end
 
     def render_assessment(assessment, status)
