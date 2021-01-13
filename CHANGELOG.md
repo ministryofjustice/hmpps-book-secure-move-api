@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.8.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.4) (2021-01-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.3...v2.8.4)
+
+**Merged pull requests:**
+
+- Add a unique index to the profile id on youth risk assessments [\#1267](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1267) ([cwrw](https://github.com/cwrw))
+- Bump shoulda-matchers from 4.4.1 to 4.5.0 [\#1265](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1265) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Set default callbacks to support new i18n gem version [\#1263](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1263) ([cwrw](https://github.com/cwrw))
+- Changelog 2.8.3 [\#1262](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1262) ([cwrw](https://github.com/cwrw))
+- Bump flipper-active\_record from 0.20.1 to 0.20.3 [\#1259](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1259) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2589 Use value\_type column value in response serializer [\#1257](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1257) ([cwrw](https://github.com/cwrw))
+- P4-2590 Add POST endpoints [\#1255](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1255) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.3) (2021-01-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.2...v2.8.3)
