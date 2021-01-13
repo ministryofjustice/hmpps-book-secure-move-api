@@ -23,9 +23,9 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   let(:movements) { { 'in' => 10, 'out' => 5 } }
 
   before do
-    allow(NomisClient::Rollcount).to receive(:get).with(agency_id, false).ordered.and_return(assigned_cells)
-    allow(NomisClient::Rollcount).to receive(:get).with(agency_id, true).ordered.and_return(unassigned_cells)
-    allow(NomisClient::Movements).to receive(:get).with(agency_id, date).and_return(movements)
+    allow(NomisClient::Rollcount).to receive(:get).with(agency_id: agency_id, unassigned: false).and_return(assigned_cells)
+    allow(NomisClient::Rollcount).to receive(:get).with(agency_id: agency_id, unassigned: true).and_return(unassigned_cells)
+    allow(NomisClient::Movements).to receive(:get).with(agency_id: agency_id, date: date).and_return(movements)
   end
 
   context 'with correct details from Nomis' do

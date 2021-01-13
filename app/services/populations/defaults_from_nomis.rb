@@ -4,9 +4,9 @@ module Populations
   class DefaultsFromNomis
     def self.call(location, date)
       nomis_agency_id = location.nomis_agency_id
-      assigned_cells = NomisClient::Rollcount.get(nomis_agency_id, false)
-      unassigned_cells = NomisClient::Rollcount.get(nomis_agency_id, true)
-      movements = NomisClient::Movements.get(nomis_agency_id, date)
+      assigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: false)
+      unassigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: true)
+      movements = NomisClient::Movements.get(agency_id: nomis_agency_id, date: date)
 
       return {} unless assigned_cells.present? && unassigned_cells.present? && movements.present?
 
