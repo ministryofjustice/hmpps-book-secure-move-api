@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_07_140348) do
+ActiveRecord::Schema.define(version: 2021_01_13_092719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(version: 2021_01_07_140348) do
     t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
     t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"
     t.index ["prefill_source_id"], name: "index_youth_risk_assessments_on_prefill_source_id"
-    t.index ["profile_id"], name: "index_youth_risk_assessments_on_profile_id"
+    t.index ["profile_id"], name: "index_youth_risk_assessments_on_profile_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
