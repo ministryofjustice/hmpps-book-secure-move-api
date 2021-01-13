@@ -12,6 +12,7 @@ class ApiController < ApplicationController
   before_action :extend_versioned_controller_actions
   before_action :set_content_type
   before_action :set_paper_trail_whodunnit
+  before_action :set_sentry_transaction_id
   before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
@@ -54,6 +55,10 @@ class ApiController < ApplicationController
   end
 
 private
+
+  def set_sentry_transaction_id
+    Raven.tags_context(transaction_id: request.headers['X-Transaction-Id'])
+  end
 
   def authentication_enabled?
     return false if Rails.env.development? && ENV['DEV_DISABLE_AUTH'] =~ /true/i
