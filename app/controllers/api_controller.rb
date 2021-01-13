@@ -291,7 +291,7 @@ private
   def extend_versioned_controller_actions
     version = "Api::V#{api_version || DEFAULT_API_VERSION}"
 
-    actions_module = "#{controller_name.capitalize}Actions"
+    actions_module = "#{controller_name.camelize}Actions"
 
     if version.constantize.const_defined?(actions_module)
       extend "#{version}::#{actions_module}".constantize

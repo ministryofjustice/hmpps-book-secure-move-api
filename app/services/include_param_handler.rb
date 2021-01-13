@@ -2,7 +2,7 @@ class IncludeParamHandler
   SEPARATOR = ','.freeze
 
   def initialize(params)
-    @params = params
+    @params = params.permit(:include, :meta)
   end
 
   def included_relationships
