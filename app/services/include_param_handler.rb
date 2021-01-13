@@ -41,6 +41,14 @@ private
       :framework_flags
     when 'questions'
       :framework_questions
+    when 'question'
+      :framework_question
+    when 'descendants'
+      :dependents
+    when '**'
+      { dependents: :dependents }
+    when 'nomis_mappings'
+      :framework_nomis_mappings
     when 'responses'
       :framework_responses
     when 'timeline_events'

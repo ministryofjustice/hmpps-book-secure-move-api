@@ -23,9 +23,10 @@ RSpec.describe Api::FrameworkResponsesController do
         },
       }
     end
+    let(:includes) {}
 
     before do
-      patch "/api/v1/framework_responses/#{framework_response_id}", params: framework_response_params, headers: headers, as: :json
+      patch "/api/v1/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
       framework_response.reload
     end
 
@@ -185,6 +186,8 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'with flags' do
+        let(:includes) { 'flags' }
+
         it 'attaches a flag and returns the correct data' do
           expect(response_json).to include_json(data: {
             "id": framework_response_id,

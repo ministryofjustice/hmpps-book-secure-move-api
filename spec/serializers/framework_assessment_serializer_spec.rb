@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkAssessmentSerializer do
-  subject(:serializer) { described_class.new(assessment, include: includes) }
+  subject(:serializer) { described_class.new(assessment, includes) }
 
   let(:move) { create(:move) }
   let(:assessment) { create(:person_escort_record, move: move, profile: move.profile) }
@@ -45,31 +45,39 @@ RSpec.describe FrameworkAssessmentSerializer do
     )
   end
 
-  it 'contains an empty `responses` relationship if no responses present' do
-    expect(result[:data][:relationships][:responses][:data]).to be_empty
+  context 'with responses' do
+    let(:includes) { { params: { included: %i[responses] } } }
+
+    it 'contains an empty `responses` relationship if no responses present' do
+      expect(result[:data][:relationships][:responses][:data]).to be_empty
+    end
+
+    it 'contains a`responses` relationship with framework responses' do
+      response = create(:string_response, assessmentable: assessment)
+
+      expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
+        id: response.id,
+        type: 'framework_responses',
+      )
+    end
   end
 
-  it 'contains a`responses` relationship with framework responses' do
-    response = create(:string_response, assessmentable: assessment)
+  context 'with flags' do
+    let(:includes) { { params: { included: %i[flags] } } }
 
-    expect(result[:data][:relationships][:responses][:data]).to contain_exactly(
-      id: response.id,
-      type: 'framework_responses',
-    )
-  end
+    it 'contains an empty `flags` relationship if no flags present' do
+      expect(result[:data][:relationships][:flags][:data]).to be_empty
+    end
 
-  it 'contains an empty `flags` relationship if no flags present' do
-    expect(result[:data][:relationships][:flags][:data]).to be_empty
-  end
+    it 'contains a `flags` relationship with framework response flags' do
+      flag = create(:framework_flag)
+      create(:string_response, assessmentable: assessment, framework_flags: [flag])
 
-  it 'contains a `flags` relationship with framework response flags' do
-    flag = create(:framework_flag)
-    create(:string_response, assessmentable: assessment, framework_flags: [flag])
-
-    expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
-      id: flag.id,
-      type: 'framework_flags',
-    )
+      expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+        id: flag.id,
+        type: 'framework_flags',
+      )
+    end
   end
 
   describe 'meta' do
@@ -91,7 +99,12 @@ RSpec.describe FrameworkAssessmentSerializer do
   end
 
   context 'with include options' do
-    let(:includes) { ['responses', 'responses.question', 'responses.nomis_mappings'] }
+    let(:includes) do
+      {
+        include: %w[responses responses.question responses.nomis_mappings],
+        params: { included: %i[responses question nomis_mappings] },
+      }
+    end
     let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
     let(:assessment) do
       assessment = create(:person_escort_record)

@@ -35,6 +35,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
             },
           },
         },
+        include: 'responses,flags',
       }
     end
 
@@ -131,6 +132,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
               },
             },
           },
+          include: 'responses,flags',
         }
       end
       let(:schema) { load_yaml_schema('post_youth_risk_assessment_responses.yaml') }

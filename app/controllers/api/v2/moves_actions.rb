@@ -145,9 +145,7 @@ module Api::V2
     def move
       @move ||= Move
         .accessible_by(current_ability)
-        .includes(
-          :from_location, :to_location, profile: { person: %i[gender ethnicity], person_escort_record: { framework_flags: :framework_question }, youth_risk_assessment: { framework_flags: :framework_question } }
-        )
+        .includes(active_record_relationships)
         .find(params[:id])
     end
 

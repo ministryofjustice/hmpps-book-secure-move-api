@@ -2,15 +2,12 @@
 
 class FrameworkAssessmentSerializer
   include JSONAPI::Serializer
+  include JSONAPI::ConditionalRelationships
 
   belongs_to :framework
 
-  has_many :responses, serializer: FrameworkResponseSerializer do |object|
-    object.framework_responses.includes(:framework_flags, :framework_nomis_mappings, framework_question: [:framework, dependents: :dependents])
-  end
-  has_many :flags, serializer: FrameworkFlagSerializer do |object|
-    object.framework_flags.includes(framework_question: :dependents)
-  end
+  has_many_if_included :responses, serializer: FrameworkResponseSerializer, &:framework_responses
+  has_many_if_included :flags, serializer: FrameworkFlagSerializer, &:framework_flags
 
   attributes :confirmed_at, :created_at, :nomis_sync_status
 

@@ -54,7 +54,9 @@ module Api
     end
 
     def assessment
-      @assessment ||= assessment_class.find(params[:id])
+      @assessment ||= assessment_class
+        .includes(active_record_relationships)
+        .find(params[:id])
     end
 
     def render_assessment(assessment, status)
