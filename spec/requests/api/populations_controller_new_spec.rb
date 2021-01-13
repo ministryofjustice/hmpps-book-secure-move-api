@@ -16,13 +16,56 @@ RSpec.describe Api::PopulationsController do
   let(:date) { Date.today.iso8601 }
   let(:params) { { location_id: location_id, date: date } }
 
+  before do
+    allow(Populations::DefaultsFromNomis).to receive(:call).and_return({})
+  end
+
   describe 'GET /populations/new' do
     context 'when successful' do
       let(:schema) { load_yaml_schema('get_new_population_responses.yaml') }
-      let(:population) { Population.new(location: location, date: Date.today) }
-      let(:data) { JSON.parse(PopulationSerializer.new(population).serializable_hash.to_json) }
+      let(:nomis_data) { { unlock: 200, discharges: 20 } }
+      let(:data) do
+        {
+          'data' => {
+            'id' => nil,
+            'type' => 'populations',
+            'attributes' => {
+              'date' => date,
+              'operational_capacity' => nil,
+              'usable_capacity' => nil,
+              'bedwatch' => nil,
+              'overnights_in' => nil,
+              'overnights_out' => nil,
+              'out_of_area_courts' => nil,
+              'unlock' => 200,
+              'discharges' => 20,
+              'free_spaces' => nil,
+              'updated_by' => nil,
+              'created_at' => nil,
+              'updated_at' => nil,
+            },
+            'relationships' => {
+              'location' => {
+                'data' => {
+                  'id' => location.id,
+                  'type' => 'locations',
+                },
+              },
+              'moves_from' => {
+                'data' => [],
+              },
+              'moves_to' => {
+                'data' => [],
+              },
+            },
+          },
+        }
+      end
 
-      before { get_new_population }
+      before do
+        allow(Populations::DefaultsFromNomis).to receive(:call) { nomis_data }
+        get_new_population
+      end
 
       it_behaves_like 'an endpoint that responds with success 200'
 
