@@ -14,6 +14,6 @@ class PersonEscortRecord < VersionedModel
 private
 
   def previous_assessment
-    @previous_assessment ||= profile&.person&.latest_person_escort_record
+    profile&.person&.latest_person_escort_record
   end
 end

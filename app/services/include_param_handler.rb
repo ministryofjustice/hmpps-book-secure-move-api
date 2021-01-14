@@ -46,6 +46,9 @@ private
     when 'descendants'
       :dependents
     when '**'
+      # This was required for the old JSON serializer, which did not load nested resources.
+      # This can be deprecated after clients move off it, and this nested include can move to
+      # `descendants` instead.
       { dependents: :dependents }
     when 'nomis_mappings'
       :framework_nomis_mappings

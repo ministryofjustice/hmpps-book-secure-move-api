@@ -13,7 +13,7 @@ class YouthRiskAssessment < VersionedModel
 private
 
   def previous_assessment
-    @previous_assessment ||= profile&.person&.latest_youth_risk_assessment
+    profile&.person&.latest_youth_risk_assessment
   end
 
   def move_from_location
