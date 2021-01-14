@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.8.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.5) (2021-01-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.4...v2.8.5)
+
+**Merged pull requests:**
+
+- Determine unlock and discharges from Nomis for new population endpoint [\#1269](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1269) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog 2.8.4 [\#1268](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1268) ([cwrw](https://github.com/cwrw))
+- Bump net-http-persistent from 4.0.0 to 4.0.1 [\#1266](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1266) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add transaction\_id to sentry tags [\#1264](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1264) ([Thource](https://github.com/Thource))
+
 ## [v2.8.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.4) (2021-01-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.3...v2.8.4)
