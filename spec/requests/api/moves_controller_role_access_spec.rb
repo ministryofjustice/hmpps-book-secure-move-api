@@ -20,16 +20,14 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'GET /moves' do
+    subject(:get_moves) { get '/api/v1/moves', headers: headers }
+
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
     let!(:moves) { create_list(:move, 2, supplier: pentonville_supplier) }
     let!(:other_moves) { create_list(:move, 2, supplier: birmingham_supplier) }
 
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
-
-      get '/api/v1/moves', headers: headers
-    end
+    before { get_moves }
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
@@ -46,69 +44,33 @@ RSpec.describe Api::MovesController do
     end
   end
 
-  context 'with swagger generation', :rswag, :with_client_authentication do
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
+  describe 'GET /moves/{move_id}' do
+    subject(:get_move) { get "/api/v1/moves/#{move_id}", headers: headers }
 
-    path '/moves/{move_id}' do
-      let!(:pentonville_move) { create :move, from_location: pentonville }
-      let!(:birmingham_move) { create :move, from_location: birmingham }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
+    let(:schema) { load_yaml_schema('get_move_responses.yaml') }
+    let!(:pentonville_move) { create :move, from_location: pentonville, supplier: pentonville_supplier }
+    let!(:birmingham_move) { create :move, from_location: birmingham, supplier: birmingham_supplier }
 
-      get 'Returns the details of a move' do
-        tags 'Moves'
-        produces 'application/vnd.api+json'
+    before { get_move }
 
-        parameter name: :Authorization,
-                  in: :header,
-                  schema: {
-                    type: 'string',
-                    default: 'Bearer <your-client-token>',
-                  },
-                  required: true
+    context 'when successful' do
+      let(:move_id) { pentonville_move.id }
 
-        parameter name: 'Content-Type',
-                  in: 'header',
-                  description: 'Accepted request content type',
-                  schema: {
-                    type: 'string',
-                    default: 'application/vnd.api+json',
-                  },
-                  required: true
+      it_behaves_like 'an endpoint that responds with success 200'
+    end
 
-        parameter name: :move_id,
-                  in: :path,
-                  description: 'The ID of the move',
-                  schema: {
-                    type: :string,
-                  },
-                  format: 'uuid',
-                  example: '00525ecb-7316-492a-aae2-f69334b2a155',
-                  required: true
+    context 'when supplier doesn\'t have rights to view the resource' do
+      let(:move_id) { birmingham_move.id }
+      let(:detail_404) { "Couldn't find Move with 'id'=#{move_id}" }
 
-        response '200', 'success' do
-          let(:move_id) { pentonville_move.id }
-          let(:resource_to_json) do
-            JSON.parse(MoveSerializer.new(pentonville_move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
-          end
-
-          schema "$ref": 'get_move_responses.yaml#/200'
-
-          run_test! do |_example|
-            expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-
-            expect(JSON.parse(response.body)).to eq resource_to_json
-          end
-        end
-
-        response '401', 'unauthorised' do
-          let(:move_id) { birmingham_move.id }
-
-          it_behaves_like 'a swagger 401 error'
-        end
-      end
+      it_behaves_like 'an endpoint that responds with error 404'
     end
   end
 
   describe 'POST /moves' do
+    subject(:post_moves) { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
 
@@ -116,12 +78,6 @@ RSpec.describe Api::MovesController do
     let!(:person) { create(:person) }
     let(:resource_to_json) do
       JSON.parse(MoveSerializer.new(move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
-    end
-
-    before do
-      next if RSpec.current_example.metadata[:skip_before]
-
-      post '/api/v1/moves', params: { data: data }, headers: headers, as: :json
     end
 
     context 'when successful' do
@@ -140,20 +96,25 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      it_behaves_like 'an endpoint that responds with success 201'
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { post_moves }
+      end
 
-      it 'creates a move', skip_before: true do
+      it 'creates a move' do
         expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
           .to change(Move, :count).by(1)
       end
 
       it 'returns the correct data' do
+        post_moves
         expect(response_json).to eq resource_to_json
       end
     end
   end
 
-  describe 'PATCH /moves' do
+  describe 'PATCH /moves/{move_id}' do
+    subject(:patch_move) { patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json }
+
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
 
@@ -172,32 +133,26 @@ RSpec.describe Api::MovesController do
       }
     end
 
-    before do
-      patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
-    end
+    before { patch_move }
 
     context 'when successful' do
       let(:move_id) { pentonville_move.id }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
-      it 'updates the status of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      it 'updates the status of a move' do
         expect(pentonville_move.reload.status).to eq 'cancelled'
       end
 
-      it 'updates the additional_information of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      it 'updates the additional_information of a move' do
         expect(pentonville_move.reload.additional_information).to eq 'some more info'
       end
 
-      it 'updates the cancellation_reason of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      it 'updates the cancellation_reason of a move' do
         expect(pentonville_move.reload.cancellation_reason).to eq 'other'
       end
 
-      it 'updates the cancellation_reason_comment of a move', skip_before: true do
-        patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+      it 'updates the cancellation_reason_comment of a move' do
         expect(pentonville_move.reload.cancellation_reason_comment).to eq 'some other reason'
       end
     end
