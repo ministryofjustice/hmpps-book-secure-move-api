@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkQuestionSerializer do
-  subject(:serializer) { described_class.new(framework_question, include: includes) }
+  subject(:serializer) { described_class.new(framework_question, includes) }
 
   let(:dependent_question) { create :framework_question }
   let(:framework_question) { create :framework_question, dependents: [dependent_question] }
@@ -45,15 +45,24 @@ RSpec.describe FrameworkQuestionSerializer do
     )
   end
 
-  it 'contains a `descendants` relationship' do
-    expect(result[:data][:relationships][:descendants][:data]).to contain_exactly(
-      id: dependent_question.id,
-      type: 'framework_questions',
-    )
+  context 'with descendants' do
+    let(:includes) { { params: { included: %i[descendants] } } }
+
+    it 'contains a `descendants` relationship' do
+      expect(result[:data][:relationships][:descendants][:data]).to contain_exactly(
+        id: dependent_question.id,
+        type: 'framework_questions',
+      )
+    end
   end
 
   context 'with include options' do
-    let(:includes) { %w[framework descendants] }
+    let(:includes) do
+      {
+        include: %w[framework descendants],
+        params: { included: %i[framework descendants] },
+      }
+    end
 
     let(:expected_json) do
       [

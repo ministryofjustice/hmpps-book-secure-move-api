@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkResponseSerializer do
-  subject(:serializer) { described_class.new(framework_response, include: includes) }
+  subject(:serializer) { described_class.new(framework_response, includes) }
 
   let(:framework_response) { create(:string_response) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
@@ -47,37 +47,48 @@ RSpec.describe FrameworkResponseSerializer do
     )
   end
 
-  it 'contains an empty `flags` relationship if no flags present' do
-    expect(result[:data][:relationships][:flags][:data]).to be_empty
+  context 'with flags' do
+    let(:includes) { { params: { included: %i[flags] } } }
+
+    it 'contains an empty `flags` relationship if no flags present' do
+      expect(result[:data][:relationships][:flags][:data]).to be_empty
+    end
+
+    it 'contains a `flags` relationship when flags present' do
+      flag = create(:framework_flag)
+      framework_response.update(framework_flags: [flag])
+
+      expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+        id: flag.id,
+        type: 'framework_flags',
+      )
+    end
   end
 
-  it 'contains a `flags` relationship when flags present' do
-    flag = create(:framework_flag)
-    framework_response.update(framework_flags: [flag])
+  context 'with nomis_mappings' do
+    let(:includes) { { params: { included: %i[nomis_mappings] } } }
 
-    expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
-      id: flag.id,
-      type: 'framework_flags',
-    )
-  end
+    it 'contains an empty `nomis_mappings` relationship if no nomis_mappings present' do
+      expect(result[:data][:relationships][:nomis_mappings][:data]).to be_empty
+    end
 
-  it 'contains an empty `nomis_mappings` relationship if no nomis_mappings present' do
-    expect(result[:data][:relationships][:nomis_mappings][:data]).to be_empty
-  end
+    it 'contains a `nomis_mappings` relationship when nomis_mappings present' do
+      framework_nomis_mapping = create(:framework_nomis_mapping)
+      framework_response.update(framework_nomis_mappings: [framework_nomis_mapping])
 
-  it 'contains a `nomis_mappings` relationship when nomis_mappings present' do
-    framework_nomis_mapping = create(:framework_nomis_mapping)
-    framework_response.update(framework_nomis_mappings: [framework_nomis_mapping])
-
-    expect(result[:data][:relationships][:nomis_mappings][:data]).to contain_exactly(
-      id: framework_nomis_mapping.id,
-      type: 'framework_nomis_mappings',
-    )
+      expect(result[:data][:relationships][:nomis_mappings][:data]).to contain_exactly(
+        id: framework_nomis_mapping.id,
+        type: 'framework_nomis_mappings',
+      )
+    end
   end
 
   context 'with include options' do
     let(:includes) do
-      %i[assessment question]
+      {
+        include: %w[assessment question],
+        params: { included: %i[assessment question] },
+      }
     end
     let(:framework_response) do
       create(:string_response, assessmentable: create(:person_escort_record))

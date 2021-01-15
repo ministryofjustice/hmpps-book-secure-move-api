@@ -2,6 +2,7 @@
 
 class FrameworkQuestionSerializer
   include JSONAPI::Serializer
+  include JSONAPI::ConditionalRelationships
 
   set_type :framework_questions
 
@@ -9,7 +10,7 @@ class FrameworkQuestionSerializer
 
   attributes :key, :section, :question_type, :options, :response_type
 
-  has_many :descendants, serializer: FrameworkQuestionSerializer, &:dependents
+  has_many_if_included :descendants, serializer: FrameworkQuestionSerializer, &:dependents
 
   SUPPORTED_RELATIONSHIPS = %w[
     framework

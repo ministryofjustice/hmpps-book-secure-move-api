@@ -150,9 +150,9 @@ module FrameworkAssessmentable
 
   def previous_responses
     @previous_responses ||= begin
-      return {} unless previous_assessment
+      return {} unless prefill_source
 
-      previous_assessment.framework_responses.includes(framework_question: :dependents).each_with_object({}) do |response, hash|
+      prefill_source.framework_responses.includes(framework_question: :dependents).each_with_object({}) do |response, hash|
         value = response.prefill_value
         next if value.blank?
 

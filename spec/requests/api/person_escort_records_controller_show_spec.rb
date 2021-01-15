@@ -19,7 +19,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:person_escort_record_id) { person_escort_record.id }
 
     before do
-      get "/api/v1/person_escort_records/#{person_escort_record_id}", headers: headers, as: :json
+      get "/api/v1/person_escort_records/#{person_escort_record_id}?include=responses,flags", headers: headers, as: :json
     end
 
     context 'when successful' do
