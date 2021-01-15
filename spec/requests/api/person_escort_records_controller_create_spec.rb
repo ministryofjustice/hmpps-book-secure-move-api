@@ -35,6 +35,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             },
           },
         },
+        include: 'responses,flags',
       }
     end
 
@@ -131,6 +132,7 @@ RSpec.describe Api::PersonEscortRecordsController do
               },
             },
           },
+          include: 'responses,flags',
         }
       end
       let(:schema) { load_yaml_schema('post_person_escort_record_responses.yaml') }
