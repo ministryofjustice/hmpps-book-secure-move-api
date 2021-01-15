@@ -113,6 +113,15 @@ RSpec.describe Moves::Finder do
         end
       end
 
+      context 'with empty location filter' do
+        let!(:second_move) { create(:move, :video_remand) }
+        let(:filter_params) { { to_location_id: [] } }
+
+        it 'returns moves matching empty location' do
+          expect(results).to contain_exactly(second_move)
+        end
+      end
+
       context 'with mis-matching location filter' do
         let(:filter_params) { { to_location_id: Random.uuid } }
 
