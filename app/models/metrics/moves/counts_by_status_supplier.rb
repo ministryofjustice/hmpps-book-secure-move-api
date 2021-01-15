@@ -2,32 +2,32 @@ module Metrics
   module Moves
     class CountsByStatusSupplier
       include BaseMetric
-
-      METRIC = {
-        label: 'Move counts by status and supplier',
-        file: 'moves/counts_by_status_supplier',
-        interval: 5.minutes,
-        columns: {
-          name: 'status',
-          field: :itself,
-          values: Move.statuses.values,
-        },
-        rows: {
-          name: 'supplier',
-          field: :key,
-          values: -> { Supplier.all + [nil] }, # NB: use lambda to delay evaluation until metric is used
-        },
-      }.freeze
+      include Moves
 
       def initialize
-        setup_metric(METRIC)
+        setup_metric(
+          label: 'Move counts by status and supplier',
+          file: 'moves/counts_by_status_supplier',
+          interval: 5.minutes,
+          columns: {
+            name: 'status',
+            field: :itself,
+            values: Move.statuses.values << TOTAL,
+          },
+          rows: {
+            name: 'supplier',
+            field: :key,
+            values: -> { Supplier.all + [nil] }, # NB: use lambda to delay evaluation until metric is used
+          },
+        )
       end
 
       def calculate_row(row_supplier)
-        Move
+        moves
           .where(supplier: row_supplier)
           .group(:status)
           .count
+          .tap { |row| row.merge!(TOTAL => row.values.sum) }
       end
     end
   end

@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Metrics::Moves::CountsByStatus100Day do
+  subject(:metric) { described_class.new }
+
+  it 'includes the BaseMetric module' do
+    expect(described_class.ancestors).to include(Metrics::BaseMetric)
+  end
+
+  it 'initializes label and file' do
+    expect(metric.label).not_to be_nil
+    expect(metric.file).to eql('moves/counts_by_status_100_day')
+  end
+
+  describe 'calculate_row' do
+    subject(:calculate_row) { metric.calculate_row(ten_days_ago) }
+
+    let(:ten_days_ago) { Time.zone.today - 10.days }
+
+    before do
+      create(:move, :completed, date: Date.tomorrow)
+      create(:move, :completed, date: Date.today)
+      create(:move, :cancelled, date: Date.yesterday)
+      create(:move, :cancelled, date: 10.days.ago)
+      create(:move, :in_transit, date: 10.days.ago)
+      create(:move, :requested, date: 1.year.ago)
+    end
+
+    it 'computes the metric' do
+      expect(calculate_row).to eql(
+        {
+          'cancelled' => 1,
+          'in_transit' => 1,
+          'total' => 2,
+        },
+      )
+    end
+  end
+end

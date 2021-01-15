@@ -9,8 +9,9 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeSupplier do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
   end
 
-  it 'initializes label' do
-    expect(metric.label).to eql(described_class::METRIC[:label])
+  it 'initializes label and file' do
+    expect(metric.label).not_to be_nil
+    expect(metric.file).to eql('moves/counts_by_move_type_supplier')
   end
 
   describe 'calculate_row' do
@@ -31,6 +32,7 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeSupplier do
         {
           'hospital' => 1,
           'prison_transfer' => 1,
+          'total' => 2,
         },
       )
     end

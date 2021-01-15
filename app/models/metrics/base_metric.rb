@@ -3,7 +3,10 @@ require 'json'
 
 module Metrics
   module BaseMetric
-    attr_reader :label, :file, :interval, :timestamp,
+    TOTAL = 'total'.freeze
+    COUNT = 'count'.freeze
+
+    attr_reader :label, :database, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
                 :rows_name, :rows_field, :rows,
                 :values
@@ -17,6 +20,7 @@ module Metrics
 
     def setup_metric(metric)
       @label = metric[:label]
+      @database = metric[:database]
       @file = metric[:file]
       @interval = metric[:interval]
       @timestamp = nil

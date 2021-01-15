@@ -9,13 +9,12 @@ RSpec.describe Metrics::Moves::CountsBySupplier do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
   end
 
-  it 'initializes label' do
-    expect(metric.label).to eql(described_class::METRIC[:label])
+  it 'initializes label and file' do
+    expect(metric.label).not_to be_nil
+    expect(metric.file).to eql('moves/counts_by_supplier')
   end
 
   describe 'calculate_row' do
-    subject(:calculate_row) { metric.calculate_row(nil) }
-
     let(:supplier1) { create(:supplier) }
     let(:supplier2) { create(:supplier) }
 
@@ -27,12 +26,8 @@ RSpec.describe Metrics::Moves::CountsBySupplier do
     end
 
     it 'computes the metric' do
-      expect(calculate_row).to eql(
-        {
-          supplier1 => 3,
-          supplier2 => 1,
-        },
-      )
+      expect(metric.calculate('count', supplier1)).to be(3)
+      expect(metric.calculate('count', supplier2)).to be(1)
     end
   end
 end

@@ -9,8 +9,9 @@ RSpec.describe Metrics::Moves::CountsByStatusTimeBin do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
   end
 
-  it 'initializes label' do
-    expect(metric.label).to eql(described_class::METRIC[:label])
+  it 'initializes label and file' do
+    expect(metric.label).not_to be_nil
+    expect(metric.file).to eql('moves/counts_by_status_time_bin')
   end
 
   describe 'calculate_row' do
@@ -34,6 +35,7 @@ RSpec.describe Metrics::Moves::CountsByStatusTimeBin do
         {
           'cancelled' => 1,
           'requested' => 2,
+          'total' => 3,
         },
       )
     end
