@@ -65,6 +65,17 @@ RSpec.describe FrameworkQuestion do
       expect(response.value_type).to eq('string')
     end
 
+    it 'builds response with correct section' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_responses(
+        assessmentable: person_escort_record,
+        questions: questions,
+      )
+
+      expect(response.section).to eq(question.section)
+    end
+
     it 'builds response dependents if question is dependent' do
       person_escort_record = create(:person_escort_record)
       question = create(:framework_question)
@@ -214,6 +225,23 @@ RSpec.describe FrameworkQuestion do
         expect(response.dependents.first.value_type).to eq('array')
       end
 
+      it 'sets section on dependents' do
+        person_escort_record = create(:person_escort_record)
+        question = create(:framework_question)
+        dependent_question = create(:framework_question, :checkbox, parent: question)
+        previous_responses = {
+          question.key => 'Yes',
+          dependent_question.key => ['Level 1'],
+        }
+        response = question.build_responses(
+          assessmentable: person_escort_record,
+          questions: questions,
+          previous_responses: previous_responses,
+        )
+
+        expect(response.dependents.first.section).to eq(dependent_question.section)
+      end
+
       it 'builds response for multiple item question with correct value' do
         person_escort_record = create(:person_escort_record)
         question = create(:framework_question, :add_multiple_items)
@@ -332,6 +360,17 @@ RSpec.describe FrameworkQuestion do
       expect(response.value_type).to eq('string')
     end
 
+    it 'sets the section from the question' do
+      question = create(:framework_question)
+      person_escort_record = create(:person_escort_record)
+      response = question.build_response(
+        question,
+        person_escort_record,
+      )
+
+      expect(response.section).to eq(question.section)
+    end
+
     context 'with previous response value' do
       it 'builds a response with the value set' do
         question = create(:framework_question)
@@ -403,6 +442,18 @@ RSpec.describe FrameworkQuestion do
         )
 
         expect(response.value_type).to eq('string')
+      end
+
+      it 'sets the section from the question if different question value type supplied' do
+        question = create(:framework_question)
+        person_escort_record = create(:person_escort_record)
+        response = question.build_response(
+          question,
+          person_escort_record,
+          %w[Yes],
+        )
+
+        expect(response.section).to eq(question.section)
       end
     end
   end
