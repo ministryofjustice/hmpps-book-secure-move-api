@@ -19,13 +19,22 @@ module Api
     rescue_from FrameworkResponses::BulkUpdateError, with: :render_bulk_update_error
 
     def update
-      framework_response.update_with_flags!(update_framework_response_attributes)
+      framework_response.update_with_flags!(
+        new_value: update_framework_response_attributes,
+        responded_by: created_by,
+        responded_at: Time.zone.now.iso8601,
+      )
 
       render_json framework_response, serializer: FrameworkResponseSerializer, include: included_relationships, status: :ok
     end
 
     def bulk_update
-      FrameworkResponses::BulkUpdater.new(assessment, bulk_update_framework_response_values).call
+      FrameworkResponses::BulkUpdater.new(
+        assessment: assessment,
+        response_values_hash: bulk_update_framework_response_values,
+        responded_by: created_by,
+        responded_at: Time.zone.now.iso8601,
+      ).call
 
       render status: :no_content
     end

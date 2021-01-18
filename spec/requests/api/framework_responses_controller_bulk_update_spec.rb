@@ -7,11 +7,14 @@ RSpec.describe Api::FrameworkResponsesController do
     include_context 'with supplier with spoofed access token'
 
     subject(:bulk_update_framework_responses) do
+      Timecop.freeze(recorded_timestamp)
       patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers: headers, as: :json
+      Timecop.return
     end
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
+    let(:recorded_timestamp) { Time.zone.parse('2020-10-07 01:02:03').iso8601 }
     let(:person_escort_record) { create(:person_escort_record, :in_progress) }
     let(:per_id) { person_escort_record.id }
 
@@ -59,6 +62,14 @@ RSpec.describe Api::FrameworkResponsesController do
       it 'attaches flags to the responses' do
         expect(framework_response.framework_flags).to contain_exactly(flag)
         expect(other_framework_response.framework_flags).to contain_exactly(other_flag)
+      end
+
+      it 'returns the responded by value' do
+        expect(framework_response.reload.responded_by).to eq('TEST_USER')
+      end
+
+      it 'returns the responded at timestamp' do
+        expect(framework_response.reload.responded_at).to eq(recorded_timestamp)
       end
 
       context 'when responses are combined' do

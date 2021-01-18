@@ -24,9 +24,13 @@ RSpec.describe Api::FrameworkResponsesController do
       }
     end
     let(:includes) {}
+    let(:recorded_timestamp) { Time.zone.parse('2020-10-07 01:02:03').iso8601 }
 
     before do
+      Timecop.freeze(recorded_timestamp)
       patch "/api/v1/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
+      Timecop.return
+
       framework_response.reload
     end
 
@@ -124,6 +128,16 @@ RSpec.describe Api::FrameworkResponsesController do
               "responded": true,
             },
           })
+        end
+      end
+
+      context 'when setting user responded data' do
+        it 'returns the responded by value' do
+          expect(framework_response.responded_by).to eq('TEST_USER')
+        end
+
+        it 'returns the responded at timestamp' do
+          expect(framework_response.responded_at).to eq(recorded_timestamp)
         end
       end
 

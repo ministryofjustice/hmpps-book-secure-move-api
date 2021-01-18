@@ -2,11 +2,14 @@
 
 module FrameworkResponses
   class BulkUpdater
-    attr_accessor :assessment, :response_values_hash, :errors
+    attr_accessor :assessment, :response_values_hash, :responded_by, :responded_at, :errors
 
-    def initialize(assessment, response_values_hash)
+    def initialize(assessment:, response_values_hash:, responded_by: nil, responded_at: nil)
       self.assessment = assessment
       self.response_values_hash = response_values_hash
+      self.responded_by = responded_by
+      self.responded_at = responded_at
+
       self.errors = {}
     end
 
@@ -35,6 +38,8 @@ module FrameworkResponses
           next if response.value == new_value && response.responded == true
 
           response.value = new_value
+          response.responded_by = responded_by
+          response.responded_at = responded_at
           if validator.valid_model?(response)
             updated_responses << response
           else
@@ -48,7 +53,7 @@ module FrameworkResponses
 
     def apply_bulk_response_changes(updated_responses)
       # Bulk update all modified response values
-      FrameworkResponse.import(updated_responses, validate: false, on_duplicate_key_update: { conflict_target: [:id], columns: %i[value_text value_json responded] })
+      FrameworkResponse.import(updated_responses, validate: false, on_duplicate_key_update: { conflict_target: [:id], columns: %i[value_text value_json responded responded_by responded_at] })
 
       # Update associated flags for all modified response values
       updated_responses.each(&:rebuild_flags!)
