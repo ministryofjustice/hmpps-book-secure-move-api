@@ -2,10 +2,14 @@ module Metrics
   module Moves
     module GeoameyMoves
       MOVES_GEOAMEY_DATABASE = 'moves_geoamey'.freeze
-      GEOAMEY = Supplier.find_by(key: 'geoamey')
+      GEOAMEY_KEY = 'geoamey'.freeze
+
+      def geoamey
+        @geoamey ||= Supplier.find_by(key: GEOAMEY_KEY)
+      end
 
       def moves
-        Move.where(supplier: GEOAMEY)
+        Move.where(supplier: geoamey)
       end
 
       def database

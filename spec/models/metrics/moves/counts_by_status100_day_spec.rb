@@ -5,8 +5,9 @@ require 'rails_helper'
 RSpec.describe Metrics::Moves::CountsByStatus100Day do
   subject(:metric) { described_class.new }
 
-  it 'includes the BaseMetric module' do
+  it 'includes the BaseMetric and Moves modules' do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
+    expect(described_class.ancestors).to include(Metrics::Moves)
   end
 
   it 'initializes label and file' do

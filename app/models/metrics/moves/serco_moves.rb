@@ -2,10 +2,14 @@ module Metrics
   module Moves
     module SercoMoves
       MOVES_SERCO_DATABASE = 'moves_serco'.freeze
-      SERCO = Supplier.find_by(key: 'serco')
+      SERCO_KEY = 'serco'.freeze
+
+      def serco
+        @serco ||= Supplier.find_by(key: SERCO_KEY)
+      end
 
       def moves
-        Move.where(supplier: SERCO)
+        Move.where(supplier: serco)
       end
 
       def database
