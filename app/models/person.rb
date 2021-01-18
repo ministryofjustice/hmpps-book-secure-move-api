@@ -35,6 +35,7 @@ class Person < VersionedModel
 
   validates :last_name, presence: true
   validates :first_names, presence: true
+  validate :validate_age
 
   auto_strip_attributes :nomis_prison_number, :prison_number, :criminal_records_office, :police_national_computer
 
@@ -79,5 +80,13 @@ class Person < VersionedModel
 
   def category
     @category ||= Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
+  end
+
+private
+
+  def validate_age
+    if date_of_birth.present? && date_of_birth.year < 1900
+      errors.add(:birth_date, 'must be after 1900-01-01.')
+    end
   end
 end

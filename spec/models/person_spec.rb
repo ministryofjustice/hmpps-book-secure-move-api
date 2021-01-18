@@ -159,4 +159,10 @@ RSpec.describe Person do
       expect(person.latest_youth_risk_assessment).to eq(newest_youth_risk_assessment)
     end
   end
+
+  context 'when the date of birth is before 1900-01-01' do
+    it 'fails with an error' do
+      expect { create(:person, :pre1900) }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Birth date must be after 1900-01-01.')
+    end
+  end
 end
