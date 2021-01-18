@@ -289,46 +289,6 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/patch_people_responses.yaml#/422"
-  "/people/{person_id}/images":
-    get:
-      summary: It retrieves the image related to the person.
-      description: |
-        The first time the image is retrieved by Nomis and stored on S3.
-        The subsequent times the image is restrieved from S3.
-      tags:
-        - People
-      parameters:
-        - name: Content-Type
-          in: header
-          description: Accepted request content type
-          schema:
-            type: string
-            default: application/vnd.api+json
-          required: true
-        - name: person_id
-          in: path
-          description: The ID of the person
-          schema:
-            type: string
-          format: uuid
-          example: 00525ecb-7316-492a-aae2-f69334b2a155
-          required: true
-      responses:
-        "422":
-          description: unprocessable entity
-          content: {}
-        "404":
-          description: not found
-          content: {}
-        "200":
-          description: success
-          content: {}
-        "504":
-          description: Nomis Timeout Error
-          content:
-            application/vnd.api+json:
-              schema:
-                "$ref": "../v1/get_people_responses.yaml#/504"
   "/moves":
     get:
       summary: Returns a list of moves
@@ -758,7 +718,7 @@
                 "$ref": "../v2/get_categories_responses.yaml#/415"
   "/events":
     post:
-      summary: DRAFT Creates a new event for a given eventable DRAFT
+      summary: Creates a new event for a given eventable
       tags:
         - Events
       consumes:

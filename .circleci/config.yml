@@ -107,9 +107,7 @@ references:
   _api_docs: &api_docs
     run:
       name: Generate API Docs
-      command: |
-        TESTS=$(circleci tests glob "spec/{requests,swagger}/**/*_spec.rb" | grep -e rswag -e swagger | circleci tests split )
-        bundle exec rspec ${TESTS} --format Rswag::Specs::SwaggerFormatter --order defined
+      command: bundle exec rails rswag:specs:swaggerize
   _load_wiremock_mappings: &load_wiremock_mappings
     run:
       name: Load mappings into wiremock
