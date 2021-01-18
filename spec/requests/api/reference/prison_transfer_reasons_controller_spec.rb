@@ -1,65 +1,48 @@
 # frozen_string_literal: true
 
-require 'swagger_helper'
+require 'rails_helper'
 
-RSpec.describe Api::Reference::PrisonTransferReasonsController, :rswag, :with_client_authentication do
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge(auth_headers) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
+RSpec.describe Api::Reference::PrisonTransferReasonsController do
+  let(:access_token) { 'spoofed-token' }
+  let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
   let(:response_json) { JSON.parse(response.body) }
-  let!(:reason) { create :prison_transfer_reason }
-  let!(:reasons) { [reason] }
 
-  path '/reference/prison_transfer_reasons' do
-    let(:"Content-Type") { content_type }
-    get 'Returns all prison transfer reasons' do
-      tags 'PrisonTransferReasons'
-      produces 'application/vnd.api+json'
+  describe 'GET /api/reference/prison_transfer_reasons' do
+    let(:schema) { load_yaml_schema('get_prison_transfer_reasons_responses.yaml') }
 
-      parameter name: :Authorization,
-                in: :header,
-                schema: {
-                  type: 'string',
-                  default: 'Bearer <your-client-token>',
-                },
-                required: true,
-                description: <<~DESCRIPTION
-                  This is "Bearer ", followed by your OAuth 2 Client token.
-                  If you're testing interactively in the web UI, you can ignore this field
-                DESCRIPTION
+    let!(:reason1) { create(:prison_transfer_reason) }
+    let!(:reason2) { create(:prison_transfer_reason) }
 
-      parameter name: :'Content-Type',
-                in: :header,
-                description: 'Accepted request content type',
-                schema: {
-                  type: 'string',
-                  default: 'application/vnd.api+json',
-                },
-                required: true
+    let(:data) do
+      [
+        {
+          type: 'prison_transfer_reasons',
+          attributes: {
+            key: reason1.key,
+            title: reason1.title,
+            disabled_at: reason1.disabled_at,
+          },
+        },
+        {
+          type: 'prison_transfer_reasons',
+          attributes: {
+            key: reason2.key,
+            title: reason2.title,
+            disabled_at: reason2.disabled_at,
+          },
+        },
+      ]
+    end
 
-      response '200', 'success' do
-        let(:resource_to_json) do
-          JSON.parse(PrisonTransferReasonSerializer.new(reasons).serializable_hash.to_json)
-        end
+    before do
+      get '/api/reference/prison_transfer_reasons', headers: headers
+    end
 
-        schema '$ref' => 'get_prison_transfer_reasons_responses.yaml#/200'
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 200'
 
-        run_test! do |_example|
-          expect(response.headers['Content-Type']).to match(Regexp.escape(content_type))
-
-          expect(JSON.parse(response.body)).to eq resource_to_json
-        end
-      end
-
-      response '401', 'unauthorised' do
-        let(:Authorization) { "Basic #{::Base64.strict_encode64('bogus-credentials')}" }
-
-        it_behaves_like 'a swagger 401 error'
-      end
-
-      response '415', 'invalid content type' do
-        let(:"Content-Type") { 'application/xml' }
-
-        it_behaves_like 'a swagger 415 error'
+      it 'returns the correct data' do
+        expect(response_json).to include_json(data: data)
       end
     end
   end

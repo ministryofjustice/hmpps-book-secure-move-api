@@ -1,0 +1,7 @@
+'200':
+  type: object
+  required:
+    - data
+  properties:
+    data:
+      $ref: image.yaml#/Image

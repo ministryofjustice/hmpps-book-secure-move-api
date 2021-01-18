@@ -1,0 +1,26 @@
+Image:
+  type: object
+  required:
+    - id
+    - type
+    - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: 88089bbd-8719-4192-b309-f9db9105d3e1
+      description: The unique identifier (UUID) of this object (actually contains person id)
+    type:
+      type: string
+      example: images
+      enum:
+      - images
+      description: The type of this object - always `images`
+    attributes:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          description: A temporary url for the persons image
