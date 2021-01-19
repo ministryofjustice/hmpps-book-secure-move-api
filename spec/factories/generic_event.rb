@@ -197,6 +197,7 @@ FactoryBot.define do
       {
         vehicle_reg: Faker::Vehicle.license_plate,
         supplier_personnel_number: SecureRandom.uuid,
+        location_id: create(:location).id,
       }
     end
   end
@@ -210,9 +211,14 @@ FactoryBot.define do
     end
   end
 
-
   factory :event_journey_arrive_at_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyArriveAtOuterGate' do
     eventable { association(:journey) }
+
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
   end
 
   factory :event_journey_cancel, parent: :generic_event, class: 'GenericEvent::JourneyCancel' do
@@ -240,6 +246,12 @@ FactoryBot.define do
 
   factory :event_journey_exit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyExitThroughOuterGate' do
     eventable { association(:journey) }
+
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
   end
 
   factory :event_journey_handover_to_destination, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToDestination' do
@@ -296,6 +308,12 @@ FactoryBot.define do
 
   factory :event_journey_ready_to_exit, parent: :generic_event, class: 'GenericEvent::JourneyReadyToExit' do
     eventable { association(:journey) }
+
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
   end
 
   factory :event_journey_reject, parent: :generic_event, class: 'GenericEvent::JourneyReject' do
