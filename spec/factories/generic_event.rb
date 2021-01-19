@@ -201,6 +201,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_journey_admit_to_reception, parent: :generic_event, class: 'GenericEvent::JourneyAdmitToReception' do
+    eventable { association(:journey) }
+    details do
+      {
+        location_id: create(:location).id,
+      }
+    end
+  end
+
+
   factory :event_journey_arrive_at_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyArriveAtOuterGate' do
     eventable { association(:journey) }
   end
