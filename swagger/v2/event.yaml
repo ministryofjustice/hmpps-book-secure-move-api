@@ -169,7 +169,7 @@ EventRequestPostBody:
             - $ref: "../v1/move_reference.yaml#/MoveReference"
             - $ref: "../v1/journey_reference.yaml#/JourneyReference"
             - $ref: "../v1/person_reference.yaml#/PersonReference"
-            - $ref: "../v1/person_reference.yaml#/PersonEscortRecordReference"
+            - $ref: "../v1/person_escort_record_reference.yaml#/PersonEscortRecordReference"
           description: |
             The subject that the event relates too.
 
