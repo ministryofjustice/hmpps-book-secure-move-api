@@ -1,0 +1,34 @@
+'200':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: framework.yaml#/Framework
+'415':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/UnsupportedMediaType
+'401':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/NotAuthorisedError
+'404':
+  type: object
+  required:
+  - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/ResourceNotFound

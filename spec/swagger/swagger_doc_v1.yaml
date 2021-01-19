@@ -3427,6 +3427,91 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v1/get_ethnicities_responses.yaml#/415"
+  "/reference/frameworks":
+    get:
+      summary: Returns a list of assessment frameworks
+      tags:
+        - Frameworks
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_frameworks_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_frameworks_responses.yaml#/401"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_frameworks_responses.yaml#/415"
+  "/reference/frameworks/{framework_id}":
+    get:
+      summary: Returns details of a single assessment framework
+      tags:
+        - Frameworks
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - name: include
+          description: Returns a specific list of resources related to the framework. It is recommended to specify all of these.
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: string
+            enum:
+              - questions
+              - questions.descendants.**
+              - questions.flags
+              - questions.descendants.flags
+          example: questions
+        - name: framework_id
+          in: path
+          required: true
+          description: The ID of the framework
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_framework_responses.yaml#/200"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_framework_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_framework_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v1/get_framework_responses.yaml#/415"
   "/reference/genders":
     get:
       summary: Returns a list of genders

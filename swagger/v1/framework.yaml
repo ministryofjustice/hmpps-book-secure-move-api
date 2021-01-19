@@ -34,8 +34,6 @@ Framework:
           readOnly: true
     relationships:
       type: object
-      required:
-      - questions
       properties:
         questions:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
