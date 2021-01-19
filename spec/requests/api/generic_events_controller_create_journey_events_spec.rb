@@ -15,6 +15,7 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'JourneyCreate'
   it_behaves_like 'a generic event endpoint', 'JourneyExitThroughOuterGate'
   it_behaves_like 'a generic event endpoint', 'JourneyHandoverToDestination'
+  it_behaves_like 'a generic event endpoint', 'JourneyHandoverToSupplier'
   it_behaves_like 'a generic event endpoint', 'JourneyLockout'
   it_behaves_like 'a generic event endpoint', 'JourneyLodging'
   it_behaves_like 'a generic event endpoint', 'JourneyPersonBoardsVehicle'

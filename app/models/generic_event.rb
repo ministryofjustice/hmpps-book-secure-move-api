@@ -22,6 +22,7 @@ class GenericEvent < ApplicationRecord
     JourneyCreate
     JourneyExitThroughOuterGate
     JourneyHandoverToDestination
+    JourneyHandoverToSupplier
     JourneyLockout
     JourneyLodging
     JourneyPersonBoardsVehicle

@@ -252,6 +252,16 @@ FactoryBot.define do
     end
   end
 
+  factory :event_journey_handover_to_supplier, parent: :generic_event, class: 'GenericEvent::JourneyHandoverToSupplier' do
+    eventable { association(:journey) }
+
+    details do
+      {
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
   factory :event_journey_lockout, parent: :generic_event, class: 'GenericEvent::JourneyLockout' do
     eventable { association(:journey) }
     details do
