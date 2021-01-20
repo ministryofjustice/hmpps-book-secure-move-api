@@ -95,15 +95,30 @@ RSpec.describe FrameworkResponse do
   describe '#update_with_flags!' do
     it 'updates response value' do
       response = create(:string_response, value: nil)
-      response.update_with_flags!('Yes')
+      response.update_with_flags!(new_value: 'Yes')
 
       expect(response.value).to eq('Yes')
+    end
+
+    it 'updates responded by value' do
+      response = create(:string_response, value: nil)
+      response.update_with_flags!(new_value: 'Yes', responded_by: 'some-user')
+
+      expect(response.responded_by).to eq('some-user')
+    end
+
+    it 'updates responded at value' do
+      responded_at = Time.zone.parse('2010-06-21')
+      response = create(:string_response, value: nil)
+      response.update_with_flags!(new_value: 'Yes', responded_at: responded_at)
+
+      expect(response.responded_at).to eq(responded_at)
     end
 
     it 'does not attach flags if no flags attached to question' do
       create(:framework_flag)
       response = create(:string_response)
-      response.update_with_flags!('Yes')
+      response.update_with_flags!(new_value: 'Yes')
 
       expect(response.framework_flags).to be_empty
     end
@@ -111,7 +126,7 @@ RSpec.describe FrameworkResponse do
     it 'does not attach flags if answer supplied does not match flag' do
       flag = create(:framework_flag)
       response = create(:string_response, value: nil, framework_question: flag.framework_question)
-      response.update_with_flags!('No')
+      response.update_with_flags!(new_value: 'No')
 
       expect(response.framework_flags).to be_empty
     end
@@ -119,7 +134,7 @@ RSpec.describe FrameworkResponse do
     it 'attaches flags if answer supplied matches flag for string' do
       flag = create(:framework_flag)
       response = create(:string_response, value: nil, framework_question: flag.framework_question)
-      response.update_with_flags!('Yes')
+      response.update_with_flags!(new_value: 'Yes')
 
       expect(response.framework_flags).to contain_exactly(flag)
     end
@@ -127,7 +142,7 @@ RSpec.describe FrameworkResponse do
     it 'attaches flags if answer supplied matches flag for array' do
       response = create(:array_response, value: nil)
       flag = create(:framework_flag, question_value: 'Level 1', framework_question: response.framework_question)
-      response.update_with_flags!(['Level 1', 'Level 2'])
+      response.update_with_flags!(new_value: ['Level 1', 'Level 2'])
 
       expect(response.framework_flags).to contain_exactly(flag)
     end
@@ -135,7 +150,7 @@ RSpec.describe FrameworkResponse do
     it 'attaches flags if answer supplied matches flag for object' do
       response = create(:object_response, :details, value: nil)
       flag = create(:framework_flag, question_value: 'Yes', framework_question: response.framework_question)
-      response.update_with_flags!({ option: 'Yes', details: 'something' })
+      response.update_with_flags!(new_value: { option: 'Yes', details: 'something' })
 
       expect(response.framework_flags).to contain_exactly(flag)
     end
@@ -143,7 +158,7 @@ RSpec.describe FrameworkResponse do
     it 'attaches flags if answer supplied matches flag for collection' do
       response = create(:collection_response, :details, value: nil)
       flag = create(:framework_flag, question_value: 'Level 1', framework_question: response.framework_question)
-      response.update_with_flags!([{ option: 'Level 1', details: 'something' }])
+      response.update_with_flags!(new_value: [{ option: 'Level 1', details: 'something' }])
 
       expect(response.framework_flags).to contain_exactly(flag)
     end
@@ -153,7 +168,7 @@ RSpec.describe FrameworkResponse do
       flag1 = create(:framework_flag, framework_question: framework_question)
       flag2 = create(:framework_flag, framework_question: framework_question)
       response = create(:string_response, value: nil, framework_question: framework_question)
-      response.update_with_flags!('Yes')
+      response.update_with_flags!(new_value: 'Yes')
 
       expect(response.framework_flags).to contain_exactly(flag1, flag2)
     end
@@ -163,7 +178,7 @@ RSpec.describe FrameworkResponse do
       flag1 = create(:framework_flag, framework_question: framework_question)
       flag2 = create(:framework_flag, framework_question: framework_question)
       response = create(:string_response, framework_question: framework_question, framework_flags: [flag1, flag2])
-      response.update_with_flags!('No')
+      response.update_with_flags!(new_value: 'No')
 
       expect(response.reload.framework_flags).to be_empty
     end
@@ -173,7 +188,7 @@ RSpec.describe FrameworkResponse do
       flag1 = create(:framework_flag, framework_question: framework_question)
       flag2 = create(:framework_flag, question_value: 'No', framework_question: framework_question)
       response = create(:string_response, framework_question: framework_question, framework_flags: [flag1])
-      response.update_with_flags!('No')
+      response.update_with_flags!(new_value: 'No')
 
       expect(response.framework_flags).to contain_exactly(flag2)
     end
@@ -182,7 +197,7 @@ RSpec.describe FrameworkResponse do
       response = create(:string_response, value: nil)
       allow(response).to receive(:update!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
 
-      expect { response.update_with_flags!('Yes') }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
+      expect { response.update_with_flags!(new_value: 'Yes') }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
     end
 
     it 'retries the transaction if it fails only once and saves response' do
@@ -195,7 +210,7 @@ RSpec.describe FrameworkResponse do
         return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
       end
 
-      response.update_with_flags!('Yes')
+      response.update_with_flags!(new_value: 'Yes')
 
       expect(response.value).to eq('Yes')
     end
@@ -207,7 +222,7 @@ RSpec.describe FrameworkResponse do
         child2_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
         child_response1 = create(:string_response, framework_question: child1_question, parent: parent_response)
         child_response2 = create(:string_response, framework_question: child2_question, parent: parent_response)
-        parent_response.update_with_flags!('No')
+        parent_response.update_with_flags!(new_value: 'No')
 
         [child_response1, child_response2].each do |response|
           expect(response.reload.value).to be_nil
@@ -218,7 +233,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:string_response)
         child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
         create(:string_response, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!('No')
+        parent_response.update_with_flags!(new_value: 'No')
 
         expect(parent_response.reload.value).to eq('No')
       end
@@ -227,7 +242,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:array_response)
         child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:array_response, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!(['Level 2'])
+        parent_response.update_with_flags!(new_value: ['Level 2'])
 
         expect(child_response.reload.value).to be_empty
       end
@@ -236,7 +251,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:object_response, :details)
         child_question = create(:framework_question, followup_comment: true, dependent_value: 'Yes', parent: parent_response.framework_question)
         child_response = create(:object_response, :details, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!(option: 'No')
+        parent_response.update_with_flags!(new_value: { option: 'No' })
 
         expect(child_response.reload.value).to be_empty
       end
@@ -245,7 +260,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!([option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
 
         expect(child_response.reload.value).to be_empty
       end
@@ -254,7 +269,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:string_response)
         child_question = create(:framework_question, dependent_value: 'Yes', parent: parent_response.framework_question)
         child_response = create(:string_response, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!('Yes')
+        parent_response.update_with_flags!(new_value: 'Yes')
 
         expect(child_response.reload.value).to eq('Yes')
       end
@@ -263,7 +278,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:array_response)
         child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:array_response, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!(['Level 1', 'Level 2'])
+        parent_response.update_with_flags!(new_value: ['Level 1', 'Level 2'])
 
         expect(child_response.reload.value).to eq(['Level 1'])
       end
@@ -272,7 +287,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:object_response, :details)
         child_question = create(:framework_question, followup_comment: true, dependent_value: 'Yes', parent: parent_response.framework_question)
         child_response = create(:object_response, :details, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!(option: 'Yes')
+        parent_response.update_with_flags!(new_value: { option: 'Yes' })
 
         expect(child_response.reload.value).to eq('option' => 'Yes', 'details' => 'some comment')
       end
@@ -281,7 +296,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!([{ option: 'Level 1' }, { option: 'Level 2' }])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 1' }, { option: 'Level 2' }])
 
         expect(child_response.reload.value).to contain_exactly(
           { 'option' => 'Level 1', 'details' => 'some comment' },
@@ -297,7 +312,7 @@ RSpec.describe FrameworkResponse do
         child_response = create(:string_response, framework_question: child_question, parent: parent_response)
         grand_child_response1 = create(:string_response, framework_question: grand_child_question1, parent: child_response)
         grand_child_response2 = create(:string_response, framework_question: grand_child_question2, parent: child_response)
-        parent_response.update_with_flags!('No')
+        parent_response.update_with_flags!(new_value: 'No')
 
         [grand_child_response1, grand_child_response2].each do |response|
           expect(response.reload.value).to be_nil
@@ -310,7 +325,7 @@ RSpec.describe FrameworkResponse do
         child2_question = create(:framework_question, dependent_value: 'Level 2', parent: parent_response.framework_question)
         create(:string_response, framework_question: child1_question, parent: parent_response)
         child_response = create(:string_response, framework_question: child2_question, parent: parent_response)
-        parent_response.update_with_flags!(['Level 2'])
+        parent_response.update_with_flags!(new_value: ['Level 2'])
 
         expect(child_response.reload.value).to eq('Yes')
       end
@@ -320,7 +335,7 @@ RSpec.describe FrameworkResponse do
         child_question = create(:framework_question, :checkbox, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:array_response, framework_question: child_question, parent: parent_response)
 
-        expect { parent_response.update_with_flags!('Level 2') }.to raise_error(FrameworkResponse::ValueTypeError)
+        expect { parent_response.update_with_flags!(new_value: 'Level 2') }.to raise_error(FrameworkResponse::ValueTypeError)
         expect(child_response.reload.value).to eq(['Level 1'])
       end
 
@@ -328,7 +343,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:string_response)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Yes', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, framework_flags: [create(:framework_flag)])
-        parent_response.update_with_flags!('No')
+        parent_response.update_with_flags!(new_value: 'No')
 
         expect(child_response.reload.framework_flags).to be_empty
       end
@@ -338,7 +353,7 @@ RSpec.describe FrameworkResponse do
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         flag = create(:framework_flag)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, framework_flags: [flag])
-        parent_response.update_with_flags!([option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
 
         expect(child_response.reload.framework_flags).to contain_exactly(flag)
       end
@@ -347,7 +362,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
-        parent_response.update_with_flags!([option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
 
         expect(child_response.reload.responded).to be(false)
       end
@@ -356,7 +371,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
-        parent_response.update_with_flags!([option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
 
         expect(child_response.reload.responded).to be(true)
       end
@@ -365,7 +380,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
-        parent_response.update_with_flags!([option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
 
         expect(child_response.reload.prefilled).to be(false)
       end
@@ -374,7 +389,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
-        parent_response.update_with_flags!([option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
 
         expect(child_response.reload.prefilled).to be(true)
       end
@@ -384,14 +399,14 @@ RSpec.describe FrameworkResponse do
       it 'does not change person escort record status answers provided invalid' do
         response = create(:string_response, value: nil)
 
-        expect { response.update_with_flags!(%w[Yes]) }.to raise_error(FrameworkResponse::ValueTypeError)
+        expect { response.update_with_flags!(new_value: %w[Yes]) }.to raise_error(FrameworkResponse::ValueTypeError)
         expect(response.assessmentable).to be_unstarted
       end
 
       it 'updates person escort record status if some answers provided' do
         response1 = create(:string_response, value: nil)
         create(:string_response, value: nil, assessmentable: response1.assessmentable)
-        response1.update_with_flags!('Yes')
+        response1.update_with_flags!(new_value: 'Yes')
 
         expect(response1.assessmentable).to be_in_progress
       end
@@ -400,7 +415,7 @@ RSpec.describe FrameworkResponse do
         person_escort_record = create(:person_escort_record, :confirmed, :with_responses)
         response = person_escort_record.framework_responses.first
 
-        expect { response.update_with_flags!('No') }.to raise_error(ActiveRecord::ReadOnlyRecord)
+        expect { response.update_with_flags!(new_value: 'No') }.to raise_error(ActiveRecord::ReadOnlyRecord)
         expect(response.reload.value).to eq('Yes')
       end
     end

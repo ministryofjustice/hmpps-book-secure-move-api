@@ -29,7 +29,7 @@ class FrameworkQuestion < VersionedModel
     question.dependents.each do |dependent_question|
       # NB: to avoid extra queries use original set of questions
       dependent_response = build_responses(question: questions[dependent_question.id], assessmentable: assessmentable, questions: questions, previous_responses: previous_responses)
-      dependent_response_values = dependent_response.slice(:type, :framework_question, :dependents, :assessmentable, :value, :prefilled, :value_type)
+      dependent_response_values = dependent_response.slice(:type, :framework_question, :dependents, :assessmentable, :value, :prefilled, :value_type, :section)
       response.dependents.build(dependent_response_values)
     end
 
@@ -62,8 +62,8 @@ class FrameworkQuestion < VersionedModel
         FrameworkResponse::String
       end
 
-    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type, value: previous_response, prefilled: previous_response.present?)
+    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type, value: previous_response, section: question.section, prefilled: previous_response.present?)
   rescue FrameworkResponse::ValueTypeError
-    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type)
+    klass.new(framework_question: question, assessmentable: assessmentable, value_type: question.response_type, section: question.section)
   end
 end

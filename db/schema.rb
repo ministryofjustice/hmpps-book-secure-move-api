@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_092719) do
+ActiveRecord::Schema.define(version: 2021_01_18_124654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -239,6 +239,9 @@ ActiveRecord::Schema.define(version: 2021_01_13_092719) do
     t.uuid "assessmentable_id"
     t.string "assessmentable_type"
     t.string "value_type"
+    t.string "section"
+    t.string "responded_by"
+    t.datetime "responded_at"
     t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
