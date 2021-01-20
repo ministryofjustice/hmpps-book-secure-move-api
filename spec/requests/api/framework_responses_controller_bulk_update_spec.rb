@@ -7,9 +7,9 @@ RSpec.describe Api::FrameworkResponsesController do
     include_context 'with supplier with spoofed access token'
 
     subject(:bulk_update_framework_responses) do
-      Timecop.freeze(recorded_timestamp)
-      patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers: headers, as: :json
-      Timecop.return
+      Timecop.freeze(recorded_timestamp) do
+        patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers: headers, as: :json
+      end
     end
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
