@@ -169,6 +169,20 @@ RSpec.describe FrameworkResponses::BulkUpdater do
       expect(per.reload).to be_in_progress
     end
 
+    it 'updates person escort record progress' do
+      per = create(:person_escort_record)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
+      response1 = create(:string_response, value: nil, assessmentable: per, framework_question: question1)
+      create(:string_response, value: nil, assessmentable: per, framework_question: question2)
+      described_class.new(assessment: per, response_values_hash: { response1.id => 'Yes' }).call
+
+      expect(per.reload.section_progress).to contain_exactly(
+        { 'key' => 'risk-information', 'status' => 'completed' },
+        { 'key' => 'health-information', 'status' => 'not_started' },
+      )
+    end
+
     it 'does not allow updating responses if person_escort_record status is confirmed' do
       per = create(:person_escort_record, :confirmed, :with_responses)
       response = per.framework_responses.first
