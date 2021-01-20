@@ -248,6 +248,15 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       expect { assessment.build_responses! }.to change(assessment_class, :count).by(1)
     end
 
+    it 'calculates section progress' do
+      question = create(:framework_question, framework: framework)
+      profile = create(:profile)
+      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment.build_responses!
+
+      expect(assessment.reload.section_progress).to contain_exactly('key' => question.section, 'status' => 'not_started')
+    end
+
     it 'creates responses for a question' do
       radio_question = create(:framework_question, framework: framework)
       profile = create(:profile)
@@ -346,23 +355,6 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       expect { assessment.build_responses! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'does not persist any responses if there are any invalid assessment records' do
-      framework = create(:framework, name: assessment_type.to_s.dasherize)
-      framework_responses = [
-        build(:framework_response, type: 'wrong-type'),
-      ]
-      assessment = build(
-        assessment_type,
-        framework: framework,
-        profile: create(:profile),
-        framework_responses: framework_responses,
-      )
-
-      assessment.build_responses!
-    rescue ActiveRecord::RecordInvalid
-      expect(FrameworkResponse.count).to be_zero
-    end
-
     it 'raises an error if transaction fails twice' do
       create(:framework_question, framework: framework)
       profile = create(:profile)
@@ -411,17 +403,17 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
   end
 
-  describe '#section_progress' do
+  describe '#calculate_section_progress' do
     it 'returns an empty hash if no responses present' do
       assessment = create(assessment_type)
 
-      expect(assessment.section_progress).to be_empty
+      expect(assessment.calculate_section_progress).to be_empty
     end
 
     it 'returns all section values for framework questions' do
       assessment = create(assessment_type, :with_responses)
       question_sections = assessment.framework_questions.pluck(:section).uniq
-      progress_sections = assessment.section_progress.map { |section| section[:key] }
+      progress_sections = assessment.calculate_section_progress.map { |section| section[:key] }
 
       expect(progress_sections).to match_array(question_sections)
     end
@@ -431,7 +423,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
         {
           key: 'risk',
           status: 'not_started',
@@ -444,7 +436,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
         {
           key: 'risk',
           status: 'in_progress',
@@ -464,7 +456,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
         {
           key: 'risk',
           status: 'in_progress',
@@ -477,7 +469,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: true)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
         {
           key: 'risk',
           status: 'completed',
@@ -498,7 +490,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
       create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
         {
           key: 'risk',
           status: 'completed',
@@ -510,7 +502,19 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type, :prefilled)
       create_response(assessmentable: assessment, section: 'risk', value: 'No', responded: false, prefilled: true)
 
-      expect(assessment.section_progress).to contain_exactly(
+      expect(assessment.calculate_section_progress).to contain_exactly(
+        {
+          key: 'risk',
+          status: 'not_started',
+        },
+      )
+    end
+
+    it 'allows for custom framework responses to be passed in' do
+      assessment = create(assessment_type)
+      response = create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
+
+      expect(assessment.calculate_section_progress(responses: [response])).to contain_exactly(
         {
           key: 'risk',
           status: 'not_started',
@@ -519,30 +523,57 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
   end
 
-  describe '#update_status!' do
+  describe '#update_status_and_progress!' do
     it 'sets initial status to `unstarted`' do
       assessment = create(assessment_type)
       create(:string_response, value: nil, assessmentable: assessment)
       create(:string_response, value: nil, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_unstarted
+    end
+
+    it 'sets initial progress to sections' do
+      assessment = create(assessment_type)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
+      create(:string_response, value: nil, assessmentable: assessment, framework_question: question1)
+      create(:string_response, value: nil, assessmentable: assessment, framework_question: question2)
+      assessment.update_status_and_progress!
+
+      expect(assessment.section_progress).to contain_exactly(
+        { 'key' => 'risk-information', 'status' => 'not_started' },
+        { 'key' => 'health-information', 'status' => 'not_started' },
+      )
     end
 
     it 'sets status to `in_progress` if at least one response provided' do
       assessment = create(assessment_type)
       create(:string_response, responded: true, assessmentable: assessment)
       create(:string_response, value: nil, responded: false, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_in_progress
+    end
+
+    it 'updates progress to sections in progress' do
+      assessment = create(assessment_type)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'risk-information')
+      create(:string_response, responded: true, assessmentable: assessment, framework_question: question1)
+      create(:string_response, value: nil, responded: false, assessmentable: assessment, framework_question: question2)
+      assessment.update_status_and_progress!
+
+      expect(assessment.section_progress).to contain_exactly(
+        { 'key' => 'risk-information', 'status' => 'in_progress' },
+      )
     end
 
     it 'sets status to `completed` if all responses provided from `unstarted`' do
       assessment = create(assessment_type)
       create(:string_response, responded: true, assessmentable: assessment)
       create(:string_response, responded: true, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_completed
     end
@@ -551,16 +582,30 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type, :in_progress)
       create(:string_response, responded: true, assessmentable: assessment)
       create(:string_response, responded: true, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_completed
+    end
+
+    it 'updates progress to sections completed' do
+      assessment = create(assessment_type)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
+      create(:string_response, responded: true, assessmentable: assessment, framework_question: question1)
+      create(:string_response, responded: true, assessmentable: assessment, framework_question: question2)
+      assessment.update_status_and_progress!
+
+      expect(assessment.section_progress).to contain_exactly(
+        { 'key' => 'risk-information', 'status' => 'completed' },
+        { 'key' => 'health-information', 'status' => 'completed' },
+      )
     end
 
     it 'sets status to `completed` from itself if response changed' do
       assessment = create(assessment_type, :completed)
       create(:string_response, responded: true, assessmentable: assessment)
       create(:string_response, responded: true, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_completed
     end
@@ -570,7 +615,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       allow(Time).to receive(:now).and_return(completed_at_timestamp)
       assessment = create(assessment_type, :in_progress)
       create(:string_response, responded: true, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment.completed_at).to eq(completed_at_timestamp)
     end
@@ -579,7 +624,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type, :completed)
       create(:string_response, responded: true, assessmentable: assessment)
       create(:string_response, value: nil, responded: false, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_in_progress
     end
@@ -591,9 +636,9 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type, :completed, completed_at: old_completed_at_timestamp)
       create(:string_response, responded: true, assessmentable: assessment)
       response = create(:string_response, value: nil, responded: false, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
       response.update(value: 'Yes')
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment.completed_at).to eq(old_completed_at_timestamp)
     end
@@ -602,14 +647,14 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type, :in_progress)
       create(:string_response, value: 'No', responded: true, assessmentable: assessment)
       create(:string_response, value: nil, responded: false, assessmentable: assessment)
-      assessment.update_status!
+      assessment.update_status_and_progress!
 
       expect(assessment).to be_in_progress
     end
 
     it 'raises error if status is `confirmed`' do
       assessment = create(assessment_type, :confirmed)
-      expect { assessment.update_status! }.to raise_error(FiniteMachine::InvalidStateError)
+      expect { assessment.update_status_and_progress! }.to raise_error(FiniteMachine::InvalidStateError)
     end
   end
 

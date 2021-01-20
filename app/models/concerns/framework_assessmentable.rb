@@ -44,7 +44,6 @@ module FrameworkAssessmentable
     ApplicationRecord.retriable_transaction do
       self.prefill_source = previous_assessment
       save!
-
       questions = framework_questions.includes(:dependents).index_by(&:id)
       questions.values.each do |question|
         next unless question.parent_id.nil?
@@ -53,7 +52,8 @@ module FrameworkAssessmentable
         framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :value_type, :section, :assessmentable))
       end
 
-      self.class.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })
+      self.section_progress = calculate_section_progress(responses: framework_responses)
+      self.class.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id], columns: %i[section_progress] })
     end
 
     self
@@ -65,17 +65,18 @@ module FrameworkAssessmentable
     FrameworkNomisMappings::Importer.new(assessmentable: self).call
   end
 
-  def section_progress
-    sections_to_responded.group_by(&:section).map do |section, responses|
+  def calculate_section_progress(responses: required_responses)
+    responses.group_by(&:section).map do |section, section_responses|
       {
         key: section,
-        status: set_progress(responses),
+        status: set_progress(section_responses),
       }
     end
   end
 
-  def update_status!
-    progress = set_progress(sections_to_responded)
+  def update_status_and_progress!
+    self.section_progress = calculate_section_progress
+    progress = set_progress(required_responses)
     state_machine.calculate!(progress)
 
     save!
@@ -125,10 +126,6 @@ module FrameworkAssessmentable
     end
   end
 
-  def sections_to_responded
-    @sections_to_responded ||= FrameworkResponse.where(id: required_responses.map(&:id)).joins(:framework_question).select('DISTINCT responded, framework_questions.section')
-  end
-
   def set_progress(responses)
     responded = responses.pluck(:responded)
 
@@ -139,7 +136,7 @@ module FrameworkAssessmentable
   end
 
   def required_responses
-    framework_responses.includes(:framework_question, :parent).select do |framework_response|
+    @required_responses ||= framework_responses.includes(:framework_question, :parent).select do |framework_response|
       framework_response.parent ? framework_response.parent.option_selected?(framework_response.framework_question.dependent_value) : framework_response
     end
   end
