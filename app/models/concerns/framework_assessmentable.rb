@@ -44,6 +44,7 @@ module FrameworkAssessmentable
     ApplicationRecord.retriable_transaction do
       self.prefill_source = previous_assessment
       save!
+
       questions = framework_questions.includes(:dependents).index_by(&:id)
       questions.values.each do |question|
         next unless question.parent_id.nil?

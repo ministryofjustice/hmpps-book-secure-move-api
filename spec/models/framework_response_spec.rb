@@ -416,7 +416,7 @@ RSpec.describe FrameworkResponse do
         response = create(:string_response, value: nil, framework_question: question)
         response.update_with_flags!(new_value: 'Yes')
 
-        expect(response.assessmentable.section_progress).to contain_exactly(
+        expect(response.reload.assessmentable.section_progress).to contain_exactly(
           { 'key' => 'risk-information', 'status' => 'completed' },
         )
       end
