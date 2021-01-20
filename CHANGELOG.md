@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.8.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.6) (2021-01-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.5...v2.8.6)
+
+**Merged pull requests:**
+
+- P4 2616 extra journey events [\#1279](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1279) ([martyn-w](https://github.com/martyn-w))
+- P4-2588 Add `section`, `responded\_by`, and `responded\_at` to framework responses [\#1277](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1277) ([cwrw](https://github.com/cwrw))
+- Bump listen from 3.4.0 to 3.4.1 [\#1273](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1273) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Clean up legacy Rswag test approach [\#1272](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1272) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1271](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1271) ([martyn-w](https://github.com/martyn-w))
+- P4-2564 Improve serializer performance for assessments [\#1270](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1270) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.5) (2021-01-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.4...v2.8.5)
