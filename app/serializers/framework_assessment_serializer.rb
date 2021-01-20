@@ -24,7 +24,7 @@ class FrameworkAssessmentSerializer
   attribute :editable, &:editable?
 
   meta do |object|
-    { section_progress: object.calculate_section_progress }
+    { section_progress: object.section_progress }
   end
 
   SUPPORTED_RELATIONSHIPS = %w[
