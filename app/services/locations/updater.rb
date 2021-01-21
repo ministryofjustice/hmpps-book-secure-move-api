@@ -2,7 +2,7 @@
 
 module Locations
   class Updater
-    YOI_NOMIS_AGENCIES = %w[WYI WNI CKI PRI FMI].freeze
+    YOI_NOMIS_AGENCIES = %w[WYI WNI CKI PRI FMI FYI].freeze
 
     def self.call
       Location.transaction do
