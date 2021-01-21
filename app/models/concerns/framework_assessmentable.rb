@@ -50,7 +50,7 @@ module FrameworkAssessmentable
         next unless question.parent_id.nil?
 
         response = question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses)
-        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :value_type, :assessmentable))
+        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :value_type, :section, :assessmentable))
       end
 
       self.class.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id] })

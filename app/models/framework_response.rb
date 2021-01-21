@@ -21,10 +21,10 @@ class FrameworkResponse < VersionedModel
 
   after_validation :set_responded_value, on: :update
 
-  def update_with_flags!(new_value)
+  def update_with_flags!(new_value:, responded_by: nil, responded_at: nil)
     return unless value != new_value
 
-    ApplicationRecord.retriable_transaction { update_response_transaction(new_value) }
+    ApplicationRecord.retriable_transaction { update_response_transaction(new_value: new_value, responded_by: responded_by, responded_at: responded_at) }
   rescue FiniteMachine::InvalidStateError
     raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because assessment is #{assessmentable.status}"
   end
@@ -111,8 +111,8 @@ private
     self.responded = true
   end
 
-  def update_response_transaction(new_value)
-    update!(value: new_value)
+  def update_response_transaction(new_value:, responded_by:, responded_at:)
+    update!(value: new_value, responded_by: responded_by, responded_at: responded_at)
     rebuild_flags!
     FrameworkResponse.clear_dependent_values_and_flags!([self])
 

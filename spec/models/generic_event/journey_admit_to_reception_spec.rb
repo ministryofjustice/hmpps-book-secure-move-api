@@ -1,5 +1,5 @@
-RSpec.describe GenericEvent::JourneyReadyToExit do
-  subject(:generic_event) { build(:event_journey_ready_to_exit) }
+RSpec.describe GenericEvent::JourneyAdmitToReception do
+  subject(:generic_event) { build(:event_journey_admit_to_reception) }
 
   it_behaves_like 'an event with relationships', location_id: :locations
   it_behaves_like 'an event requiring a location', :location_id
