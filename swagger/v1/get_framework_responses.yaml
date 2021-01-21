@@ -4,7 +4,7 @@
   - data
   properties:
     data:
-      $ref: framework.yaml#/Framework
+      $ref: framework.yaml#/Frameworks
 '415':
   type: object
   required:

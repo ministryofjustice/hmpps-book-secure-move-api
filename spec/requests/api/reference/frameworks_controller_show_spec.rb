@@ -28,7 +28,7 @@ RSpec.describe Api::Reference::FrameworksController do
     end
 
     before do
-      get "/api/v1/reference/frameworks/#{framework_id}", headers: headers, params: params
+      get "/api/reference/frameworks/#{framework_id}", headers: headers, params: params
     end
 
     context 'when successful' do

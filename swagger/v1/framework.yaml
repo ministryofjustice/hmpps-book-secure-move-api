@@ -34,7 +34,44 @@ Framework:
           readOnly: true
     relationships:
       type: object
+      required:
+      - questions
       properties:
         questions:
           $ref: framework_question_reference.yaml#/FrameworkQuestionReference
           description: The questions for the framework
+
+Frameworks:
+  type: object
+  required:
+  - id
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: f0a91e16-1b0e-4e1f-93fe-319dda9933e6
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: frameworks
+      enum:
+      - frameworks
+      description: The type of this object - always `frameworks`
+    attributes:
+      type: object
+      required:
+      - name
+      - version
+      properties:
+        name:
+          example: 'person-escort-record'
+          type: string
+          description: the name of the framework
+          readOnly: true
+        version:
+          type: string
+          example: '1.0.1'
+          description: the semantic version of the framework
+          readOnly: true

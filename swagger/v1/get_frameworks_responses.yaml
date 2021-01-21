@@ -6,7 +6,7 @@
     data:
       type: array
       items:
-        $ref: framework.yaml#/Framework
+        $ref: framework.yaml#/Frameworks
 '415':
   type: object
   required:
