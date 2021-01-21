@@ -64,7 +64,7 @@ module FrameworkResponses
 
     def apply_assessment_changes
       # Update PER progress with revised responses
-      assessment.update_status!
+      assessment.update_status_and_progress!
     rescue FiniteMachine::InvalidStateError
       raise ActiveRecord::ReadOnlyRecord, "Can't update framework_responses because assessment is #{assessment.status}"
     end

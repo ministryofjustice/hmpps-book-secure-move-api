@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_18_124654) do
+ActiveRecord::Schema.define(version: 2021_01_18_152930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -503,6 +503,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_124654) do
     t.jsonb "nomis_sync_status", default: [], null: false
     t.uuid "prefill_source_id"
     t.datetime "completed_at"
+    t.jsonb "section_progress", default: [], null: false
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
     t.index ["prefill_source_id"], name: "index_person_escort_records_on_prefill_source_id"
@@ -626,6 +627,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_124654) do
     t.datetime "completed_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "section_progress", default: [], null: false
     t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
     t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"
     t.index ["prefill_source_id"], name: "index_youth_risk_assessments_on_prefill_source_id"
