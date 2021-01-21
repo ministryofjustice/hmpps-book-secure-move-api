@@ -8,4 +8,6 @@ class Framework < ApplicationRecord
   has_many :framework_questions
   has_many :person_escort_records
   has_many :youth_risk_assessments
+
+  scope :versioned, -> { order(version: :desc) }
 end

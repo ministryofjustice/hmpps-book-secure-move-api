@@ -2,13 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe FrameworkQuestionSerializer do
-  subject(:serializer) { described_class.new(framework_question, includes) }
+RSpec.describe FrameworkQuestionsSerializer do
+  subject(:serializer) { described_class.new(framework_question, adapter_options) }
 
+  let(:flag) { create :framework_flag }
   let(:dependent_question) { create :framework_question }
-  let(:framework_question) { create :framework_question, dependents: [dependent_question] }
+  let(:framework_question) { create :framework_question, dependents: [dependent_question], framework_flags: [flag] }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
-  let(:includes) { {} }
+  let(:adapter_options) { {} }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('framework_questions')
@@ -38,15 +39,8 @@ RSpec.describe FrameworkQuestionSerializer do
     expect(result[:data][:attributes][:response_type]).to eq(framework_question.response_type)
   end
 
-  it 'contains a `framework` relationship' do
-    expect(result[:data][:relationships][:framework][:data]).to eq(
-      id: framework_question.framework.id,
-      type: 'frameworks',
-    )
-  end
-
   context 'with descendants' do
-    let(:includes) { { params: { included: %i[descendants] } } }
+    let(:adapter_options) { { params: { included: %i[descendants] } } }
 
     it 'contains a `descendants` relationship' do
       expect(result[:data][:relationships][:descendants][:data]).to contain_exactly(
@@ -56,30 +50,41 @@ RSpec.describe FrameworkQuestionSerializer do
     end
   end
 
+  context 'with flags' do
+    let(:adapter_options) { { params: { included: %i[flags] } } }
+
+    it 'contains a `flags` relationship' do
+      expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
+        id: flag.id,
+        type: 'framework_flags',
+      )
+    end
+  end
+
   context 'with include options' do
-    let(:includes) do
+    let(:adapter_options) do
       {
-        include: %w[framework descendants],
-        params: { included: %i[framework descendants] },
+        include: %w[descendants flags],
+        params: { included: %i[descendants flags] },
       }
     end
 
     let(:expected_json) do
       [
         {
-          id: framework_question.framework.id,
-          type: 'frameworks',
-          attributes: { name: framework_question.framework.name },
-        },
-        {
           id: dependent_question.id,
           type: 'framework_questions',
           attributes: { question_type: dependent_question.question_type },
         },
+        {
+          id: flag.id,
+          type: 'framework_flags',
+          attributes: { title: flag.title },
+        },
       ]
     end
 
-    it 'contains included framework and descendants' do
+    it 'contains included descendants and flags' do
       expect(result[:included]).to include_json(expected_json)
     end
   end
