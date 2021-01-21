@@ -411,6 +411,16 @@ RSpec.describe FrameworkResponse do
         expect(response1.assessmentable).to be_in_progress
       end
 
+      it 'updates person escort record progress' do
+        question = create(:framework_question, section: 'risk-information')
+        response = create(:string_response, value: nil, framework_question: question)
+        response.update_with_flags!(new_value: 'Yes')
+
+        expect(response.reload.assessmentable.section_progress).to contain_exactly(
+          { 'key' => 'risk-information', 'status' => 'completed' },
+        )
+      end
+
       it 'does not allow updating responses if person_escort_record status is confirmed' do
         person_escort_record = create(:person_escort_record, :confirmed, :with_responses)
         response = person_escort_record.framework_responses.first

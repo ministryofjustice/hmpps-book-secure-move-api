@@ -22,6 +22,10 @@ FactoryBot.define do
         "T#{number}T#{letter}"
       end
     end
+
+    trait :pre1900 do
+      date_of_birth { Date.new(1899, 1, 1) }
+    end
   end
 
   factory :person_without_profiles, class: 'Person' do

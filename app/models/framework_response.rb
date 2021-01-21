@@ -118,7 +118,7 @@ private
 
     # lock the status update to avoid race condition on multiple response patches
     assessmentable.with_lock do
-      assessmentable.update_status!
+      assessmentable.update_status_and_progress!
     end
   end
 end
