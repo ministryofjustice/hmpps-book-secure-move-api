@@ -259,6 +259,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
         assessmentable_id: assessment.id,
         type: 'FrameworkResponse::String',
         value_type: 'string',
+        section: radio_question.section,
       )
     end
 
@@ -292,6 +293,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
         assessmentable_id: assessment.id,
         type: 'FrameworkResponse::Array',
         value_type: 'array',
+        section: child_question.section,
       )
     end
 

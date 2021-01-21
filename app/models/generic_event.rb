@@ -14,6 +14,7 @@ class GenericEvent < ApplicationRecord
 
   STI_CLASSES = %w[
     JourneyAdmitThroughOuterGate
+    JourneyAdmitToReception
     JourneyArriveAtOuterGate
     JourneyCancel
     JourneyChangeVehicle
@@ -21,6 +22,7 @@ class GenericEvent < ApplicationRecord
     JourneyCreate
     JourneyExitThroughOuterGate
     JourneyHandoverToDestination
+    JourneyHandoverToSupplier
     JourneyLockout
     JourneyLodging
     JourneyPersonBoardsVehicle

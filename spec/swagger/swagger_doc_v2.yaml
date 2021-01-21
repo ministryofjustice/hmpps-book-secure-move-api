@@ -52,6 +52,8 @@
       :$ref: "../v1/profile.yaml#/Profile"
     :Move:
       :$ref: "../v2/move.yaml#/Move"
+    :Event:
+      :$ref: "../v2/event.yaml#/EventResponseBody"
 :paths:
   "/people":
     get:
