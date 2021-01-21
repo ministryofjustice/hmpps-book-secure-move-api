@@ -53,7 +53,7 @@ RSpec.describe Api::Reference::FrameworksController do
         {
           relationships: {
             questions: {
-              data: [
+              data: UnorderedArray(
                 {
                   id: question.id,
                   type: 'framework_questions',
@@ -62,7 +62,7 @@ RSpec.describe Api::Reference::FrameworksController do
                   id: dependent_question.id,
                   type: 'framework_questions',
                 },
-              ],
+              ),
             },
           },
         }
