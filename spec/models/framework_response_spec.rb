@@ -12,6 +12,8 @@ RSpec.describe FrameworkResponse do
   it { is_expected.to have_and_belong_to_many(:framework_flags) }
   it { is_expected.to have_and_belong_to_many(:framework_nomis_mappings) }
   it { is_expected.to validate_presence_of(:type) }
+  it { is_expected.to validate_presence_of(:value_type) }
+  it { is_expected.to validate_presence_of(:section) }
 
   context 'with validations' do
     it 'validates string dependent responses' do

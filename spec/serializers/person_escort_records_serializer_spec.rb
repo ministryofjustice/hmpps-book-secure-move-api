@@ -37,6 +37,25 @@ RSpec.describe PersonEscortRecordsSerializer do
     expect(result[:data][:relationships]).not_to include(:flags)
   end
 
+  describe 'meta' do
+    it 'includes section progress' do
+      question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
+      create(:string_response, value: nil, framework_question: question, assessmentable: person_escort_record)
+      person_escort_record.update_status_and_progress!
+
+      expect(result[:data][:meta][:section_progress]).to contain_exactly(
+        key: 'risk-information',
+        status: 'not_started',
+      )
+    end
+
+    context 'with no questions' do
+      it 'does not include includes section progress' do
+        expect(result[:data][:meta][:section_progress]).to be_empty
+      end
+    end
+  end
+
   context 'with included flags' do
     let(:options) { { params: { included: %i[flags] } } }
 
