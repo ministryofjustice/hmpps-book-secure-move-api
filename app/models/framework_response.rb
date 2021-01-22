@@ -3,7 +3,7 @@
 class FrameworkResponse < VersionedModel
   ValueTypeError = Class.new(StandardError)
 
-  validates :type, presence: true
+  validates :type, :value_type, :section, presence: true
   validates :responded, inclusion: { in: [true, false] }
   validates_each :value, on: :update do |record, _attr, value|
     record.errors.add(:value, :blank) if requires_value?(value, record)

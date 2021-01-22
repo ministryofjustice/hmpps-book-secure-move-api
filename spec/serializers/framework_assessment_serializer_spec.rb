@@ -84,6 +84,7 @@ RSpec.describe FrameworkAssessmentSerializer do
     it 'includes section progress' do
       question = create(:framework_question, framework: assessment.framework, section: 'risk-information')
       create(:string_response, value: nil, framework_question: question, assessmentable: assessment)
+      assessment.update_status_and_progress!
 
       expect(result[:data][:meta][:section_progress]).to contain_exactly(
         key: 'risk-information',

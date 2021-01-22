@@ -13,4 +13,8 @@ class PersonEscortRecordsSerializer
   attribute :status do |object|
     object.status == 'unstarted' ? 'not_started' : object.status
   end
+
+  meta do |object|
+    { section_progress: object.section_progress }
+  end
 end
