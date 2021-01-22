@@ -31,6 +31,8 @@ RSpec.describe Api::PersonEscortRecordsController do
           "type": 'person_escort_records',
           "attributes": {
             "version": person_escort_record.framework.version,
+            "completed_at": person_escort_record.completed_at.iso8601,
+            "amended_at": nil,
             "status": 'completed',
           },
           "meta": {

@@ -12,7 +12,10 @@ class FrameworkAssessmentStateMachine < FiniteMachine::Definition
   end
 
   on_after :calculate do
-    target.completed_at = Time.zone.now if completed? && target.completed_at.nil?
+    if completed?
+      target.amended_at = Time.zone.now if target.respond_to?(:amended_at) && target.completed_at.present?
+      target.completed_at = Time.zone.now if target.completed_at.nil?
+    end
   end
 
   on_after :confirm do

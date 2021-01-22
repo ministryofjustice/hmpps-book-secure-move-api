@@ -60,14 +60,6 @@ PersonEscortRecord:
                 type: string
           readOnly: true
           description: A list of all NOMIS resources imported when creating the person escort record, and the status of the import, either successful or failed. The timestamp and error message are also included.
-        confirmed_at:
-          example: "2020-07-24T17:29:26.338Z"
-          oneOf:
-          - type: 'null'
-          - type: string
-            format: date-time
-            description: Timestamp of when the person_escort_record was confirmed
-            readOnly: true
         created_at:
           example: "2020-07-24T17:29:26.338Z"
           oneOf:
@@ -75,6 +67,30 @@ PersonEscortRecord:
           - type: string
             format: date-time
             description: Timestamp of when the person_escort_record was created
+            readOnly: true
+        completed_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person_escort_record was first completed
+            readOnly: true
+        amended_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of subsequent amendments to person_escort_record after completion
+            readOnly: true
+        confirmed_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person_escort_record was confirmed
             readOnly: true
     meta:
       readOnly: true

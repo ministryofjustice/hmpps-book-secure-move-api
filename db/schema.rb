@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_20_101859) do
+ActiveRecord::Schema.define(version: 2021_01_22_172150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -504,6 +504,7 @@ ActiveRecord::Schema.define(version: 2021_01_20_101859) do
     t.uuid "prefill_source_id"
     t.datetime "completed_at"
     t.jsonb "section_progress", default: [], null: false
+    t.datetime "amended_at"
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
     t.index ["prefill_source_id"], name: "index_person_escort_records_on_prefill_source_id"

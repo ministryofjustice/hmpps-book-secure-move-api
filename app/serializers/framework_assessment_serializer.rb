@@ -9,7 +9,9 @@ class FrameworkAssessmentSerializer
   has_many_if_included :responses, serializer: FrameworkResponseSerializer, &:framework_responses
   has_many_if_included :flags, serializer: FrameworkFlagSerializer, &:framework_flags
 
-  attributes :confirmed_at, :created_at, :nomis_sync_status
+  attributes :completed_at, :confirmed_at, :created_at, :nomis_sync_status
+
+  attribute :amended_at, if: proc { |object| object.respond_to?(:amended_at) }
 
   attribute :version do |object|
     object.framework.version

@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe FrameworkAssessmentSerializer do
   subject(:serializer) { described_class.new(assessment, includes) }
 
-  let(:move) { create(:move) }
+  let(:location) { create(:location) }
+  let(:move) { create(:move, from_location: location) }
   let(:assessment) { create(:person_escort_record, move: move, profile: move.profile) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
@@ -24,6 +25,28 @@ RSpec.describe FrameworkAssessmentSerializer do
 
   it 'contains a `editable` attribute' do
     expect(result[:data][:attributes][:editable]).to eq(assessment.editable?)
+  end
+
+  it 'contains a `completed_at` attribute' do
+    expect(result[:data][:attributes][:completed_at]).to eq(assessment.completed_at)
+  end
+
+  describe '#amended_at attribute' do
+    context 'with a person_escort_record' do
+      it 'is included' do
+        assessment.amended_at = Time.zone.now
+        expect(result[:data][:attributes][:amended_at]).to eq(assessment.amended_at.iso8601)
+      end
+    end
+
+    context 'with a youth risk assessment' do
+      let(:location) { create(:location, :secure_childrens_home) }
+      let(:assessment) { create(:youth_risk_assessment, move: move, profile: move.profile) }
+
+      it 'is not included' do
+        expect(result[:data][:attributes]).not_to have_key(:amended_at)
+      end
+    end
   end
 
   it 'contains a `confirmed_at` attribute' do

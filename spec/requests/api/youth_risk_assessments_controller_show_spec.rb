@@ -31,6 +31,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
           "type": 'youth_risk_assessments',
           "attributes": {
             "version": youth_risk_assessment.framework.version,
+            "completed_at": youth_risk_assessment.completed_at.iso8601,
             "status": 'completed',
           },
           "meta": {
