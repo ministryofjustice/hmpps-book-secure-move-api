@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.8.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.8) (2021-01-22)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.7...v2.8.8)
+
+**Merged pull requests:**
+
+- Update CHANGELOG.md [\#1284](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1284) ([martyn-w](https://github.com/martyn-w))
+- P4-2588 Use section progress in serializer [\#1281](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1281) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.7) (2021-01-21)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.6...v2.8.7)
