@@ -40,7 +40,7 @@ module Diagnostics
         @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
         move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
           # NB only show event params if include_person_details==true, as they could contain personal details
-          @output << "#{event.type.delete_prefix('GenericEvent::').ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+          @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
         end
       else
         @output << "(no move events recorded)\n"
@@ -73,7 +73,7 @@ module Diagnostics
             @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
             journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
               # NB only show event params if include_person_details==true, as they could contain personal details
-              @output << "  #{event.type.delete_prefix('GenericEvent::').ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+              @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
             end
           else
             @output << "  (no events recorded)\n"
@@ -210,7 +210,7 @@ module Diagnostics
           @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
           move.profile.person_escort_record.generic_events.applied_order.each do |event| # NB use each to preserve sort order
             # NB only show event params if include_person_details==true, as they could contain personal details
-            @output << "#{event.type.delete_prefix('GenericEvent::').ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+            @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
           end
         else
           @output << "(no person escort record events recorded)\n"
