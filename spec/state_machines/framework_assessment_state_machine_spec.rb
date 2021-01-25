@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe FrameworkAssessmentStateMachine do
   let(:machine) { described_class.new(target) }
-  let(:target) { Struct.new(:status, :confirmed_at, :completed_at).new(initial_status) }
+  let(:target) { Struct.new(:status, :confirmed_at, :completed_at, :amended_at).new(initial_status) }
   let(:initial_status) { :unstarted }
 
   before { machine.restore!(initial_status) }
@@ -57,17 +57,17 @@ RSpec.describe FrameworkAssessmentStateMachine do
     end
 
     context 'when the complete event is fired and it is completed' do
-      let(:completed_at_timestamp) { Time.zone.now }
+      let(:current_timestamp) { Time.zone.now }
 
       before do
-        allow(Time).to receive(:now).and_return(completed_at_timestamp)
+        allow(Time).to receive(:now).and_return(current_timestamp)
         machine.calculate(FrameworkAssessmentable::ASSESSMENT_COMPLETED)
       end
 
       it_behaves_like 'state_machine target status', :completed
 
       it 'sets the current timestamp to completed_at' do
-        expect(target.completed_at).to eq(completed_at_timestamp)
+        expect(target.completed_at).to eq(current_timestamp)
       end
 
       it 'maintains first completed at timestamp and does not update it' do
@@ -75,22 +75,32 @@ RSpec.describe FrameworkAssessmentStateMachine do
         allow(Time).to receive(:now).and_return(new_completed_at_timstamp)
         machine.calculate(FrameworkAssessmentable::ASSESSMENT_COMPLETED)
 
-        expect(target.completed_at).to eq(completed_at_timestamp)
+        expect(target.completed_at).to eq(current_timestamp)
+      end
+
+      it 'does not set amended_at timestamp when first completed' do
+        expect(target.amended_at).to be_nil
+      end
+
+      it 'sets amended_at timestamp when completed again' do
+        machine.calculate(FrameworkAssessmentable::ASSESSMENT_COMPLETED)
+
+        expect(target.amended_at).to eq(current_timestamp)
       end
     end
 
     context 'when the confirm event is fired' do
-      let(:confirmed_at_timstamp) { Time.zone.now }
+      let(:current_timestamp) { Time.zone.now }
 
       before do
-        allow(Time).to receive(:now).and_return(confirmed_at_timstamp)
+        allow(Time).to receive(:now).and_return(current_timestamp)
         machine.confirm
       end
 
       it_behaves_like 'state_machine target status', :confirmed
 
       it 'sets the current timestamp to confirmed_at' do
-        expect(target.confirmed_at).to eq(confirmed_at_timstamp)
+        expect(target.confirmed_at).to eq(current_timestamp)
       end
     end
   end

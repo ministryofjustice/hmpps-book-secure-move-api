@@ -21,6 +21,16 @@ RSpec.describe PersonEscortRecordsSerializer do
     expect(result[:data][:attributes][:status]).to eq('not_started')
   end
 
+  it 'contains a `completed_at` attribute' do
+    person_escort_record.completed_at = Time.zone.now
+    expect(result[:data][:attributes][:completed_at]).to eq(person_escort_record.completed_at.iso8601)
+  end
+
+  it 'contains an `amended_at` attribute' do
+    person_escort_record.amended_at = Time.zone.now
+    expect(result[:data][:attributes][:amended_at]).to eq(person_escort_record.amended_at.iso8601)
+  end
+
   it 'contains a `confirmed_at` attribute' do
     expect(result[:data][:attributes][:confirmed_at]).to eq(person_escort_record.confirmed_at)
   end

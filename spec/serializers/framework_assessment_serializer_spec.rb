@@ -26,8 +26,14 @@ RSpec.describe FrameworkAssessmentSerializer do
     expect(result[:data][:attributes][:editable]).to eq(assessment.editable?)
   end
 
+  it 'contains a `completed_at` attribute' do
+    assessment.completed_at = Time.zone.now
+    expect(result[:data][:attributes][:completed_at]).to eq(assessment.completed_at.iso8601)
+  end
+
   it 'contains a `confirmed_at` attribute' do
-    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at)
+    assessment.confirmed_at = Time.zone.now
+    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at.iso8601)
   end
 
   it 'contains a `created_at` attribute' do

@@ -14,6 +14,11 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:type]).to eq('person_escort_records')
   end
 
+  it 'contains an `amended_at` attribute' do
+    person_escort_record.amended_at = Time.zone.now
+    expect(result[:data][:attributes][:amended_at]).to eq(person_escort_record.amended_at.iso8601)
+  end
+
   it 'contains a `profile` relationship' do
     expect(result[:data][:relationships][:profile][:data]).to eq(
       id: person_escort_record.profile.id,
