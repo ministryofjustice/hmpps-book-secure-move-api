@@ -59,7 +59,9 @@ module Moves
     end
 
     def split_params(name)
-      filter_params[name]&.split(',')
+      return if filter_params[name].blank?
+
+      filter_params[name].split(',')
     end
 
     def apply_filter(scope, param_name)
