@@ -28,29 +28,13 @@ RSpec.describe FrameworkAssessmentSerializer do
   end
 
   it 'contains a `completed_at` attribute' do
-    expect(result[:data][:attributes][:completed_at]).to eq(assessment.completed_at)
-  end
-
-  describe '#amended_at attribute' do
-    context 'with a person_escort_record' do
-      it 'is included' do
-        assessment.amended_at = Time.zone.now
-        expect(result[:data][:attributes][:amended_at]).to eq(assessment.amended_at.iso8601)
-      end
-    end
-
-    context 'with a youth risk assessment' do
-      let(:location) { create(:location, :secure_childrens_home) }
-      let(:assessment) { create(:youth_risk_assessment, move: move, profile: move.profile) }
-
-      it 'is not included' do
-        expect(result[:data][:attributes]).not_to have_key(:amended_at)
-      end
-    end
+    assessment.completed_at = Time.zone.now
+    expect(result[:data][:attributes][:completed_at]).to eq(assessment.completed_at.iso8601)
   end
 
   it 'contains a `confirmed_at` attribute' do
-    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at)
+    assessment.confirmed_at = Time.zone.now
+    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at.iso8601)
   end
 
   it 'contains a `created_at` attribute' do

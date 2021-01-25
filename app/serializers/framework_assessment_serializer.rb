@@ -11,8 +11,6 @@ class FrameworkAssessmentSerializer
 
   attributes :completed_at, :confirmed_at, :created_at, :nomis_sync_status
 
-  attribute :amended_at, if: proc { |object| object.respond_to?(:amended_at) }
-
   attribute :version do |object|
     object.framework.version
   end
