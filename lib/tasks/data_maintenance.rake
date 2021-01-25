@@ -76,7 +76,7 @@ namespace :data_maintenance do
       moves.destroy_all
       allocations.destroy_all
     else
-      "You are trying to run this on a production-like environment, which is not allowed."
+      puts "You are trying to run this on a production-like environment, which is not allowed."
     end
   end
 end
