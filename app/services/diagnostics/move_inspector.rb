@@ -183,7 +183,7 @@ module Diagnostics
         if move.profile&.person_escort_record.present?
           move.profile.person_escort_record.tap do |per|
             @output << "id:\t#{per.id}\n"
-            @output << "framework ver:\t#{per.framework&.version}\n"
+            @output << "framework version:\t#{per.framework&.version}\n"
             @output << "framework_id:\t#{per.framework_id}\n"
             @output << "profile_id:\t#{per.profile_id}\n"
             @output << "move_id:\t#{per.move_id}\n"
