@@ -62,4 +62,21 @@ namespace :data_maintenance do
     GenericEvent.where(type: incident_event_types).update_all(classification: 'incident')
     GenericEvent.where(type: notification_event_types).update_all(classification: 'notification')
   end
+
+  desc 'remove moves and allocations on staging'
+  task remove_data_staging: :environment do
+    # NB: this task should never run on production or pre-production
+    is_not_production = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
+
+    if is_not_production
+      moves = Move.all
+      puts "Number of moves to be deleted: #{moves.count}"
+      allocations = Allocation.all
+      puts "Number of allocations to be deleted: #{allocations.count}"
+      moves.destroy_all
+      allocations.destroy_all
+    else
+      "You are trying to run this on a production-like environment, which is not allowed."
+    end
+  end
 end
