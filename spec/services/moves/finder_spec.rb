@@ -113,6 +113,15 @@ RSpec.describe Moves::Finder do
         end
       end
 
+      context 'with empty location filter' do
+        let!(:second_move) { create(:move, :video_remand) }
+        let(:filter_params) { { to_location_id: [] } }
+
+        it 'returns moves matching empty location' do
+          expect(results).to contain_exactly(second_move)
+        end
+      end
+
       context 'with mis-matching location filter' do
         let(:filter_params) { { to_location_id: Random.uuid } }
 
@@ -332,9 +341,10 @@ RSpec.describe Moves::Finder do
 
       context 'with empty cancellation reason' do
         let(:filter_params) { { cancellation_reason: '' } }
+        let!(:prison_recall_move) { create :move, :prison_recall }
 
         it 'returns only moves without a cancellation reason' do
-          expect(results).to be_empty
+          expect(results).to contain_exactly(prison_recall_move)
         end
       end
 
@@ -377,9 +387,10 @@ RSpec.describe Moves::Finder do
 
       context 'with empty rejection reason' do
         let(:filter_params) { { rejection_reason: '' } }
+        let!(:prison_recall_move) { create :move, :prison_recall }
 
         it 'returns only moves without a rejection reason' do
-          expect(results).to be_empty
+          expect(results).to contain_exactly(prison_recall_move)
         end
       end
 

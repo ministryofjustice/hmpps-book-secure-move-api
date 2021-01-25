@@ -73,7 +73,9 @@ module Allocations
     end
 
     def split_params(name)
-      filter_params[name]&.split(',')
+      return if filter_params[name].blank?
+
+      filter_params[name].split(',')
     end
 
     def apply_location_filters(scope)
