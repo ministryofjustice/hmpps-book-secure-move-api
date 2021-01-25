@@ -23,8 +23,8 @@ module Diagnostics
       @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if include_person_details && move.cancellation_reason_comment.present?
       @output << <<~ENDDETAILS
         move type:\t#{move.move_type}
-        from location:\t#{move.from_location&.title}
-        to location:\t#{move.to_location&.title}
+        from location:\t#{move.from_location&.title} [#{move.from_location&.nomis_agency_id} #{move.from_location&.id}]
+        to location:\t#{move.to_location&.title} [#{move.to_location&.nomis_agency_id} #{move.to_location&.id}]
         supplier:\t#{move.supplier&.name}
         created at:\t#{move.created_at}
         updated at:\t#{move.updated_at}
@@ -37,13 +37,13 @@ module Diagnostics
       ENDMOVEEVENTS
 
       if move.generic_events.any?
-        @output << "#{'EVENT'.ljust(30)}\t#{'TIMESTAMP'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+        @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
         move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
           # NB only show event params if include_person_details==true, as they could contain personal details
-          @output << "#{event.type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+          @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
         end
       else
-        @output << "(no events recorded)\n"
+        @output << "(no move events recorded)\n"
       end
 
       @output << <<~ENDJOURNEYS
@@ -61,19 +61,19 @@ module Diagnostics
         @output << "(no journeys recorded)\n"
       end
 
-      @output << <<~ENDEVENTS
+      @output << <<~ENDJOURNEYEVENTS
 
         JOURNEY EVENTS
         --------------
-      ENDEVENTS
+      ENDJOURNEYEVENTS
       if move.journeys.any?
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
           @output << "#{journey.from_location.title} --> #{journey.to_location.title} (#{journey.id})\n"
           if journey.generic_events.any?
-            @output << "  #{'EVENT'.ljust(30)}\t#{'TIMESTAMP'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+            @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
             journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
               # NB only show event params if include_person_details==true, as they could contain personal details
-              @output << "  #{event.type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+              @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
             end
           else
             @output << "  (no events recorded)\n"
@@ -170,6 +170,51 @@ module Diagnostics
           end
         else
           @output << "(no profile associated with move)\n"
+        end
+
+        @output << <<~ENDPER
+
+          PERSON ESCORT RECORD
+          --------
+        ENDPER
+
+        # NB: it is better to identify PERs via profile (not via move directly), as there are some older records which are
+        # only associated with a profile but not with a move
+        if move.profile&.person_escort_record.present?
+          move.profile.person_escort_record.tap do |per|
+            @output << "id:\t#{per.id}\n"
+            @output << "framework version:\t#{per.framework&.version}\n"
+            @output << "framework_id:\t#{per.framework_id}\n"
+            @output << "profile_id:\t#{per.profile_id}\n"
+            @output << "move_id:\t#{per.move_id}\n"
+            @output << "prefill_source_id:\t#{per.prefill_source_id}\n"
+            @output << "section_progress:\n"
+            per.section_progress.each do |section|
+              @output << "* #{section['key']}:\t#{section['status']}\n"
+            end
+            @output << "status:\t#{per.status}\n"
+            @output << "created at:\t#{per.created_at}\n"
+            @output << "updated at:\t#{per.updated_at}\n"
+            @output << "confirmed at:\t#{per.confirmed_at}\n"
+          end
+        else
+          @output << "(no person escort record recorded)\n"
+        end
+
+        @output << <<~ENDPEREVENTS
+
+          PERSON ESCORT RECORD EVENTS
+          --------
+        ENDPEREVENTS
+
+        if move.profile&.person_escort_record&.generic_events.present?
+          @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+          move.profile.person_escort_record.generic_events.applied_order.each do |event| # NB use each to preserve sort order
+            # NB only show event params if include_person_details==true, as they could contain personal details
+            @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+          end
+        else
+          @output << "(no person escort record events recorded)\n"
         end
       end
 

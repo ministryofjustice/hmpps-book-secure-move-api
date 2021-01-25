@@ -26,8 +26,14 @@ RSpec.describe FrameworkAssessmentSerializer do
     expect(result[:data][:attributes][:editable]).to eq(assessment.editable?)
   end
 
+  it 'contains a `completed_at` attribute' do
+    assessment.completed_at = Time.zone.now
+    expect(result[:data][:attributes][:completed_at]).to eq(assessment.completed_at.iso8601)
+  end
+
   it 'contains a `confirmed_at` attribute' do
-    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at)
+    assessment.confirmed_at = Time.zone.now
+    expect(result[:data][:attributes][:confirmed_at]).to eq(assessment.confirmed_at.iso8601)
   end
 
   it 'contains a `created_at` attribute' do
@@ -84,6 +90,7 @@ RSpec.describe FrameworkAssessmentSerializer do
     it 'includes section progress' do
       question = create(:framework_question, framework: assessment.framework, section: 'risk-information')
       create(:string_response, value: nil, framework_question: question, assessmentable: assessment)
+      assessment.update_status_and_progress!
 
       expect(result[:data][:meta][:section_progress]).to contain_exactly(
         key: 'risk-information',

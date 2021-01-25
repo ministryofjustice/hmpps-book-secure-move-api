@@ -83,6 +83,7 @@ Rails.application.routes.draw do
       resources :assessment_questions, only: :index
       resources :categories, only: %i[index]
       resources :ethnicities, only: :index
+      resources :frameworks, only: %i[index show]
       resources :genders, only: :index
       resources :identifier_types, only: :index
       resources :locations, only: %i[index show]

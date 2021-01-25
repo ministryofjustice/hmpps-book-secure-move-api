@@ -1,5 +1,26 @@
 # Changelog
 
+## [v2.8.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.8) (2021-01-22)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.7...v2.8.8)
+
+**Merged pull requests:**
+
+- Update CHANGELOG.md [\#1284](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1284) ([martyn-w](https://github.com/martyn-w))
+- P4-2588 Use section progress in serializer [\#1281](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1281) ([cwrw](https://github.com/cwrw))
+
+## [v2.8.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.7) (2021-01-21)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.6...v2.8.7)
+
+**Merged pull requests:**
+
+- Enable youth risk assessments for Feltham A location [\#1283](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1283) ([smoothcontract](https://github.com/smoothcontract))
+- Changelog 2.8.6 [\#1282](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1282) ([cwrw](https://github.com/cwrw))
+- P4-2588 Add `section\_progress` to assessments [\#1280](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1280) ([cwrw](https://github.com/cwrw))
+- Add new reference data endpoints for frameworks [\#1278](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1278) ([smoothcontract](https://github.com/smoothcontract))
+- Add validation to Person\#date\_of\_birth [\#1276](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1276) ([Thource](https://github.com/Thource))
+
 ## [v2.8.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.6) (2021-01-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.5...v2.8.6)

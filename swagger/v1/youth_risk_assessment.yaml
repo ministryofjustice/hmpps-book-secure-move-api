@@ -60,14 +60,6 @@ YouthRiskAssessment:
                 type: string
           readOnly: true
           description: A list of all NOMIS resources imported when creating the youth risk assessment, and the status of the import, either successful or failed. The timestamp and error message are also included.
-        confirmed_at:
-          example: "2020-07-24T17:29:26.338Z"
-          oneOf:
-          - type: 'null'
-          - type: string
-            format: date-time
-            description: Timestamp of when the youth_risk_assessment was confirmed
-            readOnly: true
         created_at:
           example: "2020-07-24T17:29:26.338Z"
           oneOf:
@@ -75,6 +67,22 @@ YouthRiskAssessment:
           - type: string
             format: date-time
             description: Timestamp of when the youth_risk_assessment was created
+            readOnly: true
+        completed_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the youth_risk_assessment was first completed
+            readOnly: true
+        confirmed_at:
+          example: "2020-07-24T17:29:26.338Z"
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the youth_risk_assessment was confirmed
             readOnly: true
     meta:
       readOnly: true

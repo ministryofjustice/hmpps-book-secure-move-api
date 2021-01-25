@@ -1,9 +1,4 @@
 namespace :framework_responses do
-  desc 'Populate assessmentable association on framework_responses'
-  task refresh_data: :environment do
-    FrameworkResponse.update_all("assessmentable_type = 'PersonEscortRecord', assessmentable_id = person_escort_record_id")
-  end
-
   desc 'Populate value_type on framework_responses'
   task populate_value_type: :environment do
     # Updates the response value type in batches of 1000

@@ -19,6 +19,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:person_escort_record_id) { person_escort_record.id }
 
     before do
+      person_escort_record.update_status_and_progress!
       get "/api/v1/person_escort_records/#{person_escort_record_id}?include=responses,flags", headers: headers, as: :json
     end
 
@@ -30,7 +31,9 @@ RSpec.describe Api::PersonEscortRecordsController do
           "type": 'person_escort_records',
           "attributes": {
             "version": person_escort_record.framework.version,
-            "status": 'not_started',
+            "completed_at": person_escort_record.completed_at.iso8601,
+            "amended_at": nil,
+            "status": 'completed',
           },
           "meta": {
             'section_progress' => [

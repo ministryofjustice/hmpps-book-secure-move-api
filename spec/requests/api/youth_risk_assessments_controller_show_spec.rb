@@ -19,6 +19,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     let(:youth_risk_assessment_id) { youth_risk_assessment.id }
 
     before do
+      youth_risk_assessment.update_status_and_progress!
       get "/api/youth_risk_assessments/#{youth_risk_assessment_id}?include=flags,responses", headers: headers, as: :json
     end
 
@@ -30,7 +31,8 @@ RSpec.describe Api::YouthRiskAssessmentsController do
           "type": 'youth_risk_assessments',
           "attributes": {
             "version": youth_risk_assessment.framework.version,
-            "status": 'not_started',
+            "completed_at": youth_risk_assessment.completed_at.iso8601,
+            "status": 'completed',
           },
           "meta": {
             'section_progress' => [

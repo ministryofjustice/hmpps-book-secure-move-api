@@ -9,4 +9,6 @@ class PersonEscortRecordSerializer < FrameworkAssessmentSerializer
   set_type :person_escort_records
 
   belongs_to :prefill_source, serializer: PersonEscortRecordPrefillSourceSerializer
+
+  attribute :amended_at
 end
