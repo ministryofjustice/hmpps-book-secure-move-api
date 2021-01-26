@@ -259,6 +259,7 @@ GEM
       rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
+    rack-timeout (0.6.0)
     rails (6.0.3.4)
       actioncable (= 6.0.3.4)
       actionmailbox (= 6.0.3.4)
@@ -457,6 +458,7 @@ DEPENDENCIES
   puma (~> 5)
   rack-cors
   rack-test (~> 1.1.0)
+  rack-timeout (~> 0.6.0)
   rails (~> 6.0.3)
   rails-erd
   redis (~> 4.2, >= 4.2.1)

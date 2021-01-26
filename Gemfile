@@ -39,6 +39,7 @@ gem 'paper_trail'
 gem 'pg', '~> 1'
 gem 'prometheus_exporter'
 gem 'puma', '~> 5'
+gem 'rack-timeout', '~> 0.6.0', require: false
 gem 'rails', '~> 6.0.3'
 gem 'redis', '~> 4.2', '>= 4.2.1'
 gem 'routing-filter', '~> 0.6.3'
