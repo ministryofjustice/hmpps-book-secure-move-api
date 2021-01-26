@@ -12,7 +12,7 @@ RSpec.describe Metrics::Moves::CountsByStatus100Day do
 
   it 'initializes label and file' do
     expect(metric.label).not_to be_nil
-    expect(metric.file).to eql('moves/counts_by_status_100_day')
+    expect(metric.file).to eql('counts_by_status_100_day')
   end
 
   describe 'calculate_row' do

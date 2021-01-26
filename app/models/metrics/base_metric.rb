@@ -6,7 +6,7 @@ module Metrics
     TOTAL = 'total'.freeze
     COUNT = 'count'.freeze
 
-    attr_reader :label, :database, :file, :interval, :timestamp,
+    attr_reader :supplier, :label, :database, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
                 :rows_name, :rows_field, :rows,
                 :values
@@ -19,6 +19,7 @@ module Metrics
     }.freeze
 
     def setup_metric(metric)
+      @supplier = metric[:supplier]
       @label = metric[:label]
       @database = metric[:database]
       @file = metric[:file]

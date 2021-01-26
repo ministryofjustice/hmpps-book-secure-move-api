@@ -5,10 +5,11 @@ module Metrics
       include Moves
       include TimeBins
 
-      def initialize
+      def initialize(supplier: nil)
         setup_metric(
+          supplier: supplier,
           label: 'Move counts by time bin',
-          file: "#{database}/counts_by_time_bin",
+          file: 'counts_by_time_bin',
           interval: 5.minutes,
           columns: {
             name: COUNT,

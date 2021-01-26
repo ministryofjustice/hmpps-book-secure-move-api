@@ -12,7 +12,7 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeStatus do
 
   it 'initializes label and file' do
     expect(metric.label).not_to be_nil
-    expect(metric.file).to eql('moves/counts_by_move_type_status')
+    expect(metric.file).to eql('counts_by_move_type_status')
   end
 
   describe 'calculate_row' do

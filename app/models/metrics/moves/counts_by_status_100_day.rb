@@ -4,10 +4,11 @@ module Metrics
       include BaseMetric
       include Moves
 
-      def initialize
+      def initialize(supplier: nil)
         setup_metric(
+          supplier: supplier,
           label: 'Move counts by status for past 100 days',
-          file: "#{database}/counts_by_status_100_day",
+          file: 'counts_by_status_100_day',
           interval: 6.hours, # we don't need to re-calculate this report very often (and it takes a while to calculate)
           columns: {
             name: 'status',
