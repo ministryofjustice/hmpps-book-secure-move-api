@@ -22,7 +22,6 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cancancan'
 gem 'discard'
 gem 'doorkeeper'
-gem 'elastic-apm'
 gem 'faraday'
 gem 'finite_machine'
 gem 'flipper-active_record', '~> 0.19'
