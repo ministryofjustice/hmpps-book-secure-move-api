@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.0) (2021-01-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.9...v2.9.0)
+
+**Merged pull requests:**
+
+- Add rake task to backfill moves on legacy PERs [\#1298](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1298) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1297](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1297) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.8.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.9) (2021-01-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.8...v2.8.9)
