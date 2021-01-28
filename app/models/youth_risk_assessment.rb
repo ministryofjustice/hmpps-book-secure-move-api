@@ -2,7 +2,6 @@ class YouthRiskAssessment < VersionedModel
   include FrameworkAssessmentable
 
   belongs_to :prefill_source, class_name: 'YouthRiskAssessment', optional: true
-  belongs_to :move
 
   validate :move_from_location
 

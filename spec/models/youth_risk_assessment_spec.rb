@@ -5,8 +5,6 @@ require 'rails_helper'
 RSpec.describe YouthRiskAssessment do
   let(:from_location) { create(:location, :stc) }
 
-  it { is_expected.to belong_to(:move) }
-
   context 'with validations' do
     it 'is valid if the move from location is from an stc' do
       location = create(:location, :stc)

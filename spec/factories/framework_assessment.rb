@@ -34,6 +34,7 @@ FactoryBot.define do
 
   factory :person_escort_record, class: 'PersonEscortRecord', parent: :framework_assessmentable do
     association(:profile)
+    association(:move)
     association(:framework)
 
     trait :prefilled do

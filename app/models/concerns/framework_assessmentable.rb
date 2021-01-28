@@ -28,6 +28,7 @@ module FrameworkAssessmentable
     has_many :framework_questions, through: :framework
     has_many :framework_flags, through: :framework_responses
     belongs_to :profile
+    belongs_to :move
 
     has_state_machine FrameworkAssessmentStateMachine, on: :status
 
@@ -61,7 +62,7 @@ module FrameworkAssessmentable
   end
 
   def import_nomis_mappings!
-    return unless move&.from_location&.prison?
+    return unless move.from_location.prison?
 
     FrameworkNomisMappings::Importer.new(assessmentable: self).call
   end
@@ -104,7 +105,7 @@ module FrameworkAssessmentable
   end
 
   class_methods do
-    def save_with_responses!(version: nil, move_id: nil)
+    def save_with_responses!(version:, move_id:)
       move = Move.find(move_id)
       profile = move.profile
 
@@ -160,8 +161,6 @@ module FrameworkAssessmentable
   end
 
   def move_status_editable?
-    return true if move.blank?
-
     move.requested? || move.booked?
   end
 end

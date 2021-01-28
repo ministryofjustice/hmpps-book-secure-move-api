@@ -23,6 +23,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
   it { is_expected.to have_many(:generic_events) }
   it { is_expected.to belong_to(:framework) }
   it { is_expected.to belong_to(:profile) }
+  it { is_expected.to belong_to(:move) }
   it { is_expected.to belong_to(:prefill_source).optional }
 
   it 'validates uniqueness of profile' do
@@ -72,7 +73,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     it 'returns error if no framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.0.0')
       move = create(:move, from_location: from_location)
-      expect { assessment_class.save_with_responses!(move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { assessment_class.save_with_responses!(version: nil, move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if nil framework version passed' do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_172150) do
+ActiveRecord::Schema.define(version: 2021_01_28_153802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -499,7 +499,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_172150) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "confirmed_at"
-    t.uuid "move_id"
+    t.uuid "move_id", null: false
     t.jsonb "nomis_sync_status", default: [], null: false
     t.uuid "prefill_source_id"
     t.datetime "completed_at"
