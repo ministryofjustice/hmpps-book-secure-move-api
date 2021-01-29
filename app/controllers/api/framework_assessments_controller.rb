@@ -26,7 +26,7 @@ module Api
 
     def update
       FrameworkAssessments::ParamsValidator.new(update_assessment_status).validate!
-      assessment.confirm!(update_assessment_status, handover_details)
+      confirm_assessment!(assessment)
 
       render_assessment(assessment, :ok)
     end
@@ -49,10 +49,6 @@ module Api
       update_assessment_params.to_h.dig(:attributes, :status)
     end
 
-    def handover_details
-      update_assessment_params.to_h.dig(:attributes, :handover_details)
-    end
-
     def supported_relationships
       assessment_serializer::SUPPORTED_RELATIONSHIPS
     end
@@ -61,6 +57,10 @@ module Api
       @assessment ||= assessment_class
         .includes(active_record_relationships)
         .find(id)
+    end
+
+    def confirm_assessment!(assessment)
+      assessment.confirm!(update_assessment_status)
     end
 
     def render_assessment(assessment, status)

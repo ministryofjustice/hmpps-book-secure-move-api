@@ -15,6 +15,11 @@ module Api
       params.require(:data).permit(UPDATE_PER_PERMITTED_PARAMS)
     end
 
+    def confirm_assessment!(assessment)
+      handover_details = update_assessment_params.to_h.dig(:attributes, :handover_details)
+      assessment.confirm!(update_assessment_status, handover_details)
+    end
+
     def assessment_class
       PersonEscortRecord
     end
