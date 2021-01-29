@@ -43,6 +43,11 @@ RSpec.describe PersonEscortRecordsSerializer do
     expect(result[:data][:attributes][:nomis_sync_status]).to eq(person_escort_record.nomis_sync_status)
   end
 
+  it 'contains a `handover_details` attribute' do
+    person_escort_record.handover_details = { foo: 'bar' }
+    expect(result[:data][:attributes][:handover_details]).to eq(person_escort_record.handover_details.symbolize_keys)
+  end
+
   it 'omits `flags` relationship if not explicitly included' do
     expect(result[:data][:relationships]).not_to include(:flags)
   end
