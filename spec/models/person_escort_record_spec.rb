@@ -94,5 +94,28 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
+  describe '#confirm!' do
+    it 'stores handover_details if provided' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', { foo: 'bar' })
+
+      expect(assessment.handover_details).to eq({ 'foo' => 'bar' })
+    end
+
+    it 'does not store handover_details if blank' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', {})
+
+      expect(assessment.handover_details).to be_empty
+    end
+
+    it 'does not store handover_details if nil' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', nil)
+
+      expect(assessment.handover_details).to be_empty
+    end
+  end
+
   it_behaves_like 'a framework assessment', :person_escort_record, described_class
 end

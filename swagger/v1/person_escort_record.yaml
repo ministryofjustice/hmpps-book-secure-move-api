@@ -60,6 +60,11 @@ PersonEscortRecord:
                 type: string
           readOnly: true
           description: A list of all NOMIS resources imported when creating the person escort record, and the status of the import, either successful or failed. The timestamp and error message are also included.
+        handover_details:
+          oneOf:
+          - type: 'null'
+          - type: object
+            description: Optional handover details for the person escort record
         created_at:
           example: "2020-07-24T17:29:26.338Z"
           oneOf:

@@ -83,10 +83,11 @@ module FrameworkAssessmentable
     save!
   end
 
-  def confirm!(new_status)
+  def confirm!(new_status, handover_details = nil)
     return unless new_status == ASSESSMENT_CONFIRMED
 
     state_machine.confirm!
+    self.handover_details = handover_details if handover_details.present? && respond_to?(:handover_details)
     save!
   rescue FiniteMachine::InvalidStateError
     errors.add(:status, :invalid_status, message: "can't update to '#{new_status}' from '#{status}'")

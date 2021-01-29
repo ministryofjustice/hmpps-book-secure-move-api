@@ -10,5 +10,5 @@ class PersonEscortRecordSerializer < FrameworkAssessmentSerializer
 
   belongs_to :prefill_source, serializer: PersonEscortRecordPrefillSourceSerializer
 
-  attribute :amended_at
+  attributes :amended_at, :handover_details
 end

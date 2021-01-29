@@ -4,7 +4,16 @@ module Api
   class PersonEscortRecordsController < FrameworkAssessmentsController
     after_action :create_confirmation_event, only: :update # rubocop:disable LexicallyScopedActionFilter
 
+    UPDATE_PER_PERMITTED_PARAMS = [
+      :type,
+      attributes: [:status, handover_details: {}],
+    ].freeze
+
   private
+
+    def update_assessment_params
+      params.require(:data).permit(UPDATE_PER_PERMITTED_PARAMS)
+    end
 
     def assessment_class
       PersonEscortRecord

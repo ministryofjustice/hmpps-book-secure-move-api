@@ -4,13 +4,13 @@ module Api
   class FrameworkAssessmentsController < ApiController
     after_action :send_notification, only: :update
 
-    NEW_PERMITTED_PER_PARAMS = [
+    NEW_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
       attributes: [:version],
       relationships: [move: {}],
     ].freeze
 
-    UPDATE_PERMITTED_PER_PARAMS = [
+    UPDATE_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
       attributes: [:status],
     ].freeze
@@ -26,7 +26,7 @@ module Api
 
     def update
       FrameworkAssessments::ParamsValidator.new(update_assessment_status).validate!
-      assessment.confirm!(update_assessment_status)
+      assessment.confirm!(update_assessment_status, handover_details)
 
       render_assessment(assessment, :ok)
     end
@@ -38,15 +38,19 @@ module Api
   private
 
     def new_assessment_params
-      params.require(:data).permit(NEW_PERMITTED_PER_PARAMS).to_h
+      params.require(:data).permit(NEW_ASSESSMENT_PERMITTED_PARAMS).to_h
     end
 
     def update_assessment_params
-      params.require(:data).permit(UPDATE_PERMITTED_PER_PARAMS)
+      params.require(:data).permit(UPDATE_ASSESSMENT_PERMITTED_PARAMS)
     end
 
     def update_assessment_status
       update_assessment_params.to_h.dig(:attributes, :status)
+    end
+
+    def handover_details
+      update_assessment_params.to_h.dig(:attributes, :handover_details)
     end
 
     def supported_relationships

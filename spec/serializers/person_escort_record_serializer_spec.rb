@@ -19,6 +19,11 @@ RSpec.describe PersonEscortRecordSerializer do
     expect(result[:data][:attributes][:amended_at]).to eq(person_escort_record.amended_at.iso8601)
   end
 
+  it 'contains a `handover_details` attribute' do
+    person_escort_record.handover_details = { foo: 'bar' }
+    expect(result[:data][:attributes][:handover_details]).to eq(person_escort_record.handover_details.symbolize_keys)
+  end
+
   it 'contains a `profile` relationship' do
     expect(result[:data][:relationships][:profile][:data]).to eq(
       id: person_escort_record.profile.id,
