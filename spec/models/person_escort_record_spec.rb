@@ -94,5 +94,50 @@ RSpec.describe PersonEscortRecord do
     end
   end
 
+  describe '#confirm!' do
+    it 'stores handover_details if provided' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', { foo: 'bar' })
+
+      expect(assessment.handover_details).to eq({ 'foo' => 'bar' })
+    end
+
+    it 'does not store handover_details if blank' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', {})
+
+      expect(assessment.handover_details).to be_empty
+    end
+
+    it 'does not store handover_details if nil' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', nil)
+
+      expect(assessment.handover_details).to be_empty
+    end
+
+    it 'stores handover_occurred_at if provided' do
+      timestamp = Time.zone.now
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', nil, timestamp.iso8601)
+
+      expect(assessment.handover_occurred_at).to be_within(1.second).of timestamp
+    end
+
+    it 'does not store handover_occurred_at if blank' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', nil, '')
+
+      expect(assessment.handover_occurred_at).to be_nil
+    end
+
+    it 'does not store handover_occurred_at if nil' do
+      assessment = create(:person_escort_record, :completed)
+      assessment.confirm!('confirmed', nil, nil)
+
+      expect(assessment.handover_occurred_at).to be_nil
+    end
+  end
+
   it_behaves_like 'a framework assessment', :person_escort_record, described_class
 end

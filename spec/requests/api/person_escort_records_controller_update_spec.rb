@@ -17,13 +17,16 @@ RSpec.describe Api::PersonEscortRecordsController do
     let(:person_escort_record) { create(:person_escort_record, :with_responses, :completed) }
     let(:person_escort_record_id) { person_escort_record.id }
     let(:status) { 'confirmed' }
+    let(:attributes) do
+      {
+        'status': status,
+      }
+    end
     let(:person_escort_record_params) do
       {
         data: {
-          "type": 'person_escort_records',
-          "attributes": {
-            "status": status,
-          },
+          'type': 'person_escort_records',
+          'attributes': attributes,
         },
       }
     end
@@ -40,8 +43,40 @@ RSpec.describe Api::PersonEscortRecordsController do
             "type": 'person_escort_records',
             "attributes": {
               "status": 'confirmed',
+              "handover_details": {},
+              "handover_occurred_at": nil,
               "version": person_escort_record.framework.version,
               "confirmed_at": person_escort_record.confirmed_at.iso8601,
+            },
+          })
+        end
+      end
+
+      context 'when including handover details' do
+        let(:timestamp) { Time.zone.now }
+        let(:attributes) do
+          {
+            'status': status,
+            'handover_details': {
+              'recipient_name': 'Fulton McKay',
+              'recipient_id': '12345',
+              'recipient_contact_number': '01-811-8055',
+            },
+            'handover_occurred_at': timestamp.iso8601,
+          }
+        end
+
+        it_behaves_like 'an endpoint that responds with success 200'
+
+        it 'returns the correct handover details' do
+          expect(response_json).to include_json(data: {
+            'attributes': {
+              'handover_details': {
+                'recipient_name': 'Fulton McKay',
+                'recipient_id': '12345',
+                'recipient_contact_number': '01-811-8055',
+              },
+              'handover_occurred_at': timestamp.iso8601,
             },
           })
         end

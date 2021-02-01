@@ -1,5 +1,31 @@
 # Changelog
 
+## [v2.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.0) (2021-01-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.9...v2.9.0)
+
+**Merged pull requests:**
+
+- Add rake task to backfill moves on legacy PERs [\#1298](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1298) ([cwrw](https://github.com/cwrw))
+- Update CHANGELOG.md [\#1297](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1297) ([martyn-w](https://github.com/martyn-w))
+
+## [v2.8.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.9) (2021-01-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.8...v2.8.9)
+
+**Merged pull requests:**
+
+- Remove elastic apm env variable [\#1294](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1294) ([cwrw](https://github.com/cwrw))
+- Remove elastic apm gem [\#1293](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1293) ([cwrw](https://github.com/cwrw))
+- Add rack:timeout gem [\#1292](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1292) ([smoothcontract](https://github.com/smoothcontract))
+- Add PER and PER Events to Diagnostics [\#1290](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1290) ([martyn-w](https://github.com/martyn-w))
+- Bump shoulda-matchers from 4.5.0 to 4.5.1 [\#1289](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1289) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add amended\_at timestamp for subsequent updates of a completed PER [\#1288](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1288) ([smoothcontract](https://github.com/smoothcontract))
+- Remove deprecated rake task [\#1287](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1287) ([cwrw](https://github.com/cwrw))
+- Changelog 2.8.8 [\#1286](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1286) ([cwrw](https://github.com/cwrw))
+- Bump sidekiq from 6.1.2 to 6.1.3 [\#1285](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1285) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix filters bug [\#1274](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1274) ([cwrw](https://github.com/cwrw))
+
 ## [v2.8.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.8.8) (2021-01-22)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.7...v2.8.8)

@@ -8,7 +8,7 @@ class PersonEscortRecordsSerializer
 
   has_many_if_included :flags, serializer: FrameworkFlagsSerializer, &:framework_flags
 
-  attributes :created_at, :completed_at, :amended_at, :confirmed_at, :nomis_sync_status
+  attributes :created_at, :completed_at, :amended_at, :confirmed_at, :nomis_sync_status, :handover_details, :handover_occurred_at
 
   attribute :status do |object|
     object.status == 'unstarted' ? 'not_started' : object.status
