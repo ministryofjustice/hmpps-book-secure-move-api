@@ -44,6 +44,7 @@ RSpec.describe Api::PersonEscortRecordsController do
             "attributes": {
               "status": 'confirmed',
               "handover_details": {},
+              "handover_occurred_at": nil,
               "version": person_escort_record.framework.version,
               "confirmed_at": person_escort_record.confirmed_at.iso8601,
             },
@@ -52,6 +53,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       end
 
       context 'when including handover details' do
+        let(:timestamp) { Time.zone.now }
         let(:attributes) do
           {
             'status': status,
@@ -60,6 +62,7 @@ RSpec.describe Api::PersonEscortRecordsController do
               'recipient_id': '12345',
               'recipient_contact_number': '01-811-8055',
             },
+            'handover_occurred_at': timestamp.iso8601,
           }
         end
 
@@ -73,6 +76,7 @@ RSpec.describe Api::PersonEscortRecordsController do
                 'recipient_id': '12345',
                 'recipient_contact_number': '01-811-8055',
               },
+              'handover_occurred_at': timestamp.iso8601,
             },
           })
         end

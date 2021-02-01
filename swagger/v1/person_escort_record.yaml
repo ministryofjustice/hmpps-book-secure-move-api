@@ -65,6 +65,13 @@ PersonEscortRecord:
           - type: 'null'
           - type: object
             description: Optional handover details for the person escort record
+        handover_occurred_at:
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: date-time
+            description: Timestamp of when the person escort record handover occurred
+            example: "2020-07-24T17:29:26.338Z"
         created_at:
           example: "2020-07-24T17:29:26.338Z"
           oneOf:

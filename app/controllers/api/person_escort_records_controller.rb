@@ -6,7 +6,7 @@ module Api
 
     UPDATE_PER_PERMITTED_PARAMS = [
       :type,
-      attributes: [:status, handover_details: {}],
+      attributes: [:status, :handover_occurred_at, handover_details: {}],
     ].freeze
 
   private
@@ -17,7 +17,8 @@ module Api
 
     def confirm_assessment!(assessment)
       handover_details = update_assessment_params.to_h.dig(:attributes, :handover_details)
-      assessment.confirm!(update_assessment_status, handover_details)
+      handover_occurred_at = update_assessment_params.to_h.dig(:attributes, :handover_occurred_at)
+      assessment.confirm!(update_assessment_status, handover_details, handover_occurred_at)
     end
 
     def assessment_class
