@@ -89,23 +89,28 @@ module Metrics
 
     def calculate_all_values
       if values.nil? || timestamp.nil? || timestamp + interval < Time.zone.now
-        @values = {}.tap do |v|
-          rows.each do |row|
-            if respond_to?(:calculate_row)
-              # do calculation a row at a time
-              row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
-              row_values.default = 0
-              columns.each do |column|
-                v[value_key(column, row)] = row_values[column]
-              end
-              # sleep for a very short while to avoid overloading the system
-              sleep(rand(0..0.1).round(2))
-            else
-              # do calculation a cell at a time
-              columns.each do |column|
-                v[value_key(column, row)] = calculate(column, row)
+        if respond_to?(:calculate_table)
+          @values = calculate_table
+          pause
+        else
+          @values = {}.tap do |v|
+            rows.each do |row|
+              if respond_to?(:calculate_row)
+                # do calculation a row at a time
+                row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
+                row_values.default = 0
+                columns.each do |column|
+                  v[value_key(column, row)] = row_values[column]
+                end
                 # sleep for a very short while to avoid overloading the system
-                sleep(rand(0..0.1).round(2))
+                pause
+              else
+                # do calculation a cell at a time
+                columns.each do |column|
+                  v[value_key(column, row)] = calculate(column, row)
+                  # sleep for a very short while to avoid overloading the system
+                  pause
+                end
               end
             end
           end
@@ -128,6 +133,10 @@ module Metrics
 
     def value(column, row)
       @values[value_key(column, row)]
+    end
+
+    def pause
+      sleep(rand(0..0.1).round(2))
     end
   end
 end

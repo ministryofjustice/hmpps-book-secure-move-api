@@ -9,7 +9,7 @@ module Metrics
           supplier: supplier,
           label: 'Move counts by status for past 100 days',
           file: 'counts_by_status_100_day',
-          interval: 6.hours, # we don't need to re-calculate this report very often (and it takes a while to calculate)
+          interval: 1.hour, # we don't need to re-calculate this report very often as it concerns old data
           columns: {
             name: 'status',
             field: :itself,
@@ -23,12 +23,27 @@ module Metrics
         )
       end
 
-      def calculate_row(row_date)
-        moves
-          .where(date: row_date)
-          .group(:status)
+      def calculate_table
+        raw_data = moves
+          .where(date: (Time.zone.today - 100.days)..Time.zone.yesterday)
+          .group(:date, :status)
           .count
-          .tap { |row| row.merge!(TOTAL => row.values.sum) }
+        raw_data.default = 0
+
+        transformed_data = ActiveSupport::HashWithIndifferentAccess.new(0)
+
+        rows.each do |row|
+          total = 0
+          columns.each do |column|
+            next if column == TOTAL
+
+            transformed_data[value_key(column, row)] = raw_data[[row, column]]
+            total += raw_data[[row, column]]
+          end
+          transformed_data[value_key(TOTAL, row)] = total
+        end
+
+        transformed_data
       end
     end
   end
