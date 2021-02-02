@@ -5,6 +5,7 @@ module Metrics
   module BaseMetric
     TOTAL = 'total'.freeze
     COUNT = 'count'.freeze
+    MOVES = 'moves'.freeze
 
     attr_reader :supplier, :label, :database, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
@@ -20,9 +21,9 @@ module Metrics
 
     def setup_metric(metric)
       @supplier = metric[:supplier]
-      @label = metric[:label]
+      @label = build_label(metric[:label], metric[:supplier])
       @database = metric[:database]
-      @file = metric[:file]
+      @file = build_file(metric[:file], metric[:supplier])
       @interval = metric[:interval]
       @timestamp = nil
       @columns_name = metric[:columns][:name]
@@ -133,6 +134,22 @@ module Metrics
 
     def value(column, row)
       @values[value_key(column, row)]
+    end
+
+    def build_label(label, supplier)
+      if supplier.present?
+        "#{label} (#{supplier.key})"
+      else
+        label
+      end
+    end
+
+    def build_file(file, supplier)
+      if supplier.present?
+        "#{file}-#{supplier.key}"
+      else
+        file
+      end
     end
 
     def pause

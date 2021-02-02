@@ -18,7 +18,7 @@ module Metrics
           rows: {
             name: COUNT,
             field: :itself,
-            values: [COUNT],
+            values: [MOVES],
           },
         )
       end
