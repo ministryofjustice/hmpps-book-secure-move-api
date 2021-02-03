@@ -94,29 +94,31 @@ module Metrics
           @values = calculate_table
           pause
         else
-          @values = {}.tap do |v|
-            rows.each do |row|
-              if respond_to?(:calculate_row)
-                # do calculation a row at a time
-                row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
-                row_values.default = 0
-                columns.each do |column|
-                  v[value_key(column, row)] = row_values[column]
-                end
-                # sleep for a very short while to avoid overloading the system
-                pause
-              else
-                # do calculation a cell at a time
-                columns.each do |column|
-                  v[value_key(column, row)] = calculate(column, row)
-                  # sleep for a very short while to avoid overloading the system
-                  pause
-                end
-              end
+          @values = calculate_individual_rows
+        end
+        @timestamp = Time.zone.now
+      end
+    end
+
+    def calculate_individual_rows
+      {}.tap do |vals|
+        rows.each do |row|
+          if respond_to?(:calculate_row)
+            # do calculation a row at a time
+            row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
+            row_values.default = 0
+            columns.each do |column|
+              vals[value_key(column, row)] = row_values[column]
+            end
+            pause
+          else
+            # do calculation a cell at a time
+            columns.each do |column|
+              vals[value_key(column, row)] = calculate(column, row)
+              pause
             end
           end
         end
-        @timestamp = Time.zone.now
       end
     end
 
@@ -153,7 +155,8 @@ module Metrics
     end
 
     def pause
-      sleep(rand(0..0.1).round(2))
+      # sleep for a very short while to avoid overloading non-test systems
+      sleep(rand(0..0.1).round(2)) unless Rails.env.test?
     end
   end
 end

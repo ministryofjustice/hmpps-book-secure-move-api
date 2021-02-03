@@ -11,7 +11,7 @@ namespace :metrics do
       namespace.constants.map { |c| namespace.const_get(c) if namespace.const_get(c).is_a? Class }.compact
     }.flatten
 
-    SUPPLIERS = Supplier.all.to_a << nil
+    SUPPLIERS = Supplier.all.to_a << nil # NB: the nil supplier means "any supplier"
 
     feed = CloudData::MetricsFeed.new(ENV['S3_METRICS_BUCKET_NAME'])
 
@@ -31,8 +31,8 @@ namespace :metrics do
             end
           end
 
-          # sleep for a short while to avoid overloading the system
-          sleep(rand(0..0.5).round(2))
+          # sleep for a short while to avoid overloading non-test systems
+          sleep(rand(0..0.5).round(2)) unless Rails.env.test?
         end
       end
     end
