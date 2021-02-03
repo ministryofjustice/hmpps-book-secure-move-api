@@ -12,6 +12,7 @@ RSpec.describe Moves::Updater do
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
+  let(:date) { Date.today }
   let(:status) { 'requested' }
   let(:cancellation_reason) { nil }
 
@@ -27,6 +28,7 @@ RSpec.describe Moves::Updater do
         move_agreed_by: 'Fred Bloggs',
         date_from: date_from,
         date_to: date_to,
+        date: date,
       },
     }
   end
@@ -45,7 +47,7 @@ RSpec.describe Moves::Updater do
     end
 
     context 'when status changes without an associated allocation' do
-      it 'sets `status_updated` to `true`' do
+      it 'sets `status_changed` to `true`' do
         updater.call
         expect(updater.status_changed).to be_truthy
       end
@@ -75,9 +77,27 @@ RSpec.describe Moves::Updater do
     context 'when status is not updated' do
       let(:status) { 'proposed' }
 
-      it 'sets `status_updated` to `false`' do
+      it 'sets `status_changed` to `false`' do
         updater.call
         expect(updater.status_changed).to be_falsey
+      end
+    end
+
+    context 'when date changes ' do
+      let(:date) { '2019-08-23' }
+
+      it 'sets `date_changed` to `true`' do
+        updater.call
+        expect(updater.date_changed).to be true
+      end
+    end
+
+    context 'when date is not updated ' do
+      let(:date) { move.date }
+
+      it 'sets `date_changed` to `false`' do
+        updater.call
+        expect(updater.date_changed).to be false
       end
     end
 

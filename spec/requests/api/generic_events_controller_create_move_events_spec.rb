@@ -13,6 +13,7 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'MoveComplete'
   it_behaves_like 'a generic event endpoint', 'MoveCrossSupplierDropOff'
   it_behaves_like 'a generic event endpoint', 'MoveCrossSupplierPickUp'
+  it_behaves_like 'a generic event endpoint', 'MoveDateChanged'
   it_behaves_like 'a generic event endpoint', 'MoveLockout'
   it_behaves_like 'a generic event endpoint', 'MoveLodgingEnd'
   it_behaves_like 'a generic event endpoint', 'MoveLodgingStart'

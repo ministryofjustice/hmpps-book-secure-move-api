@@ -2,7 +2,7 @@
 
 module Moves
   class Updater
-    attr_accessor :move_params, :move, :status_changed
+    attr_accessor :move_params, :move, :status_changed, :date_changed
 
     def initialize(move, move_params)
       self.move = move
@@ -13,6 +13,7 @@ module Moves
       move.assign_attributes(attributes)
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
+      self.date_changed = move.date_changed?
 
       move.transaction do
         move.save!

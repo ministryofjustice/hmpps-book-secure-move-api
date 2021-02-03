@@ -631,6 +631,30 @@ RSpec.describe Api::MovesController do
             end
           end
         end
+
+        context 'when updating the date' do
+          let(:move_params) do
+            {
+              type: 'moves',
+              attributes: {
+                date: '2019-08-23',
+              },
+            }
+          end
+
+          let(:move_date_changed_event) { move.generic_events.where(type: 'GenericEvent::MoveDateChanged').first }
+
+          it 'changes the move date' do
+            do_patch
+            expect(move.reload.date).to eql Date.parse('2019-08-23')
+          end
+
+          it 'creates a GenericEvent::MoveDateChanged event' do
+            do_patch
+            expect(move_date_changed_event).to be_present
+            expect(move_date_changed_event.date).to eql '2019-08-23'
+          end
+        end
       end
 
       context 'with a read-only attribute' do

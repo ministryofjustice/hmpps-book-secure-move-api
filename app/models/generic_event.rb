@@ -40,6 +40,7 @@ class GenericEvent < ApplicationRecord
     MoveComplete
     MoveCrossSupplierDropOff
     MoveCrossSupplierPickUp
+    MoveDateChanged
     MoveLockout
     MoveLodgingEnd
     MoveLodgingStart

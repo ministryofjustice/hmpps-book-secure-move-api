@@ -26,6 +26,8 @@ module Api::V1
     def update_and_render
       updater.call
 
+      create_auto_event(updater.move, GenericEvent::MoveDateChanged, date: updater.move.date.iso8601) if updater.date_changed
+
       Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
       render_move(updater.move, :ok)
     end
@@ -138,6 +140,20 @@ module Api::V1
 
     def supported_relationships
       MoveSerializer::SUPPORTED_RELATIONSHIPS
+    end
+
+    def create_auto_event(move, event_class, details = {})
+      now = Time.zone.now.iso8601
+
+      event_class.create!(
+        eventable: move,
+        occurred_at: now,
+        recorded_at: now,
+        notes: 'Automatically generated event',
+        details: details,
+        supplier_id: doorkeeper_application_owner&.id,
+        created_by: created_by,
+      )
     end
   end
 end
