@@ -11,22 +11,29 @@ namespace :metrics do
       namespace.constants.map { |c| namespace.const_get(c) if namespace.const_get(c).is_a? Class }.compact
     }.flatten
 
+    SUPPLIERS = Supplier.all.to_a << nil # NB: the nil supplier means "any supplier"
+
     feed = CloudData::MetricsFeed.new(ENV['S3_METRICS_BUCKET_NAME'])
 
     METRIC_CLASSES.each do |metric_class|
-      metric_class.new.tap do |metric|
-        puts metric.label
-        metric_class::FORMATS.each do |format_key, format_file|
-          key = "#{metric.file}/#{format_file}"
-          expired_before = Time.zone.now - (metric.interval || 0)
+      SUPPLIERS.each do |supplier|
+        metric_class.new(supplier: supplier).tap do |metric|
+          metric_class::FORMATS.each do |format_key, format_file|
+            key = "#{metric.database}/#{metric.file}/#{format_file}"
+            expired_before = Time.zone.now - (metric.interval || 0)
 
-          if feed.stale?(key, expired_before)
-            feed.update(key, metric.send(format_key))
+            print key
+            if feed.stale?(key, expired_before)
+              feed.update(key, metric.send(format_key))
+              puts ' updated'
+            else
+              puts ' skipped'
+            end
           end
-        end
 
-        # sleep for a short while to avoid overloading the system
-        sleep(rand(0..0.5).round(2))
+          # sleep for a short while to avoid overloading non-test systems
+          sleep(rand(0..0.5).round(2)) unless Rails.env.test?
+        end
       end
     end
   end

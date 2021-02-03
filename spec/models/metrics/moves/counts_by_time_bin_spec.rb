@@ -5,12 +5,14 @@ require 'rails_helper'
 RSpec.describe Metrics::Moves::CountsByTimeBin do
   subject(:metric) { described_class.new }
 
-  it 'includes the BaseMetric module' do
+  it 'includes the BaseMetric and Moves modules' do
     expect(described_class.ancestors).to include(Metrics::BaseMetric)
+    expect(described_class.ancestors).to include(Metrics::Moves)
   end
 
-  it 'initializes label' do
-    expect(metric.label).to eql(described_class::METRIC[:label])
+  it 'initializes label and file' do
+    expect(metric.label).not_to be_nil
+    expect(metric.file).to eql('counts_by_time_bin')
   end
 
   describe 'calculate' do
@@ -27,8 +29,8 @@ RSpec.describe Metrics::Moves::CountsByTimeBin do
     end
 
     it 'computes the metric' do
-      expect(metric.calculate('total', yesterday)).to be(1)
-      expect(metric.calculate('total', next_7_days)).to be(2)
+      expect(metric.calculate('count', yesterday)).to be(1)
+      expect(metric.calculate('count', next_7_days)).to be(2)
     end
   end
 end

@@ -1,5 +1,6 @@
 module Metrics
   module TimeBins
+    TIME = 'time'.freeze
     TimeBin = Struct.new(:title, :date_from_offset, :date_to_offset)
 
     COMMON_TIME_BINS = [
