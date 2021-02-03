@@ -3,7 +3,11 @@ require 'json'
 
 module Metrics
   module BaseMetric
-    attr_reader :label, :file, :interval, :timestamp,
+    TOTAL = 'total'.freeze
+    COUNT = 'count'.freeze
+    MOVES = 'moves'.freeze
+
+    attr_reader :supplier, :label, :database, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
                 :rows_name, :rows_field, :rows,
                 :values
@@ -16,8 +20,10 @@ module Metrics
     }.freeze
 
     def setup_metric(metric)
-      @label = metric[:label]
-      @file = metric[:file]
+      @supplier = metric[:supplier]
+      @label = build_label(metric[:label], metric[:supplier])
+      @database = metric[:database]
+      @file = build_file(metric[:file], metric[:supplier])
       @interval = metric[:interval]
       @timestamp = nil
       @columns_name = metric[:columns][:name]
@@ -58,8 +64,8 @@ module Metrics
       JSON.pretty_generate({
         database: label,
         timestamp: timestamp.iso8601,
-        columns: columns.map { |column| column_key(column) },
-        rows: rows.map { |row| columns.map { |column| value(column, row) } },
+        columns: [rows_name] + columns.map { |column| column_key(column) },
+        rows: rows.map { |row| [row_key(row)] + columns.map { |column| value(column, row) } },
       })
     end
 
@@ -84,28 +90,35 @@ module Metrics
 
     def calculate_all_values
       if values.nil? || timestamp.nil? || timestamp + interval < Time.zone.now
-        @values = {}.tap do |v|
-          rows.each do |row|
-            if respond_to?(:calculate_row)
-              # do calculation a row at a time
-              row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
-              row_values.default = 0
-              columns.each do |column|
-                v[value_key(column, row)] = row_values[column]
-              end
-              # sleep for a very short while to avoid overloading the system
-              sleep(rand(0..0.1).round(2))
-            else
-              # do calculation a cell at a time
-              columns.each do |column|
-                v[value_key(column, row)] = calculate(column, row)
-                # sleep for a very short while to avoid overloading the system
-                sleep(rand(0..0.1).round(2))
-              end
+        if respond_to?(:calculate_table)
+          @values = calculate_table
+          pause
+        else
+          @values = calculate_individual_rows
+        end
+        @timestamp = Time.zone.now
+      end
+    end
+
+    def calculate_individual_rows
+      {}.tap do |vals|
+        rows.each do |row|
+          if respond_to?(:calculate_row)
+            # do calculation a row at a time
+            row_values = ActiveSupport::HashWithIndifferentAccess.new(calculate_row(row))
+            row_values.default = 0
+            columns.each do |column|
+              vals[value_key(column, row)] = row_values[column]
+            end
+            pause
+          else
+            # do calculation a cell at a time
+            columns.each do |column|
+              vals[value_key(column, row)] = calculate(column, row)
+              pause
             end
           end
         end
-        @timestamp = Time.zone.now
       end
     end
 
@@ -123,6 +136,27 @@ module Metrics
 
     def value(column, row)
       @values[value_key(column, row)]
+    end
+
+    def build_label(label, supplier)
+      if supplier.present?
+        "#{label} (#{supplier.key})"
+      else
+        label
+      end
+    end
+
+    def build_file(file, supplier)
+      if supplier.present?
+        "#{file}-#{supplier.key}"
+      else
+        file
+      end
+    end
+
+    def pause
+      # sleep for a very short while to avoid overloading non-test systems
+      sleep(rand(0..0.1).round(2)) unless Rails.env.test?
     end
   end
 end
