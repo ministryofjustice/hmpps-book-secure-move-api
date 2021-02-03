@@ -64,8 +64,8 @@ module Metrics
       JSON.pretty_generate({
         database: label,
         timestamp: timestamp.iso8601,
-        columns: columns.map { |column| column_key(column) },
-        rows: rows.map { |row| columns.map { |column| value(column, row) } },
+        columns: [rows_name] + columns.map { |column| column_key(column) },
+        rows: rows.map { |row| [row_key(row)] + columns.map { |column| value(column, row) } },
       })
     end
 
