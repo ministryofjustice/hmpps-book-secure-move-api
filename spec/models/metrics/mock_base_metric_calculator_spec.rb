@@ -72,10 +72,10 @@ RSpec.describe MockBaseMetricCalculator do
       expect(json).to eql({
         'database' => 'label',
         'timestamp' => '2020-10-07T01:02:03+01:00',
-        'columns' => %w[col1 col2],
+        'columns' => %w[row col1 col2],
         'rows' => [
-          [1, 1],
-          [1, 1],
+          ['row1', 1, 1],
+          ['row2', 1, 1],
         ],
       })
     }

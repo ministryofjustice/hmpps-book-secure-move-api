@@ -71,6 +71,7 @@ class GenericEvent < ApplicationRecord
     PerCourtTakeToSeeVisitors
     PerCourtTask
     PerGeneric
+    PerHandover
     PerMedicalAid
     PerPrisonerWelfare
     PersonMoveAssault

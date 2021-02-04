@@ -230,5 +230,44 @@ RSpec.describe Api::PersonEscortRecordsController do
         end
       end
     end
+
+    context 'with handover event' do
+      let(:occurred_timestamp) { Time.zone.now }
+      let(:handover_details) do
+        {
+          'recipient_name': 'Fulton McKay',
+          'recipient_id': '12345',
+          'recipient_contact_number': '01-811-8055',
+        }
+      end
+      let(:attributes) do
+        {
+          'status': status,
+          'handover_details': handover_details,
+          'handover_occurred_at': occurred_timestamp.iso8601,
+        }
+      end
+
+      it 'creates a per handover event' do
+        expect { patch_person_escort_record }.to change(GenericEvent, :count).by(1)
+      end
+
+      it 'persists correct attributes to a per handover event' do
+        recorded_timestamp = Time.zone.parse('2020-10-07 01:02:03')
+        Timecop.freeze(recorded_timestamp) do
+          patch_person_escort_record
+        end
+
+        event = GenericEvent.find_by(eventable: person_escort_record, type: 'GenericEvent::PerHandover')
+
+        expect(event).to have_attributes(
+          created_by: 'TEST_USER',
+          occurred_at: occurred_timestamp,
+          recorded_at: recorded_timestamp,
+          details: handover_details,
+          notes: 'Automatically generated event',
+        )
+      end
+    end
   end
 end

@@ -531,6 +531,10 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_handover, parent: :generic_event, class: 'GenericEvent::PerHandover' do
+    eventable { association(:person_escort_record, :confirmed) }
+  end
+
   factory :event_person_move_assault, parent: :incident, class: 'GenericEvent::PersonMoveAssault' do
   end
 
