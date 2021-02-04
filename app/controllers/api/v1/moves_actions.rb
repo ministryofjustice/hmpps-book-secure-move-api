@@ -26,6 +26,8 @@ module Api::V1
     def update_and_render
       updater.call
 
+      create_automatic_event!(eventable: updater.move, event_class: GenericEvent::MoveDateChanged, details: { date: updater.move.date.iso8601 }) if updater.date_changed
+
       Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
       render_move(updater.move, :ok)
     end

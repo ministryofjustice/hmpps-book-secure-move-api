@@ -2,6 +2,8 @@
 
 module Api
   class PersonEscortRecordsController < FrameworkAssessmentsController
+    include Eventable
+
     UPDATE_PER_PERMITTED_PARAMS = [
       :type,
       attributes: [:status, :handover_occurred_at, handover_details: {}],
@@ -19,9 +21,9 @@ module Api
       assessment.confirm!(update_assessment_status, handover_details, handover_occurred_at)
 
       if handover_details.present? && handover_occurred_at.present?
-        create_handover_event
+        create_handover_event!
       else
-        create_confirmation_event
+        create_confirmation_event!
       end
     end
 
@@ -33,36 +35,12 @@ module Api
       PersonEscortRecordSerializer
     end
 
-    def create_confirmation_event
-      now = Time.zone.now.iso8601
-
-      event_attributes = {
-        eventable: assessment,
-        occurred_at: now,
-        recorded_at: now,
-        notes: 'Automatically generated event',
-        details: {
-          confirmed_at: assessment.confirmed_at.iso8601,
-        },
-        created_by: created_by,
-      }
-
-      GenericEvent::PerConfirmation.create!(event_attributes)
+    def create_confirmation_event!
+      create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerConfirmation, details: { confirmed_at: assessment.confirmed_at.iso8601 })
     end
 
-    def create_handover_event
-      now = Time.zone.now.iso8601
-
-      event_attributes = {
-        eventable: assessment,
-        occurred_at: assessment.handover_occurred_at.iso8601,
-        recorded_at: now,
-        notes: 'Automatically generated event',
-        details: assessment.handover_details,
-        created_by: created_by,
-      }
-
-      GenericEvent::PerHandover.create!(event_attributes)
+    def create_handover_event!
+      create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerHandover, occurred_at: assessment.handover_occurred_at, details: assessment.handover_details)
     end
   end
 end
