@@ -1,5 +1,26 @@
 # Changelog
 
+## [v2.9.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.1) (2021-02-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.0...v2.9.1)
+
+**Merged pull requests:**
+
+- Add new PerHandover event [\#1309](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1309) ([smoothcontract](https://github.com/smoothcontract))
+- Bump aws-sdk-s3 from 1.87.0 to 1.88.0 [\#1308](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1308) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.6.0 to 1.7.0 [\#1307](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1307) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update Gemfile.lock [\#1306](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1306) ([martyn-w](https://github.com/martyn-w))
+- Add new handover\_occurred\_at attribute to PER [\#1305](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1305) ([smoothcontract](https://github.com/smoothcontract))
+- Add support for new handover\_details JSONB attribute when confirming PER [\#1304](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1304) ([smoothcontract](https://github.com/smoothcontract))
+- Bump rswag-ui from 2.3.1 to 2.3.2 [\#1303](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1303) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-api from 2.3.1 to 2.3.2 [\#1302](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1302) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-specs from 2.3.1 to 2.3.2 [\#1301](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1301) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog 2.9.0 [\#1299](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1299) ([cwrw](https://github.com/cwrw))
+- Bump bootsnap from 1.5.1 to 1.6.0 [\#1296](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1296) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.1.1 to 5.2.0 [\#1295](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1295) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add validation to Person\#date\_of\_birth [\#1276](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1276) ([Thource](https://github.com/Thource))
+- Supplier metrics [\#1275](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1275) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.0) (2021-01-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.8.9...v2.9.0)
