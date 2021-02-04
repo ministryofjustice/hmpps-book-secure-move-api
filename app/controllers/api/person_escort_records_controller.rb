@@ -2,8 +2,6 @@
 
 module Api
   class PersonEscortRecordsController < FrameworkAssessmentsController
-    after_action :create_confirmation_event, only: :update # rubocop:disable LexicallyScopedActionFilter
-
     UPDATE_PER_PERMITTED_PARAMS = [
       :type,
       attributes: [:status, :handover_occurred_at, handover_details: {}],
@@ -19,6 +17,12 @@ module Api
       handover_details = update_assessment_params.to_h.dig(:attributes, :handover_details)
       handover_occurred_at = update_assessment_params.to_h.dig(:attributes, :handover_occurred_at)
       assessment.confirm!(update_assessment_status, handover_details, handover_occurred_at)
+
+      if handover_details.present? && handover_occurred_at.present?
+        create_handover_event
+      else
+        create_confirmation_event
+      end
     end
 
     def assessment_class
@@ -44,6 +48,21 @@ module Api
       }
 
       GenericEvent::PerConfirmation.create!(event_attributes)
+    end
+
+    def create_handover_event
+      now = Time.zone.now.iso8601
+
+      event_attributes = {
+        eventable: assessment,
+        occurred_at: assessment.handover_occurred_at.iso8601,
+        recorded_at: now,
+        notes: 'Automatically generated event',
+        details: assessment.handover_details,
+        created_by: created_by,
+      }
+
+      GenericEvent::PerHandover.create!(event_attributes)
     end
   end
 end

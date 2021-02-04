@@ -22,6 +22,7 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'PerCourtTakeToSeeVisitors'
   it_behaves_like 'a generic event endpoint', 'PerCourtTask'
   it_behaves_like 'a generic event endpoint', 'PerGeneric'
+  it_behaves_like 'a generic event endpoint', 'PerHandover'
   it_behaves_like 'a generic event endpoint', 'PerMedicalAid'
   it_behaves_like 'a generic event endpoint', 'PerPrisonerWelfare'
 end
