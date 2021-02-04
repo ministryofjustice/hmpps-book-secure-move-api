@@ -23,7 +23,8 @@ module Api::V2
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
-      create_event(move)
+      create_auto_event(move, GenericEvent::MoveProposed) if move.proposed?
+      create_auto_event(move, GenericEvent::MoveRequested) if move.requested?
 
       render_move(move, :created)
     end
@@ -31,7 +32,10 @@ module Api::V2
     def update_and_render
       move.assign_attributes(common_move_attributes)
       action_name = move.status_changed? ? 'update_status' : 'update'
+      move_date_changed = move.date_changed?
       move.save!
+
+      create_auto_event(move, GenericEvent::MoveDateChanged, date: move.date.iso8601) if move_date_changed
       move.allocation&.refresh_status_and_moves_count!
 
       Allocations::CreateInNomis.call(move) if create_in_nomis?
@@ -158,26 +162,18 @@ module Api::V2
       end
     end
 
-    def create_event(move)
+    def create_auto_event(move, event_class, details = {})
       now = Time.zone.now.iso8601
 
-      event_attributes = {
+      event_class.create!(
         eventable: move,
         occurred_at: now,
         recorded_at: now,
         notes: 'Automatically generated event',
-        details: {},
+        details: details,
         supplier_id: doorkeeper_application_owner&.id,
         created_by: created_by,
-      }
-
-      if move.proposed?
-        GenericEvent::MoveProposed.create!(event_attributes)
-      end
-
-      if move.requested?
-        GenericEvent::MoveRequested.create!(event_attributes)
-      end
+      )
     end
   end
 end

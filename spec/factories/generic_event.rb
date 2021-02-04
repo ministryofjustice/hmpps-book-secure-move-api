@@ -22,6 +22,15 @@ FactoryBot.define do
     end
   end
 
+  factory :event_move_date_changed, parent: :generic_event, class: 'GenericEvent::MoveDateChanged' do
+    eventable { association(:move) }
+    details do
+      {
+        date: '2021-12-02',
+      }
+    end
+  end
+
   factory :event_move_requested, parent: :generic_event, class: 'GenericEvent::MoveRequested' do
     eventable { association(:move) }
   end
