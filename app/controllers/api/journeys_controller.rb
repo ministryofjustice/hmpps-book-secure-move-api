@@ -3,11 +3,12 @@
 module Api
   class JourneysController < ApiController
     include Idempotentable
+    include Eventable
 
     before_action :validate_params, only: %i[create update]
     before_action :validate_idempotency_key, only: %i[create update]
     around_action :idempotent_action, only: %i[create update]
-    after_action :create_event, only: %i[create update]
+    after_action :create_journey_event, only: %i[create update]
 
     PERMITTED_NEW_JOURNEY_PARAMS = [
       :type,
@@ -135,26 +136,15 @@ module Api
       end
     end
 
-    def create_event
-      now = Time.zone.now.iso8601
+    def create_journey_event
+      event_class = case action_name
+                    when 'update'
+                      GenericEvent::JourneyUpdate
+                    when 'create'
+                      GenericEvent::JourneyCreate
+                    end
 
-      event_attributes = {
-        eventable: journey,
-        occurred_at: now,
-        recorded_at: now,
-        notes: 'Automatically generated event',
-        details: {},
-        supplier_id: supplier.id,
-        created_by: created_by,
-      }
-
-      if action_name == 'update'
-        GenericEvent::JourneyUpdate.create!(event_attributes)
-      end
-
-      if action_name == 'create'
-        GenericEvent::JourneyCreate.create!(event_attributes)
-      end
+      create_automatic_event!(eventable: journey, event_class: event_class, supplier_id: supplier.id)
     end
   end
 end

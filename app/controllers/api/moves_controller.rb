@@ -2,6 +2,8 @@
 
 module Api
   class MovesController < ApiController
+    include Eventable
+
     before_action :validate_filter_params, only: %i[index filtered]
 
     CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]].freeze
