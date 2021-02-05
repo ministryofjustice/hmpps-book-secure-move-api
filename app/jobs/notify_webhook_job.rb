@@ -41,7 +41,7 @@ class NotifyWebhookJob < ApplicationJob
 private
 
   def get_client(subscription)
-    client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' })
+    client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' }, request: { timeout: 5 })
     if subscription.username.present? && subscription.password.present?
       client.headers['Authorization'] = "Basic #{Base64.strict_encode64(subscription.username + ':' + subscription.password)}"
     end
