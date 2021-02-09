@@ -2,7 +2,7 @@ class GenericEvent
   class PersonMoveVehicleSystemsFailed < GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
 
-    details_attributes :supplier_personnel_numbers, :vehicle_reg, :reported_at, :postcode
+    details_attributes :supplier_personnel_numbers, :vehicle_reg, :reported_at, :postcode, :location_description
     relationship_attributes location_id: :locations
     eventable_types 'Move', 'Person'
 
@@ -11,7 +11,9 @@ class GenericEvent
     include VehicleRegValidations
     include LocationFeed
 
-    validates :postcode, presence: true, postcode: true
+    validates :postcode, postcode: true
     validates :reported_at, iso_date_time: true
+    validates :postcode, presence: true, unless: :location_description
+    validates :location_description, presence: true, unless: :postcode
   end
 end
