@@ -1,5 +1,23 @@
 # Changelog
 
+## [v2.9.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.2) (2021-02-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.1...v2.9.2)
+
+**Merged pull requests:**
+
+- Bump bootsnap from 1.7.0 to 1.7.2 [\#1322](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1322) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2655 relaxed postcodes [\#1321](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1321) ([martyn-w](https://github.com/martyn-w))
+- Bump rswag-ui from 2.3.2 to 2.3.3 [\#1320](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1320) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump timecop from 0.9.2 to 0.9.3 [\#1319](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1319) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-specs from 2.3.2 to 2.3.3 [\#1318](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1318) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-api from 2.3.2 to 2.3.3 [\#1317](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1317) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.2.0 to 5.2.1 [\#1316](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1316) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Timeout webhooks after 5 seconds [\#1313](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1313) ([martyn-w](https://github.com/martyn-w))
+- DRY up various implementations of automatic event creation [\#1312](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1312) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1311](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1311) ([martyn-w](https://github.com/martyn-w))
+- P4-2643 add MoveDateChanged event [\#1310](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1310) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.9.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.1) (2021-02-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.0...v2.9.1)
