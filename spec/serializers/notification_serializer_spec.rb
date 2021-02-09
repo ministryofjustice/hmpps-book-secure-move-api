@@ -20,17 +20,6 @@ RSpec.describe NotificationSerializer do
             "event_type": 'move_created',
             "timestamp": notification.created_at.iso8601,
           },
-          "relationships": {
-            "move": {
-              "data": {
-                "id": notification.topic.id,
-                "type": 'moves',
-              },
-              "links": {
-                "self": "http://localhost:4000/api/v1/moves/#{notification.topic.id}",
-              },
-            },
-          },
         },
       }
     end
@@ -52,16 +41,29 @@ RSpec.describe NotificationSerializer do
     end
 
     context 'when topic is a Move' do
-      it 'contains a move relationship data' do
+      it 'contains move relationship data' do
         expect(result[:data][:relationships][:move][:data]).to eql(id: notification.topic.id, type: 'moves')
       end
 
-      it 'contains a move relationship links' do
+      it 'contains move relationship links' do
         expect(result[:data][:relationships][:move][:links]).to eql(self: "http://localhost:4000/api/v1/moves/#{notification.topic.id}")
       end
     end
 
-    context 'when topic is not a Move' do
+    context 'when topic is a PersonEscortRecord' do
+      let(:per) { create(:person_escort_record) }
+      let(:notification) { create(:notification, topic: per) }
+
+      it 'contains person_escort_record relationship data' do
+        expect(result[:data][:relationships][:person_escort_record][:data]).to eql(id: per.id, type: 'person_escort_records')
+      end
+
+      it 'contains person_escort_record relationship links' do
+        expect(result[:data][:relationships][:person_escort_record][:links]).to eql(self: "http://localhost:4000/api/v1/person_escort_records/#{per.id}")
+      end
+    end
+
+    context 'when topic is not a Move or PersonEscortRecord' do
       let(:allocation) { create(:allocation) }
       let(:notification) { create(:notification, topic: allocation) }
 

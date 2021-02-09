@@ -306,6 +306,78 @@ RSpec.describe Api::FrameworkResponsesController do
         it_behaves_like 'an endpoint that responds with error 404'
       end
     end
+
+    context 'with subscriptions' do
+      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:notification_type_email) { create(:notification_type, :email) }
+      let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+      let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
+      let(:person_escort_record) { create(:person_escort_record, :completed, move: move) }
+
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+      let(:notify_response) do
+        instance_double(
+          ActionMailer::MessageDelivery,
+          deliver_now!:
+          instance_double(
+            Mail::Message,
+            govuk_notify_response:
+            instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
+          ),
+        )
+      end
+
+      before do
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+        allow(PersonEscortRecordMailer).to receive(:notify).and_return(notify_response)
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+          bulk_update_framework_responses
+        end
+      end
+
+      it 'creates a webhook notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record,
+          notification_type: notification_type_webhook,
+          event_type: 'amend',
+        )
+      end
+
+      it 'creates an email notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record,
+          notification_type: notification_type_email,
+          event_type: 'amend',
+        )
+      end
+
+      context 'when the assessment was not previously completed' do
+        let(:person_escort_record) { create(:person_escort_record, :in_progress, move: move) }
+
+        it 'does not create notifications' do
+          expect(subscription.notifications).to be_empty
+        end
+      end
+
+      context 'when request is unsuccessful' do
+        let(:value) { 'foo-bar' }
+
+        it 'does not create notifications' do
+          expect(subscription.notifications).to be_empty
+        end
+      end
+    end
   end
 
   describe 'PATCH /youth_risk_assessments/:youth_risk_assessment_id/framework_responses' do

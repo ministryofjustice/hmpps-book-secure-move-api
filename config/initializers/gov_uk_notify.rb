@@ -6,6 +6,7 @@ if ENV['GOVUK_NOTIFY_ENABLED'] =~ /true/i
     Raven.capture_message('GOVUK_NOTIFY_API_KEY env var is not set; emails cannot be sent', { level: 'warning' })
   end
 
+  # TODO: Remove use of GOVUK_NOTIFY_TEMPLATE_ID - change to GOVUK_NOTIFY_MOVE_TEMPLATE_ID & GOVUK_NOTIFY_PER_TEMPLATE_ID
   if ENV['GOVUK_NOTIFY_TEMPLATE_ID'].blank?
     Rails.logger.warn('GOVUK_NOTIFY_TEMPLATE_ID env var is not set; emails cannot be sent')
     Raven.capture_message('GOVUK_NOTIFY_TEMPLATE_ID env var is not set; emails cannot be sent', { level: 'warning' })

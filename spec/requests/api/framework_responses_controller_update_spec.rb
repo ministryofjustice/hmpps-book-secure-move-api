@@ -6,6 +6,10 @@ RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /framework_responses/:framework_response_id' do
     include_context 'with supplier with spoofed access token'
 
+    subject(:patch_response) do
+      patch "/api/v1/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
+    end
+
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_response) { create(:string_response) }
@@ -26,15 +30,12 @@ RSpec.describe Api::FrameworkResponsesController do
     let(:includes) {}
     let(:recorded_timestamp) { Time.zone.parse('2020-10-07 01:02:03').iso8601 }
 
-    before do
-      Timecop.freeze(recorded_timestamp) do
-        patch "/api/v1/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
+    context 'when successful' do
+      before do
+        Timecop.freeze(recorded_timestamp) { patch_response }
+        framework_response.reload
       end
 
-      framework_response.reload
-    end
-
-    context 'when successful' do
       context 'when response is a string' do
         it_behaves_like 'an endpoint that responds with success 200'
 
@@ -222,6 +223,11 @@ RSpec.describe Api::FrameworkResponsesController do
     end
 
     context 'when unsuccessful' do
+      before do
+        Timecop.freeze(recorded_timestamp) { patch_response }
+        framework_response.reload
+      end
+
       context 'with a bad request' do
         let(:framework_response_params) { nil }
 
@@ -315,6 +321,79 @@ RSpec.describe Api::FrameworkResponsesController do
         let(:detail_404) { "Couldn't find FrameworkResponse with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404'
+      end
+    end
+
+    context 'with subscriptions' do
+      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:notification_type_email) { create(:notification_type, :email) }
+      let!(:notification_type_webhook) { create(:notification_type, :webhook) }
+      let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
+      let(:person_escort_record) { create(:person_escort_record, :completed, move: move) }
+      let(:framework_response) { create(:string_response, assessmentable: person_escort_record) }
+
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+      let(:notify_response) do
+        instance_double(
+          ActionMailer::MessageDelivery,
+          deliver_now!:
+          instance_double(
+            Mail::Message,
+            govuk_notify_response:
+            instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
+          ),
+        )
+      end
+
+      before do
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+        allow(PersonEscortRecordMailer).to receive(:notify).and_return(notify_response)
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+          patch_response
+        end
+      end
+
+      it 'creates a webhook notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record,
+          notification_type: notification_type_webhook,
+          event_type: 'amend',
+        )
+      end
+
+      it 'creates an email notification' do
+        notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+        expect(notification).to have_attributes(
+          topic: person_escort_record,
+          notification_type: notification_type_email,
+          event_type: 'amend',
+        )
+      end
+
+      context 'when the assessment was not previously completed' do
+        let(:person_escort_record) { create(:person_escort_record, :in_progress, move: move) }
+
+        it 'does not create notifications' do
+          expect(subscription.notifications).to be_empty
+        end
+      end
+
+      context 'when request is unsuccessful' do
+        let(:value) { 'foo-bar' }
+
+        it 'does not create notifications' do
+          expect(subscription.notifications).to be_empty
+        end
       end
     end
   end

@@ -39,4 +39,12 @@ class Notification < ApplicationRecord
   def for_feed
     attributes.slice(*FEED_ATTRIBUTES)
   end
+
+  def mailer
+    if topic.is_a?(PersonEscortRecord)
+      PersonEscortRecordMailer
+    else
+      MoveMailer
+    end
+  end
 end

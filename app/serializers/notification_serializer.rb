@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# NB: at the moment this serializer only supports Move topics. In the future we should also support Person topics.
 class NotificationSerializer
   include JSONAPI::Serializer
 
@@ -10,11 +9,11 @@ class NotificationSerializer
 
   attribute :timestamp, &:created_at
 
-  belongs_to :topic, polymorphic: true, key: :move, if: proc { |object| move?(object) }, links: {
+  belongs_to :move, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(Move) }, links: {
     self: ->(object) { Rails.application.routes.url_helpers.api_move_url(object.topic.id) },
   }
 
-  def self.move?(object)
-    object.topic.is_a?(Move)
-  end
+  belongs_to :person_escort_record, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(PersonEscortRecord) }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_person_escort_record_url(object.topic.id) },
+  }
 end

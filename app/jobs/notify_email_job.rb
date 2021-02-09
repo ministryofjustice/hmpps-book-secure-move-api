@@ -14,7 +14,7 @@ class NotifyEmailJob < ApplicationJob
 
     begin
       # NB: deliver_now! will raise an exception unless the email is delivered to gov.uk Notify
-      response = MoveMailer.notify(notification).deliver_now!
+      response = notification.mailer.notify(notification).deliver_now!
       raise('govuk_notify_response is missing') if response.govuk_notify_response.blank?
 
       notification.update(
