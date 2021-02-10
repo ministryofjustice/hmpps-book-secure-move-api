@@ -584,6 +584,7 @@ FactoryBot.define do
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
         postcode: 'W1A 1AA',
+        location_description: 'Portland Place, London',
       }
     end
   end
@@ -597,6 +598,7 @@ FactoryBot.define do
         vehicle_reg: Faker::Vehicle.license_plate,
         reported_at: Time.zone.now.iso8601,
         postcode: 'W1A 1AA',
+        location_description: 'Portland Place, London',
       }
     end
   end
