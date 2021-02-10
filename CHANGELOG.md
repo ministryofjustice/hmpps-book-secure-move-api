@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.9.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.3) (2021-02-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.2...v2.9.3)
+
+**Merged pull requests:**
+
+- Update notify\_webhook\_job.rb [\#1325](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1325) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1323](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1323) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.9.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.2) (2021-02-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.1...v2.9.2)
