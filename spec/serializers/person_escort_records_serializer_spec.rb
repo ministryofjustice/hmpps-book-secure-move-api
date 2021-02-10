@@ -39,6 +39,10 @@ RSpec.describe PersonEscortRecordsSerializer do
     expect(result[:data][:attributes][:created_at]).to eq(person_escort_record.created_at.iso8601)
   end
 
+  it 'contains an `updated_at` attribute' do
+    expect(result[:data][:attributes][:updated_at]).to eq(person_escort_record.updated_at.iso8601)
+  end
+
   it 'contains a `nomis_sync_status` attribute' do
     expect(result[:data][:attributes][:nomis_sync_status]).to eq(person_escort_record.nomis_sync_status)
   end
