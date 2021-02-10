@@ -40,6 +40,10 @@ RSpec.describe FrameworkAssessmentSerializer do
     expect(result[:data][:attributes][:created_at]).to eq(assessment.created_at.iso8601)
   end
 
+  it 'contains an `updated_at` attribute' do
+    expect(result[:data][:attributes][:updated_at]).to eq(assessment.updated_at.iso8601)
+  end
+
   it 'contains a `nomis_sync_status` attribute' do
     expect(result[:data][:attributes][:nomis_sync_status]).to eq(assessment.nomis_sync_status)
   end
