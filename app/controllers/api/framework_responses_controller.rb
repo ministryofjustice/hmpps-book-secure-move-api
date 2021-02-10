@@ -108,7 +108,7 @@ module Api
 
     def send_notification
       if assessment.respond_to?(:amended_at) && assessment.amended_at.present?
-        Notifier.prepare_notifications(topic: assessment, action_name: 'amend')
+        Notifier.prepare_notifications(topic: assessment, action_name: 'amend_person_escort_record')
       end
     end
   end

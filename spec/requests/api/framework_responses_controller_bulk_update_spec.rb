@@ -348,7 +348,7 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(notification).to have_attributes(
           topic: person_escort_record,
           notification_type: notification_type_webhook,
-          event_type: 'amend',
+          event_type: 'amend_person_escort_record',
         )
       end
 
@@ -358,7 +358,7 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(notification).to have_attributes(
           topic: person_escort_record,
           notification_type: notification_type_email,
-          event_type: 'amend',
+          event_type: 'amend_person_escort_record',
         )
       end
 
