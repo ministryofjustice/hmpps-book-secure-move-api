@@ -83,4 +83,20 @@ RSpec.describe Notification, type: :model do
       expect(notification.for_feed).to include_json(expected_json)
     end
   end
+
+  describe 'mailer' do
+    it 'returns correct mailer class for a PersonEscortRecord' do
+      topic = create(:person_escort_record)
+      notification = build(:notification, topic: topic)
+
+      expect(notification.mailer).to eq(PersonEscortRecordMailer)
+    end
+
+    it 'returns correct mailer class for a Move' do
+      topic = create(:move)
+      notification = build(:notification, topic: topic)
+
+      expect(notification.mailer).to eq(MoveMailer)
+    end
+  end
 end

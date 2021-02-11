@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 # This job is responsible for preparing a set of notify jobs to run
-class PrepareMoveNotificationsJob < PrepareBaseNotificationsJob
+class PreparePersonEscortRecordNotificationsJob < PrepareBaseNotificationsJob
 private
 
   def find_topic(topic_id)
-    Move.find(topic_id)
+    PersonEscortRecord.find(topic_id)
   end
 
   def associated_move(topic)
-    topic
+    topic.move
   end
 end

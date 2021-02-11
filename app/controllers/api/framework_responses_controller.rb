@@ -2,6 +2,8 @@
 
 module Api
   class FrameworkResponsesController < ApiController
+    after_action :send_notification, only: %i[update bulk_update]
+
     # NB: permit multiple types of value attributes: array, array of objects,
     # object with option details fields, and string
     PERMITTED_PARAMS = [
@@ -68,7 +70,13 @@ module Api
     end
 
     def assessment
-      @assessment ||= params['assessment_class'].find(params[:id])
+      @assessment ||= begin
+        if action_name == 'bulk_update'
+          params['assessment_class'].find(params[:id])
+        else
+          framework_response.assessmentable
+        end
+      end
     end
 
     def render_value_type_error(exception)
@@ -96,6 +104,12 @@ module Api
         json: { errors: errors },
         status: :unprocessable_entity,
       )
+    end
+
+    def send_notification
+      if assessment.respond_to?(:amended_at) && assessment.amended_at.present?
+        Notifier.prepare_notifications(topic: assessment, action_name: 'amend_person_escort_record')
+      end
     end
   end
 end

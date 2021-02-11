@@ -57,7 +57,17 @@ RSpec.describe Notifier do
     end
   end
 
-  context 'when scheduled with a person_escort_record' do
+  context 'when scheduled with a person_escort_record amendment' do
+    let(:move) { create(:move, date: Time.zone.tomorrow) }
+    let(:topic) { create(:person_escort_record, move: move) }
+    let(:action_name) { 'amend_person_escort_record' }
+
+    it 'queues a job' do
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+    end
+  end
+
+  context 'when scheduled with another person_escort_record action' do
     let(:topic) { create(:person_escort_record) }
 
     it 'queues a job' do

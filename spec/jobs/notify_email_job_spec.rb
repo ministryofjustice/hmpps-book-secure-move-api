@@ -12,12 +12,12 @@ RSpec.describe NotifyEmailJob, type: :job do
   let(:notification) { create(:notification, :email, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
   let(:govuk_notify_api_key) { 'GOVUK_NOTIFY_API_KEY' }
-  let(:govuk_notify_template_id) { 'GOVUK_NOTIFY_TEMPLATE_ID' }
+  let(:govuk_notify_move_template_id) { 'GOVUK_NOTIFY_MOVE_TEMPLATE_ID' }
 
   before do
     allow(ENV).to receive(:fetch).and_call_original
     allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_API_KEY', nil).and_return(govuk_notify_api_key)
-    allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_TEMPLATE_ID', nil).and_return(govuk_notify_template_id)
+    allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_MOVE_TEMPLATE_ID', nil).and_return(govuk_notify_move_template_id)
     ActionMailer::Base.add_delivery_method :govuk_notify, GovukNotifyRails::Delivery, api_key: govuk_notify_api_key
   end
 
@@ -29,8 +29,8 @@ RSpec.describe NotifyEmailJob, type: :job do
     end
   end
 
-  context 'when GOVUK_NOTIFY_TEMPLATE_ID env var is not set' do
-    let(:govuk_notify_template_id) { nil }
+  context 'when GOVUK_NOTIFY_MOVE_TEMPLATE_ID env var is not set' do
+    let(:govuk_notify_move_template_id) { nil }
 
     it 'raises an ArgumentError' do
       expect { perform! }.to raise_error(ArgumentError, /Missing template ID/)

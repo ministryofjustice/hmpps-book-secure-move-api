@@ -39,6 +39,10 @@ FactoryBot.define do
     trait :prefilled do
       association(:prefill_source, factory: :person_escort_record)
     end
+
+    trait :amended do
+      amended_at { Time.zone.now }
+    end
   end
 
   factory :youth_risk_assessment, class: 'YouthRiskAssessment', parent: :framework_assessmentable do
