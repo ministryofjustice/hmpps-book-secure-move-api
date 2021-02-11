@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.9.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.4) (2021-02-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.3...v2.9.4)
+
+**Merged pull requests:**
+
+- Bump faker from 2.15.1 to 2.16.0 [\#1333](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1333) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rails from 6.0.3.4 to 6.0.3.5 [\#1332](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1332) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Include `updated\_at` attribute for serialized PERs and Youth risk assessments [\#1331](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1331) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1330](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1330) ([martyn-w](https://github.com/martyn-w))
+- Bump rswag-api from 2.3.3 to 2.4.0 [\#1329](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1329) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump timecop from 0.9.3 to 0.9.4 [\#1328](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1328) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-specs from 2.3.3 to 2.4.0 [\#1327](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1327) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-ui from 2.3.3 to 2.4.0 [\#1326](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1326) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.9.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.3) (2021-02-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.2...v2.9.3)
