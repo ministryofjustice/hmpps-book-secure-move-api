@@ -2,8 +2,7 @@
 
 class MoveMailer < BaseMailer
   def notify(notification)
-    # TODO: Remove use of GOVUK_NOTIFY_TEMPLATE_ID
-    set_template(ENV.fetch('GOVUK_NOTIFY_MOVE_TEMPLATE_ID', ENV.fetch('GOVUK_NOTIFY_TEMPLATE_ID', nil)))
+    set_template(ENV.fetch('GOVUK_NOTIFY_MOVE_TEMPLATE_ID', nil))
     set_reference(notification.id)
     notification.topic.tap do |move|
       set_personalisation(
