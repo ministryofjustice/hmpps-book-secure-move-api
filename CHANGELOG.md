@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.9.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.5) (2021-02-12)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.4...v2.9.5)
+
+**Merged pull requests:**
+
+- Small cleanup of legacy ENV vars for Govuk notify service [\#1335](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1335) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1334](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1334) ([martyn-w](https://github.com/martyn-w))
+- Add webhook and email notifications for PER amendments [\#1324](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1324) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.9.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.4) (2021-02-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.3...v2.9.4)
