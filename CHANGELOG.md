@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.9.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.6) (2021-02-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.5...v2.9.6)
+
+**Merged pull requests:**
+
+- Feature flag supplier specific webhook [\#1339](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1339) ([martyn-w](https://github.com/martyn-w))
+- disables webhook as required [\#1338](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1338) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1337](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1337) ([martyn-w](https://github.com/martyn-w))
+
 ## [v2.9.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.5) (2021-02-12)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.4...v2.9.5)
