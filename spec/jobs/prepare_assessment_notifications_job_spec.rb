@@ -41,7 +41,7 @@ RSpec.describe PrepareAssessmentNotificationsJob, type: :job do
 
     context 'when the webhook is disabled by a feature flag' do
       before do
-        allow(ENV).to receive(:fetch).with('DISABLE_WEBHOOK_CONFIRM_PERSON_ESCORT_RECORD_SUPPLIERKEY', 'FALSE').and_return('TRUE')
+        allow(ENV).to receive(:fetch).with('DISABLE_WEBHOOK_CONFIRM_PERSON_ESCORT_RECORD_SUPPLIERKEY', 'FALSE').and_return('true')
       end
 
       it 'does not schedule a NotifyWebhookJob' do
