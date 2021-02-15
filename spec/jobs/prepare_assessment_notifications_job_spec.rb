@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe PrepareAssessmentNotificationsJob, type: :job do
   subject(:perform) { described_class.new.perform(topic_id: person_escort_record.id, topic_class: person_escort_record.class.name, action_name: 'update') }
 
   let(:subscription) { create(:subscription) }
-  let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
+  let(:supplier) { create :supplier, name: 'test', key: 'supplierkey', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
 
   before do
@@ -35,6 +37,17 @@ RSpec.describe PrepareAssessmentNotificationsJob, type: :job do
     it 'schedules a NotifyEmailJob' do
       perform
       expect(NotifyEmailJob).to have_received(:perform_later).with(notification_id: Notification.emails.last.id, queue_as: :notifications_high)
+    end
+
+    context 'when the webhook is disabled by a feature flag' do
+      before do
+        allow(ENV).to receive(:fetch).with('DISABLE_WEBHOOK_CONFIRM_PERSON_ESCORT_RECORD_SUPPLIERKEY', 'FALSE').and_return('TRUE')
+      end
+
+      it 'does not schedule a NotifyWebhookJob' do
+        perform
+        expect(NotifyWebhookJob).not_to have_received(:perform_later)
+      end
     end
   end
 
