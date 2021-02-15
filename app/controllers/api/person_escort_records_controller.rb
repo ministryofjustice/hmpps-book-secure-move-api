@@ -21,9 +21,9 @@ module Api
       assessment.confirm!(update_assessment_status, handover_details, handover_occurred_at)
 
       if handover_details.present? && handover_occurred_at.present?
-        create_handover_event!
+        create_handover_event_and_notification!
       else
-        create_confirmation_event!
+        create_confirmation_event_and_notification!
       end
     end
 
@@ -35,12 +35,14 @@ module Api
       PersonEscortRecordSerializer
     end
 
-    def create_confirmation_event!
+    def create_confirmation_event_and_notification!
       create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerConfirmation, details: { confirmed_at: assessment.confirmed_at.iso8601 })
+      Notifier.prepare_notifications(topic: assessment, action_name: nil)
     end
 
-    def create_handover_event!
+    def create_handover_event_and_notification!
       create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerHandover, occurred_at: assessment.handover_occurred_at, details: assessment.handover_details)
+      Notifier.prepare_notifications(topic: assessment, action_name: 'handover_person_escort_record')
     end
   end
 end
