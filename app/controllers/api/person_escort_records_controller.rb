@@ -37,6 +37,7 @@ module Api
 
     def create_confirmation_event_and_notification!
       create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerConfirmation, details: { confirmed_at: assessment.confirmed_at.iso8601 })
+      # TODO: Remove derivation of action_name 'confirm_person_escort_record' within PrepareAssessmentNotificationsJob and pass explicitly
       Notifier.prepare_notifications(topic: assessment, action_name: nil)
     end
 
