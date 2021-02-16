@@ -7,8 +7,10 @@ RSpec.describe GenericEvent::PerCourtHearing do
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event with a location in the feed', :location_id
 
-  it { is_expected.to validate_presence_of(:is_virtual) }
-  it { is_expected.to validate_presence_of(:is_trial) }
+  it { is_expected.to allow_value(true).for(:is_virtual) }
+  it { is_expected.to allow_value(false).for(:is_virtual) }
+  it { is_expected.to allow_value(true).for(:is_trial) }
+  it { is_expected.to allow_value(false).for(:is_trial) }
   it { is_expected.to validate_presence_of(:court_listing_at) }
   it { is_expected.to validate_presence_of(:started_at) }
   it { is_expected.to validate_presence_of(:ended_at) }
