@@ -158,29 +158,62 @@ RSpec.describe Api::PersonEscortRecordsController do
       before do
         allow(Faraday).to receive(:new).and_return(faraday_client)
         allow(MoveMailer).to receive(:notify).and_return(notify_response)
-        perform_enqueued_jobs(only: [PrepareAssessmentNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, PrepareAssessmentNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
           patch_person_escort_record
         end
       end
 
-      it 'creates a webhook notification' do
-        notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+      context 'when excluding handover details' do
+        it 'creates a webhook notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
-        expect(notification).to have_attributes(
-          topic: person_escort_record.move,
-          notification_type: notification_type_webhook,
-          event_type: 'confirm_person_escort_record',
-        )
+          expect(notification).to have_attributes(
+            topic: person_escort_record.move,
+            notification_type: notification_type_webhook,
+            event_type: 'confirm_person_escort_record',
+          )
+        end
+
+        it 'creates an email notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+          expect(notification).to have_attributes(
+            topic: person_escort_record.move,
+            notification_type: notification_type_email,
+            event_type: 'confirm_person_escort_record',
+          )
+        end
       end
 
-      it 'creates an email notification' do
-        notification = subscription.notifications.find_by(notification_type: notification_type_email)
+      context 'when including handover details' do
+        let(:timestamp) { Time.zone.now }
+        let(:attributes) do
+          {
+            'status': status,
+            'handover_details': {
+              'recipient_name': 'Fulton McKay',
+              'recipient_id': '12345',
+              'recipient_contact_number': '01-811-8055',
+            },
+            'handover_occurred_at': timestamp.iso8601,
+          }
+        end
 
-        expect(notification).to have_attributes(
-          topic: person_escort_record.move,
-          notification_type: notification_type_email,
-          event_type: 'confirm_person_escort_record',
-        )
+        it 'creates a webhook notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+
+          expect(notification).to have_attributes(
+            topic: person_escort_record,
+            notification_type: notification_type_webhook,
+            event_type: 'handover_person_escort_record',
+          )
+        end
+
+        it 'does not create an email notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+          expect(notification).to be_nil
+        end
       end
 
       context 'when request is unsuccessful' do

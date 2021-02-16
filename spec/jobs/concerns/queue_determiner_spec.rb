@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe QueueDeterminer do
   let(:target) do
     # anonymous class to test concern against
@@ -36,6 +38,12 @@ RSpec.describe QueueDeterminer do
 
     context 'with move last week' do
       let(:move) { build(:move, date: Time.zone.today - 7) }
+
+      it { is_expected.to be(:notifications_low) }
+    end
+
+    context 'with nil move' do
+      let(:move) { nil }
 
       it { is_expected.to be(:notifications_low) }
     end

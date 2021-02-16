@@ -2,7 +2,7 @@ module QueueDeterminer
   extend ActiveSupport::Concern
 
   def move_queue_priority(move)
-    case move.date
+    case move&.date
     when Time.zone.today
       # moves for today are high priority
       :notifications_high

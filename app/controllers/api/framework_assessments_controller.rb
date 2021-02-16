@@ -2,8 +2,6 @@
 
 module Api
   class FrameworkAssessmentsController < ApiController
-    after_action :send_notification, only: :update
-
     NEW_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
       attributes: [:version],
@@ -60,15 +58,11 @@ module Api
     end
 
     def confirm_assessment!(assessment)
-      assessment.confirm!(update_assessment_status)
+      raise NotImplementedError
     end
 
     def render_assessment(assessment, status)
       render_json assessment, serializer: assessment_serializer, include: included_relationships, status: status
-    end
-
-    def send_notification
-      Notifier.prepare_notifications(topic: assessment, action_name: 'update')
     end
 
     def assessment_class
