@@ -210,6 +210,8 @@ RSpec.describe Api::PersonEscortRecordsController do
         end
 
         it 'does not create an email notification' do
+          pending 'awaiting GeoAmey to confirm ability to handle new webhook and removal of duplicate notifications'
+
           notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
           expect(notification).to be_nil
