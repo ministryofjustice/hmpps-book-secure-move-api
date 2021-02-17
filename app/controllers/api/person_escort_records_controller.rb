@@ -44,6 +44,9 @@ module Api
     def create_handover_event_and_notification!
       create_automatic_event!(eventable: assessment, event_class: GenericEvent::PerHandover, occurred_at: assessment.handover_occurred_at, details: assessment.handover_details)
       Notifier.prepare_notifications(topic: assessment, action_name: 'handover_person_escort_record')
+
+      # TODO: Remove this webhook once GeoAmey have confirmed they can process the new handover webhook instead
+      Notifier.prepare_notifications(topic: assessment, action_name: nil)
     end
   end
 end
