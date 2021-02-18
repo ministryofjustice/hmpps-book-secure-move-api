@@ -12,10 +12,6 @@ class Subscription < ApplicationRecord
   validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP, allow_nil: true }, presence: false
   validate :email_address_or_callback_url_required
 
-  def kept?
-    !discarded?
-  end
-
   def secret=(value)
     self[:encrypted_secret] = Encryptor.encrypt(value)
   end

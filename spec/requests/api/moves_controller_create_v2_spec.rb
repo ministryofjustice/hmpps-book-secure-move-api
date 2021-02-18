@@ -560,6 +560,24 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'when the move is to an inactive location' do
+      let(:to_location) { create :location, :court, :inactive }
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => 'To location must be an active location',
+            'source' => { 'pointer' => '/data/attributes/to_location' },
+            'code' => 'inactive_location',
+          },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
     context 'when the profile is for an unsupported prisoner category' do
       let(:profile) { create(:profile, :category_not_supported) }
       let(:category_key) { profile.category.key.humanize.downcase }

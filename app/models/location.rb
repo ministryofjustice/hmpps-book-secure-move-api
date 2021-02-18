@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Location < ApplicationRecord
+  include Discard::Model
+  # TODO: rename disabled_at column to discarded_at and remove this line
+  self.discard_column = :disabled_at
+
   LOCATION_TYPE_COURT = 'court'
   LOCATION_TYPE_POLICE = 'police'
   LOCATION_TYPE_PRISON = 'prison'
