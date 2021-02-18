@@ -1,5 +1,23 @@
 # Changelog
 
+## [v2.9.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.8) (2021-02-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.7...v2.9.8)
+
+**Merged pull requests:**
+
+- Quick and dirty hack to reinstate PER confirmation Webhook for GeoAmey [\#1344](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1344) ([smoothcontract](https://github.com/smoothcontract))
+
+## [v2.9.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.7) (2021-02-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.6...v2.9.7)
+
+**Merged pull requests:**
+
+- remove presence validation on PerCourtHearing [\#1342](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1342) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1341](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1341) ([martyn-w](https://github.com/martyn-w))
+- Add new webhook \(no email\) for PER handover event [\#1340](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1340) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.9.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.6) (2021-02-15)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.5...v2.9.6)
