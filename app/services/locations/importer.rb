@@ -29,9 +29,9 @@ module Locations
 
       active_agency_ids = items.map { |item| item[:nomis_agency_id] }
       Location.where.not(nomis_agency_id: active_agency_ids).find_each do |location|
-        if location.disabled_at.blank?
+        if location.kept?
           disabled_locations << location.nomis_agency_id
-          location.update(disabled_at: Time.zone.now)
+          location.discard
         end
       end
     end

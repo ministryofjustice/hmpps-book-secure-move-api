@@ -18,10 +18,34 @@ RSpec.describe Moves::MoveTypeValidator do
 
   before { target.move_type = move_type }
 
-  context 'when valid' do
+  context 'when move_type is nil' do
     let(:move_type) { nil }
 
     it { is_expected.to be_valid }
+  end
+
+  context 'when move_type is not nil' do
+    let(:move_type) { 'prison_transfer' }
+
+    it 'validates `from_location` and `to_location` are active' do
+      target.from_location = build(:location)
+      target.to_location = build(:location)
+      expect(target).to be_valid
+    end
+
+    it 'has an error if `from_location` is not active' do
+      target.from_location = build(:location, :inactive)
+      target.to_location = build(:location)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:from_location]).to match_array('must be an active location')
+    end
+
+    it 'has an error if `to_location` is not active' do
+      target.from_location = build(:location)
+      target.to_location = build(:location, :inactive)
+      expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
+      expect(target.errors[:to_location]).to match_array('must be an active location')
+    end
   end
 
   context 'with court_appearance `move_type`' do

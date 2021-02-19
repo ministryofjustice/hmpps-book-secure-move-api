@@ -6,6 +6,8 @@ module Moves
 
     def validate(record)
       @record = record
+      validate_active_locations
+
       return if record.move_type.blank?
 
       # Apply more complex validation rules for specific move types
@@ -28,32 +30,37 @@ module Moves
       record.move_type.to_s.humanize(capitalize: false)
     end
 
+    def validate_active_locations
+      record.errors.add(:from_location, :inactive_location, message: 'must be an active location') if record.from_location&.discarded?
+      record.errors.add(:to_location, :inactive_location, message: 'must be an active location') if record.to_location&.discarded?
+    end
+
     def validate_court_to_location
-      record.errors.add(:to_location, "must be a court location for #{human_move_type} move") unless record.to_location&.court?
+      record.errors.add(:to_location, :invalid_location, message: "must be a court location for #{human_move_type} move") unless record.to_location&.court?
     end
 
     def validate_detained_from_location
-      record.errors.add(:from_location, "must be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.from_location&.detained?
+      record.errors.add(:from_location, :invalid_location, message: "must be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.from_location&.detained?
     end
 
     def validate_detained_to_location
-      record.errors.add(:to_location, "must be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.to_location&.detained?
+      record.errors.add(:to_location, :invalid_location, message: "must be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.to_location&.detained?
     end
 
     def validate_hospital_to_location
-      record.errors.add(:to_location, "must be a hospital or high security hospital location for #{human_move_type} move") unless record.to_location&.high_security_hospital? || record.to_location&.hospital?
+      record.errors.add(:to_location, :invalid_location, message: "must be a hospital or high security hospital location for #{human_move_type} move") unless record.to_location&.high_security_hospital? || record.to_location&.hospital?
     end
 
     def validate_not_detained_to_location
-      record.errors.add(:to_location, "must not be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.to_location&.not_detained?
+      record.errors.add(:to_location, :invalid_location, message: "must not be a prison, secure training centre or secure childrens hospital for #{human_move_type} move") unless record.to_location&.not_detained?
     end
 
     def validate_police_from_location
-      record.errors.add(:from_location, "must be a police location for #{human_move_type} move") unless record.from_location&.police?
+      record.errors.add(:from_location, :invalid_location, message: "must be a police location for #{human_move_type} move") unless record.from_location&.police?
     end
 
     def validate_police_to_location
-      record.errors.add(:to_location, "must be a police location for #{human_move_type} move") unless record.to_location&.police?
+      record.errors.add(:to_location, :invalid_location, message: "must be a police location for #{human_move_type} move") unless record.to_location&.police?
     end
   end
 end
