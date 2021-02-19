@@ -164,6 +164,23 @@ RSpec.describe Api::MoveEventsController do
             [{
               'title' => 'Unprocessable entity',
               'detail' => 'To location must be a hospital or high security hospital location for hospital move',
+              'source' => { 'pointer' => '/data/attributes/to_location' },
+              'code' => 'invalid_location',
+            }]
+          end
+        end
+      end
+
+      context 'with a redirection to an inactive location' do
+        let(:new_location) { create(:location, :inactive) }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location must be an active location',
+              'source' => { 'pointer' => '/data/attributes/to_location' },
+              'code' => 'inactive_location',
             }]
           end
         end

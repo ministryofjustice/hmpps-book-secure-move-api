@@ -7,6 +7,10 @@ FactoryBot.define do
     location_type { Location::LOCATION_TYPE_PRISON }
     nomis_agency_id { 'PEI' }
 
+    trait :inactive do
+      disabled_at { Time.zone.now }
+    end
+
     trait :with_moves do
       after(:create) do |location, _|
         create_list :move, 2, from_location: location
