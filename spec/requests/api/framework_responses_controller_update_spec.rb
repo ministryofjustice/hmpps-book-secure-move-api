@@ -383,8 +383,20 @@ RSpec.describe Api::FrameworkResponsesController do
       context 'when the assessment was not previously completed' do
         let(:person_escort_record) { create(:person_escort_record, :in_progress, move: move) }
 
-        it 'does not create notifications' do
-          expect(subscription.notifications).to be_empty
+        it 'creates a webhook notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
+
+          expect(notification).to have_attributes(
+            topic: person_escort_record,
+            notification_type: notification_type_webhook,
+            event_type: 'complete_person_escort_record',
+          )
+        end
+
+        it 'does not create an email notification' do
+          notification = subscription.notifications.find_by(notification_type: notification_type_email)
+
+          expect(notification).to be_nil
         end
       end
 

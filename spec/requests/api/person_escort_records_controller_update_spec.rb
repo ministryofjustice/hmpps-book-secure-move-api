@@ -168,20 +168,16 @@ RSpec.describe Api::PersonEscortRecordsController do
           notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
           expect(notification).to have_attributes(
-            topic: person_escort_record.move,
+            topic: person_escort_record,
             notification_type: notification_type_webhook,
             event_type: 'confirm_person_escort_record',
           )
         end
 
-        it 'creates an email notification' do
+        it 'does not create an email notification' do
           notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
-          expect(notification).to have_attributes(
-            topic: person_escort_record.move,
-            notification_type: notification_type_email,
-            event_type: 'confirm_person_escort_record',
-          )
+          expect(notification).to be_nil
         end
       end
 
@@ -210,8 +206,6 @@ RSpec.describe Api::PersonEscortRecordsController do
         end
 
         it 'does not create an email notification' do
-          pending 'awaiting GeoAmey to confirm ability to handle new webhook and removal of duplicate notifications'
-
           notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
           expect(notification).to be_nil
