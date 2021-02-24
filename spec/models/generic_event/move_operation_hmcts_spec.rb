@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::MoveOperationHmcts do
   subject(:generic_event) { build(:event_move_operation_hmcts) }
 

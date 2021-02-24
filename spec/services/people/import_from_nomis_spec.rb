@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe People::ImportFromNomis do
   context 'when the person is present in NOMIS', with_nomis_client_authentication: true do
     subject(:import) { described_class.new([prison_number, non_existent_prison_number]) }

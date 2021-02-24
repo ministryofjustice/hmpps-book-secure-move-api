@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PersonMoveDeathInCustody do
   subject(:generic_event) { build(:event_person_move_death_in_custody) }
 

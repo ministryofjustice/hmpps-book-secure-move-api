@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe Feeds::Journey do
   let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
   let(:updated_at_to) { Time.zone.yesterday.end_of_day }

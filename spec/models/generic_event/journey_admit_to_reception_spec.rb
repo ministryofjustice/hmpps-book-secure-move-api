@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyAdmitToReception do
   subject(:generic_event) { build(:event_journey_admit_to_reception) }
 

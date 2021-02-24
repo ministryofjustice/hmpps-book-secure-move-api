@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe Feeds::Notification do
   subject(:feed) { described_class.new(updated_at_from, updated_at_to) }
 

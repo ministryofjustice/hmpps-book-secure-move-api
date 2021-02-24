@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtCellShareRiskAssessment do
   subject(:generic_event) { build(:event_per_court_cell_share_risk_assessment) }
 

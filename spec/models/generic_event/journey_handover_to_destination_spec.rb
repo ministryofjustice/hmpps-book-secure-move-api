@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyHandoverToDestination do
   subject(:generic_event) { build(:event_journey_handover_to_destination) }
 

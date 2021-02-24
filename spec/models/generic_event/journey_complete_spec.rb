@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyComplete do
   subject(:generic_event) { build(:event_journey_complete) }
 

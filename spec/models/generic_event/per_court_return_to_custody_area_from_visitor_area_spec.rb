@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtReturnToCustodyAreaFromVisitorArea do
   subject(:generic_event) { build(:event_per_court_return_to_custody_area_from_visitor_area) }
 
