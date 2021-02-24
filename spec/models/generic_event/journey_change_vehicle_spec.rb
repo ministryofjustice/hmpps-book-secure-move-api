@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyChangeVehicle do
   subject(:generic_event) { build(:event_journey_change_vehicle) }
 

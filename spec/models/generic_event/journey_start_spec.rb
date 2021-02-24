@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyStart do
   subject(:generic_event) { build(:event_journey_start) }
 

@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::MoveCollectionByEscort do
   subject(:generic_event) { build(:event_move_collection_by_escort) }
 

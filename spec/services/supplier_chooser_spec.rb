@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe SupplierChooser do
   subject(:service) { described_class.new(move_or_allocation) }
 

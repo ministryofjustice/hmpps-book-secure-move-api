@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PersonMoveBookedIntoReceivingEstablishment do
   subject(:generic_event) { build(:event_person_move_booked_into_receiving_establishment) }
 

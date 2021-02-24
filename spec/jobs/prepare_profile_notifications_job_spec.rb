@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe PrepareProfileNotificationsJob, type: :job do
   let(:person) { create(:person) }
   let(:profile) { create :profile, person: person }

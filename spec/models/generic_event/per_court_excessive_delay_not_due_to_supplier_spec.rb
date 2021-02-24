@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtExcessiveDelayNotDueToSupplier do
   subject(:generic_event) { build(:event_per_court_excessive_delay_not_due_to_supplier) }
 

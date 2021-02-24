@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtAllDocumentationProvidedToSupplier do
   subject(:generic_event) { build(:event_per_court_all_documentation_provided_to_supplier) }
 

@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PersonMoveVehicleBrokeDown do
   subject(:generic_event) { build(:event_person_move_vehicle_broke_down) }
 

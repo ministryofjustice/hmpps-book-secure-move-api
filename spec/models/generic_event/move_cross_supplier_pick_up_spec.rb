@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::MoveCrossSupplierPickUp do
   subject(:generic_event) { build(:event_move_cross_supplier_pick_up) }
 

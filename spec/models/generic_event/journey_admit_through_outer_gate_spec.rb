@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyAdmitThroughOuterGate do
   subject(:generic_event) { build(:event_journey_admit_through_outer_gate) }
 
