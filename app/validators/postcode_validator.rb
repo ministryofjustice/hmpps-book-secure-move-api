@@ -4,7 +4,7 @@ class PostcodeValidator < ActiveModel::EachValidator
       ukpc = UKPostcode.parse(value)
 
       unless ukpc.full_valid?
-        record.errors[attribute] << 'not recognised as a UK postcode'
+        record.errors.add(attribute, 'not recognised as a UK postcode')
       end
     end
   end

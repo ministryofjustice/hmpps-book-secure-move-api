@@ -17,7 +17,10 @@ RSpec.describe GenericEvent::PersonMoveVehicleBrokeDown do
       generic_event.postcode = 'totally broken'
     end
 
-    it { is_expected.not_to be_valid }
+    it 'includes error details' do
+      expect(generic_event).not_to be_valid
+      expect(generic_event.errors.details[:postcode]).to eq([{ error: 'not recognised as a UK postcode' }])
+    end
   end
 
   context 'when reported_at is not a valid iso8601 date' do
