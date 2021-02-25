@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.9.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.9) (2021-02-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.8...v2.9.9)
+
+**Merged pull requests:**
+
+- Fix postcode error handling [\#1350](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1350) ([smoothcontract](https://github.com/smoothcontract))
+- Bump doorkeeper from 5.4.0 to 5.5.0 [\#1348](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1348) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump activerecord-import from 1.0.7 to 1.0.8 [\#1347](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1347) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Raise an error when creating/redirecting move to/from inactive location [\#1346](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1346) ([smoothcontract](https://github.com/smoothcontract))
+- Update CHANGELOG.md [\#1345](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1345) ([martyn-w](https://github.com/martyn-w))
+- Bump rails-erd from 1.6.0 to 1.6.1 [\#1343](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1343) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.88.0 to 1.88.1 [\#1336](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1336) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.9.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.8) (2021-02-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.7...v2.9.8)
