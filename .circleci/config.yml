@@ -42,7 +42,7 @@ aliases:
         }'
       mentions: '@here'
   - &notify_slack_of_approval
-    slack/approval:
+    slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
       custom: '{
           "blocks": [
