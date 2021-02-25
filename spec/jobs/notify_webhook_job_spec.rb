@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.perform_now(notification_id: notification.id) }
 

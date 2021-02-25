@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyPersonBoardsVehicle do
   subject(:generic_event) { build(:event_journey_person_boards_vehicle) }
 

@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtPreReleaseChecksCompleted do
   subject(:generic_event) { build(:event_per_court_pre_release_checks_completed) }
 

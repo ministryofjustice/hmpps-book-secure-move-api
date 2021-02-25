@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe PreparePersonNotificationsJob, type: :job do
   let(:person) { create :person }
   let!(:move_today) { create :move, profile: person.latest_profile, date: Time.zone.today }

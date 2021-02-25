@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::JourneyReadyToExit do
   subject(:generic_event) { build(:event_journey_ready_to_exit) }
 

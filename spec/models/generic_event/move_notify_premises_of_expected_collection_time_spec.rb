@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime do
   subject(:generic_event) { build(:event_move_notify_premises_of_expected_collection_time) }
 

@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe People::BuildPersonAndProfileV1 do
   subject(:service) { described_class.new(nomis_attributes) }
 

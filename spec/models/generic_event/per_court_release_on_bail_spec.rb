@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtReleaseOnBail do
   subject(:generic_event) { build(:event_per_court_release_on_bail) }
 

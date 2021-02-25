@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GenericEvent::PerCourtTakeFromCustodyToDock do
   subject(:generic_event) { build(:event_per_court_take_from_custody_to_dock) }
 
