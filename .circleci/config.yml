@@ -1,44 +1,107 @@
 version: 2.1
 
 orbs:
-  slack: circleci/slack@3.4.2
+  slack: circleci/slack@4.3.0
 
 aliases:
   - &notify_slack_on_failure
-    slack/notify-on-failure:
-      only_for_branches: master
+    slack/notify:
+      event: fail
+      branch_pattern: master
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: "API is being prepared for release :building_construction:"
-      title_link: "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
-      message: A new release was created by ${CIRCLE_USERNAME}
-      footer: Click the title to view the changes
-      include_project_field: false
-      include_job_number_field: false
-      include_visit_job_action: false
-      color: "#1d70b8"
-      mentions: here
+      custom: '{
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+                "type": "plain_text",
+                "text": "*API is being prepared for release :building_construction:*",
+                "emoji": true
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "A new release was created by ${CIRCLE_USERNAME}"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Changelog",
+                  "emoji": true
+                },
+                "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md",
+                "action_id": "button-action"
+              }
+            }
+          ]
+        }'
+      mentions: '@here'
   - &notify_slack_of_approval
     slack/approval:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      message: "API release *requires your approval* before it can be deployed :eyes:"
-      include_project_field: false
-      include_job_number_field: false
-      color: "#912b88"
+      custom: '{
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "API release *requires your approval* before it can be deployed :eyes:"
+              }
+            },
+            {
+              "type": "actions",
+              "elements": [
+                {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "View Workflow"
+                  },
+                  "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
+                }
+              ]
+            }
+          ]
+        }'
       mentions: $BUILD_NOTIFICATIONS_MENTION_ID
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      title: "API has been deployed :rocket:"
-      title_link: https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases
-      message: This release was successfully deployed to production
-      footer: Click the title to view the release notes
-      include_project_field: false
-      include_job_number_field: false
-      include_visit_job_action: false
-      color: "#28a197"
-      mentions: here
+      custom: '{
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+                "type": "plain_text",
+                "text": "*API has been deployed* :rocket:",
+                "emoji": true
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "This release was successfully deployed to production"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Release",
+                  "emoji": true
+                },
+                "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases",
+                "action_id": "button-action"
+              }
+            }
+          ]
+        }'
+      mentions: '@here'
   - &all_tags
     filters:
       tags:
@@ -458,10 +521,14 @@ workflows:
   test-build-deploy:
     jobs:
       - notify_of_release:
+          context:
+            - hmpps-common-vars
           <<: *only_deploy_tags
       - setup_test_environment:
           <<: *all_tags
       - api_docs:
+          context:
+            - hmpps-common-vars
           <<: *all_tags
           requires:
             - setup_test_environment
@@ -480,18 +547,26 @@ workflows:
             - rspec_tests
             - linters
       - deploy_dev:
+          context:
+            - hmpps-common-vars
           <<: *only_master_and_create_dev
           requires:
             - build_image
       - deploy_staging:
+          context:
+            - hmpps-common-vars
           <<: *only_master
           requires:
             - build_image
       - deploy_uat:
+          context:
+            - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
             - build_image
       - deploy_preprod:
+          context:
+            - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
             - build_image
@@ -501,10 +576,14 @@ workflows:
           requires:
             - build_image
       - notify_of_approval:
+          context:
+            - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
             - build_image
       - deploy_production:
+          context:
+            - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
             - hold_production
