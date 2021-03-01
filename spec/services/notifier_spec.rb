@@ -63,33 +63,26 @@ RSpec.describe Notifier do
     let(:action_name) { 'amend_person_escort_record' }
 
     it 'queues a job' do
-      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: true, queue_as: :notifications_medium)
     end
   end
 
-  context 'when scheduled with a person_escort_record handover' do
+  context 'when scheduled with another person_escort_record action' do
     let(:move) { create(:move, date: Time.zone.tomorrow) }
     let(:topic) { create(:person_escort_record, move: move) }
-    let(:action_name) { 'handover_person_escort_record' }
 
     it 'queues a job' do
       expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
     end
   end
 
-  context 'when scheduled with another person_escort_record action' do
-    let(:topic) { create(:person_escort_record) }
-
-    it 'queues a job' do
-      expect(PrepareAssessmentNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, topic_class: 'PersonEscortRecord', queue_as: :notifications_medium)
-    end
-  end
-
   context 'when scheduled with a youth_risk_assessment' do
-    let(:topic) { create(:youth_risk_assessment) }
+    let(:location) { create(:location, :stc) }
+    let(:move) { create(:move, from_location: location, date: Time.zone.tomorrow) }
+    let(:topic) { create(:youth_risk_assessment, move: move) }
 
     it 'queues a job' do
-      expect(PrepareAssessmentNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, topic_class: 'YouthRiskAssessment', queue_as: :notifications_medium)
+      expect(PrepareYouthRiskAssessmentNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
     end
   end
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: Remove this class - it's deprecated now and only present until we can be sure there are no queued jobs in deployed environments
 class PrepareAssessmentNotificationsJob < ApplicationJob
   include QueueDeterminer
 
