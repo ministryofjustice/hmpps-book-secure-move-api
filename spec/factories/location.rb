@@ -17,6 +17,14 @@ FactoryBot.define do
       end
     end
 
+    trait :with_address do
+      premise { 'The Big Building' }
+      locality { 'District 9' }
+      city { Faker::Address.city }
+      country { 'England' }
+      postcode { 'B1 2JP' }
+    end
+
     trait :prison do
       # This is already the default
     end
