@@ -1,0 +1,60 @@
+[
+  {
+    "agencyId":"ACI",
+    "description":"ALTCOURSE (HMP)",
+    "formattedDescription":"Altcourse (HMP)",
+    "addressType":"BUS",
+    "premise":"HMP ALTCOURSE",
+    "locality":"Fazakerley",
+    "city":"Liverpool",
+    "country":"England",
+    "postCode":"L9 7LH",
+    "phones":[{"number":"0151 522 2000", "type":"BUS"}, {"number":"0151 522 2121", "type":"FAX"}]
+  },
+  {
+    "agencyId":"AGI",
+    "description":"ASKHAM GRANGE (HMP & YOI)",
+    "formattedDescription":"Askham Grange (HMP & YOI)",
+    "addressType":"BUS",
+    "premise":"HMP & YOI ASKHAM GRANGE",
+    "city":"York",
+    "country":"England",
+    "postCode":"YO23 3FT",
+    "phones":[{"number":"01904 772001", "type":"FAX"}, {"number":"01904 772000", "type":"BUS"}]
+  },
+  {
+    "agencyId":"ASI",
+    "description":"ASHFIELD (HMP)",
+    "formattedDescription":"Ashfield (HMP)",
+    "addressType":"BUS",
+    "premise":"HMP & YOI ASHFIELD",
+    "locality":"Pucklechurch",
+    "city":"Bristol",
+    "country":"England",
+    "postCode":"BS16 9QJ",
+    "phones":[{"number":"0117 303 8000", "type":"BUS"}, {"number":"0117 303 8001", "type":"FAX"}]
+  },
+  {
+    "agencyId":"AYI",
+    "description":"AYLESBURY (HMP)",
+    "formattedDescription":"Aylesbury (HMP)",
+    "addressType":"BUS",
+    "premise":"HMP AYLESBURY",
+    "city":"Aylesbury",
+    "country":"England",
+    "postCode":"HP20 1EH",
+    "phones":[{"number":"01296 444001", "type":"FAX"}, {"number":"01296 444000", "type":"BUS"}]
+  },
+  {
+    "agencyId":"BAI",
+    "description":"BELMARSH (HMP)",
+    "formattedDescription":"Belmarsh (HMP)",
+    "addressType":"BUS",
+    "premise":"HMP BELMARSH",
+    "locality":"Thamesmead",
+    "city":"London",
+    "country":"England",
+    "postCode":"SE28 0EB",
+    "phones":[{"number":"020 8331 4401", "type":"FAX"}, {"number":"020 8331 4400", "type":"BUS"}]
+  }
+]

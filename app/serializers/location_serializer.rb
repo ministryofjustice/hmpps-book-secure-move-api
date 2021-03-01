@@ -11,6 +11,11 @@ class LocationSerializer
              :nomis_agency_id,
              :can_upload_documents,
              :young_offender_institution,
+             :premise,
+             :locality,
+             :city,
+             :country,
+             :postcode,
              :disabled_at
 
   has_many :suppliers

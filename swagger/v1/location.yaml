@@ -47,6 +47,36 @@ Location:
           example: court
           description: Location type indicates whether this a prison, police station,
             court etc.
+        premise:
+          oneOf:
+          - type: string
+          - type: 'null'
+          example: HMP ALTCOURSE
+          description: Optional premise (building name) for this location
+        locality:
+          oneOf:
+          - type: string
+          - type: 'null'
+          example: Fazakerley
+          description: Optional local area name for this location
+        city:
+          oneOf:
+          - type: string
+          - type: 'null'
+          example: Liverpool
+          description: Optional city name for this location
+        country:
+          oneOf:
+          - type: string
+          - type: 'null'
+          example: England
+          description: Optional country name for this location
+        postcode:
+          oneOf:
+          - type: string
+          - type: 'null'
+          example: L9 7LH
+          description: Optional postcode for this location
         nomis_agency_id:
           type: string
           example: BAI
