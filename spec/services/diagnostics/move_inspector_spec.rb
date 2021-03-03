@@ -34,8 +34,8 @@ RSpec.describe Diagnostics::MoveInspector do
   it { is_expected.to match(/move type:\s+court_appearance/) }
   it { is_expected.to match(/status:\s+in_transit/) }
   it { is_expected.to match(/#{journey.id}/) }
-  it { is_expected.to match(/#{webhook.subscription.callback_url}/) }
-  it { is_expected.to match(/#{email.subscription.email_address}/) }
+  it { is_expected.to include(webhook.subscription.callback_url) }
+  it { is_expected.to include(email.subscription.email_address) }
 
   context 'when include_person_details=false' do
     let(:include_person_details) { false }
