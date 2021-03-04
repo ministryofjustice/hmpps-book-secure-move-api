@@ -16,6 +16,8 @@ class LocationSerializer
              :city,
              :country,
              :postcode,
+             :latitude,
+             :longitude,
              :disabled_at
 
   has_many :suppliers

@@ -136,6 +136,7 @@ GEM
     flipper-active_record (0.20.3)
       activerecord (>= 5.0, < 7)
       flipper (~> 0.20.3)
+    geocoder (1.6.5)
     git (1.8.1)
       rchardet (~> 1.8)
     github_changelog_generator (1.15.2)
@@ -414,6 +415,7 @@ DEPENDENCIES
   faraday
   finite_machine
   flipper-active_record (~> 0.19)
+  geocoder (~> 1.6.5)
   git (~> 1.7)
   github_changelog_generator
   govuk_notify_rails (~> 2.1.2)

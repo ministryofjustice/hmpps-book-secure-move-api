@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Location < ApplicationRecord
+  include Geocodeable
   include Discard::Model
+
   # TODO: rename disabled_at column to discarded_at and remove this line
   self.discard_column = :disabled_at
 
