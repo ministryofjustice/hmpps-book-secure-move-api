@@ -16,8 +16,8 @@ aliases:
             {
               "type": "section",
               "text": {
-                "text": "*API is being prepared for release :building_construction:*",
-                "emoji": true
+                "type": "plain_text",
+                "text": "*API is being prepared for release :building_construction:*"
               }
             },
             {
@@ -39,6 +39,7 @@ aliases:
                 {
                   "type": "button",
                   "text": {
+                    "type": "plain_text",
                     "text": "Changelog"
                   },
                   "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
@@ -72,6 +73,7 @@ aliases:
                 {
                   "type": "button",
                   "text": {
+                    "type": "plain_text",
                     "text": "View Workflow"
                   },
                   "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
@@ -89,8 +91,8 @@ aliases:
             {
               "type": "section",
               "text": {
-                "text": "*API has been deployed* :rocket:",
-                "emoji": true
+                "type": "mrkdwn",
+                "text": "*API has been deployed* :rocket:"
               },
               "fields": [
                 "text": {
@@ -112,6 +114,7 @@ aliases:
                 {
                   "type": "button",
                   "text": {
+                    "type": "plain_text",
                     "text": "Release"
                   },
                   "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases"
