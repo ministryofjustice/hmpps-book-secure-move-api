@@ -12,117 +12,112 @@ aliases:
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
       custom: '{
-          "blocks": [
-            {
-              "type": "section",
-              "text": {
-                "type": "plain_text",
-                "text": "*API is being prepared for release :building_construction:*"
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "A new release was created by ${CIRCLE_USERNAME}"
-              },
-              "fields": [
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
-                  }
-              ]
-            },
-            {
-              "type": "actions",
-              "elements": [
+              "blocks": [
                 {
-                  "type": "button",
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*API is being prepared for release :building_construction:*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
                   "text": {
-                    "type": "plain_text",
-                    "text": "Changelog"
+                    "type": "mrkdwn",
+                    "text": "A new release was created by ${CIRCLE_USERNAME}"
                   },
-                  "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${SLACK_PARAM_MENTIONS}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Changelog"
+                      },
+                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
+                    }
+                  ]
                 }
               ]
-            }
-          ]
-        }'
+            }'
       mentions: '@here'
   - &notify_slack_of_approval
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
       custom: '{
-          "blocks": [
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "API release *requires your approval* before it can be deployed :eyes:"
-              },
-              "fields": [
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
-                  }
-              ]
-            },
-            {
-              "type": "actions",
-              "elements": [
+              "blocks": [
                 {
-                  "type": "button",
+                  "type": "section",
                   "text": {
-                    "type": "plain_text",
-                    "text": "View Workflow"
+                    "type": "mrkdwn",
+                    "text": "API release *requires your approval* before it can be deployed :eyes:"
                   },
-                  "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${SLACK_PARAM_MENTIONS}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Workflow"
+                      },
+                      "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
+                    }
+                  ]
                 }
               ]
-            }
-          ]
-        }'
+            }'
       mentions: $BUILD_NOTIFICATIONS_MENTION_ID
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
       custom: '{
-          "blocks": [
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*API has been deployed* :rocket:"
-              },
-              "fields": [
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
-                  }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "This release was successfully deployed to production"
-              }
-            },
-            {
-              "type": "actions",
-              "elements": [
+              "blocks": [
                 {
-                  "type": "button",
+                  "type": "section",
                   "text": {
-                    "type": "plain_text",
-                    "text": "Release"
+                    "type": "mrkdwn",
+                    "text": "*API has been deployed* :rocket:"
                   },
-                  "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases"
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${SLACK_PARAM_MENTIONS} This release was successfully deployed to production"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Release"
+                      },
+                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases"
+                    }
+                  ]
                 }
               ]
-            }
-          ]
-        }'
+            }'
       mentions: '@here'
   - &all_tags
     filters:
