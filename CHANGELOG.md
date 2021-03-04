@@ -1,5 +1,20 @@
 # Changelog
 
+## [v3.0.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.0) (2021-03-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.9...v3.0.0)
+
+**Merged pull requests:**
+
+- refactor: Fix errors in slack message template [\#1359](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1359) ([Nimphal](https://github.com/Nimphal))
+- refactor: Update Slack messages template to show mentions, fix buttons [\#1357](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1357) ([Nimphal](https://github.com/Nimphal))
+- Bump puma from 5.2.1 to 5.2.2 [\#1356](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1356) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add support for importing prison addresses from Nomis [\#1355](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1355) ([smoothcontract](https://github.com/smoothcontract))
+- Bump aws-sdk-s3 from 1.88.1 to 1.89.0 [\#1354](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1354) ([dependabot[bot]](https://github.com/apps/dependabot))
+- refactor: Update circle config to use new Slack orb [\#1352](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1352) ([Nimphal](https://github.com/Nimphal))
+- Update CHANGELOG.md [\#1351](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1351) ([martyn-w](https://github.com/martyn-w))
+- Add a new webhook when an assessment is completed [\#1349](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1349) ([smoothcontract](https://github.com/smoothcontract))
+
 ## [v2.9.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v2.9.9) (2021-02-25)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.8...v2.9.9)
