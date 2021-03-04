@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Locations::Importer do
-  subject(:importer) { described_class.new(input_data) }
+  subject(:importer) { described_class.new(input_data, location_details) }
 
   let(:input_data) do
     [
@@ -50,6 +50,18 @@ RSpec.describe Locations::Importer do
     ]
   end
 
+  let(:location_details) do
+    {
+      'ACI' => {
+        premise: 'HMP ALTCOURSE',
+        locality: 'Fazakerley',
+        city: 'Liverpool',
+        country: 'England',
+        postcode: 'L9 7LH',
+      },
+    }
+  end
+
   context 'with no existing records' do
     it 'creates all the supported input items' do
       expect { importer.call }.to change(Location, :count).by(5)
@@ -63,9 +75,33 @@ RSpec.describe Locations::Importer do
       end
     end
 
+    it 'populates address details when provided' do
+      importer.call
+
+      expect(Location.find_by(nomis_agency_id: 'ACI')).to have_attributes(
+        premise: 'HMP ALTCOURSE',
+        locality: 'Fazakerley',
+        city: 'Liverpool',
+        country: 'England',
+        postcode: 'L9 7LH',
+      )
+    end
+
     it 'does not import unknown location types' do
       importer.call
       expect(Location.find_by(input_data.last)).not_to be_present
+    end
+
+    it 'does not populate missing address details' do
+      importer.call
+
+      expect(Location.find_by(nomis_agency_id: 'ABDRCT')).to have_attributes(
+        premise: nil,
+        locality: nil,
+        city: nil,
+        country: nil,
+        postcode: nil,
+      )
     end
 
     it 'returns a list of new locations' do

@@ -7,7 +7,7 @@ RSpec.describe LocationSerializer do
 
   let(:disabled_at) { Time.zone.local(2019, 1, 1) }
   let(:supplier) { create(:supplier) }
-  let(:location) { create :location, disabled_at: disabled_at, suppliers: [supplier] }
+  let(:location) { create :location, :with_address, disabled_at: disabled_at, suppliers: [supplier] }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
@@ -34,6 +34,26 @@ RSpec.describe LocationSerializer do
 
   it 'contains a title attribute' do
     expect(attributes[:title]).to eql location.title
+  end
+
+  it 'contains a premise attribute' do
+    expect(attributes[:premise]).to eql location.premise
+  end
+
+  it 'contains a locality attribute' do
+    expect(attributes[:locality]).to eql location.locality
+  end
+
+  it 'contains a city attribute' do
+    expect(attributes[:city]).to eql location.city
+  end
+
+  it 'contains a country attribute' do
+    expect(attributes[:country]).to eql location.country
+  end
+
+  it 'contains a postcode attribute' do
+    expect(attributes[:postcode]).to eql location.postcode
   end
 
   it 'contains a nomis_agency_id attribute' do

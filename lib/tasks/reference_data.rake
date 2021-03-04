@@ -4,7 +4,9 @@ namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
     puts 'Importing locations...'
-    importer = Locations::Importer.new(NomisClient::Locations.get)
+    locations = NomisClient::Locations.get
+    location_details = NomisClient::LocationDetails.get
+    importer = Locations::Importer.new(locations, location_details)
     importer.call
 
     puts "NEW LOCATIONS (#{importer.added_locations.length}):"

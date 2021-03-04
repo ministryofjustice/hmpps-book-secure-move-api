@@ -123,7 +123,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       before do
         allow(Faraday).to receive(:new).and_return(faraday_client)
         allow(MoveMailer).to receive(:notify).and_return(notify_response)
-        perform_enqueued_jobs(only: [PrepareAssessmentNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+        perform_enqueued_jobs(only: [PrepareYouthRiskAssessmentNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
           patch_youth_risk_assessment
         end
       end
@@ -132,20 +132,16 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
         expect(notification).to have_attributes(
-          topic: youth_risk_assessment.move,
+          topic: youth_risk_assessment,
           notification_type: notification_type_webhook,
           event_type: 'confirm_youth_risk_assessment',
         )
       end
 
-      it 'creates an email notification' do
+      it 'does not create an email notification' do
         notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
-        expect(notification).to have_attributes(
-          topic: youth_risk_assessment.move,
-          notification_type: notification_type_email,
-          event_type: 'confirm_youth_risk_assessment',
-        )
+        expect(notification).to be_nil
       end
 
       context 'when request is unsuccessful' do

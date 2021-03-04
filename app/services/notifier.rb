@@ -12,15 +12,10 @@ class Notifier
     when Profile
       PrepareProfileNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
     when PersonEscortRecord
-      if action_name == 'amend_person_escort_record'
-        PreparePersonEscortRecordNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, queue_as: move_queue_priority(topic.move))
-      elsif action_name == 'handover_person_escort_record'
-        PreparePersonEscortRecordNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: move_queue_priority(topic.move))
-      else
-        PrepareAssessmentNotificationsJob.perform_later(topic_id: topic.id, topic_class: topic.class.name, queue_as: :notifications_medium)
-      end
+      send_emails = action_name == 'amend_person_escort_record'
+      PreparePersonEscortRecordNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, send_emails: send_emails, queue_as: move_queue_priority(topic.move))
     when YouthRiskAssessment
-      PrepareAssessmentNotificationsJob.perform_later(topic_id: topic.id, topic_class: topic.class.name, queue_as: :notifications_medium)
+      PrepareYouthRiskAssessmentNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: move_queue_priority(topic.move))
     end
   end
 end

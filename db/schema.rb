@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_01_121439) do
+ActiveRecord::Schema.define(version: 2021_02_24_144350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -327,6 +327,11 @@ ActiveRecord::Schema.define(version: 2021_02_01_121439) do
     t.boolean "can_upload_documents", default: false, null: false
     t.uuid "category_id"
     t.boolean "young_offender_institution", default: false
+    t.string "premise"
+    t.string "locality"
+    t.string "city"
+    t.string "country"
+    t.string "postcode"
     t.index ["category_id"], name: "index_locations_on_category_id"
     t.index ["young_offender_institution"], name: "index_locations_on_young_offender_institution"
   end

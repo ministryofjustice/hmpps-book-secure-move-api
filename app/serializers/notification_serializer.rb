@@ -16,4 +16,8 @@ class NotificationSerializer
   belongs_to :person_escort_record, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(PersonEscortRecord) }, links: {
     self: ->(object) { Rails.application.routes.url_helpers.api_person_escort_record_url(object.topic.id) },
   }
+
+  belongs_to :youth_risk_assessment, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(YouthRiskAssessment) }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_youth_risk_assessment_url(object.topic.id) },
+  }
 end
