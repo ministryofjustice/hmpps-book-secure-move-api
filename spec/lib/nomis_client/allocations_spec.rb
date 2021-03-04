@@ -28,7 +28,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
       let(:response_status) { 500 }
 
-      let(:raven_args) do
+      let(:sentry_args) do
         [
           'Allocations::CreateInNomis Error!',
           extra: {
@@ -41,11 +41,11 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       end
 
       it 'pushes an error warning to Sentry' do
-        allow(Raven).to receive(:capture_message)
+        allow(Sentry).to receive(:capture_message)
 
         prison_transfer_post
 
-        expect(Raven).to have_received(:capture_message).with(*raven_args)
+        expect(Sentry).to have_received(:capture_message).with(*sentry_args)
       end
     end
   end
@@ -76,7 +76,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
       let(:response_status) { 500 }
 
-      let(:raven_args) do
+      let(:sentry_args) do
         [
           'Allocations::RemoveFromNomis Error!',
           extra: {
@@ -89,11 +89,11 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       end
 
       it 'pushes an error warning to Sentry' do
-        allow(Raven).to receive(:capture_message)
+        allow(Sentry).to receive(:capture_message)
 
         prison_transfer_put
 
-        expect(Raven).to have_received(:capture_message).with(*raven_args)
+        expect(Sentry).to have_received(:capture_message).with(*sentry_args)
       end
     end
   end

@@ -215,13 +215,13 @@ RSpec.describe FrameworkNomisMappings::Importer do
   context 'when logging errors' do
     it 'pushes an error warning to Sentry when validation fails on persisting NOMIS mappings' do
       nomis_alert = { comment: 'Some comment', expired: false, active: true }
-      allow(Raven).to receive(:capture_message)
+      allow(Sentry).to receive(:capture_message)
       allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
 
       person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
       described_class.new(assessmentable: person_escort_record).call
 
-      raven_args = [
+      sentry_args = [
         'FrameworkNomisMapping import validation Error',
         extra: {
           id: person_escort_record.id,
@@ -230,11 +230,11 @@ RSpec.describe FrameworkNomisMappings::Importer do
         level: 'error',
       ]
 
-      expect(Raven).to have_received(:capture_message).with(*raven_args)
+      expect(Sentry).to have_received(:capture_message).with(*sentry_args)
     end
 
     it 'pushes an error warning to Sentry when a NOMIS resource is new' do
-      allow(Raven).to receive(:capture_message)
+      allow(Sentry).to receive(:capture_message)
       person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
       described_class.new(assessmentable: person_escort_record).call
       personal_care_need = [
@@ -246,7 +246,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
         level: 'error',
       ]
 
-      expect(Raven).to have_received(:capture_message).with(*personal_care_need).once
+      expect(Sentry).to have_received(:capture_message).with(*personal_care_need).once
     end
   end
 

@@ -57,7 +57,7 @@ class ApiController < ApplicationController
 private
 
   def set_sentry_transaction_id
-    Raven.tags_context(transaction_id: request.headers['X-Transaction-Id'])
+    Sentry.set_tags(transaction_id: request.headers['X-Transaction-Id'])
   end
 
   def authentication_enabled?
