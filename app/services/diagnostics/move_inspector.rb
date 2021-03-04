@@ -26,7 +26,7 @@ module Diagnostics
         from location:\t#{move.from_location}
       ENDDETAILS
 
-      if move.versions.length > 1
+      if move.versions.many?
         move.versions.where.not(object: nil).first.reify.to_location.tap do |original_to_location|
           @output << "original to location:\t#{original_to_location}\n" if original_to_location != move.to_location
         end
@@ -48,10 +48,10 @@ module Diagnostics
 
       if move.generic_events.any?
         capture_events_errors(move) do |event_valid, object_valid, object_errors|
-          @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+          @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'CREATED BY'.ljust(15)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
           move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
             # NB only show event params if include_person_details==true, as they could contain personal details
-            @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+            @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.created_by.to_s.truncate(15).ljust(15) : '-'.ljust(15)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
           end
 
           @output << <<~ENDVALIDATION
@@ -100,10 +100,10 @@ module Diagnostics
           if journey.generic_events.any?
 
             capture_events_errors(journey) do |event_valid, object_valid, object_errors|
-              @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+              @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'CREATED BY'.ljust(15)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
               journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
                 # NB only show event params if include_person_details==true, as they could contain personal details
-                @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+                @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.created_by.to_s.truncate(15).ljust(15) : '-'.ljust(15)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
               end
 
               @output << "\n"
@@ -213,9 +213,10 @@ module Diagnostics
             @output << "status:\t#{per.status}\n"
             @output << "created at:\t#{per.created_at}\n"
             @output << "updated at:\t#{per.updated_at}\n"
+            @output << "completed at:\t#{per.completed_at}\n"
             @output << "amended at:\t#{per.amended_at}\n"
-            @output << "handover at:\t#{per.handover_occurred_at}\n"
             @output << "confirmed at:\t#{per.confirmed_at}\n"
+            @output << "handover at:\t#{per.handover_occurred_at}\n"
           end
         else
           @output << "(no person escort record recorded)\n"
@@ -258,6 +259,7 @@ module Diagnostics
             @output << "status:\t#{yra.status}\n"
             @output << "created at:\t#{yra.created_at}\n"
             @output << "updated at:\t#{yra.updated_at}\n"
+            @output << "completed at:\t#{yra.completed_at}\n"
             @output << "confirmed at:\t#{yra.confirmed_at}\n"
           end
         else
@@ -266,8 +268,8 @@ module Diagnostics
       end
 
       topics = [move]
-      topics << move.profile.person_escort_record if move&.profile&.person_escort_record.present?
-      topics << move.profile.youth_risk_assessment if move&.profile&.youth_risk_assessment.present?
+      topics << move.profile.person_escort_record if move.profile&.person_escort_record.present?
+      topics << move.profile.youth_risk_assessment if move.profile&.youth_risk_assessment.present?
       notifications = Notification.where(topic: topics)
 
       @output << <<~WEBHOOKS
@@ -303,15 +305,19 @@ module Diagnostics
 
     def capture_events_errors(object)
       event_valid = {}
-      object.generic_events.applied_order.each do |event|
-        event.trigger
-        event_valid[event.id] = object.validate
+      object.transaction do
+        object.generic_events.applied_order.each do |event|
+          event.trigger(dry_run: true)
+          event_valid[event.id] = object.validate
+        end
+
+        object_valid = object.validate
+        object_errors = object.errors
+
+        yield event_valid, object_valid, object_errors
+        
+        raise ActiveRecord::Rollback
       end
-
-      object_valid = object.validate
-      object_errors = object.errors
-
-      yield event_valid, object_valid, object_errors
 
       object.reload # it is important to reload the original object, to prevent the implied or failed changes from being propagated
     end

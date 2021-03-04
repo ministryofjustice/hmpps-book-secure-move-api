@@ -4,9 +4,9 @@ module GenericEvents
       @eventable = eventable
     end
 
-    def call
-      @eventable.generic_events.applied_order.each(&:trigger)
-      @eventable.handle_event_run
+    def call(dry_run: false)
+      @eventable.generic_events.applied_order.each { |e| e.trigger({ dry_run: dry_run }) }
+      @eventable.handle_event_run unless dry_run
     end
   end
 end

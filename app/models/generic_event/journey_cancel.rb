@@ -2,7 +2,7 @@ class GenericEvent
   class JourneyCancel < GenericEvent
     eventable_types 'Journey'
 
-    def trigger
+    def trigger(*)
       eventable.cancel
     end
   end

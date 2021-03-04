@@ -124,7 +124,7 @@ class GenericEvent < ApplicationRecord
   end
 
   # Default trigger behaviour for all events is to do nothing
-  def trigger; end
+  def trigger(*); end
 
   def for_feed
     feed = attributes.slice(*FEED_ATTRIBUTES)

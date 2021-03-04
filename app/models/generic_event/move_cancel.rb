@@ -5,12 +5,12 @@ class GenericEvent
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
 
-    def trigger
+    def trigger(dry_run: false)
       eventable.status = Move::MOVE_STATUS_CANCELLED
       eventable.cancellation_reason = cancellation_reason
       eventable.cancellation_reason_comment = cancellation_reason_comment
 
-      Allocations::RemoveFromNomis.call(eventable)
+      Allocations::RemoveFromNomis.call(eventable) unless dry_run
     end
 
     def for_feed

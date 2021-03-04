@@ -20,7 +20,7 @@ class GenericEvent
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
 
-    def trigger
+    def trigger(*)
       eventable.to_location = to_location
       eventable.move_type = move_type if move_type.present?
     end

@@ -2,7 +2,7 @@ class GenericEvent
   class JourneyReject < GenericEvent
     eventable_types 'Journey'
 
-    def trigger
+    def trigger(*)
       eventable.reject
     end
   end
