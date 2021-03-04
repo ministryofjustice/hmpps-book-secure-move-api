@@ -4,7 +4,7 @@ Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN']
 
 
-  filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
+  filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters.map(&:to_s))
   config.before_send = lambda do |event, hint|
     event.request.data = filter.filter(event.request.data)
     event
