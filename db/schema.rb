@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_24_144350) do
+ActiveRecord::Schema.define(version: 2021_03_03_141951) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -332,6 +332,8 @@ ActiveRecord::Schema.define(version: 2021_02_24_144350) do
     t.string "city"
     t.string "country"
     t.string "postcode"
+    t.float "latitude"
+    t.float "longitude"
     t.index ["category_id"], name: "index_locations_on_category_id"
     t.index ["young_offender_institution"], name: "index_locations_on_young_offender_institution"
   end

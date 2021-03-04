@@ -25,6 +25,11 @@ FactoryBot.define do
       postcode { 'B1 2JP' }
     end
 
+    trait :with_coordinates do
+      latitude { 51.4992813 }
+      longitude { -0.1363143 }
+    end
+
     trait :prison do
       # This is already the default
     end
