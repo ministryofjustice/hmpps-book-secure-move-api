@@ -172,7 +172,7 @@ RSpec.describe Journey, type: :model do
       it 'does not save the journey' do
         journey.handle_event_run(dry_run: true)
 
-        expect(journey.changed?).to be true
+        expect(journey).to be_changed
         expect(journey.reload.state).to eq('proposed')
       end
     end
