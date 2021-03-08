@@ -87,4 +87,8 @@ class Location < ApplicationRecord
       "#{prefix}location" => nomis_agency_id,
     }
   end
+
+  def to_s
+    "#{title} (#{nomis_agency_id} #{id})"
+  end
 end

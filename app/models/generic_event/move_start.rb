@@ -2,7 +2,7 @@ class GenericEvent
   class MoveStart < GenericEvent
     eventable_types 'Move'
 
-    def trigger
+    def trigger(*)
       eventable.status = Move::MOVE_STATUS_IN_TRANSIT
     end
   end

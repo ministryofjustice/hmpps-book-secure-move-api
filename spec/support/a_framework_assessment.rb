@@ -723,6 +723,19 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
         expect(assessment.reload.status).to eq('in_progress')
       end
     end
+
+    context 'when dry_run: true' do
+      before do
+        assessment.status = 'in_progress'
+      end
+
+      it 'does not save the assessment' do
+        assessment.handle_event_run(dry_run: true)
+
+        expect(assessment.changed?).to be true
+        expect(assessment.reload.status).to eq('unstarted')
+      end
+    end
   end
 
   describe '#editable?' do
