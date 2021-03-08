@@ -11,11 +11,11 @@ class GenericEvent
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date')
     end
 
-    def trigger
+    def trigger(dry_run: false)
       eventable.status = Move::MOVE_STATUS_REQUESTED
 
       eventable.date = date
-      Allocations::CreateInNomis.call(eventable) if create_in_nomis
+      Allocations::CreateInNomis.call(eventable) if !dry_run && create_in_nomis
     end
 
     def for_feed

@@ -5,12 +5,12 @@ class GenericEvent
 
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }
 
-    def trigger
+    def trigger(dry_run: false)
       eventable.status = Move::MOVE_STATUS_CANCELLED
       eventable.rejection_reason = rejection_reason
       eventable.cancellation_reason = Move::CANCELLATION_REASON_REJECTED
       eventable.cancellation_reason_comment = cancellation_reason_comment
-      eventable.rebook if rebook
+      eventable.rebook if !dry_run && rebook
     end
 
     def for_feed

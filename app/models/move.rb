@@ -190,8 +190,8 @@ class Move < VersionedModel
     feed_attributes
   end
 
-  def handle_event_run
-    if changed?
+  def handle_event_run(dry_run: false)
+    if changed? && !dry_run
       action_name = status_changed? ? 'update_status' : 'update'
 
       save! # save before notifying

@@ -2,7 +2,7 @@ class GenericEvent
   class MoveAccept < GenericEvent
     eventable_types 'Move'
 
-    def trigger
+    def trigger(*)
       eventable.status = Move::MOVE_STATUS_BOOKED
     end
   end

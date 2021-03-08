@@ -7,7 +7,7 @@ class GenericEvent
 
     validates :previous_vehicle_reg, presence: true
 
-    def trigger
+    def trigger(*)
       eventable.vehicle_registration = vehicle_reg
     end
   end

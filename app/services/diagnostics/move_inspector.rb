@@ -23,13 +23,23 @@ module Diagnostics
       @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if include_person_details && move.cancellation_reason_comment.present?
       @output << <<~ENDDETAILS
         move type:\t#{move.move_type}
-        from location:\t#{move.from_location&.title} [#{move.from_location&.nomis_agency_id} #{move.from_location&.id}]
-        to location:\t#{move.to_location&.title} [#{move.to_location&.nomis_agency_id} #{move.to_location&.id}]
+        from location:\t#{move.from_location}
+      ENDDETAILS
+
+      if move.versions.many?
+        move.versions.where.not(object: nil).first.reify.to_location.tap do |original_to_location|
+          @output << "original to location:\t#{original_to_location}\n" if original_to_location != move.to_location
+        end
+      end
+
+      @output << <<~ENDDETAILS
+        to location:\t#{move.to_location}
         supplier:\t#{move.supplier&.name}
         created at:\t#{move.created_at}
         updated at:\t#{move.updated_at}
       ENDDETAILS
-      @output << "additional information: #{move.additional_information}" if include_person_details
+      @output << "additional information: #{move.additional_information}\n" if include_person_details
+
       @output << <<~ENDMOVEEVENTS
 
         MOVE EVENTS
@@ -37,10 +47,28 @@ module Diagnostics
       ENDMOVEEVENTS
 
       if move.generic_events.any?
-        @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
-        move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
-          # NB only show event params if include_person_details==true, as they could contain personal details
-          @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+        capture_events_errors(move) do |event_valid, object_valid, object_errors|
+          @output << "#{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'CREATED BY'.ljust(15)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+          move.generic_events.applied_order.each do |event| # NB use each to preserve sort order
+            # NB only show event params if include_person_details==true, as they could contain personal details
+            @output << "#{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.created_by.to_s.truncate(15).ljust(15) : '-'.ljust(15)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+          end
+
+          @output << <<~ENDVALIDATION
+  
+            MOVE EVENT VALIDATION
+            ---------------------
+            valid:\t#{object_valid}
+          ENDVALIDATION
+
+          object_errors.each do |key, message|
+            # we need to take care that we don't display any personal details in the error report
+            @output << if @include_person_details
+                         "  #{key.inspect}\t#{message}\t#{move.send(key)}\n"
+                       else
+                         "  #{key.inspect}\t#{message}\t-\n"
+                       end
+          end
         end
       else
         @output << "(no move events recorded)\n"
@@ -55,7 +83,7 @@ module Diagnostics
       if move.journeys.any?
         @output << "#{'ID'.ljust(37)}\t#{'TIMESTAMP'.ljust(27)}\t#{'STATE'.ljust(12)}\t#{'BILLABLE'.ljust(9)}\t#{'SUPPLIER'.ljust(9)}\tFROM --> TO\n"
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
-          @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.supplier.name.ljust(9)}\t#{journey.from_location.title} --> #{journey.to_location.title}\n"
+          @output << "#{journey.id.to_s.ljust(37)}\t#{journey.client_timestamp.to_s.ljust(27)}\t#{journey.state.to_s.ljust(12)}\t#{journey.billable.to_s.ljust(9)}\t#{journey.supplier.name.ljust(9)}\t#{journey.from_location} --> #{journey.to_location}\n"
         end
       else
         @output << "(no journeys recorded)\n"
@@ -68,13 +96,31 @@ module Diagnostics
       ENDJOURNEYEVENTS
       if move.journeys.any?
         move.journeys.default_order.each do |journey| # NB use each to preserve sort order
-          @output << "#{journey.from_location.title} --> #{journey.to_location.title} (#{journey.id})\n"
+          @output << "#{journey.id}: #{journey.from_location} --> #{journey.to_location}\n"
           if journey.generic_events.any?
-            @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
-            journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
-              # NB only show event params if include_person_details==true, as they could contain personal details
-              @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+
+            capture_events_errors(journey) do |event_valid, object_valid, object_errors|
+              @output << "  #{'EVENT'.ljust(30)}\t#{'OCCURRED AT'.ljust(27)}\t#{'VALID'.ljust(6)}\t#{'CREATED BY'.ljust(15)}\t#{'NOTES'.ljust(30)}\tDETAILS\n"
+              journey.generic_events.applied_order.each do |event| # NB use each to preserve sort order
+                # NB only show event params if include_person_details==true, as they could contain personal details
+                @output << "  #{event.event_type.ljust(30)}\t#{event.occurred_at.to_s.ljust(27)}\t#{event_valid[event.id].to_s.ljust(6)}\t#{include_person_details ? event.created_by.to_s.truncate(15).ljust(15) : '-'.ljust(15)}\t#{include_person_details ? event.notes.to_s.truncate(30).ljust(30) : '-'.ljust(30)}\t#{include_person_details ? event.details : '-'}\n"
+              end
+
+              @output << "\n"
+              @output << "  JOURNEY EVENT VALIDATION\n"
+              @output << "  ------------------------\n"
+              @output << "  valid:\t#{object_valid}\n"
+
+              object_errors.each do |key, message|
+                # we need to take care that we don't display any personal details in the error report
+                @output << if @include_person_details
+                             "  #{key.inspect}\t#{message}\t#{journey.send(key)}\n"
+                           else
+                             "  #{key.inspect}\t#{message}\t-\n"
+                           end
+              end
             end
+
           else
             @output << "  (no events recorded)\n"
           end
@@ -82,34 +128,6 @@ module Diagnostics
         end
       else
         @output << "(no journeys recorded)\n"
-      end
-
-      @output << <<~WEBHOOKS
-
-        WEBHOOK NOTIFICATIONS
-        ---------------------
-      WEBHOOKS
-      if move.notifications.webhooks.any?
-        @output << "#{'TYPE'.ljust(18)}\t#{'DELIVERED AT'.ljust(27)}\t#{'ATTEMPTS'.ljust(9)}\tENDPOINT\n"
-        move.notifications.webhooks.order(:created_at).each do |notification|
-          @output << "#{notification.event_type.ljust(18)}\t#{notification.delivered_at.to_s.ljust(27)}\t#{notification.delivery_attempts.to_s.ljust(9)}\t#{notification.subscription.callback_url}\n"
-        end
-      else
-        @output << "(no notifications recorded)\n"
-      end
-
-      @output << <<~EMAILS
-
-        EMAIL NOTIFICATIONS
-        -------------------
-      EMAILS
-      if move.notifications.emails.any?
-        @output << "#{'TYPE'.ljust(18)}\t#{'DELIVERED AT'.ljust(27)}\t#{'ATTEMPTS'.ljust(9)}\tEMAIL\n"
-        move.notifications.emails.order(:created_at).each do |notification|
-          @output << "#{notification.event_type.ljust(18)}\t#{notification.delivered_at.to_s.ljust(27)}\t#{notification.delivery_attempts.to_s.ljust(9)}\t#{notification.subscription.email_address}\n"
-        end
-      else
-        @output << "(no notifications recorded)\n"
       end
 
       if include_person_details
@@ -175,7 +193,7 @@ module Diagnostics
         @output << <<~ENDPER
 
           PERSON ESCORT RECORD
-          --------
+          --------------------
         ENDPER
 
         # NB: it is better to identify PERs via profile (not via move directly), as there are some older records which are
@@ -195,7 +213,10 @@ module Diagnostics
             @output << "status:\t#{per.status}\n"
             @output << "created at:\t#{per.created_at}\n"
             @output << "updated at:\t#{per.updated_at}\n"
+            @output << "completed at:\t#{per.completed_at}\n"
+            @output << "amended at:\t#{per.amended_at}\n"
             @output << "confirmed at:\t#{per.confirmed_at}\n"
+            @output << "handover at:\t#{per.handover_occurred_at}\n"
           end
         else
           @output << "(no person escort record recorded)\n"
@@ -204,7 +225,7 @@ module Diagnostics
         @output << <<~ENDPEREVENTS
 
           PERSON ESCORT RECORD EVENTS
-          --------
+          ---------------------------
         ENDPEREVENTS
 
         if move.profile&.person_escort_record&.generic_events.present?
@@ -216,9 +237,83 @@ module Diagnostics
         else
           @output << "(no person escort record events recorded)\n"
         end
+
+        @output << <<~ENDPER
+
+          YOUTH RISK ASSESSMENT
+          ---------------------
+        ENDPER
+
+        if move.profile&.youth_risk_assessment.present?
+          move.profile.youth_risk_assessment.tap do |yra|
+            @output << "id:\t#{yra.id}\n"
+            @output << "framework version:\t#{yra.framework&.version}\n"
+            @output << "framework_id:\t#{yra.framework_id}\n"
+            @output << "profile_id:\t#{yra.profile_id}\n"
+            @output << "move_id:\t#{yra.move_id}\n"
+            @output << "prefill_source_id:\t#{yra.prefill_source_id}\n"
+            @output << "section_progress:\n"
+            yra.section_progress.each do |section|
+              @output << "* #{section['key']}:\t#{section['status']}\n"
+            end
+            @output << "status:\t#{yra.status}\n"
+            @output << "created at:\t#{yra.created_at}\n"
+            @output << "updated at:\t#{yra.updated_at}\n"
+            @output << "completed at:\t#{yra.completed_at}\n"
+            @output << "confirmed at:\t#{yra.confirmed_at}\n"
+          end
+        else
+          @output << "(no youth risk assessment recorded)\n"
+        end
+      end
+
+      topics = [move]
+      topics << move.profile.person_escort_record if move.profile&.person_escort_record.present?
+      topics << move.profile.youth_risk_assessment if move.profile&.youth_risk_assessment.present?
+      notifications = Notification.where(topic: topics)
+
+      @output << <<~WEBHOOKS
+
+        WEBHOOK NOTIFICATIONS
+        ---------------------
+      WEBHOOKS
+      if notifications.webhooks.any?
+        @output << "#{'TYPE'.ljust(18)}\t#{'DELIVERED AT'.ljust(27)}\t#{'ATTEMPTS'.ljust(9)}\tENDPOINT\n"
+        notifications.webhooks.order(:created_at).each do |notification|
+          @output << "#{notification.event_type.ljust(18)}\t#{notification.delivered_at.to_s.ljust(27)}\t#{notification.delivery_attempts.to_s.ljust(9)}\t#{notification.subscription.callback_url}\n"
+        end
+      else
+        @output << "(no notifications recorded)\n"
+      end
+
+      @output << <<~EMAILS
+
+        EMAIL NOTIFICATIONS
+        -------------------
+      EMAILS
+      if notifications.emails.any?
+        @output << "#{'TYPE'.ljust(18)}\t#{'DELIVERED AT'.ljust(27)}\t#{'ATTEMPTS'.ljust(9)}\tEMAIL\n"
+        notifications.emails.order(:created_at).each do |notification|
+          @output << "#{notification.event_type.ljust(18)}\t#{notification.delivered_at.to_s.ljust(27)}\t#{notification.delivery_attempts.to_s.ljust(9)}\t#{notification.subscription.email_address}\n"
+        end
+      else
+        @output << "(no notifications recorded)\n"
       end
 
       @output
+    end
+
+    def capture_events_errors(object)
+      event_valid = {}
+
+      GenericEvents::Runner.new(object, dry_run: true).call do |event|
+        event_valid[event.id] = object.validate
+      end
+
+      yield event_valid, object.validate, object.errors
+
+      # it is important to reload the original object, to prevent the implied or failed changes from being propagated
+      object.reload
     end
   end
 end

@@ -723,6 +723,19 @@ RSpec.describe Move do
         expect(Notifier).to have_received(:prepare_notifications).with(topic: move, action_name: 'update')
       end
     end
+
+    context 'when dry_run: true' do
+      before do
+        move.status = 'in_transit'
+      end
+
+      it 'does not save the move' do
+        move.handle_event_run(dry_run: true)
+
+        expect(move.changed?).to be true
+        expect(move.reload.status).to eq('requested')
+      end
+    end
   end
 
   describe '#all_events_for_timeline' do
