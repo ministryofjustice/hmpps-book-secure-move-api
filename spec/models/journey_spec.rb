@@ -163,6 +163,19 @@ RSpec.describe Journey, type: :model do
         expect(journey.reload.state).to eq('in_progress')
       end
     end
+
+    context 'when dry_run: true' do
+      before do
+        journey.state = 'in_progress'
+      end
+
+      it 'does not save the journey' do
+        journey.handle_event_run(dry_run: true)
+
+        expect(journey.changed?).to be true
+        expect(journey.reload.state).to eq('proposed')
+      end
+    end
   end
 
   describe '#vehicle_registration=' do

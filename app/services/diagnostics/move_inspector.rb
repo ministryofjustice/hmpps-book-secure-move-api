@@ -305,21 +305,15 @@ module Diagnostics
 
     def capture_events_errors(object)
       event_valid = {}
-      object.transaction do
-        object.generic_events.applied_order.each do |event|
-          event.trigger(dry_run: true)
-          event_valid[event.id] = object.validate
-        end
 
-        object_valid = object.validate
-        object_errors = object.errors
-
-        yield event_valid, object_valid, object_errors
-        
-        raise ActiveRecord::Rollback
+      GenericEvents::Runner.new(object, dry_run: true).call do |event|
+        event_valid[event.id] = object.validate
       end
 
-      object.reload # it is important to reload the original object, to prevent the implied or failed changes from being propagated
+      yield event_valid, object.validate, object.errors
+
+      # it is important to reload the original object, to prevent the implied or failed changes from being propagated
+      object.reload
     end
   end
 end

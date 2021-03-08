@@ -1,28 +1,33 @@
 module GenericEvents
   class Runner
-    def initialize(eventable)
+    attr_reader :eventable, :dry_run
+
+    def initialize(eventable, dry_run: false)
       @eventable = eventable
+      @dry_run = dry_run
     end
 
-    def call(dry_run: false, &block)
-
+    def call(&block)
       if dry_run
-        @eventable.transaction do
-
-          @eventable.generic_events.applied_order.each do |event|
-            event.trigger({ dry_run: dry_run })
-            yield event if block_given?
-          end
+        eventable.transaction do
+          trigger_events(&block)
 
           raise ActiveRecord::Rollback
         end
       else
-        @eventable.generic_events.applied_order.each do |event|
-          event.trigger({ dry_run: dry_run })
-          yield event if block_given?
-        end
-        @eventable.handle_event_run
+        trigger_events(&block)
       end
+    end
+
+  private
+
+    def trigger_events
+      eventable.generic_events.applied_order.each do |event|
+        event.trigger(dry_run: dry_run)
+        yield event if block_given?
+      end
+
+      eventable.handle_event_run(dry_run: dry_run)
     end
   end
 end
