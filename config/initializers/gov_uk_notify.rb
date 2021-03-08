@@ -4,7 +4,7 @@ if ENV['GOVUK_NOTIFY_ENABLED'] =~ /true/i
   %w[GOVUK_NOTIFY_API_KEY GOVUK_NOTIFY_MOVE_TEMPLATE_ID GOVUK_NOTIFY_PER_TEMPLATE_ID].each do |name|
     if ENV[name].blank?
       Rails.logger.warn("#{name} env var is not set; emails cannot be sent")
-      Raven.capture_message("#{name} env var is not set; emails cannot be sent", { level: 'warning' })
+      Sentry.capture_message("#{name} env var is not set; emails cannot be sent", { level: 'warning' })
     end
   end
 
