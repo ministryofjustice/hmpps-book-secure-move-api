@@ -211,8 +211,6 @@ references:
         echo ${TESTS}
         bundle exec rspec ${TESTS}
         #COVERAGE=1 bundle exec rspec
-      environment:
-        SENTRY_DSN: "//"
   _rubocop: &rubocop
     run:
       name: Run rubocop
