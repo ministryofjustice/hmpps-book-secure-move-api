@@ -31,7 +31,7 @@ aliases:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "${SLACK_PARAM_MENTIONS}"
+                      "text": "@here"
                     }
                   ]
                 },
@@ -50,7 +50,6 @@ aliases:
                 }
               ]
             }'
-      mentions: '@here'
   - &notify_slack_of_approval
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
@@ -65,7 +64,7 @@ aliases:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "${SLACK_PARAM_MENTIONS}"
+                      "text": "${BUILD_NOTIFICATIONS_MENTION_IDS}"
                     }
                   ]
                 },
@@ -84,7 +83,6 @@ aliases:
                 }
               ]
             }'
-      mentions: $BUILD_NOTIFICATIONS_MENTION_ID
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
@@ -99,7 +97,7 @@ aliases:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "${SLACK_PARAM_MENTIONS} This release was successfully deployed to production"
+                      "text": "@here This release was successfully deployed to production"
                     }
                   ]
                 },
@@ -118,7 +116,6 @@ aliases:
                 }
               ]
             }'
-      mentions: '@here'
   - &all_tags
     filters:
       tags:

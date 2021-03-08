@@ -59,8 +59,22 @@ RSpec.describe Locations::Importer do
         country: 'England',
         postcode: 'L9 7LH',
       },
+      'SCH1' => {
+        premise: 'The Building',
+        city: 'Springfield',
+        postcode: 'ZZ99 9ZZ',
+      },
     }
   end
+
+  # Avoid real calls to external geocoding API
+  Geocoder.configure(lookup: :test, ip_lookup: :test)
+  Geocoder::Lookup::Test.set_default_stub(
+    [{ 'coordinates' => [] }],
+  )
+  Geocoder::Lookup::Test.add_stub(
+    'L9 7LH', [{ 'coordinates' => [53.4614425, -2.9357489] }]
+  )
 
   context 'with no existing records' do
     it 'creates all the supported input items' do
@@ -84,6 +98,24 @@ RSpec.describe Locations::Importer do
         city: 'Liverpool',
         country: 'England',
         postcode: 'L9 7LH',
+      )
+    end
+
+    it 'geocodes valid postcode when provided' do
+      importer.call
+
+      expect(Location.find_by(nomis_agency_id: 'ACI')).to have_attributes(
+        latitude: 53.4614425,
+        longitude: -2.9357489,
+      )
+    end
+
+    it 'does not geocode invalid postcode' do
+      importer.call
+
+      expect(Location.find_by(nomis_agency_id: 'SCH1')).to have_attributes(
+        latitude: nil,
+        longitude: nil,
       )
     end
 

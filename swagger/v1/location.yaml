@@ -77,6 +77,18 @@ Location:
           - type: 'null'
           example: L9 7LH
           description: Optional postcode for this location
+        latitude:
+          oneOf:
+          - type: number
+          - type: 'null'
+          example: 51.4992813
+          description: Optional latitude coordinate for this location
+        longitude:
+          oneOf:
+          - type: number
+          - type: 'null'
+          example: -0.1363143
+          description: Optional longitude coordinate for this location
         nomis_agency_id:
           type: string
           example: BAI

@@ -79,4 +79,61 @@ RSpec.describe Location do
       end
     end
   end
+
+  describe '#geocode' do
+    let(:location) { build(:location, :with_address) }
+    let(:valid_latitude) { 51.4992813 }
+    let(:valid_longitude) { -0.1363143 }
+    let(:valid_coordinates) { [valid_latitude, valid_longitude] }
+    let(:unknown_coordinates) { [nil, nil] }
+
+    before do
+      allow(location).to receive(:geocode) do
+        location.latitude = valid_latitude
+        location.longitude = valid_longitude
+        valid_coordinates
+      end
+    end
+
+    it 'automatically geocodes valid postcode on save' do
+      location.save!
+      expect(location).to have_received(:geocode)
+      expect(location.coordinates).to eq(valid_coordinates)
+    end
+
+    it 'does not geocode discarded locations' do
+      location.discard
+      expect(location).not_to have_received(:geocode)
+      expect(location.coordinates).to eq(unknown_coordinates)
+    end
+
+    it 'does not geocode if postcode not present' do
+      location.postcode = nil
+      location.save!
+      expect(location).not_to have_received(:geocode)
+      expect(location.coordinates).to eq(unknown_coordinates)
+    end
+
+    it 'does not geocode again if postcode has not changed and was previously geocoded' do
+      location.save!
+      location.reload
+      location.save!
+      expect(location).to have_received(:geocode).once
+    end
+
+    it 'automatically geocodes again if postcode has changed' do
+      location.save!
+      location.postcode = 'B2 1JP'
+      location.save!
+      expect(location).to have_received(:geocode).twice
+    end
+
+    it 'automatically geocodes again if coordinates are missing' do
+      location.save!
+      location.longitude = nil
+      location.latitude = nil
+      location.save!
+      expect(location).to have_received(:geocode).twice
+    end
+  end
 end
