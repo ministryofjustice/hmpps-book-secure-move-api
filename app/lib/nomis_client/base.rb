@@ -72,16 +72,16 @@ module NomisClient
       end
 
       def log_exception(description, path, params, exception)
-        Raven.capture_message(description,
-                              extra: {
-                                route: path,
-                                body_params: params,
-                                nomis_response: {
-                                  status: exception.response.status,
-                                  body: exception.response.body,
-                                },
-                              },
-                              level: 'error')
+        Sentry.capture_message(description,
+                               extra: {
+                                 route: path,
+                                 body_params: params,
+                                 nomis_response: {
+                                   status: exception.response.status,
+                                   body: exception.response.body,
+                                 },
+                               },
+                               level: 'error')
       end
     end
   end

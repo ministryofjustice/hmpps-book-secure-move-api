@@ -93,7 +93,7 @@ module FrameworkNomisMappings
     end
 
     def log_exception(description, params)
-      Raven.capture_message(
+      Sentry.capture_message(
         description,
         extra: {
           id: assessmentable&.id,

@@ -23,7 +23,7 @@ RSpec.describe Mock::SentryController, type: :request do
   end
 
   before do
-    allow(Raven).to receive(:tags_context).and_return({})
+    allow(Sentry).to receive(:set_tags).and_return({})
   end
 
   context 'with an X-Transaction-Id header' do
@@ -43,8 +43,8 @@ RSpec.describe Mock::SentryController, type: :request do
       expect(response_json).to eql({ 'hello' => 'world' })
     end
 
-    it 'sets the tag in raven' do
-      expect(Raven).to have_received(:tags_context).with({ transaction_id: 'transaction-id' })
+    it 'sets the tag in sentry' do
+      expect(Sentry).to have_received(:set_tags).with({ transaction_id: 'transaction-id' })
     end
   end
 
@@ -65,8 +65,8 @@ RSpec.describe Mock::SentryController, type: :request do
       expect(response_json).to eql({ 'hello' => 'world' })
     end
 
-    it 'sets the tag in raven to nil' do
-      expect(Raven).to have_received(:tags_context).with({ transaction_id: nil })
+    it 'sets the tag in sentry to nil' do
+      expect(Sentry).to have_received(:set_tags).with({ transaction_id: nil })
     end
   end
 end

@@ -33,7 +33,10 @@ class NotifyWebhookJob < ApplicationJob
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
-      Raven.capture_exception(e)
+      Sentry.with_scope do |scope|
+        scope.set_tags(supplier: subscription.supplier.name)
+        Sentry.capture_exception(e)
+      end
       raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
   end
