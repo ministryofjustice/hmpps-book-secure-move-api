@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
@@ -28,6 +30,17 @@ namespace :reference_data do
   task update_locations: :environment do
     puts 'Updating locations...'
     Locations::Updater.call
+  end
+
+  desc 'import postcodes'
+  task import_postcodes: :environment do
+    puts 'Importing postcodes...'
+    postcodes = CSV.read('./lib/tasks/data/postcodes.csv', headers: true)
+    importer = Locations::PostcodeImporter.new(postcodes)
+    importer.call
+
+    puts "\n\n#{importer.ignored_locations.count} locations ignored, #{importer.errored_locations.count} errors encountered."
+    puts "Done. #{Location.kept.geocoded.count}/#{Location.kept.count} locations geocoded."
   end
 
   desc 'create ethnicities'
@@ -97,6 +110,7 @@ namespace :reference_data do
   desc 'create all of the necessary reference data'
   task create_all: :environment do
     %w[reference_data:create_locations
+       reference_data:import_postcodes
        reference_data:create_ethnicities
        reference_data:create_genders
        reference_data:create_identifier_types
