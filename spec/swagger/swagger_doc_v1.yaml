@@ -1571,7 +1571,7 @@
             from the logged-in account).
           schema:
             "$ref": "../v1/post_journey.yaml#/PostJourney"
-        - "$ref": "../v1/journey_include_parameter.yaml#/JourneyIncludeParameter"
+        - "$ref": "../v1/journeys_include_parameter.yaml#/JourneysIncludeParameter"
       responses:
         "201":
           description: created
