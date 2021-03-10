@@ -42,6 +42,17 @@ RSpec.describe Api::JourneysController do
         it { is_expected.not_to include(other_supplier_journey.id) } # NB: should not contain another supplier's journey in the same move
       end
 
+      describe 'with included locations' do
+        let(:params) do
+          { include: 'from_location,to_location' }
+        end
+
+        it 'includes the requested includes in the response' do
+          returned_types = response_json['included'].map { |r| r['type'] }.uniq
+          expect(returned_types).to contain_exactly('locations')
+        end
+      end
+
       describe 'paginating results' do
         let(:intermediate_journeys_count) { 4 }
         let(:meta_pagination) do

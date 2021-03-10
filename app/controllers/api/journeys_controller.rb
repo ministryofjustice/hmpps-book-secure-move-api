@@ -22,7 +22,7 @@ module Api
     ].freeze
 
     def index
-      paginate journeys, serializer: JourneySerializer
+      paginate journeys, serializer: JourneysSerializer, include: included_relationships
     end
 
     def show
@@ -47,7 +47,12 @@ module Api
     end
 
     def supported_relationships
-      JourneySerializer::SUPPORTED_RELATIONSHIPS
+      # for performance reasons, we support fewer include relationships on the index action
+      if action_name == 'index'
+        JourneysSerializer::SUPPORTED_RELATIONSHIPS
+      else
+        JourneySerializer::SUPPORTED_RELATIONSHIPS
+      end
     end
 
     def move
