@@ -28,10 +28,7 @@ class NotifyEmailJob < ApplicationJob
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
-      Sentry.with_scope do |scope|
-        scope.set_tags(supplier: notification.subscription.supplier.name)
-        Sentry.capture_exception(e)
-      end
+      Sentry.capture_exception(e)
       raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
   end
