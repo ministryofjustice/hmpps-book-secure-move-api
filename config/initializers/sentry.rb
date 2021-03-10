@@ -14,6 +14,8 @@ Sentry.init do |config|
   # This will remove the request body from the information sent to sentry
   config.send_default_pii = false
 
-  # Half of all requests will be used in perfomace sampling. 
-  config.traces_sample_rate = 0.5
+  # Half of all requests will be used in performance sampling.
+  # Currently the MoJ plan does not allow this. Turn on when
+  # plan has been updated in July 2021
+  # config.traces_sample_rate = 0.5
 end
