@@ -7,7 +7,8 @@ class NotifyEmailJob < ApplicationJob
 
   def perform(notification_id:, **_)
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
-    return unless notification.subscription.enabled?
+    subscription = notification.subscription
+    return unless subscription.enabled?
 
     # just return if the notification has been already delivered
     return if notification.delivered_at.present?
