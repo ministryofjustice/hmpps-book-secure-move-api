@@ -7,7 +7,8 @@ class NotifyEmailJob < ApplicationJob
 
   def perform(notification_id:, **_)
     notification = Notification.emails.kept.includes(:subscription).find(notification_id)
-    return unless notification.subscription.enabled?
+    subscription = notification.subscription
+    return unless subscription.enabled?
 
     # just return if the notification has been already delivered
     return if notification.delivered_at.present?
@@ -28,7 +29,11 @@ class NotifyEmailJob < ApplicationJob
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
-      Sentry.capture_exception(e)
+      Sentry.with_scope do |scope|
+        scope.set_tags(supplier: subscription.supplier.key)
+        scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
+        Sentry.capture_exception(e)
+      end
       raise e # re-raise the error to force the notification to be retried by sidekiq later
     end
   end

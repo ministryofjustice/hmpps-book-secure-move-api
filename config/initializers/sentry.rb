@@ -3,10 +3,10 @@ return unless ENV['SENTRY_DSN'].present?
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN']
 
-
-  filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters.map(&:to_s))
+  filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.before_send = lambda do |event, hint|
-    event.request.data = filter.filter(event.request.data)
+    # filter the request data if there is an associated request (manually raised events won't have a request)
+    event.request.data = filter.filter(event.request.data) if event.request&.data.present?
     event
   end
 
