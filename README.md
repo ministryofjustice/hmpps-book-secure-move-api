@@ -183,7 +183,7 @@ Platform with the following namespace names:
 * hmpps-book-secure-move-api-production
 
 `dev` and `staging` environments are automatically deployed on successful builds of the
-`master` branch on Circle CI.
+`main` branch on Circle CI.
 
 `preprod`, `uat` and `production` can be deployed by generating a new tag
 following [semantic versioning](https://semver.org/) pointing to the current commit. We typically do this locally with:
