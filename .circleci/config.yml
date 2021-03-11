@@ -7,7 +7,7 @@ aliases:
   - &notify_slack_on_failure
     slack/notify:
       event: fail
-      branch_pattern: master
+      branch_pattern: main
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
@@ -44,7 +44,7 @@ aliases:
                         "type": "plain_text",
                         "text": "Changelog"
                       },
-                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/master/CHANGELOG.md"
+                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/main/CHANGELOG.md"
                     }
                   ]
                 }
@@ -120,16 +120,16 @@ aliases:
     filters:
       tags:
         only: /.*/
-  - &only_master
+  - &only_main
     filters:
       branches:
         only:
-          - master
-  - &only_master_and_create_dev
+          - main
+  - &only_main_and_create_dev
     filters:
       branches:
         only:
-          - master
+          - main
           - dev-auth-from-docs
           - /.*-deploydev/
   - &only_for_deployment
@@ -138,7 +138,7 @@ aliases:
         only: /^v.*/
       branches:
         only:
-          - master
+          - main
           - dev-auth-from-docs
           - /.*-deploydev/
   - &only_deploy_tags
@@ -563,13 +563,13 @@ workflows:
       - deploy_dev:
           context:
             - hmpps-common-vars
-          <<: *only_master_and_create_dev
+          <<: *only_main_and_create_dev
           requires:
             - build_image
       - deploy_staging:
           context:
             - hmpps-common-vars
-          <<: *only_master
+          <<: *only_main
           requires:
             - build_image
       - deploy_uat:
@@ -606,4 +606,4 @@ workflows:
     triggers:
       - schedule:
           cron: "0 9 * * 1"
-          <<: *only_master
+          <<: *only_main
