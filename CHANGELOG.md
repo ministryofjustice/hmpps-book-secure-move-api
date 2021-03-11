@@ -1,5 +1,36 @@
 # Changelog
 
+## [v3.0.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.2) (2021-03-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.1...v3.0.2)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-s3 from 1.89.0 to 1.91.0 [\#1375](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1375) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add include support to move journeys endpoint [\#1374](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1374) ([smoothcontract](https://github.com/smoothcontract))
+- Fix sentry pii scrubbing [\#1373](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1373) ([martyn-w](https://github.com/martyn-w))
+- refactor: Revert exception handling changes and tracing config for sentry [\#1372](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1372) ([Nimphal](https://github.com/Nimphal))
+- Bump rspec-rails from 4.1.0 to 5.0.0 [\#1371](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1371) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add new rake task to import postcodes.csv file and perform location geocoding [\#1370](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1370) ([smoothcontract](https://github.com/smoothcontract))
+- refactor: Simplify slack message mentions [\#1368](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1368) ([Nimphal](https://github.com/Nimphal))
+- Bump rspec-rails from 4.0.2 to 4.1.0 [\#1367](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1367) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.20.3 to 0.20.4 [\#1366](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1366) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump climate\_control from 0.2.0 to 1.0.0 [\#1365](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1365) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump geocoder from 1.6.5 to 1.6.6 [\#1364](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1364) ([dependabot[bot]](https://github.com/apps/dependabot))
+- refactor: Replace sentry-raven with new Ruby and Rails SDKs. Update config and tests [\#1362](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1362) ([Nimphal](https://github.com/Nimphal))
+- Extend move diagnostics [\#1358](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1358) ([martyn-w](https://github.com/martyn-w))
+
+## [v3.0.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.1) (2021-03-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.0...v3.0.1)
+
+**Merged pull requests:**
+
+- Add geocoder gem and mixin to support geocoding location postcodes [\#1363](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1363) ([smoothcontract](https://github.com/smoothcontract))
+- refactor: Fix slack fields definition to match accepted format [\#1361](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1361) ([Nimphal](https://github.com/Nimphal))
+- Update CHANGELOG.md [\#1360](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1360) ([martyn-w](https://github.com/martyn-w))
+
+
 ## [v3.0.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.0) (2021-03-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v2.9.9...v3.0.0)
