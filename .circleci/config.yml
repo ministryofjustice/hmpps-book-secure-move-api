@@ -64,7 +64,7 @@ aliases:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "${BUILD_NOTIFICATIONS_MENTION_IDS}"
+                      "text": "${BUILD_NOTIFICATIONS_MENTION_ID}"
                     }
                   ]
                 },
