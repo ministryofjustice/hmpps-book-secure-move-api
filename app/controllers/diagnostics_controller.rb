@@ -11,7 +11,6 @@ class DiagnosticsController < ApiController
     include_person_details = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
 
     if params[:delay].present?
-      puts "sleeping for #{params[:delay].to_f} seconds"
       sleep params[:delay].to_f
     end
 
