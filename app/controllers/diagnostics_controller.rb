@@ -10,6 +10,11 @@ class DiagnosticsController < ApiController
     # NB: personal details should only be available on localhost, dev, staging and uat; not on pre-prod or production
     include_person_details = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat)\-)/i
 
+    if params[:delay].present?
+      puts "sleeping for #{params[:delay].to_f} seconds"
+      sleep params[:delay].to_f
+    end
+
     if move.present?
       render plain: Diagnostics::MoveInspector.new(move, include_person_details: include_person_details).generate, status: :ok
     else
