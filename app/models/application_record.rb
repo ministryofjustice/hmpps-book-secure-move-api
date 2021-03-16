@@ -3,7 +3,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  connects_to database: { writing: :primary, reading: :primary_replica }
+  connects_to database: { writing: :primary, reading: :primary_replica } if ENV['REPLICA_DATABASE_URL'].present?
 
   scope :created_at_range, ->(from, to) { where(created_at: from..to) }
   scope :updated_at_range, ->(from, to) { where(updated_at: from..to) }
