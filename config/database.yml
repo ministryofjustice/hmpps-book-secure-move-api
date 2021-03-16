@@ -10,3 +10,12 @@ development:
 test:
   <<: *default
   database: pecs_move_platform_backend_test
+
+production:
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+  primary_replica:
+    <<: *default
+    url: <%= ENV['REPLICA_DATABASE_URL'] %>
+    replica: true
