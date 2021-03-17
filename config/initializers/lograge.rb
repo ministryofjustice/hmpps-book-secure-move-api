@@ -5,6 +5,8 @@ Rails.application.configure do
     {
       remote_ip: event.payload[:remote_ip],
       request_id: event.payload[:request_id],
+      transaction_id: event.payload[:transaction_id],
+      someheader: event.payload[:someheader],
       idempotency_key: event.payload[:idempotency_key],
       client_id: event.payload[:client_id],
       client_name: event.payload[:client_name],
