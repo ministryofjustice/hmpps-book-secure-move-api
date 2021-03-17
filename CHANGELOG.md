@@ -1,5 +1,20 @@
 # Changelog
 
+## [v3.0.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.3) (2021-03-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.2...v3.0.3)
+
+**Merged pull requests:**
+
+- logs transaction id in Kibana [\#1385](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1385) ([martyn-w](https://github.com/martyn-w))
+- Bump sidekiq from 6.1.3 to 6.2.0 [\#1383](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1383) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump jsonapi-serializer from 2.1.0 to 2.2.0 [\#1381](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1381) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.11.1 to 1.11.2 [\#1380](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1380) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faker from 2.16.0 to 2.17.0 [\#1379](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1379) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix the name of the env var holding the slack mentions [\#1378](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1378) ([Nimphal](https://github.com/Nimphal))
+- Rename master to main [\#1377](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1377) ([Nimphal](https://github.com/Nimphal))
+- Update CHANGELOG.md [\#1376](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1376) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.2) (2021-03-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.1...v3.0.2)
