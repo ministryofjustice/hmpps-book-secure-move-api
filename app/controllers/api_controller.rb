@@ -303,6 +303,7 @@ private
 
     payload[:remote_ip] = request.remote_ip
     payload[:request_id] = request.request_id
+    payload[:transaction_id] = request.headers['X-Transaction-Id']
     payload[:idempotency_key] = request.headers['Idempotency-Key']
     payload[:client_id] = current_user&.uid
     payload[:client_name] = current_user&.name
