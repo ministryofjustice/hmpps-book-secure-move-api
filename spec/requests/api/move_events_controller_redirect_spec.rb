@@ -11,7 +11,7 @@ RSpec.describe Api::MoveEventsController do
     let(:from_location) { create(:location, suppliers: [supplier]) }
     let(:move) { create(:move, :prison_transfer, from_location: from_location) }
     let(:move_id) { move.id }
-    let(:new_location) { create(:location) }
+    let(:new_location) { create(:location, :prison) }
     let(:attributes) do
       {
         timestamp: '2020-04-23T18:25:43.511Z',
@@ -156,8 +156,29 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'with a redirection to an invalid location for the move type' do
+      context 'with a redirection to an invalid location for the current move type' do
         let(:move) { create(:move, :hospital) }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location must be a hospital or high security hospital location for hospital move',
+              'source' => { 'pointer' => '/data/attributes/to_location' },
+              'code' => 'invalid_location',
+            }]
+          end
+        end
+      end
+
+      context 'with a redirection to an invalid location for the new move type' do
+        let(:attributes) do
+          {
+            timestamp: '2020-04-23T18:25:43.511Z',
+            notes: 'requested by PMU',
+            move_type: 'hospital',
+          }
+        end
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do

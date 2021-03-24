@@ -44,34 +44,49 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=redirect' do
-      let!(:event1) { create(:event_move_redirect, eventable: move, occurred_at: event1_timestamp, created_at: 100.minutes.ago, details: event1_details) }
-      let(:event1_details) { { to_location_id: event1_location.id } }
-      let(:event1_location) { create(:location, title: 'Event1-Location') }
+      context 'with multiple events' do
+        let!(:event1) { create(:event_move_redirect, eventable: move, occurred_at: event1_timestamp, created_at: 100.minutes.ago, details: event1_details) }
+        let(:event1_details) { { to_location_id: event1_location.id } }
+        let(:event1_location) { create(:location, title: 'Event1-Location') }
 
-      let!(:event2) { create(:event_move_redirect, eventable: move, occurred_at: event2_timestamp, created_at: 1.minute.ago, details: event2_details) }
-      let(:event2_details) { { to_location_id: event2_location.id } }
-      let(:event2_location) { create(:location, title: 'Event2-Location') }
+        let!(:event2) { create(:event_move_redirect, eventable: move, occurred_at: event2_timestamp, created_at: 1.minute.ago, details: event2_details) }
+        let(:event2_details) { { to_location_id: event2_location.id } }
+        let(:event2_location) { create(:location, title: 'Event2-Location') }
 
-      context 'when events are received in a chronological order' do
-        let(:event1_timestamp) { '2020-05-22 09:00:00' }  # chronologically first event created first
-        let(:event2_timestamp) { '2020-05-22 10:00:00' }  # chronologically second event created second
+        context 'when events are received in a chronological order' do
+          let(:event1_timestamp) { '2020-05-22 09:00:00' }  # chronologically first event created first
+          let(:event2_timestamp) { '2020-05-22 10:00:00' }  # chronologically second event created second
 
-        it 'updates the move to event2 redirect location' do
-          expect { runner.call }.to change(move, :to_location).from(original_location).to(event2_location)
+          it 'updates the move to event2 redirect location' do
+            expect { runner.call }.to change(move, :to_location).from(original_location).to(event2_location)
+          end
+
+          it_behaves_like 'it calls the Notifier with an update action_name'
         end
 
-        it_behaves_like 'it calls the Notifier with an update action_name'
+        context 'when events are not received in a chronological order' do
+          let(:event1_timestamp) { '2020-05-22 10:00:00' } # chronologically second event created first
+          let(:event2_timestamp) { '2020-05-22 09:00:00' } # chronologically first event created second
+
+          it 'updates the move to event1 redirect location' do
+            expect { runner.call }.to change(move, :to_location).from(original_location).to(event1_location)
+          end
+
+          it_behaves_like 'it calls the Notifier with an update action_name'
+        end
       end
 
-      context 'when events are not received in a chronological order' do
-        let(:event1_timestamp) { '2020-05-22 10:00:00' } # chronologically second event created first
-        let(:event2_timestamp) { '2020-05-22 09:00:00' } # chronologically first event created second
+      context 'with invalid move_type' do
+        let(:court_location) { create(:location, :court) }
+        let(:invalid_event) { build(:event_move_redirect, eventable: move, details: { to_location_id: court_location.id, move_type: 'hospital' }) }
 
-        it 'updates the move to event1 redirect location' do
-          expect { runner.call }.to change(move, :to_location).from(original_location).to(event1_location)
+        before do
+          invalid_event.save(validate: false)
         end
 
-        it_behaves_like 'it calls the Notifier with an update action_name'
+        it 'raises a validation error' do
+          expect { runner.call }.to raise_error(ActiveRecord::RecordInvalid, /To location must be a hospital or high security hospital/i)
+        end
       end
     end
 
