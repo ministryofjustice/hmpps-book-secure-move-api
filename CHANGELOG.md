@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.0.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.5) (2021-03-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.4...v3.0.5)
+
+**Merged pull requests:**
+
+- Upgrade mimemagic to 0.3.7 [\#1400](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1400) ([martyn-w](https://github.com/martyn-w))
+- Remove authentication from api/reference/locations [\#1399](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1399) ([Thource](https://github.com/Thource))
+- Cleanup defunct move and PER prometheus counters [\#1398](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1398) ([martyn-w](https://github.com/martyn-w))
+- Changelog v3.0.4 [\#1397](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1397) ([martyn-w](https://github.com/martyn-w))
+- Improved move\_type validation for MoveRedirect events [\#1395](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1395) ([martyn-w](https://github.com/martyn-w))
+- Changelog v3.0.3 [\#1386](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1386) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.4) (2021-03-25)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.3...v3.0.4)
