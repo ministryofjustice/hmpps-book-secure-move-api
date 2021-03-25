@@ -8,7 +8,8 @@ module Moves
       @record = record
       validate_active_locations
 
-      return if record.move_type.blank?
+      # General move_type validation
+      validate_known_move_type
 
       # Apply more complex validation rules for specific move types
       validate_court_to_location if includes? %w[court_appearance]
@@ -28,6 +29,12 @@ module Moves
 
     def human_move_type
       record.move_type.to_s.humanize(capitalize: false)
+    end
+
+    def validate_known_move_type
+      unless record.move_type.blank? || Move.move_types.include?(record.move_type)
+        record.errors.add(:move_type, :invalid_move_type, message: "must be a valid move type (#{human_move_type})")
+      end
     end
 
     def validate_active_locations

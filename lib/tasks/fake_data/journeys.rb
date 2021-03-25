@@ -90,7 +90,7 @@ module Tasks
       end
 
       def create_redirect_move_event(timestamp, location)
-        GenericEvent::MoveRedirect.create(
+        GenericEvent::MoveRedirect.create!(
           eventable: move,
           occurred_at: timestamp,
           created_by: 'TEST_USER',
@@ -100,10 +100,32 @@ module Tasks
             fake: true,
             to_location_id: location.id,
             reason: GenericEvent::MoveRedirect.reasons.keys.sample,
-            move_type: Move.move_types.keys.sample,
+            move_type: random_move_type(move.from_location, location),
           },
           supplier_id: supplier.id,
         )
+      end
+
+      def random_move_type(from_location, to_location)
+        if from_location.police? && to_location.police?
+          'police_transfer'
+        elsif from_location.police? && to_location.detained?
+          %w[prison_recall video_remand].sample
+        elsif from_location.police? && to_location.court?
+          'court_appearance'
+        elsif from_location.court? && to_location.detained?
+          'prison_remand'
+        elsif from_location.court? && to_location.not_detained?
+          'court_other'
+        elsif from_location.detained? && to_location.detained?
+          'prison_transfer'
+        elsif from_location.detained? && to_location.court?
+          'court_appearance'
+        elsif to_location.hospital?
+          'hospital'
+        else
+          'UNKNOWN'
+        end
       end
 
       def random_event
