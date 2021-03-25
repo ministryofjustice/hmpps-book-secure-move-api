@@ -19,6 +19,9 @@ class GenericEvent
     include LocationFeed
 
     validates :reason, inclusion: { in: reasons }, if: -> { reason.present? }
+    validates_with Moves::MoveTypeValidator
+
+    delegate :from_location, to: :eventable
 
     def trigger(*)
       eventable.to_location = to_location

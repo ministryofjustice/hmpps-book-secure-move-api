@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvent::MoveRedirect do
-  subject(:generic_event) { build(:event_move_redirect) }
+  subject(:generic_event) { build(:event_move_redirect) } # this is a court_appearance redirect to a court
 
   let(:redirect_reasons) do
     %w[
@@ -40,6 +40,56 @@ RSpec.describe GenericEvent::MoveRedirect do
     it 'returns nil if to_location_id is nil in the details' do
       generic_event.details['to_location_id'] = nil
       expect(generic_event.to_location).to be_nil
+    end
+  end
+
+  describe '#move_type' do
+    context 'when valid' do
+      before do
+        generic_event.details[:move_type] = 'court_appearance'
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when invalid with respect to the to_location' do
+      before do
+        generic_event.details[:move_type] = 'hospital'
+      end
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when unknown' do
+      before do
+        generic_event.details[:move_type] = 'FOO_BAR'
+      end
+
+      it { is_expected.not_to be_valid }
+    end
+
+    context 'when blank' do
+      before do
+        generic_event.details[:move_type] = ''
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when nil' do
+      before do
+        generic_event.details[:move_type] = nil
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when not present' do
+      before do
+        generic_event.details.delete(:move_type)
+      end
+
+      it { is_expected.to be_valid }
     end
   end
 

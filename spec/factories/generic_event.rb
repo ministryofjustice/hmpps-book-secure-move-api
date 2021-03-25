@@ -179,7 +179,7 @@ FactoryBot.define do
       {
         reason: 'no_space',
         move_type: 'court_appearance',
-        to_location_id: create(:location).id,
+        to_location_id: create(:location, :court).id,
       }
     end
   end
