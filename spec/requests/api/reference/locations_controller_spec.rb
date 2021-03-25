@@ -6,7 +6,7 @@ RSpec.describe Api::Reference::LocationsController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:headers) { { 'CONTENT_TYPE': content_type } }
   let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
 
   describe 'GET /api/v1/reference/locations' do
@@ -67,6 +67,14 @@ RSpec.describe Api::Reference::LocationsController do
 
       it 'returns the correct data' do
         expect(response_json).to include_json(expected_document)
+      end
+    end
+
+    describe 'still works when authenticated' do
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before do
+          get '/api/v1/reference/locations', params: params, headers: headers.merge('Authorization' => "Bearer #{access_token}")
+        end
       end
     end
 

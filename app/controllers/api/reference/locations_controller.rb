@@ -15,6 +15,10 @@ module Api
 
     private
 
+      def authentication_enabled?
+        false
+      end
+
       def find_location
         Location.find(params[:id])
       end
