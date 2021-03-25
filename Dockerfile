@@ -41,7 +41,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info
 
 # Fix incompatibility with slim tzdata from 2020b onwards
 RUN wget https://data.iana.org/time-zones/tzdb/tzdata.zi -O /usr/share/zoneinfo/tzdata.zi && \
