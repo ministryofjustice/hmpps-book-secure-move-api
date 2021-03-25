@@ -7,7 +7,7 @@ ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info
 RUN gem update bundler --no-document
 
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
