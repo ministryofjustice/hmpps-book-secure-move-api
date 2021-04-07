@@ -251,10 +251,6 @@ executors:
       - image: rodolpheche/wiremock:2.27.1-alpine
         command: --port 8888
 
-  auditor:
-    docker:
-      - image: circleci/ruby:2-buster
-
 commands:
   build-base:
     description: "Checkout app code and fetch dependencies for running tests"
@@ -375,7 +371,7 @@ commands:
 
 jobs:
   security_audit:
-    executor: auditor
+    executor: test-executor
     steps:
       - checkout
       - build-base
