@@ -16,7 +16,7 @@ class PrepareBaseNotificationsJob < ApplicationJob
         next unless subscription.enabled?
 
         # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
-        if send_webhooks && subscription.callback_url.present?
+        if send_webhooks && subscription.callback_url.present? && should_webhook?(move)
           # feature flag certain webhook messages: disable if there is an envvar DISABLE_WEBHOOK_<ACTIONNAME>_<SUPPLIER>=="TRUE"
           unless ENV.fetch("DISABLE_WEBHOOK_#{action_name.upcase}_#{supplier.key.upcase}", 'FALSE') =~ /TRUE/i
             NotifyWebhookJob.perform_later(
@@ -53,6 +53,11 @@ private
       topic: topic,
       event_type: event_type(action_name),
     )
+  end
+
+  def should_webhook?(move)
+    # NB: we should not send webhooks for :proposed moves - these are completely internal to Book a Secure Move
+    Move::MOVE_STATUS_PROPOSED != move.status
   end
 
   def should_email?(move)

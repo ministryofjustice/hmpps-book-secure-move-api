@@ -185,12 +185,26 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      it 'creates the correct notification' do
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-          do_post
-        end
+      context 'with a requested move' do
+        it 'creates the correct notification' do
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+            do_post
+          end
 
-        expect(subscription.notifications.last.attributes).to include_json(expected_notification_attributes)
+          expect(subscription.notifications.last.attributes).to include_json(expected_notification_attributes)
+        end
+      end
+
+      context 'with a proposed move' do
+        let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'proposed') }
+
+        it 'creates the correct notification' do
+          perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+            do_post
+          end
+
+          expect(subscription.notifications.last).to be_nil
+        end
       end
     end
 
