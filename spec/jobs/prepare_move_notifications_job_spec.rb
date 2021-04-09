@@ -135,6 +135,15 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     it_behaves_like 'it schedules NotifyEmailJob'
   end
 
+  context 'when creating a proposed move' do
+    let(:move) { create :move, :proposed, from_location: location, date_from: Time.zone.today, supplier: supplier }
+
+    it_behaves_like 'it does not create a webhook notification record'
+    it_behaves_like 'it does not create an email notification record'
+    it_behaves_like 'it does not schedule NotifyWebhookJob'
+    it_behaves_like 'it does not schedule NotifyEmailJob'
+  end
+
   context 'when send_webhooks is false' do
     let(:send_webhooks) { false }
 
