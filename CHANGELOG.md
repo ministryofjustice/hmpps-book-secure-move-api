@@ -1,5 +1,32 @@
 # Changelog
 
+## [v3.0.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.7) (2021-04-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.6...v3.0.7)
+
+**Merged pull requests:**
+
+- Update move\_inspector.rb [\#1413](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1413) ([martyn-w](https://github.com/martyn-w))
+- Bump aws-sdk-s3 from 1.93.0 to 1.93.1 [\#1412](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1412) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2737 disable webhooks for proposed moves [\#1411](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1411) ([martyn-w](https://github.com/martyn-w))
+- Bump nokogiri from 1.11.2 to 1.11.3 [\#1410](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1410) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sidekiq from 6.2.0 to 6.2.1 [\#1409](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1409) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix security audit executor to use the test executor [\#1408](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1408) ([Nimphal](https://github.com/Nimphal))
+- Bump doorkeeper from 5.5.0 to 5.5.1 [\#1407](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1407) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add bundler audit scheduled job to circle [\#1406](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1406) ([Nimphal](https://github.com/Nimphal))
+- Bump listen from 3.5.0 to 3.5.1 [\#1405](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1405) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump paper\_trail from 11.1.0 to 12.0.0 [\#1404](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1404) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rails from 6.0.3.5 to 6.0.3.6 [\#1403](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1403) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog v3.0.5 [\#1401](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1401) ([martyn-w](https://github.com/martyn-w))
+
+## [v3.0.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.6) (2021-03-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.5...v3.0.6)
+
+**Merged pull requests:**
+
+- VERY URGENT update to Dockerfile [\#1402](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1402) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.5) (2021-03-25)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.4...v3.0.5)
