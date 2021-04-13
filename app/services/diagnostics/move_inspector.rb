@@ -18,13 +18,13 @@ module Diagnostics
       @output << "date-from:\t#{move.date_from}\n" if move.date_from.present?
       @output << "date-to:\t#{move.date_to}\n" if move.date_to.present?
       @output << "time due:\t#{move.time_due}\n" if move.time_due.present?
-      @output << "status:\t\t#{move.status}\n"
+      @output << "status:\t#{move.status}\n"
+      @output << "move type:\t#{move.move_type}\n"
       @output << "cancel reason:\t#{move.cancellation_reason}\n" if move.cancellation_reason.present?
       @output << "cancel comment:\t#{move.cancellation_reason_comment}\n" if include_person_details && move.cancellation_reason_comment.present?
-      @output << <<~ENDDETAILS
-        move type:\t#{move.move_type}
-        from location:\t#{move.from_location}
-      ENDDETAILS
+      @output << "prison transfer reason:\t#{move.prison_transfer_reason.title}\n" if include_person_details && move.prison_transfer_reason.present?
+      @output << "prison transfer comment:\t#{move.reason_comment}\n" if include_person_details && move.reason_comment.present?
+      @output << "from location:\t#{move.from_location}\n"
 
       if move.versions.many?
         move.versions.where.not(object: nil).first.reify.to_location.tap do |original_to_location|
