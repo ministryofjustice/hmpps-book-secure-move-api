@@ -79,6 +79,13 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include RSpec::JsonExpectations::Matchers
+
+  config.before do
+    image_data = File.read('spec/fixtures/Arctic_Tern.jpg')
+    allow(NomisClient::Image).to receive(:get).and_return(image_data)
+    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
+    allow(NomisClient::Alerts).to receive(:get).and_return([])
+  end
 end
 
 Shoulda::Matchers.configure do |config|

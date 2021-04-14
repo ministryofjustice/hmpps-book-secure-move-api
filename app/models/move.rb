@@ -116,6 +116,15 @@ class Move < VersionedModel
   before_validation :set_reference
   before_validation :set_move_type
 
+  after_create do
+    next if person.blank?
+
+    People::RetrieveImage.call(person, true)
+    next if person.prison_number.blank?
+
+    Profiles::ImportAlertsAndPersonalCareNeeds.new(profile, person.prison_number).call
+  end
+
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
