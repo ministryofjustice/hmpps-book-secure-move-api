@@ -3,14 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Move do
-  let(:import_alerts_and_personal_care_needs) { Profiles::ImportAlertsAndPersonalCareNeeds.new('', '') }
-
-  before do
-    allow(People::RetrieveImage).to receive(:call).and_return(true)
-    allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new).and_return(import_alerts_and_personal_care_needs)
-    allow(import_alerts_and_personal_care_needs).to receive(:call).and_return(true)
-  end
-
   it { is_expected.to belong_to(:supplier) }
   it { is_expected.to belong_to(:from_location) }
   it { is_expected.to belong_to(:to_location).optional }
@@ -27,20 +19,6 @@ RSpec.describe Move do
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
   it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
-
-  context 'when a move is created' do
-    before { move.person.prison_number = 123 }
-
-    let(:move) { create(:move, :with_journey, profile: create(:profile)) }
-
-    it "updates the person's image" do
-      expect(People::RetrieveImage).to have_received(:call).with(move.person, true)
-    end
-
-    it "updates the person's alerts and personal care needs" do
-      expect(import_alerts_and_personal_care_needs).to have_received(:call)
-    end
-  end
 
   describe 'cancellation_reason' do
     context 'when the move is not cancelled' do
