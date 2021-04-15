@@ -44,25 +44,11 @@ RSpec.describe Api::MovesController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     context 'when successful' do
-      let(:person) { create(:person) }
-      let(:profile) { create(:profile, person: person) }
-      let(:data) do
-        {
-          type: 'moves',
-          attributes: move_attributes,
-          relationships: {
-            profile: { data: { type: 'profiles', id: profile.id } },
-            from_location: { data: { type: 'locations', id: from_location.id } },
-            to_location: to_location ? { data: { type: 'locations', id: to_location.id } } : { data: nil },
-            documents: { data: [{ type: 'documents', id: document.id }] },
-            prison_transfer_reason: { data: { type: 'prison_transfer_reasons', id: reason.id } },
-          },
-        }
-      end
       let(:move) { Move.find_by(from_location_id: from_location.id) }
 
       before do
         allow(person).to receive(:update_nomis_data)
+        allow_any_instance_of(Move).to receive(:person).and_return(person) # rubocop:disable RSpec/AnyInstance
       end
 
       it_behaves_like 'an endpoint that responds with success 201' do

@@ -165,4 +165,31 @@ RSpec.describe Person do
       expect { create(:person, :pre1900) }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Birth date must be after 1900-01-01.')
     end
   end
+
+  describe '#update_nomis_data' do
+    let(:import_alerts_and_personal_care_needs) { instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true) }
+
+    before do
+      allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new).and_return(import_alerts_and_personal_care_needs)
+      allow(People::RetrieveImage).to receive(:call)
+    end
+
+    it "updates the person's image" do
+      person.update_nomis_data
+
+      expect(People::RetrieveImage).to have_received(:call).with(person, force_update: true).once
+    end
+
+    context 'when the person has a prison number' do
+      before do
+        person.instance_variable_set(:@prison_number, 123)
+      end
+
+      it "updates the person's alerts and personal needs" do
+        person.update_nomis_data
+
+        expect(import_alerts_and_personal_care_needs).to have_received(:call).once
+      end
+    end
+  end
 end
