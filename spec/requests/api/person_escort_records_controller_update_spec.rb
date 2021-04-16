@@ -158,7 +158,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       before do
         allow(Faraday).to receive(:new).and_return(faraday_client)
         allow(MoveMailer).to receive(:notify).and_return(notify_response)
-        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, PrepareAssessmentNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
+        perform_enqueued_jobs(only: [PreparePersonEscortRecordNotificationsJob, NotifyWebhookJob, NotifyEmailJob]) do
           patch_person_escort_record
         end
       end
