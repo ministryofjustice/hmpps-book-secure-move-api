@@ -341,7 +341,8 @@ RSpec.describe Move do
       let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
 
       it 'ignores cancelled moves' do
-        move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
+        move.cancel
+        move.update!(cancellation_reason: 'made_in_error')
         expect(duplicate.existing_moves).to be_empty
       end
     end

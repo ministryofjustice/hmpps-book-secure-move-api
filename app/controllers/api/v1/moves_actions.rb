@@ -12,6 +12,8 @@ module Api::V1
 
     def create_and_render
       move = Move.new(new_move_attributes)
+      move.state_machine.restore!(move.status)
+
       move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
       move.profile.documents = profile_documents
 

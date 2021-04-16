@@ -10,7 +10,9 @@ module Moves
     end
 
     def call
+      update_move_status
       move.assign_attributes(attributes)
+
       # NB: rather than update directly, we need to detect whether the move status has changed before saving the record
       self.status_changed = move.status_changed?
       self.date_changed = move.date_changed?
@@ -58,6 +60,32 @@ module Moves
       profile.documents = Document.where(id: document_ids) unless document_attributes.nil?
 
       attributes
+    end
+
+    def update_move_status
+      # NB: for historic reasons it is still possible for a client to manually update a move's status (without an associated event).
+      # If the client is attempting to update a move's status, compare the before and after status to infer the correct
+      # state transition and apply that via the move's state machine.
+
+      new_status = attributes.delete(:status)
+      raise ActiveRecord::RecordInvalid if new_status.present? && !Move.statuses.keys.include?(new_status)
+      transition = { move.status => new_status }
+      case transition
+      when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_REQUESTED }
+        move.approve
+      when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_BOOKED }
+        move.accept
+      when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_IN_TRANSIT }
+        move.start
+      when { Move::MOVE_STATUS_IN_TRANSIT => Move::MOVE_STATUS_COMPLETED }
+        move.complete
+      when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_CANCELLED }
+        move.reject
+      when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_CANCELLED }
+        move.reject
+      when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_CANCELLED }
+        move.cancel
+      end
     end
   end
 end

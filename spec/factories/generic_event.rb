@@ -196,7 +196,7 @@ FactoryBot.define do
   end
 
   factory :event_move_start, parent: :generic_event, class: 'GenericEvent::MoveStart' do
-    eventable { association(:move) }
+    eventable { association(:move, :booked) }
   end
 
   factory :event_journey_admit_through_outer_gate, parent: :generic_event, class: 'GenericEvent::JourneyAdmitThroughOuterGate' do

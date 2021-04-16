@@ -24,6 +24,8 @@ class Move < VersionedModel
     rejection_reason
   ].freeze
 
+  include StateMachineable
+
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
@@ -119,6 +121,22 @@ class Move < VersionedModel
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
+
+  has_state_machine MoveStateMachine, on: :status
+
+  delegate :approve,
+           :accept,
+           :start,
+           :complete,
+           :reject,
+           :cancel,
+           :proposed?,
+           :requested?,
+           :booked?,
+           :in_transit?,
+           :completed?,
+           :cancelled?,
+           to: :state_machine
 
   # TODO: Temporary method to apply correct validation rules when creating v2 move
   def v2?
