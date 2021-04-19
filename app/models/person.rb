@@ -84,9 +84,6 @@ class Person < VersionedModel
 
   def update_nomis_data
     People::RetrieveImage.call(self, force_update: true)
-    return if @prison_number.blank?
-
-    Profiles::ImportAlertsAndPersonalCareNeeds.new(@profile, @prison_number).call
   end
 
 private

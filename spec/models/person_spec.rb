@@ -179,17 +179,5 @@ RSpec.describe Person do
 
       expect(People::RetrieveImage).to have_received(:call).with(person, force_update: true).once
     end
-
-    context 'when the person has a prison number' do
-      before do
-        person.instance_variable_set(:@prison_number, 123)
-      end
-
-      it "updates the person's alerts and personal needs" do
-        person.update_nomis_data
-
-        expect(import_alerts_and_personal_care_needs).to have_received(:call).once
-      end
-    end
   end
 end
