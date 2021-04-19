@@ -81,13 +81,6 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when successful' do
-      before do
-        image_data = File.read('spec/fixtures/Arctic_Tern.jpg')
-        allow(NomisClient::Image).to receive(:get).and_return(image_data)
-        allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
-        allow(NomisClient::Alerts).to receive(:get).and_return([])
-      end
-
       let(:move) { Move.first }
 
       let!(:person) { create(:person) }
