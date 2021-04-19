@@ -167,10 +167,7 @@ RSpec.describe Person do
   end
 
   describe '#update_nomis_data' do
-    let(:import_alerts_and_personal_care_needs) { instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true) }
-
     before do
-      allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new).and_return(import_alerts_and_personal_care_needs)
       allow(People::RetrieveImage).to receive(:call)
     end
 
