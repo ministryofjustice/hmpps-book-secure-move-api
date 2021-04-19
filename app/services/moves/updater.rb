@@ -69,6 +69,7 @@ module Moves
 
       new_status = attributes.delete(:status)
       raise ActiveRecord::RecordInvalid if new_status.present? && !Move.statuses.keys.include?(new_status)
+
       transition = { move.status => new_status }
       case transition
       when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_REQUESTED }
@@ -84,7 +85,7 @@ module Moves
       when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_CANCELLED }
         move.reject
       when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_CANCELLED }
-        move.cancel
+        move.cancel # FIXME: ADD PARAMS
       end
     end
   end

@@ -128,8 +128,6 @@ class Move < VersionedModel
            :accept,
            :start,
            :complete,
-           :reject,
-           :cancel,
            :proposed?,
            :requested?,
            :booked?,
@@ -137,6 +135,33 @@ class Move < VersionedModel
            :completed?,
            :cancelled?,
            to: :state_machine
+
+  def cancel(cancellation_reason:, cancellation_reason_comment: nil)
+    assign_attributes(
+      cancellation_reason: cancellation_reason,
+      cancellation_reason_comment: cancellation_reason_comment,
+    )
+    state_machine.cancel
+  end
+
+  def cancel!(args)
+    cancel(args)
+    save!
+  end
+
+  def reject(rejection_reason:, cancellation_reason_comment: nil)
+    assign_attributes(
+      rejection_reason: rejection_reason,
+      cancellation_reason: Move::CANCELLATION_REASON_REJECTED,
+      cancellation_reason_comment: cancellation_reason_comment,
+    )
+    state_machine.reject
+  end
+
+  def reject!(args)
+    reject(args)
+    save!
+  end
 
   # TODO: Temporary method to apply correct validation rules when creating v2 move
   def v2?
