@@ -46,6 +46,11 @@ RSpec.describe Api::MovesController do
     context 'when successful' do
       let(:move) { Move.find_by(from_location_id: from_location.id) }
 
+      before do
+        allow(person).to receive(:update_nomis_data)
+        allow_any_instance_of(Move).to receive(:person).and_return(person) # rubocop:disable RSpec/AnyInstance
+      end
+
       it_behaves_like 'an endpoint that responds with success 201' do
         before { post_moves }
       end
@@ -57,6 +62,11 @@ RSpec.describe Api::MovesController do
       it 'sets the from_location supplier as the supplier on the move' do
         post_moves
         expect(move.supplier).to eq(supplier)
+      end
+
+      it "updates the person's nomis data" do
+        post_moves
+        expect(person).to have_received(:update_nomis_data).once
       end
 
       context 'with a real access token' do

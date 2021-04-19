@@ -82,6 +82,10 @@ class Person < VersionedModel
     @category ||= Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
   end
 
+  def update_nomis_data
+    People::RetrieveImage.call(self, force_update: true)
+  end
+
 private
 
   def validate_age
