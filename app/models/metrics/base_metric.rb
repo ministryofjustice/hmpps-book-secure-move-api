@@ -6,6 +6,7 @@ module Metrics
     TOTAL = 'total'.freeze
     COUNT = 'count'.freeze
     MOVES = 'moves'.freeze
+    PERSON_ESCORT_RECORDS = 'pers'.freeze
 
     attr_reader :supplier, :label, :database, :file, :interval, :timestamp,
                 :columns_name, :columns_field, :columns,
