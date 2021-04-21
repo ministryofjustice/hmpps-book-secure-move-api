@@ -11,8 +11,6 @@ RSpec.describe GenericEvent::PerMedicalAid do
 
   it { is_expected.to validate_presence_of(:advised_at) }
   it { is_expected.to validate_presence_of(:advised_by) }
-  it { is_expected.to validate_presence_of(:treated_at) }
-  it { is_expected.to validate_presence_of(:treated_by) }
 
   it { is_expected.to validate_inclusion_of(:eventable_type).in_array(%w[PersonEscortRecord]) }
 
@@ -34,6 +32,15 @@ RSpec.describe GenericEvent::PerMedicalAid do
     let(:treated_at) { '2019/01/01T18:00:00' }
 
     it { is_expected.not_to be_valid }
+  end
+
+  context 'when the treated_at and treated_by are nil' do
+    before do
+      generic_event.treated_by = nil
+      generic_event.treated_at = nil
+    end
+
+    it { is_expected.to be_valid }
   end
 
   describe '#event_classification' do
