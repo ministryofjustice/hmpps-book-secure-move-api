@@ -20,6 +20,8 @@ module Api::V1
       authorize!(:create, move)
       move.save!
 
+      move.person.update_nomis_data if move.person.present?
+
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
       render_move(move, :created)

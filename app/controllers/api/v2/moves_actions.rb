@@ -22,6 +22,8 @@ module Api::V2
       authorize!(:create, move)
       move.save!
 
+      move.person.update_nomis_data if move.person.present?
+
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveProposed) if move.proposed?

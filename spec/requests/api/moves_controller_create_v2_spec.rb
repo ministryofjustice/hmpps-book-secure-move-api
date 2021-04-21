@@ -37,6 +37,7 @@ RSpec.describe Api::MovesController do
 
     let(:status) { 'requested' }
     let(:profile) { create(:profile) }
+    let(:person) { create(:person) }
     let(:another_supplier) { create(:supplier) }
     let(:from_location) { create :location, suppliers: [another_supplier] }
     let(:to_location) { create :location, :court }
@@ -56,6 +57,11 @@ RSpec.describe Api::MovesController do
 
     let(:move) { Move.find_by(from_location_id: from_location.id) }
 
+    before do
+      allow(person).to receive(:update_nomis_data)
+      allow_any_instance_of(Move).to receive(:person).and_return(person) # rubocop:disable RSpec/AnyInstance
+    end
+
     it_behaves_like 'an endpoint that responds with success 201' do
       before { do_post }
     end
@@ -73,6 +79,11 @@ RSpec.describe Api::MovesController do
       do_post
 
       expect(GenericEvent.last.created_by).to eq('TEST_USER')
+    end
+
+    it "updates the person's nomis data" do
+      do_post
+      expect(person).to have_received(:update_nomis_data).once
     end
 
     context 'when the new move status is `proposed`' do
