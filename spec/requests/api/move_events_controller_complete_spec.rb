@@ -9,7 +9,7 @@ RSpec.describe Api::MoveEventsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, from_location: from_location) }
+    let(:move) { create(:move, :in_transit, from_location: from_location) }
     let(:move_id) { move.id }
 
     let(:complete_params) do

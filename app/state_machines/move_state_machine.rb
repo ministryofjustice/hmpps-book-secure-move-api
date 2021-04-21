@@ -11,6 +11,7 @@ class MoveStateMachine < FiniteMachine::Definition
   event :start, booked: :in_transit
 
   event :complete, in_transit: :completed
+  event :cancel, proposed: :cancelled # NB proposed --Cancel--> cancelled is not a formally specified transition
   event :cancel, requested: :cancelled # NB requested --Cancel--> cancelled is not a formally specified transition
   event :cancel, in_transit: :cancelled # NB in_transit --Cancel--> cancelled is not a formally specified transition
 

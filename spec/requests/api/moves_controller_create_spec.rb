@@ -437,8 +437,25 @@ RSpec.describe Api::MovesController do
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
-    context 'with validation errors' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(status: 'invalid') }
+    context 'with invalid status errors' do
+      let(:move_attributes) { attributes_for(:move).merge(status: 'invalid') }
+
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Invalid status',
+            'detail' => /Status is not included in the list/,
+          },
+        ]
+      end
+
+      before { post_moves }
+
+      it_behaves_like 'an endpoint that responds with error 422'
+    end
+
+    context 'with missing date' do
+      let(:move_attributes) { attributes_for(:move).except(:date) }
 
       let(:errors_422) do
         [
@@ -447,12 +464,6 @@ RSpec.describe Api::MovesController do
             'detail' => "Date can't be blank",
             'source' => { 'pointer' => '/data/attributes/date' },
             'code' => 'blank',
-          },
-          {
-            'title' => 'Unprocessable entity',
-            'detail' => 'Status is not included in the list',
-            'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'inclusion',
           },
         ]
       end

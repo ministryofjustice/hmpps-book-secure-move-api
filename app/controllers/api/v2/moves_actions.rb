@@ -15,6 +15,7 @@ module Api::V2
     end
 
     def create_and_render
+      validate_move_status
       move = Move.new(move_attributes)
       move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
 
@@ -30,6 +31,16 @@ module Api::V2
     end
 
     def update_and_render
+      move.present? # verify the move exists before validations
+      new_status = validate_move_status
+      if new_status.present?
+        move.infer_status_transition(
+          new_status,
+          rejection_reason: common_move_attributes.delete(:rejection_reason),
+          cancellation_reason: common_move_attributes.delete(:cancellation_reason),
+          cancellation_reason_comment: common_move_attributes.delete(:cancellation_reason_comment),
+        )
+      end
       move.assign_attributes(common_move_attributes)
       action_name = move.status_changed? ? 'update_status' : 'update'
       move_date_changed = move.date_changed?
@@ -88,6 +99,15 @@ module Api::V2
         attributes[:court_hearings] = court_hearings unless court_hearing_attributes.nil?
         attributes[:prison_transfer_reason] = prison_transfer_reason unless prison_transfer_reason_attributes.nil?
       end
+    end
+
+    def validate_move_status
+      status = move_params.fetch(:attributes, {})[:status]
+      if status.present?
+        validator = Moves::StatusValidator.new(status: status, cancellation_reason: move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: move_params.fetch(:attributes, {})[:rejection_reason])
+        raise ActiveModel::ValidationError, validator unless validator.valid?
+      end
+      status
     end
 
     def profile

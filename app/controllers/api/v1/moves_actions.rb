@@ -11,8 +11,8 @@ module Api::V1
     end
 
     def create_and_render
+      validate_move_status
       move = Move.new(new_move_attributes)
-      move.state_machine.restore!(move.status)
 
       move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
       move.profile.documents = profile_documents
@@ -26,6 +26,7 @@ module Api::V1
     end
 
     def update_and_render
+      move.present? # verify the move exists before validations
       updater.call
 
       create_automatic_event!(eventable: updater.move, event_class: GenericEvent::MoveDateChanged, details: { date: updater.move.date.iso8601 }) if updater.date_changed
@@ -90,6 +91,15 @@ module Api::V1
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
         )
       end
+    end
+
+    def validate_move_status
+      status = update_move_params.fetch(:attributes, {})[:status]
+      if status.present?
+        validator = Moves::StatusValidator.new(status: status, cancellation_reason: update_move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: update_move_params.fetch(:attributes, {})[:rejection_reason])
+        raise ActiveModel::ValidationError, validator unless validator.valid?
+      end
+      status
     end
 
     def profile_or_person_latest_profile

@@ -73,7 +73,7 @@ FactoryBot.define do
   end
 
   factory :event_move_complete, parent: :generic_event, class: 'GenericEvent::MoveComplete' do
-    eventable { association(:move) }
+    eventable { association(:move, :in_transit) }
   end
 
   factory :event_move_cross_supplier_drop_off, parent: :generic_event, class: 'GenericEvent::MoveCrossSupplierDropOff' do
