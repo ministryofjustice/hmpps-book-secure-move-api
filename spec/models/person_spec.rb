@@ -165,4 +165,16 @@ RSpec.describe Person do
       expect { create(:person, :pre1900) }.to raise_exception(ActiveRecord::RecordInvalid, 'Validation failed: Birth date must be after 1900-01-01.')
     end
   end
+
+  describe '#update_nomis_data' do
+    before do
+      allow(People::RetrieveImage).to receive(:call)
+    end
+
+    it "updates the person's image" do
+      person.update_nomis_data
+
+      expect(People::RetrieveImage).to have_received(:call).with(person, force_update: true).once
+    end
+  end
 end
