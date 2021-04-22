@@ -13,8 +13,7 @@ class GenericEvent
 
     validates :advised_at, presence: true, iso_date_time: true
     validates :advised_by, presence: true
-    validates :treated_at, presence: true, iso_date_time: true
-    validates :treated_by, presence: true
+    validates :treated_at, allow_nil: true, iso_date_time: true
 
     def event_classification
       :medical
