@@ -15,12 +15,12 @@ module Metrics
       TimeBin.new('the future exc today', 1, nil),
     ].freeze
 
-    def apply_time_bin(obj, time_bin)
+    def apply_time_bin(obj, time_bin, field: 'date')
       if time_bin.date_from_offset.present? && time_bin.date_to_offset.present? && time_bin.date_from_offset == time_bin.date_to_offset
-        obj = obj.where(date: Time.zone.now + time_bin.date_from_offset.days)
+        obj = obj.where("#{field} = ?", Time.zone.today + time_bin.date_from_offset.days)
       else
-        obj = obj.where('date >= ?', Time.zone.today + time_bin.date_from_offset.days) if time_bin.date_from_offset.present?
-        obj = obj.where('date <= ?', Time.zone.today + time_bin.date_to_offset.days) if time_bin.date_to_offset.present?
+        obj = obj.where("#{field} >= ?", Time.zone.today + time_bin.date_from_offset.days) if time_bin.date_from_offset.present?
+        obj = obj.where("#{field} <= ?", Time.zone.today + time_bin.date_to_offset.days) if time_bin.date_to_offset.present?
       end
       obj
     end

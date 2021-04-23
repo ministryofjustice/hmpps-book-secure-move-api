@@ -148,7 +148,7 @@ FactoryBot.define do
       after(:create) do |move, evaluator|
         create(
           :person_escort_record,
-          profile: move.profile,
+          move: move,
           status: evaluator.person_escort_record_status,
           confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
           completed_at: evaluator.person_escort_record_status == 'completed' ? Time.zone.now : nil,
