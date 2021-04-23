@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.0.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.8) (2021-04-22)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.7...v3.0.8)
+
+**Merged pull requests:**
+
+- Relax rules on per\_medical\_aid treated\_at and treated\_by [\#1420](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1420) ([martyn-w](https://github.com/martyn-w))
+- Bump geocoder from 1.6.6 to 1.6.7 [\#1418](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1418) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.3.0 to 1.4.1 [\#1417](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1417) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove deprecated PrepareAssessmentNotificationsJob [\#1416](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1416) ([martyn-w](https://github.com/martyn-w))
+- refactor: Fetch person nomis data on move creation [\#1415](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1415) ([Thource](https://github.com/Thource))
+- Update CHANGELOG.md [\#1414](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1414) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.7) (2021-04-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.6...v3.0.7)

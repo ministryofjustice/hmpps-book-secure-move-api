@@ -38,7 +38,7 @@ class NotifyWebhookJob < ApplicationJob
         scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
         Sentry.capture_exception(e)
       end
-      raise e # re-raise the error to force the notification to be retried by sidekiq later
+      raise RetryJobError, e
     end
   end
 
