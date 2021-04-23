@@ -14,6 +14,9 @@ Sentry.init do |config|
   # This will remove the request body from the information sent to sentry
   config.send_default_pii = false
 
+  # Don't log RetryJobError exceptions in Sentry as they will have already been logged as part of the failed job
+  config.excluded_exceptions += ['RetryJobError']
+
   # Half of all requests will be used in performance sampling.
   # Currently the MoJ plan does not allow this. Turn on when
   # plan has been updated in July 2021
