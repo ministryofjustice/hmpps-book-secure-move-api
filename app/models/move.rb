@@ -24,6 +24,8 @@ class Move < VersionedModel
     rejection_reason
   ].freeze
 
+  include StateMachineable
+
   MOVE_STATUS_PROPOSED = 'proposed'
   MOVE_STATUS_REQUESTED = 'requested'
   MOVE_STATUS_BOOKED = 'booked'
@@ -119,6 +121,75 @@ class Move < VersionedModel
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
+
+  has_state_machine MoveStateMachine, on: :status
+
+  delegate :approve,
+           :accept,
+           :start,
+           :complete,
+           :proposed?,
+           :requested?,
+           :booked?,
+           :in_transit?,
+           :completed?,
+           :cancelled?,
+           to: :state_machine
+
+  def cancel(cancellation_reason:, cancellation_reason_comment: nil)
+    assign_attributes(
+      cancellation_reason: cancellation_reason,
+      cancellation_reason_comment: cancellation_reason_comment,
+    )
+    state_machine.cancel
+  end
+
+  def cancel!(args)
+    cancel(args)
+    save!
+  end
+
+  def reject(rejection_reason:, cancellation_reason_comment: nil)
+    assign_attributes(
+      rejection_reason: rejection_reason,
+      cancellation_reason: Move::CANCELLATION_REASON_REJECTED,
+      cancellation_reason_comment: cancellation_reason_comment,
+    )
+    state_machine.reject
+  end
+
+  def reject!(args)
+    reject(args)
+    save!
+  end
+
+  def infer_status_transition(new_status, cancellation_reason: nil, cancellation_reason_comment: nil, rejection_reason: nil)
+    # NB: for historic reasons it is still possible for a client to manually update a move's status (without an associated event).
+    # If the client is attempting to update a move's status, compare the before and after status to infer the correct
+    # state transition and apply that via the move's state machine.
+
+    transition = { status => new_status }
+    case transition
+    when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_REQUESTED }
+      approve
+    when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_BOOKED }
+      accept
+    when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_IN_TRANSIT }
+      start
+    when { Move::MOVE_STATUS_IN_TRANSIT => Move::MOVE_STATUS_COMPLETED }
+      complete
+    when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_CANCELLED }, { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_CANCELLED }
+      # NB: Usually Proposed --> Cancelled is a Rejection; however some systems may still expect this to be a cancellation
+      # NB: Usually Requested --> Cancelled is a Rejection; however some systems may still expect this to be a cancellation
+      if cancellation_reason.present?
+        cancel(cancellation_reason: cancellation_reason, cancellation_reason_comment: cancellation_reason_comment)
+      elsif rejection_reason.present?
+        reject(rejection_reason: rejection_reason, cancellation_reason_comment: cancellation_reason_comment)
+      end
+    when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_CANCELLED }
+      cancel(cancellation_reason: cancellation_reason, cancellation_reason_comment: cancellation_reason_comment)
+    end
+  end
 
   # TODO: Temporary method to apply correct validation rules when creating v2 move
   def v2?

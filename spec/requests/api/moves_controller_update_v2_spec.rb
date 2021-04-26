@@ -506,10 +506,8 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
-            'detail' => 'Status is not included in the list',
-            'source' => { 'pointer' => '/data/attributes/status' },
-            'code' => 'inclusion',
+            'title' => 'Invalid status',
+            'detail' => /Status is not included in the list/,
           },
         ]
       end

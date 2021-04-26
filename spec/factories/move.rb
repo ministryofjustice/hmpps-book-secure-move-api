@@ -14,6 +14,9 @@ FactoryBot.define do
 
     association(:supplier)
 
+    # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
+    after(:build, &:initialize_state)
+
     # Move types
     trait :court_appearance do
       # NB: Police / Prison / STC / SCH --> Court
@@ -189,5 +192,8 @@ FactoryBot.define do
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
     move_type { 'court_appearance' }
+
+    # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
+    after(:build, &:initialize_state)
   end
 end

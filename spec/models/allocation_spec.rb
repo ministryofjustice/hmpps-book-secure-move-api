@@ -227,8 +227,11 @@ RSpec.describe Allocation do
       let(:allocation) { create(:allocation, :with_moves, moves_count: 3) }
 
       before do
-        allocation.moves.first.update(status: 'cancelled', cancellation_reason: 'other')
-        allocation.moves.last.update(profile: nil, status: 'cancelled', cancellation_reason: 'other')
+        allocation.moves.first.cancel!(cancellation_reason: 'other')
+        allocation.moves.last.tap do |move|
+          move.cancel(cancellation_reason: 'other')
+          move.update(profile: nil)
+        end
       end
 
       it 'excludes cancelled moves from all move counts' do
@@ -244,7 +247,9 @@ RSpec.describe Allocation do
       let(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
 
       before do
-        allocation.moves.update_all(status: 'cancelled', cancellation_reason: 'other')
+        allocation.moves.each do |move|
+          move.cancel!(cancellation_reason: 'other')
+        end
       end
 
       it 'includes cancelled moves in total count' do
@@ -306,8 +311,11 @@ RSpec.describe Allocation do
       let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
 
       before do
-        described_class.first.moves.first.update(status: 'cancelled', cancellation_reason: 'other')
-        described_class.last.moves.first.update(profile: nil, status: 'cancelled', cancellation_reason: 'other')
+        described_class.first.moves.first.cancel!(cancellation_reason: 'other')
+        described_class.last.moves.first.tap do |move|
+          move.cancel(cancellation_reason: 'other')
+          move.update(profile: nil)
+        end
       end
 
       it 'excludes cancelled moves from all move counts' do
@@ -330,7 +338,9 @@ RSpec.describe Allocation do
       let!(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
 
       before do
-        described_class.first.moves.update_all(status: 'cancelled', cancellation_reason: 'other')
+        described_class.first.moves.each do |move|
+          move.cancel!(cancellation_reason: 'other')
+        end
       end
 
       it 'includes cancelled moves in total count' do

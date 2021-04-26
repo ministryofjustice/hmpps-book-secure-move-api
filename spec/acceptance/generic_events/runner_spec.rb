@@ -277,8 +277,20 @@ RSpec.describe GenericEvents::Runner do
       let!(:event) { create(:event_move_complete, eventable: move) }
 
       context 'when the move is requested' do
+        let!(:move) { create(:move, :requested) }
+
+        it 'does not change the move status' do
+          expect { runner.call }.not_to change(move, :status).from('requested')
+        end
+
+        it_behaves_like 'it does not call the Notifier'
+      end
+
+      context 'when the move is in_transit' do
+        let!(:move) { create(:move, :in_transit) }
+
         it 'updates the move status to completed' do
-          expect { runner.call }.to change(move, :status).from('requested').to('completed')
+          expect { runner.call }.to change(move, :status).from('in_transit').to('completed')
         end
 
         it_behaves_like 'it calls the Notifier with an update_status action_name'

@@ -12,7 +12,7 @@ RSpec.describe GenericEvent::MoveStart do
     end
 
     it 'sets the eventable `status` to in_transit' do
-      expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('requested').to('in_transit')
+      expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('booked').to('in_transit')
     end
   end
 end
