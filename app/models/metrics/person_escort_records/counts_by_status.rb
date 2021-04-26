@@ -13,7 +13,7 @@ module Metrics
           columns: {
             name: 'status',
             field: :itself,
-            values: PersonEscortRecord.statuses.values << TOTAL,
+            values: PersonEscortRecord.statuses.keys << TOTAL,
           },
           rows: {
             name: COUNT,
@@ -24,7 +24,7 @@ module Metrics
       end
 
       def calculate_row(_row)
-        person_escort_records
+        person_escort_records_with_moves
           .group(:status)
           .count
           .tap { |row| row.merge!(TOTAL => row.values.sum) }

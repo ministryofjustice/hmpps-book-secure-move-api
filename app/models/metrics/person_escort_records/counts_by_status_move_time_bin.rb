@@ -14,7 +14,7 @@ module Metrics
           columns: {
             name: 'status',
             field: :itself,
-            values: PersonEscortRecord.statuses.values << TOTAL,
+            values: PersonEscortRecord.statuses.keys << TOTAL,
           },
           rows: {
             name: 'time',
