@@ -7,7 +7,7 @@ namespace :metrics do
     abort 'Please set S3_METRICS_BUCKET_NAME' if ENV['S3_METRICS_BUCKET_NAME'].blank?
 
     # get list of all available metrics
-    METRIC_CLASSES = [Metrics::Moves].map { |namespace|
+    METRIC_CLASSES = [Metrics::Moves, Metrics::PersonEscortRecords].map { |namespace|
       namespace.constants.map { |c| namespace.const_get(c) if namespace.const_get(c).is_a? Class }.compact
     }.flatten
 

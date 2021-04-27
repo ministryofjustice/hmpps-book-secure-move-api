@@ -17,6 +17,10 @@ FactoryBot.define do
       end
     end
 
+    trait :unstarted do
+      status { 'unstarted' }
+    end
+
     trait :in_progress do
       status { FrameworkAssessmentable::ASSESSMENT_IN_PROGRESS }
     end
@@ -33,8 +37,18 @@ FactoryBot.define do
   end
 
   factory :person_escort_record, class: 'PersonEscortRecord', parent: :framework_assessmentable do
-    association(:profile)
     association(:framework)
+    move { create(:move, *move_attr) }
+    profile { move.profile }
+
+    transient do
+      move_attr { nil }
+    end
+
+    trait :without_move do
+      association(:profile)
+      move { nil }
+    end
 
     trait :prefilled do
       association(:prefill_source, factory: :person_escort_record)

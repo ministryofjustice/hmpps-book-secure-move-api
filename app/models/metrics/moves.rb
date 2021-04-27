@@ -1,5 +1,6 @@
 module Metrics
   module Moves
+    MOVES = 'moves'.freeze
     MOVES_DATABASE = 'moves'.freeze
 
     def database

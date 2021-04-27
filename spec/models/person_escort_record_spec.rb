@@ -51,13 +51,13 @@ RSpec.describe PersonEscortRecord do
   context 'when no move associated' do
     describe '#editable?' do
       it 'is editable if a PER is not confirmed' do
-        person_escort_record = create(:person_escort_record, :with_responses, move: nil)
+        person_escort_record = create(:person_escort_record, :with_responses, :without_move)
 
         expect(person_escort_record).to be_editable
       end
 
       it 'is not editable if a PER is confirmed' do
-        person_escort_record = create(:person_escort_record, :confirmed, :with_responses, move: nil)
+        person_escort_record = create(:person_escort_record, :confirmed, :with_responses, :without_move)
 
         expect(person_escort_record).not_to be_editable
       end
