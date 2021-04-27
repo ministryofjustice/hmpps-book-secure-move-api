@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics::PersonEscortRecords::CountsByStatus do
+RSpec.describe Metrics::PersonEscortRecords::CountsByPerStatus do
   subject(:metric) { described_class.new }
 
   it 'includes the BaseMetric and PersonEscortRecords modules' do
@@ -12,7 +12,7 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByStatus do
 
   it 'initializes label and file' do
     expect(metric.label).not_to be_nil
-    expect(metric.file).to eql('counts_by_status')
+    expect(metric.file).to eql('counts_by_per_status')
   end
 
   describe 'calculate_row' do

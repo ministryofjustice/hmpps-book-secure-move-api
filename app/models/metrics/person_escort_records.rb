@@ -1,5 +1,6 @@
 module Metrics
   module PersonEscortRecords
+    PERSON_ESCORT_RECORDS = 'person escort records'.freeze
     PERSON_ESCORT_RECORDS_DATABASE = 'person_escort_records'.freeze
 
     def database

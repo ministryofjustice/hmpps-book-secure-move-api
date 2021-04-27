@@ -1,15 +1,14 @@
 module Metrics
   module PersonEscortRecords
-    class CountsByStatusMoveTimeBin
+    class CountsByPerStatusMoveType
       include BaseMetric
       include PersonEscortRecords
-      include TimeBins
 
       def initialize(supplier: nil)
         setup_metric(
           supplier: supplier,
-          label: 'PER counts by status and move time bin',
-          file: 'counts_by_status_move_time_bin',
+          label: 'PER counts by PER status and move type',
+          file: 'counts_by_per_status_move_type',
           interval: 5.minutes,
           columns: {
             name: 'status',
@@ -17,15 +16,16 @@ module Metrics
             values: PersonEscortRecord.statuses.keys << TOTAL,
           },
           rows: {
-            name: 'time',
-            field: :title,
-            values: COMMON_TIME_BINS,
+            name: 'move_type',
+            field: :itself,
+            values: Move.move_types.values,
           },
         )
       end
 
-      def calculate_row(row_time_bin)
-        apply_time_bin(person_escort_records_with_moves, row_time_bin, field: 'moves.date')
+      def calculate_row(row_move_type)
+        person_escort_records_with_moves
+          .where(moves: { move_type: row_move_type })
           .group(:status)
           .count
           .tap { |row| row.merge!(TOTAL => row.values.sum) }

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics::PersonEscortRecords::CountsByStatusMoveTimeBin do
+RSpec.describe Metrics::PersonEscortRecords::CountsByPerStatusMoveTimeBin do
   subject(:metric) { described_class.new }
 
   describe 'modules' do
@@ -15,7 +15,7 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByStatusMoveTimeBin do
 
   it 'initializes label and file' do
     expect(metric.label).not_to be_nil
-    expect(metric.file).to eql('counts_by_status_move_time_bin')
+    expect(metric.file).to eql('counts_by_per_status_move_time_bin')
   end
 
   describe 'calculate_row' do

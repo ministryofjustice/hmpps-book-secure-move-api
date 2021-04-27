@@ -1,19 +1,19 @@
 module Metrics
   module PersonEscortRecords
-    class CountsByMoveType
+    class CountsByMoveStatus
       include BaseMetric
       include PersonEscortRecords
 
       def initialize(supplier: nil)
         setup_metric(
           supplier: supplier,
-          label: 'PER counts by move type',
-          file: 'counts_by_move_type',
+          label: 'PER counts by move status',
+          file: 'counts_by_move_status',
           interval: 5.minutes,
           columns: {
-            name: 'move_type',
+            name: 'status',
             field: :itself,
-            values: Move.move_types.values << TOTAL,
+            values: Move.statuses.values << TOTAL,
           },
           rows: {
             name: COUNT,
@@ -25,7 +25,7 @@ module Metrics
 
       def calculate_row(_row)
         person_escort_records_with_moves
-          .group(:move_type)
+          .group('moves.status')
           .count
           .tap { |row| row.merge!(TOTAL => row.values.sum) }
       end

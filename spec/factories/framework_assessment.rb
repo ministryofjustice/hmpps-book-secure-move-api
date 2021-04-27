@@ -17,6 +17,10 @@ FactoryBot.define do
       end
     end
 
+    trait :unstarted do
+      status { 'unstarted' }
+    end
+
     trait :in_progress do
       status { FrameworkAssessmentable::ASSESSMENT_IN_PROGRESS }
     end
