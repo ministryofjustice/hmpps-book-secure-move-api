@@ -12,7 +12,7 @@ RSpec.describe GenericEvent::MoveComplete do
     end
 
     it 'sets the eventable `status` to booked' do
-      expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('requested').to('completed')
+      expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('in_transit').to('completed')
     end
   end
 end

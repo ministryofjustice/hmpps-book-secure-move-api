@@ -65,15 +65,6 @@ RSpec.describe Moves::Updater do
       end
     end
 
-    context 'when status changes to non cancelled with an associated allocation' do
-      let!(:allocation) { create :allocation, moves_count: 5 }
-      let!(:move) { create :move, :cancelled, from_location: from_location, allocation: allocation }
-
-      it 'corrects allocation moves_count' do
-        expect { updater.call }.to change { allocation.reload.moves_count }.from(5).to(1)
-      end
-    end
-
     context 'when status is not updated' do
       let(:status) { 'proposed' }
 
@@ -327,7 +318,7 @@ RSpec.describe Moves::Updater do
     let(:status) { 'wrong status' }
 
     it 'raises an error' do
-      expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { updater.call }.to raise_error(ActiveModel::ValidationError)
     end
   end
 end

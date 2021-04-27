@@ -97,7 +97,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
         let(:response) { instance_double(Faraday::Response, success?: false, status: 503, reason_phrase: 'Server error', body: { message: 'some message', error: 'some error' }.to_json) }
 
         it 'raises Notification failed error' do
-          expect { perform! }.to raise_error(RuntimeError, /non-success status received/)
+          expect { perform! }.to raise_error(RetryJobError, /non-success status received/)
         end
 
         it 'updates delivery_attempts' do
@@ -116,7 +116,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       it 'raises Notification failed error' do
-        expect { perform! }.to raise_error(Faraday::ClientError, 'Internet is unplugged')
+        expect { perform! }.to raise_error(RetryJobError, 'Internet is unplugged')
       end
 
       it 'updates delivery_attempts' do

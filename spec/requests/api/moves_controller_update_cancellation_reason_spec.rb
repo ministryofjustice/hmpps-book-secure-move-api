@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
 
-  describe 'PATCH /moves/:move_id/journeys/:journey_id' do
+  describe 'PATCH /moves/:move_id' do
     let(:supplier) { create(:supplier) }
     let(:access_token) { 'spoofed-token' }
     let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
@@ -86,8 +86,8 @@ RSpec.describe Api::MovesController do
       context 'with an invalid reason' do
         let(:cancellation_reason) { 'fruit bats' }
         let(:errors_422) do
-          [{ "title": 'Unprocessable entity',
-             "detail": 'Cancellation reason is not included in the list' }]
+          [{ "title": 'Invalid cancellation_reason',
+             "detail": /Cancellation reason is not included in the list/ }]
         end
 
         it_behaves_like 'it does not set the cancellation_reason'
@@ -97,8 +97,8 @@ RSpec.describe Api::MovesController do
       context 'with a missing reason' do
         let(:cancellation_reason) { nil }
         let(:errors_422) do
-          [{ "title": 'Unprocessable entity',
-             "detail": 'Cancellation reason is not included in the list' }]
+          [{ "title": 'Invalid cancellation_reason',
+             "detail": /Cancellation reason can't be blank/ }]
         end
 
         it_behaves_like 'it does not set the cancellation_reason'
@@ -145,8 +145,8 @@ RSpec.describe Api::MovesController do
       context 'with an invalid reason' do
         let(:cancellation_reason) { 'fruit bats' }
         let(:errors_422) do
-          [{ "title": 'Unprocessable entity',
-             "detail": 'Cancellation reason is not included in the list' }]
+          [{ "title": 'Invalid cancellation_reason',
+             "detail": /Cancellation reason is not included in the list/ }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -156,8 +156,8 @@ RSpec.describe Api::MovesController do
       context 'with a missing reason' do
         let(:cancellation_reason) { nil }
         let(:errors_422) do
-          [{ "title": 'Unprocessable entity',
-             "detail": 'Cancellation reason is not included in the list' }]
+          [{ "title": 'Invalid cancellation_reason',
+             "detail": /Cancellation reason can't be blank/ }]
         end
 
         it_behaves_like 'an endpoint that responds with error 422'

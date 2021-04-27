@@ -77,6 +77,7 @@ RSpec.describe Api::MovesController do
 
     it 'sets the created by on the GenericEvent' do
       do_post
+
       expect(GenericEvent.last.created_by).to eq('TEST_USER')
     end
 
@@ -511,13 +512,26 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when specifying invalid attributes' do
-      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'invalid') }
+    context 'when specifying an invalid status' do
+      let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', status: 'INVALID') }
+
+      let(:errors_422) do
+        [
+          { 'title' => 'Invalid status', 'detail' => /Status is not included in the list/ },
+        ]
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { do_post }
+      end
+    end
+
+    context 'when missing a required attribute' do
+      let(:move_attributes) { attributes_for(:move).except(:date).merge(move_type: 'court_appearance', status: 'requested') }
 
       let(:errors_422) do
         [
           { 'title' => 'Unprocessable entity', 'detail' => "Date can't be blank", 'source' => { 'pointer' => '/data/attributes/date' }, 'code' => 'blank' },
-          { 'title' => 'Unprocessable entity', 'detail' => 'Status is not included in the list', 'source' => { 'pointer' => '/data/attributes/status' }, 'code' => 'inclusion' },
         ]
       end
 

@@ -27,7 +27,7 @@ RSpec.describe NotifyEmailJob, type: :job do
     let(:govuk_notify_api_key) { nil }
 
     it 'raises an NoMethodError' do
-      expect { perform! }.to raise_error(NoMethodError, /undefined method `length' for nil/)
+      expect { perform! }.to raise_error(RetryJobError, /undefined method `length' for nil/)
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe NotifyEmailJob, type: :job do
     let(:govuk_notify_move_template_id) { nil }
 
     it 'raises an ArgumentError' do
-      expect { perform! }.to raise_error(ArgumentError, /Missing template ID/)
+      expect { perform! }.to raise_error(RetryJobError, /Missing template ID/)
     end
   end
 
@@ -143,7 +143,7 @@ RSpec.describe NotifyEmailJob, type: :job do
       end
 
       it 'raises an error' do
-        expect { perform! }.to raise_error(RuntimeError, 'govuk_notify_response is missing')
+        expect { perform! }.to raise_error(RetryJobError, 'govuk_notify_response is missing')
       end
     end
 

@@ -28,7 +28,7 @@ RSpec.describe Move do
     end
 
     context 'when the move is cancelled' do
-      let(:move) { build(:move, status: 'cancelled') }
+      let(:move) { build(:move, :cancelled) }
 
       it {
         expect(move).to validate_inclusion_of(:cancellation_reason)
@@ -51,7 +51,7 @@ RSpec.describe Move do
     end
 
     context 'when the move is rejected' do
-      let(:move) { build(:move, status: 'cancelled', cancellation_reason: 'rejected') }
+      let(:move) { build(:move, :cancelled, cancellation_reason: 'rejected') }
 
       it {
         expect(move).to validate_inclusion_of(:rejection_reason)
@@ -341,7 +341,7 @@ RSpec.describe Move do
       let(:duplicate) { described_class.new(move.attributes.merge(id: nil, status: 'requested')) }
 
       it 'ignores cancelled moves' do
-        move.update!(status: :cancelled, cancellation_reason: 'made_in_error')
+        move.cancel!(cancellation_reason: 'made_in_error')
         expect(duplicate.existing_moves).to be_empty
       end
     end
