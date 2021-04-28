@@ -16,7 +16,6 @@ RSpec.describe GenericEvent::PerCourtHearing do
   it { is_expected.to validate_presence_of(:court_listing_at) }
   it { is_expected.to validate_presence_of(:started_at) }
   it { is_expected.to validate_presence_of(:ended_at) }
-  it { is_expected.to validate_presence_of(:agreed_at) }
   it { is_expected.to validate_presence_of(:court_outcome) }
 
   %i[court_listing_at started_at ended_at agreed_at].each do |details_attribute|

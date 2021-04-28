@@ -11,7 +11,7 @@ class GenericEvent
     validates :court_listing_at, presence: true, iso_date_time: true
     validates :started_at,       presence: true, iso_date_time: true
     validates :ended_at,         presence: true, iso_date_time: true
-    validates :agreed_at,        presence: true, iso_date_time: true
+    validates :agreed_at,        allow_nil: true, iso_date_time: true
     validates :court_outcome,    presence: true
 
     include LocationValidations
