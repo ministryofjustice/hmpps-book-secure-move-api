@@ -234,7 +234,7 @@ executors:
   test-executor:
     docker:
       # Check https://circleci.com/docs/2.0/language-ruby/ for more details
-      - image: circleci/ruby:2.7.2
+      - image: circleci/ruby:2.7.3
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
