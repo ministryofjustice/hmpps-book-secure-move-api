@@ -147,12 +147,7 @@ RSpec.describe GenericEvent, type: :model do
 
       context 'with a supported V2 version' do
         let(:event) do
-          create(
-            :event_move_cross_supplier_pick_up,
-            details: {
-              previous_move_id: create(:move).id,
-            },
-          )
+          create(:event_move_cross_supplier_pick_up, :with_move_reference)
         end
 
         let(:relation_serializer_key) { :previous_move }

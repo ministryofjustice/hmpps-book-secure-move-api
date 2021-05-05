@@ -87,6 +87,14 @@ FactoryBot.define do
         previous_move_id: create(:move).id,
       }
     end
+
+    trait :with_move_reference do
+      details do
+        {
+          previous_move_reference: create(:move).reference,
+        }
+      end
+    end
   end
 
   factory :event_move_lockout, parent: :generic_event, class: 'GenericEvent::MoveLockout' do
