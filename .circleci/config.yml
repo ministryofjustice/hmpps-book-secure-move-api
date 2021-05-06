@@ -657,4 +657,6 @@ workflows:
             branches:
               only: main
     jobs:
-      - security_audit
+      - security_audit:
+          context:
+            - hmpps-common-vars
