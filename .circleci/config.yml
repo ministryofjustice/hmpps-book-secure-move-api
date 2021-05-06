@@ -6,8 +6,6 @@ orbs:
 aliases:
   - &notify_slack_on_failure
     slack/notify:
-      context:
-        - hmpps-common-vars
       event: fail
       branch_pattern: main
       channel: pecs-dev
@@ -412,6 +410,8 @@ jobs:
           name: Run security audit
           command: bundle exec bundle audit check
       - *notify_slack_on_failure
+    context:
+      - hmpps-common-vars
 
   notify_of_approval:
     resource_class: small
@@ -449,6 +449,8 @@ jobs:
             - swagger/v1/swagger.yaml
             - swagger/v2/swagger.yaml
       - *notify_slack_on_failure
+    context:
+      - hmpps-common-vars
 
   rspec_tests:
     executor: test-executor
