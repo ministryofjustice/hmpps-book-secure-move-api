@@ -1,5 +1,6 @@
 class GenericEvent
   class MoveCrossSupplierPickUp < GenericEvent
+    details_attributes :previous_move_reference
     relationship_attributes previous_move_id: :moves
     eventable_types 'Move'
 
@@ -16,7 +17,7 @@ class GenericEvent
 
     def set_move_id_from_reference(reference = details.delete('previous_move_reference'))
       if reference.present?
-        details['previous_move_id'] = Move.find_by(reference: reference)&.id
+        details['previous_move_id'] = Move.find_by!(reference: reference).id
       end
     end
 
