@@ -410,8 +410,6 @@ jobs:
           name: Run security audit
           command: bundle exec bundle audit check
       - *notify_slack_on_failure
-    context:
-      - hmpps-common-vars
 
   notify_of_approval:
     resource_class: small
@@ -449,8 +447,6 @@ jobs:
             - swagger/v1/swagger.yaml
             - swagger/v2/swagger.yaml
       - *notify_slack_on_failure
-    context:
-      - hmpps-common-vars
 
   rspec_tests:
     executor: test-executor
@@ -661,4 +657,6 @@ workflows:
             branches:
               only: main
     jobs:
-      - security_audit
+      - security_audit:
+          context:
+            - hmpps-common-vars
