@@ -5,6 +5,8 @@ orbs:
 
 aliases:
   - &notify_slack_on_failure
+    context:
+      - hmpps-common-vars
     slack/notify:
       event: fail
       branch_pattern: main
