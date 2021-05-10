@@ -124,8 +124,7 @@ class Move < VersionedModel
 
   has_state_machine MoveStateMachine, on: :status
 
-  delegate :approve,
-           :accept,
+  delegate :accept,
            :start,
            :complete,
            :proposed?,
@@ -135,6 +134,16 @@ class Move < VersionedModel
            :completed?,
            :cancelled?,
            to: :state_machine
+
+  def approve(date:)
+    assign_attributes(date: date) if date.present?
+    state_machine.approve
+  end
+
+  def approve!(args)
+    approve(args)
+    save!
+  end
 
   def cancel(cancellation_reason:, cancellation_reason_comment: nil)
     assign_attributes(
@@ -163,7 +172,7 @@ class Move < VersionedModel
     save!
   end
 
-  def infer_status_transition(new_status, cancellation_reason: nil, cancellation_reason_comment: nil, rejection_reason: nil)
+  def infer_status_transition(new_status, cancellation_reason: nil, cancellation_reason_comment: nil, rejection_reason: nil, date: nil)
     # NB: for historic reasons it is still possible for a client to manually update a move's status (without an associated event).
     # If the client is attempting to update a move's status, compare the before and after status to infer the correct
     # state transition and apply that via the move's state machine.
@@ -171,7 +180,7 @@ class Move < VersionedModel
     transition = { status => new_status }
     case transition
     when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_REQUESTED }
-      approve
+      approve(date: date)
     when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_BOOKED }
       accept
     when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_IN_TRANSIT }
