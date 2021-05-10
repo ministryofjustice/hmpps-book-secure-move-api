@@ -3,7 +3,7 @@ class GenericEvent
     eventable_types 'Move'
 
     def trigger(*)
-      eventable.status = Move::MOVE_STATUS_BOOKED
+      eventable.accept
     end
   end
 end

@@ -41,6 +41,7 @@ module Api::V2
           rejection_reason: common_move_attributes.delete(:rejection_reason),
           cancellation_reason: common_move_attributes.delete(:cancellation_reason),
           cancellation_reason_comment: common_move_attributes.delete(:cancellation_reason_comment),
+          date: common_move_attributes[:date],
         )
       end
       move.assign_attributes(common_move_attributes)
