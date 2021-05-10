@@ -652,9 +652,11 @@ workflows:
   scheduled:
     triggers:
       - schedule:
-          cron: "0 7 * * 1-5"
+          cron: "0 6 * * 1-5"
           filters:
             branches:
               only: main
     jobs:
-      - security_audit
+      - security_audit:
+          context:
+            - hmpps-common-vars
