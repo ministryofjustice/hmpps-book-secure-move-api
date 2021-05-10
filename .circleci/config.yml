@@ -8,6 +8,36 @@ aliases:
     slack/notify:
       event: fail
       branch_pattern: main
+      channel: pecs-dev
+      custom: |
+        {
+          "blocks": [
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "View job"
+                },
+                "url": "${CIRCLE_BUILD_URL}"
+              }
+            }
+          ]
+        }
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
@@ -379,6 +409,7 @@ jobs:
       - run:
           name: Run security audit
           command: bundle exec bundle audit check
+      - *notify_slack_on_failure
 
   notify_of_approval:
     resource_class: small
@@ -621,9 +652,11 @@ workflows:
   scheduled:
     triggers:
       - schedule:
-          cron: "0 7 * * 1-5"
+          cron: "0 6 * * 1-5"
           filters:
             branches:
               only: main
     jobs:
-      - security_audit
+      - security_audit:
+          context:
+            - hmpps-common-vars
