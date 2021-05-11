@@ -23,7 +23,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   let(:movements) { { 'in' => 10, 'out' => 5 } }
   let(:discharges) do
     [
-      { 'firstName': 'Test'},
+      { 'firstName': 'Test' },
       { 'firstName': 'Test1' },
     ]
   end
