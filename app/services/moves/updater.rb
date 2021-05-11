@@ -17,6 +17,7 @@ module Moves
           rejection_reason: attributes.delete(:rejection_reason),
           cancellation_reason: attributes.delete(:cancellation_reason),
           cancellation_reason_comment: attributes.delete(:cancellation_reason_comment),
+          date: attributes[:date],
         )
       end
 

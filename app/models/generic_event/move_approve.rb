@@ -12,9 +12,8 @@ class GenericEvent
     end
 
     def trigger(dry_run: false)
-      eventable.status = Move::MOVE_STATUS_REQUESTED
+      eventable.approve(date: date)
 
-      eventable.date = date
       Allocations::CreateInNomis.call(eventable) if !dry_run && create_in_nomis
     end
 
