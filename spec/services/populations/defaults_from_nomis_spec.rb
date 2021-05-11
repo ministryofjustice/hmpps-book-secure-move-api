@@ -21,18 +21,25 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
     ]
   end
   let(:movements) { { 'in' => 10, 'out' => 5 } }
+  let(:discharges) do
+    [
+      { 'firstName': 'Test'},
+      { 'firstName': 'Test1' },
+    ]
+  end
 
   before do
     allow(NomisClient::Rollcount).to receive(:get).with(agency_id: agency_id, unassigned: false).and_return(assigned_cells)
     allow(NomisClient::Rollcount).to receive(:get).with(agency_id: agency_id, unassigned: true).and_return(unassigned_cells)
     allow(NomisClient::Movements).to receive(:get).with(agency_id: agency_id, date: date).and_return(movements)
+    allow(NomisClient::Discharges).to receive(:get).with(agency_id: agency_id, date: date).and_return(discharges)
   end
 
   context 'with correct details from Nomis' do
     it 'returns correct unlock and discharges' do
       expect(defaults).to eq({
-        unlock: 3 + 4 + 1 - 10 + 5,
-        discharges: 5,
+        unlock: 3 + 4 + 1 - 10 + 2,
+        discharges: 2,
       })
     end
   end
@@ -46,8 +53,8 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
 
     it 'returns correct unlock and discharges' do
       expect(defaults).to eq({
-        unlock: 3 + 4 - 10 + 5,
-        discharges: 5,
+        unlock: 3 + 4 - 10 + 2,
+        discharges: 2,
       })
     end
   end
@@ -73,6 +80,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
     let(:assigned_cells) { nil }
     let(:unassigned_cells) { nil }
     let(:movements) { nil }
+    let(:discharges) { nil }
 
     it 'returns empty hash' do
       expect(defaults).to be_empty
