@@ -1,5 +1,36 @@
 # Changelog
 
+## [v3.0.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.9) (2021-05-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.8...v3.0.9)
+
+**Merged pull requests:**
+
+- small fixes to approve/accept process [\#1444](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1444) ([martyn-w](https://github.com/martyn-w))
+- Bump factory\_bot\_rails from 6.1.0 to 6.2.0 [\#1443](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1443) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.20.4 to 0.21.0 [\#1442](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1442) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.2.2 to 5.3.0 [\#1441](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1441) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4 2836/make audit notify slack on fail [\#1440](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1440) ([Thource](https://github.com/Thource))
+- Bump rails to 6.0.3.7 [\#1439](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1439) ([Thource](https://github.com/Thource))
+- Add hmpps-common-vars to fail context [\#1438](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1438) ([Thource](https://github.com/Thource))
+- Bump aws-sdk-s3 from 1.94.0 to 1.94.1 [\#1437](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1437) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4 2815 tiny bugfix [\#1435](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1435) ([martyn-w](https://github.com/martyn-w))
+- \[P4-2836\] Notify Slack when circle audit job fails [\#1434](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1434) ([Thource](https://github.com/Thource))
+- Bump bootsnap from 1.7.4 to 1.7.5 [\#1433](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1433) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4 2815 move reference supplier pickup [\#1432](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1432) ([martyn-w](https://github.com/martyn-w))
+- bump rexml to 3.2.5 [\#1431](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1431) ([martyn-w](https://github.com/martyn-w))
+- Bump ruby to 2.7.3 [\#1430](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1430) ([martyn-w](https://github.com/martyn-w))
+- Bump github\_changelog\_generator from 1.16.1 to 1.16.2 [\#1429](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1429) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Create LICENSE [\#1428](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1428) ([Nimphal](https://github.com/Nimphal))
+- P4-2817 relax agreed\_at attrib [\#1427](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1427) ([martyn-w](https://github.com/martyn-w))
+- Bump aws-sdk-s3 from 1.93.1 to 1.94.0 [\#1426](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1426) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove status validation on index moves [\#1425](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1425) ([martyn-w](https://github.com/martyn-w))
+- P4 2148 per counts for dashboards deploydev [\#1424](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1424) ([martyn-w](https://github.com/martyn-w))
+- Raise RetryJobError on job errors [\#1423](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1423) ([martyn-w](https://github.com/martyn-w))
+- Update CHANGELOG.md [\#1422](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1422) ([martyn-w](https://github.com/martyn-w))
+- Bump bootsnap from 1.7.3 to 1.7.4 [\#1421](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1421) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4 2030 move statemachine [\#1419](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1419) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.8) (2021-04-22)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.7...v3.0.8)
