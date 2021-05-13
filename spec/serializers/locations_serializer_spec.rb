@@ -5,8 +5,9 @@ require 'rails_helper'
 RSpec.describe LocationsSerializer do
   subject(:serializer) { described_class.new(location) }
 
+  let(:created_at) { Time.zone.local(2018, 6, 1) }
   let(:disabled_at) { Time.zone.local(2019, 1, 1) }
-  let(:location) { create :location, :with_address, :with_coordinates, disabled_at: disabled_at }
+  let(:location) { create :location, :with_address, :with_coordinates, created_at: created_at, disabled_at: disabled_at }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }
@@ -69,6 +70,10 @@ RSpec.describe LocationsSerializer do
 
   it 'contains a young_offender_institution attribute' do
     expect(attributes[:young_offender_institution]).to eql location.young_offender_institution
+  end
+
+  it 'contains a created_at attribute' do
+    expect(attributes[:created_at]).to eql created_at.iso8601
   end
 
   it 'contains a disabled_at attribute' do
