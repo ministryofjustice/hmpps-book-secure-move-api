@@ -72,7 +72,7 @@ module Locations
     def apply_created_at_filters(scope)
       return scope if filter_params[:created_at].blank?
 
-      date = Date.strptime(filter_params[:created_at])
+      date = Date.strptime(filter_params[:created_at], '%Y-%m-%d')
       scope = scope.where(created_at: date.midnight..date.end_of_day)
       scope
     end
