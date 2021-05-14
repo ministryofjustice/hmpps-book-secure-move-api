@@ -3582,6 +3582,13 @@
             type: string
           format: uuid
           example: 950ef512-a25f-46d7-8ced-7ad09510659b
+        - name: filter[created_at]
+          in: query
+          description: Filters results to only include locations created on the given date
+          schema:
+            type: string
+          format: date
+          example: "2019-05-15"
         - name: filter[young_offender_institution]
           in: query
           explode: false
