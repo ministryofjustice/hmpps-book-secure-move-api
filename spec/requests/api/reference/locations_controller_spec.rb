@@ -169,7 +169,8 @@ RSpec.describe Api::Reference::LocationsController do
     describe 'filters' do
       let!(:supplier) { create :supplier }
       let!(:location) { create :location, suppliers: [supplier] }
-      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_id: supplier.id, young_offender_institution: nil } }
+      let(:created_at) { Date.new(2020, 5, 6) }
+      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_id: supplier.id, young_offender_institution: nil, created_at: created_at } }
       let(:params) { { filter: filters } }
 
       before do
@@ -186,6 +187,7 @@ RSpec.describe Api::Reference::LocationsController do
             nomis_agency_id: location.nomis_agency_id,
             supplier_id: supplier.id,
             young_offender_institution: nil,
+            created_at: created_at.to_s,
           },
           active_record_relationships: nil,
         )

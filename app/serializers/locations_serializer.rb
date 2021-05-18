@@ -18,5 +18,6 @@ class LocationsSerializer
              :postcode,
              :latitude,
              :longitude,
+             :created_at,
              :disabled_at
 end

@@ -58,6 +58,19 @@ RSpec.describe Locations::Finder do
       end
     end
 
+    context 'with a created_at' do
+      let(:filter_params) { { created_at: '2020-05-06' } }
+
+      before do
+        create(:location, title: '2020-05-06 Location', created_at: Time.zone.local(2020, 5, 6, 23, 59, 59))
+        create(:location, title: '2020-05-07 Location', created_at: Time.zone.local(2020, 5, 7, 0, 0, 0))
+      end
+
+      it 'returns locations with specified id' do
+        expect(location_finder.call.pluck(:created_at)).to contain_exactly(Time.zone.local(2020, 5, 6, 23, 59, 59))
+      end
+    end
+
     context 'with young_offender_institution true' do
       let(:filter_params) { { young_offender_institution: true } }
 
@@ -66,7 +79,7 @@ RSpec.describe Locations::Finder do
         create(:location, young_offender_institution: false, title: 'Non YOI')
       end
 
-      it 'returns YOI only locations' do
+      it 'returns only YOI locations' do
         expect(location_finder.call.pluck(:title)).to contain_exactly('YOI Location')
       end
     end
@@ -79,7 +92,7 @@ RSpec.describe Locations::Finder do
         create(:location, young_offender_institution: false, title: 'Non YOI')
       end
 
-      it 'returns YOI only locations' do
+      it 'returns only non-YOI locations' do
         expect(location_finder.call.pluck(:title)).to contain_exactly('Non YOI')
       end
     end

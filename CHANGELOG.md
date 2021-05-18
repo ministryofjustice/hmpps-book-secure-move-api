@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.1.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.0) (2021-05-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.9...v3.1.0)
+
+**Merged pull requests:**
+
+- P4-2831: Add created\_at to locations + filter [\#1448](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1448) ([Thource](https://github.com/Thource))
+- feat: Update discharges number to reflect releases from agency [\#1446](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1446) ([Nimphal](https://github.com/Nimphal))
+- Update CHANGELOG.md  [\#1445](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1445) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.0.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.9) (2021-05-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.8...v3.0.9)
