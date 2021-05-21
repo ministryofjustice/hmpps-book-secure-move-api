@@ -132,7 +132,16 @@ FactoryBot.define do
     eventable { association(:move) }
   end
 
-  factory :event_move_notify_premises_of_eta, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfEta' do
+  factory :event_move_notify_premises_of_drop_off_eta, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfDropOffEta' do
+    eventable { association(:move) }
+    details do
+      {
+        expected_at: '2020-06-16T10:20:30+01:00',
+      }
+    end
+  end
+
+  factory :event_move_notify_premises_of_pickup_eta, parent: :generic_event, class: 'GenericEvent::MoveNotifyPremisesOfPickupEta' do
     eventable { association(:move) }
     details do
       {
