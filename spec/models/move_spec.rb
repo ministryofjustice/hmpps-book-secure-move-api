@@ -863,14 +863,14 @@ RSpec.describe Move do
     end
 
     it 'returns the expected time of arrival for a vehicle' do
-      event = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00')
+      event = create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-16T10:20:30+01:00')
       move = create(:move, notification_events: [event])
 
       expect(move.expected_time_of_arrival).to eq('2019-06-16T10:20:30+01:00')
     end
 
     it 'returns the expected time of arrival for a vehicle if multiple different notification events exist' do
-      event1 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event1 = create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
       event2 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
       move = create(:move, notification_events: [event2, event1])
 
@@ -878,8 +878,8 @@ RSpec.describe Move do
     end
 
     it 'returns the latest expected time of arrival for a vehicle if multiple events present' do
-      event1 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
-      event2 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      event1 = create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
+      event2 = create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
       move = create(:move, notification_events: [event2, event1])
 
       expect(move.expected_time_of_arrival).to eq('2019-06-17T10:20:30+01:00')
@@ -908,7 +908,7 @@ RSpec.describe Move do
 
     it 'returns the expected collection time for a vehicle if multiple different notification events exist' do
       event1 = create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-16T10:20:30+01:00', occurred_at: 2.minutes.ago)
-      event2 = create(:event_move_notify_premises_of_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
+      event2 = create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-17T10:20:30+01:00', occurred_at: 1.minute.ago)
       move = create(:move, notification_events: [event2, event1])
 
       expect(move.expected_collection_time).to eq('2019-06-16T10:20:30+01:00')

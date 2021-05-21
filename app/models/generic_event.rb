@@ -46,6 +46,8 @@ class GenericEvent < ApplicationRecord
     MoveLodgingStart
     MoveNotifyPremisesOfArrivalIn30Mins
     MoveNotifyPremisesOfEta
+    MoveNotifyPremisesOfDropOffEta
+    MoveNotifyPremisesOfPickupEta
     MoveNotifyPremisesOfExpectedCollectionTime
     MoveOperationHmcts
     MoveOperationSafeguard

@@ -55,11 +55,18 @@ namespace :data_maintenance do
     notification_event_types = [
       'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins',
       'GenericEvent::MoveNotifyPremisesOfEta',
+      'GenericEvent::MoveNotifyPremisesOfDropOffEta',
+      'GenericEvent::MoveNotifyPremisesOfPickupEta',
       'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime',
     ]
 
     GenericEvent.where(type: medical_event_type).update_all(classification: 'medical')
     GenericEvent.where(type: incident_event_types).update_all(classification: 'incident')
     GenericEvent.where(type: notification_event_types).update_all(classification: 'notification')
+  end
+
+  desc 'remap ETA events: MoveNotifyPremisesOfEta to MoveNotifyPremisesOfDropOffEta'
+  task remap_eta_events: :environment do
+    GenericEvent.where(type: 'GenericEvent::MoveNotifyPremisesOfEta').update_all(type: 'GenericEvent::MoveNotifyPremisesOfDropOffEta')
   end
 end

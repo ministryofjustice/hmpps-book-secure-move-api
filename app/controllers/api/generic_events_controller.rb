@@ -57,7 +57,7 @@ module Api
     end
 
     def event_type
-      @event_type ||= 'GenericEvent::' + event_params.dig('attributes', 'event_type')
+      @event_type ||= 'GenericEvent::' + event_remap(event_params.dig('attributes', 'event_type'))
     end
 
     def event_specific_relationships
@@ -66,6 +66,12 @@ module Api
 
     def run_event_logs
       GenericEvents::Runner.new(eventable).call
+    end
+
+    def event_remap(original_event)
+      {
+        'MoveNotifyPremisesOfEta' => 'MoveNotifyPremisesOfDropOffEta',
+      }[original_event] || original_event
     end
   end
 end

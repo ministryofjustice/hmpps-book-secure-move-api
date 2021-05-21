@@ -91,7 +91,7 @@ RSpec.describe V2::MovesSerializer do
   end
 
   context 'with expected_time_of_arrival params set to true' do
-    let(:event) { create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:event) { create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-16T10:20:30+01:00') }
     let(:move) { create :move, notification_events: [event] }
     let(:options) do
       { params: { expected_time_of_arrival: true } }
@@ -103,7 +103,7 @@ RSpec.describe V2::MovesSerializer do
   end
 
   context 'with expected_time_of_arrival params set to false' do
-    let(:event) { create(:event_move_notify_premises_of_eta, expected_at: '2019-06-16T10:20:30+01:00') }
+    let(:event) { create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-16T10:20:30+01:00') }
     let(:move) { create :move, notification_events: [event] }
     let(:options) do
       { params: { expected_time_of_arrival: false } }
