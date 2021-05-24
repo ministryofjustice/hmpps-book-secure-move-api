@@ -18,7 +18,8 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'MoveLodgingEnd'
   it_behaves_like 'a generic event endpoint', 'MoveLodgingStart'
   it_behaves_like 'a generic event endpoint', 'MoveNotifyPremisesOfArrivalIn30Mins'
-  it_behaves_like 'a generic event endpoint', 'MoveNotifyPremisesOfEta'
+  it_behaves_like 'a generic event endpoint', 'MoveNotifyPremisesOfDropOffEta'
+  it_behaves_like 'a generic event endpoint', 'MoveNotifyPremisesOfPickupEta'
   it_behaves_like 'a generic event endpoint', 'MoveNotifyPremisesOfExpectedCollectionTime'
   it_behaves_like 'a generic event endpoint', 'MoveOperationHmcts'
   it_behaves_like 'a generic event endpoint', 'MoveOperationSafeguard'
@@ -39,4 +40,39 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'PersonMoveUsedForce'
   it_behaves_like 'a generic event endpoint', 'PersonMoveVehicleBrokeDown'
   it_behaves_like 'a generic event endpoint', 'PersonMoveVehicleSystemsFailed'
+
+  describe 'remapping of MoveNotifyPremisesOfEta to MoveNotifyPremisesOfDropOffEta' do
+    let(:headers) do
+      {
+        'CONTENT_TYPE': ApiController::CONTENT_TYPE,
+        'Accept': 'application/vnd.api+json; version=2',
+        'Authorization' => 'Bearer spoofed-token',
+      }
+    end
+    let(:data) do
+      {
+        type: 'events',
+        attributes: {
+          event_type: 'MoveNotifyPremisesOfEta',
+          occurred_at: '2019-06-16T10:20:30+01:00',
+          recorded_at: '2019-06-16T10:20:30+01:00',
+          details: {
+            expected_at: '2019-06-16T10:20:30+01:00',
+          },
+        },
+        relationships: {
+          eventable: { data: { type: eventable_type, id: eventable_id } },
+        },
+      }
+    end
+
+    it 'correctly remaps the old event' do
+      expect {
+        post '/api/events',
+             headers: headers,
+             params: { data: data },
+             as: :json
+      }.to change(GenericEvent::MoveNotifyPremisesOfDropOffEta, :count).by(1)
+    end
+  end
 end

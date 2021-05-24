@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe GenericEvent::MoveNotifyPremisesOfEta do
-  subject(:generic_event) { build(:event_move_notify_premises_of_eta) }
+RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
+  subject(:generic_event) { build(:event_move_notify_premises_of_pickup_eta) }
 
   it_behaves_like 'an event with details', :expected_at
 
@@ -18,5 +18,5 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfEta do
     expect(generic_event).not_to be_valid
   end
 
-  it_behaves_like 'an event about a notification', :event_move_notify_premises_of_eta
+  it_behaves_like 'an event about a notification', :event_move_notify_premises_of_pickup_eta
 end

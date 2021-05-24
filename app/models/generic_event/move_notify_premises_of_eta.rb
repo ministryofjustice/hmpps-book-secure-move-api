@@ -1,3 +1,4 @@
+# TODO: remove this event once we have migrated over to MoveNotifyPremisesOfDropOffEta + MoveNotifyPremisesOfPickupEta
 class GenericEvent
   class MoveNotifyPremisesOfEta < Notification
     details_attributes :expected_at
