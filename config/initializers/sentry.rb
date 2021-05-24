@@ -20,5 +20,5 @@ Sentry.init do |config|
   # Half of all requests will be used in performance sampling.
   # Currently the MoJ plan does not allow this. Turn on when
   # plan has been updated in July 2021
-  # config.traces_sample_rate = 0.5
+  config.traces_sample_rate = 0.5
 end
