@@ -40,6 +40,35 @@ module Diagnostics
       ENDDETAILS
       @output << "additional information: #{move.additional_information}\n" if include_person_details
 
+      if move.allocation.present?
+        @output << <<~ENDALLOCATION
+
+          ALLOCATION
+          -----------
+          id:\t#{move.allocation.id}
+          moves_count:\t#{move.allocation.moves_count}        
+          date:\t#{move.allocation.date}        
+          status:\t#{move.allocation.status}
+          complete in full:\t#{move.allocation.complete_in_full}
+          from location:\t#{move.allocation.from_location}
+          to location:\t#{move.allocation.to_location}
+          created at:\t#{move.allocation.created_at}
+          updated at:\t#{move.allocation.updated_at}
+        ENDALLOCATION
+
+        if @include_person_details
+          @output << "prisoner category:\t#{move.allocation.prisoner_category}\n"
+          @output << "sentence length:\t#{move.allocation.sentence_length}\n"
+          @output << "sentence length comment:\t#{move.allocation.sentence_length_comment}\n" if move.allocation.sentence_length_comment.present?
+          @output << "estate:\t#{move.allocation.estate}\n"
+          @output << "estate comment:\t#{move.allocation.estate_comment}\n" if move.allocation.estate_comment.present?
+          @output << "other criteria:\t#{move.allocation.other_criteria}\n" if move.allocation.other_criteria.present?
+          @output << "cancellation reason:\t#{move.allocation.cancellation_reason}\n" if move.allocation.cancellation_reason.present?
+          @output << "cancellation reason comment:\t#{move.allocation.cancellation_reason_comment}\n" if move.allocation.cancellation_reason_comment.present?
+          @output << "requested by:\t#{move.allocation.requested_by}\n"
+        end
+      end
+
       @output << <<~ENDMOVEEVENTS
 
         MOVE EVENTS
