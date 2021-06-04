@@ -35,7 +35,8 @@ module Tasks
 
       def random_event
         [
-          GenericEvent::MoveNotifyPremisesOfEta,
+          GenericEvent::MoveNotifyPremisesOfDropoffEta,
+          GenericEvent::MoveNotifyPremisesOfPickupEta,
           GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime,
         ].sample
       end
