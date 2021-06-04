@@ -1,5 +1,5 @@
 class GenericEvent
-  class MoveNotifyPremisesOfPickupEta < Notification
+  class MoveNotifyPremisesOfPickupEta < GenericEvent
     details_attributes :expected_at
     eventable_types 'Move'
 
