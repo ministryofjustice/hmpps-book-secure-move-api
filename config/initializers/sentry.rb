@@ -1,5 +1,7 @@
 return unless ENV['SENTRY_DSN'].present?
 
+EXCLUDE_PATHS = %w[/ping /health].freeze
+
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN']
 
@@ -17,8 +19,16 @@ Sentry.init do |config|
   # Don't log RetryJobError exceptions in Sentry as they will have already been logged as part of the failed job
   config.excluded_exceptions += ['RetryJobError']
 
-  # Half of all requests will be used in performance sampling.
-  # Currently the MoJ plan does not allow this. Turn on when
-  # plan has been updated in July 2021
-  config.traces_sample_rate = 0.5
+  config.traces_sampler = lambda do |sampling_context|
+
+    # Only send sampling data for production
+    if Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat|preprod)\-)/i
+      return 0
+    end
+
+    transaction_context = sampling_context[:transaction_context]
+    transaction_name = transaction_context[:name]
+
+    transaction_name.in?(EXCLUDE_PATHS) ? 0.0 : 0.5
+  end
 end
