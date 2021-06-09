@@ -105,6 +105,22 @@ RSpec.describe Allocations::Creator do
       )
     end
 
+    it 'creates the same number of GenericEvent::MoveRequested events as `moves_count`' do
+      expect { call_creator }.to change(GenericEvent::MoveRequested, :count).by(2)
+    end
+
+    it 'sets the correct attributes of associated MoveRequested events' do
+      call_creator
+      expect(creator.allocation.moves.first.generic_events.first).to have_attributes(
+        type: 'GenericEvent::MoveRequested',
+        eventable_id: creator.allocation.moves.first.id,
+        eventable_type: 'Move',
+        notes: 'Automatically generated for allocation',
+        created_by: 'Iama Requestor',
+        supplier_id: supplier.id,
+      )
+    end
+
     it 'sets the correct number of complex_cases' do
       call_creator
       expect(creator.allocation.complex_cases.size).to eq(2)

@@ -69,4 +69,16 @@ namespace :data_maintenance do
   task remap_eta_events: :environment do
     GenericEvent.where(type: 'GenericEvent::MoveNotifyPremisesOfEta').update_all(type: 'GenericEvent::MoveNotifyPremisesOfDropOffEta')
   end
+
+  desc 'Change notification classification on ETA events'
+  task update_eta_notifications: :environment do
+    default_event_types = [
+      'GenericEvent::MoveNotifyPremisesOfEta',
+      'GenericEvent::MoveNotifyPremisesOfPickupEta',
+      'GenericEvent::MoveNotifyPremisesOfDropOffEta',
+      'GenericEvent::MoveNotifyPremisesOfArrivalIn30Mins',
+      'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime',
+    ]
+    GenericEvent.where(type: default_event_types).update_all(classification: 'default')
+  end
 end
