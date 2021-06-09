@@ -619,4 +619,8 @@ FactoryBot.define do
       }
     end
   end
+
+  factory :generic_event_notification, parent: :generic_event, class: 'GenericEvent::Notification' do
+    eventable { association(:move) }
+  end
 end
