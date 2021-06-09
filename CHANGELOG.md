@@ -1,5 +1,35 @@
 # Changelog
 
+## [v3.1.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.2) (2021-06-03)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.1...v3.1.2)
+
+**Merged pull requests:**
+
+- Bump nokogiri from 1.11.5 to 1.11.7 [\#1467](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1467) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump cancancan from 3.2.1 to 3.2.2 [\#1464](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1464) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump climate\_control from 1.0.0 to 1.0.1 [\#1463](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1463) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.95.0 to 1.95.1 [\#1461](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1461) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore: Enable Sentry performance tracking [\#1460](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1460) ([Nimphal](https://github.com/Nimphal))
+- Bump puma from 5.3.1 to 5.3.2 [\#1459](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1459) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.4.1 to 1.4.2 [\#1458](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1458) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.94.1 to 1.95.0 [\#1457](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1457) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-2816 drop-off and pickup ETA events [\#1456](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1456) ([martyn-w](https://github.com/martyn-w))
+- Bump nokogiri from 1.11.4 to 1.11.5 [\#1455](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1455) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.1.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.1) (2021-05-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.0...v3.1.1)
+
+**Merged pull requests:**
+
+- Generated changelog for v3.1.0 [\#1453](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1453) ([Thource](https://github.com/Thource))
+- Bump nokogiri from 1.11.3 to 1.11.4 [\#1452](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1452) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faker from 2.17.0 to 2.18.0 [\#1451](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1451) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump activerecord-import from 1.0.8 to 1.1.0 [\#1450](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1450) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump github\_changelog\_generator from 1.16.2 to 1.16.3 [\#1449](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1449) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.3.0 to 5.3.1 [\#1447](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1447) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.1.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.0) (2021-05-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.0.9...v3.1.0)

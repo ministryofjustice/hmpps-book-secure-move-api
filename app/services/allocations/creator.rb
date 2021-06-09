@@ -29,6 +29,8 @@ module Allocations
 
     def moves
       supplier = doorkeeper_application_owner || SupplierChooser.new(allocation).call
+      now = Time.zone.now
+      created_by = attributes[:requested_by]
 
       Array.new(allocation.moves_count) do
         Move.new(
@@ -36,7 +38,16 @@ module Allocations
           to_location: allocation.to_location,
           date: allocation.date,
           supplier: supplier,
-        )
+          status: Move::MOVE_STATUS_REQUESTED,
+        ).tap do |move|
+          move.generic_events << GenericEvent::MoveRequested.new(
+            occurred_at: now,
+            recorded_at: now,
+            notes: 'Automatically generated for allocation',
+            created_by: created_by,
+            supplier: supplier,
+          )
+        end
       end
     end
 

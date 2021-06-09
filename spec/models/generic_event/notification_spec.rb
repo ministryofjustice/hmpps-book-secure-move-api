@@ -17,7 +17,8 @@ RSpec.describe GenericEvent::Notification, type: :model do
     end
 
     it 'is automatically assigned on creation' do
-      event = create(:event_move_notify_premises_of_arrival_in30_mins, classification: nil)
+      # no real events currently have a notification classification, so use a fake one for now
+      event = create(:generic_event_notification, classification: nil)
 
       expect(event.classification).to eq 'notification'
     end

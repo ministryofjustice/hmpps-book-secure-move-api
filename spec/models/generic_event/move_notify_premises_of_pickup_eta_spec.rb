@@ -17,6 +17,4 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
     generic_event.expected_at = '16-06-2020 10:20:30+01:00'
     expect(generic_event).not_to be_valid
   end
-
-  it_behaves_like 'an event about a notification', :event_move_notify_premises_of_pickup_eta
 end

@@ -1,5 +1,5 @@
 class GenericEvent
-  class MoveNotifyPremisesOfDropOffEta < Notification
+  class MoveNotifyPremisesOfDropOffEta < GenericEvent
     details_attributes :expected_at
     eventable_types 'Move'
 

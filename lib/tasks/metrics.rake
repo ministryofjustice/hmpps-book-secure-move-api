@@ -1,6 +1,6 @@
 namespace :metrics do
   desc 'Exports metrics in all the popular formats to s3'
-  task export: :environment do
+  task :export, [:metric_class] => :environment do |_, args|
     abort 'Please set S3_METRICS_ACCESS_KEY_ID' if ENV['S3_METRICS_ACCESS_KEY_ID'].blank?
     abort 'Please set S3_METRICS_SECRET_ACCESS_KEY' if ENV['S3_METRICS_SECRET_ACCESS_KEY'].blank?
     abort 'Please set S3_METRICS_REGION' if ENV['S3_METRICS_REGION'].blank?
@@ -16,6 +16,10 @@ namespace :metrics do
     feed = CloudData::MetricsFeed.new(ENV['S3_METRICS_BUCKET_NAME'])
 
     METRIC_CLASSES.each do |metric_class|
+      if args[:metric_class].present? && metric_class.to_s != args[:metric_class]
+        next # skip metric
+      end
+
       SUPPLIERS.each do |supplier|
         metric_class.new(supplier: supplier).tap do |metric|
           metric_class::FORMATS.each do |format_key, format_file|
