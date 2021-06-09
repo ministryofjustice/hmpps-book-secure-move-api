@@ -34,6 +34,23 @@ FactoryBot.define do
       status { FrameworkAssessmentable::ASSESSMENT_CONFIRMED }
       confirmed_at { Time.zone.now }
     end
+
+    trait :handover do
+      status { FrameworkAssessmentable::ASSESSMENT_CONFIRMED }
+      confirmed_at { Time.zone.now }
+      handover_occurred_at { Time.zone.now }
+      handover_details do
+        {
+          'dispatching_officer' => 'Derek Dispatcher',
+          'dispatching_officer_id' => 'D100',
+          'dispatching_officer_contact' => '0123 456 789',
+          'receiving_officer' => 'Roberta Receiver',
+          'receiving_officer_id' => 'R200',
+          'receiving_officer_contact' => '0987 654 321',
+          'receiving_organisation' => 'Supplier Co',
+        }
+      end
+    end
   end
 
   factory :person_escort_record, class: 'PersonEscortRecord', parent: :framework_assessmentable do

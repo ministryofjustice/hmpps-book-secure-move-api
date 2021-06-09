@@ -37,7 +37,7 @@ module Metrics
     def to_csv
       calculate_all_values
       CSV.generate do |csv|
-        csv << [label] + columns.map { |column| column_key(column) }
+        csv << [rows_name] + columns.map { |column| column_key(column) }
         rows.each do |row|
           csv << [row_key(row)] + columns.map { |column| value(column, row) }
         end
