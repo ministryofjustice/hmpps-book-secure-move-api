@@ -8,7 +8,7 @@ module Metrics
       attr_reader :reporting_date
 
       def initialize(supplier: nil)
-        @reporting_date = Date.yesterday
+        @reporting_date = ENV['REPORTING_DATE'].present? ? Date.parse(ENV['REPORTING_DATE']) : Date.yesterday
 
         setup_metric(
           supplier: supplier,
