@@ -43,7 +43,7 @@ RSpec.describe MockBaseMetricRowCalculator do
 
     it {
       expect(csv).to eql([
-        %w[label col1 col2],
+        %w[row col1 col2],
         %w[row1 1 2],
         %w[row2 1 2],
       ])
