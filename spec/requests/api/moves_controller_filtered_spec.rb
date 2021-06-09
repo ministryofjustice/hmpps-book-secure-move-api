@@ -163,7 +163,7 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'meta fields' do
-      let(:notification_events) do
+      let(:events) do
         [
           create(:event_move_notify_premises_of_expected_collection_time, expected_at: '2019-06-17T10:20:30+01:00'),
           create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-19T10:20:30+01:00'),
@@ -174,7 +174,7 @@ RSpec.describe Api::MovesController do
           :move,
           1,
           :with_journey,
-          notification_events: notification_events,
+          generic_events: events,
         )
       end
 
