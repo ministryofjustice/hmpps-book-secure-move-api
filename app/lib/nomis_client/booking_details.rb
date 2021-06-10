@@ -11,6 +11,8 @@ module NomisClient
         end
       end
 
+    private
+
       def get_response(nomis_booking_id)
         path = "/bookings/#{nomis_booking_id}"
         begin
@@ -21,19 +23,17 @@ module NomisClient
         end
       end
 
+      def relevant_attributes
+        # NB: although other details are available, we just want the prisoner category and csra for now
+        %w[category categoryCode csra]
+      end
+
       def attributes_for(details)
-        # NB: although other details are available, we just want the prisoner category for now
-        {
-          category: details['category'],
-          category_code: details['categoryCode'],
-        }
+        no_details.merge(details.slice(*relevant_attributes).transform_keys { |key| key.underscore.to_sym })
       end
 
       def no_details
-        {
-          category: nil,
-          category_code: nil,
-        }
+        relevant_attributes.map { |key| [key.underscore.to_sym, nil] }.to_h
       end
     end
   end
