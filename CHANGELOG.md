@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.1.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.3) (2021-06-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.2...v3.1.3)
+
+**Merged pull requests:**
+
+- \[P4-2653\] Change people\#image 422 to 404 [\#1474](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1474) ([Thource](https://github.com/Thource))
+- P4 2919 per handover report [\#1473](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1473) ([martyn-w](https://github.com/martyn-w))
+- Update the tracing setup to only be used in prod and ignore health [\#1472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1472) ([Nimphal](https://github.com/Nimphal))
+- Change eta classification [\#1471](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1471) ([martyn-w](https://github.com/martyn-w))
+- Bump aws-sdk-s3 from 1.95.1 to 1.96.0 [\#1470](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1470) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump github\_changelog\_generator from 1.16.3 to 1.16.4 [\#1469](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1469) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog v3.1.2 [\#1468](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1468) ([martyn-w](https://github.com/martyn-w))
+- P4 2904 add MoveRequested event to allocation moves [\#1466](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1466) ([martyn-w](https://github.com/martyn-w))
+- Changelog v3.1.1 [\#1454](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1454) ([martyn-w](https://github.com/martyn-w))
+
 ## [v3.1.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.2) (2021-06-03)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.1...v3.1.2)
