@@ -354,9 +354,11 @@
       "assessmentSeq": 9
     }
   ],
-  "csra": "Standard",
   "category": "Cat B",
   "categoryCode": "B",
+  "csra": "Standard",
+  "csraClassificationCode": "STANDARD",
+  "csraClassificationDate": "2020-01-04",
   "birthPlace": "SCOTLAND",
   "birthCountryCode": "SCOT",
   "inOutStatus": "IN",

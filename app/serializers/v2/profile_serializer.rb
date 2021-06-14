@@ -5,7 +5,7 @@ class V2::ProfileSerializer
 
   set_type :profiles
 
-  attributes :requires_youth_risk_assessment, :assessment_answers
+  attributes :requires_youth_risk_assessment, :assessment_answers, :csra
 
   belongs_to :person, serializer: ::V2::PersonSerializer
   belongs_to :category, serializer: CategorySerializer

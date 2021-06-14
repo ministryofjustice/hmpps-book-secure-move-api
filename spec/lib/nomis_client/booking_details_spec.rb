@@ -10,10 +10,11 @@ RSpec.describe NomisClient::BookingDetails, with_nomis_client_authentication: tr
       let(:response_status) { 200 }
       let(:response_body) { file_fixture('nomis/get_booking_details_200.json').read }
 
-      it 'returns the correct prisoner category' do
+      it 'returns the correct data' do
         expect(response).to eql({
           category: 'Cat B',
           category_code: 'B',
+          csra: 'Standard',
         })
       end
     end
@@ -22,10 +23,11 @@ RSpec.describe NomisClient::BookingDetails, with_nomis_client_authentication: tr
       let(:response_status) { 200 }
       let(:response_body) { file_fixture('nomis/get_booking_details_404.json').read }
 
-      it 'returns an unknown catgeory' do
+      it "returns nil'd data" do
         expect(response).to eql({
           category: nil,
           category_code: nil,
+          csra: nil,
         })
       end
     end
