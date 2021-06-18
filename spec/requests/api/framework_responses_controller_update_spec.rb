@@ -4,11 +4,11 @@ require 'rails_helper'
 
 RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /framework_responses/:framework_response_id' do
-    include_context 'with supplier with spoofed access token'
-
     subject(:patch_response) do
       patch "/api/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
     end
+
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }

@@ -6,13 +6,13 @@ namespace :auth do
     require 'doorkeeper/orm/active_record/application'
 
     puts "What's the application's name?"
-    name = STDIN.gets.chomp
+    name = $stdin.gets.chomp
     application = Doorkeeper::Application.new(name: name)
 
     keys = Supplier.pluck(:key).sort + %w[none]
     puts "Which application owner should your tokens be associated with? #{keys}"
 
-    supplier_key = STDIN.gets.chomp
+    supplier_key = $stdin.gets.chomp
     abort('Error: unknown supplier, quitting.') unless keys.include?(supplier_key)
 
     supplier = supplier_key == 'none' ? nil : Supplier.find_by(key: supplier_key)

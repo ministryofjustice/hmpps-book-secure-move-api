@@ -2,11 +2,13 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::AllocationsController do
-  include_context 'with supplier with spoofed access token'
   subject(:post_allocations) do
     post '/api/allocations/filtered', params: { data: data }.merge(params), headers: headers, as: :json
   end
+
+  include_context 'with supplier with spoofed access token'
 
   let(:response_json) { JSON.parse(response.body) }
   let(:data) do
@@ -230,3 +232,4 @@ RSpec.describe Api::AllocationsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

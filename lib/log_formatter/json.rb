@@ -16,7 +16,7 @@ module LogFormatter
         data[:msg] = msg
       end
 
-      ::JSON.dump(data) + "\n"
+      "#{::JSON.dump(data)}\n"
     end
   end
 end

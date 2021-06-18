@@ -319,10 +319,8 @@ class Move < VersionedModel
 private
 
   def date_to_after_date_from
-    if date_from.present? && date_to.present?
-      if date_to < date_from
-        errors.add(:date_to, 'must be after date from')
-      end
+    if date_from.present? && date_to.present? && (date_to < date_from)
+      errors.add(:date_to, 'must be after date from')
     end
   end
 

@@ -7,20 +7,20 @@ namespace :metrics do
     abort 'Please set S3_METRICS_BUCKET_NAME' if ENV['S3_METRICS_BUCKET_NAME'].blank?
 
     # get list of all available metrics
-    METRIC_CLASSES = [Metrics::Moves, Metrics::PersonEscortRecords].map { |namespace|
+    metric_classes = [Metrics::Moves, Metrics::PersonEscortRecords].map { |namespace|
       namespace.constants.map { |c| namespace.const_get(c) if namespace.const_get(c).is_a? Class }.compact
     }.flatten
 
-    SUPPLIERS = Supplier.all.to_a << nil # NB: the nil supplier means "any supplier"
+    suppliers = Supplier.all.to_a << nil # NB: the nil supplier means "any supplier"
 
     feed = CloudData::MetricsFeed.new(ENV['S3_METRICS_BUCKET_NAME'])
 
-    METRIC_CLASSES.each do |metric_class|
+    metric_classes.each do |metric_class|
       if args[:metric_class].present? && metric_class.to_s != args[:metric_class]
         next # skip metric
       end
 
-      SUPPLIERS.each do |supplier|
+      suppliers.each do |supplier|
         metric_class.new(supplier: supplier).tap do |metric|
           metric_class::FORMATS.each do |format_key, format_file|
             key = "#{metric.database}/#{metric.file}/#{format_file}"

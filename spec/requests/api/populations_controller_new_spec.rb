@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Api::PopulationsController do
-  include_context 'with supplier with spoofed access token'
-
   subject(:get_new_population) do
     get '/api/populations/new', params: params, headers: headers
   end
+
+  include_context 'with supplier with spoofed access token'
 
   let(:response_json) { JSON.parse(response.body) }
 

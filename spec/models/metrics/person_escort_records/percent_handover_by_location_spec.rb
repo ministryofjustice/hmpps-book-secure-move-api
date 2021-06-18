@@ -24,18 +24,18 @@ RSpec.describe Metrics::PersonEscortRecords::PercentHandoverByLocation do
     subject(:calculate_table) { metric.calculate_table }
 
     before do
-      create(:person_escort_record, :unstarted, move_attr: [:completed, date: Date.yesterday, from_location: prison])
-      create(:person_escort_record, :in_progress, move_attr: [:completed, date: Date.yesterday, from_location: prison])
-      create(:person_escort_record, :completed, move_attr: [:cancelled, date: Date.yesterday, from_location: prison])
-      create(:person_escort_record, :handover, move_attr: [:completed, date: Date.yesterday, from_location: prison])
+      create(:person_escort_record, :unstarted, move_attr: [:completed, { date: Date.yesterday, from_location: prison }])
+      create(:person_escort_record, :in_progress, move_attr: [:completed, { date: Date.yesterday, from_location: prison }])
+      create(:person_escort_record, :completed, move_attr: [:cancelled, { date: Date.yesterday, from_location: prison }])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.yesterday, from_location: prison }])
 
-      create(:person_escort_record, :unstarted, move_attr: [:completed, date: Date.yesterday, from_location: police])
-      create(:person_escort_record, :completed, move_attr: [:completed, date: Date.yesterday, from_location: police])
-      create(:person_escort_record, :handover, move_attr: [:completed, date: Date.yesterday, from_location: police])
-      create(:person_escort_record, :handover, move_attr: [:completed, date: Date.yesterday, from_location: police])
+      create(:person_escort_record, :unstarted, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
+      create(:person_escort_record, :completed, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
 
-      create(:person_escort_record, :handover, move_attr: [:completed, date: Date.today, from_location: prison])
-      create(:person_escort_record, :handover, move_attr: [:completed, date: Date.tomorrow, from_location: police])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.today, from_location: prison }])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.tomorrow, from_location: police }])
       create(:move, :completed, from_location: other_prison)
     end
 

@@ -32,15 +32,15 @@ module Api
 
     PERMITTED_ALLOCATION_PARAMS = [
       :type,
-      attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
-      relationships: {},
+      { attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
+        relationships: {} },
     ].freeze
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
     PERMITTED_FILTERED_PARAMS = [
       :type,
-      attributes: [filter: PERMITTED_FILTER_PARAMS],
+      { attributes: [filter: PERMITTED_FILTER_PARAMS] },
     ].freeze
 
     def sort_params
@@ -52,13 +52,11 @@ module Api
     end
 
     def filter_params
-      @filter_params ||= begin
-        if action_name == 'filtered'
-          filtered_params.dig(:attributes, :filter) || {}
-        else
-          params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
-        end
-      end
+      @filter_params ||= if action_name == 'filtered'
+                           filtered_params.dig(:attributes, :filter) || {}
+                         else
+                           params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+                         end
     end
 
     def search_params

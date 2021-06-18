@@ -16,8 +16,7 @@ namespace :frameworks do
         respository.tags.each do |tag|
           respository.checkout(tag.name)
           version = tag.name.gsub('v', '')
-          filepath = respository.dir.path + '/frameworks'
-
+          filepath = "#{respository.dir.path}/frameworks"
           import_framework(filepath, version)
         end
       ensure

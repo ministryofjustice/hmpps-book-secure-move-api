@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/reject' do
     include_context 'with supplier with spoofed access token'
@@ -106,3 +107,4 @@ RSpec.describe Api::MoveEventsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

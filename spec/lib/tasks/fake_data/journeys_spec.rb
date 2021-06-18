@@ -8,12 +8,8 @@ RSpec.describe Tasks::FakeData::Journeys do
 
   let(:generator) { described_class.new(move) }
   let(:supplier) { create :supplier }
-
-  let(:from_location) { create(:location, suppliers: [supplier]) }
   let(:intermediate_locations) { create_list(:location, number_of_journeys, suppliers: [supplier]) }
-  let(:to_location) { create(:location, suppliers: [supplier]) }
-
-  let(:move) { create(:move, from_location: from_location, to_location: to_location) }
+  let(:move) { create(:move, from_location: create(:location, suppliers: [supplier]), to_location: create(:location, suppliers: [supplier])) }
   let(:number_of_journeys) { 3 }
 
   # create necessary intermediate_locations before the tests run

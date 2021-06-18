@@ -5,14 +5,14 @@ require 'net/http'
 namespace :wiremock do
   desc 'Download and install wiremock (NB: requires java)'
   task install: :environment do
-    WIREMOCK_VERSION = '2.27.1'
+    wiremock_version = '2.27.1'
 
     jar_file = Rails.root.join('spec/wiremock/wiremock-standalone.jar')
-    uri = URI("https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/#{WIREMOCK_VERSION}/wiremock-standalone-#{WIREMOCK_VERSION}.jar")
+    uri = URI("https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/#{wiremock_version}/wiremock-standalone-#{wiremock_version}.jar")
     File.open(jar_file, 'wb') do |file|
       file.write(Net::HTTP.get(uri))
     end
-    puts "Wiremock #{WIREMOCK_VERSION} installed at: #{jar_file}"
+    puts "Wiremock #{wiremock_version} installed at: #{jar_file}"
 
     puts 'NB: java is also required, you are currently running java version:'
     sh('java -version')

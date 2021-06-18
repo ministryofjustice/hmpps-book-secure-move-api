@@ -39,7 +39,7 @@ RSpec.describe Api::PeopleController do
         get_image
 
         expect(JSON.parse(response.body)['data']['id']).to eq(person.id)
-        expect(JSON.parse(response.body)['data']['attributes']['url']).to include person.id + '.jpg'
+        expect(JSON.parse(response.body)['data']['attributes']['url']).to include "#{person.id}.jpg"
       end
 
       it 'returns the image if image was already attached' do

@@ -6,7 +6,7 @@ module Api
 
     UPDATE_PER_PERMITTED_PARAMS = [
       :type,
-      attributes: [:status, :handover_occurred_at, handover_details: {}],
+      { attributes: [:status, :handover_occurred_at, { handover_details: {} }] },
     ].freeze
 
   private

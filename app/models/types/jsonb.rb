@@ -4,6 +4,7 @@ module Types
   class Jsonb < ActiveRecord::Type::Value
     def initialize(concrete_class)
       @concrete_class = concrete_class
+      super()
     end
 
     def type
@@ -17,10 +18,10 @@ module Types
     def deserialize(value)
       if value.is_a?(String)
         decoded = begin
-                    ::ActiveSupport::JSON.decode(value)
-                  rescue StandardError
-                    nil
-                  end
+          ::ActiveSupport::JSON.decode(value)
+        rescue StandardError
+          nil
+        end
         cast(decoded)
       else
         super

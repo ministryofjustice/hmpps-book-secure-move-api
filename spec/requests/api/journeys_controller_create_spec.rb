@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
     subject(:do_post) do
@@ -12,7 +13,7 @@ RSpec.describe Api::JourneysController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
-    let(:to_location_id) { create(:location, suppliers: [supplier]) .id }
+    let(:to_location_id) { create(:location, suppliers: [supplier]).id }
     let(:move_id) { create(:move, supplier: supplier).id }
     let(:timestamp) { '2020-05-04T09:00:00+01:00' }
     let(:billable) { false }
@@ -167,3 +168,4 @@ RSpec.describe Api::JourneysController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

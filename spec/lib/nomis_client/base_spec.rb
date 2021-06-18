@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe NomisClient::Base do
   let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
@@ -343,3 +344,4 @@ RSpec.describe NomisClient::Base do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

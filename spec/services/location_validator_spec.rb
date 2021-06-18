@@ -8,6 +8,7 @@ RSpec.describe LocationValidator do
     Class.new {
       include ActiveModel::Validations
       attr_accessor :location
+
       validates_with LocationValidator, locations: [:location]
 
       def self.name

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::JourneysController do
   describe 'GET /moves/:move_id/journeys/:journey_id' do
     include_context 'with supplier with spoofed access token'
@@ -75,3 +76,4 @@ RSpec.describe Api::JourneysController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

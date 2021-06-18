@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MoveEventsController do
   describe 'POST /moves/:move_id/approve' do
     include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
-    let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, :proposed, from_location: from_location, supplier: supplier) }
+    let(:move) { create(:move, :proposed, from_location: create(:location, suppliers: [supplier]), supplier: supplier) }
     let(:approved_date) { move.date + 1.day }
     let(:move_id) { move.id }
     let(:approve_params) do
@@ -105,3 +105,4 @@ RSpec.describe Api::MoveEventsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

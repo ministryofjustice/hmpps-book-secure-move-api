@@ -41,8 +41,7 @@ module Allocations
 
     def apply_search(scope)
       scope = apply_location_search(scope)
-      scope = apply_person_search(scope)
-      scope
+      apply_person_search(scope)
     end
 
     def apply_location_search(scope)
@@ -62,8 +61,7 @@ module Allocations
     def apply_filters(scope)
       scope = apply_date_range_filters(scope)
       scope = apply_location_filters(scope)
-      scope = apply_status_filters(scope)
-      scope
+      apply_status_filters(scope)
     end
 
     def apply_date_range_filters(scope)

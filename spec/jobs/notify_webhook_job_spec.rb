@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe NotifyWebhookJob, type: :job do
   subject(:perform!) { described_class.perform_now(notification_id: notification.id) }
 
@@ -137,3 +138,4 @@ RSpec.describe NotifyWebhookJob, type: :job do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

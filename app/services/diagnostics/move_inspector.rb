@@ -46,8 +46,8 @@ module Diagnostics
           ALLOCATION
           -----------
           id:\t#{move.allocation.id}
-          moves_count:\t#{move.allocation.moves_count}        
-          date:\t#{move.allocation.date}        
+          moves_count:\t#{move.allocation.moves_count}
+          date:\t#{move.allocation.date}
           status:\t#{move.allocation.status}
           complete in full:\t#{move.allocation.complete_in_full}
           from location:\t#{move.allocation.from_location}
@@ -84,7 +84,7 @@ module Diagnostics
           end
 
           @output << <<~ENDVALIDATION
-  
+
             MOVE EVENT VALIDATION
             ---------------------
             valid:\t#{object_valid}
