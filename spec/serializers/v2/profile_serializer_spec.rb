@@ -14,7 +14,7 @@ RSpec.describe V2::ProfileSerializer do
       data: {
         id: profile.id,
         type: 'profiles',
-        attributes: { assessment_answers: [], requires_youth_risk_assessment: nil },
+        attributes: { assessment_answers: [], csra: nil, requires_youth_risk_assessment: nil },
         relationships: {
           category: {
             data: nil,
@@ -96,7 +96,7 @@ RSpec.describe V2::ProfileSerializer do
         data: {
           id: profile.id,
           type: 'profiles',
-          attributes: { assessment_answers: [] },
+          attributes: { assessment_answers: [], csra: nil },
           relationships: {
             person: {
               data: { id: profile.person.id, type: 'people' },
@@ -112,6 +112,41 @@ RSpec.describe V2::ProfileSerializer do
     end
 
     before { ActiveStorage::Current.host = 'http://www.example.com' } # This is used in the serializer
+
+    it 'returns the expected serialized `Profile`' do
+      expect(result).to include_json(expected_document)
+    end
+  end
+
+  describe 'with csra' do
+    let(:profile) { create(:profile, csra: 'Standard') }
+
+    let(:expected_document) do
+      {
+        data: {
+          id: profile.id,
+          type: 'profiles',
+          attributes: { assessment_answers: [], csra: 'Standard', requires_youth_risk_assessment: nil },
+          relationships: {
+            category: {
+              data: nil,
+            },
+            person: {
+              data: { id: profile.person.id, type: 'people' },
+            },
+            documents: {
+              data: [],
+            },
+            person_escort_record: {
+              data: nil,
+            },
+            youth_risk_assessment: {
+              data: nil,
+            },
+          },
+        },
+      }
+    end
 
     it 'returns the expected serialized `Profile`' do
       expect(result).to include_json(expected_document)

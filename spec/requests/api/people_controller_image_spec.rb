@@ -53,9 +53,19 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'when there is NOT an image associated with the person in NOMIS' do
-      it 'return not found 404' do
+      it 'returns not found 404' do
         allow(NomisClient::Image).to receive(:get).and_return(nil)
 
+        get_image
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when person.latest_nomis_booking_id is nil' do
+      let!(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: nil) }
+
+      it 'returns not found 404' do
         get_image
 
         expect(response).to have_http_status(:not_found)

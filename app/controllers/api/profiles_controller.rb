@@ -51,12 +51,9 @@ module Api
     def profile_attributes
       profile_attributes = profile_params.fetch(:attributes, {})
       profile_attributes[:documents] = documents unless document_attributes.nil?
-      profile_attributes[:category] = category
+      profile_attributes[:category] = person.category
+      profile_attributes[:csra] = person.csra
       profile_attributes
-    end
-
-    def category
-      Categories::FindByNomisBookingId.new(person.latest_nomis_booking_id).call
     end
 
     def documents

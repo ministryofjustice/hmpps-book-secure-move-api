@@ -3,7 +3,7 @@
 module Api
   class PeopleController < ApiController
     before_action :validate_timetable_filter_params, only: [:timetable]
-    before_action :validate_nomis_profile, only: %i[court_cases image timetable]
+    before_action :validate_nomis_profile, only: %i[court_cases timetable]
     before_action :validate_other_include_params, only: %i[court_cases timetable]
     before_action :validate_include_params, except: %i[court_cases timetable]
 
@@ -24,6 +24,7 @@ module Api
     end
 
     def image
+      validate_nomis_profile
       success = People::RetrieveImage.call(person)
 
       if success
@@ -32,6 +33,8 @@ module Api
       else
         raise ActiveRecord::RecordNotFound, 'Image not found'
       end
+    rescue ActiveModel::ValidationError
+      raise ActiveRecord::RecordNotFound, 'No NOMIS booking id found'
     end
 
     def court_cases
