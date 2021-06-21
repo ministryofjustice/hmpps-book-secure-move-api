@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::YouthRiskAssessmentsController do
   describe 'POST /youth_risk_assessments' do
     subject(:post_youth_risk_assessment) do
@@ -307,4 +306,3 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

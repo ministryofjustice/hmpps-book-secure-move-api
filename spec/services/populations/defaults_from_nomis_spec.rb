@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication: true do
   subject(:defaults) { described_class.call(location, date) }
 
@@ -88,4 +87,3 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

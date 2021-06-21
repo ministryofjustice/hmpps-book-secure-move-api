@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PeopleController do
   subject(:get_people) { get '/api/v1/people', headers: headers, params: params }
 
@@ -167,4 +166,3 @@ RSpec.describe Api::PeopleController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

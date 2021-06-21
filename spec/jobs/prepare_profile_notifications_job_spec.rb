@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe PrepareProfileNotificationsJob, type: :job do
   let(:person) { create(:person) }
   let(:profile) { create :profile, person: person }
@@ -37,4 +36,3 @@ RSpec.describe PrepareProfileNotificationsJob, type: :job do
     it_behaves_like 'it calls PrepareMoveNotificationsJob for the related moves'
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

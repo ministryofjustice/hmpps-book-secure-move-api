@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe GenericEvents::Runner do
   subject(:runner) { described_class.new(eventable, dry_run: dry_run) }
 
@@ -76,4 +75,3 @@ RSpec.describe GenericEvents::Runner do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

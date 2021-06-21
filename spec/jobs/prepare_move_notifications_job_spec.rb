@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe PrepareMoveNotificationsJob, type: :job do
   subject(:perform) do
     described_class.perform_now(topic_id: move.id, action_name: action_name, queue_as: :some_queue_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
@@ -181,4 +180,3 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     it_behaves_like 'it does not schedule NotifyEmailJob'
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe LocationsSerializer do
   subject(:serializer) { described_class.new(location) }
 
@@ -81,4 +80,3 @@ RSpec.describe LocationsSerializer do
     expect(attributes[:disabled_at]).to eql disabled_at.iso8601
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

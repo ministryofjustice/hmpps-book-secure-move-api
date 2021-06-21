@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Diagnostics::MoveInspector do
   subject { described_class.new(move, include_person_details: include_person_details).generate }
 
@@ -62,4 +61,3 @@ RSpec.describe Diagnostics::MoveInspector do
     it { is_expected.to match(/id:\s+#{profile.id}/) }
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

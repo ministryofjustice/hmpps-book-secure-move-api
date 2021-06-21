@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'POST /person_escort_records' do
     subject(:post_person_escort_record) do
@@ -292,4 +291,3 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

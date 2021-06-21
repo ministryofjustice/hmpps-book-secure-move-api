@@ -223,7 +223,6 @@ RSpec.describe Population do
     end
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '.free_spaces_date_range' do
     let!(:population1) { create(:population, location: prison1, date: Date.today) } # Included
     let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
@@ -296,5 +295,4 @@ RSpec.describe Population do
       expect(described_class.free_spaces_date_range(locations, date_range)).to eq(expected_hash)
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers
 end

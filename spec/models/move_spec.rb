@@ -750,7 +750,6 @@ RSpec.describe Move do
       end
     end
 
-    # rubocop:disable RSpec/MultipleMemoizedHelpers
     context 'when there are events for each eventable' do
       let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
       let!(:second_event) { create(:event_person_move_death_in_custody, eventable: move.profile.person, occurred_at: now + 1.second) }
@@ -762,7 +761,6 @@ RSpec.describe Move do
         expect(all_events_for_timeline.pluck(:id)).to eq([fifth_event, fourth_event, third_event, second_event, first_event].map(&:id))
       end
     end
-    # rubocop:enable RSpec/MultipleMemoizedHelpers
 
     context 'when there are events for only one eventable' do
       let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }

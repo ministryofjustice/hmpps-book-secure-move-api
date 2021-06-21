@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe SupplierChooser do
   subject(:service) { described_class.new(move_or_allocation) }
 
@@ -121,4 +120,3 @@ RSpec.describe SupplierChooser do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

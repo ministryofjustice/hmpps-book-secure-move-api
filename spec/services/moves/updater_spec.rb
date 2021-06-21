@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Moves::Updater do
   subject(:updater) { described_class.new(move, move_params) }
 
@@ -323,4 +322,3 @@ RSpec.describe Moves::Updater do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

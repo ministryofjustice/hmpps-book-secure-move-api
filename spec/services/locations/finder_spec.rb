@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Locations::Finder do
   subject(:location_finder) do
     described_class.new(
@@ -128,4 +127,3 @@ RSpec.describe Locations::Finder do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

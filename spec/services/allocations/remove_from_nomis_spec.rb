@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Allocations::RemoveFromNomis do
   context 'when move is valid' do
     subject(:remove_transfer_from_nomis) { described_class.call(move) }
@@ -95,4 +94,3 @@ RSpec.describe Allocations::RemoveFromNomis do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Idempotency::Store do
   subject(:store) { described_class.new(idempotency_key, request_hash) }
 
@@ -74,4 +73,3 @@ RSpec.describe Idempotency::Store do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

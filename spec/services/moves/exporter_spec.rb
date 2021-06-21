@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Moves::Exporter do
   subject(:file) { described_class.new(moves).call }
 
@@ -96,4 +95,3 @@ RSpec.describe Moves::Exporter do
     expect(row.last).to eq '0'
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

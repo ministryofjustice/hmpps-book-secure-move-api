@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::AllocationsController do
   subject(:post_allocations) do
     post '/api/allocations/filtered', params: { data: data }.merge(params), headers: headers, as: :json
@@ -232,4 +231,3 @@ RSpec.describe Api::AllocationsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

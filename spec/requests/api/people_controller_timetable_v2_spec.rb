@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PeopleController do
   let(:access_token) { 'spoofed-token' }
   let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: '1150262') }
@@ -75,4 +74,3 @@ RSpec.describe Api::PeopleController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

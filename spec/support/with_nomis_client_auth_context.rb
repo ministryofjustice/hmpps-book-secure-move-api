@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable  RSpec/MultipleMemoizedHelpers
 RSpec.shared_context 'with NomisClient authentication', shared_context: :metadata do
   let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
@@ -45,7 +44,6 @@ RSpec.shared_context 'with NomisClient authentication', shared_context: :metadat
     NomisClient::Base.instance_variable_set(:@token, nil)
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers
 
 RSpec.configure do |rspec|
   rspec.include_context 'with NomisClient authentication', with_nomis_client_authentication: true

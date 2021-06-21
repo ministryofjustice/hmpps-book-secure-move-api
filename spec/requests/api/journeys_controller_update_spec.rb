@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::JourneysController do
   describe 'PATCH /moves/:move_id/journeys/:journey_id' do
     subject(:do_patch) do
@@ -240,4 +239,3 @@ RSpec.describe Api::JourneysController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

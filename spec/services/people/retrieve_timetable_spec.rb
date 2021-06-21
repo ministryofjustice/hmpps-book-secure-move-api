@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe People::RetrieveTimetable do
   before do
     allow(People::RetrieveCourtHearings).to receive(:call).and_return(nomis_court_hearings_struct)
@@ -73,4 +72,3 @@ RSpec.describe People::RetrieveTimetable do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

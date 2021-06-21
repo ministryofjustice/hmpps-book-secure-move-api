@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe LocationSerializer do
   subject(:serializer) { described_class.new(location, include: %i[suppliers]) }
 
@@ -86,4 +85,3 @@ RSpec.describe LocationSerializer do
     expect(result[:included].map { |r| r[:type] }).to match_array(%w[suppliers])
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

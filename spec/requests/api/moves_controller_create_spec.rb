@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
@@ -485,4 +484,3 @@ RSpec.describe Api::MovesController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

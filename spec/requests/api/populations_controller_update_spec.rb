@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PopulationsController do
   describe 'PATCH /populations/:population_id' do
     subject(:patch_population) do
@@ -108,4 +107,3 @@ RSpec.describe Api::PopulationsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

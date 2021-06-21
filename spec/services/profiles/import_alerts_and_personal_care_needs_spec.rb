@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_authentication: true do
   let(:person) { create :person, :nomis_synced }
   let(:prison_number) { person.prison_number }
@@ -63,4 +62,3 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_aut
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

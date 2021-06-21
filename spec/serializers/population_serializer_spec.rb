@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe PopulationSerializer do
   subject(:serializer) { described_class.new(population, adapter_options) }
 
@@ -148,4 +147,3 @@ RSpec.describe PopulationSerializer do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

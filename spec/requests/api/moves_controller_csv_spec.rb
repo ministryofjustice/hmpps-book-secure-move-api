@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   subject(:post_moves_csv) { post '/api/moves/csv', params: params, headers: headers, as: :json }
 
@@ -75,4 +74,3 @@ RSpec.describe Api::MovesController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

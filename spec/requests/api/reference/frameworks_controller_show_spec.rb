@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::Reference::FrameworksController do
   let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
@@ -87,4 +86,3 @@ RSpec.describe Api::Reference::FrameworksController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

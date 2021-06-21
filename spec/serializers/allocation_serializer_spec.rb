@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe AllocationSerializer do
   subject(:serializer) { described_class.new(allocation, adapter_options) }
 
@@ -161,4 +160,3 @@ RSpec.describe AllocationSerializer do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

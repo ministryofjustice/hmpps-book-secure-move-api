@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe MoveEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
@@ -217,4 +216,3 @@ RSpec.describe MoveEvents::ParamsValidator do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

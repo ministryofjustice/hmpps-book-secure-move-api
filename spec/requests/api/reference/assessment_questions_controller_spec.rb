@@ -36,7 +36,6 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
       end
     end
 
-    # rubocop:disable RSpec/MultipleMemoizedHelpers
     describe 'filtering' do
       let(:category_filter) { :health }
       let(:params) { { filter: { category: category_filter } } }
@@ -62,6 +61,5 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
         end
       end
     end
-    # rubocop:enable RSpec/MultipleMemoizedHelpers
   end
 end

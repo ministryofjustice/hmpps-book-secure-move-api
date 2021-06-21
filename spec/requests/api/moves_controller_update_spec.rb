@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
@@ -734,4 +733,3 @@ RSpec.describe Api::MovesController do
     text.gsub(/("https?:\/\/www\.example\.com\/)([^"]+)\/([^"]+")/, '\1\3')
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

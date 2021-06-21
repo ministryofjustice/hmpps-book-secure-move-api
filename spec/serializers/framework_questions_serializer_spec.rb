@@ -61,7 +61,6 @@ RSpec.describe FrameworkQuestionsSerializer do
     end
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
   context 'with include options' do
     let(:adapter_options) do
       {
@@ -89,5 +88,4 @@ RSpec.describe FrameworkQuestionsSerializer do
       expect(result[:included]).to include_json(expected_json)
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers
 end

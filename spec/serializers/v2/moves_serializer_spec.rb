@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe V2::MovesSerializer do
   subject(:serializer) { described_class.new(move, options) }
 
@@ -139,4 +138,3 @@ RSpec.describe V2::MovesSerializer do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe CourtHearings::CreateInNomis do
   context 'when court hearing are valid' do
     subject(:create_hearing_in_nomis) { described_class.call(move, court_hearings) }
@@ -75,4 +74,3 @@ RSpec.describe CourtHearings::CreateInNomis do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

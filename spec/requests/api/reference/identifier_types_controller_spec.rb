@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::Reference::IdentifierTypesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
@@ -46,4 +45,3 @@ RSpec.describe Api::Reference::IdentifierTypesController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

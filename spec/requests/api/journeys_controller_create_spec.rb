@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
     subject(:do_post) do
@@ -168,4 +167,3 @@ RSpec.describe Api::JourneysController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

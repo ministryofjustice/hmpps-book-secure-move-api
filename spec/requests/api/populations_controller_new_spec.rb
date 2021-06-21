@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PopulationsController do
   subject(:get_new_population) do
     get '/api/populations/new', params: params, headers: headers
@@ -160,4 +159,3 @@ RSpec.describe Api::PopulationsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

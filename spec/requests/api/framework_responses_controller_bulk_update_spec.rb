@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /person_escort_records/:per_id/framework_responses' do
     subject(:bulk_update_framework_responses) do
@@ -466,4 +465,3 @@ RSpec.describe Api::FrameworkResponsesController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::AllocationsController do
   include ActiveJob::TestHelper
 
@@ -237,4 +236,3 @@ RSpec.describe Api::AllocationsController do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

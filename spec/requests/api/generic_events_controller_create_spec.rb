@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::GenericEventsController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_event_responses.yaml', version: 'v2') }
@@ -361,4 +360,3 @@ RSpec.describe Api::GenericEventsController do
     post '/api/events', params: { data: data }, headers: headers, as: :json
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

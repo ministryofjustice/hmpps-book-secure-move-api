@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe ProfileSerializer do
   subject(:serializer) { described_class.new(profile, adapter_options) }
 
@@ -95,4 +94,3 @@ RSpec.describe ProfileSerializer do
     end
   end
 end
-# rubocop:enable RSpec/MultipleMemoizedHelpers

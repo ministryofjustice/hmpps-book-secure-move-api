@@ -189,7 +189,6 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     end
   end
 
-  # rubocop:disable RSpec/MultipleMemoizedHelpers
   describe '.from_nomis_personal_care_need' do
     let(:personal_care_need) do
       {
@@ -227,5 +226,4 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
       expect(result.as_json.symbolize_keys).to eq(expected_assessment_answer)
     end
   end
-  # rubocop:enable RSpec/MultipleMemoizedHelpers
 end
