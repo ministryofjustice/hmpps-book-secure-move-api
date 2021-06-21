@@ -23,9 +23,7 @@ module Mock
     end
   end
 end
-# frozen_string_literal: true
 
-require 'rails_helper'
 RSpec.describe Mock::PaperTrailController, type: :request do
   around do |example|
     Rails.application.routes.draw do

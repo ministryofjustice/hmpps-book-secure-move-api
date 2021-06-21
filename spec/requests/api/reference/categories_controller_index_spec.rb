@@ -6,12 +6,11 @@ RSpec.describe Api::Reference::CategoriesController do
   subject(:get_categories) { get '/api/reference/categories', headers: headers }
 
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { 'spoofed-token' }
   let(:headers) do
     {
       'CONTENT_TYPE': ApiController::CONTENT_TYPE,
       'Accept': 'application/vnd.api+json; version=2',
-      'Authorization' => "Bearer #{access_token}",
+      'Authorization' => 'Bearer spoofed-token',
     }
   end
   let!(:cat_a) { create(:category, :not_supported, key: 'A', title: 'Cat A') }

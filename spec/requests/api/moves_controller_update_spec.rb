@@ -730,6 +730,6 @@ RSpec.describe Api::MovesController do
     # this strips the path from test active storage urls, in order to prevent a flaky test in CircleCI
     # e.g. "http://www.example.com/rails/active_storage/disk/XXX/YYY/ZZZ/file-sample_100kB.doc?content_type=AAA&disposition=BBB"
     # ---> "http://www.example.com/file-sample_100kB.doc?content_type=AAA&disposition=BBB"
-    text.gsub(/(\"https?\:\/\/www\.example\.com\/)([^\"]+)\/([^\"]+\")/, '\1\3')
+    text.gsub(/("https?:\/\/www\.example\.com\/)([^"]+)\/([^"]+")/, '\1\3')
   end
 end

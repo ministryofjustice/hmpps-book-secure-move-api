@@ -2,14 +2,14 @@ module Api
   class GenericEventsController < ApiController
     PERMITTED_EVENT_PARAMS = [
       :type,
-      attributes: [
+      { attributes: [
         :event_type,
         :occurred_at,
         :recorded_at,
         :notes,
-        details: {},
+        { details: {} },
       ],
-      relationships: {},
+        relationships: {} },
     ].freeze
 
     def create
@@ -57,7 +57,7 @@ module Api
     end
 
     def event_type
-      @event_type ||= 'GenericEvent::' + event_remap(event_params.dig('attributes', 'event_type'))
+      @event_type ||= "GenericEvent::#{event_remap(event_params.dig('attributes', 'event_type'))}"
     end
 
     def event_specific_relationships

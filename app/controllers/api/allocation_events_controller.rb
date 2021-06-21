@@ -19,7 +19,7 @@ module Api
 
     PERMITTED_CANCEL_PARAMS = [
       :type,
-      attributes: %i[timestamp cancellation_reason cancellation_reason_comment],
+      { attributes: %i[timestamp cancellation_reason cancellation_reason_comment] },
     ].freeze
 
     def validate_params!(event_params)

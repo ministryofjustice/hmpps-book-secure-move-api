@@ -3,10 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::Reference::AllocationComplexCasesController do
-  let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => 'Bearer spoofed-token') }
 
   describe 'GET /api/v1/reference/allocation_complex_cases' do
     let(:schema) { load_yaml_schema('get_allocation_complex_cases_responses.yaml') }

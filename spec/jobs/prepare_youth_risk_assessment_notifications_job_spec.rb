@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PrepareYouthRiskAssessmentNotificationsJob, type: :job do
   subject(:perform) do
-    described_class.perform_now(topic_id: assessment.id, action_name: action_name, queue_as: :some_queue_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
+    described_class.perform_now(topic_id: assessment.id, action_name: 'confirm_youth_risk_assessment', queue_as: :some_queue_name, send_webhooks: true, send_emails: false, only_supplier_id: nil)
   end
 
   let(:subscription) { create :subscription }
@@ -12,10 +12,6 @@ RSpec.describe PrepareYouthRiskAssessmentNotificationsJob, type: :job do
   let(:location) { create :location, :secure_childrens_home, suppliers: [supplier] }
   let(:move) { create :move, from_location: location, supplier: supplier }
   let(:assessment) { create :youth_risk_assessment, :completed, move: move }
-  let(:action_name) { 'confirm_youth_risk_assessment' }
-  let(:send_webhooks) { true }
-  let(:send_emails) { false }
-  let(:only_supplier_id) { nil }
 
   before do
     create(:notification_type, :webhook)

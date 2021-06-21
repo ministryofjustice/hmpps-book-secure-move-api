@@ -67,7 +67,7 @@ RSpec.describe Api::MovesController do
     end
 
     it 'creates a move' do
-      expect { do_post } .to change(Move, :count).by(1)
+      expect { do_post }.to change(Move, :count).by(1)
     end
 
     it 'creates a GenericEvent without a supplier' do
@@ -280,7 +280,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'creates a move' do
-        expect { do_post } .to change(Move, :count).by(1)
+        expect { do_post }.to change(Move, :count).by(1)
       end
 
       it 'sets the move_type to `prison_recall`' do

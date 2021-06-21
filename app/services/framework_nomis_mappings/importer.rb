@@ -71,19 +71,17 @@ module FrameworkNomisMappings
     end
 
     def nomis_code_ids_to_mappings
-      @nomis_code_ids_to_mappings ||= begin
-        persist_framework_nomis_mappings.each_with_object({}) do |mapping, hash|
-          mapping_nomis_codes = framework_nomis_codes.select { |nomis_code| nomis_code.code == mapping.code && nomis_code.code_type == mapping.code_type }
-          mapping_nomis_fallback = fallback_nomis_codes.find { |fallback| fallback.code_type == mapping.code_type }
+      @nomis_code_ids_to_mappings ||= persist_framework_nomis_mappings.each_with_object({}) do |mapping, hash|
+        mapping_nomis_codes = framework_nomis_codes.select { |nomis_code| nomis_code.code == mapping.code && nomis_code.code_type == mapping.code_type }
+        mapping_nomis_fallback = fallback_nomis_codes.find { |fallback| fallback.code_type == mapping.code_type }
 
-          if mapping_nomis_codes.any?
-            mapping_nomis_codes.each do |nomis_code|
-              hash[nomis_code.id] = hash[nomis_code.id].to_a + [mapping]
-            end
-          elsif mapping_nomis_fallback
-            hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]
-            log_exception('New NOMIS codes imported', [{ code: mapping.code, type: mapping_nomis_fallback.code_type }])
+        if mapping_nomis_codes.any?
+          mapping_nomis_codes.each do |nomis_code|
+            hash[nomis_code.id] = hash[nomis_code.id].to_a + [mapping]
           end
+        elsif mapping_nomis_fallback
+          hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]
+          log_exception('New NOMIS codes imported', [{ code: mapping.code, type: mapping_nomis_fallback.code_type }])
         end
       end
     end

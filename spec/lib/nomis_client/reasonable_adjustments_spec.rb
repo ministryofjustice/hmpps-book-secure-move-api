@@ -29,8 +29,6 @@ RSpec.describe NomisClient::ReasonableAdjustments, with_nomis_client_authenticat
     end
 
     context 'when a resource is found' do
-      let(:response_status) { 200 }
-
       context 'with a non-empty body' do
         let(:response_body) { file_fixture('nomis/get_reasonable_adjustments_200.json').read }
 

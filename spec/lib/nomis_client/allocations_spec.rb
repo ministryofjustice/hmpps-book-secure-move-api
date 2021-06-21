@@ -31,12 +31,12 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       let(:sentry_args) do
         [
           'Allocations::CreateInNomis Error!',
-          extra: {
+          { extra: {
             body_params: {},
             route: '/bookings/1111/prison-to-prison',
             nomis_response: { body: '{}', status: 500 },
           },
-          level: 'error',
+            level: 'error' },
         ]
       end
 
@@ -79,12 +79,12 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       let(:sentry_args) do
         [
           'Allocations::RemoveFromNomis Error!',
-          extra: {
+          { extra: {
             body_params: {},
             route: '/bookings/1111/prison-to-prison/2222/cancel',
             nomis_response: { body: '{}', status: 500 },
           },
-          level: 'error',
+            level: 'error' },
         ]
       end
 

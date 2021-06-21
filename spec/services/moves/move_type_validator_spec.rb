@@ -8,6 +8,7 @@ RSpec.describe Moves::MoveTypeValidator do
     Class.new {
       include ActiveModel::Validations
       attr_accessor :from_location, :to_location, :move_type
+
       validates_with Moves::MoveTypeValidator
 
       def self.name

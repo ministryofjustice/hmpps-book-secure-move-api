@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable  RSpec/MultipleMemoizedHelpers
 RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_class|
   subject { create(assessment_type) }
 
@@ -780,3 +783,4 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     create(:string_response, value: options[:value], framework_question: question, assessmentable: options[:assessmentable], responded: options[:responded], parent: options[:parent])
   end
 end
+# rubocop:enable  RSpec/MultipleMemoizedHelpers

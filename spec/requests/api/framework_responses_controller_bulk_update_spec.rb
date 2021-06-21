@@ -4,13 +4,13 @@ require 'rails_helper'
 
 RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /person_escort_records/:per_id/framework_responses' do
-    include_context 'with supplier with spoofed access token'
-
     subject(:bulk_update_framework_responses) do
       Timecop.freeze(recorded_timestamp) do
         patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers: headers, as: :json
       end
     end
+
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
@@ -393,11 +393,11 @@ RSpec.describe Api::FrameworkResponsesController do
   end
 
   describe 'PATCH /youth_risk_assessments/:youth_risk_assessment_id/framework_responses' do
-    include_context 'with supplier with spoofed access token'
-
     subject(:bulk_update_framework_responses) do
       patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}/framework_responses", params: bulk_youth_risk_assessment_params, headers: headers, as: :json
     end
+
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }

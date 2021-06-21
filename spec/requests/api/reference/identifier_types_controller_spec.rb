@@ -4,9 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::IdentifierTypesController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => 'Bearer spoofed-token') }
 
   describe 'GET /api/v1/reference/identifier_types' do
     let(:schema) { load_yaml_schema('get_identifier_types_responses.yaml') }

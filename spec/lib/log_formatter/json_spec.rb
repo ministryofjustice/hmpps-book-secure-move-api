@@ -5,8 +5,7 @@ RSpec.describe LogFormatter::Json do
 
   let(:severity) { 'DEBUG' }
   let(:timestamp) { '2020-07-03T15:33:17+01:00' }
-  let(:progname) { nil }
-  let(:expected) { JSON.dump(expected_json) + "\n" }
+  let(:expected) { "#{JSON.dump(expected_json)}\n" }
 
   context 'when the message argument is not parsable json' do
     let(:msg) { '[ElasticAPM] Agent disabled with `enabled: false' }
@@ -20,7 +19,7 @@ RSpec.describe LogFormatter::Json do
     end
 
     it 'returns the correctly formatted log line' do
-      expect(formatter.call(severity, timestamp, progname, msg)).to eq(expected)
+      expect(formatter.call(severity, timestamp, nil, msg)).to eq(expected)
     end
   end
 
@@ -44,7 +43,7 @@ RSpec.describe LogFormatter::Json do
     end
 
     it 'returns the correctly formatted log line' do
-      expect(formatter.call(severity, timestamp, progname, msg)).to eq(expected)
+      expect(formatter.call(severity, timestamp, nil, msg)).to eq(expected)
     end
   end
 end

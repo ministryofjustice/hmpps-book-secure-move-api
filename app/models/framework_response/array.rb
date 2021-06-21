@@ -23,7 +23,7 @@ class FrameworkResponse
       return if errors.present?
 
       if (invalid_options = value - framework_question.options).any?
-        errors.add(:value, invalid_options.join(', ') + ' are not valid options')
+        errors.add(:value, "#{invalid_options.join(', ')} are not valid options")
       end
     end
 

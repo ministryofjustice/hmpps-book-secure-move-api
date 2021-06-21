@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
 require 'rack/test'
 
 # 6.1 IPT Prison to Prison prison_transfer move for a person with a PN identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-# rubocop:disable Rails/HttpPositionalArguments
+# rubocop:disable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers
 RSpec.describe 'singleton', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
@@ -209,4 +210,4 @@ RSpec.describe 'singleton', type: :request, api_story: true do
   end
   # rubocop:enable RSpec/MultipleExpectations
 end
-# rubocop:enable Rails/HttpPositionalArguments
+# rubocop:enable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers

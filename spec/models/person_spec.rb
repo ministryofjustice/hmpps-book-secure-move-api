@@ -177,4 +177,14 @@ RSpec.describe Person do
       expect(People::RetrieveImage).to have_received(:call).with(person, force_update: true).once
     end
   end
+
+  describe '#csra' do
+    before do
+      allow(NomisClient::BookingDetails).to receive(:get).and_return({ csra: 'Standard' })
+    end
+
+    it 'returns the value obtained from BookingDetails' do
+      expect(person.csra).to eq('Standard')
+    end
+  end
 end

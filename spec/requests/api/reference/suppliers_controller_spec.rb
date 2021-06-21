@@ -4,9 +4,15 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::SuppliersController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => 'Bearer spoofed-token') }
+  let(:supplier1) { create(:supplier, name: 'Test Supplier 1', key: 'test_supplier_1') }
+  let(:supplier2) { create(:supplier, name: 'Test Supplier 2', key: 'test_supplier_2') }
+
+  before do
+    supplier1
+    supplier2
+  end
 
   describe 'GET /api/v1/reference/suppliers' do
     let(:schema) { load_yaml_schema('get_suppliers_responses.yaml') }
@@ -14,24 +20,22 @@ RSpec.describe Api::Reference::SuppliersController do
     let(:data) do
       [
         {
-          type: 'suppliers',
-          attributes: {
-            name: 'Test Supplier 1',
-            key: 'test_supplier_1',
+          'id' => supplier1.id,
+          'type' => 'suppliers',
+          'attributes' => {
+            'name' => supplier1.name,
+            'key' => supplier1.key,
           },
         },
         {
-          type: 'suppliers',
-          attributes: {
-            name: 'Test Supplier 2',
-            key: 'test_supplier_2',
+          'id' => supplier2.id,
+          'type' => 'suppliers',
+          'attributes' => {
+            'name' => supplier2.name,
+            'key' => supplier2.key,
           },
         },
       ]
-    end
-
-    before do
-      data.each { |supplier| create(:supplier, supplier[:attributes]) }
     end
 
     context 'when successful' do
@@ -42,7 +46,7 @@ RSpec.describe Api::Reference::SuppliersController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json['data']).to match_array(data)
       end
     end
   end
@@ -52,24 +56,22 @@ RSpec.describe Api::Reference::SuppliersController do
     let(:params) { {} }
     let(:data) do
       {
-        type: 'suppliers',
-        attributes: {
-          name: 'Test Supplier 1',
-          key: 'test_supplier_1',
+        'id' => supplier1.id,
+        'type' => 'suppliers',
+        'attributes' => {
+          'name' => supplier1.name,
+          'key' => supplier1.key,
         },
       }
     end
 
-    let!(:supplier) { create(:supplier, data[:attributes]) }
-    let(:supplier_key) { supplier.key }
-
     context 'when successful' do
-      before { get "/api/v1/reference/suppliers/#{supplier_key}", params: params, headers: headers }
+      before { get "/api/v1/reference/suppliers/#{supplier1.key}", params: params, headers: headers }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json['data']).to eql(data)
       end
     end
 

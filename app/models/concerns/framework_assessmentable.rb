@@ -46,7 +46,7 @@ module FrameworkAssessmentable
       save!
 
       questions = framework_questions.includes(:dependents).index_by(&:id)
-      questions.values.each do |question|
+      questions.each_value do |question|
         next unless question.parent_id.nil?
 
         response = question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses)

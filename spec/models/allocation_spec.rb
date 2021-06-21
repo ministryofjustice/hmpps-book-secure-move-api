@@ -35,13 +35,16 @@ RSpec.describe Allocation do
 
   describe '#refresh_status_and_moves_count!' do
     context 'when updating moves count' do
-      let(:cancelled_move) { create :move, :cancelled }
-      let(:proposed_move) { create :move, :proposed }
-      let(:requested_move) { create :move, :requested }
-      let(:booked_move) { create :move, :booked }
-      let(:in_transit_move) { create :move, :in_transit }
-      let(:completed_move) { create :move, :completed }
-      let(:moves) { [cancelled_move, proposed_move, requested_move, booked_move, in_transit_move, completed_move] }
+      let(:moves) do
+        [
+          create(:move, :cancelled),
+          create(:move, :proposed),
+          create(:move, :requested),
+          create(:move, :booked),
+          create(:move, :in_transit),
+          create(:move, :completed),
+        ]
+      end
       let!(:allocation) { create :allocation, moves: moves, moves_count: 1 }
 
       it 'updates the number of non cancelled moves' do

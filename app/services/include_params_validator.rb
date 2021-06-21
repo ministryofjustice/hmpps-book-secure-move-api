@@ -45,6 +45,7 @@ class IncludeParamsValidator
   class ValidationError < StandardError
     def initialize(validator)
       @validator = validator
+      super()
     end
 
     delegate :errors, to: :@validator

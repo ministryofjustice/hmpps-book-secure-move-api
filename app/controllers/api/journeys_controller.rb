@@ -12,13 +12,13 @@ module Api
 
     PERMITTED_NEW_JOURNEY_PARAMS = [
       :type,
-      attributes: [:timestamp, :billable, vehicle: {}],
-      relationships: [from_location: {}, to_location: {}, supplier: {}],
+      { attributes: [:timestamp, :billable, { vehicle: {} }],
+        relationships: [from_location: {}, to_location: {}, supplier: {}] },
     ].freeze
 
     PERMITTED_UPDATE_JOURNEY_PARAMS = [
       :type,
-      attributes: [:timestamp, :billable, vehicle: {}],
+      { attributes: [:timestamp, :billable, { vehicle: {} }] },
     ].freeze
 
     def index

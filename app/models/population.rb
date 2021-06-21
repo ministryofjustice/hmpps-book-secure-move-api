@@ -78,9 +78,9 @@ class Population < ApplicationRecord
   def self.free_spaces_for_date(locations, date)
     locations
       # Join with matching populations for location and given date (if any). Can't use a where clause as there may not be a population record
-      .joins(sanitize_sql(['LEFT OUTER JOIN populations p ON p.location_id = locations.id AND p.date = :date', date: date]))
+      .joins(sanitize_sql(['LEFT OUTER JOIN populations p ON p.location_id = locations.id AND p.date = :date', { date: date }]))
       # Join with matching (non cancelled) prison transfers on the given date (if any) so we can count them
-      .joins(sanitize_sql(["LEFT OUTER JOIN moves m ON m.move_type = 'prison_transfer' AND m.status <> 'cancelled' AND m.date = :date", date: date]))
+      .joins(sanitize_sql(["LEFT OUTER JOIN moves m ON m.move_type = 'prison_transfer' AND m.status <> 'cancelled' AND m.date = :date", { date: date }]))
       # Group by columns used in the free space calculation
       .group(:id, :'p.id')
       # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(

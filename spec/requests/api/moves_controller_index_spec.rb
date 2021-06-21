@@ -44,8 +44,8 @@ RSpec.describe Api::MovesController do
             :original_move,
             :from_location,
             :to_location,
-            profile: [:documents, person_escort_record: [:framework, :framework_responses, framework_flags: :framework_question]],
-            person: %i[gender ethnicity],
+            { profile: [:documents, { person_escort_record: [:framework, :framework_responses, { framework_flags: :framework_question }] }],
+              person: %i[gender ethnicity] },
           ]
         end
 

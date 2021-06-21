@@ -6,7 +6,7 @@ module Api
 
     before_action :validate_filter_params, only: %i[index filtered]
 
-    CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]].freeze
+    CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, { person: %i[gender ethnicity] }].freeze
 
     def index
       index_and_render
@@ -55,7 +55,7 @@ module Api
 
     PERMITTED_FILTERED_PARAMS = [
       :type,
-      attributes: [filter: PERMITTED_FILTER_PARAMS],
+      { attributes: [filter: PERMITTED_FILTER_PARAMS] },
     ].freeze
 
     def filtered_params
@@ -63,13 +63,11 @@ module Api
     end
 
     def filter_params
-      @filter_params ||= begin
-        if action_name == 'filtered'
-          filtered_params.dig(:attributes, :filter) || {}
-        else
-          params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
-        end
-      end
+      @filter_params ||= if action_name == 'filtered'
+                           filtered_params.dig(:attributes, :filter) || {}
+                         else
+                           params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+                         end
     end
   end
 end

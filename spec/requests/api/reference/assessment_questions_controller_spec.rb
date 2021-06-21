@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::AssessmentQuestionsController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { 'spoofed-token' }
 
   describe 'GET /api/v1/reference/assessment_questions' do
     let(:schema) { load_yaml_schema('get_assessment_questions_responses.yaml') }
@@ -26,7 +25,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => "Bearer #{access_token}" }
+      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => 'Bearer spoofed-token' }
     end
 
     context 'when successful' do

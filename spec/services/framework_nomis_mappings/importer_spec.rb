@@ -223,11 +223,11 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
       sentry_args = [
         'FrameworkNomisMapping import validation Error',
-        extra: {
+        { extra: {
           id: person_escort_record.id,
           params: [{ code: ["can't be blank"] }],
         },
-        level: 'error',
+          level: 'error' },
       ]
 
       expect(Sentry).to have_received(:capture_message).with(*sentry_args)
@@ -239,11 +239,11 @@ RSpec.describe FrameworkNomisMappings::Importer do
       described_class.new(assessmentable: person_escort_record).call
       personal_care_need = [
         'New NOMIS codes imported',
-        extra: {
+        { extra: {
           id: person_escort_record.id,
           params: [{ code: 'PEEP', type: 'personal_care_need' }],
         },
-        level: 'error',
+          level: 'error' },
       ]
 
       expect(Sentry).to have_received(:capture_message).with(*personal_care_need).once

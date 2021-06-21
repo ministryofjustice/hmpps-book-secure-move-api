@@ -16,14 +16,12 @@ class PrepareBaseNotificationsJob < ApplicationJob
         next unless subscription.enabled?
 
         # NB: always notify the webhook (if defined) on any change, even for back-dated historic moves
-        if send_webhooks && subscription.callback_url.present? && should_webhook?(move)
-          # feature flag certain webhook messages: disable if there is an envvar DISABLE_WEBHOOK_<ACTIONNAME>_<SUPPLIER>=="TRUE"
-          unless ENV.fetch("DISABLE_WEBHOOK_#{action_name.upcase}_#{supplier.key.upcase}", 'FALSE') =~ /TRUE/i
-            NotifyWebhookJob.perform_later(
-              notification_id: build_notification(subscription, NotificationType::WEBHOOK, topic, action_name).id,
-              queue_as: queue_as, # send webhook with same priority as move
-            )
-          end
+        # feature flag certain webhook messages: disable if there is an envvar DISABLE_WEBHOOK_<ACTIONNAME>_<SUPPLIER>=="TRUE"
+        if send_webhooks && subscription.callback_url.present? && should_webhook?(move) && (ENV.fetch("DISABLE_WEBHOOK_#{action_name.upcase}_#{supplier.key.upcase}", 'FALSE') !~ /TRUE/i)
+          NotifyWebhookJob.perform_later(
+            notification_id: build_notification(subscription, NotificationType::WEBHOOK, topic, action_name).id,
+            queue_as: queue_as, # send webhook with same priority as move
+          )
         end
 
         # NB: only email in certain conditions (should_email?)

@@ -39,12 +39,12 @@ module Api
 
     def move
       @move ||= begin
-                  id = params.require(:data).dig(:relationships, :move, :data, :id)
+        id = params.require(:data).dig(:relationships, :move, :data, :id)
 
-                  return if id.blank?
+        return if id.blank?
 
-                  Move.find(id)
-                end
+        Move.find(id)
+      end
     end
 
     def should_save_in_nomis?
