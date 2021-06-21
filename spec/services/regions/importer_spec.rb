@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Regions::Importer do
   subject(:importer) { described_class.new(input_data) }
 
@@ -73,3 +74,4 @@ RSpec.describe Regions::Importer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Moves::Finder do
   subject(:results) do
     described_class.new(
@@ -539,3 +540,4 @@ RSpec.describe Moves::Finder do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::YouthRiskAssessmentsController do
   describe 'GET /youth_risk_assessments/:youth_risk_assessment_id' do
     include_context 'with supplier with spoofed access token'
@@ -94,3 +95,4 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

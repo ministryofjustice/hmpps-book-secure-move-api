@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::SuppliersController do
   subject(:get_supplier_locations) { get "/api/v1/suppliers/#{supplier_id}/locations#{query_params}", headers: headers, params: {} }
 
@@ -86,3 +87,4 @@ RSpec.describe Api::SuppliersController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

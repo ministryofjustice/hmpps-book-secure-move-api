@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe GenericEvents::CommonParamsValidator do
   subject(:params_validator) { described_class.new(event_params, event_relationships) }
 
@@ -56,3 +57,4 @@ RSpec.describe GenericEvents::CommonParamsValidator do
     it { is_expected.not_to be_valid }
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

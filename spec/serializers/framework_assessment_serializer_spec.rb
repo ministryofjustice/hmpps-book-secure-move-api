@@ -109,6 +109,7 @@ RSpec.describe FrameworkAssessmentSerializer do
     end
   end
 
+  # rubocop:disable RSpec/MultipleMemoizedHelpers
   context 'with include options' do
     let(:includes) do
       {
@@ -148,4 +149,5 @@ RSpec.describe FrameworkAssessmentSerializer do
       expect(result[:included]).to include_json(expected_json)
     end
   end
+  # rubocop:enable RSpec/MultipleMemoizedHelpers
 end

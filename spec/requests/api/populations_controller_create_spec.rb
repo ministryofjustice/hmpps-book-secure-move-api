@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PopulationsController do
   include_context 'with supplier with spoofed access token'
 
@@ -117,3 +118,4 @@ RSpec.describe Api::PopulationsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

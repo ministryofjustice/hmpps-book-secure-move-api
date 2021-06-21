@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::Reference::PrisonTransferReasonsController do
-  let(:access_token) { 'spoofed-token' }
-  let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
+  let(:headers) { { 'Authorization' => 'Bearer spoofed-token' } }
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'GET /api/reference/prison_transfer_reasons' do
@@ -47,3 +47,4 @@ RSpec.describe Api::Reference::PrisonTransferReasonsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

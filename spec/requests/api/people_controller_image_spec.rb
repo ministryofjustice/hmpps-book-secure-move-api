@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PeopleController do
   subject(:get_image) { get "/api/v1/people/#{id}/images", headers: headers }
 
@@ -73,3 +74,4 @@ RSpec.describe Api::PeopleController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

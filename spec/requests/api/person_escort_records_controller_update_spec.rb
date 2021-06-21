@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'PATCH /person_escort_records/:person_escort_record_id' do
     subject(:patch_person_escort_record) do
@@ -243,3 +244,4 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

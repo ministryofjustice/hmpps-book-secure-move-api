@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'GET /person_escort_records/:person_escort_record_id' do
     include_context 'with supplier with spoofed access token'
@@ -95,3 +96,4 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

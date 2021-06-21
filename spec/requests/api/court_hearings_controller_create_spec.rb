@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::CourtHearingsController do
   let(:response_json) { JSON.parse(response.body) }
 
@@ -94,3 +95,4 @@ RSpec.describe Api::CourtHearingsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

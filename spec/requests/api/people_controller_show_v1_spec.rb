@@ -3,16 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
   let(:schema) { load_yaml_schema('get_person_responses.yaml', version: 'v1') }
   let(:person) { create(:person) }
 
   let(:headers) do
     {
-      'CONTENT_TYPE': content_type,
+      'CONTENT_TYPE': ApiController::CONTENT_TYPE,
       'Accept': 'application/vnd.api+json; version=1',
       'Authorization' => "Bearer #{access_token}",
     }

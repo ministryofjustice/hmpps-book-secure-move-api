@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Allocations::Creator do
   subject(:call_creator) { creator.call }
 
@@ -237,3 +238,4 @@ RSpec.describe Allocations::Creator do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe People::BuildPersonAndProfileV1 do
   subject(:service) { described_class.new(nomis_attributes) }
 
@@ -100,3 +101,4 @@ RSpec.describe People::BuildPersonAndProfileV1 do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

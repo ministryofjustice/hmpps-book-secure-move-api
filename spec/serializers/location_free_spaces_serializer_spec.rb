@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe LocationFreeSpacesSerializer do
   subject(:serializer) { described_class.new(location, adapter_options) }
 
@@ -72,3 +73,4 @@ RSpec.describe LocationFreeSpacesSerializer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

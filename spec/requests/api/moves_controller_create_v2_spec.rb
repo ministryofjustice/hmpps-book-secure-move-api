@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
@@ -649,3 +650,4 @@ RSpec.describe Api::MovesController do
     post '/api/moves', params: { data: data }, headers: headers, as: :json
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

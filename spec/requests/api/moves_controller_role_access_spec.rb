@@ -2,6 +2,7 @@
 
 require 'swagger_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
   let(:token) { create(:access_token, application: application) }
@@ -165,3 +166,4 @@ RSpec.describe Api::MovesController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

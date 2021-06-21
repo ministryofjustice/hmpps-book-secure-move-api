@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe People::Creator do
   subject(:creator) { described_class.new(params) }
 
@@ -129,3 +130,4 @@ RSpec.describe People::Creator do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

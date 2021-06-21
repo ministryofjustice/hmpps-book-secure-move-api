@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Api::Reference::AssessmentQuestionsController do
   let(:response_json) { JSON.parse(response.body) }
-  let(:access_token) { 'spoofed-token' }
 
   describe 'GET /api/v1/reference/assessment_questions' do
     let(:schema) { load_yaml_schema('get_assessment_questions_responses.yaml') }
@@ -26,7 +25,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => "Bearer #{access_token}" }
+      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => 'Bearer spoofed-token' }
     end
 
     context 'when successful' do
@@ -37,6 +36,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
       end
     end
 
+    # rubocop:disable RSpec/MultipleMemoizedHelpers
     describe 'filtering' do
       let(:category_filter) { :health }
       let(:params) { { filter: { category: category_filter } } }
@@ -62,5 +62,6 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
         end
       end
     end
+    # rubocop:enable RSpec/MultipleMemoizedHelpers
   end
 end

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::Reference::LocationsController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { 'spoofed-token' }
@@ -238,3 +239,4 @@ RSpec.describe Api::Reference::LocationsController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe FrameworkNomisMappings::Importer do
   let(:nomis_alerts) do
     [
@@ -278,3 +279,4 @@ RSpec.describe FrameworkNomisMappings::Importer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

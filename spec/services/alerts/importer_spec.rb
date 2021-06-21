@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Alerts::Importer do
   subject(:importer) do
     described_class.new(
@@ -130,3 +131,4 @@ RSpec.describe Alerts::Importer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

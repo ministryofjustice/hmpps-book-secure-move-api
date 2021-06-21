@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe PersonalCareNeeds::Importer do
   subject(:importer) do
     described_class.new(
@@ -66,3 +67,4 @@ RSpec.describe PersonalCareNeeds::Importer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

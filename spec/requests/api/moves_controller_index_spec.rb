@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   subject(:get_moves) { get '/api/v1/moves', params: params, headers: headers }
 
@@ -233,3 +234,4 @@ RSpec.describe Api::MovesController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Allocations::CreateInNomis do
   context 'when move is valid' do
     subject(:create_transfer_in_nomis) { described_class.call(move) }
@@ -109,3 +110,4 @@ RSpec.describe Allocations::CreateInNomis do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

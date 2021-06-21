@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe RegionSerializer do
   subject(:serializer) { described_class.new(region, adapter_options) }
 
@@ -63,3 +64,4 @@ RSpec.describe RegionSerializer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

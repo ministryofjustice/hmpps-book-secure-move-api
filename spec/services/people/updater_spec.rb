@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe People::Updater do
   subject(:updater) { described_class.new(person, params) }
 
@@ -154,3 +155,4 @@ RSpec.describe People::Updater do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

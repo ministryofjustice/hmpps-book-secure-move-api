@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Allocations::Finder do
   subject(:allocation_finder) do
     described_class.new(
@@ -303,3 +304,4 @@ RSpec.describe Allocations::Finder do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

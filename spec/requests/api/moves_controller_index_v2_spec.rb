@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::MovesController do
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
@@ -256,3 +257,4 @@ RSpec.describe Api::MovesController do
     get "/api/moves#{query_params}", params: params, headers: headers
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /framework_responses/:framework_response_id' do
     subject(:patch_response) do
@@ -410,3 +411,4 @@ RSpec.describe Api::FrameworkResponsesController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe SupplierLocations::Importer do
   subject(:call_importer) { importer.call }
 
@@ -65,3 +66,4 @@ RSpec.describe SupplierLocations::Importer do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers

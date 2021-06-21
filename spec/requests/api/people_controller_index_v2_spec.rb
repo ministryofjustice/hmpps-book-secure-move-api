@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-# TODO: this class will be renamed to Api::PeopleController
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Api::PeopleController do
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
@@ -247,3 +247,4 @@ RSpec.describe Api::PeopleController do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
