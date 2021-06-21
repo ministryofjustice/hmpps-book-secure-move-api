@@ -25,9 +25,9 @@ module Api
 
     PROFILE_ATTRIBUTES = [
       :type,
-      attributes: [
+      { attributes: [
         :requires_youth_risk_assessment,
-        assessment_answers: [
+        { assessment_answers: [
           %i[
             key
             date
@@ -43,9 +43,9 @@ module Api
             expires_at
             imported_from_nomis
           ],
-        ],
+        ] },
       ],
-      relationships: {},
+        relationships: {} },
     ].freeze
 
     def profile_attributes

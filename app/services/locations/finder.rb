@@ -36,8 +36,7 @@ module Locations
       scope = apply_location_filters(scope)
       scope = apply_region_filters(scope)
       scope = apply_young_offender_institution_filters(scope)
-      scope = apply_created_at_filters(scope)
-      scope
+      apply_created_at_filters(scope)
     end
 
     def split_params(name)
@@ -73,8 +72,7 @@ module Locations
       return scope if filter_params[:created_at].blank?
 
       date = Date.strptime(filter_params[:created_at], '%Y-%m-%d')
-      scope = scope.where(created_at: date.midnight..date.end_of_day)
-      scope
+      scope.where(created_at: date.midnight..date.end_of_day)
     end
   end
 end

@@ -54,8 +54,7 @@ module Moves
       scope = apply_filter(scope, :status)
       scope = apply_filter(scope, :move_type)
       scope = apply_filter(scope, :cancellation_reason)
-      scope = apply_filter(scope, :rejection_reason)
-      scope
+      apply_filter(scope, :rejection_reason)
     end
 
     def split_params(name)
@@ -118,12 +117,11 @@ module Moves
       return scope unless filter_params.key?(:ready_for_transit) && %w[true false].include?(filter_params[:ready_for_transit])
 
       scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
-      scope = if filter_params[:ready_for_transit] == 'true'
-                scope.where('person_escort_records.status' => 'confirmed')
-              else
-                scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
-              end
-      scope
+      if filter_params[:ready_for_transit] == 'true'
+        scope.where('person_escort_records.status' => 'confirmed')
+      else
+        scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
+      end
     end
   end
 end

@@ -4,13 +4,13 @@ module Api
   class FrameworkAssessmentsController < ApiController
     NEW_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
-      attributes: [:version],
-      relationships: [move: {}],
+      { attributes: [:version],
+        relationships: [move: {}] },
     ].freeze
 
     UPDATE_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
-      attributes: [:status],
+      { attributes: [:status] },
     ].freeze
 
     def create

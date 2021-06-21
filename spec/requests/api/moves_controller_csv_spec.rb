@@ -59,7 +59,7 @@ RSpec.describe Api::MovesController do
           filter_params: { from_location_id: from_location_id },
           ability: ability,
           order_params: {},
-          active_record_relationships: [:from_location, :to_location, { profile: :documents }, person: %i[gender ethnicity]],
+          active_record_relationships: [:from_location, :to_location, { profile: :documents }, { person: %i[gender ethnicity] }],
         )
       end
     end

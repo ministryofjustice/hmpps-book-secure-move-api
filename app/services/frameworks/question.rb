@@ -93,9 +93,7 @@ module Frameworks
     end
 
     def question
-      @question ||= begin
-        questions[key] = questions[key] || FrameworkQuestion.new(key: key)
-      end
+      @question ||= questions[key] = questions[key] || FrameworkQuestion.new(key: key)
     end
   end
 end

@@ -8,9 +8,9 @@ module Api
     before_action :validate_idempotency_key
     around_action :idempotent_action
 
-    COMMON_PARAMS = [:type, attributes: %i[timestamp notes]].freeze
-    LOCKOUT_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { from_location: {} }].freeze
-    LODGING_PARAMS = [:type, attributes: %i[timestamp notes], relationships: { to_location: {} }].freeze
+    COMMON_PARAMS = [:type, { attributes: %i[timestamp notes] }].freeze
+    LOCKOUT_PARAMS = [:type, { attributes: %i[timestamp notes], relationships: { from_location: {} } }].freeze
+    LODGING_PARAMS = [:type, { attributes: %i[timestamp notes], relationships: { to_location: {} } }].freeze
 
     def cancel
       JourneyEvents::ParamsValidator.new(common_params).validate!

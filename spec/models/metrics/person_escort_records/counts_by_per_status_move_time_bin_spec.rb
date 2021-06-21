@@ -25,13 +25,13 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByPerStatusMoveTimeBin do
     let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days exc today' } }
 
     before do
-      create(:person_escort_record, move_attr: [:completed, date: 4.days.ago])
-      create(:person_escort_record, :completed, move_attr: [:completed, date: Date.yesterday])
-      create(:person_escort_record, :in_progress, move_attr: [:cancelled, date: 7.days.from_now])
-      create(:person_escort_record, :in_progress, move_attr: [:in_transit, date: Date.today])
-      create(:person_escort_record, move_attr: [:requested, date: Date.tomorrow])
-      create(:person_escort_record, :completed, move_attr: [:requested, date: 4.days.from_now])
-      create(:person_escort_record, :confirmed, move_attr: [:requested, date: 8.days.from_now])
+      create(:person_escort_record, move_attr: [:completed, { date: 4.days.ago }])
+      create(:person_escort_record, :completed, move_attr: [:completed, { date: Date.yesterday }])
+      create(:person_escort_record, :in_progress, move_attr: [:cancelled, { date: 7.days.from_now }])
+      create(:person_escort_record, :in_progress, move_attr: [:in_transit, { date: Date.today }])
+      create(:person_escort_record, move_attr: [:requested, { date: Date.tomorrow }])
+      create(:person_escort_record, :completed, move_attr: [:requested, { date: 4.days.from_now }])
+      create(:person_escort_record, :confirmed, move_attr: [:requested, { date: 8.days.from_now }])
     end
 
     it 'computes the metric' do

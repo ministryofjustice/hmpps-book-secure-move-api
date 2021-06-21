@@ -3,8 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::Reference::FrameworksController do
-  let(:access_token) { 'spoofed-token' }
-  let(:headers) { { 'Authorization' => "Bearer #{access_token}" } }
+  let(:headers) { { 'Authorization' => 'Bearer spoofed-token' } }
   let(:response_json) { JSON.parse(response.body) }
 
   describe 'GET /api/reference/frameworks' do

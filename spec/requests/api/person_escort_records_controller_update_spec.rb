@@ -4,13 +4,13 @@ require 'rails_helper'
 
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'PATCH /person_escort_records/:person_escort_record_id' do
-    include_context 'with supplier with spoofed access token'
-
     subject(:patch_person_escort_record) do
       patch "/api/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
 
       person_escort_record.reload
     end
+
+    include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('patch_person_escort_record_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }

@@ -8,11 +8,11 @@ module Api
     # object with option details fields, and string
     PERMITTED_PARAMS = [
       :type,
-      attributes: [
+      { attributes: [
         :value,
-        { value: [:option, :details, :item, responses: [:framework_question_id, :value, { value: %i[option details] }, { value: [] }]] },
+        { value: [:option, :details, :item, { responses: [:framework_question_id, :value, { value: %i[option details] }, { value: [] }] }] },
         { value: [] },
-      ],
+      ] },
     ].freeze
 
     BULK_PERMITTED_PARAMS = (%i[id] + PERMITTED_PARAMS).freeze
@@ -70,13 +70,11 @@ module Api
     end
 
     def assessment
-      @assessment ||= begin
-        if action_name == 'bulk_update'
-          params['assessment_class'].find(params[:id])
-        else
-          framework_response.assessmentable
-        end
-      end
+      @assessment ||= if action_name == 'bulk_update'
+                        params['assessment_class'].find(params[:id])
+                      else
+                        framework_response.assessmentable
+                      end
     end
 
     def render_value_type_error(exception)

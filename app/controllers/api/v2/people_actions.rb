@@ -38,7 +38,7 @@ module Api::V2
       police_national_computer
       gender_additional_information
     ].freeze
-    PERMITTED_PERSON_PARAMS = [:type, attributes: PERSON_ATTRIBUTES, relationships: {}].freeze
+    PERMITTED_PERSON_PARAMS = [:type, { attributes: PERSON_ATTRIBUTES, relationships: {} }].freeze
 
     def person_params
       params.require(:data).permit(PERMITTED_PERSON_PARAMS).to_h

@@ -22,7 +22,7 @@ class FrameworkQuestion < VersionedModel
   has_many :framework_responses
   has_and_belongs_to_many :framework_nomis_codes, autosave: true
 
-  def build_responses(question: self, assessmentable:, questions:, previous_responses: {})
+  def build_responses(assessmentable:, questions:, question: self, previous_responses: {})
     response = build_response(question, assessmentable, previous_responses[question.key])
     return response if question.dependents.empty? || question.question_type == 'add_multiple_items'
 

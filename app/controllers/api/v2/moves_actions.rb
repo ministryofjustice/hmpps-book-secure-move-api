@@ -63,7 +63,7 @@ module Api::V2
 
     PERMITTED_MOVE_PARAMS = [
       :type,
-      attributes: %i[
+      { attributes: %i[
         date
         time_due
         status
@@ -77,7 +77,7 @@ module Api::V2
         date_from
         date_to
       ],
-      relationships: {},
+        relationships: {} },
     ].freeze
 
     def create_in_nomis?
@@ -134,7 +134,7 @@ module Api::V2
     end
 
     def court_hearings
-      court_hearing_ids = court_hearing_attributes.dig(:data)
+      court_hearing_ids = court_hearing_attributes[:data]
       court_hearing_ids = court_hearing_ids&.map { |court_hearing| court_hearing[:id] }
 
       CourtHearing.where(id: court_hearing_ids) if court_hearing_ids

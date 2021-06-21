@@ -155,13 +155,12 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   describe '#set_timestamps' do
     let(:assessment_question) { create :assessment_question, category: 'health', title: 'Sight Impaired' }
     let(:initial_date) { nil }
-    let(:initial_expiry_date) { nil }
     let(:attribute_values) do
       {
         comments: 'just a test',
         assessment_question_id: assessment_question.id,
         created_at: initial_date,
-        expires_at: initial_expiry_date,
+        expires_at: nil,
       }
     end
 

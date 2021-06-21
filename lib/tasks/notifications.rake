@@ -50,7 +50,7 @@ namespace :notifications do
 
     puts "\nAre you sure you want to trigger these notifications? Enter YES to confirm:"
     print '> '
-    confirm = STDIN.gets.chomp
+    confirm = $stdin.gets.chomp
 
     abort 'Cancelling' unless confirm =~ /Y(ES)?/i
 

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
 require 'rack/test'
 
 # 2.1 Police to unspecified Prison prison_recall move for a person with a PNC identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-# rubocop:disable Rails/HttpPositionalArguments
+# rubocop:disable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers
 RSpec.describe 'police to unknown prison recall', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
@@ -213,4 +214,4 @@ RSpec.describe 'police to unknown prison recall', type: :request, api_story: tru
   end
   # rubocop:enable RSpec/MultipleExpectations
 end
-# rubocop:enable Rails/HttpPositionalArguments
+# rubocop:enable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers

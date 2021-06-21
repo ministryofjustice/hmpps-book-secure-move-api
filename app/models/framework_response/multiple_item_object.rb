@@ -11,7 +11,7 @@ class FrameworkResponse
     validate :multiple_response_objects
     validate :required_questions
 
-    def initialize(attributes: {}, questions: [], assessmentable:)
+    def initialize(assessmentable:, attributes: {}, questions: [])
       attributes = attributes.presence || {}
       @questions = questions
       @assessmentable = assessmentable

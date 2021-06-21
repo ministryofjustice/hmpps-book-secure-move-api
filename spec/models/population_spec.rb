@@ -224,19 +224,14 @@ RSpec.describe Population do
   end
 
   describe '.free_spaces_date_range' do
-    let!(:prison1) { create(:location, :prison) }
-    let!(:prison2) { create(:location, :prison) }
-    let!(:move1) { create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday) }
-    let!(:move2) { create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday) }
-    let!(:move3) { create(:move, :prison_transfer, to_location: prison1, date: Date.yesterday) }
-    let!(:move4) { create(:move, :prison_transfer, from_location: prison1, date: Date.today) }
-    let!(:move5) { create(:move, :prison_transfer, to_location: prison2, date: Date.today) }
-    let!(:move6) { create(:move, :prison_transfer, from_location: prison1, date: Date.tomorrow) }
     let!(:population1) { create(:population, location: prison1, date: Date.today) } # Included
     let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
     let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) } # Included
     let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) } # Included
     let!(:population5) { create(:population, location: prison1, date: Date.today - 2) } # Falls outside scope of dates, so not included
+
+    let(:prison1) { create(:location, :prison) }
+    let(:prison2) { create(:location, :prison) }
     let(:date_range) { (Date.yesterday..Date.tomorrow) }
     let(:locations) { Location.where(id: [prison1.id, prison2.id]) }
 
@@ -285,6 +280,15 @@ RSpec.describe Population do
           },
         ],
       }
+    end
+
+    before do
+      create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)
+      create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)
+      create(:move, :prison_transfer, to_location: prison1, date: Date.yesterday)
+      create(:move, :prison_transfer, from_location: prison1, date: Date.today)
+      create(:move, :prison_transfer, to_location: prison2, date: Date.today)
+      create(:move, :prison_transfer, from_location: prison1, date: Date.tomorrow)
     end
 
     it 'returns hashed array of free space details by location id' do

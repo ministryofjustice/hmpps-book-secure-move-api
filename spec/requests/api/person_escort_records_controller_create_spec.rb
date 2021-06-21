@@ -4,11 +4,11 @@ require 'rails_helper'
 
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'POST /person_escort_records' do
-    include_context 'with supplier with spoofed access token'
-
     subject(:post_person_escort_record) do
       post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
     end
+
+    include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:person) { create(:person) }

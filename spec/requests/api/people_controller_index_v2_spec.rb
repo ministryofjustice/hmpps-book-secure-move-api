@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-# TODO: this class will be renamed to Api::PeopleController
 RSpec.describe Api::PeopleController do
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }

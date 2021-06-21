@@ -11,7 +11,7 @@ class SupplierLocation < ApplicationRecord
   scope :effective_to, ->(date) { where(effective_to: nil).or(where('effective_to >= ?', date)) }
   scope :effective_on, ->(date) { effective_from(date).effective_to(date) }
 
-  def self.link_locations(effective_from: nil, effective_to: nil, supplier:, locations:)
+  def self.link_locations(supplier:, locations:, effective_from: nil, effective_to: nil)
     locations.each do |location|
       create!(effective_from: effective_from, effective_to: effective_to, supplier: supplier, location: location)
     end
@@ -20,10 +20,8 @@ class SupplierLocation < ApplicationRecord
 private
 
   def effective_to_after_effective_from
-    if effective_from.present? && effective_to.present?
-      if effective_to < effective_from
-        errors.add(:effective_to, 'must be after effective from')
-      end
+    if effective_from.present? && effective_to.present? && (effective_to < effective_from)
+      errors.add(:effective_to, 'must be after effective from')
     end
   end
 end

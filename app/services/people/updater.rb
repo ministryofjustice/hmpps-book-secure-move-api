@@ -8,6 +8,7 @@ module People
       @person = person
       @profile = person.latest_profile
       @params = params
+      super(params)
     end
 
     def call
