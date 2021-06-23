@@ -5,5 +5,7 @@ RSpec.shared_examples 'an event with eventable types' do |*types|
     end
   end
 
-  it { is_expected.to validate_inclusion_of(:eventable_type).in_array(types) }
+  # NB: the shoulda matcher validate_inclusion_of mutates the subject during the test; so use an unsaved subject
+  # (build vs create) to avoid low-level "wrong constant name shoulda-matchers test string" rspec problems
+  it { expect(subject).to validate_inclusion_of(:eventable_type).in_array(types) }
 end
