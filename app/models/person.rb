@@ -41,9 +41,7 @@ class Person < VersionedModel
 
   def age
     # See: https://medium.com/@craigsheen/calculating-age-in-rails-9bb661f11303
-    # rubocop:disable Rails/Date
-    @age ||= ((Time.zone.now - date_of_birth.to_time) / 1.year.seconds).floor if date_of_birth.present?
-    # rubocop:enable Rails/Date
+    @age ||= (TimeSince.new(date_of_birth.in_time_zone).get / 1.year.seconds).floor if date_of_birth.present?
   end
 
   def latest_profile
