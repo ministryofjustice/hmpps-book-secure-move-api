@@ -125,7 +125,6 @@ class Move < VersionedModel
   has_state_machine MoveStateMachine, on: :status
 
   delegate :accept,
-           :start,
            :complete,
            :proposed?,
            :requested?,
@@ -170,6 +169,23 @@ class Move < VersionedModel
   def reject!(args)
     reject(args)
     save!
+  end
+
+  def start
+    # if the move is being started and the PER is completed but not yet confirmed, then auto-confirm it
+    # move started
+    if state_machine.start && (person_escort_record.present? && person_escort_record.completed?)
+      now = Time.zone.now
+
+      person_escort_record.generic_events << GenericEvent::PerConfirmation.new(
+        occurred_at: now,
+        recorded_at: now,
+        notes: 'Automatically confirmed on move start',
+        details: { confirmed_at: now },
+      )
+      person_escort_record.confirm!(FrameworkAssessmentable::ASSESSMENT_CONFIRMED)
+      Notifier.prepare_notifications(topic: person_escort_record, action_name: 'confirm_person_escort_record')
+    end
   end
 
   def infer_status_transition(new_status, cancellation_reason: nil, cancellation_reason_comment: nil, rejection_reason: nil, date: nil)
