@@ -31,7 +31,8 @@ module Locations
     end
 
     def apply_filters(scope)
-      scope = scope.where(filter_params.slice(:location_type, :nomis_agency_id))
+      scope = apply_location_type_filters(scope)
+      scope = apply_nomis_agency_filters(scope)
       scope = apply_supplier_filters(scope)
       scope = apply_location_filters(scope)
       scope = apply_region_filters(scope)
@@ -43,6 +44,16 @@ module Locations
       return if filter_params[name].blank?
 
       filter_params[name].split(',')
+    end
+
+    def apply_location_type_filters(scope)
+      scope = scope.where(location_type: split_params(:location_type)) if filter_params.key?(:location_type)
+      scope
+    end
+
+    def apply_nomis_agency_filters(scope)
+      scope = scope.where(nomis_agency_id: split_params(:nomis_agency_id)) if filter_params.key?(:nomis_agency_id)
+      scope
     end
 
     def apply_supplier_filters(scope)
