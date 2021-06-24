@@ -30,8 +30,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db/hmpps-book-secure-move-api
       - SECRET_KEY_BASE=h463472fhaa91f4a277002e9652f86f330e636358e2090d86ab4a4f06845ege1
       - SERVE_API_DOCS=true
-      - AWS_ACCESS_KEY_ID=fakeid
-      - AWS_SECRET_ACCESS_KEY=fakesecret
+      - S3_ACCESS_KEY_ID=fakeid
+      - S3_SECRET_ACCESS_KEY=fakesecret
       - S3_BUCKET_NAME=apibook-a-secure-move-documents-s3-bucket
       - S3_BACKEND=http://s3:4572
     ports:

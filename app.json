@@ -19,7 +19,7 @@
       "description": "Private secrete access key for AWS S3 storage",
       "required": true
     },
-    "S3_BUCKET_NAME": {
+    "S3_REPORTING_BUCKET_NAME": {
       "description": "Name of the storage bucket to use on AWS S3",
       "required": true
     },
