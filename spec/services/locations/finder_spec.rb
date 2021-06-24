@@ -13,15 +13,55 @@ RSpec.describe Locations::Finder do
 
   let(:supplier) { create(:supplier) }
   let(:region) { create(:region) }
-  let(:location1) { create(:location) }
-  let(:location2) { create(:location) }
-  let(:other_location) { create(:location) }
+  let(:location1) { create(:location, :court, nomis_agency_id: 'COURT001') }
+  let(:location2) { create(:location, :prison, nomis_agency_id: 'PRISON002') }
+  let(:other_location) { create(:location, :police, nomis_agency_id: 'POLICE003') }
 
   let(:sort_params) { {} }
   let(:filter_params) { {} }
   let(:active_record_relationships) { [] }
 
   describe 'filtering' do
+    context 'with location_type and nomis_agency filters' do
+      before do
+        location1
+        location2
+        other_location
+      end
+
+      context 'with a single location_type' do
+        let(:filter_params) { { location_type: 'court' } }
+
+        it 'returns locations with matching location_type' do
+          expect(location_finder.call.pluck(:id)).to contain_exactly(location1.id)
+        end
+      end
+
+      context 'with multiple location_types' do
+        let(:filter_params) { { location_type: 'prison,court' } }
+
+        it 'returns locations with matching location_type' do
+          expect(location_finder.call.pluck(:id)).to match_array([location1.id, location2.id])
+        end
+      end
+
+      context 'with a single nomis_agency' do
+        let(:filter_params) { { nomis_agency_id: 'COURT001' } }
+
+        it 'returns locations with matching nomis_agency_id' do
+          expect(location_finder.call.pluck(:id)).to contain_exactly(location1.id)
+        end
+      end
+
+      context 'with multiple nomis_agencies' do
+        let(:filter_params) { { nomis_agency_id: 'COURT001,PRISON002' } }
+
+        it 'returns locations with matching nomis_agency_id' do
+          expect(location_finder.call.pluck(:id)).to match_array([location1.id, location2.id])
+        end
+      end
+    end
+
     context 'with a supplier' do
       let(:filter_params) { { supplier_id: supplier.id } }
 
