@@ -101,7 +101,7 @@ RSpec.describe GenericEvent, type: :model do
 
       actual_events = described_class.updated_at_range(updated_at_from, updated_at_to)
 
-      expect(actual_events).to eq([on_start_event, on_end_event])
+      expect(actual_events).to match_array([on_start_event, on_end_event])
     end
   end
 
@@ -117,7 +117,7 @@ RSpec.describe GenericEvent, type: :model do
 
       actual_events = described_class.created_at_range(created_at_from, created_at_to)
 
-      expect(actual_events).to eq([on_start_event, on_end_event])
+      expect(actual_events).to match_array([on_start_event, on_end_event])
     end
   end
 
