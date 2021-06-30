@@ -102,6 +102,18 @@ RSpec.describe PersonEscortRecord do
       expect(assessment.handover_details).to eq({ 'foo' => 'bar' })
     end
 
+    it 'stores handover_details on an already-confirmed PER if provided' do
+      assessment = create(:person_escort_record, :confirmed)
+      assessment.confirm!('confirmed', { foo: 'bar' })
+
+      expect(assessment.handover_details).to eq({ 'foo' => 'bar' })
+    end
+
+    it 'throws an error if attempting to re-confirm an already confirmed PER without handover details' do
+      assessment = create(:person_escort_record, :confirmed)
+      expect { assessment.confirm!('confirmed', nil) }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     it 'does not store handover_details if blank' do
       assessment = create(:person_escort_record, :completed)
       assessment.confirm!('confirmed', {})

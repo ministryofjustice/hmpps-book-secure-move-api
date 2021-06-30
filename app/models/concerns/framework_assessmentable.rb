@@ -86,7 +86,7 @@ module FrameworkAssessmentable
   def confirm!(new_status, handover_details = nil, handover_occurred_at = nil)
     return unless new_status == ASSESSMENT_CONFIRMED
 
-    state_machine.confirm!
+    state_machine.confirm! unless state_machine.confirmed? && (handover_details.present? || handover_occurred_at.present?)
     self.handover_details = handover_details if handover_details.present? && respond_to?(:handover_details)
     self.handover_occurred_at = handover_occurred_at if handover_occurred_at.present? && respond_to?(:handover_occurred_at)
     save!
