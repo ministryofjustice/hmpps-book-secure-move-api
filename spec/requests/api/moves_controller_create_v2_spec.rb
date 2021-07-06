@@ -617,6 +617,14 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'when the profile has no prisoner category' do
+      let(:profile) { create(:profile, category: nil) }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+    end
+
     context 'when the profile is for an unsupported prisoner category' do
       let(:profile) { create(:profile, :category_not_supported) }
       let(:category_key) { profile.category.key.humanize.downcase }
