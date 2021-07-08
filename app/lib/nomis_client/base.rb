@@ -76,10 +76,8 @@ module NomisClient
                                extra: {
                                  route: path,
                                  body_params: params,
-                                 nomis_response: {
-                                   status: exception.response.status,
-                                   body: exception.response.body,
-                                 },
+                                 nomis_response_status: exception.response.status,
+                                 nomis_response_body: exception.response.body,
                                },
                                level: 'error')
       end

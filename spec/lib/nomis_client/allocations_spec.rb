@@ -35,7 +35,8 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
             extra: {
               body_params: {},
               route: '/bookings/1111/prison-to-prison',
-              nomis_response: { body: '{}', status: 500 },
+              nomis_response_status: 500,
+              nomis_response_body: '{}',
             },
             level: 'error',
           }
@@ -77,7 +78,8 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
             extra: {
               body_params: {},
               route: '/bookings/1111/prison-to-prison/2222/cancel',
-              nomis_response: { body: '{}', status: 500 },
+              nomis_response_status: 500,
+              nomis_response_body: '{}',
             },
             level: 'error',
           }
