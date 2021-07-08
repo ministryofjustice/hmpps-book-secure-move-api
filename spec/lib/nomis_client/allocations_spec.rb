@@ -37,6 +37,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
               route: '/bookings/1111/prison-to-prison',
               nomis_response_status: 500,
               nomis_response_body: '{}',
+              nomis_response_message: nil,
             },
             level: 'error',
           }
@@ -70,6 +71,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
       end
 
       let(:response_status) { 500 }
+      let(:response_body) { { developerMessage: 'An error message.' }.to_json }
 
       include_examples 'captures a message in Sentry' do
         let(:sentry_message) { 'Allocations::RemoveFromNomis Error!' }
@@ -79,7 +81,8 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
               body_params: {},
               route: '/bookings/1111/prison-to-prison/2222/cancel',
               nomis_response_status: 500,
-              nomis_response_body: '{}',
+              nomis_response_body: '{"developerMessage":"An error message."}',
+              nomis_response_message: 'An error message.',
             },
             level: 'error',
           }

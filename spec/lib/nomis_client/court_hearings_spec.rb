@@ -51,6 +51,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
       end
 
       let(:response_status) { 500 }
+      let(:response_body) { { developerMessage: 'An error message.' }.to_json }
 
       include_examples 'captures a message in Sentry' do
         let(:sentry_message) { 'CourtHearings::CreateInNomis Error!' }
@@ -60,7 +61,8 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
               body_params: {},
               route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
               nomis_response_status: 500,
-              nomis_response_body: '{}',
+              nomis_response_body: '{"developerMessage":"An error message."}',
+              nomis_response_message: 'An error message.',
             },
             level: 'error',
           }
