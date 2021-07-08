@@ -71,17 +71,30 @@ module NomisClient
         }.deep_merge(params)
       end
 
+      def sentry_extra(path, params, exception)
+        response = exception.response
+
+        message = begin
+          ActiveSupport::JSON.decode(response.body)['developerMessage']
+        rescue StandardError
+          nil
+        end
+
+        {
+          route: path,
+          body_params: params,
+          nomis_response_status: response.status,
+          nomis_response_body: response.body,
+          nomis_response_message: message,
+        }
+      end
+
       def log_exception(description, path, params, exception)
-        Sentry.capture_message(description,
-                               extra: {
-                                 route: path,
-                                 body_params: params,
-                                 nomis_response: {
-                                   status: exception.response.status,
-                                   body: exception.response.body,
-                                 },
-                               },
-                               level: 'error')
+        Sentry.capture_message(
+          description,
+          extra: sentry_extra(path, params, exception),
+          level: 'error',
+        )
       end
     end
   end

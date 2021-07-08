@@ -213,40 +213,45 @@ RSpec.describe FrameworkNomisMappings::Importer do
   end
 
   context 'when logging errors' do
-    it 'pushes an error warning to Sentry when validation fails on persisting NOMIS mappings' do
-      nomis_alert = { comment: 'Some comment', expired: false, active: true }
-      allow(Sentry).to receive(:capture_message)
-      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    subject { described_class.new(assessmentable: person_escort_record).call }
 
-      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-      described_class.new(assessmentable: person_escort_record).call
-
-      sentry_args = [
-        'FrameworkNomisMapping import validation Error',
-        { extra: {
-          id: person_escort_record.id,
-          params: [{ code: ["can't be blank"] }],
-        },
-          level: 'error' },
-      ]
-
-      expect(Sentry).to have_received(:capture_message).with(*sentry_args)
+    let(:person_escort_record) do
+      create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
     end
 
-    it 'pushes an error warning to Sentry when a NOMIS resource is new' do
-      allow(Sentry).to receive(:capture_message)
-      person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
-      described_class.new(assessmentable: person_escort_record).call
-      personal_care_need = [
-        'New NOMIS codes imported',
-        { extra: {
-          id: person_escort_record.id,
-          params: [{ code: 'PEEP', type: 'personal_care_need' }],
-        },
-          level: 'error' },
-      ]
+    context 'when validation fails on persisting NOMIS mappings' do
+      before do
+        nomis_alert = { comment: 'Some comment', expired: false, active: true }
+        allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+      end
 
-      expect(Sentry).to have_received(:capture_message).with(*personal_care_need).once
+      include_examples 'captures a message in Sentry' do
+        let(:sentry_message) { 'FrameworkNomisMapping import validation Error' }
+        let(:sentry_options) do
+          {
+            extra: {
+              id: person_escort_record.id,
+              params: [{ code: ["can't be blank"] }],
+            },
+            level: 'error',
+          }
+        end
+      end
+    end
+
+    context 'when a NOMIS resource is new' do
+      include_examples 'captures a message in Sentry' do
+        let(:sentry_message) { 'New NOMIS codes imported' }
+        let(:sentry_options) do
+          {
+            extra: {
+              id: person_escort_record.id,
+              params: [{ code: 'PEEP', type: 'personal_care_need' }],
+            },
+            level: 'error',
+          }
+        end
+      end
     end
   end
 
