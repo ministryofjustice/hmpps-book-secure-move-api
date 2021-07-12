@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.1.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.6) (2021-07-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.5...v3.1.6)
+
+**Merged pull requests:**
+
+- Improve additional data for Prison API Sentry errors [\#1494](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1494) ([thomasleese](https://github.com/thomasleese))
+- Add a test for when a profile has no category [\#1491](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1491) ([thomasleese](https://github.com/thomasleese))
+- fix to allow an autoconfirmed PER to be handed over [\#1488](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1488) ([martyn-w](https://github.com/martyn-w))
+
+## [v3.1.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.5) (2021-06-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.4...v3.1.5)
+
+**Merged pull requests:**
+
+- Bump faraday from 1.4.2 to 1.4.3 [\#1487](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1487) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Changelog v3.1.4 [\#1486](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1486) ([martyn-w](https://github.com/martyn-w))
+- \[P4-2923\] Convert feed rake tasks to sidekiq jobs [\#1483](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1483) ([Thource](https://github.com/Thource))
+
 ## [v3.1.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.4) (2021-06-24)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.3...v3.1.4)
