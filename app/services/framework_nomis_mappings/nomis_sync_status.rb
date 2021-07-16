@@ -28,5 +28,13 @@ module FrameworkNomisMappings
         message: message,
       }
     end
+
+    def is_success?
+      status == SUCCESS
+    end
+
+    def is_failure?
+      status == FAILED
+    end
   end
 end

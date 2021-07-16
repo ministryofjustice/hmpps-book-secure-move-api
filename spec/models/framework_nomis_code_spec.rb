@@ -7,7 +7,7 @@ RSpec.describe FrameworkNomisCode do
 
   it { is_expected.to have_and_belong_to_many(:framework_questions) }
   it { is_expected.to validate_presence_of(:code_type) }
-  it { is_expected.to validate_inclusion_of(:code_type).in_array(%w[alert personal_care_need reasonable_adjustment]) }
+  it { is_expected.to validate_inclusion_of(:code_type).in_array(%w[alert assessment personal_care_need reasonable_adjustment]) }
 
   context 'when fallback false' do
     it { is_expected.to validate_presence_of(:code) }
