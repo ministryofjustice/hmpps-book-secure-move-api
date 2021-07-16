@@ -19,6 +19,11 @@ RSpec.describe FrameworkNomisMappings::NomisSyncStatus do
     it 'sets the synced_at timestamp' do
       expect(nomis_sync_status.synced_at).to eq(sync_date)
     end
+
+    it 'is marked as a success' do
+      expect(nomis_sync_status.is_success?).to be(true)
+      expect(nomis_sync_status.is_failure?).to be(false)
+    end
   end
 
   describe '#set_failure' do
@@ -34,6 +39,11 @@ RSpec.describe FrameworkNomisMappings::NomisSyncStatus do
 
     it 'sets the synced_at timestamp' do
       expect(nomis_sync_status.synced_at).to eq(sync_date)
+    end
+
+    it 'is marked as a failure' do
+      expect(nomis_sync_status.is_failure?).to be(true)
+      expect(nomis_sync_status.is_success?).to be(false)
     end
 
     context 'with a message' do
