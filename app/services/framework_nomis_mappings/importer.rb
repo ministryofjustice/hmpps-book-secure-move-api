@@ -33,12 +33,13 @@ module FrameworkNomisMappings
         alert_mappings.nomis_sync_status,
         personal_care_need_mappings.nomis_sync_status,
         reasonable_adjust_mappings.nomis_sync_status,
+        assessment_mappings.nomis_sync_status,
       ]
     end
 
     def persist_framework_nomis_mappings
       @persist_framework_nomis_mappings ||= begin
-        mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call
+        mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call + assessment_mappings.call
         import = FrameworkNomisMapping.import(mappings, all_or_none: true)
 
         log_exception('FrameworkNomisMapping import validation Error', import.failed_instances.map { |mapping| mapping.errors.messages }) if import.failed_instances.any?
@@ -60,6 +61,10 @@ module FrameworkNomisMappings
         booking_id: person.latest_nomis_booking_id,
         nomis_codes: grouped_framework_nomis_codes['reasonable_adjustment'],
       )
+    end
+
+    def assessment_mappings
+      @assessment_mappings ||= FrameworkNomisMappings::Assessments.new(booking_id: person.latest_nomis_booking_id)
     end
 
     def grouped_framework_nomis_codes
