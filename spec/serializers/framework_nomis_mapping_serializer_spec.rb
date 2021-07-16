@@ -51,4 +51,12 @@ RSpec.describe FrameworkNomisMappingSerializer do
   it 'contains a `expiry_date` attribute' do
     expect(result[:data][:attributes][:expiry_date]).to eq(framework_nomis_mapping.expiry_date.iso8601)
   end
+
+  it 'contains a `approval_date` attribute' do
+    expect(result[:data][:attributes][:approval_date]).to eq(framework_nomis_mapping.approval_date)
+  end
+
+  it 'contains a `next_review_date` attribute' do
+    expect(result[:data][:attributes][:next_review_date]).to eq(framework_nomis_mapping.next_review_date)
+  end
 end
