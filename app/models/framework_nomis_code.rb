@@ -3,6 +3,7 @@
 class FrameworkNomisCode < VersionedModel
   enum code_type: {
     alert: 'alert',
+    assessment: 'assessment',
     personal_care_need: 'personal_care_need',
     reasonable_adjustment: 'reasonable_adjustment',
   }
