@@ -3,53 +3,60 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkNomisMappings::NomisSyncStatus do
-  describe '#set_success' do
-    it 'sets the `status` as "success"' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      nomis_sync_status.set_success
+  subject(:nomis_sync_status) { described_class.new(resource_type: 'some_resource') }
 
+  let(:sync_date) { Time.zone.local(2020, 1, 1) }
+
+  describe '#set_success' do
+    before do
+      travel_to(sync_date) { nomis_sync_status.set_success }
+    end
+
+    it 'sets the status to success' do
       expect(nomis_sync_status.status).to eq(described_class::SUCCESS)
     end
 
-    it 'sets the `synced_at` timestamp' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      sync_at_timstamp = Time.zone.now
-      allow(Time).to receive(:now).and_return(sync_at_timstamp)
-      nomis_sync_status.set_success
+    it 'sets the synced_at timestamp' do
+      expect(nomis_sync_status.synced_at).to eq(sync_date)
+    end
 
-      expect(nomis_sync_status.synced_at).to eq(sync_at_timstamp)
+    it 'is marked as a success' do
+      expect(nomis_sync_status.is_success?).to be(true)
+      expect(nomis_sync_status.is_failure?).to be(false)
     end
   end
 
   describe '#set_failure' do
-    it 'sets the `status` as "failed"' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      nomis_sync_status.set_failure
+    let(:message) { nil }
 
+    before do
+      travel_to(sync_date) { nomis_sync_status.set_failure(message: message) }
+    end
+
+    it 'sets the status to success' do
       expect(nomis_sync_status.status).to eq(described_class::FAILED)
     end
 
-    it 'sets the `synced_at` timestamp' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      sync_at_timstamp = Time.zone.now
-      allow(Time).to receive(:now).and_return(sync_at_timstamp)
-      nomis_sync_status.set_failure
-
-      expect(nomis_sync_status.synced_at).to eq(sync_at_timstamp)
+    it 'sets the synced_at timestamp' do
+      expect(nomis_sync_status.synced_at).to eq(sync_date)
     end
 
-    it 'sets the error `message`' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      nomis_sync_status.set_failure(message: 'BOOM!')
+    it 'is marked as a failure' do
+      expect(nomis_sync_status.is_failure?).to be(true)
+      expect(nomis_sync_status.is_success?).to be(false)
+    end
 
-      expect(nomis_sync_status.message).to eq('BOOM!')
+    context 'with a message' do
+      let(:message) { 'Boom!' }
+
+      it 'sets the error message' do
+        expect(nomis_sync_status.message).to eq('Boom!')
+      end
     end
   end
 
   describe '#as_json' do
     it 'returns the attributes of nomis sync status as json' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-
       expect(nomis_sync_status.as_json).to eq(
         resource_type: 'some_resource',
         status: nil,
@@ -58,18 +65,19 @@ RSpec.describe FrameworkNomisMappings::NomisSyncStatus do
       )
     end
 
-    it 'returns the attributes of nomis sync status if set as json' do
-      nomis_sync_status = described_class.new(resource_type: 'some_resource')
-      sync_at_timstamp = Time.zone.now
-      allow(Time).to receive(:now).and_return(sync_at_timstamp)
-      nomis_sync_status.set_success
+    context 'with a success' do
+      before do
+        travel_to(sync_date) { nomis_sync_status.set_success }
+      end
 
-      expect(nomis_sync_status.as_json).to eq(
-        resource_type: 'some_resource',
-        status: described_class::SUCCESS,
-        synced_at: sync_at_timstamp,
-        message: nil,
-      )
+      it 'returns the attributes of nomis sync status if set as json' do
+        expect(nomis_sync_status.as_json).to eq(
+          resource_type: 'some_resource',
+          status: described_class::SUCCESS,
+          synced_at: sync_date,
+          message: nil,
+        )
+      end
     end
   end
 end
