@@ -31,6 +31,14 @@ RSpec.describe Api::PeopleController do
       end
     end
 
+    context 'when called with an array of filters' do
+      let(:params) { { filter: %w[a] } }
+
+      before { get_people }
+
+      it_behaves_like 'an endpoint that responds with success 200'
+    end
+
     context 'when called with police_national_computer filter' do
       let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
 

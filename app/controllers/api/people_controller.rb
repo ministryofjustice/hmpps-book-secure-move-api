@@ -109,7 +109,7 @@ module Api
     end
 
     def filter_params
-      params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+      params.permit(filter: {}).permit(filter: PERMITTED_FILTER_PARAMS).to_h.fetch(:filter, {})
     end
   end
 end
