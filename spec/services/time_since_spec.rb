@@ -19,6 +19,7 @@ RSpec.describe TimeSince do
     it 'returns the correct value' do
       time_since = described_class.new(Time.zone.local(2020, 12, 30))
       expect(time_since.get).to eq(2.days.seconds)
+      expect(time_since.get(Time.zone.local(2020, 12, 31))).to eq(1.day.seconds)
     end
   end
 end
