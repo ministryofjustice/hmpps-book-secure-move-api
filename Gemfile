@@ -16,6 +16,7 @@ end
 
 gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
 gem 'auto_strip_attributes', '~> 2.6'
+gem 'aws-sdk-athena'
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -47,6 +48,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sidekiq'
+gem 'slack-ruby-client'
 gem 'uk_postcode', '~> 2'
 gem 'validate_url', '~> 1.0.8'
 
