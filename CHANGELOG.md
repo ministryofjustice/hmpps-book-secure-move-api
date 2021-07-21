@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.2.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.2.0) (2021-07-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.6...v3.2.0)
+
+**Merged pull requests:**
+
+- Avoid NoMethodError with an array filter [\#1502](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1502) ([thomasleese](https://github.com/thomasleese))
+- Bump activerecord-import from 1.1.0 to 1.2.0 [\#1501](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1501) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Import assessments from NOMIS [\#1500](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1500) ([thomasleese](https://github.com/thomasleese))
+- Bump addressable from 2.7.0 to 2.8.0 [\#1499](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1499) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update changelog for v3.1.6 [\#1498](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1498) ([thomasleese](https://github.com/thomasleese))
+- Bump shoulda-matchers from 4.5.1 to 5.0.0 [\#1497](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1497) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.4.3 to 1.5.1 [\#1496](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1496) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.21.0 to 0.22.0 [\#1495](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1495) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump git from 1.8.1 to 1.9.1 [\#1493](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1493) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prometheus\_exporter from 0.7.0 to 0.8.0 [\#1489](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1489) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.1.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.1.6) (2021-07-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.5...v3.1.6)
