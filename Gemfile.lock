@@ -92,6 +92,9 @@ GEM
       activerecord (>= 4.0)
     aws-eventstream (1.1.1)
     aws-partitions (1.479.0)
+    aws-sdk-athena (1.37.0)
+      aws-sdk-core (~> 3, >= 3.112.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-core (3.117.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -163,6 +166,8 @@ GEM
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
+    faraday_middleware (1.0.0)
+      faraday (~> 1.0)
     ffi (1.15.3)
     fiber-local (1.0.0)
     finite_machine (0.14.0)
@@ -184,11 +189,13 @@ GEM
       octokit (~> 4.6)
       rainbow (>= 2.2.1)
       rake (>= 10.0)
+    gli (2.20.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     govuk_notify_rails (2.1.2)
       notifications-ruby-client (~> 5.1)
       rails (>= 4.1.0)
+    hashie (4.1.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
@@ -416,6 +423,12 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.2)
+    slack-ruby-client (0.17.0)
+      faraday (>= 1.0)
+      faraday_middleware
+      gli
+      hashie
+      websocket-driver
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -454,6 +467,7 @@ DEPENDENCIES
   activerecord-import (~> 1.0, >= 1.0.5)
   appinsights!
   auto_strip_attributes (~> 2.6)
+  aws-sdk-athena
   aws-sdk-s3
   bcrypt
   bootsnap (>= 1.1.0)
@@ -510,6 +524,7 @@ DEPENDENCIES
   shoulda-matchers
   sidekiq
   simplecov
+  slack-ruby-client
   spring
   spring-watcher-listen
   timecop

@@ -139,7 +139,7 @@ FactoryBot.define do
 
     trait :with_journey do
       after(:create) do |move|
-        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move)
+        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move, supplier: move.supplier)
       end
     end
 

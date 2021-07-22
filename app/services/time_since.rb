@@ -3,8 +3,8 @@ class TimeSince
     @start = start
   end
 
-  def get
-    (Time.zone.now - @start).seconds
+  def get(time = Time.zone.now)
+    (time - @start).seconds
   end
 
   def reset
