@@ -18,7 +18,8 @@ private
 
   def post_results(results)
     formatted_date_range = "#{@date_range.first.strftime('%Y/%m/%d')} - #{@date_range.last.strftime('%Y/%m/%d')}"
-    payload = {
+
+    Slack::Notifier.new(ENV['SLACK_WEBHOOK']).post({
       blocks: [
         {
           type: 'header',
@@ -27,36 +28,32 @@ private
         { type: 'divider' },
         *results.each_with_index.map { |res, i| generate_block(SUPPLIERS[i], res) },
       ],
-      channel: ENV['SLACK_CHANNEL'],
-    }
-
-    slack_client.chat_postMessage(payload)
-    results.each_with_index.map { |res, i| post_failure_file(SUPPLIERS[i], res) }
+    })
   end
 
-  def post_failure_file(supplier, results)
-    failures = results[:failures]
-    return if failures.empty?
+  # Commented out for retention, this will be used after some thought is put into how the suppliers will be able to access it
+  #
+  # def failure_csv_content(results)
+  #   failures = results[:failures]
+  #   return if failures.empty?
 
-    reasons = failures.map { |r| r[:reason] }.uniq
-    failure_rows = reasons.each_with_index.each_with_object([]) do |(reason, reason_i), returned_rows|
-      failures.filter { |f| f[:reason] == reason }.each_with_index do |failure, failure_i|
-        returned_rows[failure_i] = [] if returned_rows[failure_i].nil?
+  #   reasons = failures.map { |r| r[:reason] }.uniq
+  #   failure_rows = reasons.each_with_index.each_with_object([]) do |(reason, reason_i), returned_rows|
+  #     failures.filter { |f| f[:reason] == reason }.each_with_index do |failure, failure_i|
+  #       returned_rows[failure_i] = [] if returned_rows[failure_i].nil?
 
-        returned_rows[failure_i][reason_i] = failure[:move].id
-      end
-    end
+  #       returned_rows[failure_i][reason_i] = failure[:move].id
+  #     end
+  #   end
 
-    content = <<~STR
-      reasons,#{reasons.join(',')}
-      occurrences,#{reasons.map { |reason| failures.count { |failure| failure[:reason] == reason } }.join(',')}
+  #   <<~STR
+  #     reasons,#{reasons.join(',')}
+  #     occurrences,#{reasons.map { |reason| failures.count { |failure| failure[:reason] == reason } }.join(',')}
 
-      move ids
-      #{failure_rows.map { |fr| ",#{fr.join(',')}" }.join("\n")}
-    STR
-
-    slack_client.files_upload(filename: "#{supplier}_failures.csv", content: content, channels: ENV['SLACK_CHANNEL'])
-  end
+  #     move ids
+  #     #{failure_rows.map { |fr| ",#{fr.join(',')}" }.join("\n")}
+  #   STR
+  # end
 
   def generate_block(supplier, results)
     failures = results[:failures]
@@ -89,9 +86,5 @@ private
         emoji: true,
       },
     }
-  end
-
-  def slack_client
-    @slack_client ||= Slack::Web::Client.new(token: ENV['SLACK_APP_TOKEN'])
   end
 end
