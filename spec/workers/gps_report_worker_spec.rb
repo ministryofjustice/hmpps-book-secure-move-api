@@ -9,7 +9,7 @@ RSpec.describe GPSReportWorker, type: :worker do
       serco: instance_double(GPSReport),
     }
   end
-  let(:slack_client) { instance_double(Slack::Web::Client) }
+  let(:slack_notifier) { instance_double(Slack::Notifier) }
 
   around do |example|
     Timecop.freeze('2021-01-02 00:00:00')
@@ -20,10 +20,8 @@ RSpec.describe GPSReportWorker, type: :worker do
   before do
     allow(GPSReport).to receive(:new).with(anything, 'geoamey').and_return(gps_reports[:geoamey])
     allow(GPSReport).to receive(:new).with(anything, 'serco').and_return(gps_reports[:serco])
-    allow(Slack::Web::Client).to receive(:new).and_return(slack_client)
-    allow(slack_client).to receive(:chat_postMessage)
-    allow(slack_client).to receive(:files_upload)
-    stub_const('ENV', { 'SLACK_CHANNEL' => '#env_channel' })
+    allow(Slack::Notifier).to receive(:new).and_return(slack_notifier)
+    allow(slack_notifier).to receive(:post)
   end
 
   context 'when geoamey passes and serco fails' do
@@ -53,34 +51,6 @@ RSpec.describe GPSReportWorker, type: :worker do
             },
           },
         ],
-        channel: '#env_channel',
-      }
-    end
-    let(:files) do
-      {
-        geoamey: {
-          filename: 'geoamey_failures.csv',
-          content: <<~STR,
-            reasons,no_gps_data
-            occurrences,1
-
-            move ids
-            ,#{move.id}
-          STR
-          channels: '#env_channel',
-        },
-        serco: {
-          filename: 'serco_failures.csv',
-          content: <<~STR,
-            reasons,no_journeys,no_gps_data
-            occurrences,1,2
-
-            move ids
-            ,#{move.id},#{move.id}
-            ,,#{move.id}
-          STR
-          channels: '#env_channel',
-        },
       }
     end
 
@@ -98,12 +68,7 @@ RSpec.describe GPSReportWorker, type: :worker do
     end
 
     it 'posts the expected results message to slack' do
-      expect(slack_client).to have_received(:chat_postMessage).with(chat_data)
-    end
-
-    it 'posts the expected results files to slack' do
-      expect(slack_client).to have_received(:files_upload).with(files[:geoamey])
-      expect(slack_client).to have_received(:files_upload).with(files[:serco])
+      expect(slack_notifier).to have_received(:post).with(chat_data)
     end
   end
 end

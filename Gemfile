@@ -48,7 +48,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sidekiq'
-gem 'slack-ruby-client'
+gem 'slack-notifier'
 gem 'uk_postcode', '~> 2'
 gem 'validate_url', '~> 1.0.8'
 
