@@ -42,6 +42,15 @@ module Moves
       end
     end
 
+    SIMPLE_FIELD_FILTERS = %i[
+      supplier_id
+      status
+      move_type
+      cancellation_reason
+      rejection_reason
+      profile_id
+    ].freeze
+
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
       scope = apply_date_range_filters(scope)
@@ -50,11 +59,7 @@ module Moves
       scope = apply_location_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
-      scope = apply_filter(scope, :supplier_id)
-      scope = apply_filter(scope, :status)
-      scope = apply_filter(scope, :move_type)
-      scope = apply_filter(scope, :cancellation_reason)
-      apply_filter(scope, :rejection_reason)
+      SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
     end
 
     def split_params(name)
