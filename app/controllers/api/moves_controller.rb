@@ -13,10 +13,7 @@ module Api
     end
 
     def csv
-      csv_moves = Moves::Finder.new(filter_params: filter_params,
-                                    ability: current_ability,
-                                    order_params: params[:sort] || {},
-                                    active_record_relationships: CSV_INCLUDES).call
+      csv_moves = find_moves(active_record_relationships: CSV_INCLUDES)
       send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
@@ -38,11 +35,17 @@ module Api
 
   private
 
+    def find_moves(active_record_relationships:)
+      Moves::Finder.new(
+        filter_params: filter_params,
+        ability: current_ability,
+        order_params: params[:sort] || {},
+        active_record_relationships: active_record_relationships,
+      ).call
+    end
+
     def moves
-      @moves ||= Moves::Finder.new(filter_params: filter_params,
-                                   ability: current_ability,
-                                   order_params: params[:sort] || {},
-                                   active_record_relationships: active_record_relationships).call
+      @moves ||= find_moves(active_record_relationships: active_record_relationships)
     end
 
     def validate_filter_params
