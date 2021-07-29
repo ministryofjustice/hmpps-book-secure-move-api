@@ -286,5 +286,14 @@ RSpec.describe Api::MovesController do
 
       it_behaves_like 'an api that filters moves correctly'
     end
+
+    describe 'by reference' do
+      let(:reference) { SecureRandom.uuid }
+      let(:filter_params) { { filter: { reference: reference } } }
+      let(:expected_moves) { create_list :move, 1, reference: reference }
+      let(:unexpected_moves) { create_list :move, 1 }
+
+      it_behaves_like 'an api that filters moves correctly'
+    end
   end
 end

@@ -597,5 +597,35 @@ RSpec.describe Moves::Finder do
         end
       end
     end
+
+    describe 'by reference' do
+      let(:reference) { SecureRandom.uuid }
+      let!(:move) { create :move, reference: reference }
+
+      context 'with matching profile filter' do
+        let(:filter_params) { { reference: reference } }
+
+        it 'returns moves matching the profile' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two profile filters' do
+        let(:second_move) { create :move }
+        let(:filter_params) { { reference: [reference, second_move.reference] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { reference: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
   end
 end

@@ -72,6 +72,7 @@ module Api
       ready_for_transit
       profile_id
       person_id
+      reference
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [

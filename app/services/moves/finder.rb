@@ -49,6 +49,7 @@ module Moves
       cancellation_reason
       rejection_reason
       profile_id
+      reference
     ].freeze
 
     def apply_filters(scope)
