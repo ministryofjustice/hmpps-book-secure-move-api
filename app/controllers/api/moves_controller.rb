@@ -53,7 +53,23 @@ module Api
     end
 
     PERMITTED_FILTER_PARAMS = %i[
-      date_from date_to created_at_from created_at_to date_of_birth_from date_of_birth_to location_type status from_location_id to_location_id location_id supplier_id move_type cancellation_reason rejection_reason has_relationship_to_allocation ready_for_transit
+      date_from
+      date_to
+      created_at_from
+      created_at_to
+      date_of_birth_from
+      date_of_birth_to
+      location_type
+      status
+      from_location_id
+      to_location_id
+      location_id
+      supplier_id
+      move_type
+      cancellation_reason
+      rejection_reason
+      has_relationship_to_allocation
+      ready_for_transit
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [
