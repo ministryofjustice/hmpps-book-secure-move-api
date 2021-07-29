@@ -537,5 +537,95 @@ RSpec.describe Moves::Finder do
         expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order
       end
     end
+
+    describe 'by profile_id' do
+      let(:profile) { create :profile }
+      let!(:move) { create :move, profile: profile }
+
+      context 'with matching profile filter' do
+        let(:filter_params) { { profile_id: profile.id } }
+
+        it 'returns moves matching the profile' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two profile filters' do
+        let(:second_move) { create :move }
+        let(:filter_params) { { profile_id: [profile.id, second_move.profile_id] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { profile_id: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by person_id' do
+      let(:person) { create :person }
+      let!(:move) { create :move, person: person }
+
+      context 'with matching profile filter' do
+        let(:filter_params) { { person_id: person.id } }
+
+        it 'returns moves matching the profile' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two profile filters' do
+        let(:second_move) { create :move }
+        let(:filter_params) { { person_id: [person.id, second_move.person_id] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { person_id: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
+
+    describe 'by reference' do
+      let(:reference) { SecureRandom.uuid }
+      let!(:move) { create :move, reference: reference }
+
+      context 'with matching profile filter' do
+        let(:filter_params) { { reference: reference } }
+
+        it 'returns moves matching the profile' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two profile filters' do
+        let(:second_move) { create :move }
+        let(:filter_params) { { reference: [reference, second_move.reference] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { reference: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
   end
 end

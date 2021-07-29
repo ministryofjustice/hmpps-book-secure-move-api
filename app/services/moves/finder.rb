@@ -42,19 +42,26 @@ module Moves
       end
     end
 
+    SIMPLE_FIELD_FILTERS = %i[
+      supplier_id
+      status
+      move_type
+      cancellation_reason
+      rejection_reason
+      profile_id
+      reference
+    ].freeze
+
     def apply_filters(scope)
       scope = scope.accessible_by(ability)
       scope = apply_date_range_filters(scope)
       scope = apply_date_of_birth_filters(scope)
-      scope = apply_location_type_filters(scope)
+      scope = apply_second_degree_filter(scope, :location_type, joins: :to_location, where: :locations)
       scope = apply_location_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
-      scope = apply_filter(scope, :supplier_id)
-      scope = apply_filter(scope, :status)
-      scope = apply_filter(scope, :move_type)
-      scope = apply_filter(scope, :cancellation_reason)
-      apply_filter(scope, :rejection_reason)
+      scope = apply_second_degree_filter(scope, :person_id, joins: :profile, where: :profiles)
+      SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
     end
 
     def split_params(name)
@@ -69,6 +76,14 @@ module Moves
       else
         scope
       end
+    end
+
+    def apply_second_degree_filter(scope, param_name, joins:, where:)
+      return scope unless filter_params.key?(param_name)
+
+      scope
+        .joins(joins)
+        .where(where => { param_name => filter_params[param_name] })
     end
 
     def apply_date_range_filters(scope)
@@ -88,14 +103,6 @@ module Moves
       scope = scope.where('people.date_of_birth >= ?', filter_params[:date_of_birth_from]) if filter_params.key?(:date_of_birth_from)
       scope = scope.where('people.date_of_birth <= ?', filter_params[:date_of_birth_to]) if filter_params.key?(:date_of_birth_to)
       scope
-    end
-
-    def apply_location_type_filters(scope)
-      return scope unless filter_params.key?(:location_type)
-
-      scope
-        .joins(:to_location)
-        .where(locations: { location_type: filter_params[:location_type] })
     end
 
     def apply_location_filters(scope)

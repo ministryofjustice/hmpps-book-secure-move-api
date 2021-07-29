@@ -13,10 +13,7 @@ module Api
     end
 
     def csv
-      csv_moves = Moves::Finder.new(filter_params: filter_params,
-                                    ability: current_ability,
-                                    order_params: params[:sort] || {},
-                                    active_record_relationships: CSV_INCLUDES).call
+      csv_moves = find_moves(active_record_relationships: CSV_INCLUDES)
       send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
@@ -38,11 +35,17 @@ module Api
 
   private
 
+    def find_moves(active_record_relationships:)
+      Moves::Finder.new(
+        filter_params: filter_params,
+        ability: current_ability,
+        order_params: params[:sort] || {},
+        active_record_relationships: active_record_relationships,
+      ).call
+    end
+
     def moves
-      @moves ||= Moves::Finder.new(filter_params: filter_params,
-                                   ability: current_ability,
-                                   order_params: params[:sort] || {},
-                                   active_record_relationships: active_record_relationships).call
+      @moves ||= find_moves(active_record_relationships: active_record_relationships)
     end
 
     def validate_filter_params
@@ -50,7 +53,26 @@ module Api
     end
 
     PERMITTED_FILTER_PARAMS = %i[
-      date_from date_to created_at_from created_at_to date_of_birth_from date_of_birth_to location_type status from_location_id to_location_id location_id supplier_id move_type cancellation_reason rejection_reason has_relationship_to_allocation ready_for_transit
+      date_from
+      date_to
+      created_at_from
+      created_at_to
+      date_of_birth_from
+      date_of_birth_to
+      location_type
+      status
+      from_location_id
+      to_location_id
+      location_id
+      supplier_id
+      move_type
+      cancellation_reason
+      rejection_reason
+      has_relationship_to_allocation
+      ready_for_transit
+      profile_id
+      person_id
+      reference
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [

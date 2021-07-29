@@ -465,6 +465,26 @@
           schema:
             type: boolean
             example: true
+        - name: filter[profile_id]
+          description: Filters results to only include moves for the given profile UUIDs
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: filter[person_id]
+          description: Filters results to only include moves for the given person UUIDs
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
         - name: sort[by]
           description: field to sort results by
           in: query
