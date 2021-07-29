@@ -268,5 +268,14 @@ RSpec.describe Api::MovesController do
         it_behaves_like 'an api that filters moves correctly'
       end
     end
+
+    describe 'by profile_id' do
+      let(:profile) { create(:profile) }
+      let(:filter_params) { { filter: { profile_id: profile.id } } }
+      let(:expected_moves) { create_list :move, 1, profile: profile }
+      let(:unexpected_moves) { create_list :move, 1 }
+
+      it_behaves_like 'an api that filters moves correctly'
+    end
   end
 end

@@ -70,6 +70,7 @@ module Api
       rejection_reason
       has_relationship_to_allocation
       ready_for_transit
+      profile_id
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [
