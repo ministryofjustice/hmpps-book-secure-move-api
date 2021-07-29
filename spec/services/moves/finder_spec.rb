@@ -567,5 +567,35 @@ RSpec.describe Moves::Finder do
         end
       end
     end
+
+    describe 'by person_id' do
+      let(:person) { create :person }
+      let!(:move) { create :move, person: person }
+
+      context 'with matching profile filter' do
+        let(:filter_params) { { person_id: person.id } }
+
+        it 'returns moves matching the profile' do
+          expect(results).to contain_exactly(move)
+        end
+      end
+
+      context 'with two profile filters' do
+        let(:second_move) { create :move }
+        let(:filter_params) { { person_id: [person.id, second_move.person_id] } }
+
+        it 'returns moves matching multiple locations' do
+          expect(results).to contain_exactly(move, second_move)
+        end
+      end
+
+      context 'with mis-matching location filter' do
+        let(:filter_params) { { person_id: Random.uuid } }
+
+        it 'returns empty results set' do
+          expect(results).to be_empty
+        end
+      end
+    end
   end
 end

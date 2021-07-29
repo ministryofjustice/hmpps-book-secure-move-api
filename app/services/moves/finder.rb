@@ -59,6 +59,7 @@ module Moves
       scope = apply_location_filters(scope)
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
+      scope = apply_person_filters(scope)
       SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
     end
 
@@ -127,6 +128,14 @@ module Moves
       else
         scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
       end
+    end
+
+    def apply_person_filters(scope)
+      return scope unless filter_params.key?(:person_id)
+
+      scope
+        .joins(:profile)
+        .where(profiles: { person_id: filter_params[:person_id] })
     end
   end
 end

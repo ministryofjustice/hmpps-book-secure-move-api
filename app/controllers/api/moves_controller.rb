@@ -71,6 +71,7 @@ module Api
       has_relationship_to_allocation
       ready_for_transit
       profile_id
+      person_id
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [
