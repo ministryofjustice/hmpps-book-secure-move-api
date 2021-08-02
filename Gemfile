@@ -32,7 +32,6 @@ gem 'paper_trail'
 gem 'pg'
 gem 'prometheus_exporter'
 gem 'puma'
-gem 'rack-timeout', require: false
 gem 'redis'
 gem 'routing-filter'
 gem 'sentry-rails'
