@@ -19,7 +19,7 @@ class NotifyWebhookJob < ApplicationJob
       response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
 
       unless response.success?
-        raise "non-success status received from #{subscription.callback_url}. Status: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
+        raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
       end
 
       notification.update(
@@ -33,11 +33,14 @@ class NotifyWebhookJob < ApplicationJob
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
+
       Sentry.with_scope do |scope|
         scope.set_tags(supplier: subscription.supplier.key)
         scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
+        scope.set_level(:warning) if e.is_a?(NotificationFailedResponseError)
         Sentry.capture_exception(e)
       end
+
       raise RetryJobError, e
     end
   end
@@ -52,3 +55,5 @@ private
     client
   end
 end
+
+class NotificationFailedResponseError < StandardError; end
