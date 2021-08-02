@@ -458,13 +458,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-import (~> 1.0, >= 1.0.5)
+  activerecord-import
   appinsights!
-  auto_strip_attributes (~> 2.6)
+  auto_strip_attributes
   aws-sdk-athena
   aws-sdk-s3
   bcrypt
-  bootsnap (>= 1.1.0)
+  bootsnap
   bundler-audit
   cancancan
   climate_control
@@ -476,35 +476,35 @@ DEPENDENCIES
   faker
   faraday
   finite_machine
-  flipper-active_record (~> 0.19)
-  geocoder (~> 1.6.5)
-  git (~> 1.7)
+  flipper-active_record
+  geocoder
+  git
   github_changelog_generator
-  govuk_notify_rails (~> 2.1.2)
+  govuk_notify_rails
   json-schema
-  jsonapi-serializer (~> 2.1)
+  jsonapi-serializer
   kaminari
   listen
-  lograge (~> 0.11.2)
-  logstash-event (~> 1.2)
-  logstash-logger (~> 0.26.1)
+  lograge
+  logstash-event
+  logstash-logger
   net-http-persistent
-  nokogiri (>= 1.10.4)
-  notifications-ruby-client (~> 5.1.2)
+  nokogiri
+  notifications-ruby-client
   oauth2
   paper_trail
-  pg (~> 1)
+  pg
   prometheus_exporter
   pry-byebug
   pry-rails
-  puma (~> 5)
+  puma
   rack-cors
-  rack-test (~> 1.1.0)
-  rack-timeout (~> 0.6.0)
+  rack-test
+  rack-timeout
   rails (= 6.0.4)
   rails-erd
-  redis (~> 4.2, >= 4.2.1)
-  routing-filter (~> 0.6.3)
+  redis
+  routing-filter
   rspec-json_expectations
   rspec-rails
   rswag-api
@@ -514,7 +514,7 @@ DEPENDENCIES
   sentry-rails
   sentry-ruby
   sentry-sidekiq
-  service_mock (~> 0.9)
+  service_mock
   shoulda-matchers
   sidekiq
   simplecov
@@ -522,8 +522,8 @@ DEPENDENCIES
   spring
   spring-watcher-listen
   timecop
-  uk_postcode (~> 2)
-  validate_url (~> 1.0.8)
+  uk_postcode
+  validate_url
 
 RUBY VERSION
    ruby 2.7.3p183
