@@ -66,7 +66,6 @@ group :development, :test do
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
-  # This needs to be in dev/test to expose the rake task
   gem 'rswag-specs'
   gem 'timecop'
 end
@@ -83,11 +82,10 @@ end
 group :test do
   gem 'climate_control'
   gem 'rack-test', '~> 1.1.0'
-  gem 'service_mock', '~> 0.9' # wrapper for Wiremock
+  gem 'service_mock', '~> 0.9'
   gem 'simplecov', require: false
 end
 
-# don't enable this in dev/test - the insights envs are staging/preprod/prod
 group :production do
   # usage docs for application_insights gem at
   # https://github.com/microsoft/ApplicationInsights-Ruby
