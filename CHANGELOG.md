@@ -1,5 +1,32 @@
 # Changelog
 
+## [v3.3.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.3.0) (2021-08-02)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.2.0...v3.3.0)
+
+**Merged pull requests:**
+
+- Organise Gemfile according to GOV.UK conventions [\#1522](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1522) ([thomasleese](https://github.com/thomasleese))
+- Upgrade Sentry Gems [\#1521](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1521) ([thomasleese](https://github.com/thomasleese))
+- Improve Sentry performance monitoring [\#1520](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1520) ([thomasleese](https://github.com/thomasleese))
+- Improve Framework NOMIS Mappings Sentry issues [\#1519](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1519) ([thomasleese](https://github.com/thomasleese))
+- Bump faraday from 1.5.1 to 1.6.0 [\#1518](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1518) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.97.0 to 1.98.0 [\#1517](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1517) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.38.0 to 1.39.0 [\#1516](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1516) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add NotificationFailedResponseError [\#1515](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1515) ([thomasleese](https://github.com/thomasleese))
+- Bump puma from 5.3.2 to 5.4.0 [\#1514](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1514) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Allow filtering moves by profile or person [\#1513](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1513) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-s3 from 1.96.2 to 1.97.0 [\#1512](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1512) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 4.3.1 to 4.4.0 [\#1511](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1511) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.37.0 to 1.38.0 [\#1510](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1510) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.7.5 to 1.7.6 [\#1509](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1509) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Use Slack webhook instead of API [\#1508](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1508) ([Thource](https://github.com/Thource))
+- Fix name of GPS data report rake task [\#1507](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1507) ([Thource](https://github.com/Thource))
+- Add GPS data reports [\#1506](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1506) ([Thource](https://github.com/Thource))
+- Bump listen from 3.5.1 to 3.6.0 [\#1505](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1505) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.96.1 to 1.96.2 [\#1504](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1504) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.2.0 [\#1503](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1503) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.2.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.2.0) (2021-07-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.1.6...v3.2.0)
