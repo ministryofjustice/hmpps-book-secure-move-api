@@ -501,7 +501,7 @@ DEPENDENCIES
   rack-cors
   rack-test (~> 1.1.0)
   rack-timeout (~> 0.6.0)
-  rails (~> 6.0.3)
+  rails (= 6.0.4)
   rails-erd
   redis (~> 4.2, >= 4.2.1)
   routing-filter (~> 0.6.3)

@@ -4,6 +4,8 @@ source 'https://rubygems.org'
 
 ruby File.read('.ruby-version')
 
+gem 'rails', '6.0.4'
+
 gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
 gem 'auto_strip_attributes', '~> 2.6'
 gem 'aws-sdk-athena'
@@ -31,7 +33,6 @@ gem 'pg', '~> 1'
 gem 'prometheus_exporter'
 gem 'puma', '~> 5'
 gem 'rack-timeout', '~> 0.6.0', require: false
-gem 'rails', '~> 6.0.3'
 gem 'redis', '~> 4.2', '>= 4.2.1'
 gem 'routing-filter', '~> 0.6.3'
 gem 'sentry-rails'
