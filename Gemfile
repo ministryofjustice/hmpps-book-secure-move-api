@@ -1,56 +1,47 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-# don't enable this in dev/test - the insights envs are staging/preprod/prod
-group :production do
-  # usage docs for application_insights gem at
-  # https://github.com/microsoft/ApplicationInsights-Ruby
-  # Gem to add insights automatically to a Rack application
-  # enhanced to support a RequestTracker with an ignore list
-  gem 'appinsights', github: 'ministryofjustice/appinsights'
-end
+gem 'rails', '6.0.4'
 
-gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
-gem 'auto_strip_attributes', '~> 2.6'
+gem 'activerecord-import'
+gem 'auto_strip_attributes'
 gem 'aws-sdk-athena'
 gem 'aws-sdk-s3', require: false
 gem 'bcrypt', require: false
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', require: false
 gem 'cancancan'
 gem 'discard'
 gem 'doorkeeper'
 gem 'faraday'
 gem 'finite_machine'
-gem 'flipper-active_record', '~> 0.19'
-gem 'geocoder', '~> 1.6.5'
-gem 'git', '~> 1.7'
-gem 'govuk_notify_rails', '~> 2.1.2'
-gem 'jsonapi-serializer', '~> 2.1'
+gem 'flipper-active_record'
+gem 'geocoder'
+gem 'git'
+gem 'govuk_notify_rails'
+gem 'jsonapi-serializer'
 gem 'json-schema'
 gem 'kaminari'
 gem 'net-http-persistent'
-gem 'nokogiri', '>= 1.10.4'
-gem 'notifications-ruby-client', '~> 5.1.2'
+gem 'nokogiri'
+gem 'notifications-ruby-client'
 gem 'oauth2'
 gem 'paper_trail'
-gem 'pg', '~> 1'
+gem 'pg'
 gem 'prometheus_exporter'
-gem 'puma', '~> 5'
-gem 'rack-timeout', '~> 0.6.0', require: false
-gem 'rails', '~> 6.0.3'
-gem 'redis', '~> 4.2', '>= 4.2.1'
-gem 'routing-filter', '~> 0.6.3'
+gem 'puma'
+gem 'rack-timeout', require: false
+gem 'redis'
+gem 'routing-filter'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sidekiq'
 gem 'slack-notifier'
-gem 'uk_postcode', '~> 2'
-gem 'validate_url', '~> 1.0.8'
+gem 'uk_postcode'
+gem 'validate_url'
 
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests
 # against the API without an Access-Control-Allow-Origin error.
@@ -60,9 +51,9 @@ gem 'rswag-ui'
 
 # Augments Rails logging to output JSON for Fluentd/Kibana
 # on Cloud Platform
-gem 'lograge', '~> 0.11.2'
-gem 'logstash-event', '~> 1.2'
-gem 'logstash-logger', '~> 0.26.1'
+gem 'lograge'
+gem 'logstash-event'
+gem 'logstash-logger'
 
 group :development, :test do
   gem 'dotenv'
@@ -74,9 +65,8 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
-  gem 'shoulda-matchers'
-  # This needs to be in dev/test to expose the rake task
   gem 'rswag-specs'
+  gem 'shoulda-matchers'
   gem 'timecop'
 end
 
@@ -91,7 +81,15 @@ end
 
 group :test do
   gem 'climate_control'
-  gem 'rack-test', '~> 1.1.0'
-  gem 'service_mock', '~> 0.9' # wrapper for Wiremock
+  gem 'rack-test'
+  gem 'service_mock'
   gem 'simplecov', require: false
+end
+
+group :production do
+  # usage docs for application_insights gem at
+  # https://github.com/microsoft/ApplicationInsights-Ruby
+  # Gem to add insights automatically to a Rack application
+  # enhanced to support a RequestTracker with an ignore list
+  gem 'appinsights', github: 'ministryofjustice/appinsights'
 end
