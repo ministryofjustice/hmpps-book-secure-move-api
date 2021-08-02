@@ -7,7 +7,7 @@ RSpec.shared_examples 'an endpoint that responds with error 400' do
     [
       {
         'title' => 'Bad request',
-        'detail' => 'param is missing or the value is empty: data',
+        'detail' => /param is missing or the value is empty/,
       },
     ]
   end
