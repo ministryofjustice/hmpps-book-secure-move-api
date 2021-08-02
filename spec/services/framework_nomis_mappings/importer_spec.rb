@@ -248,10 +248,11 @@ RSpec.describe FrameworkNomisMappings::Importer do
         let(:sentry_options) do
           {
             extra: {
-              id: person_escort_record.id,
-              params: [{ code: ["can't be blank"] }],
+              assessmentable_id: person_escort_record.id,
+              error_messages: [{ code: ["can't be blank"] }],
             },
-            level: 'error',
+            tags: {},
+            level: :error,
           }
         end
       end
@@ -262,11 +263,9 @@ RSpec.describe FrameworkNomisMappings::Importer do
         let(:sentry_message) { 'New NOMIS codes imported' }
         let(:sentry_options) do
           {
-            extra: {
-              id: person_escort_record.id,
-              params: [{ code: 'PEEP', type: 'personal_care_need' }],
-            },
-            level: 'error',
+            extra: { assessmentable_id: person_escort_record.id },
+            tags: { nomis_code: 'PEEP', nomis_type: 'personal_care_need' },
+            level: :warning,
           }
         end
       end
