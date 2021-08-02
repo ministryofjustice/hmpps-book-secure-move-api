@@ -20,9 +20,9 @@ module RoutingFilter
     end
 
     def add_version!(result)
-      path, _options = result
-
-      path.gsub!('/api/', '/api/v1/')
+      result.update(
+        result.url.gsub('/api/', '/api/v1/'),
+      )
     end
   end
 end
