@@ -1,6 +1,6 @@
 return unless ENV['SENTRY_DSN'].present?
 
-EXCLUDE_PATHS = %w[/ping /health].freeze
+EXCLUDE_PATHS = %w[/ping /ping.json /health /health.json].freeze
 
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN']
@@ -20,7 +20,6 @@ Sentry.init do |config|
   config.excluded_exceptions += ['RetryJobError']
 
   config.traces_sampler = lambda do |sampling_context|
-
     # Only send sampling data for production
     if Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat|preprod)\-)/i
       return 0
