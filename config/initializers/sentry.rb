@@ -20,11 +20,6 @@ Sentry.init do |config|
   config.excluded_exceptions += ['RetryJobError']
 
   config.traces_sampler = lambda do |sampling_context|
-    # Only send sampling data for production
-    if Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(\-(dev|staging|uat|preprod)\-)/i
-      return 0
-    end
-
     transaction_context = sampling_context[:transaction_context]
     transaction_name = transaction_context[:name]
 
