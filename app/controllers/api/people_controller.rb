@@ -28,7 +28,7 @@ module Api
       success = People::RetrieveImage.call(person)
 
       if success
-        image = Image.new(person.id, person.image.service_url)
+        image = Image.new(person.id, person.image.url)
         render_json image, serializer: ImageSerializer
       else
         raise ActiveRecord::RecordNotFound, 'Image not found'

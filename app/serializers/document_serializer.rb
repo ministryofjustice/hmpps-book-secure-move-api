@@ -8,7 +8,7 @@ class DocumentSerializer
   set_type :documents
 
   attribute :url do |object|
-    object.file.service_url
+    object.file.url
   end
 
   attribute :filename do |object|
