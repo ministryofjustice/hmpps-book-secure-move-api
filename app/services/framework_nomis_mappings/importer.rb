@@ -42,7 +42,12 @@ module FrameworkNomisMappings
         mappings = alert_mappings.call + personal_care_need_mappings.call + reasonable_adjust_mappings.call + assessment_mappings.call
         import = FrameworkNomisMapping.import(mappings, all_or_none: true)
 
-        log_exception('FrameworkNomisMapping import validation Error', import.failed_instances.map { |mapping| mapping.errors.messages }) if import.failed_instances.any?
+        if import.failed_instances.any?
+          log_exception(
+            'FrameworkNomisMapping import validation Error',
+            extra: { error_messages: import.failed_instances.map { |mapping| mapping.errors.messages } },
+          )
+        end
 
         FrameworkNomisMapping.where(id: import.ids)
       end
@@ -86,7 +91,11 @@ module FrameworkNomisMappings
           end
         elsif mapping_nomis_fallback
           hash[mapping_nomis_fallback.id] = hash[mapping_nomis_fallback.id].to_a + [mapping]
-          log_exception('New NOMIS codes imported', [{ code: mapping.code, type: mapping_nomis_fallback.code_type }])
+          log_exception(
+            'New NOMIS codes imported',
+            tags: { nomis_code: mapping.code, nomis_type: mapping_nomis_fallback.code_type },
+            level: :warning,
+          )
         end
       end
     end
@@ -95,14 +104,12 @@ module FrameworkNomisMappings
       @responses_to_codes ||= framework_responses.joins(:framework_nomis_codes).select('framework_responses.id as id, framework_nomis_codes.id as nomis_code_id').group_by(&:id)
     end
 
-    def log_exception(description, params)
+    def log_exception(description, tags: {}, extra: {}, level: :error)
       Sentry.capture_message(
         description,
-        extra: {
-          id: assessmentable&.id,
-          params: params,
-        },
-        level: 'error',
+        tags: tags,
+        extra: { assessmentable_id: assessmentable&.id }.merge(extra),
+        level: level,
       )
     end
   end
