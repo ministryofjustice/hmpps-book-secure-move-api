@@ -5,15 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-# don't enable this in dev/test - the insights envs are staging/preprod/prod
-group :production do
-  # usage docs for application_insights gem at
-  # https://github.com/microsoft/ApplicationInsights-Ruby
-  # Gem to add insights automatically to a Rack application
-  # enhanced to support a RequestTracker with an ignore list
-  gem 'appinsights', github: 'ministryofjustice/appinsights'
-end
-
 gem 'activerecord-import', '~> 1.0', '>= 1.0.5'
 gem 'auto_strip_attributes', '~> 2.6'
 gem 'aws-sdk-athena'
@@ -94,4 +85,13 @@ group :test do
   gem 'rack-test', '~> 1.1.0'
   gem 'service_mock', '~> 0.9' # wrapper for Wiremock
   gem 'simplecov', require: false
+end
+
+# don't enable this in dev/test - the insights envs are staging/preprod/prod
+group :production do
+  # usage docs for application_insights gem at
+  # https://github.com/microsoft/ApplicationInsights-Ruby
+  # Gem to add insights automatically to a Rack application
+  # enhanced to support a RequestTracker with an ignore list
+  gem 'appinsights', github: 'ministryofjustice/appinsights'
 end
