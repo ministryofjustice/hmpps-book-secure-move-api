@@ -38,8 +38,10 @@ class FrameworkResponse
       return unless response_objects.any? { |object| object.invalid?(:update) }
 
       response_objects.each_with_index do |object, index|
-        object.errors.each do |key, value|
-          errors.add("responses[#{index}].#{key}", value)
+        object.errors.each do |error|
+          attribute = error.attribute
+          message = error.message
+          errors.add("responses[#{index}].#{attribute}", message)
         end
       end
     end

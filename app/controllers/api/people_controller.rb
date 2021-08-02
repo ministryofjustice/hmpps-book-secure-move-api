@@ -90,7 +90,7 @@ module Api
         if validator.invalid?
           render status: :bad_request,
                  json: {
-                   errors: validator.errors.map { |field, message| { title: field, detail: message } },
+                   errors: validator.errors.map { |error| { title: error.attribute, detail: error.message } },
                  }
         end
       end
