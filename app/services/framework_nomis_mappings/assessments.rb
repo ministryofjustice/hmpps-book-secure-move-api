@@ -43,9 +43,7 @@ module FrameworkNomisMappings
     end
 
     def assessment_comments(assessment)
-      comments = assessment[:classification]
-      comments += " — #{assessment[:assessment_comment]}" if assessment[:assessment_comment].present?
-      comments
+      [assessment[:classification], assessment[:assessment_comment]].filter(&:present?).join(' — ')
     end
 
     def valid_assessment?(assessment)
