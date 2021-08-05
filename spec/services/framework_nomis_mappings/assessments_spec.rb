@@ -83,6 +83,14 @@ RSpec.describe FrameworkNomisMappings::Assessments do
             expect(mappings).not_to be_empty
           end
         end
+
+        context 'without a classification' do
+          let(:nomis_assessments) { [nomis_assessment(classification: nil)] }
+
+          it 'is returned' do
+            expect(mappings.first.comments).to eq('')
+          end
+        end
       end
 
       context 'with an out-of-date assessment' do
