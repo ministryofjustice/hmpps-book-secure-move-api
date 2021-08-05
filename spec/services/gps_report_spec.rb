@@ -141,10 +141,12 @@ RSpec.describe GPSReport do
         allow(athena_client).to receive(:get_query_results).and_raise(error)
         query_execution = Aws::Athena::Types::GetQueryExecutionOutput.new(query_execution: Aws::Athena::Types::QueryExecution.new(status: Aws::Athena::Types::QueryExecutionStatus.new(state: 'FAILED')))
         allow(athena_client).to receive(:get_query_execution).and_return(query_execution)
+        allow(Sentry).to receive(:capture_exception)
       end
 
-      it 'is raised' do
+      it 'is raised and logs the query_execution_id in sentry' do
         expect { gps_report.generate }.to raise_exception(error)
+        expect(Sentry).to have_received(:capture_exception).with(error, extra: { query_execution_id: 'repair' })
       end
     end
   end

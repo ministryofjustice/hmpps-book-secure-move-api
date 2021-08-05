@@ -100,6 +100,9 @@ private
     sleep 1.second while %w[QUEUED RUNNING].include?(athena_client.get_query_execution(query_execution_id: query_id).query_execution.status.state)
 
     athena_client.get_query_results(query_execution_id: query_id)
+  rescue Aws::Athena::Errors::InvalidRequestException => e
+    Sentry.capture_exception(e, extra: { query_execution_id: query_id })
+    raise e
   end
 
   def athena_client
