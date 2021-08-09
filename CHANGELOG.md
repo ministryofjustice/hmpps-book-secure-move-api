@@ -1,5 +1,23 @@
 # Changelog
 
+## [v3.3.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.3.1) (2021-08-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.3.0...v3.3.1)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-athena from 1.39.0 to 1.40.0 [\#1534](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1534) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add Athena query\_id to sentry extras [\#1533](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1533) ([Thource](https://github.com/Thource))
+- Handle when assessment has no classification [\#1532](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1532) ([thomasleese](https://github.com/thomasleese))
+- Bump prometheus\_exporter from 0.8.0 to 0.8.1 [\#1531](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1531) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.12.1 to 1.12.2 [\#1530](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1530) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Reduce number of trace samples [\#1529](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1529) ([thomasleese](https://github.com/thomasleese))
+- Bump nokogiri from 1.12.0 to 1.12.1 [\#1528](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1528) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.11.7 to 1.12.0 [\#1526](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1526) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.7.6 to 1.7.7 [\#1525](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1525) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump notifications-ruby-client from 5.1.2 to 5.3.0 [\#1524](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1524) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.3.0 [\#1523](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1523) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.3.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.3.0) (2021-08-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.2.0...v3.3.0)
