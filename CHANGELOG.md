@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.4.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.4.0) (2021-08-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.3.1...v3.4.0)
+
+**Merged pull requests:**
+
+- Don't define a pidfile [\#1539](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1539) ([thomasleese](https://github.com/thomasleese))
+- Fix indentation in YAML file [\#1538](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1538) ([thomasleese](https://github.com/thomasleese))
+- Ensure S3 env vars are available during migrations [\#1537](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1537) ([thomasleese](https://github.com/thomasleese))
+- Bump faraday from 1.6.0 to 1.7.0 [\#1536](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1536) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.3.1 [\#1535](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1535) ([thomasleese](https://github.com/thomasleese))
+- Upgrade to Rails 6.1 [\#1527](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1527) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.3.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.3.1) (2021-08-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.3.0...v3.3.1)
