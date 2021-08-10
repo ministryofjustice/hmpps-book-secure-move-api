@@ -128,7 +128,7 @@ namespace :fake_data do
     profiles = Profile.all
     prisons = Location.where(location_type: 'prison').all
     courts = Location.where(location_type: 'court').all
-    file = StringIO.new(File.read('spec/fixtures/file-sample_100kB.doc'))
+    file = StringIO.new(File.read('spec/fixtures/files/file-sample_100kB.doc'))
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       time = date.to_time

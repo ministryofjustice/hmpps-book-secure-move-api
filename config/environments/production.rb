@@ -1,3 +1,4 @@
+require "active_support/core_ext/integer/time"
 require 'log_formatter/json'
 
 Rails.application.configure do

@@ -200,7 +200,7 @@ private
 
   def validation_errors(record)
     errors = record.errors
-    errors.keys.flat_map do |field|
+    errors.attribute_names.flat_map do |field|
       Array.new(errors[field].size) do |index|
         {
           title: 'Unprocessable entity',
@@ -224,7 +224,7 @@ private
   def render_validation_error(exception)
     render(
       json: { errors: [{
-        title: "Invalid #{exception.model.errors.keys.join(', ')}",
+        title: "Invalid #{exception.model.errors.attribute_names.join(', ')}",
         detail: exception.to_s,
       }] },
       status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
@@ -234,8 +234,8 @@ private
   def render_include_validation_error(exception)
     render(
       json: {
-        errors: exception.errors.map do |field, message|
-          { title: field, detail: message }
+        errors: exception.errors.map do |error|
+          { title: error.attribute, detail: error.message }
         end,
       },
       # NB: The json:api specification requires this is a 400

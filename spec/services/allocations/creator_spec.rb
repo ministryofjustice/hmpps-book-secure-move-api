@@ -226,7 +226,7 @@ RSpec.describe Allocations::Creator do
       it 'makes the allocation validation errors available via exception' do
         call_creator
       rescue ActiveRecord::RecordInvalid => e
-        expect(e.record.errors.messages).to include(date: ["can't be blank"])
+        expect(e.record.errors.messages[:date]).to eq(["can't be blank"])
       end
 
       it 'does not attempt to create a move' do

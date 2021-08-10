@@ -90,12 +90,15 @@ module Diagnostics
             valid:\t#{object_valid}
           ENDVALIDATION
 
-          object_errors.each do |key, message|
+          object_errors.each do |error|
+            attribute = error.attribute
+            message = error.message
+
             # we need to take care that we don't display any personal details in the error report
             @output << if @include_person_details
-                         "  #{key.inspect}\t#{message}\t#{move.send(key)}\n"
+                         "  #{attribute.inspect}\t#{message}\t#{move.send(key)}\n"
                        else
-                         "  #{key.inspect}\t#{message}\t-\n"
+                         "  #{attribute.inspect}\t#{message}\t-\n"
                        end
           end
         end
@@ -140,12 +143,15 @@ module Diagnostics
               @output << "  ------------------------\n"
               @output << "  valid:\t#{object_valid}\n"
 
-              object_errors.each do |key, message|
+              object_errors.each do |error|
+                attribute = error.attribute
+                message = error.message
+
                 # we need to take care that we don't display any personal details in the error report
                 @output << if @include_person_details
-                             "  #{key.inspect}\t#{message}\t#{journey.send(key)}\n"
+                             "  #{attribute.inspect}\t#{message}\t#{journey.send(key)}\n"
                            else
-                             "  #{key.inspect}\t#{message}\t-\n"
+                             "  #{attribute.inspect}\t#{message}\t-\n"
                            end
               end
             end

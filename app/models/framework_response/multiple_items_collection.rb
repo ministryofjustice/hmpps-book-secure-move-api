@@ -28,8 +28,10 @@ class FrameworkResponse
       return unless collection.any?(&:invalid?)
 
       collection.each_with_index do |object, index|
-        object.errors.each do |key, value|
-          errors.add("items[#{index}].#{key}", value)
+        object.errors.each do |error|
+          attribute = error.attribute
+          message = error.message
+          errors.add("items[#{index}].#{attribute}", message)
         end
       end
     end

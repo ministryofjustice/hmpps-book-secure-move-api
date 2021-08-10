@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'rails', '6.0.4'
+gem 'rails', '6.1.4'
 
 gem 'activerecord-import'
 gem 'auto_strip_attributes'
@@ -33,7 +34,7 @@ gem 'pg'
 gem 'prometheus_exporter'
 gem 'puma'
 gem 'redis'
-gem 'routing-filter'
+gem 'routing-filter', github: 'svenfuchs/routing-filter', branch: 'master'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
