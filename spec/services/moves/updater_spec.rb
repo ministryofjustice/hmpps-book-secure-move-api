@@ -61,7 +61,7 @@ RSpec.describe Moves::Updater do
       let(:status) { 'cancelled' }
 
       it 'corrects allocation moves_count' do
-        expect { updater.call }.to change { allocation.reload.moves_count }.from(5).to(0)
+        expect { updater.call }.to change { move.allocation.reload.moves_count }.from(5).to(0)
       end
     end
 

@@ -162,7 +162,8 @@ RSpec.describe Population do
     end
 
     context 'with a previous population record for same location' do
-      let!(:older_population) { create(:population, location: location, date: date - 2.days) }
+      before { create(:population, location: location, date: date - 2.days) }
+
       let!(:previous_population) { create(:population, location: location, date: date - 1.day) }
 
       it 'populates details from most recent previous record' do
@@ -225,16 +226,10 @@ RSpec.describe Population do
 
   describe '.free_spaces_date_range' do
     let!(:population1) { create(:population, location: prison1, date: Date.today) } # Included
-    let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
-    let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) } # Included
-    let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) } # Included
-    let!(:population5) { create(:population, location: prison1, date: Date.today - 2) } # Falls outside scope of dates, so not included
-
     let(:prison1) { create(:location, :prison) }
     let(:prison2) { create(:location, :prison) }
     let(:date_range) { (Date.yesterday..Date.tomorrow) }
     let(:locations) { Location.where(id: [prison1.id, prison2.id]) }
-
     let(:expected_hash) do
       {
         prison1.id => [
@@ -281,8 +276,13 @@ RSpec.describe Population do
         ],
       }
     end
+    let!(:population2) { create(:population, location: prison2, date: Date.today) } # Included
+    let!(:population3) { create(:population, location: prison1, date: Date.tomorrow) } # Included
+    let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) } # Included
 
     before do
+      create(:population, location: prison1, date: Date.today - 2)  # Falls outside scope of dates, so not included
+
       create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)
       create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)
       create(:move, :prison_transfer, to_location: prison1, date: Date.yesterday)

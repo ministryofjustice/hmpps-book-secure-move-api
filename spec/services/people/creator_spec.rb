@@ -113,7 +113,7 @@ RSpec.describe People::Creator do
       }
     end
 
-    let!(:result) { creator.call }
+    before { creator.call }
 
     it 'sets the identifiers for the Person' do
       identifiers = new_person

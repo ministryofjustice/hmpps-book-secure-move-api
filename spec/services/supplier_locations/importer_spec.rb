@@ -13,10 +13,13 @@ RSpec.describe SupplierLocations::Importer do
     let(:effective_to) { Date.parse('2020-12-31') }
 
     let!(:supplier1) { create(:supplier, key: 'supplier1') }
-    let!(:supplier2) { create(:supplier, key: 'supplier2') }
     let!(:location1) { create(:location, nomis_agency_id: 'LOC1') }
-    let!(:location2) { create(:location, nomis_agency_id: 'LOC2') }
-    let!(:location3) { create(:location, nomis_agency_id: 'LOC3') }
+
+    before do
+      create(:supplier, key: 'supplier2')
+      create(:location, nomis_agency_id: 'LOC2')
+      create(:location, nomis_agency_id: 'LOC3')
+    end
 
     it 'creates expected supplier locations' do
       # valid.yaml contains two suppliers each mapped to two known locations (plus an unknown location)

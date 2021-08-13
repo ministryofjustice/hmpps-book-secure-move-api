@@ -16,7 +16,8 @@ RSpec.describe Api::PeopleController do
 
   describe 'GET /people' do
     let(:schema) { load_yaml_schema('get_people_responses.yaml', version: 'v2') }
-    let!(:people) { create_list :person, 2, prison_number: nil }
+
+    before { create_list :person, 2, prison_number: nil }
 
     context 'when the API client requires compressed response' do
       let(:accept_encoding) { 'gzip, deflate' }
@@ -64,15 +65,13 @@ RSpec.describe Api::PeopleController do
       let(:query) { '?filter[prison_number]=G3239GV,GV345VG' }
       let(:import_from_nomis) { instance_double('People::ImportFromNomis', call: nil) }
 
-      let!(:people) do
-        [
-          create(:person, prison_number: 'G3239GV'),
-          create(:person, prison_number: 'GV345VG'),
-          create(:person, prison_number: 'FLIBBLE'),
-        ]
-      end
+      before do
+        create(:person, prison_number: 'G3239GV')
+        create(:person, prison_number: 'GV345VG')
+        create(:person, prison_number: 'FLIBBLE')
 
-      before { allow(People::ImportFromNomis).to receive(:new).and_return(import_from_nomis) }
+        allow(People::ImportFromNomis).to receive(:new).and_return(import_from_nomis)
+      end
 
       it 'updates the person from nomis' do
         get "/api/people#{query}", headers: headers
@@ -178,8 +177,6 @@ RSpec.describe Api::PeopleController do
     describe 'paginating results' do
       let(:params) { {} }
 
-      let!(:people) { create_list :person, 6 }
-
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -197,15 +194,19 @@ RSpec.describe Api::PeopleController do
         }
       end
 
-      before { get '/api/people', params: params, headers: headers }
+      before do
+        create_list :person, 4
+        get '/api/people', params: params, headers: headers
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end
 
     describe 'included relationships' do
-      let!(:people) { create_list :person, 2 }
-
-      before { get '/api/people', params: params, headers: headers }
+      before do
+        create_list :person, 2
+        get '/api/people', params: params, headers: headers
+      end
 
       context 'when the include query param is empty' do
         let(:params) { { include: [] } }

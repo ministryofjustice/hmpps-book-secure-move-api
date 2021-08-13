@@ -25,9 +25,11 @@ RSpec.describe Api::MovesController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
     let!(:moves) { create_list(:move, 2, supplier: pentonville_supplier) }
-    let!(:other_moves) { create_list(:move, 2, supplier: birmingham_supplier) }
 
-    before { get_moves }
+    before do
+      create_list(:move, 2, supplier: birmingham_supplier)
+      get_moves
+    end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'

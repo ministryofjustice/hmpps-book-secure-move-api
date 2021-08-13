@@ -5,8 +5,11 @@ require 'rails_helper'
 RSpec.describe Regions::Importer do
   subject(:importer) { described_class.new(input_data) }
 
-  let!(:linked_location1) { create :location, nomis_agency_id: 'FOO' }
-  let!(:linked_location2) { create :location, nomis_agency_id: 'BAR' }
+  before do
+    create :location, nomis_agency_id: 'FOO'
+    create :location, nomis_agency_id: 'BAR'
+  end
+
   let!(:unlinked_location) { create :location, nomis_agency_id: 'BAZ' }
 
   let(:input_data) do

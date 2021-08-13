@@ -21,7 +21,7 @@ RSpec.describe Api::PeopleController do
   end
 
   context 'when person ID is valid' do
-    let!(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
+    let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: 'foobar') }
     let(:image_data) { File.read('spec/fixtures/Arctic_Tern.jpg') }
 
     context 'when there is an image associated with the person in NOMIS' do
@@ -63,7 +63,7 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'when person.latest_nomis_booking_id is nil' do
-      let!(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: nil) }
+      let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: nil) }
 
       it 'returns not found 404' do
         get_image

@@ -784,21 +784,23 @@ RSpec.describe Move do
     end
 
     context 'when there are move incident events' do
-      let!(:first_event) { create(:event_person_move_assault, eventable: move) }
-      let!(:second_event) { create(:event_move_approve, eventable: move) }
+      let!(:important_event) { create(:event_person_move_assault, eventable: move) }
+
+      before { create(:event_move_approve, eventable: move) }
 
       it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([first_event.id])
+        expect(important_events.pluck(:id)).to eq([important_event.id])
       end
     end
 
     context 'when there are PER medical events' do
       let(:person_escort_record) { move.profile.person_escort_record }
-      let!(:first_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
-      let!(:second_event) { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
+      let!(:important_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
+
+      before { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
 
       it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([first_event.id])
+        expect(important_events.pluck(:id)).to eq([important_event.id])
       end
     end
 

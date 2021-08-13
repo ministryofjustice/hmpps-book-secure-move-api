@@ -6,9 +6,6 @@ RSpec.describe Categories::Importer do
   subject(:importer) { described_class.new(input_data) }
 
   let!(:location1) { create :location, nomis_agency_id: 'FOO' }
-  let!(:location2) { create :location, nomis_agency_id: 'BAR' }
-  let!(:location3) { create :location, nomis_agency_id: 'BAZ' }
-
   let(:input_data) do
     {
       'A': {
@@ -28,10 +25,14 @@ RSpec.describe Categories::Importer do
       },
     }
   end
-
   let(:category_a) { Category.find_by(key: 'A') }
   let(:category_b) { Category.find_by(key: 'B') }
   let(:category_c) { Category.find_by(key: 'C') }
+
+  before do
+    create :location, nomis_agency_id: 'BAR'
+    create :location, nomis_agency_id: 'BAZ'
+  end
 
   context 'with no existing records' do
     it 'creates all the input items' do

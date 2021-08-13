@@ -13,8 +13,7 @@ RSpec.describe Api::Reference::FrameworksController do
 
     let(:framework) { create(:framework) }
     let(:dependent_question) { create(:framework_question, framework: framework) }
-    let!(:question) { create(:framework_question, framework: framework, dependents: [dependent_question]) }
-    let!(:flag) { create(:framework_flag, framework_question: question) }
+    let(:question) { create(:framework_question, framework: framework, dependents: [dependent_question]) }
 
     let(:data) do
       {
@@ -28,6 +27,8 @@ RSpec.describe Api::Reference::FrameworksController do
     end
 
     before do
+      create(:framework_flag, framework_question: question)
+
       get "/api/reference/frameworks/#{framework_id}", headers: headers, params: params
     end
 

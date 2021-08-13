@@ -269,7 +269,7 @@ RSpec.describe Allocation do
     subject(:move_totals) { described_class.all.move_totals }
 
     context 'without associated moves' do
-      let!(:allocations) { create_list(:allocation, 2) }
+      before { create_list(:allocation, 2) }
 
       it 'contains zero total and filled move counts' do
         expect(move_totals).to eq({
@@ -288,9 +288,8 @@ RSpec.describe Allocation do
     end
 
     context 'with associated moves' do
-      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
-
       before do
+        create_list(:allocation, 2, :with_moves, moves_count: 2)
         described_class.first.moves.first.update(profile: nil)
       end
 
@@ -311,9 +310,9 @@ RSpec.describe Allocation do
     end
 
     context 'with cancelled moves on a current allocation' do
-      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
-
       before do
+        create_list(:allocation, 2, :with_moves, moves_count: 2)
+
         described_class.first.moves.first.cancel!(cancellation_reason: 'other')
         described_class.last.moves.first.tap do |move|
           move.cancel(cancellation_reason: 'other')
@@ -338,9 +337,9 @@ RSpec.describe Allocation do
     end
 
     context 'with cancelled moves on a cancelled allocation' do
-      let!(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
-
       before do
+        create(:allocation, :with_moves, :cancelled, moves_count: 2)
+
         described_class.first.moves.each do |move|
           move.cancel!(cancellation_reason: 'other')
         end

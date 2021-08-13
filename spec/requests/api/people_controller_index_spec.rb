@@ -18,11 +18,12 @@ RSpec.describe Api::PeopleController do
     let(:prison_number) { 'G5033UT' }
 
     context 'when called with NO filters' do
-      let!(:people) { create_list :person, 2 }
-
       let(:params) {}
 
-      before { get_people }
+      before do
+        create_list :person, 2
+        get_people
+      end
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -42,7 +43,7 @@ RSpec.describe Api::PeopleController do
     context 'when called with police_national_computer filter' do
       let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
 
-      let!(:people) { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
+      before { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
 
       it 'returns the correct data' do
         get_people
@@ -61,20 +62,22 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'with no ethnicity' do
-      let!(:person) { create(:person, ethnicity: nil) }
-
-      before { get_people }
+      before do
+        create(:person, ethnicity: nil)
+        get_people
+      end
 
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
     context 'when the filter prison_number is used' do
-      let!(:people) { create_list :person, 5, gender: gender, ethnicity: ethnicity }
       let(:gender) { create(:gender) }
       let(:ethnicity) { create(:ethnicity) }
 
       let(:params) { { filter: { prison_number: prison_number } } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
+
+      before { create_list :person, 5, gender: gender, ethnicity: ethnicity }
 
       context 'when Nomis replies with success' do
         before do
@@ -109,9 +112,8 @@ RSpec.describe Api::PeopleController do
     end
 
     describe 'included relationships' do
-      let!(:people) { create_list :person, 2, police_national_computer: 'AB/1234567' }
-
       before do
+        create_list :person, 2, police_national_computer: 'AB/1234567'
         get "/api/v1/people#{query_params}", headers: headers, params: params
       end
 

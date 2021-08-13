@@ -140,9 +140,11 @@ RSpec.describe Locations::Finder do
 
   describe 'sorting' do
     context 'when by title' do
-      let!(:location1) { create :location, title: 'LOCATION1' }
-      let!(:location2) { create :location, title: 'Location2' }
-      let!(:location3) { create :location, title: 'LOCATION3' }
+      before do
+        create :location, title: 'LOCATION1'
+        create :location, title: 'Location2'
+        create :location, title: 'LOCATION3'
+      end
 
       let(:sort_params) { { by: :title, direction: :asc } }
 
@@ -152,14 +154,16 @@ RSpec.describe Locations::Finder do
     end
 
     context 'when by category' do
-      let!(:category1) { create :category, title: 'Category A' }
-      let!(:category2) { create :category, title: 'Category B' }
-      let!(:category1_first_location) { create :location, title: 'Location1', category: category1 }
-      let!(:category2_location) { create :location, title: 'Location2', category: category2 }
-      let!(:category1_second_location) { create :location, title: 'Location3', category: category1 }
-      let!(:location_without_category) { create :location, title: 'Location4' }
-
+      let(:category1) { create :category, title: 'Category A' }
       let(:sort_params) { { by: :category, direction: :asc } }
+      let(:category2) { create :category, title: 'Category B' }
+
+      before do
+        create :location, title: 'Location1', category: category1
+        create :location, title: 'Location2', category: category2
+        create :location, title: 'Location3', category: category1
+        create :location, title: 'Location4'
+      end
 
       it 'orders by category title then location title' do
         expect(location_finder.call.pluck(:title)).to eql(%w[Location1 Location3 Location2 Location4])

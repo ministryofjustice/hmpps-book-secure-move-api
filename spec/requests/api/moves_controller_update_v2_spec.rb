@@ -384,7 +384,6 @@ RSpec.describe Api::MovesController do
       context 'when the supplier has an email subscription' do
         # NB: updates to existing moves should trigger an email notification
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-        let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
         let(:notify_response) do
           instance_double(
@@ -408,6 +407,8 @@ RSpec.describe Api::MovesController do
         end
 
         before do
+          create(:notification_type, :email)
+
           allow(MoveMailer).to receive(:notify).and_return(notify_response)
           perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyEmailJob]) do
             do_patch

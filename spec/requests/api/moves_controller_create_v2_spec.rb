@@ -572,7 +572,7 @@ RSpec.describe Api::MovesController do
       let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
       context 'when there are cancelled duplicates' do
-        let!(:move) { create(:move, :cancelled, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
+        before { create(:move, :cancelled, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { do_post }

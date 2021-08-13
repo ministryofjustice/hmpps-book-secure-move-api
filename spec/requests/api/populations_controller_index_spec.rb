@@ -115,9 +115,11 @@ RSpec.describe Api::PopulationsController do
 
     describe 'included relationships' do
       let!(:category) { create :category }
-      let!(:location) { create :location, category: category }
 
-      before { get_locations_free_spaces }
+      before do
+        create :location, category: category
+        get_locations_free_spaces
+      end
 
       context 'when not including the include query param' do
         let(:params) { {} }
@@ -147,7 +149,6 @@ RSpec.describe Api::PopulationsController do
     end
 
     describe 'paginating results' do
-      let!(:locations) { create_list :location, 6 }
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -165,7 +166,10 @@ RSpec.describe Api::PopulationsController do
         }
       end
 
-      before { get_locations_free_spaces }
+      before do
+        create_list :location, 6
+        get_locations_free_spaces
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end

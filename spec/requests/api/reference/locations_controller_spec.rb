@@ -142,8 +142,6 @@ RSpec.describe Api::Reference::LocationsController do
     end
 
     describe 'pagination' do
-      let!(:prisons) { create_list :location, 4 }
-      let!(:courts) { create_list :location, 2, :court }
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -161,7 +159,12 @@ RSpec.describe Api::Reference::LocationsController do
         }
       end
 
-      before { get '/api/v1/reference/locations', params: params, headers: headers }
+      before do
+        create_list :location, 4
+        create_list :location, 2, :court
+
+        get '/api/v1/reference/locations', params: params, headers: headers
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end

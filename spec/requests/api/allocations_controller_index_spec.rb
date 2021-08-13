@@ -126,7 +126,6 @@ RSpec.describe Api::AllocationsController do
     end
 
     describe 'paginating results' do
-      let!(:allocations) { create_list :allocation, 6 }
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -144,7 +143,10 @@ RSpec.describe Api::AllocationsController do
         }
       end
 
-      before { get_allocations }
+      before do
+        create_list :allocation, 6
+        get_allocations
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end
@@ -190,12 +192,14 @@ RSpec.describe Api::AllocationsController do
     end
 
     describe 'included relationships' do
-      let!(:allocation) { create :allocation, :with_moves }
-
-      before { get_allocations }
+      before do
+        create :allocation, :with_moves
+        get_allocations
+      end
 
       context 'when not including the include query param' do
-        let!(:allocation) { create(:allocation, :with_moves) }
+        before { create(:allocation, :with_moves) }
+
         let(:params) { {} }
 
         it 'returns no included relationships ' do

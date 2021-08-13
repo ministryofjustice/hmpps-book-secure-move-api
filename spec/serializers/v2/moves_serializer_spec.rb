@@ -60,7 +60,8 @@ RSpec.describe V2::MovesSerializer do
 
     let!(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
     let!(:flag) { create(:framework_flag) }
-    let!(:response) { create(:string_response, assessmentable: person_escort_record, framework_flags: [flag]) }
+
+    before { create(:string_response, assessmentable: person_escort_record, framework_flags: [flag]) }
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })
