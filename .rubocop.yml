@@ -30,11 +30,6 @@ Rails/Date:
     - "lib/tasks/fake_data.rake"
     - "spec/**/**/*"
 
-# The anonymiser isn't production code, and is going away soon
-Rails/TimeZone:
-  Exclude:
-    - "app/services/moves/anonymiser.rb"
-
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - "spec/**/*"
