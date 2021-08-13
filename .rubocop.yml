@@ -19,9 +19,6 @@ AllCops:
     - "config/**/*"
     - "tmp/**/*"
 
-RSpec/LeakyConstantDeclaration:
-  Enabled: false
-
 # Rubocop think to have empty context whenever RSwagger is used
 RSpec/EmptyExampleGroup:
   Enabled: false
