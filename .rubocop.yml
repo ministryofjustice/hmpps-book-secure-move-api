@@ -24,10 +24,6 @@ AllCops:
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
-# I think we disagree with GDS on this one
-Style/MethodCalledOnDoEndBlock:
-  Enabled: false
-
 # don't worry about timezones in tests or during fake data creation
 Rails/Date:
   Exclude:
