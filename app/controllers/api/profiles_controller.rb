@@ -3,7 +3,7 @@
 module Api
   class ProfilesController < ApiController
     def create
-      profile = person.profiles.create(profile_attributes)
+      profile = person.profiles.create!(profile_attributes)
 
       if person.prison_number.present? && profile_attributes[:assessment_answers].blank?
         Profiles::ImportAlertsAndPersonalCareNeeds.new(profile, person.prison_number).call

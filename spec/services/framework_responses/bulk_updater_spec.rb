@@ -120,7 +120,7 @@ RSpec.describe FrameworkResponses::BulkUpdater do
         return_values = [:raise, true]
         allow(FrameworkResponse).to receive(:import).twice do
           return_value = return_values.shift
-          return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
+          return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update!(value: 'Yes')
         end
 
         described_class.new(assessment: per, response_values_hash: { response.id => 'Yes' }).call

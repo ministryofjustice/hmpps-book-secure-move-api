@@ -9,7 +9,7 @@ namespace :prisoner_category do
       latest_nomis_booking_id = profile&.person&.latest_nomis_booking_id
       if latest_nomis_booking_id.present?
         profile.category = Categories::FindByNomisBookingId.new(latest_nomis_booking_id).call
-        profile.save(touch: false) # NB: don't mass-update the updated_at timestamp to prevent a catastrophe in JPC/CDI reports
+        profile.save!(touch: false) # NB: don't mass-update the updated_at timestamp to prevent a catastrophe in JPC/CDI reports
       end
 
       puts "processed #{i + 1} of #{count}: #{profile.id} -> #{profile.category}"

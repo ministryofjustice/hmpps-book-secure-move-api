@@ -88,6 +88,6 @@ class Journey < ApplicationRecord
   end
 
   def handle_event_run(dry_run: false)
-    save if changed? && valid? && !dry_run
+    save! if changed? && valid? && !dry_run
   end
 end

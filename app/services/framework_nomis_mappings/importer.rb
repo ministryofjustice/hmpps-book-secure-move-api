@@ -22,7 +22,7 @@ module FrameworkNomisMappings
           response.framework_nomis_mappings = nomis_code_ids_to_mappings.slice(*nomis_code_ids).values.flatten
         end
 
-        assessmentable.update(nomis_sync_status: nomis_sync_status)
+        assessmentable.update!(nomis_sync_status: nomis_sync_status)
       end
     end
 

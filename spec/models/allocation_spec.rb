@@ -233,7 +233,7 @@ RSpec.describe Allocation do
         allocation.moves.first.cancel!(cancellation_reason: 'other')
         allocation.moves.last.tap do |move|
           move.cancel(cancellation_reason: 'other')
-          move.update(profile: nil)
+          move.update!(profile: nil)
         end
       end
 
@@ -290,7 +290,7 @@ RSpec.describe Allocation do
     context 'with associated moves' do
       before do
         create_list(:allocation, 2, :with_moves, moves_count: 2)
-        described_class.first.moves.first.update(profile: nil)
+        described_class.first.moves.first.update!(profile: nil)
       end
 
       it 'contains correct total, filled and unfilled move counts' do
@@ -316,7 +316,7 @@ RSpec.describe Allocation do
         described_class.first.moves.first.cancel!(cancellation_reason: 'other')
         described_class.last.moves.first.tap do |move|
           move.cancel(cancellation_reason: 'other')
-          move.update(profile: nil)
+          move.update!(profile: nil)
         end
       end
 

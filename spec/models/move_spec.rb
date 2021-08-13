@@ -192,7 +192,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move with the same from_location, to_location and date' do
       it 'returns a validation error on date' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: move.to_location,
                                           date: move.date)
@@ -203,7 +203,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move in Proposed status' do
       it 'returns a valid Move' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: move.to_location,
                                           date: move.date,
@@ -215,7 +215,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move having to_location empty' do
       it 'returns a validation error on date' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: nil,
                                           date: move.date,
@@ -585,7 +585,7 @@ RSpec.describe Move do
     end
 
     it 'does not create a move version record if only changing move updated_at timestamp' do
-      move.update(updated_at: Time.zone.now)
+      move.update!(updated_at: Time.zone.now)
       expect(move.versions.count).to eq 1
     end
 
@@ -596,13 +596,13 @@ RSpec.describe Move do
     end
 
     it 'creates a move version record if other move attributes are changed' do
-      move.update(additional_information: 'Bar')
+      move.update!(additional_information: 'Bar')
       expect(move.versions.count).to eq 2
     end
 
     it 'stores original move attributes in new version record when other move attributes are changed' do
       previous_move_attributes = move.attributes
-      move.update(additional_information: 'Bar')
+      move.update!(additional_information: 'Bar')
       expect(move.versions.last.reify.attributes).to eq previous_move_attributes
     end
   end

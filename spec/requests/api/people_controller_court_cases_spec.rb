@@ -82,7 +82,7 @@ RSpec.describe Api::PeopleController do
       let(:booking_id) { nil }
 
       it 'returns 422 bad request' do
-        person.update(latest_nomis_booking_id: booking_id)
+        person.update!(latest_nomis_booking_id: booking_id)
 
         get "/api/v1/people/#{person.id}/court_cases", headers: headers
 

@@ -18,14 +18,14 @@ class NotifyEmailJob < ApplicationJob
       response = notification.mailer.notify(notification).deliver_now!
       raise('govuk_notify_response is missing') if response.govuk_notify_response.blank?
 
-      notification.update(
+      notification.update!(
         delivered_at: Time.zone.now,
         response_id: response.govuk_notify_response.id,
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
     rescue StandardError => e
-      notification.update(
+      notification.update!(
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )

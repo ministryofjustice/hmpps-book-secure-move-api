@@ -67,21 +67,21 @@ RSpec.describe Moves::Exporter do
 
   %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_to_be_released special_vehicle].each do |alert_type|
     it "includes TRUE flag and comments when #{alert_type} is present" do
-      question.update(key: alert_type)
-      move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
+      question.update!(key: alert_type)
+      move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
       expect(row).to include('true', 'Yikes!')
     end
   end
 
   it 'includes description prefix on comments for Nomis alerts' do
-    question.update(key: 'violent')
-    move.profile.update(assessment_answers: [{ nomis_alert_description: 'Foo', assessment_question_id: question.id, comments: 'Yikes!' }])
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ nomis_alert_description: 'Foo', assessment_question_id: question.id, comments: 'Yikes!' }])
     expect(row).to include('Foo: Yikes!')
   end
 
   it 'includes multiple comment lines for multiple alerts for the same question' do
-    question.update(key: 'violent')
-    move.profile.update(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!' }])
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!' }])
     expect(row).to include("Yikes!\n\nBam!")
   end
 

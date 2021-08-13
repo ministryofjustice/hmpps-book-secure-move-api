@@ -12,7 +12,7 @@ module Categories
       items.each do |key, details|
         category = Category.find_or_initialize_by(key: key.to_s)
         category.locations = Location.where(nomis_agency_id: details[:locations])
-        category.update(title: details[:title], move_supported: details[:move_supported])
+        category.update!(title: details[:title], move_supported: details[:move_supported])
       end
     end
   end

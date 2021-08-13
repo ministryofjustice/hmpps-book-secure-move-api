@@ -73,7 +73,7 @@ RSpec.describe Profile, type: :model do
 
     it 'serializes assessment answers correctly' do
       profile.assessment_answers = assessment_answers
-      profile.save
+      profile.save!
       reloaded_profile = described_class.find(profile.id)
       expect(reloaded_profile.assessment_answers&.first&.as_json).to eql expected_attributes
     end

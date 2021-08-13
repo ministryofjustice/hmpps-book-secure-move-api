@@ -56,7 +56,7 @@ RSpec.describe FrameworkResponseSerializer do
 
     it 'contains a `flags` relationship when flags present' do
       flag = create(:framework_flag)
-      framework_response.update(framework_flags: [flag])
+      framework_response.update!(framework_flags: [flag])
 
       expect(result[:data][:relationships][:flags][:data]).to contain_exactly(
         id: flag.id,
@@ -74,7 +74,7 @@ RSpec.describe FrameworkResponseSerializer do
 
     it 'contains a `nomis_mappings` relationship when nomis_mappings present' do
       framework_nomis_mapping = create(:framework_nomis_mapping)
-      framework_response.update(framework_nomis_mappings: [framework_nomis_mapping])
+      framework_response.update!(framework_nomis_mappings: [framework_nomis_mapping])
 
       expect(result[:data][:relationships][:nomis_mappings][:data]).to contain_exactly(
         id: framework_nomis_mapping.id,

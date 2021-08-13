@@ -23,6 +23,3 @@ AllCops:
 # if we switched to the GDS standard.
 Style/StringLiterals:
   EnforcedStyle: single_quotes
-
-Rails/SaveBang:
-  Enabled: false

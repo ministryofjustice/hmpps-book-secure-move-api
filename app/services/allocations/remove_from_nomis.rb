@@ -15,7 +15,7 @@ module Allocations
       response = NomisClient::Allocations.put(body)
 
       if response&.status == 200
-        move.update(nomis_event_id: nil)
+        move.update!(nomis_event_id: nil)
       end
 
       { response_status: response&.status, response_body: response&.body, request_params: body }.tap do |log_attributes|

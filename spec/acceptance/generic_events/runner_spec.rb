@@ -254,7 +254,7 @@ RSpec.describe GenericEvents::Runner do
 
         before do
           event.details[:rebook] = true
-          event.save
+          event.save!
         end
 
         it 'creates a new move' do
