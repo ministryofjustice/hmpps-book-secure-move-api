@@ -168,7 +168,7 @@ RSpec.describe Moves::Updater do
         end
 
         it 'does not change the status' do
-          expect { updater.call }.not_to change { move.reload.allocation.status }
+          expect { updater.call }.not_to(change { move.reload.allocation.status })
         end
       end
 
@@ -217,7 +217,7 @@ RSpec.describe Moves::Updater do
 
       context 'with no person relationship' do
         it 'does not change old person associated' do
-          expect { updater.call }.not_to change { move.reload.profile.person }
+          expect { updater.call }.not_to(change { move.reload.profile.person })
         end
       end
     end
@@ -255,7 +255,7 @@ RSpec.describe Moves::Updater do
 
       context 'with no profile relationship' do
         it 'does not change old profile associated' do
-          expect { updater.call }.not_to change { move.reload.profile }
+          expect { updater.call }.not_to(change { move.reload.profile })
         end
       end
     end

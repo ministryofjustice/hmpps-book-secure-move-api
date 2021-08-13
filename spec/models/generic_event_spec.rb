@@ -16,13 +16,13 @@ RSpec.describe GenericEvent, type: :model do
     eventable = create(:move)
     event = create(:event_move_cancel, eventable: eventable)
 
-    expect { event.update(occurred_at: event.occurred_at + 1.day) }.to change { eventable.reload.updated_at }
+    expect { event.update(occurred_at: event.occurred_at + 1.day) }.to(change { eventable.reload.updated_at })
   end
 
   it 'updates the parent record when created' do
     eventable = create(:move)
 
-    expect { create(:event_move_cancel, eventable: eventable) }.to change { eventable.reload.updated_at }
+    expect { create(:event_move_cancel, eventable: eventable) }.to(change { eventable.reload.updated_at })
   end
 
   it 'defines the correct STI classes for validation' do
@@ -62,7 +62,7 @@ RSpec.describe GenericEvent, type: :model do
     subject(:generic_event) { create(:event_move_cancel) }
 
     it 'does nothing to the eventable attributes by default' do
-      expect { generic_event.trigger }.not_to change { generic_event.reload.eventable.attributes }
+      expect { generic_event.trigger }.not_to(change { generic_event.reload.eventable.attributes })
     end
   end
 

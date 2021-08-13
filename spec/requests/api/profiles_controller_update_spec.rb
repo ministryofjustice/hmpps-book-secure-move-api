@@ -123,7 +123,7 @@ RSpec.describe Api::ProfilesController do
 
       it 'does not affect other relationships' do
         expect { patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
-          .not_to change { profile.reload.person }
+          .not_to(change { profile.reload.person })
       end
 
       it 'returns the updated documents in the response body' do

@@ -30,9 +30,5 @@ Rails/Date:
     - "lib/tasks/fake_data.rake"
     - "spec/**/**/*"
 
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - "spec/**/*"
-
 Rails/SaveBang:
   Enabled: false

@@ -649,13 +649,13 @@ RSpec.describe Move do
       profile = create(:profile)
       move = create(:move, profile: profile)
 
-      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+      expect { move.update(date: move.date + 1.day) }.to(change { profile.reload.updated_at })
     end
 
     it 'updates the parent record when created' do
       profile = create(:profile)
 
-      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+      expect { create(:move, profile: profile) }.to(change { profile.reload.updated_at })
     end
   end
 

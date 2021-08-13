@@ -112,7 +112,7 @@ RSpec.describe Api::PeopleController do
 
       it 'does not change the gender' do
         expect { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
-          .not_to change { person.reload.gender_id }
+          .not_to(change { person.reload.gender_id })
       end
     end
 

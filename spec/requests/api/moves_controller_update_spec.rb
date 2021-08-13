@@ -155,7 +155,7 @@ RSpec.describe Api::MovesController do
           end
 
           it 'does not affect other relationships' do
-            expect { do_patch }.not_to change { move.reload.from_location }
+            expect { do_patch }.not_to(change { move.reload.from_location })
           end
 
           it 'returns the updated documents in the response body' do
@@ -182,7 +182,7 @@ RSpec.describe Api::MovesController do
             end
 
             it 'does not affect other relationships' do
-              expect { do_patch }.not_to change { move.reload.from_location }
+              expect { do_patch }.not_to(change { move.reload.from_location })
             end
 
             it 'returns the updated documents in the response body' do
@@ -242,7 +242,7 @@ RSpec.describe Api::MovesController do
           end
 
           it 'does not affect other relationships', :skip_before do
-            expect { do_patch }.not_to change { move.reload.from_location }
+            expect { do_patch }.not_to(change { move.reload.from_location })
           end
 
           it 'returns the updated person in the response body' do
@@ -302,7 +302,7 @@ RSpec.describe Api::MovesController do
           end
 
           it 'does not affect other relationships', :skip_before do
-            expect { do_patch }.not_to change { move.reload.from_location }
+            expect { do_patch }.not_to(change { move.reload.from_location })
           end
 
           it 'returns the updated profile in the response body' do

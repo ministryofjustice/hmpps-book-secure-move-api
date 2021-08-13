@@ -178,7 +178,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'does not affect other relationships' do
-        expect { do_patch }.not_to change { move.reload.from_location }
+        expect { do_patch }.not_to(change { move.reload.from_location })
       end
 
       it 'returns the updated profile in the response body' do
@@ -226,10 +226,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'does not affect both from_location and to_location' do
-        expect { do_patch }.not_to change {
-          [move.reload.from_location,
-           move.reload.to_location]
-        }
+        expect { do_patch }.not_to(change { [move.reload.from_location, move.reload.to_location] })
       end
     end
 
@@ -468,7 +465,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'does NOT update the reference of a move' do
-        expect { do_patch }.not_to change { move.reload.reference }
+        expect { do_patch }.not_to(change { move.reload.reference })
       end
 
       it_behaves_like 'an endpoint that responds with success 200' do
