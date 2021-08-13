@@ -19,35 +19,14 @@ AllCops:
     - "config/**/*"
     - "tmp/**/*"
 
-Style/Documentation:
-  Enabled: false
-
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
-
-Layout/LineLength:
-  Max: 120
-
-Metrics/BlockLength:
-  Exclude:
-    - "spec/**/*"
-
-RSpec/ExampleLength:
-  Max: 15
-
-RSpec/NestedGroups:
-  Max: 6
 
 RSpec/LetSetup:
   Enabled: false
 
 RSpec/LeakyConstantDeclaration:
   Enabled: false
-
-# It's not unreasonable to have 2 expectations, especially when there are similar
-# rather than being forced to create another 'it' block for the second one
-RSpec/MultipleExpectations:
-  Max: 2
 
 # Rubocop think to have empty context whenever RSwagger is used
 RSpec/EmptyExampleGroup:
