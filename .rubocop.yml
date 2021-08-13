@@ -19,9 +19,6 @@ AllCops:
     - "config/**/*"
     - "tmp/**/*"
 
-Layout/ParameterAlignment:
-  EnforcedStyle: with_fixed_indentation
-
 RSpec/LetSetup:
   Enabled: false
 
