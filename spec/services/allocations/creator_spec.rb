@@ -41,7 +41,7 @@ RSpec.describe Allocations::Creator do
   let!(:from_location) { create(:location, :with_suppliers) }
   let!(:to_location) { create(:location) }
   let!(:supplier) { from_location&.suppliers&.first }
-  let(:date) { Date.today }
+  let(:date) { Time.zone.today }
   let(:moves_count) { 2 }
   let(:requested_by) { 'Iama Requestor' }
   let(:allocation_params) do

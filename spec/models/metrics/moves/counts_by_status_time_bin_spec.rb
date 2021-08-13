@@ -25,7 +25,7 @@ RSpec.describe Metrics::Moves::CountsByStatusTimeBin do
       create(:move, :completed, date: 4.days.ago)
       create(:move, :completed, date: Date.yesterday)
       create(:move, :cancelled, date: 7.days.from_now)
-      create(:move, :in_transit, date: Date.today)
+      create(:move, :in_transit, date: Time.zone.today)
       create(:move, :requested, date: Date.tomorrow)
       create(:move, :requested, date: 4.days.from_now)
       create(:move, :requested, date: 8.days.from_now)

@@ -140,14 +140,14 @@ RSpec.describe GenericEvents::Runner do
       end
 
       context 'when the move is proposed' do
-        let!(:move) { create(:move, :proposed, date: Date.today) }
+        let!(:move) { create(:move, :proposed, date: Time.zone.today) }
 
         it 'updates the move status to requested' do
           expect { runner.call }.to change(move, :status).from('proposed').to('requested')
         end
 
         it 'updates the move date' do
-          expect { runner.call }.to change(move, :date).from(Date.today).to(Date.tomorrow)
+          expect { runner.call }.to change(move, :date).from(Time.zone.today).to(Date.tomorrow)
         end
 
         it 'does not create a prison transfer event in Nomis' do

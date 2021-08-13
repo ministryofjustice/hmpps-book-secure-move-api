@@ -13,7 +13,7 @@ RSpec.describe Api::PopulationsController do
 
   let(:location) { create(:location, :prison) }
   let(:location_id) { location.id }
-  let(:date) { Date.today.iso8601 }
+  let(:date) { Time.zone.today.iso8601 }
   let(:params) { { location_id: location_id, date: date } }
 
   before do

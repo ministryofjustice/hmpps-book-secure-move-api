@@ -131,7 +131,7 @@ namespace :fake_data do
     file = StringIO.new(File.read('spec/fixtures/files/file-sample_100kB.doc'))
     1000.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
-      time = date.to_time
+      time = date.to_time(:local)
       time = time.change(hour: [9, 12, 14].sample)
       profile = profiles.sample
       from_location = prisons.sample

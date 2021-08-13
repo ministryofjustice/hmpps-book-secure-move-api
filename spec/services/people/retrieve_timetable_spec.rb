@@ -9,7 +9,7 @@ RSpec.describe People::RetrieveTimetable do
   end
 
   let(:person) { instance_double('Person') }
-  let(:date_from) { Date.today }
+  let(:date_from) { Time.zone.today }
   let(:date_to) { Date.tomorrow }
 
   let(:nomis_court_hearings_struct) do

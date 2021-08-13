@@ -24,7 +24,7 @@ RSpec.describe Metrics::Moves::CountsByMoveTypeTimeBin do
     before do
       create(:move, :prison_transfer, date: 4.days.ago)
       create(:move, :prison_transfer, date: Date.yesterday)
-      create(:move, :prison_recall, date: Date.today)
+      create(:move, :prison_recall, date: Time.zone.today)
       create(:move, :prison_recall, date: Date.tomorrow)
       create(:move, :hospital, date: Date.tomorrow)
       create(:move, :hospital, date: 4.days.from_now)

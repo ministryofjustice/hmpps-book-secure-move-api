@@ -6,7 +6,7 @@ RSpec.describe SupplierChooser do
   let(:supplier1) { create(:supplier) }
   let(:supplier2) { create(:supplier) }
   let(:location) { create(:location) }
-  let(:date) { Date.today }
+  let(:date) { Time.zone.today }
   let(:move_or_allocation) { build(:move, from_location: location, date: date) }
 
   context 'with a move with a date' do

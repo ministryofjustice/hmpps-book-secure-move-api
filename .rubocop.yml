@@ -24,11 +24,5 @@ AllCops:
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
-# don't worry about timezones in tests or during fake data creation
-Rails/Date:
-  Exclude:
-    - "lib/tasks/fake_data.rake"
-    - "spec/**/**/*"
-
 Rails/SaveBang:
   Enabled: false

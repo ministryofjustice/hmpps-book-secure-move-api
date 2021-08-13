@@ -49,7 +49,7 @@ RSpec.describe SupplierLocation do
 
     let(:location) { create(:location) }
     let(:supplier) { create(:supplier) }
-    let(:date) { Date.today }
+    let(:date) { Time.zone.today }
     let(:supplier_location) { create(:supplier_location, supplier: supplier, location: location) }
     let(:supplier_other_locations) { [] }
 
@@ -60,7 +60,7 @@ RSpec.describe SupplierLocation do
 
     context 'with a nil date parameter' do
       let(:date) { nil }
-      let(:supplier_other_locations) { create(:supplier_location, supplier: supplier, location: location, effective_from: Date.today, effective_to: Date.today) }
+      let(:supplier_other_locations) { create(:supplier_location, supplier: supplier, location: location, effective_from: Time.zone.today, effective_to: Time.zone.today) }
 
       it 'returns matching supplier locations, excluding matches that have an effective date' do
         expect(effective_on).to contain_exactly(supplier_location)

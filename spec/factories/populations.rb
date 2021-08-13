@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :population do
     association(:location)
 
-    sequence(:date) { |n| Date.today + n.days }
+    sequence(:date) { |n| Time.zone.today + n.days }
     operational_capacity { Faker::Number.between(from: 200, to: 500) }
     usable_capacity { Faker::Number.between(from: 250, to: 450) }
     unlock { Faker::Number.between(from: 300, to: 400) }

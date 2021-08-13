@@ -21,7 +21,7 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByPerStatus100Day do
     before do
       create(:person_escort_record, :unstarted, move_attr: [:completed, { date: Date.tomorrow }])
       create(:person_escort_record, :unstarted, move_attr: [:completed, { date: Date.yesterday }])
-      create(:person_escort_record, :in_progress, move_attr: [:completed, { date: Date.today }])
+      create(:person_escort_record, :in_progress, move_attr: [:completed, { date: Time.zone.today }])
       create(:person_escort_record, :in_progress, move_attr: [:cancelled, { date: Date.yesterday }])
       create(:person_escort_record, :completed, move_attr: [:cancelled, { date: 10.days.ago }])
       create(:person_escort_record, :confirmed, move_attr: [:in_transit, { date: 10.days.ago }])

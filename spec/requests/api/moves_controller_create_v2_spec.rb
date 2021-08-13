@@ -27,7 +27,7 @@ RSpec.describe Api::MovesController do
   describe 'POST /moves' do
     let(:move_attributes) do
       {
-        date: Date.today,
+        date: Time.zone.today,
         time_due: Time.zone.now,
         status: status,
         additional_information: 'some more info',
@@ -88,7 +88,7 @@ RSpec.describe Api::MovesController do
 
     context 'when the new move status is `proposed`' do
       before do
-        move_attributes[:date_from] = Date.today.iso8601
+        move_attributes[:date_from] = Time.zone.today.iso8601
       end
 
       let(:status) { 'proposed' }
@@ -305,7 +305,7 @@ RSpec.describe Api::MovesController do
         {
           type: 'moves',
           attributes: {
-            date: Date.today,
+            date: Time.zone.today,
             time_due: Time.zone.now,
             status: 'requested',
             additional_information: 'some more info',
@@ -334,7 +334,7 @@ RSpec.describe Api::MovesController do
       let(:date_to) { Date.tomorrow }
       let(:move_attributes) do
         {
-          date: Date.today,
+          date: Time.zone.today,
           move_agreed: 'true',
           move_agreed_by: 'John Doe',
           date_from: date_from,

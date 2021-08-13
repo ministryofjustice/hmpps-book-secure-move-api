@@ -12,7 +12,7 @@ RSpec.describe Moves::Updater do
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
-  let(:date) { Date.today }
+  let(:date) { Time.zone.today }
   let(:status) { 'requested' }
   let(:cancellation_reason) { nil }
 

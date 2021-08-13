@@ -34,7 +34,7 @@ RSpec.describe Metrics::PersonEscortRecords::PercentHandoverByLocation do
       create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
       create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.yesterday, from_location: police }])
 
-      create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.today, from_location: prison }])
+      create(:person_escort_record, :handover, move_attr: [:completed, { date: Time.zone.today, from_location: prison }])
       create(:person_escort_record, :handover, move_attr: [:completed, { date: Date.tomorrow, from_location: police }])
       create(:move, :completed, from_location: other_prison)
     end

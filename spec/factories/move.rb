@@ -5,12 +5,12 @@ FactoryBot.define do
     association(:profile)
     association(:from_location, factory: :location)
     association(:to_location, :court, factory: :location)
-    sequence(:date) { |n| Date.today + n.days }
+    sequence(:date) { |n| Time.zone.today + n.days }
     time_due { Time.zone.now }
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
     sequence(:created_at) { |n| Time.zone.now - n.minutes }
-    sequence(:date_from) { |n| Date.today - n.days }
+    sequence(:date_from) { |n| Time.zone.today - n.days }
 
     association(:supplier)
 
@@ -187,7 +187,7 @@ FactoryBot.define do
     association(:to_location, :court, factory: :location)
     association(:supplier)
 
-    date { Date.today }
+    date { Time.zone.today }
     time_due { Time.zone.now }
     status { 'requested' }
     additional_information { 'some more info about the move that the supplier might need to know' }
