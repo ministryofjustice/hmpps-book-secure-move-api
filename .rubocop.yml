@@ -77,9 +77,5 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - "spec/**/*"
 
-# Remove when we move away from the rswag rspec dsl
-RSpec/VariableName:
-  Enabled: false
-
 Rails/SaveBang:
   Enabled: false
