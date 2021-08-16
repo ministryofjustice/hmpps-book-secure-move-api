@@ -31,29 +31,50 @@ private
     })
   end
 
-  # Commented out for retention, this will be used after some thought is put into how the suppliers will be able to access it
-  #
-  # def failure_csv_content(results)
-  #   failures = results[:failures]
-  #   return if failures.empty?
+  def failure_csv_content(failures)
+    return if failures.empty?
 
-  #   reasons = failures.map { |r| r[:reason] }.uniq
-  #   failure_rows = reasons.each_with_index.each_with_object([]) do |(reason, reason_i), returned_rows|
-  #     failures.filter { |f| f[:reason] == reason }.each_with_index do |failure, failure_i|
-  #       returned_rows[failure_i] = [] if returned_rows[failure_i].nil?
+    reasons = failures.map { |r| r[:reason] }.uniq
+    failure_rows = reasons.each_with_index.each_with_object([]) do |(reason, reason_i), returned_rows|
+      failures.filter { |f| f[:reason] == reason }.each_with_index do |failure, failure_i|
+        returned_rows[failure_i] = [] if returned_rows[failure_i].nil?
 
-  #       returned_rows[failure_i][reason_i] = failure[:move].id
-  #     end
-  #   end
+        returned_rows[failure_i][reason_i] = failure[:move].id
+      end
+    end
 
-  #   <<~STR
-  #     reasons,#{reasons.join(',')}
-  #     occurrences,#{reasons.map { |reason| failures.count { |failure| failure[:reason] == reason } }.join(',')}
+    <<~STR
+      reasons,#{reasons.join(',')}
+      occurrences,#{reasons.map { |reason| failures.count { |failure| failure[:reason] == reason } }.join(',')}
 
-  #     move ids
-  #     #{failure_rows.map { |fr| ",#{fr.join(',')}" }.join("\n")}
-  #   STR
-  # end
+      move ids
+      #{failure_rows.map { |fr| ",#{fr.join(',')}" }.join("\n")}
+    STR
+  end
+
+  def write_s3(content, supplier_name)
+    return if content.blank?
+
+    folder_name = @date_range.first.strftime('%Y/%m/%d')
+    filename = "#{@date_range.first.strftime('%Y-%m-%d')}-#{@date_range.last.strftime('%Y-%m-%d')}"
+
+    full_name = "#{folder_name}/#{filename}-#{supplier_name}.csv"
+    obj = bucket.object(full_name)
+    obj.put(body: content)
+
+    obj
+  end
+
+  def bucket
+    return @bucket if @bucket.present?
+
+    client = Aws::S3::Client.new(
+      access_key_id: ENV['S3_REPORTING_ACCESS_KEY_ID'],
+      secret_access_key: ENV['S3_REPORTING_SECRET_ACCESS_KEY'],
+    )
+    s3 = Aws::S3::Resource.new(client: client)
+    @bucket = s3.bucket(ENV['S3_REPORTING_BUCKET_NAME'])
+  end
 
   def generate_block(supplier, results)
     failures = results[:failures]
@@ -67,23 +88,25 @@ private
   end
 
   def passed_block(supplier, percent_passed, move_count, failures)
+    file = write_s3(failure_csv_content(failures), supplier)
+
     {
       type: 'section',
       text: {
-        type: 'plain_text',
-        text: ":white_check_mark: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria",
-        emoji: true,
+        type: 'mrkdwn',
+        text: ":white_check_mark: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get)}|failure file>" : ''}",
       },
     }
   end
 
   def failed_block(supplier, percent_passed, move_count, failures)
+    file = write_s3(failure_csv_content(failures), supplier)
+
     {
       type: 'section',
       text: {
-        type: 'plain_text',
-        text: ":x: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria",
-        emoji: true,
+        type: 'mrkdwn',
+        text: ":x: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get)}|failure file>" : ''}",
       },
     }
   end
