@@ -69,7 +69,6 @@ RSpec.describe Api::MovesController do
 
     context 'with a cancelled move' do
       let(:move) { create(:move, :cancelled) }
-      let!(:moves) { [move] }
       let(:from_location_id) { move.from_location_id }
       let(:filters) { { from_location_id: from_location_id } }
       let(:params) { { filter: filters } }
@@ -96,7 +95,6 @@ RSpec.describe Api::MovesController do
 
     context 'with a booked move' do
       let(:move) { create(:move, :booked) }
-      let!(:moves) { [move] }
       let(:from_location_id) { move.from_location_id }
       let(:filters) { { from_location_id: from_location_id } }
       let(:params) { { filter: filters } }
@@ -110,8 +108,6 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'paginating results' do
-      let!(:moves) { create_list :move, 6 }
-
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -129,7 +125,10 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      before { do_get }
+      before do
+        create_list :move, 4
+        do_get
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end
@@ -164,12 +163,13 @@ RSpec.describe Api::MovesController do
         )
       end
 
-      let!(:court_hearing) { create(:court_hearing, move: moves.first) }
-
       let(:to_location) { create(:location, suppliers: [supplier]) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
 
-      before { do_get(query_params) }
+      before do
+        create(:court_hearing, move: moves.first)
+        do_get(query_params)
+      end
 
       context 'when not including the include query param' do
         let(:query_params) { '' }
@@ -217,16 +217,17 @@ RSpec.describe Api::MovesController do
           create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-19T10:20:30+01:00'),
         ]
       end
-      let!(:moves) do
+
+      before do
         create_list(
           :move,
           1,
           :with_journey,
           notification_events: notification_events,
         )
-      end
 
-      before { do_get(query_params) }
+        do_get(query_params)
+      end
 
       context 'when not including the meta query param' do
         let(:query_params) { '' }

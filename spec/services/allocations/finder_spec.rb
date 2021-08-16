@@ -53,9 +53,10 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'with matching from_locations' do
-      let!(:other_allocation) { create(:allocation, to_location: to_location) }
       let(:filter_params) { { from_locations: from_location.id } }
       let(:active_record_relationships) { %i[from_location] }
+
+      before { create(:allocation, to_location: to_location) }
 
       it 'returns allocations matching specified from_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -63,9 +64,10 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'with matching to_locations' do
-      let!(:other_allocation) { create(:allocation, from_location: from_location) }
       let(:filter_params) { { to_locations: to_location.id } }
       let(:active_record_relationships) { %i[to_location] }
+
+      before { create(:allocation, from_location: from_location) }
 
       it 'returns allocations matching specified to_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -73,8 +75,9 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'with matching from_locations and to_locations' do
-      let!(:other_allocation) { create(:allocation) }
       let(:filter_params) { { from_locations: from_location.id, to_locations: to_location.id } }
+
+      before { create(:allocation) }
 
       it 'returns allocations matching specified from_location and to_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -85,8 +88,9 @@ RSpec.describe Allocations::Finder do
       let!(:shared_location) { create :location }
       let!(:allocation) { create(:allocation, from_location: shared_location) }
       let!(:other_allocation) { create(:allocation, to_location: shared_location) }
-      let!(:unmatched_allocation) { create(:allocation) }
       let(:filter_params) { { locations: shared_location.id } }
+
+      before { create(:allocation) }
 
       it 'returns allocations matching specified from_location or to_location' do
         expect(allocation_finder.call).to contain_exactly(allocation, other_allocation)
@@ -167,9 +171,12 @@ RSpec.describe Allocations::Finder do
     let(:location3) { create :location, title: 'LOCATION3' }
 
     context 'when by from_location' do
-      let!(:allocation) { create :allocation, from_location: location1, to_location: to_location }
-      let!(:allocation2) { create :allocation, from_location: location2, to_location: to_location }
-      let!(:allocation3) { create :allocation, from_location: location3, to_location: to_location }
+      before do
+        Allocation.delete_all
+        create :allocation, from_location: location1, to_location: to_location
+        create :allocation, from_location: location2, to_location: to_location
+        create :allocation, from_location: location3, to_location: to_location
+      end
 
       let(:sort_params) { { by: :from_location, direction: :asc } }
 
@@ -179,9 +186,12 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'when by to_location' do
-      let!(:allocation) { create :allocation, from_location: from_location, to_location: location1 }
-      let!(:allocation2) { create :allocation, from_location: from_location, to_location: location2 }
-      let!(:allocation3) { create :allocation, from_location: from_location, to_location: location3 }
+      before do
+        Allocation.delete_all
+        create :allocation, from_location: from_location, to_location: location1
+        create :allocation, from_location: from_location, to_location: location2
+        create :allocation, from_location: from_location, to_location: location3
+      end
 
       let(:sort_params) { { by: :to_location, direction: :asc } }
 
@@ -191,9 +201,12 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'when by moves_count' do
-      let!(:allocation) { create :allocation, moves_count: 1, from_location: from_location, to_location: to_location }
-      let!(:allocation2) { create :allocation, moves_count: 2, from_location: from_location, to_location: to_location }
-      let!(:allocation3) { create :allocation, moves_count: 3, from_location: from_location, to_location: to_location }
+      before do
+        Allocation.delete_all
+        create :allocation, moves_count: 1, from_location: from_location, to_location: to_location
+        create :allocation, moves_count: 2, from_location: from_location, to_location: to_location
+        create :allocation, moves_count: 3, from_location: from_location, to_location: to_location
+      end
 
       let(:sort_params) { { by: :moves_count, direction: :desc } }
 
@@ -220,12 +233,15 @@ RSpec.describe Allocations::Finder do
       let!(:location2) { create :location, title: 'Location2' }
       let!(:location3) { create :location, title: 'LOCATION3' }
 
-      let!(:allocation) { create :allocation, :with_moves, from_location: from_location, to_location: location1 }
-      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: location2 }
-      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: location3 }
-
       let(:sort_params) { { by: :to_location, direction: :desc } }
       let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
+
+      let!(:allocation) { create :allocation, :with_moves, from_location: from_location, to_location: location1 }
+
+      before do
+        create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: location2
+        create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: location3
+      end
 
       it 'returns allocations matching date range sorted by location title (case-sensitive)' do
         expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[Location2 LOCATION3 LOCATION1])
@@ -251,7 +267,8 @@ RSpec.describe Allocations::Finder do
     let!(:other_allocation) { create :allocation, from_location: from_location }
     let!(:person) { create :person, last_name: 'Kray' }
     let!(:profile) { create :profile, person: person }
-    let!(:move) { create :move, profile: profile, allocation: allocation }
+
+    before { create :move, profile: profile, allocation: allocation }
 
     context 'with blank location' do
       let(:search_params) { { location: '' } }

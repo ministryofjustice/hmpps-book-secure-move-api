@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable  RSpec/MultipleMemoizedHelpers
+# rubocop:disable Rails/SaveBang
 RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_class|
   subject { create(assessment_type) }
 
@@ -376,7 +376,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       return_values = [:raise, true]
       allow(assessment).to receive(:save!).twice do
         return_value = return_values.shift
-        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : assessment.save
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : assessment.save # rubocop:disable Rails/SaveBang
       end
 
       assessment.build_responses!
@@ -640,7 +640,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       create(:string_response, responded: true, assessmentable: assessment)
       response = create(:string_response, value: nil, responded: false, assessmentable: assessment)
       assessment.update_status_and_progress!
-      response.update(value: 'Yes')
+      response.update!(value: 'Yes')
       assessment.update_status_and_progress!
 
       expect(assessment.completed_at).to eq(old_completed_at_timestamp)
@@ -783,4 +783,4 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     create(:string_response, value: options[:value], framework_question: question, assessmentable: options[:assessmentable], responded: options[:responded], parent: options[:parent])
   end
 end
-# rubocop:enable  RSpec/MultipleMemoizedHelpers
+# rubocop:enable Rails/SaveBang

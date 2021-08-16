@@ -13,7 +13,7 @@ RSpec.describe Api::MovesController do
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
     let(:move_attributes) do
-      { date: Date.today,
+      { date: Time.zone.today,
         time_due: Time.zone.now,
         status: 'requested',
         additional_information: 'some more info',
@@ -231,7 +231,7 @@ RSpec.describe Api::MovesController do
           {
             type: 'moves',
             attributes: {
-              date: Date.today,
+              date: Time.zone.today,
               time_due: Time.zone.now,
               status: 'requested',
               additional_information: 'some more info',
@@ -259,7 +259,7 @@ RSpec.describe Api::MovesController do
         let(:date_to) { Date.tomorrow }
         let(:move_attributes) do
           {
-            date: Date.today,
+            date: Time.zone.today,
             move_agreed: 'true',
             move_agreed_by: 'John Doe',
             date_from: date_from,

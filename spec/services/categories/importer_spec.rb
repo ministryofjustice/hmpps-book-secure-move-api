@@ -6,9 +6,6 @@ RSpec.describe Categories::Importer do
   subject(:importer) { described_class.new(input_data) }
 
   let!(:location1) { create :location, nomis_agency_id: 'FOO' }
-  let!(:location2) { create :location, nomis_agency_id: 'BAR' }
-  let!(:location3) { create :location, nomis_agency_id: 'BAZ' }
-
   let(:input_data) do
     {
       'A': {
@@ -28,10 +25,14 @@ RSpec.describe Categories::Importer do
       },
     }
   end
+  let(:category_a) { Category.find_by(key: 'A') }
+  let(:category_b) { Category.find_by(key: 'B') }
+  let(:category_c) { Category.find_by(key: 'C') }
 
-  let(:categoryA) { Category.find_by(key: 'A') }
-  let(:categoryB) { Category.find_by(key: 'B') }
-  let(:categoryC) { Category.find_by(key: 'C') }
+  before do
+    create :location, nomis_agency_id: 'BAR'
+    create :location, nomis_agency_id: 'BAZ'
+  end
 
   context 'with no existing records' do
     it 'creates all the input items' do
@@ -41,31 +42,31 @@ RSpec.describe Categories::Importer do
     it 'populates correct title' do
       importer.call
 
-      expect(categoryA.title).to eq 'Category A'
+      expect(category_a.title).to eq 'Category A'
     end
 
     it 'populates correct move_supported flag' do
       importer.call
 
-      expect(categoryA).not_to be_move_supported
+      expect(category_a).not_to be_move_supported
     end
 
     it 'links to correct locations' do
       importer.call
 
-      expect(categoryB.locations.map(&:nomis_agency_id)).to match_array %w[FOO BAR]
+      expect(category_b.locations.map(&:nomis_agency_id)).to match_array %w[FOO BAR]
     end
 
     it 'does not link to missing locations' do
       importer.call
 
-      expect(categoryC.locations.map(&:nomis_agency_id)).to match_array %w[BAZ]
+      expect(category_c.locations.map(&:nomis_agency_id)).to match_array %w[BAZ]
     end
 
     it 'does not link to nil locations' do
       importer.call
 
-      expect(categoryA.locations).to be_empty
+      expect(category_a.locations).to be_empty
     end
   end
 

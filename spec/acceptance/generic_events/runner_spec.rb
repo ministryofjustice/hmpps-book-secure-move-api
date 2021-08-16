@@ -94,9 +94,8 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=cancel' do
-      let!(:event) { create(:event_move_cancel, eventable: move) }
-
       before do
+        create(:event_move_cancel, eventable: move)
         allow(Allocations::RemoveFromNomis).to receive(:call)
       end
 
@@ -133,22 +132,22 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=approve' do
-      let!(:event) { create(:event_move_approve, eventable: move, details: { create_in_nomis: create_in_nomis, date: Date.tomorrow }) }
       let(:create_in_nomis) { false }
 
       before do
+        create(:event_move_approve, eventable: move, details: { create_in_nomis: create_in_nomis, date: Date.tomorrow })
         allow(Allocations::CreateInNomis).to receive(:call)
       end
 
       context 'when the move is proposed' do
-        let!(:move) { create(:move, :proposed, date: Date.today) }
+        let!(:move) { create(:move, :proposed, date: Time.zone.today) }
 
         it 'updates the move status to requested' do
           expect { runner.call }.to change(move, :status).from('proposed').to('requested')
         end
 
         it 'updates the move date' do
-          expect { runner.call }.to change(move, :date).from(Date.today).to(Date.tomorrow)
+          expect { runner.call }.to change(move, :date).from(Time.zone.today).to(Date.tomorrow)
         end
 
         it 'does not create a prison transfer event in Nomis' do
@@ -180,7 +179,7 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=accept' do
-      let!(:event) { create(:event_move_accept, eventable: move) }
+      before { create(:event_move_accept, eventable: move) }
 
       context 'when the move is requested' do
         let!(:move) { create(:move, :requested) }
@@ -204,7 +203,7 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=start' do
-      let!(:event) { create(:event_move_start, eventable: move) }
+      before { create(:event_move_start, eventable: move) }
 
       context 'when the move is booked' do
         let!(:move) { create(:move, :booked) }
@@ -255,7 +254,7 @@ RSpec.describe GenericEvents::Runner do
 
         before do
           event.details[:rebook] = true
-          event.save
+          event.save!
         end
 
         it 'creates a new move' do
@@ -277,7 +276,7 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=complete' do
-      let!(:event) { create(:event_move_complete, eventable: move) }
+      before { create(:event_move_complete, eventable: move) }
 
       context 'when the move is requested' do
         let!(:move) { create(:move, :requested) }
@@ -312,7 +311,7 @@ RSpec.describe GenericEvents::Runner do
 
     context 'when event_name=lockout' do
       # NB: lockout events have should have no effect on a move, they are purely for auditing
-      let!(:event) { create(:event_move_lockout, eventable: move) }
+      before { create(:event_move_lockout, eventable: move) }
 
       it 'does not update the move status' do
         expect { runner.call }.not_to change(move, :status).from('requested')

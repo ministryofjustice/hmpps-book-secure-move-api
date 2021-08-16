@@ -73,7 +73,7 @@ RSpec.describe Profile, type: :model do
 
     it 'serializes assessment answers correctly' do
       profile.assessment_answers = assessment_answers
-      profile.save
+      profile.save!
       reloaded_profile = described_class.find(profile.id)
       expect(reloaded_profile.assessment_answers&.first&.as_json).to eql expected_attributes
     end
@@ -169,13 +169,13 @@ RSpec.describe Profile, type: :model do
       profile = create(:profile, :with_assessment_answers)
       person = profile.person
 
-      expect { profile.update(assessment_answers: []) }.to change { person.reload.updated_at }
+      expect { profile.update(assessment_answers: []) }.to(change { person.reload.updated_at })
     end
 
     it 'updates the parent record when created' do
       person = create(:person_without_profiles)
 
-      expect { create(:profile, person: person) }.to change { person.reload.updated_at }
+      expect { create(:profile, person: person) }.to(change { person.reload.updated_at })
     end
   end
 

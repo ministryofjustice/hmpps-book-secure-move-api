@@ -28,7 +28,7 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByPerStatusMoveTimeBin do
       create(:person_escort_record, move_attr: [:completed, { date: 4.days.ago }])
       create(:person_escort_record, :completed, move_attr: [:completed, { date: Date.yesterday }])
       create(:person_escort_record, :in_progress, move_attr: [:cancelled, { date: 7.days.from_now }])
-      create(:person_escort_record, :in_progress, move_attr: [:in_transit, { date: Date.today }])
+      create(:person_escort_record, :in_progress, move_attr: [:in_transit, { date: Time.zone.today }])
       create(:person_escort_record, move_attr: [:requested, { date: Date.tomorrow }])
       create(:person_escort_record, :completed, move_attr: [:requested, { date: 4.days.from_now }])
       create(:person_escort_record, :confirmed, move_attr: [:requested, { date: 8.days.from_now }])

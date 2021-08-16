@@ -6,11 +6,10 @@ RSpec.describe FrameworkNomisMappingSerializer do
   subject(:serializer) { described_class.new(framework_nomis_mapping, include: includes) }
 
   let(:framework_nomis_mapping) { create(:framework_nomis_mapping) }
-  let!(:framework_response) do
-    create(:string_response, framework_nomis_mappings: [framework_nomis_mapping])
-  end
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
+
+  before { create(:string_response, framework_nomis_mappings: [framework_nomis_mapping]) }
 
   it 'contains a `type` property' do
     expect(result[:data][:type]).to eq('framework_nomis_mappings')

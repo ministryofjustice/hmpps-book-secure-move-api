@@ -80,7 +80,6 @@ RSpec.describe Api::MovesController do
 
       context 'with a cancelled move' do
         let(:move) { create(:move, :cancelled) }
-        let!(:moves) { [move] }
         let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
@@ -111,7 +110,6 @@ RSpec.describe Api::MovesController do
 
       context 'with a booked move' do
         let(:move) { create(:move, :booked) }
-        let!(:moves) { [move] }
         let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
@@ -129,8 +127,6 @@ RSpec.describe Api::MovesController do
       end
 
       describe 'paginating results' do
-        let!(:moves) { create_list :move, 6 }
-
         let(:meta_pagination) do
           {
             per_page: 5,
@@ -148,7 +144,10 @@ RSpec.describe Api::MovesController do
           }
         end
 
-        before { get_moves }
+        before do
+          create_list :move, 4
+          get_moves
+        end
 
         it_behaves_like 'an endpoint that paginates resources'
       end
@@ -183,12 +182,12 @@ RSpec.describe Api::MovesController do
           )
         end
 
-        let!(:court_hearing) { create(:court_hearing, move: moves.first) }
-
         let(:to_location) { create(:location, suppliers: [supplier]) }
         let(:from_location) { create(:location, suppliers: [supplier]) }
 
         before do
+          create(:court_hearing, move: moves.first)
+
           get "/api/v1/moves#{query_params}", params: params, headers: headers
         end
 

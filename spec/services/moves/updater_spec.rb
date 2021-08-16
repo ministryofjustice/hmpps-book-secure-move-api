@@ -12,7 +12,7 @@ RSpec.describe Moves::Updater do
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
-  let(:date) { Date.today }
+  let(:date) { Time.zone.today }
   let(:status) { 'requested' }
   let(:cancellation_reason) { nil }
 
@@ -61,7 +61,7 @@ RSpec.describe Moves::Updater do
       let(:status) { 'cancelled' }
 
       it 'corrects allocation moves_count' do
-        expect { updater.call }.to change { allocation.reload.moves_count }.from(5).to(0)
+        expect { updater.call }.to change { move.allocation.reload.moves_count }.from(5).to(0)
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe Moves::Updater do
         end
 
         it 'does not change the status' do
-          expect { updater.call }.not_to change { move.reload.allocation.status }
+          expect { updater.call }.not_to(change { move.reload.allocation.status })
         end
       end
 
@@ -217,7 +217,7 @@ RSpec.describe Moves::Updater do
 
       context 'with no person relationship' do
         it 'does not change old person associated' do
-          expect { updater.call }.not_to change { move.reload.profile.person }
+          expect { updater.call }.not_to(change { move.reload.profile.person })
         end
       end
     end
@@ -255,7 +255,7 @@ RSpec.describe Moves::Updater do
 
       context 'with no profile relationship' do
         it 'does not change old profile associated' do
-          expect { updater.call }.not_to change { move.reload.profile }
+          expect { updater.call }.not_to(change { move.reload.profile })
         end
       end
     end

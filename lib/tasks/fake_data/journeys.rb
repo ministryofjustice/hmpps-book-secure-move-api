@@ -78,7 +78,7 @@ module Tasks
 
       def create_initial_move_event(timestamp, _location)
         initial_transition_events = [GenericEvent::MoveProposed, GenericEvent::MoveRequested]
-        initial_transition_events.sample.create(
+        initial_transition_events.sample.create!(
           eventable: move,
           occurred_at: timestamp,
           created_by: 'TEST_USER',

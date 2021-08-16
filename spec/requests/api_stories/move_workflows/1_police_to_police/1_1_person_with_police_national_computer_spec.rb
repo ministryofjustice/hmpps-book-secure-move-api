@@ -6,7 +6,7 @@ require 'rack/test'
 # 1.1 Police to Police police_transfer move for a person with a PNC identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-# rubocop:disable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers
+# rubocop:disable Rails/HttpPositionalArguments
 RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
@@ -166,7 +166,6 @@ RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
     frontend_post_police_to_police_move
   end
 
-  # rubocop:disable RSpec/MultipleExpectations
   it 'police to police transfer move' do
     # get requested moves awaiting processing
     get_requested_moves
@@ -191,6 +190,5 @@ RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
       expect(json.dig('data', 'relationships', 'to_location', 'data', 'id')).to eql police2.id
     end
   end
-  # rubocop:enable RSpec/MultipleExpectations
 end
-# rubocop:enable Rails/HttpPositionalArguments, RSpec/MultipleMemoizedHelpers
+# rubocop:enable Rails/HttpPositionalArguments

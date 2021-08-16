@@ -11,7 +11,7 @@ RSpec.describe Api::PeopleController do
 
   let(:nomis_activities) { [] }
   let(:nomis_court_hearings) { [] }
-  let(:date_from) { Date.today }
+  let(:date_from) { Time.zone.today }
   let(:date_to) { Date.tomorrow }
 
   let(:params) do

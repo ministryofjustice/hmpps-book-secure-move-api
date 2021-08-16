@@ -7,7 +7,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
     subject(:court_hearings_get) { described_class.get(booking_id, start_date, end_date) }
 
     let(:booking_id) { '1495077' }
-    let(:start_date) { Date.today }
+    let(:start_date) { Time.zone.today }
     let(:end_date) { Date.tomorrow }
 
     let(:response_body) { file_fixture('nomis/get_court_hearings_200.json').read }

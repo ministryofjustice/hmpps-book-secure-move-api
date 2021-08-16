@@ -266,8 +266,9 @@ RSpec.describe Moves::Finder do
       let!(:requested_move) { create :move, :requested }
       let!(:booked_move) { create :move, :booked }
       let!(:in_transit_move) { create :move, :in_transit }
-      let!(:cancelled_move) { create :move, :cancelled }
       let!(:completed_move) { create :move, :completed }
+
+      before { create :move, :cancelled }
 
       context 'with matching status' do
         let(:filter_params) { { status: 'proposed' } }
@@ -327,9 +328,10 @@ RSpec.describe Moves::Finder do
 
     describe 'by cancellation_reason' do
       let!(:cancelled_made_in_error_move) { create :move, :cancelled_made_in_error }
-      let!(:cancelled_supplier_declined_to_move_move) { create :move, :cancelled_supplier_declined_to_move }
       let!(:cancelled_rejected_move) { create :move, :cancelled_rejected }
       let!(:cancelled_other_move) { create :move, :cancelled_other }
+
+      before { create :move, :cancelled_supplier_declined_to_move }
 
       context 'with nil cancellation reason' do
         let(:filter_params) { { cancellation_reason: nil } }
@@ -524,14 +526,15 @@ RSpec.describe Moves::Finder do
 
     describe 'sort order' do
       let(:location1) { create :location, title: 'LOCATION1' }
+      let(:order_params) { { by: :to_location, direction: :asc } }
       let(:location2) { create :location, title: 'Location2' }
       let(:location3) { create :location, title: 'LOCATION3' }
-      let!(:moves) do
+
+      before do
         create :move, to_location: location1
         create :move, to_location: location2
         create :move, to_location: location3
       end
-      let(:order_params) { { by: :to_location, direction: :asc } }
 
       it 'ordered by location (case-sensitive)' do
         expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order

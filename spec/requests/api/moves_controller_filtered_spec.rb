@@ -62,8 +62,6 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'paginating results' do
-      let!(:moves) { create_list :move, 6 }
-
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -81,7 +79,10 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      before { post_moves }
+      before do
+        create_list :move, 4
+        post_moves
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end
@@ -115,13 +116,13 @@ RSpec.describe Api::MovesController do
           to_location: to_location,
         )
       end
-
-      let!(:court_hearing) { create(:court_hearing, move: moves.first) }
-
       let(:to_location) { create(:location, suppliers: [supplier]) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
 
-      before { post_moves }
+      before do
+        create(:court_hearing, move: moves.first)
+        post_moves
+      end
 
       context 'when not including the include query param' do
         let(:params) { {} }
@@ -169,16 +170,17 @@ RSpec.describe Api::MovesController do
           create(:event_move_notify_premises_of_drop_off_eta, expected_at: '2019-06-19T10:20:30+01:00'),
         ]
       end
-      let!(:moves) do
+
+      before do
         create_list(
           :move,
           1,
           :with_journey,
           generic_events: events,
         )
-      end
 
-      before { post_moves }
+        post_moves
+      end
 
       context 'when not including the meta query param' do
         let(:params) { {} }

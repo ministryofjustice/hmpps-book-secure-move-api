@@ -233,7 +233,7 @@ RSpec.describe Allocation do
         allocation.moves.first.cancel!(cancellation_reason: 'other')
         allocation.moves.last.tap do |move|
           move.cancel(cancellation_reason: 'other')
-          move.update(profile: nil)
+          move.update!(profile: nil)
         end
       end
 
@@ -269,7 +269,7 @@ RSpec.describe Allocation do
     subject(:move_totals) { described_class.all.move_totals }
 
     context 'without associated moves' do
-      let!(:allocations) { create_list(:allocation, 2) }
+      before { create_list(:allocation, 2) }
 
       it 'contains zero total and filled move counts' do
         expect(move_totals).to eq({
@@ -288,10 +288,9 @@ RSpec.describe Allocation do
     end
 
     context 'with associated moves' do
-      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
-
       before do
-        described_class.first.moves.first.update(profile: nil)
+        create_list(:allocation, 2, :with_moves, moves_count: 2)
+        described_class.first.moves.first.update!(profile: nil)
       end
 
       it 'contains correct total, filled and unfilled move counts' do
@@ -311,13 +310,13 @@ RSpec.describe Allocation do
     end
 
     context 'with cancelled moves on a current allocation' do
-      let!(:allocations) { create_list(:allocation, 2, :with_moves, moves_count: 2) }
-
       before do
+        create_list(:allocation, 2, :with_moves, moves_count: 2)
+
         described_class.first.moves.first.cancel!(cancellation_reason: 'other')
         described_class.last.moves.first.tap do |move|
           move.cancel(cancellation_reason: 'other')
-          move.update(profile: nil)
+          move.update!(profile: nil)
         end
       end
 
@@ -338,9 +337,9 @@ RSpec.describe Allocation do
     end
 
     context 'with cancelled moves on a cancelled allocation' do
-      let!(:allocation) { create(:allocation, :with_moves, :cancelled, moves_count: 2) }
-
       before do
+        create(:allocation, :with_moves, :cancelled, moves_count: 2)
+
         described_class.first.moves.each do |move|
           move.cancel!(cancellation_reason: 'other')
         end

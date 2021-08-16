@@ -28,7 +28,7 @@ RSpec.describe CourtHearings::CreateInNomis do
     before do
       allow(NomisClient::CourtHearings).to receive(:post)
                                               .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
-      move.person.update(latest_nomis_booking_id: booking_id)
+      move.person.update!(latest_nomis_booking_id: booking_id)
     end
 
     context 'when Nomis return 201 success' do

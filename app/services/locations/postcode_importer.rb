@@ -38,7 +38,7 @@ module Locations
     end
 
     def update_location(nomis_agency_id, location, postcode)
-      location.update(postcode: postcode)
+      location.update!(postcode: postcode)
     rescue Geocoder::InvalidRequest => e
       log "\nError geocoding: #{nomis_agency_id} #{e.message}\n"
 

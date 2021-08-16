@@ -42,7 +42,7 @@ RSpec.describe Api::AllocationsController do
     let(:moves_count) { 2 }
     let(:allocation_attributes) do
       {
-        date: Date.today,
+        date: Time.zone.today,
         moves_count: moves_count,
         estate: :other_estate,
         estate_comment: 'Another estate description',

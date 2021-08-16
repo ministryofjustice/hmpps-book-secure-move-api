@@ -400,21 +400,8 @@ RSpec.describe Api::FrameworkResponsesController do
     include_context 'with supplier with spoofed access token'
 
     let(:schema) { load_yaml_schema('patch_framework_response_responses.yaml') }
-    let(:response_json) { JSON.parse(response.body) }
-    let(:youth_risk_assessment) { create(:youth_risk_assessment, :in_progress) }
-    let(:youth_risk_assessment_id) { youth_risk_assessment.id }
-
-    let(:framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'No') }
-    let(:other_framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'Yes') }
-    let(:framework_response_id) { framework_response.id }
-    let(:other_framework_response_id) { other_framework_response.id }
-
-    let!(:flag) { create(:framework_flag, framework_question: framework_response.framework_question, question_value: 'Yes') }
-    let!(:other_flag) { create(:framework_flag, framework_question: other_framework_response.framework_question, question_value: 'No') }
-
     let(:value) { 'Yes' }
     let(:other_value) { 'No' }
-
     let(:bulk_youth_risk_assessment_params) do
       {
         data: [
@@ -434,6 +421,19 @@ RSpec.describe Api::FrameworkResponsesController do
           },
         ],
       }
+    end
+    let(:response_json) { JSON.parse(response.body) }
+    let(:youth_risk_assessment) { create(:youth_risk_assessment, :in_progress) }
+    let(:youth_risk_assessment_id) { youth_risk_assessment.id }
+
+    let(:framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'No') }
+    let(:other_framework_response) { create(:string_response, assessmentable: youth_risk_assessment, value: 'Yes') }
+    let(:framework_response_id) { framework_response.id }
+    let(:other_framework_response_id) { other_framework_response.id }
+
+    before do
+      create(:framework_flag, framework_question: framework_response.framework_question, question_value: 'Yes')
+      create(:framework_flag, framework_question: other_framework_response.framework_question, question_value: 'No')
     end
 
     context 'when successful' do

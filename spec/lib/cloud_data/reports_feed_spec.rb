@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CloudData::ReportsFeed do
   before do
-    Aws.config.update(stub_responses: true)
+    Aws.config.update(stub_responses: true)  # rubocop:disable Rails/SaveBang
     Timecop.freeze(Time.zone.local(2020, 1, 30))
   end
 

@@ -1,11 +1,12 @@
-inherit_from: .rubocop_todo.yml
-
 inherit_gem:
   rubocop-govuk:
     - config/default.yml
     - config/rails.yml
+    - config/rspec.yml
 
-require: rubocop-rspec
+inherit_mode:
+  merge:
+    - Exclude
 
 AllCops:
   # Exclude anything that isn't really part of our code.
@@ -18,67 +19,7 @@ AllCops:
     - "config/**/*"
     - "tmp/**/*"
 
-Style/Documentation:
-  Enabled: false
-
-Layout/ParameterAlignment:
-  EnforcedStyle: with_fixed_indentation
-
-Layout/LineLength:
-  Max: 120
-
-Metrics/BlockLength:
-  Exclude:
-    - "spec/**/*"
-
-RSpec/ExampleLength:
-  Max: 15
-
-RSpec/NestedGroups:
-  Max: 6
-
-RSpec/LetSetup:
-  Enabled: false
-
-RSpec/LeakyConstantDeclaration:
-  Enabled: false
-
-# It's not unreasonable to have 2 expectations, especially when there are similar
-# rather than being forced to create another 'it' block for the second one
-RSpec/MultipleExpectations:
-  Max: 2
-
-# Rubocop think to have empty context whenever RSwagger is used
-RSpec/EmptyExampleGroup:
-  Enabled: false
-
 # This seems very much personal choice, and would alter every string
 # if we switched to the GDS standard.
 Style/StringLiterals:
   EnforcedStyle: single_quotes
-
-# I think we disagree with GDS on this one
-Style/MethodCalledOnDoEndBlock:
-  Enabled: false
-
-# don't worry about timezones in tests or during fake data creation
-Rails/Date:
-  Exclude:
-    - "lib/tasks/fake_data.rake"
-    - "spec/**/**/*"
-
-# The anonymiser isn't production code, and is going away soon
-Rails/TimeZone:
-  Exclude:
-    - "app/services/moves/anonymiser.rb"
-
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - "spec/**/*"
-
-# Remove when we move away from the rswag rspec dsl
-RSpec/VariableName:
-  Enabled: false
-
-Rails/SaveBang:
-  Enabled: false

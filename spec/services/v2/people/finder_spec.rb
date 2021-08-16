@@ -150,9 +150,11 @@ RSpec.describe V2::People::Finder do
         }
       end
 
-      let!(:person1) { create(:person, police_national_computer: 'AB/00006') }
-      let!(:person2) { create(:person, prison_number: 'D00007') }
-      let!(:person3) { create(:person, criminal_records_office: 'CR00006') }
+      before do
+        create(:person, police_national_computer: 'AB/00006')
+        create(:person, prison_number: 'D00007')
+        create(:person, criminal_records_office: 'CR00006')
+      end
 
       it 'does not return people if filters do not all match records' do
         expect(finder.call).to be_empty

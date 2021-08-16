@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Api::MovesController do
+  subject(:do_get) { get "/api/moves/#{move.id}", params: params, headers: headers }
+
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
   let(:response_json) { JSON.parse(response.body) }
@@ -23,7 +25,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'GET /moves/:id' do
-    let!(:move) { create(:move) }
+    let(:move) { create(:move) }
 
     it 'returns serialized data' do
       do_get
@@ -35,7 +37,12 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'included relationships' do
-      let!(:move) do
+      let(:profile) { create(:profile) }
+      let(:court_hearing) { create(:court_hearing) }
+      let(:to_location) { create(:location, suppliers: [supplier]) }
+      let(:from_location) { create(:location, suppliers: [supplier]) }
+
+      before do
         create(
           :move,
           profile: profile,
@@ -43,14 +50,7 @@ RSpec.describe Api::MovesController do
           to_location: to_location,
           court_hearings: [court_hearing],
         )
-      end
 
-      let(:profile) { create(:profile) }
-      let(:court_hearing) { create(:court_hearing) }
-      let(:to_location) { create(:location, suppliers: [supplier]) }
-      let(:from_location) { create(:location, suppliers: [supplier]) }
-
-      before do
         get "/api/moves#{query_params}", params: params, headers: headers
       end
 
@@ -92,9 +92,5 @@ RSpec.describe Api::MovesController do
         end
       end
     end
-  end
-
-  def do_get
-    get "/api/moves/#{move.id}", params: params, headers: headers
   end
 end

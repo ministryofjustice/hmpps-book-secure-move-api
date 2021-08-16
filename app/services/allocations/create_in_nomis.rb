@@ -18,7 +18,7 @@ module Allocations
 
       if response&.status == 201
         new_event_id = JSON.parse(response.body)['id']
-        move.update(nomis_event_id: new_event_id)
+        move.update!(nomis_event_id: new_event_id)
       end
 
       { response_status: response&.status, response_body: response&.body, request_params: body }.tap do |log_attributes|

@@ -9,7 +9,7 @@ module Api::V2
     end
 
     def create_and_render
-      person = Person.create(person_attributes)
+      person = Person.create!(person_attributes)
 
       render_person(person, :created)
     end

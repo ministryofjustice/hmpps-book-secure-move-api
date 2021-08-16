@@ -6,9 +6,6 @@ RSpec.describe Locations::PostcodeImporter do
   subject(:importer) { described_class.new(input_data) }
 
   let!(:court_location) { create(:location, :court, nomis_agency_id: 'CRT') }
-  let!(:prison_location) { create(:location, :prison, nomis_agency_id: 'ACI') }
-  let!(:disabled_location) { create(:location, :prison, :inactive, nomis_agency_id: 'DIS') }
-
   let(:input_data) do
     [
       {
@@ -27,6 +24,11 @@ RSpec.describe Locations::PostcodeImporter do
         'nomis_agency_id' => 'UNKNOWN',
       },
     ]
+  end
+
+  before do
+    create(:location, :prison, nomis_agency_id: 'ACI')
+    create(:location, :prison, :inactive, nomis_agency_id: 'DIS')
   end
 
   # Avoid real calls to external geocoding API

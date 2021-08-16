@@ -39,7 +39,7 @@ RSpec.describe Api::PeopleController do
     ]
   end
   let(:response_json) { JSON.parse(response.body) }
-  let(:date_from) { Date.today }
+  let(:date_from) { Time.zone.today }
   let(:date_to) { Date.tomorrow }
 
   let(:params) do

@@ -25,7 +25,7 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByMoveTimeBin do
     before do
       create(:person_escort_record, move_attr: [date: 4.days.ago])
       create(:person_escort_record, move_attr: [date: Date.yesterday])
-      create(:person_escort_record, move_attr: [date: Date.today])
+      create(:person_escort_record, move_attr: [date: Time.zone.today])
       create(:person_escort_record, move_attr: [date: Date.tomorrow])
       create(:person_escort_record, move_attr: [date: 4.days.from_now])
       create(:person_escort_record, move_attr: [date: 8.days.from_now])

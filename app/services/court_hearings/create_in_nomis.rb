@@ -27,7 +27,7 @@ module CourtHearings
 
         new_hearing_id = JSON.parse(response.body)['id']
 
-        hearing.update(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
+        hearing.update!(nomis_hearing_id: new_hearing_id, saved_to_nomis: true)
       end
 
       log_attributes

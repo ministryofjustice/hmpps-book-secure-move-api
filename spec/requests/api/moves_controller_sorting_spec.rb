@@ -21,13 +21,14 @@ RSpec.describe Api::MovesController do
     let(:profile3) { create :profile, person: create(:person, last_name: 'PROFILE3') }
     let(:profile4) { create :profile, person: create(:person, last_name: 'profile4') }
 
-    let!(:move1) { create :move, profile: profile1, to_location: location1 }
     let!(:move2) { create :move, :prison_transfer, profile: profile2, to_location: location2 }
     let!(:move3) { create :move, :prison_transfer, profile: profile3, to_location: location3 }
-    let!(:move4) { create :move, profile: profile4, to_location: location4 }
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
+
+      create :move, profile: profile1, to_location: location1
+      create :move, profile: profile4, to_location: location4
 
       get '/api/v1/moves', headers: headers, params: { sort: sort_params }
     end

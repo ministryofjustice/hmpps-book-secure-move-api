@@ -192,7 +192,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move with the same from_location, to_location and date' do
       it 'returns a validation error on date' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: move.to_location,
                                           date: move.date)
@@ -203,7 +203,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move in Proposed status' do
       it 'returns a valid Move' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: move.to_location,
                                           date: move.date,
@@ -215,7 +215,7 @@ RSpec.describe Move do
 
     context 'when creating a new Move having to_location empty' do
       it 'returns a validation error on date' do
-        new_move = described_class.create(profile: profile_for_new_move,
+        new_move = described_class.create(profile: profile_for_new_move,  # rubocop:disable Rails/SaveBang
                                           from_location: move.from_location,
                                           to_location: nil,
                                           date: move.date,
@@ -585,7 +585,7 @@ RSpec.describe Move do
     end
 
     it 'does not create a move version record if only changing move updated_at timestamp' do
-      move.update(updated_at: Time.zone.now)
+      move.update!(updated_at: Time.zone.now)
       expect(move.versions.count).to eq 1
     end
 
@@ -596,13 +596,13 @@ RSpec.describe Move do
     end
 
     it 'creates a move version record if other move attributes are changed' do
-      move.update(additional_information: 'Bar')
+      move.update!(additional_information: 'Bar')
       expect(move.versions.count).to eq 2
     end
 
     it 'stores original move attributes in new version record when other move attributes are changed' do
       previous_move_attributes = move.attributes
-      move.update(additional_information: 'Bar')
+      move.update!(additional_information: 'Bar')
       expect(move.versions.last.reify.attributes).to eq previous_move_attributes
     end
   end
@@ -649,13 +649,13 @@ RSpec.describe Move do
       profile = create(:profile)
       move = create(:move, profile: profile)
 
-      expect { move.update(date: move.date + 1.day) }.to change { profile.reload.updated_at }
+      expect { move.update(date: move.date + 1.day) }.to(change { profile.reload.updated_at })
     end
 
     it 'updates the parent record when created' do
       profile = create(:profile)
 
-      expect { create(:move, profile: profile) }.to change { profile.reload.updated_at }
+      expect { create(:move, profile: profile) }.to(change { profile.reload.updated_at })
     end
   end
 
@@ -784,21 +784,23 @@ RSpec.describe Move do
     end
 
     context 'when there are move incident events' do
-      let!(:first_event) { create(:event_person_move_assault, eventable: move) }
-      let!(:second_event) { create(:event_move_approve, eventable: move) }
+      let!(:important_event) { create(:event_person_move_assault, eventable: move) }
+
+      before { create(:event_move_approve, eventable: move) }
 
       it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([first_event.id])
+        expect(important_events.pluck(:id)).to eq([important_event.id])
       end
     end
 
     context 'when there are PER medical events' do
       let(:person_escort_record) { move.profile.person_escort_record }
-      let!(:first_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
-      let!(:second_event) { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
+      let!(:important_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
+
+      before { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
 
       it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([first_event.id])
+        expect(important_events.pluck(:id)).to eq([important_event.id])
       end
     end
 

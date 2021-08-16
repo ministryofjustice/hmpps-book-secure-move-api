@@ -111,7 +111,8 @@ RSpec.describe Alerts::Importer do
 
   context 'with a relevant nomis alert mapping' do
     let(:assessment_question) { create :assessment_question, :risk }
-    let!(:nomis_alert) do
+
+    before do
       create(
         :nomis_alert,
         type_code: 'X',

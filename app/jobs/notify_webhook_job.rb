@@ -22,14 +22,14 @@ class NotifyWebhookJob < ApplicationJob
         raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
       end
 
-      notification.update(
+      notification.update!(
         delivered_at: Time.zone.now,
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )
       # TODO: in the future, consider suggesting that the webhook endpoint could return a UUID in the response, which we could store in notification.response_id ?
     rescue StandardError => e
-      notification.update(
+      notification.update!(
         delivery_attempts: notification.delivery_attempts.succ,
         delivery_attempted_at: Time.zone.now,
       )

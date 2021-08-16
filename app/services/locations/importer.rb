@@ -36,7 +36,8 @@ module Locations
         elsif location.changed?
           updated_locations << location.nomis_agency_id
         end
-        location.save
+
+        location.save  # rubocop:disable Rails/SaveBang
       end
     end
 

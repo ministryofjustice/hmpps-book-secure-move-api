@@ -7,7 +7,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
 
   let(:agency_id) { 'PRI' }
   let(:location) { create(:location, :prison, nomis_agency_id: agency_id) }
-  let(:date) { Date.today }
+  let(:date) { Time.zone.today }
 
   let(:assigned_cells) do
     [

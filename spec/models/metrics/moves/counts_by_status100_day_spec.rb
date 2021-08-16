@@ -20,7 +20,7 @@ RSpec.describe Metrics::Moves::CountsByStatus100Day do
 
     before do
       create(:move, :completed, date: Date.tomorrow)
-      create(:move, :completed, date: Date.today)
+      create(:move, :completed, date: Time.zone.today)
       create(:move, :cancelled, date: Date.yesterday)
       create(:move, :cancelled, date: 10.days.ago)
       create(:move, :in_transit, date: 10.days.ago)

@@ -85,7 +85,7 @@ RSpec.describe People::BuildPersonAndProfileV1 do
 
       let(:profile) do
         profile = service.call
-        profile.save
+        profile.save!
         profile.reload
       end
 

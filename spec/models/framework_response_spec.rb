@@ -209,7 +209,7 @@ RSpec.describe FrameworkResponse do
       return_values = [:raise, true]
       allow(response).to receive(:update!).twice do
         return_value = return_values.shift
-        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')  # rubocop:disable Rails/SaveBang
       end
 
       response.update_with_flags!(new_value: 'Yes')
@@ -463,21 +463,21 @@ RSpec.describe FrameworkResponse do
 
     it 'sets the responded value to true on update with empty value' do
       response = create(:string_response, value: nil)
-      response.update(value: 'Yes')
+      response.update!(value: 'Yes')
 
       expect(response.responded).to be(true)
     end
 
     it 'sets the responded value to true on update with value' do
       response = create(:string_response, value: 'Yes')
-      response.update(value: nil)
+      response.update!(value: nil)
 
       expect(response.responded).to be(true)
     end
 
     it 'sets the responded value to true on update with a prefilled value' do
       response = create(:string_response, value: 'Yes', prefilled: true, responded: false)
-      response.update(value: 'Yes')
+      response.update!(value: 'Yes')
 
       expect(response.responded).to be(true)
     end

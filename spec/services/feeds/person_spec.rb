@@ -15,8 +15,8 @@ RSpec.describe Feeds::Person do
     end
 
     it 'returns correctly formatted feed' do
-      on_start_person.update(updated_at: updated_at_from)
-      on_end_person.update(updated_at: updated_at_to)
+      on_start_person.update!(updated_at: updated_at_from)
+      on_end_person.update!(updated_at: updated_at_to)
       actual = feed.call.split("\n").map { |person| JSON.parse(person) }
       expect(actual).to include_json(expected_json)
     end

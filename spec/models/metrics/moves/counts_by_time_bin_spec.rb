@@ -22,7 +22,7 @@ RSpec.describe Metrics::Moves::CountsByTimeBin do
     before do
       create(:move, date: 4.days.ago)
       create(:move, date: Date.yesterday)
-      create(:move, date: Date.today)
+      create(:move, date: Time.zone.today)
       create(:move, date: Date.tomorrow)
       create(:move, date: 4.days.from_now)
       create(:move, date: 8.days.from_now)

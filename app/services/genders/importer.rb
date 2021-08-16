@@ -33,7 +33,7 @@ module Genders
         next if VISIBLE_GENDERS.map { |visible_gender| visible_gender[:key] }.include?(gender.key)
 
         gender
-          .update(item.slice(:title, :key)
+          .update!(item.slice(:title, :key)
           .merge(disabled_at: gender.disabled_at || 1.day.ago))
       end
     end

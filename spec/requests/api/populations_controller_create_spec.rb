@@ -13,7 +13,7 @@ RSpec.describe Api::PopulationsController do
 
     let(:schema) { load_yaml_schema('post_populations_responses.yaml') }
 
-    let(:population_date) { Date.today }
+    let(:population_date) { Time.zone.today }
     let(:population_attributes) do
       {
         date: population_date,

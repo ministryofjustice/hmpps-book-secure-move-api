@@ -14,50 +14,50 @@ RSpec.describe Api::Reference::RegionsController do
     let!(:region1) { create(:region, locations: [location]) }
     let!(:region2) { create(:region, locations: [location]) }
 
-    let(:data) do
-      [
-        {
-          type: 'regions',
-          attributes: {
-            key: region1.key,
-            name: region1.name,
-          },
-          relationships: {
-            locations: {
-              data: [
-                {
-                  id: location.id,
-                  type: 'locations',
-                },
-              ],
-            },
-          },
-        },
-        {
-          type: 'regions',
-          attributes: {
-            key: region2.key,
-            name: region2.name,
-          },
-          relationships: {
-            locations: {
-              data: [
-                {
-                  id: location.id,
-                  type: 'locations',
-                },
-              ],
-            },
-          },
-        },
-      ]
-    end
-
     before do
       get '/api/v1/reference/regions', headers: headers
     end
 
     context 'when successful' do
+      let(:data) do
+        [
+          {
+            type: 'regions',
+            attributes: {
+              key: region1.key,
+              name: region1.name,
+            },
+            relationships: {
+              locations: {
+                data: [
+                  {
+                    id: location.id,
+                    type: 'locations',
+                  },
+                ],
+              },
+            },
+          },
+          {
+            type: 'regions',
+            attributes: {
+              key: region2.key,
+              name: region2.name,
+            },
+            relationships: {
+              locations: {
+                data: [
+                  {
+                    id: location.id,
+                    type: 'locations',
+                  },
+                ],
+              },
+            },
+          },
+        ]
+      end
+
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
@@ -69,8 +69,11 @@ RSpec.describe Api::Reference::RegionsController do
       let(:location1) { create(:location) }
       let(:location2) { create(:location) }
       let(:location3) { create(:location) }
+
+      # rubocop:disable RSpec/LetSetup
       let!(:region1) { create(:region, locations: [location1, location2]) }
       let!(:region2) { create(:region, locations: [location2, location3]) }
+      # rubocop:enable RSpec/LetSetup
 
       let(:expected_relationships) do
         UnorderedArray(

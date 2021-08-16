@@ -13,7 +13,7 @@ RSpec.describe Api::PopulationsController do
 
     let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
     let(:params) { {} }
-    let(:date_from) { Date.today }
+    let(:date_from) { Time.zone.today }
     let(:date_to) { Date.tomorrow }
     let(:date_params) { { date_from: date_from.to_s, date_to: date_to.to_s } }
 
@@ -115,9 +115,11 @@ RSpec.describe Api::PopulationsController do
 
     describe 'included relationships' do
       let!(:category) { create :category }
-      let!(:location) { create :location, category: category }
 
-      before { get_locations_free_spaces }
+      before do
+        create :location, category: category
+        get_locations_free_spaces
+      end
 
       context 'when not including the include query param' do
         let(:params) { {} }
@@ -147,7 +149,6 @@ RSpec.describe Api::PopulationsController do
     end
 
     describe 'paginating results' do
-      let!(:locations) { create_list :location, 6 }
       let(:meta_pagination) do
         {
           per_page: 5,
@@ -165,7 +166,10 @@ RSpec.describe Api::PopulationsController do
         }
       end
 
-      before { get_locations_free_spaces }
+      before do
+        create_list :location, 6
+        get_locations_free_spaces
+      end
 
       it_behaves_like 'an endpoint that paginates resources'
     end
