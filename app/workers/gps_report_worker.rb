@@ -94,7 +94,7 @@ private
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: ":white_check_mark: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get)}|failure file>" : ''}",
+        text: ":white_check_mark: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get, expires_in: 604_800)}|failure file>" : ''}",
       },
     }
   end
@@ -106,7 +106,7 @@ private
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: ":x: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get)}|failure file>" : ''}",
+        text: ":x: #{supplier}: #{move_count - failures.count}/#{move_count} (#{percent_passed.floor(1).to_s.sub(/\.0+$/, '')}%) moves met the criteria#{file.present? ? ", <#{file.presigned_url(:get, expires_in: 604_800)}|failure file>" : ''}",
       },
     }
   end
