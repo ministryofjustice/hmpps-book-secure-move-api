@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.5.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.5.1) (2021-08-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.5.0...v3.5.1)
+
+**Merged pull requests:**
+
+- Change gps failure file expiry to 1 week [\#1552](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1552) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.5.0 [\#1551](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1551) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.5.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.5.0) (2021-08-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.4.0...v3.5.0)
