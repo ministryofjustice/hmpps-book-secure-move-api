@@ -1,5 +1,23 @@
 # Changelog
 
+## [v3.5.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.5.0) (2021-08-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.4.0...v3.5.0)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-s3 from 1.98.0 to 1.99.0 [\#1550](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1550) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Upload gps data report results to s3 [\#1549](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1549) ([Thource](https://github.com/Thource))
+- PER Quality Report [\#1548](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1548) ([thomasleese](https://github.com/thomasleese))
+- Bump rspec-rails from 5.0.1 to 5.0.2 [\#1547](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1547) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Standardise linting on rubocop-govuk [\#1546](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1546) ([thomasleese](https://github.com/thomasleese))
+- Bump sentry-ruby from 4.6.4 to 4.6.5 [\#1545](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1545) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-rails from 4.6.4 to 4.6.5 [\#1544](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1544) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-sidekiq from 4.6.4 to 4.6.5 [\#1543](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1543) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Validate CourtHearing comments field length [\#1542](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1542) ([thomasleese](https://github.com/thomasleese))
+- Bump nokogiri from 1.12.2 to 1.12.3 [\#1541](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1541) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.4.0 [\#1540](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1540) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.4.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.4.0) (2021-08-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.3.1...v3.4.0)
