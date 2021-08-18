@@ -28,8 +28,8 @@ RSpec.describe Person do
 
   describe '#police_national_computer' do
     it 'is case insensitive' do
-      person = create(:person, police_national_computer: 'FLIBBLE')
-      expect(described_class.where(police_national_computer: 'flibble')).to include(person)
+      person = create(:person, police_national_computer: '06/4169X')
+      expect(described_class.where(police_national_computer: '06/4169x')).to include(person)
     end
 
     it 'stores blank values as nil' do
@@ -40,8 +40,8 @@ RSpec.describe Person do
 
   describe '#criminal_records_office' do
     it 'is case insensitive' do
-      person = create(:person, criminal_records_office: 'FLIBBLE')
-      expect(described_class.where(criminal_records_office: 'flibble')).to include(person)
+      person = create(:person, criminal_records_office: '06/4169X')
+      expect(described_class.where(criminal_records_office: '06/4169x')).to include(person)
     end
 
     it 'stores blank values as nil' do
@@ -52,8 +52,8 @@ RSpec.describe Person do
 
   describe '#prison_number' do
     it 'is case insensitive' do
-      person = create(:person, prison_number: 'FLIBBLE')
-      expect(described_class.where(prison_number: 'flibble')).to include(person)
+      person = create(:person, prison_number: '06/4169X')
+      expect(described_class.where(prison_number: '06/4169x')).to include(person)
     end
 
     it 'stores blank values as nil' do
@@ -65,8 +65,8 @@ RSpec.describe Person do
   # TODO: Remove nomis_prison_number once we remove v1 from our system
   describe '#nomis_prison_number' do
     it 'is case insensitive' do
-      person = create(:person, nomis_prison_number: 'FLIBBLE')
-      expect(described_class.where(nomis_prison_number: 'flibble')).to include(person)
+      person = create(:person, nomis_prison_number: '06/4169X')
+      expect(described_class.where(nomis_prison_number: '06/4169x')).to include(person)
     end
 
     it 'stores blank values as nil' do
@@ -185,6 +185,41 @@ RSpec.describe Person do
 
     it 'returns the value obtained from BookingDetails' do
       expect(person.csra).to eq('Standard')
+    end
+  end
+
+  describe '.is_valid_pnc?' do
+    let(:valid_pnc_numbers) do
+      [
+        nil,
+        '',
+        '96/2663652J',
+        '1996/2663652J',
+        '14/2400766Q',
+        '2014/2400766Q',
+        '06/0000222G',
+        '2006/0000222G',
+        '06/4169X',
+        '2006/4169X',
+      ]
+    end
+
+    let(:invalid_pnc_numbers) do
+      [
+        796_507,
+        '796507',
+        '996/0607652B',
+        '08012345P',
+        '08/012345',
+        '012345P',
+        'ABCDEF',
+        '08/P',
+      ]
+    end
+
+    it 'correctly identifies valid PNC numbers' do
+      valid_pnc_numbers.each { |pnc| expect(described_class.is_valid_pnc?(pnc)).to eq(true) }
+      invalid_pnc_numbers.each { |pnc| expect(described_class.is_valid_pnc?(pnc)).to eq(false) }
     end
   end
 end
