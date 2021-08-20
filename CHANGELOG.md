@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.7.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.0) (2021-08-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.6.1...v3.7.0)
+
+**Merged pull requests:**
+
+- Revert "Merge pull request \#1555 from ministryofjustice/P4-2828/add-pnc-number-validation" [\#1563](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1563) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.6.1 [\#1562](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1562) ([Thource](https://github.com/Thource))
+- Warn when NOMIS rejects court dates due to location mismatch  [\#1561](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1561) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.6.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.6.1) (2021-08-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.6.0...v3.6.1)
