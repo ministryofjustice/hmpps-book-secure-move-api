@@ -43,7 +43,7 @@ private
   def journey_failures
     failures = journeys.filter_map do |journey|
       gps_data = gps_data_map[journey.id]
-      next { move: journey.move, reason: 'no_gps_data' } if gps_data.blank?
+      next { move: journey.move, reason: 'no_gps_data' } if gps_data.blank? || gps_data.length < 2
 
       intervals = gps_data.each_with_index.filter_map { |t, i| i < gps_data.count - 1 ? gps_data[i + 1] - t : nil }
       { move: journey.move, reason: 'gps_data_gap' } if intervals.max > 60.seconds
