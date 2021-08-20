@@ -44,7 +44,33 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
         .with('/api/bookings/1111/court-cases/2222/prison-to-court-hearings', body: '{}', headers: { Accept: 'application/json', 'Content-Type': 'application/json' })
     end
 
-    context 'when Nomis returns an error' do
+    context 'when NOMIS returns a prison/booking location mismatch error' do
+      before do
+        allow(oauth2_response).to receive(:error=)
+        allow(token).to receive(:post).and_raise(OAuth2::Error.new(oauth2_response))
+      end
+
+      let(:response_status) { 400 }
+      let(:response_body) { { developerMessage: 'Prison location does not match the bookings location.' }.to_json }
+
+      include_examples 'captures an exception in Sentry' do
+        let(:sentry_exception) { NomisClient::CourtHearings::PrisonBookingLocationMismatch }
+        let(:sentry_options) do
+          {
+            extra: {
+              body_params: {},
+              route: '/bookings/1111/court-cases/2222/prison-to-court-hearings',
+              nomis_response_status: 400,
+              nomis_response_body: '{"developerMessage":"Prison location does not match the bookings location."}',
+              nomis_response_message: 'Prison location does not match the bookings location.',
+            },
+            level: :warning,
+          }
+        end
+      end
+    end
+
+    context 'when NOMIS returns an error' do
       before do
         allow(oauth2_response).to receive(:error=)
         allow(token).to receive(:post).and_raise(OAuth2::Error.new(oauth2_response))
