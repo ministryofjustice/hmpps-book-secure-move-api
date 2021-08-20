@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.6.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.6.1) (2021-08-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.6.0...v3.6.1)
+
+**Merged pull requests:**
+
+- Fix error when a journey has 1 gps point [\#1560](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1560) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.6.0 [\#1559](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1559) ([Thource](https://github.com/Thource))
+
 ## [v3.6.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.6.0) (2021-08-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.5.2...v3.6.0)
