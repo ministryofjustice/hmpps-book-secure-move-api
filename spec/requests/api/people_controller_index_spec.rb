@@ -9,6 +9,7 @@ RSpec.describe Api::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
+  let(:pnc) { "17/39#{Person.pnc_checkdigit('170000039')}" }
 
   let(:schema) { load_yaml_schema('get_people_responses.yaml') }
 
@@ -41,9 +42,9 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'when called with police_national_computer filter' do
-      let(:params) { { filter: { police_national_computer: 'AB/1234567' } } }
+      let(:params) { { filter: { police_national_computer: pnc } } }
 
-      before { create_list :person, 5, :nomis_synced, police_national_computer: 'AB/1234567' }
+      before { create_list :person, 5, :nomis_synced, police_national_computer: pnc }
 
       it 'returns the correct data' do
         get_people
@@ -57,7 +58,7 @@ RSpec.describe Api::PeopleController do
 
         get_people
 
-        expect(People::Finder).to have_received(:new).with(police_national_computer: 'AB/1234567')
+        expect(People::Finder).to have_received(:new).with(police_national_computer: pnc)
       end
     end
 
@@ -113,7 +114,7 @@ RSpec.describe Api::PeopleController do
 
     describe 'included relationships' do
       before do
-        create_list :person, 2, police_national_computer: 'AB/1234567'
+        create_list :person, 2, police_national_computer: pnc
         get "/api/v1/people#{query_params}", headers: headers, params: params
       end
 

@@ -96,14 +96,15 @@ class Person < VersionedModel
     regex = /^([0-9]{2}|[0-9]{4})\/[0-9]+[A-Z]$/
     return false if regex.match(pnc).nil?
 
-    mod23chars = 'ZABCDEFGHJKLMNPQRTUVWXY'.split('')
     year, number = pnc.split('/')
-    check_digit = pnc.last
     derived_pnc = "#{year.last(2)}#{number[..-2].rjust(7, '0')}"
-    i = derived_pnc.to_i % 23
-    return false if mod23chars[i] != check_digit
+    return false if pnc_checkdigit(derived_pnc) != pnc.last
 
     true
+  end
+
+  def self.pnc_checkdigit(derived_pnc)
+    'ZABCDEFGHJKLMNPQRTUVWXY'[derived_pnc.to_i % 23]
   end
 
 private

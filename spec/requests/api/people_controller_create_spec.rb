@@ -6,6 +6,7 @@ RSpec.describe Api::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
+  let(:pnc) { "11/2853#{Person.pnc_checkdigit('110002853')}" }
 
   let(:headers) do
     {
@@ -37,7 +38,7 @@ RSpec.describe Api::PeopleController do
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
-              { identifier_type: 'police_national_computer', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: pnc },
               { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
           },
@@ -72,7 +73,7 @@ RSpec.describe Api::PeopleController do
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
-              { identifier_type: 'police_national_computer', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: pnc },
               { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
           },

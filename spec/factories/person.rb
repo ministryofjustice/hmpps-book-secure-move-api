@@ -3,12 +3,9 @@
 def generate_pnc(seq)
   year = '16'
   number = seq.to_s
-
-  mod23chars = 'ZABCDEFGHJKLMNPQRTUVWXY'.split('')
   derived_pnc = "#{year.last(2)}#{number.rjust(7, '0')}"
-  i = derived_pnc.to_i % 23
 
-  "#{year}/#{number}#{mod23chars[i]}"
+  "#{year}/#{number}#{Person.pnc_checkdigit(derived_pnc)}"
 end
 
 FactoryBot.define do
