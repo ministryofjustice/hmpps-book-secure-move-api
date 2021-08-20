@@ -41,11 +41,8 @@ RSpec.describe GPSReport do
         too_late_move: create(:move, :completed, :with_journey, supplier: serco, date: '2021-01-08'),
       }
     end
-
-    before do
-      moves_with_journeys = [moves[:passing_move], moves[:no_gps_data_move], moves[:gps_data_gap_move]].sort_by(&:id)
-
-      gps_data_res = instance_double(
+    let(:gps_data_res) do
+      instance_double(
         Aws::Athena::Types::GetQueryResultsOutput,
         result_set: instance_double(
           Aws::Athena::Types::ResultSet,
@@ -94,7 +91,23 @@ RSpec.describe GPSReport do
             ),
           ],
         ),
+        next_token: nil,
       )
+    end
+    let(:repair_res) do
+      instance_double(
+        Aws::Athena::Types::GetQueryResultsOutput,
+        result_set: instance_double(
+          Aws::Athena::Types::ResultSet,
+          rows: [],
+        ),
+        next_token: nil,
+      )
+    end
+
+    before do
+      moves_with_journeys = [moves[:passing_move], moves[:no_gps_data_move], moves[:gps_data_gap_move]].sort_by(&:id)
+
       allow(athena_client).to receive(:start_query_execution).with(
         {
           work_group: 'env_work_group',
@@ -115,7 +128,8 @@ RSpec.describe GPSReport do
         },
       ).and_return(instance_double(Aws::Athena::Types::StartQueryExecutionOutput, query_execution_id: 'gps_data'))
 
-      allow(athena_client).to receive(:get_query_results).with(query_execution_id: 'gps_data').and_return(gps_data_res)
+      allow(athena_client).to receive(:get_query_results).with(query_execution_id: 'gps_data', next_token: nil).and_return(gps_data_res)
+      allow(athena_client).to receive(:get_query_results).with(query_execution_id: 'repair', next_token: nil).and_return(repair_res)
     end
 
     it 'returns the expected values' do
@@ -131,7 +145,70 @@ RSpec.describe GPSReport do
         move_count: 4,
       })
 
-      expect(athena_client).to have_received(:get_query_results).with(query_execution_id: 'repair')
+      expect(athena_client).to have_received(:get_query_results).with(query_execution_id: 'repair', next_token: nil)
+    end
+
+    context 'when athena returns a next_token' do
+      let(:gps_data_res1) do
+        instance_double(
+          Aws::Athena::Types::GetQueryResultsOutput,
+          result_set: instance_double(
+            Aws::Athena::Types::ResultSet,
+            rows: [
+              instance_double(
+                Aws::Athena::Types::Row,
+                data: [
+                  instance_double(Aws::Athena::Types::Datum, var_char_value: moves[:passing_move].journeys.first.id),
+                  instance_double(Aws::Athena::Types::Datum, var_char_value: '2021-01-01T07:01:50+01:00'),
+                ],
+              ),
+            ],
+          ),
+          next_token: 'token2',
+        )
+      end
+
+      let(:gps_data_res2) do
+        instance_double(
+          Aws::Athena::Types::GetQueryResultsOutput,
+          result_set: instance_double(
+            Aws::Athena::Types::ResultSet,
+            rows: [
+              instance_double(
+                Aws::Athena::Types::Row,
+                data: [
+                  instance_double(Aws::Athena::Types::Datum, var_char_value: moves[:passing_move].journeys.first.id),
+                  instance_double(Aws::Athena::Types::Datum, var_char_value: '2021-01-01T07:03:10+01:00'),
+                ],
+              ),
+            ],
+          ),
+          next_token: nil,
+        )
+      end
+
+      before do
+        allow(gps_data_res).to receive(:next_token).and_return('token1')
+        allow(athena_client).to receive(:get_query_results).with(query_execution_id: 'gps_data', next_token: 'token1').and_return(gps_data_res1)
+        allow(athena_client).to receive(:get_query_results).with(query_execution_id: 'gps_data', next_token: 'token2').and_return(gps_data_res2)
+      end
+
+      it 'returns the expected values' do
+        res = gps_report.generate
+        res[:failures].sort_by! { |f| f[:move].id }
+
+        expect(res).to eq({
+          failures: [
+            { move: moves[:no_gps_data_move], reason: 'no_gps_data' },
+            { move: moves[:gps_data_gap_move], reason: 'gps_data_gap' },
+            { move: moves[:passing_move], reason: 'gps_data_gap' },
+            { move: moves[:no_journey_move], reason: 'no_journeys' },
+          ].sort_by { |f| f[:move].id },
+          move_count: 4,
+        })
+
+        expect(athena_client).to have_received(:get_query_results).with(query_execution_id: 'repair', next_token: nil)
+      end
     end
 
     context 'when athena raises an unexpected error' do

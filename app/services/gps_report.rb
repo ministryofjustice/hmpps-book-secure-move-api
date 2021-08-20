@@ -59,15 +59,16 @@ private
 
       time_since = TimeSince.new
       res = athena_query("select journey_id, tracking_timestamp from #{@supplier.key} where journey_id in ('#{journeys.map(&:id).join("', '")}') order by journey_id, tracking_timestamp;")
+      rows = res.flat_map { |r| r.result_set.rows }[1..]
 
-      gps_data_map = res.result_set.rows[1..].each_with_object({}) do |data_row, data_map|
+      gps_data_map = rows.each_with_object({}) do |data_row, data_map|
         journey_id, timestamp = *data_row.data.map(&:var_char_value)
         data_map[journey_id] = [] if data_map[journey_id].nil?
 
         data_map[journey_id] << Time.zone.parse(timestamp)
       end
 
-      Rails.logger.info "Fetched #{pluralize(res.result_set.rows[1..].count, "#{@supplier.key} GPS data point")} in #{pluralize(time_since.get, 'second')}."
+      Rails.logger.info "Fetched #{pluralize(rows.count, "#{@supplier.key} GPS data point")} in #{pluralize(time_since.get, 'second')}."
 
       gps_data_map
     end
@@ -99,7 +100,16 @@ private
 
     sleep 1.second while %w[QUEUED RUNNING].include?(athena_client.get_query_execution(query_execution_id: query_id).query_execution.status.state)
 
-    athena_client.get_query_results(query_execution_id: query_id)
+    results = []
+
+    next_token = nil
+    while results.count.zero? || next_token.present?
+      res = athena_client.get_query_results(query_execution_id: query_id, next_token: next_token)
+      results << res
+      next_token = res.next_token
+    end
+
+    results
   rescue Aws::Athena::Errors::InvalidRequestException => e
     Sentry.capture_exception(e, extra: { query_execution_id: query_id })
     raise e
