@@ -36,6 +36,7 @@ class Person < VersionedModel
   validates :last_name, presence: true
   validates :first_names, presence: true
   validate :validate_age
+  validate :validate_pnc
 
   auto_strip_attributes :nomis_prison_number, :prison_number, :criminal_records_office, :police_national_computer
 
@@ -88,11 +89,35 @@ class Person < VersionedModel
     People::RetrieveImage.call(self, force_update: true)
   end
 
+  def self.is_valid_pnc?(pnc)
+    return true if pnc.blank?
+
+    pnc = pnc.to_s.upcase
+    regex = /^([0-9]{2}|[0-9]{4})\/[0-9]+[A-Z]$/
+    return false if regex.match(pnc).nil?
+
+    year, number = pnc.split('/')
+    derived_pnc = "#{year.last(2)}#{number[..-2].rjust(7, '0')}"
+    return false if pnc_checkdigit(derived_pnc) != pnc.last
+
+    true
+  end
+
+  def self.pnc_checkdigit(derived_pnc)
+    'ZABCDEFGHJKLMNPQRTUVWXY'[derived_pnc.to_i % 23]
+  end
+
 private
 
   def validate_age
-    if date_of_birth.present? && date_of_birth.year < 1900
-      errors.add(:birth_date, 'must be after 1900-01-01.')
-    end
+    return if date_of_birth.blank? || date_of_birth.year >= 1900
+
+    errors.add(:birth_date, 'must be after 1900-01-01.')
+  end
+
+  def validate_pnc
+    return if self.class.is_valid_pnc?(police_national_computer)
+
+    errors.add(:police_national_computer, 'must be in the correct format. (e.g. 08/012345P)')
   end
 end

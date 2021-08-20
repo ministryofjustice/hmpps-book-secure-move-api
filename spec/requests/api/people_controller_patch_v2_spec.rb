@@ -32,7 +32,7 @@ RSpec.describe Api::PeopleController do
             date_of_birth: Date.new(1980, 1, 1),
             prison_number: 'G3239GV',
             criminal_records_office: 'CRO0111d',
-            police_national_computer: 'AB/1234567',
+            police_national_computer: person.police_national_computer,
             gender_additional_information: 'info about Bob',
           },
           relationships: {
@@ -62,7 +62,7 @@ RSpec.describe Api::PeopleController do
           date_of_birth: '1980-01-01',
           prison_number: 'G3239GV',
           criminal_records_office: 'CRO0111d',
-          police_national_computer: 'AB/1234567',
+          police_national_computer: person.police_national_computer,
           gender_additional_information: 'info about Bob',
         },
         relationships: {
