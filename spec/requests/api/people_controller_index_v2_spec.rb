@@ -107,11 +107,11 @@ RSpec.describe Api::PeopleController do
     end
 
     describe 'filtering results by police_national_computer' do
-      let!(:person) { create(:person) }
+      let!(:person) { create(:person, police_national_computer: 'AB/1234567') }
       let(:filters) do
         {
           bar: 'bar',
-          police_national_computer: person.police_national_computer,
+          police_national_computer: 'AB/1234567',
           foo: 'foo',
         }
       end
@@ -130,13 +130,13 @@ RSpec.describe Api::PeopleController do
 
     describe 'filtering results by multiple filters' do
       let!(:person) do
-        create(:person, criminal_records_office: 'CRO0105d')
+        create(:person, criminal_records_office: 'CRO0105d', police_national_computer: 'AB/00001d')
       end
       let(:filters) do
         {
           bar: 'bar',
           criminal_records_office: 'CRO0105d',
-          police_national_computer: person.police_national_computer,
+          police_national_computer: 'AB/00001d',
           foo: 'foo',
         }
       end

@@ -11,8 +11,8 @@ RSpec.describe V2::People::Finder do
   describe 'filtering' do
     describe 'by police_national_computer' do
       context 'with matching police_national_computer' do
-        let!(:person) { create(:person) }
-        let(:filter_params) { { police_national_computer: person.police_national_computer } }
+        let(:filter_params) { { police_national_computer: 'AB/00006' } }
+        let!(:person) { create(:person, police_national_computer: 'AB/00006') }
 
         it 'returns people matching police_national_computer' do
           expect(finder.call).to contain_exactly(person)
@@ -20,9 +20,9 @@ RSpec.describe V2::People::Finder do
       end
 
       context 'with multiple police_national_computer values' do
-        let!(:person1) { create(:person) }
-        let!(:person2) { create(:person) }
-        let(:filter_params) { { police_national_computer: [person1, person2].map(&:police_national_computer).join(',') } }
+        let(:filter_params) { { police_national_computer: 'AB/00006,AB/00007' } }
+        let!(:person1) { create(:person, police_national_computer: 'AB/00006') }
+        let!(:person2) { create(:person, police_national_computer: 'AB/00007') }
 
         it 'returns people matching police_national_computer' do
           expect(finder.call).to contain_exactly(person1, person2)
@@ -124,16 +124,16 @@ RSpec.describe V2::People::Finder do
     end
 
     context 'with multiple matching filters' do
-      let!(:person) do
-        create(:person, prison_number: 'D00007', criminal_records_office: 'CR00006')
-      end
-
       let(:filter_params) do
         {
-          police_national_computer: person.police_national_computer,
+          police_national_computer: 'ab/00006',
           prison_number: 'd00007',
           criminal_records_office: 'cr00006',
         }
+      end
+
+      let!(:person) do
+        create(:person, police_national_computer: 'AB/00006', prison_number: 'D00007', criminal_records_office: 'CR00006')
       end
 
       it 'does not return people if filters do not all match records' do
@@ -142,16 +142,16 @@ RSpec.describe V2::People::Finder do
     end
 
     context 'with multiple mismatching filters' do
-      let(:person) { create(:person) }
       let(:filter_params) do
         {
-          police_national_computer: person.police_national_computer,
+          police_national_computer: 'AB/00006',
           prison_number: 'D00007',
           criminal_records_office: 'CR00006',
         }
       end
 
       before do
+        create(:person, police_national_computer: 'AB/00006')
         create(:person, prison_number: 'D00007')
         create(:person, criminal_records_office: 'CR00006')
       end
