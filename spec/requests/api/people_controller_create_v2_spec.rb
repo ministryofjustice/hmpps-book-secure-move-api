@@ -6,7 +6,6 @@ RSpec.describe Api::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:pnc) { "11/2313#{Person.pnc_checkdigit('110002313')}" }
 
   let(:headers) do
     {
@@ -32,7 +31,7 @@ RSpec.describe Api::PeopleController do
             date_of_birth: Date.new(1980, 1, 1),
             prison_number: 'G3239GV',
             criminal_records_office: 'CRO0111d',
-            police_national_computer: pnc,
+            police_national_computer: 'AB/1234567',
             gender_additional_information: 'info about Bob',
           },
           relationships: {
@@ -62,7 +61,7 @@ RSpec.describe Api::PeopleController do
           date_of_birth: Date.new(1980, 1, 1).iso8601,
           prison_number: 'G3239GV',
           criminal_records_office: 'CRO0111d',
-          police_national_computer: pnc,
+          police_national_computer: 'AB/1234567',
           gender_additional_information: 'info about Bob',
         },
         relationships: {
