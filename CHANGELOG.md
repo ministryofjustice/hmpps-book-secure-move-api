@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.6.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.6.0) (2021-08-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.5.2...v3.6.0)
+
+**Merged pull requests:**
+
+- Pull more data from athena if we're limited [\#1558](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1558) ([Thource](https://github.com/Thource))
+- Bump listen from 3.6.0 to 3.7.0 [\#1557](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1557) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.5.2 [\#1556](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1556) ([thomasleese](https://github.com/thomasleese))
+- Add PNC number validation to Person [\#1555](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1555) ([Thource](https://github.com/Thource))
+
 ## [v3.5.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.5.2) (2021-08-18)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.5.1...v3.5.2)
