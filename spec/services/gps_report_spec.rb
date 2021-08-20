@@ -33,6 +33,7 @@ RSpec.describe GPSReport do
       {
         passing_move: create(:move, :completed, :with_journey, supplier: serco, date: '2021-01-01'),
         no_gps_data_move: create(:move, :completed, :with_journey, supplier: serco, date: '2021-01-07'),
+        single_point_move: create(:move, :completed, :with_journey, supplier: serco, date: '2021-01-07'),
         gps_data_gap_move: create(:move, :completed, :with_journey, supplier: serco, date: '2021-01-02'),
         no_journey_move: create(:move, :completed, supplier: serco, date: '2021-01-06'),
         requested_move: create(:move, :requested, :with_journey, supplier: serco, date: '2021-01-03'),
@@ -89,6 +90,13 @@ RSpec.describe GPSReport do
                 instance_double(Aws::Athena::Types::Datum, var_char_value: '2021-01-01T07:01:09+01:00'),
               ],
             ),
+            instance_double(
+              Aws::Athena::Types::Row,
+              data: [
+                instance_double(Aws::Athena::Types::Datum, var_char_value: moves[:single_point_move].journeys.first.id),
+                instance_double(Aws::Athena::Types::Datum, var_char_value: '2021-01-01T07:01:42+01:00'),
+              ],
+            ),
           ],
         ),
         next_token: nil,
@@ -106,7 +114,7 @@ RSpec.describe GPSReport do
     end
 
     before do
-      moves_with_journeys = [moves[:passing_move], moves[:no_gps_data_move], moves[:gps_data_gap_move]].sort_by(&:id)
+      moves_with_journeys = [moves[:passing_move], moves[:single_point_move], moves[:no_gps_data_move], moves[:gps_data_gap_move]].sort_by(&:id)
 
       allow(athena_client).to receive(:start_query_execution).with(
         {
@@ -139,10 +147,11 @@ RSpec.describe GPSReport do
       expect(res).to eq({
         failures: [
           { move: moves[:no_gps_data_move], reason: 'no_gps_data' },
+          { move: moves[:single_point_move], reason: 'no_gps_data' },
           { move: moves[:gps_data_gap_move], reason: 'gps_data_gap' },
           { move: moves[:no_journey_move], reason: 'no_journeys' },
         ].sort_by { |f| f[:move].id },
-        move_count: 4,
+        move_count: 5,
       })
 
       expect(athena_client).to have_received(:get_query_results).with(query_execution_id: 'repair', next_token: nil)
@@ -200,11 +209,12 @@ RSpec.describe GPSReport do
         expect(res).to eq({
           failures: [
             { move: moves[:no_gps_data_move], reason: 'no_gps_data' },
+            { move: moves[:single_point_move], reason: 'no_gps_data' },
             { move: moves[:gps_data_gap_move], reason: 'gps_data_gap' },
             { move: moves[:passing_move], reason: 'gps_data_gap' },
             { move: moves[:no_journey_move], reason: 'no_journeys' },
           ].sort_by { |f| f[:move].id },
-          move_count: 4,
+          move_count: 5,
         })
 
         expect(athena_client).to have_received(:get_query_results).with(query_execution_id: 'repair', next_token: nil)
