@@ -98,6 +98,7 @@ RSpec.describe People::Creator do
   end
 
   context 'with identifiers' do
+    let(:pnc) { "11/2333#{Person.pnc_checkdigit('110002333')}" }
     let(:params) do
       {
         type: 'people',
@@ -106,7 +107,7 @@ RSpec.describe People::Creator do
           last_name: 'Roberts',
           date_of_birth: Date.civil(1980, 1, 1),
           identifiers: [
-            { identifier_type: 'police_national_computer', value: 'ABC123' },
+            { identifier_type: 'police_national_computer', value: pnc },
             { identifier_type: 'prison_number', value: 'XYZ987' },
           ],
         },
@@ -123,7 +124,7 @@ RSpec.describe People::Creator do
 
       expect(identifiers).to eq(
         'criminal_records_office' => nil,
-        'police_national_computer' => 'ABC123',
+        'police_national_computer' => pnc,
         'prison_number' => 'XYZ987',
       )
     end

@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe People::Finder do
   subject(:people_finder) { described_class.new(filter_params) }
 
-  let!(:person) { create(:person, police_national_computer: 'CD/765432', prison_number: 'GFEDCBA') }
+  let!(:person) { create(:person) }
 
   describe 'filtering' do
     context 'when filtering by police_national_computer' do
-      let(:filter_params) { { police_national_computer: 'CD/765432' } }
+      let(:filter_params) { { police_national_computer: person.police_national_computer } }
 
       it 'returns people matching the police_national_computer' do
         expect(people_finder.call).to eq [person]
@@ -18,7 +18,7 @@ RSpec.describe People::Finder do
 
     context 'when filtering by empty police_national_computer' do
       let(:filter_params) { { police_national_computer: nil } }
-      let!(:other_person) { create(:person, police_national_computer: nil, prison_number: 'GFEDCBA') }
+      let!(:other_person) { create(:person, police_national_computer: nil, prison_number: person.prison_number) }
 
       it 'returns people matching the police_national_computer' do
         expect(people_finder.call).to eq [other_person]
@@ -26,7 +26,7 @@ RSpec.describe People::Finder do
     end
 
     context 'when filtering by prison_number' do
-      let(:filter_params) { { prison_number: 'GFEDCBA' } }
+      let(:filter_params) { { prison_number: person.prison_number } }
 
       it 'returns people matching the prison_number' do
         expect(people_finder.call).to eq [person]

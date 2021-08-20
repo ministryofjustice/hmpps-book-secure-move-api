@@ -15,12 +15,13 @@ RSpec.describe People::Updater do
       person: person,
     }
   end
+  let(:pnc) { "17/1553#{Person.pnc_checkdigit('170001553')}" }
   let(:original_person_attributes) do
     {
       first_names: 'Robbie',
       last_name: 'Roberts',
       date_of_birth: Date.civil(1980, 6, 1),
-      police_national_computer: 'ABC123',
+      police_national_computer: pnc,
     }
   end
   let(:person) { create(:person, original_person_attributes) }
@@ -68,7 +69,7 @@ RSpec.describe People::Updater do
     end
 
     it 'does not change original identifiers for the Person' do
-      expect(updated_person.police_national_computer).to eq('ABC123')
+      expect(updated_person.police_national_computer).to eq(pnc)
     end
   end
 
@@ -85,7 +86,7 @@ RSpec.describe People::Updater do
             { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
           ],
           identifiers: [
-            { identifier_type: 'police_national_computer', value: 'ABC123' },
+            { identifier_type: 'police_national_computer', value: pnc },
             { identifier_type: 'prison_number', value: 'XYZ987' },
           ],
         },

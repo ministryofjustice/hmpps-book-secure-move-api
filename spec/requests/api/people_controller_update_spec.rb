@@ -16,6 +16,7 @@ RSpec.describe Api::PeopleController do
     let(:risk_type_1) { create :assessment_question, :risk }
     let(:risk_type_2) { create :assessment_question, :risk }
     let(:gender_additional_information) { nil }
+    let(:pnc) { "17/35#{Person.pnc_checkdigit('170000035')}" }
     let(:person_params) do
       {
         data: {
@@ -40,7 +41,7 @@ RSpec.describe Api::PeopleController do
               { title: 'Violent', assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
-              { identifier_type: 'police_national_computer', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: pnc },
               { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
             gender_additional_information: gender_additional_information,
@@ -85,7 +86,7 @@ RSpec.describe Api::PeopleController do
               { title: risk_type_2.title, assessment_question_id: risk_type_2.id },
             ],
             identifiers: [
-              { identifier_type: 'police_national_computer', value: 'ABC123' },
+              { identifier_type: 'police_national_computer', value: pnc },
               { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
           },

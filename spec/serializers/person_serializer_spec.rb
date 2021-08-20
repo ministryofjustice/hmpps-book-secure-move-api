@@ -81,7 +81,7 @@ RSpec.describe PersonSerializer do
     let(:profile_identifiers) do
       [
         {
-          value: 'ABC123456',
+          value: person.police_national_computer,
           identifier_type: 'police_national_computer',
         },
         {
@@ -92,7 +92,6 @@ RSpec.describe PersonSerializer do
     end
 
     before do
-      person.police_national_computer = 'ABC123456'
       person.prison_number = 'XYZ123456'
       person.criminal_records_office = nil
       person.save!
