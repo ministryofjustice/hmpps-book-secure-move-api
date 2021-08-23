@@ -125,9 +125,9 @@ module Moves
 
       scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
       if filter_params[:ready_for_transit] == 'true'
-        scope.where('person_escort_records.status' => 'confirmed')
+        scope.where('person_escort_records.status' => %w[completed confirmed])
       else
-        scope.where.not('person_escort_records.status' => 'confirmed').or(scope.where('person_escort_records.id' => nil))
+        scope.where.not('person_escort_records.status' => %w[completed confirmed]).or(scope.where('person_escort_records.id' => nil))
       end
     end
   end

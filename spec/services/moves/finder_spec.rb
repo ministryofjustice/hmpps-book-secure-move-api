@@ -475,8 +475,9 @@ RSpec.describe Moves::Finder do
       context 'with ready_for_transit set as `true`' do
         let(:filter_params) { { ready_for_transit: 'true' } }
 
-        it 'returns only confirmed moves' do
+        it 'returns completed and confirmed moves' do
           expect(results).to contain_exactly(
+            move_with_completed_person_escort_record,
             move_with_confirmed_person_escort_record,
           )
         end
@@ -485,12 +486,11 @@ RSpec.describe Moves::Finder do
       context 'with ready_for_transit set as `false`' do
         let(:filter_params) { { ready_for_transit: 'false' } }
 
-        it 'returns all non confirmed moves' do
+        it 'returns all non completed or confirmed moves' do
           expect(results).to contain_exactly(
             move_with_no_person_escort_record,
             move_with_unstarted_person_escort_record,
             move_with_in_progress_person_escort_record,
-            move_with_completed_person_escort_record,
           )
         end
       end
