@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.7.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.1) (2021-08-23)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.0...v3.7.1)
+
+**Merged pull requests:**
+
+- Consider completed PERs as 'ready for transit' [\#1566](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1566) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.7.0 [\#1564](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1564) ([Thource](https://github.com/Thource))
+
 ## [v3.7.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.0) (2021-08-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.6.1...v3.7.0)
