@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.7.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.2) (2021-08-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.1...v3.7.2)
+
+**Merged pull requests:**
+
+- Bump bootsnap from 1.7.7 to 1.8.0 [\#1572](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1572) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Upgrade to Rails 6.1.4.1 [\#1571](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1571) ([thomasleese](https://github.com/thomasleese))
+- Bump faker from 2.18.0 to 2.19.0 [\#1570](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1570) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.22.0 to 0.22.1 [\#1569](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1569) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sidekiq from 6.2.1 to 6.2.2 [\#1568](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1568) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.7.1 [\#1567](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1567) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.7.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.1) (2021-08-23)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.0...v3.7.1)
