@@ -6,15 +6,6 @@ GIT
       application_insights (~> 0.5.0)
       toml-rb (~> 0.3.0)
 
-GIT
-  remote: https://github.com/svenfuchs/routing-filter.git
-  revision: 8d1f1da79c4db786e8baeda586a8d790e23712bf
-  branch: master
-  specs:
-    routing-filter (0.6.3)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -344,6 +335,9 @@ GEM
     request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.5)
+    routing-filter (0.7.0)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
     rspec-expectations (3.10.1)
@@ -511,7 +505,7 @@ DEPENDENCIES
   rails (= 6.1.4.1)
   rails-erd
   redis
-  routing-filter!
+  routing-filter
   rspec-json_expectations
   rspec-rails
   rswag-api
