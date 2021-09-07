@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.7.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.3) (2021-09-06)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.2...v3.7.3)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-s3 from 1.99.0 to 1.102.0 [\#1583](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1583) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.40.0 to 1.41.0 [\#1582](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1582) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump routing-filter from `8d1f1da` to `3ce9a7e` [\#1580](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1580) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bundler-audit from 0.8.0 to 0.9.0.1 [\#1579](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1579) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump paper\_trail from 12.0.0 to 12.1.0 [\#1578](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1578) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.7.0 to 1.7.1 [\#1577](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1577) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.12.3 to 1.12.4 [\#1575](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1575) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.8.0 to 1.8.1 [\#1574](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1574) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.7.2 [\#1573](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1573) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.7.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.2) (2021-08-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.1...v3.7.2)
