@@ -23,6 +23,6 @@ Sentry.init do |config|
     transaction_context = sampling_context[:transaction_context]
     transaction_name = transaction_context[:name]
 
-    transaction_name.in?(EXCLUDE_PATHS) ? 0.0 : 0.25
+    transaction_name.in?(EXCLUDE_PATHS) ? 0.0 : 0.1
   end
 end
