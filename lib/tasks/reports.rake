@@ -6,6 +6,6 @@ namespace :reports do
     start_date = Date.parse(args.fetch(:start_date))
     end_date = args[:end_date].present? ? Date.parse(args[:end_date]) : nil
 
-    Reports::PersonEscortRecordQuality.call(start_date: start_date, end_date: end_date)
+    puts Reports::PersonEscortRecordQuality.call(start_date: start_date, end_date: end_date)
   end
 end

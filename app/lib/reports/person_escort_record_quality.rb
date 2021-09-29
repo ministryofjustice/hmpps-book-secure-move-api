@@ -15,7 +15,7 @@ class Reports::PersonEscortRecordQuality
   private_class_method :new
 
   def call
-    puts csv  # rubocop:disable Rails/Output
+    generate_csv
   end
 
 private
@@ -32,7 +32,7 @@ private
     'Handover At',
   ].freeze
 
-  def csv
+  def generate_csv
     CSV.generate(headers: HEADERS, write_headers: true) do |csv|
       records.each do |row|
         csv << row.map { |col| col.respond_to?(:iso8601) ? col.iso8601 : col }

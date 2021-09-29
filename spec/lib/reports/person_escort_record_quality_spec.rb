@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Reports::PersonEscortRecordQuality do
   describe '#call' do
     subject(:csv) do
-      csv = with_captured_stdout { described_class.call(start_date: start_date, end_date: end_date) }
+      csv = described_class.call(start_date: start_date, end_date: end_date)
       CSV.parse(csv, headers: :first_row)
     end
 
@@ -149,14 +149,5 @@ RSpec.describe Reports::PersonEscortRecordQuality do
         end
       end
     end
-  end
-
-  def with_captured_stdout
-    original_stdout = $stdout  # capture previous value of $stdout
-    $stdout = StringIO.new     # assign a string buffer to $stdout
-    yield                      # perform the body of the user code
-    $stdout.string             # return the contents of the string buffer
-  ensure
-    $stdout = original_stdout  # restore $stdout to its previous value
   end
 end

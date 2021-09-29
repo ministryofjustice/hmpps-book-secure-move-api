@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Rake::Task['reports:person_escort_record_quality'] do
   before do
-    allow(Reports::PersonEscortRecordQuality).to receive(:call)
+    allow(Reports::PersonEscortRecordQuality).to receive(:call).and_return('csv')
 
     described_class.reenable
   end
@@ -16,6 +16,10 @@ RSpec.describe Rake::Task['reports:person_escort_record_quality'] do
   end
 
   context 'with a start date' do
+    it 'writes the CSV to stdout' do
+      expect { described_class.invoke('2020-01-01') }.to output("csv\n").to_stdout
+    end
+
     it 'parses the date and passes it to the report' do
       described_class.invoke('2020-01-01')
 
@@ -24,6 +28,10 @@ RSpec.describe Rake::Task['reports:person_escort_record_quality'] do
     end
 
     context 'with an end date' do
+      it 'writes the CSV to stdout' do
+        expect { described_class.invoke('2020-01-01', '2021-01-01') }.to output("csv\n").to_stdout
+      end
+
       it 'parses the date and passes it to the report' do
         described_class.invoke('2020-01-01', '2021-01-01')
 
