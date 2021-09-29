@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MoveMailer < BaseMailer
+class MoveMailer < ApplicationMailer
   def notify(notification)
     set_template(ENV.fetch('GOVUK_NOTIFY_MOVE_TEMPLATE_ID', nil))
     set_reference(notification.id)
