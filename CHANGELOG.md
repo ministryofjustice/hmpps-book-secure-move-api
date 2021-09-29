@@ -1,5 +1,23 @@
 # Changelog
 
+## [v3.7.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.4) (2021-09-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.3...v3.7.4)
+
+**Merged pull requests:**
+
+- Reduce Sentry transaction sample rate [\#1594](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1594) ([thomasleese](https://github.com/thomasleese))
+- Bump nokogiri from 1.12.4 to 1.12.5 [\#1593](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1593) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump doorkeeper from 5.5.2 to 5.5.3 [\#1592](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1592) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.9.0 to 1.9.1 [\#1591](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1591) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.7.2 to 1.8.0 [\#1590](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1590) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.4.0 to 5.5.0 [\#1589](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1589) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk from 4.0.0 to 4.1.0 [\#1588](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1588) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.8.1 to 1.9.0 [\#1587](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1587) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.102.0 to 1.103.0 [\#1586](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1586) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.7.1 to 1.7.2 [\#1585](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1585) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.7.3 [\#1584](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1584) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.7.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.3) (2021-09-06)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.2...v3.7.3)
