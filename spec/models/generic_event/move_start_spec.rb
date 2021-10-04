@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe GenericEvent::MoveStart do
   subject(:move_start_event) { build(:event_move_start, eventable: create(:move, move_status)) }
 
+  it_behaves_like 'an event that must not occur after', 'GenericEvent::MoveComplete'
+
   shared_examples 'the move changes but is not saved' do
     it do
       expect { move_start_event.trigger }.to change(move, :changed?)
