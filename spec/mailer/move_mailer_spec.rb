@@ -11,7 +11,6 @@ RSpec.describe MoveMailer, type: :mailer do
   let(:move) { create(:move, reference: 'MOVEREF1', status: Move::MOVE_STATUS_REQUESTED) }
 
   before do
-    ActionMailer::Base.add_delivery_method :govuk_notify, GovukNotifyRails::Delivery, api_key: ENV.fetch('GOVUK_NOTIFY_API_KEY', nil)
     allow(ENV).to receive(:fetch).and_call_original
     allow(ENV).to receive(:fetch).with('GOVUK_NOTIFY_MOVE_TEMPLATE_ID', nil).and_return('some-template-id')
     allow(ENV).to receive(:fetch).with('SERVER_FQDN', Rails.env).and_return('www.example.org')

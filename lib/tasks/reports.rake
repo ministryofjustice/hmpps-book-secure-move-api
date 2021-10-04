@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 namespace :reports do
-  desc 'Generate a CSV file reporting on the quality of person escort records.'
-  task :person_escort_record_quality, %w[start_date end_date] => :environment do |_task, args|
-    start_date = Date.parse(args.fetch(:start_date))
-    end_date = args[:end_date].present? ? Date.parse(args[:end_date]) : nil
+  desc 'Email a CSV file reporting on the quality of person escort records to registered recipients.'
+  task person_escort_record_quality: :environment do |_task, _args|
+    start_date = Time.zone.today.beginning_of_quarter
+    end_date = Time.zone.today.end_of_quarter
 
-    Reports::PersonEscortRecordQuality.call(start_date: start_date, end_date: end_date)
+    recipients = ENV.fetch('PER_QUALITY_REPORT_RECIPIENTS').split(',')
+
+    ReportMailer.with(
+      recipients: recipients,
+      start_date: start_date,
+      end_date: end_date,
+    ).person_escort_record_quality.deliver_later
   end
 end
