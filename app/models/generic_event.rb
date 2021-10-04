@@ -198,6 +198,22 @@ class GenericEvent < ApplicationRecord
     end
   end
 
+  def self.validate_occurs_before(before_type)
+    validate do
+      next if eventable.generic_events.where('occurred_at < ?', occurred_at).where(type: before_type).empty?
+
+      errors.add(:base, "#{type} may not occur after #{before_type}")
+    end
+  end
+
+  def self.validate_occurs_after(after_type)
+    validate do
+      next if eventable.generic_events.where('occurred_at > ?', occurred_at).where(type: after_type).empty?
+
+      errors.add(:base, "#{type} may not occur before #{after_type}")
+    end
+  end
+
   def self.eventable_types(*types)
     define_singleton_method(:eventable_types) do
       instance_variable_get('@eventable_types')
