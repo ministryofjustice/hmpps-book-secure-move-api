@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.8.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.8.0) (2021-10-06)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.4...v3.8.0)
+
+**Merged pull requests:**
+
+- Bump doorkeeper from 5.5.3 to 5.5.4 [\#1598](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1598) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Automate PER quality report [\#1596](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1596) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.7.4 [\#1595](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1595) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.7.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.7.4) (2021-09-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.3...v3.7.4)
