@@ -198,19 +198,41 @@ class GenericEvent < ApplicationRecord
     end
   end
 
-  def self.validate_occurs_before(before_type)
+  def self.validate_occurs_before(*before_types)
     validate do
-      next if eventable.generic_events.where('occurred_at < ?', occurred_at).where(type: before_type).empty?
+      before_types.each do |before_type|
+        events = if before_type.constantize.eventable_types.include?(eventable_type)
+                   eventable.generic_events
+                 elsif eventable_type == 'Move'
+                   eventable.all_events_for_timeline
+                 elsif eventable_type == 'Journey'
+                   eventable.move.all_events_for_timeline
+                 else
+                   eventable.generic_events
+                 end
+        next if events.where('occurred_at < ?', occurred_at).where(type: before_type).empty?
 
-      errors.add(:base, "#{type} may not occur after #{before_type}")
+        errors.add(:base, "#{type} may not occur after #{before_type}")
+      end
     end
   end
 
-  def self.validate_occurs_after(after_type)
+  def self.validate_occurs_after(*after_types)
     validate do
-      next if eventable.generic_events.where('occurred_at > ?', occurred_at).where(type: after_type).empty?
+      after_types.each do |after_type|
+        events = if after_type.constantize.eventable_types.include?(eventable_type)
+                   eventable.generic_events
+                 elsif eventable_type == 'Move'
+                   eventable.all_events_for_timeline
+                 elsif eventable_type == 'Journey'
+                   eventable.move.all_events_for_timeline
+                 else
+                   eventable.generic_events
+                 end
+        next if events.where('occurred_at > ?', occurred_at).where(type: after_type).empty?
 
-      errors.add(:base, "#{type} may not occur before #{after_type}")
+        errors.add(:base, "#{type} may not occur before #{after_type}")
+      end
     end
   end
 

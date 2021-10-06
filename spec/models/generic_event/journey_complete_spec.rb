@@ -8,4 +8,5 @@ RSpec.describe GenericEvent::JourneyComplete do
   end
 
   it_behaves_like 'an event that must not occur before', 'GenericEvent::JourneyStart'
+  it_behaves_like 'an event that must not occur after', 'GenericEvent::MoveComplete'
 end

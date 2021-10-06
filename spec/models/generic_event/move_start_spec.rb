@@ -1,49 +1,49 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvent::MoveStart do
-  subject(:move_start_event) { build(:event_move_start, eventable: create(:move, move_status)) }
+  subject(:generic_event) { build(:event_move_start, eventable: create(:move, move_status)) }
 
-  it_behaves_like 'an event that must not occur after', 'GenericEvent::MoveComplete'
+  let(:move) { generic_event.eventable }
 
   shared_examples 'the move changes but is not saved' do
     it do
-      expect { move_start_event.trigger }.to change(move, :changed?)
+      expect { generic_event.trigger }.to change(move, :changed?)
     end
   end
 
   shared_examples 'the move status does not change' do
     it do
-      expect { move_start_event.trigger }.not_to change(move, :status)
+      expect { generic_event.trigger }.not_to change(move, :status)
     end
   end
 
   shared_examples_for 'the move status changes to in_transit' do
     it do
-      expect { move_start_event.trigger }.to change(move, :status).from('booked').to('in_transit')
+      expect { generic_event.trigger }.to change(move, :status).from('booked').to('in_transit')
     end
   end
 
   shared_examples_for 'the PER status does not change' do
     it do
-      expect { move_start_event.trigger }.not_to change(person_escort_record, :status).from(person_escort_record_status)
+      expect { generic_event.trigger }.not_to change(person_escort_record, :status).from(person_escort_record_status)
     end
   end
 
   shared_examples_for 'the PER status changes to confirmed' do
     it do
-      expect { move_start_event.trigger }.to change(person_escort_record, :status).from(person_escort_record_status).to('confirmed')
+      expect { generic_event.trigger }.to change(person_escort_record, :status).from(person_escort_record_status).to('confirmed')
     end
   end
 
   shared_examples_for 'a GenericEvent::PerConfirmation event is created' do
     it do
-      expect { move_start_event.trigger }.to change { person_escort_record.generic_events.where(type: 'GenericEvent::PerConfirmation').count }.from(0).to(1)
+      expect { generic_event.trigger }.to change { person_escort_record.generic_events.where(type: 'GenericEvent::PerConfirmation').count }.from(0).to(1)
     end
   end
 
   shared_examples_for 'a GenericEvent::PerConfirmation event is not created' do
     it do
-      expect { move_start_event.trigger }.not_to change { person_escort_record.generic_events.where(type: 'GenericEvent::PerConfirmation').exists? }.from(false)
+      expect { generic_event.trigger }.not_to change { person_escort_record.generic_events.where(type: 'GenericEvent::PerConfirmation').exists? }.from(false)
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe GenericEvent::MoveStart do
     before { allow(Notifier).to receive(:prepare_notifications) }
 
     it do
-      move_start_event.trigger
+      generic_event.trigger
       expect(Notifier).to have_received(:prepare_notifications).with(topic: person_escort_record, action_name: 'confirm_person_escort_record')
     end
   end
@@ -60,17 +60,16 @@ RSpec.describe GenericEvent::MoveStart do
     before { allow(Notifier).to receive(:prepare_notifications) }
 
     it do
-      move_start_event.trigger
+      generic_event.trigger
       expect(Notifier).not_to have_received(:prepare_notifications).with(topic: person_escort_record, action_name: 'confirm_person_escort_record')
     end
   end
-
-  let(:move) { move_start_event.eventable }
 
   context 'when the move status is requested' do
     let(:move_status) { :requested }
 
     it_behaves_like 'the move status does not change'
+    it_behaves_like 'an event that must not occur after', 'GenericEvent::MoveComplete', 'GenericEvent::JourneyStart'
   end
 
   context 'when the move status is booked' do
@@ -80,7 +79,7 @@ RSpec.describe GenericEvent::MoveStart do
     it_behaves_like 'the move status changes to in_transit'
 
     context 'when the move has an associated PER' do
-      subject(:move_start_event) { build(:event_move_start, eventable: create(:move, move_status, :with_person_escort_record, person_escort_record_status: person_escort_record_status)) }
+      subject(:generic_event) { build(:event_move_start, eventable: create(:move, move_status, :with_person_escort_record, person_escort_record_status: person_escort_record_status)) }
 
       let(:person_escort_record) { move.person_escort_record }
 
@@ -135,7 +134,7 @@ RSpec.describe GenericEvent::MoveStart do
   end
 
   context 'with generic event validation' do
-    subject(:move_start_event) { build(:event_move_start) }
+    subject(:generic_event) { build(:event_move_start) }
 
     it_behaves_like 'a move event'
   end
