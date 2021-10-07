@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Rake::Task['reports:person_escort_record_quality'] do
   before do
     allow(Reports::PersonEscortRecordQuality).to receive(:call).and_return('csv')
-    travel_to Time.zone.local(2020, 2, 1)
+    travel_to Time.zone.local(2020, 4, 1)
     described_class.reenable
   end
 
