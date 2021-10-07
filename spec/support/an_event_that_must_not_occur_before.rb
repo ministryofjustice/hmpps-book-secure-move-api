@@ -15,7 +15,7 @@ def get_eventable(generic_event, type)
 end
 
 RSpec.shared_examples 'an event that must not occur before' do |*types|
-  let(:supplier) { create(:supplier) }
+  let(:supplier) { create(:supplier, :serco) }
 
   types.each do |type|
     context type do
@@ -55,7 +55,7 @@ RSpec.shared_examples 'an event that must not occur before' do |*types|
           end
 
           it 'adds an error to errors' do
-            expect(Sentry).to receive(:capture_message).with("#{described_class} occurred before #{type}", level: 'warning', extra: { supplier_id: supplier.id, eventable_type: generic_event.eventable_type, eventable_id: generic_event.eventable_id })
+            expect(Sentry).to receive(:capture_message).with("#{described_class} occurred before #{type}", level: 'warning', extra: { supplier: supplier.key, eventable_type: generic_event.eventable_type, eventable_id: generic_event.eventable_id })
             generic_event.save!
             # expect(generic_event.save).to eq(false)
             # expect(generic_event.errors.errors.to_s).to include("#{described_class} may not occur before #{type}")
