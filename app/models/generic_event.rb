@@ -212,7 +212,9 @@ class GenericEvent < ApplicationRecord
                  end
         next if events.where('occurred_at < ?', occurred_at).where(type: before_type).empty?
 
-        errors.add(:base, "#{type} may not occur after #{before_type}")
+        # errors.add(:base, "#{type} may not occur after #{before_type}")
+        Sentry.capture_message("#{type} occurred after #{before_type}", level: 'warning', extra: { supplier_id: supplier&.id, eventable_type: eventable_type, eventable_id: eventable_id })
+        break
       end
     end
   end
@@ -231,7 +233,9 @@ class GenericEvent < ApplicationRecord
                  end
         next if events.where('occurred_at > ?', occurred_at).where(type: after_type).empty?
 
-        errors.add(:base, "#{type} may not occur before #{after_type}")
+        # errors.add(:base, "#{type} may not occur before #{after_type}")
+        Sentry.capture_message("#{type} occurred before #{after_type}", level: 'warning', extra: { supplier_id: supplier&.id, eventable_type: eventable_type, eventable_id: eventable_id })
+        break
       end
     end
   end
