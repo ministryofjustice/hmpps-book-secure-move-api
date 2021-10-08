@@ -4,6 +4,7 @@ RSpec.describe GenericEvent::MoveComplete do
   subject(:generic_event) { build(:event_move_complete) }
 
   it_behaves_like 'a move event'
+  it_behaves_like 'an event that must not occur before', 'GenericEvent::MoveStart', 'GenericEvent::JourneyComplete'
 
   describe '#trigger' do
     it 'does not persist changes to the eventable' do

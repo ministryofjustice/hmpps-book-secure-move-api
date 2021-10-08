@@ -2,6 +2,8 @@ class GenericEvent
   class JourneyComplete < GenericEvent
     details_attributes :vehicle_reg
     eventable_types 'Journey'
+    validate_occurs_before 'GenericEvent::MoveComplete'
+    validate_occurs_after 'GenericEvent::JourneyStart'
 
     def trigger(*)
       if vehicle_reg.present?

@@ -31,4 +31,7 @@ RSpec.describe GenericEvent::JourneyComplete do
       expect(generic_event.eventable.vehicle_registration).to eq('AB12 CDE')
     end
   end
+
+  it_behaves_like 'an event that must not occur before', 'GenericEvent::JourneyStart'
+  it_behaves_like 'an event that must not occur after', 'GenericEvent::MoveComplete'
 end
