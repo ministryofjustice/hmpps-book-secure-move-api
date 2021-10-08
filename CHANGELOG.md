@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.8.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.8.1) (2021-10-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.8.0...v3.8.1)
+
+**Merged pull requests:**
+
+- Bump govuk\_notify\_rails from 2.1.2 to 2.2.0 [\#1604](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1604) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add vehicle\_reg to JourneyStart/Complete [\#1603](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1603) ([Thource](https://github.com/Thource))
+- Run PER Quality Report for yesterday [\#1601](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1601) ([thomasleese](https://github.com/thomasleese))
+- Bump flipper-active\_record from 0.22.1 to 0.22.2 [\#1600](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1600) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.8.0 [\#1599](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1599) ([thomasleese](https://github.com/thomasleese))
+- P4 3117/validate event occurred at order [\#1597](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1597) ([Thource](https://github.com/Thource))
+
 ## [v3.8.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.8.0) (2021-10-06)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.7.4...v3.8.0)
