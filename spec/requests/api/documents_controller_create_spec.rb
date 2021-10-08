@@ -31,7 +31,7 @@ RSpec.describe Api::DocumentsController do
            { url: a_string_starting_with('http://www.example.com/rails/active_storage/disk'),
              filename: 'file-sample_100kB.doc',
              filesize: 100_352,
-             content_type: 'application/msword' },
+             content_type: 'application/x-ole-storage' },
       }
     end
 
