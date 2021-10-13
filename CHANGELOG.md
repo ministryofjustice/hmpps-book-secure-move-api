@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.9.0) (2021-10-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.8.1...v3.9.0)
+
+**Merged pull requests:**
+
+- Import contacts from NOMIS [\#1609](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1609) ([thomasleese](https://github.com/thomasleese))
+- Bump puma from 5.5.0 to 5.5.2 [\#1608](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1608) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump geocoder from 1.6.7 to 1.7.0 [\#1606](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1606) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.8.1 [\#1605](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1605) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.8.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.8.1) (2021-10-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.8.0...v3.8.1)
