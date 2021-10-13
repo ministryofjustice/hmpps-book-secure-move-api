@@ -43,7 +43,7 @@ module FrameworkNomisMappings
     end
 
     def assessment_comments(assessment)
-      [assessment[:classification], assessment[:assessment_comment]].filter(&:present?).join(' — ')
+      [assessment[:classification], assessment[:assessment_comment]].compact_blank.join(' — ')
     end
 
     def valid_assessment?(assessment)

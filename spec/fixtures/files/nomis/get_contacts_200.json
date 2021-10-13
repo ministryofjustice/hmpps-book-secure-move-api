@@ -1,0 +1,51 @@
+{
+  "bookingId": 0,
+  "nextOfKin": [
+    {
+      "activeFlag": true,
+      "approvedVisitorFlag": true,
+      "awareOfChargesFlag": true,
+      "bookingId": 2468081,
+      "canBeContactedFlag": false,
+      "commentText": "Some additional information",
+      "contactRootOffenderId": 5871791,
+      "contactType": "O",
+      "contactTypeDescription": "Official",
+      "createDateTime": "2021-10-13T07:06:12.199Z",
+      "emergencyContact": true,
+      "expiryDate": "2019-01-31T00:00:00.000+00:00",
+      "firstName": "JOHN",
+      "lastName": "SMITH",
+      "middleName": "MARK",
+      "nextOfKin": false,
+      "personId": 5871791,
+      "relationship": "RO",
+      "relationshipDescription": "Responsible Officer",
+      "relationshipId": 10466277
+    }
+  ],
+  "otherContacts": [
+    {
+      "activeFlag": true,
+      "approvedVisitorFlag": true,
+      "awareOfChargesFlag": true,
+      "bookingId": 2468081,
+      "canBeContactedFlag": false,
+      "commentText": "Some additional information",
+      "contactRootOffenderId": 5871791,
+      "contactType": "O",
+      "contactTypeDescription": "Official",
+      "createDateTime": "2021-10-13T07:06:12.199Z",
+      "emergencyContact": true,
+      "expiryDate": "2019-01-31T00:00:00.000+00:00",
+      "firstName": "JOHN",
+      "lastName": "SMITH",
+      "middleName": "MARK",
+      "nextOfKin": false,
+      "personId": 5871791,
+      "relationship": "RO",
+      "relationshipDescription": "Responsible Officer",
+      "relationshipId": 10466277
+    }
+  ]
+}
