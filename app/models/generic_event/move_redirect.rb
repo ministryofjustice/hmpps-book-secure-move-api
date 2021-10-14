@@ -22,6 +22,7 @@ class GenericEvent
     validates_with Moves::MoveTypeValidator
 
     delegate :from_location, to: :eventable
+    delegate :generic_events, to: :eventable
 
     def trigger(*)
       eventable.to_location = to_location

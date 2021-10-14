@@ -7,9 +7,11 @@ RSpec.describe Moves::MoveTypeValidator do
     # anonymous class to test validation against
     Class.new {
       include ActiveModel::Validations
-      attr_accessor :from_location, :to_location, :move_type
+      attr_accessor :from_location, :to_location, :move_type, :move
 
       validates_with Moves::MoveTypeValidator
+
+      delegate :generic_events, to: :move
 
       def self.name
         'TestValidationClass'
@@ -17,7 +19,10 @@ RSpec.describe Moves::MoveTypeValidator do
     }.new
   end
 
-  before { target.move_type = move_type }
+  before do
+    target.move_type = move_type
+    target.move = create(:move)
+  end
 
   context 'when move_type is nil' do
     let(:move_type) { nil }
@@ -191,6 +196,28 @@ RSpec.describe Moves::MoveTypeValidator do
       target.from_location = build(:location, :court)
       expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
       expect(target.errors[:to_location]).to match_array('must be a prison, secure training centre or secure childrens hospital for prison remand move')
+    end
+
+    context 'when a MoveLockout event has occurred' do
+      before { create(:event_move_lockout, eventable: target.move) }
+
+      it 'validates the locations are a valid location type' do
+        Location.location_types.each_value do |location_type|
+          target.from_location = build(:location, location_type)
+          target.to_location = build(:location, location_type)
+          expect(target).to be_valid
+        end
+      end
+
+      it 'validates `to_location` is not nil' do
+        target.to_location = nil
+        expect(target).not_to be_valid
+      end
+
+      it 'validates `from_location` is not nil' do
+        target.from_location = nil
+        expect(target).not_to be_valid
+      end
     end
   end
 
