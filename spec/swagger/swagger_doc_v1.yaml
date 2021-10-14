@@ -1308,6 +1308,9 @@
 
         Move events _do not_ alter the child journeys associated with the move: additional API calls may be necessary to
         complete or cancel existing journeys.
+
+        After a lockout is recorded, journey location validation is disabled, so that a journey can be made to the
+        lodging location without changing the move type.
       tags:
         - Moves
       consumes:
