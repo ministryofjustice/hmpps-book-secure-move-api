@@ -14,7 +14,7 @@ RSpec.describe GenericEvents::Runner do
 
   before do
     allow(eventable).to receive(:generic_events) do
-      class_double('GenericEvent', applied_order: events)
+      class_double('GenericEvent', applied_order: events, where: events)
     end
     allow(eventable).to receive(:handle_event_run).and_call_original
 

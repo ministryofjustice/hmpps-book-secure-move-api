@@ -11,6 +11,12 @@ module Moves
       # General move_type validation
       validate_known_move_type
 
+      # If a move lockout has occurred, we no longer care about the location types
+      if record.generic_events.where(type: 'GenericEvent::MoveLockout').count.positive?
+        validate_present_locations
+        return
+      end
+
       # Apply more complex validation rules for specific move types
       validate_court_to_location if includes? %w[court_appearance]
       validate_not_detained_to_location if includes? %w[court_other]
@@ -40,6 +46,11 @@ module Moves
     def validate_active_locations
       record.errors.add(:from_location, :inactive_location, message: 'must be an active location') if record.from_location&.discarded?
       record.errors.add(:to_location, :inactive_location, message: 'must be an active location') if record.to_location&.discarded?
+    end
+
+    def validate_present_locations
+      record.errors.add(:from_location, :inactive_location, message: 'must be supplied') if record.from_location.nil?
+      record.errors.add(:to_location, :inactive_location, message: 'must be supplied') if record.to_location.nil?
     end
 
     def validate_court_to_location
