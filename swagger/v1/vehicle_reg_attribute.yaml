@@ -1,0 +1,4 @@
+Notes:
+  type: string
+  example: AB12 CDE
+  description: Registration number of the related vehicle

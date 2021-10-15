@@ -19,3 +19,5 @@ PostJourneyStart:
           $ref: timestamp_attribute.yaml#/Timestamp
         notes:
           $ref: notes_attribute.yaml#/Notes
+        vehicle_reg:
+          $ref: vehicle_reg_attribute.yaml#/Notes
