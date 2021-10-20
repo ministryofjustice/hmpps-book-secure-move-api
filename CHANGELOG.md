@@ -1,5 +1,20 @@
 # Changelog
 
+## [v3.10.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.10.0) (2021-10-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.9.0...v3.10.0)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-athena from 1.41.0 to 1.42.0 [\#1617](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1617) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.103.0 to 1.104.0 [\#1616](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1616) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add vehicle\_reg to more journey events [\#1615](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1615) ([Thource](https://github.com/Thource))
+- Bump redis from 4.5.0 to 4.5.1 [\#1614](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1614) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update Swagger docs [\#1613](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1613) ([Thource](https://github.com/Thource))
+- Bump redis from 4.4.0 to 4.5.0 [\#1612](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1612) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Disable location validation for locked out moves [\#1611](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1611) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.9.0 [\#1610](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1610) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.9.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.9.0) (2021-10-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.8.1...v3.9.0)
