@@ -15,6 +15,22 @@ namespace :import do
     end
   end
 
+  namespace :missing_move_ending_events do
+    desc 'Import events for moves which are missing an ending event.'
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        move_id: :BASMMOJMoveID,
+        event_type: :SERSEndingEvent,
+        event_timestamp: :TimeOfEndingEvent,
+        cancellation_reason: :CancellationReason,
+        rejection_reason: :CancellationReason,
+      }
+
+      print Imports::MissingMoveEndingEvents.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :moves_without_ending_state do
     desc "Import moves which don't have an ending state using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
