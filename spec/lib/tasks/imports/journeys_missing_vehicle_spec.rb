@@ -15,9 +15,9 @@ RSpec.describe Rake::Task['import:journeys_missing_vehicle:serco'] do
     expect(Imports::JourneysMissingVehicle).to receive(:call).with(
       csv_path: 'data.csv',
       columns: {
-        journey_id: :BASMMOJJourneyID,
-        move_id: :BASMMOJMoveID,
-        vehicle_registration: :SERs_vehicleReg,
+        journey_id: :basmmojjourneyid,
+        move_id: :basmmojmoveid,
+        vehicle_registration: :sers_vehiclereg,
       },
     )
 

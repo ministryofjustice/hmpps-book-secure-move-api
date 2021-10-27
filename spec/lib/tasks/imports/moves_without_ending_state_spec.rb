@@ -15,9 +15,9 @@ RSpec.describe Rake::Task['import:moves_without_ending_state:serco'] do
     expect(Imports::MovesWithoutEndingState).to receive(:call).with(
       csv_path: 'data.csv',
       columns: {
-        move_id: :BASMMOJMoveID,
-        old_status: :BASMMoveStatus,
-        new_status: :SERs_journeyStatus,
+        move_id: :basmmojmoveid,
+        old_status: :basmmovestatus,
+        new_status: :sers_journeystatus,
       },
     )
 

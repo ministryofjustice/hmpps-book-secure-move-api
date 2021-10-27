@@ -6,9 +6,9 @@ namespace :import do
     task :serco, [:csv_path] => :environment do |_, args|
       csv_path = args.fetch(:csv_path)
       columns = {
-        journey_id: :BASMMOJJourneyID,
-        move_id: :BASMMOJMoveID,
-        vehicle_registration: :SERs_vehicleReg,
+        journey_id: :basmmojjourneyid,
+        move_id: :basmmojmoveid,
+        vehicle_registration: :sers_vehiclereg,
       }
 
       print Imports::JourneysMissingVehicle.call(csv_path: csv_path, columns: columns).summary
@@ -20,11 +20,11 @@ namespace :import do
     task :serco, [:csv_path] => :environment do |_, args|
       csv_path = args.fetch(:csv_path)
       columns = {
-        move_id: :BASMMOJMoveID,
-        event_type: :SERSEndingEvent,
-        event_timestamp: :TimeOfEndingEvent,
-        cancellation_reason: :CancellationReason,
-        rejection_reason: :CancellationReason,
+        move_id: :basmmojmoveid,
+        event_type: :sersendingevent,
+        event_timestamp: :timeofendingevent,
+        cancellation_reason: :cancellationreason,
+        rejection_reason: :cancellationreason,
       }
 
       print Imports::MissingMoveEndingEvents.call(csv_path: csv_path, columns: columns).summary
@@ -49,9 +49,9 @@ namespace :import do
     task :serco, [:csv_path] => :environment do |_, args|
       csv_path = args.fetch(:csv_path)
       columns = {
-        move_id: :BASMMOJMoveID,
-        old_status: :BASMMoveStatus,
-        new_status: :SERs_journeyStatus,
+        move_id: :basmmojmoveid,
+        old_status: :basmmovestatus,
+        new_status: :sers_journeystatus,
       }
 
       print Imports::MovesWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
