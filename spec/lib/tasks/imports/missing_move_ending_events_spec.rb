@@ -15,11 +15,11 @@ RSpec.describe Rake::Task['import:missing_move_ending_events:serco'] do
     expect(Imports::MissingMoveEndingEvents).to receive(:call).with(
       csv_path: 'data.csv',
       columns: {
-        move_id: :BASMMOJMoveID,
-        event_type: :SERSEndingEvent,
-        event_timestamp: :TimeOfEndingEvent,
-        cancellation_reason: :CancellationReason,
-        rejection_reason: :CancellationReason,
+        move_id: :basmmojmoveid,
+        event_type: :sersendingevent,
+        event_timestamp: :timeofendingevent,
+        cancellation_reason: :cancellationreason,
+        rejection_reason: :cancellationreason,
       },
     )
 
