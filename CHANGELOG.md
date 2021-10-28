@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.11.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.0) (2021-10-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.10.0...v3.11.0)
+
+**Merged pull requests:**
+
+- Make import column names lowercase [\#1621](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1621) ([thomasleese](https://github.com/thomasleese))
+- Add task to import move start events [\#1620](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1620) ([thomasleese](https://github.com/thomasleese))
+- Add import tasks for fixing incorrect historical data [\#1619](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1619) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.10.0 [\#1618](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1618) ([Thource](https://github.com/Thource))
+
 ## [v3.10.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.10.0) (2021-10-19)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.9.0...v3.10.0)
