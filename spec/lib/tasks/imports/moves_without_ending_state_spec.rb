@@ -17,7 +17,7 @@ RSpec.describe Rake::Task['import:moves_without_ending_state:serco'] do
       columns: {
         move_id: :basmmojmoveid,
         old_status: :basmmovestatus,
-        new_status: :sers_journeystatus,
+        new_status: :sersstatus,
       },
     )
 
