@@ -51,7 +51,7 @@ namespace :import do
       columns = {
         move_id: :basmmojmoveid,
         old_status: :basmmovestatus,
-        new_status: :sers_journeystatus,
+        new_status: :sersstatus,
       }
 
       print Imports::MovesWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
