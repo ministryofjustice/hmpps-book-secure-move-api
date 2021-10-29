@@ -24,6 +24,8 @@ private
   end
 
   def to_active_record_include_hash(value)
+    return {} if NOT_DATABASE_ASSOCIATIONS.include?(value)
+
     parts = value.split('.', 2)
     db_name = db_alias(parts.first)
 
@@ -66,4 +68,13 @@ private
       name.to_sym
     end
   end
+
+  # Includes which are not possible to query using ActiveRecord eager loading, and instead must come from multiple
+  # calls to the database.
+  NOT_DATABASE_ASSOCIATIONS = %w[
+    timeline_events.location
+    timeline_events.court_location
+    timeline_events.from_location
+    timeline_events.to_location
+  ].freeze
 end
