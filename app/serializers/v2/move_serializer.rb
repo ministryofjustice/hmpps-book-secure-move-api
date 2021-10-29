@@ -71,6 +71,7 @@ module V2
       important_events
       timeline_events
       timeline_events.eventable
+      timeline_events.to_location
       journeys
       journeys.from_location
       journeys.to_location
