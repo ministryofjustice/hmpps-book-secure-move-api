@@ -113,7 +113,7 @@ RSpec.describe V2::MoveSerializer do
   end
 
   describe 'timeline_events' do
-    let(:includes) { %i[timeline_events timeline_events.eventable] }
+    let(:includes) { %i[timeline_events timeline_events.eventable timeline_events.to_location] }
     let(:adapter_options) { { include: includes, params: { included: includes } } }
 
     context 'with generic events' do
@@ -157,6 +157,10 @@ RSpec.describe V2::MoveSerializer do
 
         it 'contains included events' do
           expect(included_event).to be_present
+        end
+
+        it 'contains included location' do
+          expect(result[:included]).to include(hash_including(id: event.to_location.id, type: 'locations'))
         end
 
         it 'contains the correct relationships for the event include' do
