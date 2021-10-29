@@ -51,7 +51,10 @@ RSpec.describe Api::MovesController do
           court_hearings: [court_hearing],
         )
 
-        get "/api/moves#{query_params}", params: params, headers: headers
+        create(:event_move_accept, eventable: move)
+        create(:event_move_redirect, eventable: move)
+
+        get "/api/moves/#{move.id}#{query_params}", params: params, headers: headers
       end
 
       context 'when not including the include query param' do
@@ -69,6 +72,15 @@ RSpec.describe Api::MovesController do
         it 'includes the requested includes in the response' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
           expect(returned_types).to contain_exactly('profiles')
+        end
+      end
+
+      context 'when including non-database fields' do
+        let(:query_params) { '?include=timeline_events,timeline_events.to_location' }
+
+        it 'includes the requested includes in the response' do
+          returned_types = response_json['included'].map { |r| r['type'] }.uniq
+          expect(returned_types).to contain_exactly('events', 'locations')
         end
       end
 
