@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.11.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.1) (2021-10-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.0...v3.11.1)
+
+**Merged pull requests:**
+
+- Allow including to\_location in timeline events [\#1625](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1625) ([thomasleese](https://github.com/thomasleese))
+- Fix column name for moves\_without\_ending\_state import [\#1624](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1624) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.0 [\#1623](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1623) ([thomasleese](https://github.com/thomasleese))
+- Add GitHub Workflow for CodeQL [\#1622](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1622) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.0) (2021-10-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.10.0...v3.11.0)
