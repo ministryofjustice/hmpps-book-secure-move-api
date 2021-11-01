@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.11.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.2) (2021-10-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.1...v3.11.2)
+
+**Merged pull requests:**
+
+- Allow including location in timeline events [\#1628](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1628) ([thomasleese](https://github.com/thomasleese))
+- Revert "Allow including to\_location in timeline events" [\#1627](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1627) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.1 [\#1626](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1626) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.1) (2021-10-29)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.0...v3.11.1)
