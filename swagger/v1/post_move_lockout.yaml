@@ -24,4 +24,4 @@ PostMoveLockout:
       properties:
         from_location:
           $ref: location_reference.yaml#/LocationReference
-          description: This is the location that the move has been locked out from.
+          description: "This is the location that the move has been locked out from. (Note: This is not the same as the move's from_location.)"
