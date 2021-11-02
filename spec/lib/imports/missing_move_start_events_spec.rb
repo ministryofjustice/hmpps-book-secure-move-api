@@ -32,7 +32,7 @@ RSpec.describe Imports::MissingMoveStartEvents do
 
     it 'records failures' do
       expect(results.failures).to match_array([
-        { move_id: 'abc', event_timestamp: 'abc' },
+        { move_id: 'abc', event_timestamp: 'abc', reason: 'Could not find move.' },
       ])
     end
 
