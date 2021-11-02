@@ -14,15 +14,15 @@ class Imports::Results
     successes.append(record)
   end
 
-  def record_failure(record)
-    failures.append(record)
+  def record_failure(record, reason:)
+    failures.append(record.merge(reason: reason))
   end
 
   def save(obj, record)
     if obj.save
       record_success(record)
     else
-      record_failure(record)
+      record_failure(record, reason: 'Could not save record.')
     end
   end
 

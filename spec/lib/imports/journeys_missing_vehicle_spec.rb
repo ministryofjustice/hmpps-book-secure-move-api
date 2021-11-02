@@ -34,8 +34,8 @@ RSpec.describe Imports::JourneysMissingVehicle do
 
     it 'records failures' do
       expect(results.failures).to match_array([
-        { journey_id: journey.id, move_id: 'abc', vehicle_registration: 'ABC DEF' },
-        { journey_id: 'abc', move_id: 'abc', vehicle_registration: 'ABC DEF' },
+        { journey_id: journey.id, move_id: 'abc', vehicle_registration: 'ABC DEF', reason: 'Could not find journey.' },
+        { journey_id: 'abc', move_id: 'abc', vehicle_registration: 'ABC DEF', reason: 'Could not find journey.' },
       ])
     end
 

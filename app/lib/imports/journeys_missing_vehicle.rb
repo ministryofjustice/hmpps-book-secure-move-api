@@ -26,7 +26,7 @@ private
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
       journey = Journey.find_by(id: record[:journey_id], move_id: record[:move_id])
       if journey.nil?
-        results.record_failure(record)
+        results.record_failure(record, reason: 'Could not find journey.')
         next
       end
 

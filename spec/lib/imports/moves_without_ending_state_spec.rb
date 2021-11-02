@@ -33,8 +33,8 @@ RSpec.describe Imports::MovesWithoutEndingState do
 
     it 'records failures' do
       expect(results.failures).to match_array([
-        { move_id: move.id, old_status: 'rejected', new_status: 'Completed' },
-        { move_id: 'abc', old_status: 'abc', new_status: 'abc' },
+        { move_id: move.id, old_status: 'rejected', new_status: 'Completed', reason: 'Could not find move.' },
+        { move_id: 'abc', old_status: 'abc', new_status: 'abc', reason: 'Could not find move.' },
       ])
     end
 

@@ -8,7 +8,7 @@ RSpec.describe Imports::MissingMoveEndingEvents do
   let(:rejected_move) { create(:move, :requested) }
 
   let(:csv) do
-    "move_id,event_type,event_timestamp,cancellation_reason,rejection_reason\nabc,abc,abc,,\n#{completed_move.id},MoveComplete,2020-01-01,,\n#{cancelled_move.id},MoveCancel,2020-01-01,made_in_error,\n#{rejected_move.id},MoveReject,2020-01-01,,no_space_at_receiving_prison"
+    "move_id,event_type,event_timestamp,cancellation_reason,rejection_reason\nabc,abc,abc,,\nabc,MoveComplete,abc,,\n#{completed_move.id},MoveComplete,2020-01-01,,\n#{cancelled_move.id},MoveCancel,2020-01-01,made_in_error,\n#{rejected_move.id},MoveReject,2020-01-01,,no_space_at_receiving_prison"
   end
 
   let(:csv_path) do
@@ -32,12 +32,13 @@ RSpec.describe Imports::MissingMoveEndingEvents do
     subject(:results) { described_class.call(csv_path: csv_path, columns: columns) }
 
     it 'imports all rows' do
-      expect(results.total).to eq(4)
+      expect(results.total).to eq(5)
     end
 
     it 'records failures' do
       expect(results.failures).to match_array([
-        { move_id: 'abc', event_type: 'abc', event_timestamp: 'abc', cancellation_reason: nil, rejection_reason: nil },
+        { move_id: 'abc', event_type: 'MoveComplete', event_timestamp: 'abc', cancellation_reason: nil, rejection_reason: nil, reason: 'Could not find move.' },
+        { move_id: 'abc', event_type: 'abc', event_timestamp: 'abc', cancellation_reason: nil, rejection_reason: nil, reason: 'Event type not allowed.' },
       ])
     end
 

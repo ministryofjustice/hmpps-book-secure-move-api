@@ -19,7 +19,7 @@ RSpec.describe Imports::Results do
     end
 
     context 'with a failure recorded' do
-      before { results.record_failure({ id: 1 }) }
+      before { results.record_failure({ id: 1 }, reason: 'Reason') }
 
       it { is_expected.to eq(1) }
     end
@@ -27,7 +27,7 @@ RSpec.describe Imports::Results do
     context 'with a success and a failure recorded' do
       before do
         results.record_success({ id: 0 })
-        results.record_failure({ id: 1 })
+        results.record_failure({ id: 1 }, reason: 'Reason')
       end
 
       it { is_expected.to eq(2) }
@@ -36,7 +36,7 @@ RSpec.describe Imports::Results do
 
   describe '#save' do
     let(:obj) { double }
-    let(:record) { double }
+    let(:record) { { id: 1 } }
 
     context 'when save is successful' do
       before { allow(obj).to receive(:save).and_return(true) }
@@ -56,7 +56,7 @@ RSpec.describe Imports::Results do
         results.save(obj, record)
 
         expect(results.successes).to be_empty
-        expect(results.failures).to match_array([record])
+        expect(results.failures).to match_array([record.merge(reason: 'Could not save record.')])
       end
     end
   end
@@ -75,18 +75,18 @@ RSpec.describe Imports::Results do
     end
 
     context 'with a failure recorded' do
-      before { results.record_failure({ id: 1 }) }
+      before { results.record_failure({ id: 1 }, reason: 'Reason') }
 
-      it { is_expected.to eq("Imported 1 records with 1 failures.\n\nid\n1\n") }
+      it { is_expected.to eq("Imported 1 records with 1 failures.\n\nid,reason\n1,Reason\n") }
     end
 
     context 'with a success and a failure recorded' do
       before do
         results.record_success({ id: 0 })
-        results.record_failure({ id: 1 })
+        results.record_failure({ id: 1 }, reason: 'Reason')
       end
 
-      it { is_expected.to eq("Imported 2 records with 1 failures.\n\nid\n1\n") }
+      it { is_expected.to eq("Imported 2 records with 1 failures.\n\nid,reason\n1,Reason\n") }
     end
   end
 end

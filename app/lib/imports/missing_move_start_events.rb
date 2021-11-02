@@ -29,7 +29,7 @@ private
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
       move = Move.find_by(id: record[:move_id])
       if move.nil?
-        results.record_failure(record)
+        results.record_failure(record, reason: 'Could not find move.')
         next
       end
 
