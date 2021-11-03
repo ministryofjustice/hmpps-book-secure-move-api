@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.11.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.3) (2021-11-03)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.2...v3.11.3)
+
+**Merged pull requests:**
+
+- Use events to transition move status [\#1632](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1632) ([thomasleese](https://github.com/thomasleese))
+- Clear up documentation for MoveLockout.from\_location [\#1631](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1631) ([Thource](https://github.com/Thource))
+- Record failure reason in import results [\#1630](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1630) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.2 [\#1629](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1629) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.2) (2021-10-29)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.1...v3.11.2)
