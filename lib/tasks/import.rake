@@ -15,6 +15,21 @@ namespace :import do
     end
   end
 
+  namespace :journeys_without_ending_state do
+    desc "Import journeys which don't have an ending state using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        journey_id: :basm_id,
+        move_id: :basm_moveid,
+        old_state: :basm_state,
+        new_state: :sers_status,
+      }
+
+      print Imports::JourneysWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :missing_move_ending_events do
     desc "Import events for moves which are missing an ending event using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
