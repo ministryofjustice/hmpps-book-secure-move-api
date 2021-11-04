@@ -1,7 +1,7 @@
 class Imports::ColumnMapper
   Column = Struct.new(:source_key, :target_key, :downcase?) do
     def fetch(row)
-      value = row.fetch(source_key)
+      value = row.fetch(source_key)&.strip
       return value&.downcase if downcase?
 
       value

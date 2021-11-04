@@ -14,7 +14,7 @@ RSpec.describe Imports::ColumnMapper do
 
   let(:rows) do
     [
-      { b: 'B', d: 'D' },
+      { b: 'B ', d: 'D' },
     ]
   end
 
