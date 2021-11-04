@@ -11,7 +11,7 @@ class Imports::MissingMoveEndingEvents
 
   def initialize(csv_path:, columns:)
     @csv_path = csv_path
-    @columns = columns
+    @column_mapper = Imports::ColumnMapper.new(columns)
     @current_move = nil
   end
 
@@ -23,7 +23,7 @@ class Imports::MissingMoveEndingEvents
 
 private
 
-  attr_reader :csv_path, :columns
+  attr_reader :csv_path, :column_mapper
 
   ALLOWED_EVENT_TYPES = %w[MoveCancel MoveReject MoveComplete].freeze
   EXPECTED_MOVE_STATUSES = %i[proposed requested booked in_transit].freeze
@@ -58,15 +58,7 @@ private
   end
 
   def records
-    @records ||= CSV.table(csv_path).map do |record|
-      {
-        move_id: record[columns.fetch(:move_id)],
-        event_type: record[columns.fetch(:event_type)],
-        event_timestamp: record[columns.fetch(:event_timestamp)],
-        cancellation_reason: record[columns.fetch(:cancellation_reason)],
-        rejection_reason: record[columns.fetch(:rejection_reason)],
-      }
-    end
+    @records ||= column_mapper.map(CSV.table(csv_path))
   end
 
   def doorkeeper_application_owner

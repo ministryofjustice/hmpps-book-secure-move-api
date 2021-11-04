@@ -9,7 +9,7 @@ class Imports::JourneysMissingVehicle
 
   def initialize(csv_path:, columns:)
     @csv_path = csv_path
-    @columns = columns
+    @column_mapper = Imports::ColumnMapper.new(columns)
   end
 
   private_class_method :new
@@ -20,7 +20,7 @@ class Imports::JourneysMissingVehicle
 
 private
 
-  attr_reader :csv_path, :columns
+  attr_reader :csv_path, :column_mapper
 
   def results
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
@@ -36,12 +36,6 @@ private
   end
 
   def records
-    @records ||= CSV.table(csv_path).map do |record|
-      {
-        journey_id: record[columns.fetch(:journey_id)],
-        move_id: record[columns.fetch(:move_id)],
-        vehicle_registration: record[columns.fetch(:vehicle_registration)],
-      }
-    end
+    @records ||= column_mapper.map(CSV.table(csv_path))
   end
 end
