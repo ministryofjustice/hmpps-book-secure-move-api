@@ -9,7 +9,11 @@ class Imports::MovesWithoutEndingState
 
   def initialize(csv_path:, columns:)
     @csv_path = csv_path
-    @columns = columns
+    @column_mapper = Imports::ColumnMapper.new({
+      move_id: columns.fetch(:move_id),
+      old_status: { source: columns.fetch(:old_status), downcase: true },
+      new_status: { source: columns.fetch(:new_status), downcase: true },
+    })
   end
 
   private_class_method :new
@@ -20,7 +24,7 @@ class Imports::MovesWithoutEndingState
 
 private
 
-  attr_reader :csv_path, :columns
+  attr_reader :csv_path, :column_mapper
 
   def results
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
@@ -82,12 +86,6 @@ private
   end
 
   def records
-    @records ||= CSV.table(csv_path).map do |record|
-      {
-        move_id: record[columns.fetch(:move_id)],
-        old_status: record[columns.fetch(:old_status)].downcase,
-        new_status: record[columns.fetch(:new_status)].downcase,
-      }
-    end
+    @records ||= column_mapper.map(CSV.table(csv_path))
   end
 end

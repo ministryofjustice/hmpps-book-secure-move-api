@@ -11,7 +11,7 @@ class Imports::MissingMoveStartEvents
 
   def initialize(csv_path:, columns:)
     @csv_path = csv_path
-    @columns = columns
+    @column_mapper = Imports::ColumnMapper.new(columns)
     @current_move = nil
   end
 
@@ -23,7 +23,7 @@ class Imports::MissingMoveStartEvents
 
 private
 
-  attr_reader :csv_path, :columns
+  attr_reader :csv_path, :column_mapper
 
   def results
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
@@ -48,12 +48,7 @@ private
   end
 
   def records
-    @records ||= CSV.table(csv_path).map do |record|
-      {
-        move_id: record[columns.fetch(:move_id)],
-        event_timestamp: record[columns.fetch(:event_timestamp)],
-      }
-    end
+    @records ||= column_mapper.map(CSV.table(csv_path))
   end
 
   def doorkeeper_application_owner
