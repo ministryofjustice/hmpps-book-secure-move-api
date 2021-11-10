@@ -15,7 +15,7 @@ RSpec.describe Rake::Task['import:missing_journey_start_events:serco'] do
     expect(Imports::MissingJourneyStartEvents).to receive(:call).with(
       csv_path: 'data.csv',
       columns: {
-        move_id: :journeyid,
+        journey_id: :journeyid,
         event_timestamp: :timeofjourneystartevent,
       },
     )

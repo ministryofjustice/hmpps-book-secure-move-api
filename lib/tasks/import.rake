@@ -50,7 +50,7 @@ namespace :import do
     task :serco, [:csv_path] => :environment do |_, args|
       csv_path = args.fetch(:csv_path)
       columns = {
-        move_id: :journeyid,
+        journey_id: :journeyid,
         event_timestamp: :timeofjourneystartevent,
       }
 
