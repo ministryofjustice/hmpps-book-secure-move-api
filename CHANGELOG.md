@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.11.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.5) (2021-11-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.4...v3.11.5)
+
+**Merged pull requests:**
+
+- Fix NameError in move inspector [\#1644](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1644) ([thomasleese](https://github.com/thomasleese))
+- Fix typo in column name [\#1643](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1643) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.4 [\#1642](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1642) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.4) (2021-11-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.3...v3.11.4)
