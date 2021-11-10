@@ -45,6 +45,19 @@ namespace :import do
     end
   end
 
+  namespace :missing_journey_start_events do
+    desc "Import events for journeys which are missing a start event using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        move_id: :journeyid,
+        event_timestamp: :timeofjourneystartevent,
+      }
+
+      print Imports::MissingJourneyStartEvents.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :missing_move_ending_events do
     desc "Import events for moves which are missing an ending event using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
