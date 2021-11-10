@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.11.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.4) (2021-11-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.3...v3.11.4)
+
+**Merged pull requests:**
+
+- Import journey missing start events [\#1641](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1641) ([thomasleese](https://github.com/thomasleese))
+- Import journeys missing ending events [\#1640](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1640) ([thomasleese](https://github.com/thomasleese))
+- Bump sidekiq from 6.2.2 to 6.3.1 [\#1639](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1639) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.105.0 to 1.105.1 [\#1638](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1638) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.42.0 to 1.43.0 [\#1637](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1637) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.104.0 to 1.105.0 [\#1636](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1636) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add import task for journeys without ending status [\#1635](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1635) ([thomasleese](https://github.com/thomasleese))
+- Strip whitespace from spreadsheet cells [\#1634](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1634) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.3 [\#1633](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1633) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.3) (2021-11-03)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.2...v3.11.3)
