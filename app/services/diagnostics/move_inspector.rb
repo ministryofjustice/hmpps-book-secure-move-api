@@ -96,7 +96,7 @@ module Diagnostics
 
             # we need to take care that we don't display any personal details in the error report
             @output << if @include_person_details
-                         "  #{attribute.inspect}\t#{message}\t#{move.send(key)}\n"
+                         "  #{attribute.inspect}\t#{message}\t#{move.send(attribute)}\n"
                        else
                          "  #{attribute.inspect}\t#{message}\t-\n"
                        end
@@ -149,7 +149,7 @@ module Diagnostics
 
                 # we need to take care that we don't display any personal details in the error report
                 @output << if @include_person_details
-                             "  #{attribute.inspect}\t#{message}\t#{journey.send(key)}\n"
+                             "  #{attribute.inspect}\t#{message}\t#{journey.send(attribute)}\n"
                            else
                              "  #{attribute.inspect}\t#{message}\t-\n"
                            end
