@@ -1,0 +1,18 @@
+digraph moves_state_machine {
+    rankdir=LR;
+    size="8,5"
+
+    node [shape = doublecircle]; proposed cancelled completed;
+    node [shape = circle];
+
+    proposed -> requested [label = "approve"];
+    proposed -> cancelled [label = "reject"];
+
+    requested -> booked [label = "accept"];
+    requested -> cancelled [label = "reject"];
+
+    booked -> cancelled [label = "cancel"];
+    booked -> in_transit [label = "start"];
+
+    in_transit -> completed [label = "complete"];
+}

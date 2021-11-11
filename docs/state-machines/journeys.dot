@@ -1,0 +1,16 @@
+digraph journeys_state_machine {
+    rankdir=LR;
+    size="8,5"
+
+    node [shape = doublecircle]; proposed;
+    node [shape = circle];
+
+    proposed -> in_progress [label = "start"];
+    proposed -> rejected [label = "reject"];
+
+    in_progress -> completed [label = "complete"];
+    completed -> in_progress [label = "uncomplete"];
+
+    in_progress -> cancelled [label = "cancel"];
+    cancelled -> in_progress [label = "uncancel"];
+}
