@@ -42,8 +42,9 @@ RSpec.describe Imports::Results do
       before { allow(obj).to receive(:save).and_return(true) }
 
       it 'records a successful record' do
-        results.save(obj, record)
+        return_value = results.save(obj, record)
 
+        expect(return_value).to be(true)
         expect(results.successes).to match_array([record])
         expect(results.failures).to be_empty
       end
@@ -53,8 +54,9 @@ RSpec.describe Imports::Results do
       before { allow(obj).to receive(:save).and_return(false) }
 
       it 'records a failed record' do
-        results.save(obj, record)
+        return_value = results.save(obj, record)
 
+        expect(return_value).to be(false)
         expect(results.successes).to be_empty
         expect(results.failures).to match_array([record.merge(reason: 'Could not save record.')])
       end
