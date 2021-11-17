@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.11.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.6) (2021-11-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.5...v3.11.6)
+
+**Merged pull requests:**
+
+- Make importer ignore objects which aren't valid [\#1648](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1648) ([thomasleese](https://github.com/thomasleese))
+- Bump rubocop-govuk from 4.1.0 to 4.2.0 [\#1647](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1647) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add move and journey state machine diagrams [\#1646](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1646) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.5 [\#1645](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1645) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.5) (2021-11-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.4...v3.11.5)
