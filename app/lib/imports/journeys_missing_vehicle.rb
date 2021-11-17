@@ -30,6 +30,8 @@ private
         next
       end
 
+      next unless results.ensure_valid(journey, record)
+
       journey.vehicle_registration = record[:vehicle_registration]
       results.save(journey, record)
     end

@@ -33,6 +33,8 @@ private
         next
       end
 
+      next unless results.ensure_valid(move, record)
+
       @current_move = move
 
       process_event(move, GenericEvent::MoveStart, {
