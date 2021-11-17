@@ -34,6 +34,8 @@ private
         next
       end
 
+      next unless results.ensure_valid(move, record)
+
       new_status = record[:new_status]
 
       event = find_event(move, new_status)

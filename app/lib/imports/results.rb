@@ -21,9 +21,18 @@ class Imports::Results
   def save(obj, record)
     if obj.save
       record_success(record)
+      true
     else
       record_failure(record, reason: 'Could not save record.')
+      false
     end
+  end
+
+  def ensure_valid(obj, record)
+    return true if obj.valid?
+
+    record_failure(record, reason: 'Record is not valid.')
+    false
   end
 
   def summary

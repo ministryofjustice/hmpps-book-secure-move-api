@@ -35,6 +35,8 @@ private
         next
       end
 
+      next unless results.ensure_valid(journey, record)
+
       new_state = record[:new_state]
 
       event = find_event(journey, new_state)

@@ -40,6 +40,8 @@ private
         next
       end
 
+      next unless results.ensure_valid(journey, record)
+
       @current_journey = journey
 
       process_event(journey, event_name(state: record[:new_state]), {
