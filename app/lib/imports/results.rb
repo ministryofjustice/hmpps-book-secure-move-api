@@ -28,6 +28,13 @@ class Imports::Results
     end
   end
 
+  def ensure_valid(obj, record)
+    return true if obj.valid?
+
+    record_failure(record, reason: 'Record is not valid.')
+    false
+  end
+
   def summary
     string = "Imported #{total} records with #{failures.count} failures.\n"
 

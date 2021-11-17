@@ -63,6 +63,35 @@ RSpec.describe Imports::Results do
     end
   end
 
+  describe '#ensure_valid' do
+    let(:obj) { double }
+    let(:record) { { id: 1 } }
+
+    context 'when object is valid' do
+      before { allow(obj).to receive(:valid?).and_return(true) }
+
+      it 'does not record a result' do
+        return_value = results.ensure_valid(obj, record)
+
+        expect(return_value).to be(true)
+        expect(results.successes).to be_empty
+        expect(results.failures).to be_empty
+      end
+    end
+
+    context 'when object is not valid' do
+      before { allow(obj).to receive(:valid?).and_return(false) }
+
+      it 'records a failed record' do
+        return_value = results.ensure_valid(obj, record)
+
+        expect(return_value).to be(false)
+        expect(results.successes).to be_empty
+        expect(results.failures).to match_array([record.merge(reason: 'Record is not valid.')])
+      end
+    end
+  end
+
   describe '#summary' do
     subject(:summary) { results.summary }
 
