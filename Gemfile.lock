@@ -444,7 +444,7 @@ GEM
       citrus (~> 3.0, > 3.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uk_postcode (2.1.6)
+    uk_postcode (2.1.7)
     unicode-display_width (2.1.0)
     validate_url (1.0.13)
       activemodel (>= 3.0.0)
