@@ -51,6 +51,7 @@ class Journey < ApplicationRecord
   validates :supplier, presence: true
   validates :from_location, presence: true
   validates :to_location, presence: true
+  validates_with DifferentToFromLocationValidator
   validates :client_timestamp, presence: true
   validates :billable, exclusion: { in: [nil] }
   validates :state, presence: true, inclusion: { in: states }

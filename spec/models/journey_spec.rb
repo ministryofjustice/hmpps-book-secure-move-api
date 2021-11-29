@@ -41,6 +41,17 @@ RSpec.describe Journey, type: :model do
     end
   end
 
+  context 'when the from_location and to_location are the same' do
+    subject(:journey) { build(:journey, to_location: location, from_location: location) }
+
+    let(:location) { create(:location) }
+
+    it 'is not valid' do
+      expect(journey).not_to be_valid
+      expect(journey.errors[:to_location_id]).to eq(['should be different to the from location'])
+    end
+  end
+
   shared_examples 'model is synchronised with state_machine' do |expected_state|
     describe 'machine state' do
       it { expect(state_machine_state).to eql expected_state.to_sym }
