@@ -100,4 +100,17 @@ namespace :import do
       print Imports::MovesWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
     end
   end
+
+  namespace :moves_without_to_location do
+    desc "Import moves which don't have a to location using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        move_id: :id,
+        location_key: :mojdestlocationcode,
+      }
+
+      print Imports::MovesWithoutToLocation.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
 end
