@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.11.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.7) (2021-11-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.6...v3.11.7)
+
+**Merged pull requests:**
+
+- Add task for importing moves without a to location [\#1655](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1655) ([thomasleese](https://github.com/thomasleese))
+- Bump uk\_postcode from 2.1.6 to 2.1.7 [\#1654](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1654) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.9.1 to 1.9.3 [\#1653](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1653) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.106.0 to 1.107.0 [\#1652](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1652) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prometheus\_exporter from 0.8.1 to 1.0.0 [\#1651](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1651) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.105.1 to 1.106.0 [\#1650](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1650) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.11.6 [\#1649](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1649) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.6) (2021-11-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.5...v3.11.6)
