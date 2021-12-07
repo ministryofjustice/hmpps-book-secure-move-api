@@ -14,6 +14,20 @@ namespace :import do
     end
   end
 
+  namespace :events_incorrect_occurred_at do
+    desc "Import events which have an incorrect occurred at time using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        event_id: :moveeventid,
+        eventable_id: :moveid,
+        occurred_at: :timetoupdate,
+      }
+
+      print Imports::EventsIncorrectOccurredAt.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :journeys_missing_vehicle do
     desc "Import journeys which are missing a vehicle using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
