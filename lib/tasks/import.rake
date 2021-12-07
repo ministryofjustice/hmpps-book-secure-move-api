@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 namespace :import do
+  namespace :delete_events do
+    desc "Deletes events which are invalid a vehicle using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        event_id: :moveeventid,
+        eventable_id: :moveid,
+      }
+
+      print Imports::DeleteEvents.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :journeys_missing_vehicle do
     desc "Import journeys which are missing a vehicle using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
