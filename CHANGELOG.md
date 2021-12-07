@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.11.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.8) (2021-12-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.7...v3.11.8)
+
+**Merged pull requests:**
+
+- Add tasks for importing events [\#1661](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1661) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-athena from 1.43.0 to 1.44.0 [\#1660](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1660) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.108.0 to 1.109.0 [\#1659](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1659) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.107.0 to 1.108.0 [\#1658](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1658) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.11.7 [\#1656](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1656) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.7) (2021-11-29)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.6...v3.11.7)
