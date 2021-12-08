@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_03_072614) do
+ActiveRecord::Schema.define(version: 2021_12_08_080712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -126,24 +126,6 @@ ActiveRecord::Schema.define(version: 2021_08_03_072614) do
     t.datetime "updated_at", null: false
     t.string "nomis_code"
     t.datetime "disabled_at"
-  end
-
-  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "event_name", null: false
-    t.jsonb "details"
-    t.datetime "client_timestamp", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "eventable_id", null: false
-    t.string "eventable_type", null: false
-    t.string "type"
-    t.text "notes"
-    t.uuid "generic_event_id"
-    t.index ["client_timestamp"], name: "index_events_on_client_timestamp"
-    t.index ["eventable_id", "eventable_type", "event_name"], name: "index_events_on_eventable_id_and_eventable_type_and_event_name"
-    t.index ["eventable_id", "eventable_type"], name: "index_events_on_eventable_id_and_eventable_type"
-    t.index ["generic_event_id"], name: "index_events_on_generic_event_id"
-    t.index ["updated_at"], name: "index_events_on_updated_at"
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -660,7 +642,6 @@ ActiveRecord::Schema.define(version: 2021_08_03_072614) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "events", "generic_events"
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
