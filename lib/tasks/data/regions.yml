@@ -74,6 +74,7 @@
     - SNI
     - WEI
     - WTI
+    - MHI
   4:
     name: North East and North West
     locations:
@@ -123,7 +124,6 @@
     locations:
     - HCI
     - MSI
-    - MHI
   7:
     name: Long Term High Security Estate
     locations:
