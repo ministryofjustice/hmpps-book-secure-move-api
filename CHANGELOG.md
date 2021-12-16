@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.11.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.9) (2021-12-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.8...v3.11.9)
+
+**Merged pull requests:**
+
+- Add BULMIL to Serco locations [\#1664](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1664) ([thomasleese](https://github.com/thomasleese))
+- Remove unused events table [\#1663](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1663) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.8 [\#1662](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1662) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.8) (2021-12-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.7...v3.11.8)
