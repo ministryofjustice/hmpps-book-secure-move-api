@@ -1,5 +1,26 @@
 # Changelog
 
+## [v3.12.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.12.0) (2022-01-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.9...v3.12.0)
+
+**Merged pull requests:**
+
+- Add cancellation reason for database corrections [\#1678](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1678) ([thomasleese](https://github.com/thomasleese))
+- Bump git from 1.10.0 to 1.10.1 [\#1677](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1677) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump geocoder from 1.7.0 to 1.7.2 [\#1676](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1676) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump kaminari from 1.2.1 to 1.2.2 [\#1675](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1675) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.22.2 to 0.23.0 [\#1674](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1674) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump shoulda-matchers from 5.0.0 to 5.1.0 [\#1673](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1673) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prometheus\_exporter from 1.0.0 to 1.0.1 [\#1672](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1672) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.109.0 to 1.110.0 [\#1671](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1671) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.44.0 to 1.45.0 [\#1670](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1670) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump git from 1.9.1 to 1.10.0 [\#1669](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1669) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump activerecord-import from 1.2.0 to 1.3.0 [\#1668](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1668) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump discard from 1.2.0 to 1.2.1 [\#1667](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1667) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update category and region for HMP Morton Hall [\#1666](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1666) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.11.9 [\#1665](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1665) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.11.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.11.9) (2021-12-15)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.8...v3.11.9)
