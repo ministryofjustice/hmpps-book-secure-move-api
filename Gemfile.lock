@@ -177,10 +177,10 @@ GEM
     finite_machine (0.14.0)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
-    flipper (0.22.2)
-    flipper-active_record (0.22.2)
-      activerecord (>= 4.2, < 7)
-      flipper (~> 0.22.2)
+    flipper (0.23.0)
+    flipper-active_record (0.23.0)
+      activerecord (>= 4.2, < 8)
+      flipper (~> 0.23.0)
     geocoder (1.7.2)
     git (1.10.1)
       rchardet (~> 1.8)
@@ -453,7 +453,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.5.1)
+    zeitwerk (2.5.3)
 
 PLATFORMS
   ruby
