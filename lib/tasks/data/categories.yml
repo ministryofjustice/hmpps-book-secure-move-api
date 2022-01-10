@@ -33,36 +33,36 @@
     title: Category C
     move_supported: true
     locations:
-    - HCI
-    - MSI
-    - CWI
+    - BCI
     - BXI
+    - CLI
+    - CWI
+    - DAI
+    - EEI
+    - FSI
+    - GMI
+    - HCI
+    - HHI
+    - HMI
     - HPI
     - ISI
-    - MTI
-    - WII
-    - WLI
-    - FSI
-    - HMI
+    - LFI
     - LHI
     - MDI
-    - OWI
+    - MHI
+    - MSI
+    - MTI
+    - NLI
     - ONI
+    - OWI
     - RNI
+    - RSI
     - SKI
     - SNI
     - WEI
-    - BCI
-    - HHI
-    - LFI
-    - NLI
-    - RSI
+    - WII
+    - WLI
     - WMI
-    - CLI
-    - DAI
-    - EEI
-    - GMI
-    - MHI
   CVPU:
     title: Category C VPU
     move_supported: true
