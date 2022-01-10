@@ -50,31 +50,32 @@
     locations:
     - BMI
     - BSI
-    - DNI
     - DGI
+    - DNI
     - FSI
+    - FWI
     - HDI
     - HEI
     - HLI
     - HMI
-    - LEI
     - LCI
-    - LII
+    - LEI
     - LHI
+    - LII
     - MDI
-    - NSI
+    - MHI
     - NMI
-    - OWI
+    - NSI
     - ONI
+    - OWI
     - RNI
     - SFI
-    - SKI
     - SHI
-    - SUI
+    - SKI
     - SNI
+    - SUI
     - WEI
     - WTI
-    - MHI
   4:
     name: North East and North West
     locations:
