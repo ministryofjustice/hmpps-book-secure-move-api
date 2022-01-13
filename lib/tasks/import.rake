@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 namespace :import do
+  namespace :cancel_or_reject_journeys do
+    desc "Cancels or rejects journeys using Serco's spreadsheets."
+    task :serco, [:csv_path] => :environment do |_, args|
+      csv_path = args.fetch(:csv_path)
+      columns = {
+        journey_id: :id,
+        move_id: :move_id,
+        event_timestamp: :timeofendingevent,
+      }
+
+      print Imports::CancelOrRejectJourneys.call(csv_path: csv_path, columns: columns).summary
+    end
+  end
+
   namespace :delete_events do
     desc "Deletes events which are invalid a vehicle using Serco's spreadsheets."
     task :serco, [:csv_path] => :environment do |_, args|
