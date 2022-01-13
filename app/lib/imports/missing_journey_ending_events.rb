@@ -25,16 +25,17 @@ private
 
   attr_reader :csv_path, :column_mapper
 
-  ALLOWED_JOURNEY_STATES = %w[Completed Cancelled].freeze
+  ALLOWED_EXISTING_JOURNEY_STATES = %w[proposed in_progress].freeze
+  ALLOWED_NEW_JOURNEY_STATES = %w[Completed Cancelled Rejected].freeze
 
   def results
     @results ||= records.each_with_object(Imports::Results.new) do |record, results|
-      unless ALLOWED_JOURNEY_STATES.include?(record[:new_state])
+      unless ALLOWED_NEW_JOURNEY_STATES.include?(record[:new_state])
         results.record_failure(record, reason: 'New state not allowed.')
         next
       end
 
-      journey = Journey.find_by(id: record[:journey_id], move_id: record[:move_id], state: 'in_progress')
+      journey = Journey.find_by(id: record[:journey_id], move_id: record[:move_id], state: ALLOWED_EXISTING_JOURNEY_STATES)
       if journey.nil?
         results.record_failure(record, reason: 'Could not find journey.')
         next
