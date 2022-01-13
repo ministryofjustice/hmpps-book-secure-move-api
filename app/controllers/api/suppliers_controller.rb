@@ -11,9 +11,12 @@ module Api
     def locations_from_supplier_moves
       supplier = Supplier.find(params[:supplier_id])
 
-      Location.joins(:moves_from)
-              .includes(:suppliers)
-              .where(moves: { supplier_id: supplier.id })
+      ids_from_moves = supplier.moves.select(:from_location_id)
+      ids_from_supplier_locations = supplier.supplier_locations.effective_on(Time.zone.today).select(:location_id)
+
+      Location.includes(:suppliers)
+              .where(id: ids_from_moves)
+              .or(Location.where(id: ids_from_supplier_locations))
               .order(key: :asc)
               .distinct
     end
