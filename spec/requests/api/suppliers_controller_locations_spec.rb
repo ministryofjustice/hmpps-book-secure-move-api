@@ -18,8 +18,6 @@ RSpec.describe Api::SuppliersController do
     let(:location_a) { create(:location, suppliers: [supplier], key: 'key_aaa') }
     let(:location_b) { create(:location, suppliers: [supplier], key: 'key_bbb') }
 
-    before { create(:location, suppliers: [supplier], key: 'key_ccc') }
-
     it_behaves_like 'an endpoint that responds with success 200' do
       before do
         create(:move, :requested, supplier: supplier)
@@ -38,7 +36,7 @@ RSpec.describe Api::SuppliersController do
                                  .select { |e| e['type'] == 'locations' }
                                  .map { |l| l['attributes']['key'] }
 
-      expect(response_location_keys).to eq(%w[key_aaa key_bbb key_ccc])
+      expect(response_location_keys).to eq(%w[key_aaa key_bbb])
     end
 
     context 'when other locations are present' do
@@ -54,7 +52,7 @@ RSpec.describe Api::SuppliersController do
                                      .select { |e| e['type'] == 'locations' }
                                      .map { |l| l['attributes']['key'] }
 
-        expect(response_location_keys).to eq(%w[key_aaa key_ccc])
+        expect(response_location_keys).to eq(%w[key_aaa])
       end
     end
   end
