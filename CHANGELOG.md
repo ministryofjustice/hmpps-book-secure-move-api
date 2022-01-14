@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.13.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.13.0) (2022-01-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.12.0...v3.13.0)
+
+**Merged pull requests:**
+
+- Bump nokogiri from 1.13.0 to 1.13.1 [\#1691](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1691) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump listen from 3.7.0 to 3.7.1 [\#1690](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1690) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Import journeys which should be cancelled or rejected [\#1689](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1689) ([thomasleese](https://github.com/thomasleese))
+- Allow importing journeys to be rejected [\#1688](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1688) ([thomasleese](https://github.com/thomasleese))
+- Expand scope of supplier locations endpoint [\#1687](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1687) ([thomasleese](https://github.com/thomasleese))
+- Bump bootsnap from 1.9.3 to 1.9.4 [\#1686](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1686) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add Five Wells location information [\#1685](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1685) ([thomasleese](https://github.com/thomasleese))
+- Bump faraday from 1.8.0 to 1.9.3 [\#1684](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1684) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.111.0 to 1.111.1 [\#1683](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1683) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump git from 1.10.1 to 1.10.2 [\#1682](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1682) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.12.5 to 1.13.0 [\#1681](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1681) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.110.0 to 1.111.0 [\#1680](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1680) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.12.0 [\#1679](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1679) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.12.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.12.0) (2022-01-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.11.9...v3.12.0)
