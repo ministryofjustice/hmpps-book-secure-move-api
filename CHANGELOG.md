@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.14.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.14.0) (2022-01-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.13.0...v3.14.0)
+
+**Merged pull requests:**
+
+- Revert "Expand scope of supplier locations endpoint" [\#1693](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1693) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.13.0 [\#1692](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1692) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.13.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.13.0) (2022-01-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.12.0...v3.13.0)
