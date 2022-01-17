@@ -37,11 +37,11 @@ private
 
       @current_journey = journey
 
-      event_sti_classes_for(state: journey.state).each do |event_sti_class|
+      timestamp = Time.zone.parse(record[:event_timestamp])
+
+      event_sti_classes_for(state: journey.state).each_with_index do |event_sti_class, index|
         process_event(journey, event_sti_class, {
-          attributes: {
-            timestamp: record[:event_timestamp],
-          },
+          attributes: { timestamp: (timestamp + index.seconds).iso8601 },
         })
       end
 

@@ -13,7 +13,7 @@ RSpec.describe Imports::CancelOrRejectJourneys do
     [
       'journey_id,move_id,event_timestamp',
       'abc,abc,2020-01-01',
-      "#{completed_journey.id},#{completed_journey.move_id},2020-01-01",
+      "#{completed_journey.id},#{completed_journey.move_id},01/07/2020 23:59",
       "#{cancelled_journey.id},#{cancelled_journey.move_id},2020-01-01",
       "#{rejected_journey.id},#{rejected_journey.move_id},2020-01-01",
       "#{in_progress_journey.id},#{in_progress_journey.move_id},2020-01-01",
@@ -51,7 +51,7 @@ RSpec.describe Imports::CancelOrRejectJourneys do
 
     it 'records successes' do
       expect(results.successes).to match_array([
-        { journey_id: completed_journey.id, move_id: completed_journey.move_id, event_timestamp: '2020-01-01' },
+        { journey_id: completed_journey.id, move_id: completed_journey.move_id, event_timestamp: '01/07/2020 23:59' },
         { journey_id: cancelled_journey.id, move_id: cancelled_journey.move_id, event_timestamp: '2020-01-01' },
         { journey_id: rejected_journey.id, move_id: rejected_journey.move_id, event_timestamp: '2020-01-01' },
         { journey_id: in_progress_journey.id, move_id: in_progress_journey.move_id, event_timestamp: '2020-01-01' },
@@ -67,6 +67,12 @@ RSpec.describe Imports::CancelOrRejectJourneys do
           GenericEvent::JourneyUncomplete,
           GenericEvent::JourneyCancel,
         ])
+
+        uncomplete_event = GenericEvent::JourneyUncomplete.find_by(eventable: completed_journey)
+        expect(uncomplete_event.occurred_at).to eq('2020-07-01T23:59:00+01:00')
+
+        cancel_event = GenericEvent::JourneyCancel.find_by(eventable: completed_journey)
+        expect(cancel_event.occurred_at).to eq('2020-07-01T23:59:01+01:00')
       end
 
       it 'leaves cancelled journeys' do
