@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.15.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.0) (2022-01-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.14.0...v3.15.0)
+
+**Merged pull requests:**
+
+- Bump flipper-active\_record from 0.23.0 to 0.23.1 [\#1698](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1698) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.9.4 to 1.10.1 [\#1697](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1697) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump geocoder from 1.7.2 to 1.7.3 [\#1696](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1696) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add delays between subsequent events when importing [\#1695](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1695) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.14.0 [\#1694](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1694) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.14.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.14.0) (2022-01-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.13.0...v3.14.0)
