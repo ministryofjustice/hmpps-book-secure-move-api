@@ -35,6 +35,7 @@ class Person < VersionedModel
 
   validates :last_name, presence: true
   validates :first_names, presence: true
+  validates :prison_number, prison_number: true
   validate :validate_age
 
   auto_strip_attributes :nomis_prison_number, :prison_number, :criminal_records_office, :police_national_computer
