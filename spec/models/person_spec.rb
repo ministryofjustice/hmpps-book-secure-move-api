@@ -60,6 +60,12 @@ RSpec.describe Person do
       person = create(:person, prison_number: '')
       expect(person.reload.prison_number).to be_nil
     end
+
+    it 'validates the format' do
+      person = build(:person, prison_number: 'in:valid')
+      expect(person).not_to be_valid
+      expect(person.errors.messages[:prison_number]).to include('is not a valid prison number')
+    end
   end
 
   # TODO: Remove nomis_prison_number once we remove v1 from our system
