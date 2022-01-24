@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.15.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.1) (2022-01-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.0...v3.15.1)
+
+**Merged pull requests:**
+
+- Bump paper\_trail from 12.1.0 to 12.2.0 [\#1705](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1705) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add basic validation on prison numbers [\#1703](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1703) ([thomasleese](https://github.com/thomasleese))
+- Bump sidekiq from 6.3.1 to 6.4.0 [\#1702](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1702) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.111.1 to 1.111.2 [\#1701](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1701) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk from 4.2.0 to 4.3.0 [\#1700](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1700) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.15.0 [\#1699](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1699) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.15.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.0) (2022-01-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.14.0...v3.15.0)
