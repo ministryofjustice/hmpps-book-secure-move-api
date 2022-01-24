@@ -324,6 +324,32 @@ commands:
           name: check image
           command: docker images
 
+  export_kube_vars:
+    description: "Exports kube vars for the chosen environment and cluster."
+    parameters:
+      env:
+        type: string
+      cluster:
+        type: string
+        default: "live-1"
+    steps:
+      - run:
+          command: |
+            ENV_UPCASED=$(echo "<< parameters.env >>" | tr '[:lower:]' '[:upper:]')
+            [[ "<< parameters.cluster >>" = "live" ]] && CLUSTER_SUFFIX="_LIVE"
+
+            ENDPOINT_VAR="ECR_ENDPOINT${CLUSTER_SUFFIX}"
+            CACERT_VAR="KUBE_ENV_${ENV_UPCASED}_CACERT${CLUSTER_SUFFIX}"
+            NAME_VAR="KUBE_ENV_${ENV_UPCASED}_NAME"
+            NAMESPACE_VAR="KUBE_ENV_${ENV_UPCASED}_NAMESPACE"
+            TOKEN_VAR="KUBE_ENV_${ENV_UPCASED}_TOKEN${CLUSTER_SUFFIX}"
+
+            echo "export ECR_ENDPOINT=\"${!ENDPOINT_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_ENV_CACERT=\"${!CACERT_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_ENV_NAME=\"${!NAME_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_ENV_NAMESPACE=\"${!NAMESPACE_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_ENV_TOKEN=\"${!TOKEN_VAR}\"" >> $BASH_ENV
+
   retag_docker_image:
     description: "Re-tag an image for deployment."
     parameters:
@@ -348,20 +374,25 @@ commands:
     parameters:
       env:
         type: string
+      cluster:
+        type: string
+        default: "live-1"
       notify_slack:
         type: string
         default: ""
     steps:
       - checkout
-
-      # This step leverages cloud platform. There needs to be 4 env variables in Circle CI named KUBE_ENV_<env>_* to
-      # support this. Details at:
-      # https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/use-circleci-to-upgrade-app.html#creating-a-service-account-for-circleci
+      - export_kube_vars:
+          env: << parameters.env >>
+          cluster: << parameters.cluster >>
       - run:
-          name: kubectl use context
+          name: Authenticate with cluster
           command: |
-            setup-kube-auth
-            kubectl config use-context << parameters.env >>
+            echo -n $KUBE_ENV_CACERT | base64 -d > ./ca.crt
+            kubectl config set-cluster ${ECR_ENDPOINT} --certificate-authority=./ca.crt --server=https://${ECR_ENDPOINT}
+            kubectl config set-credentials circleci --token=${KUBE_ENV_TOKEN}
+            kubectl config set-context << parameters.cluster >>-${ECR_ENDPOINT} --cluster=${ECR_ENDPOINT} --user=circleci --namespace=${KUBE_ENV_NAMESPACE}
+            kubectl config use-context ${ECR_ENDPOINT}
       - run:
           name: run db migrations
           command: |
@@ -373,7 +404,7 @@ commands:
             kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit ${exit_code}
       - deploy:
-          name: rolling update image to << parameters.env >>
+          name: rolling update image to << parameters.env >> on << parameters.cluster >>
           command: |
             export BUILD_DATE=$(date -Is) >> $BASH_ENV
             source $BASH_ENV
@@ -487,6 +518,15 @@ jobs:
           env: "dev"
       - deploy_to_k8s:
           env: "dev"
+
+  deploy_dev_live:
+    resource_class: small
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - deploy_to_k8s:
+          env: "dev"
+          cluster: "live"
 
   deploy_uat:
     resource_class: small
@@ -602,6 +642,12 @@ workflows:
             - rspec_tests
             - linters
       - deploy_dev:
+          context:
+            - hmpps-common-vars
+          <<: *only_main_and_create_dev
+          requires:
+            - build_image
+      - deploy_dev_live:
           context:
             - hmpps-common-vars
           <<: *only_main_and_create_dev
