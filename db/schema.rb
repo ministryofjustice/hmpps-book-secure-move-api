@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_08_080712) do
+ActiveRecord::Schema.define(version: 2022_01_25_102025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -326,6 +326,8 @@ ActiveRecord::Schema.define(version: 2021_12_08_080712) do
     t.float "latitude"
     t.float "longitude"
     t.index ["category_id"], name: "index_locations_on_category_id"
+    t.index ["location_type"], name: "index_locations_on_location_type"
+    t.index ["nomis_agency_id"], name: "index_locations_on_nomis_agency_id"
     t.index ["young_offender_institution"], name: "index_locations_on_young_offender_institution"
   end
 
