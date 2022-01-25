@@ -391,7 +391,7 @@ commands:
             echo -n $KUBE_ENV_CACERT | base64 -d > ./ca.crt
             kubectl config set-cluster ${ECR_ENDPOINT} --certificate-authority=./ca.crt --server=https://${ECR_ENDPOINT}
             kubectl config set-credentials circleci --token=${KUBE_ENV_TOKEN}
-            kubectl config set-context << parameters.cluster >>-${ECR_ENDPOINT} --cluster=${ECR_ENDPOINT} --user=circleci --namespace=${KUBE_ENV_NAMESPACE}
+            kubectl config set-context ${ECR_ENDPOINT} --cluster=${ECR_ENDPOINT} --user=circleci --namespace=${KUBE_ENV_NAMESPACE}
             kubectl config use-context ${ECR_ENDPOINT}
       - run:
           name: run db migrations
