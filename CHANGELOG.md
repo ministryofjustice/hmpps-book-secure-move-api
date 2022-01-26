@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.15.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.2) (2022-01-26)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.1...v3.15.2)
+
+**Merged pull requests:**
+
+- Bump puma from 5.5.2 to 5.6.0 [\#1713](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1713) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add delay to import move start events [\#1712](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1712) ([thomasleese](https://github.com/thomasleese))
+- Add indexes for some location fields [\#1710](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1710) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-s3 from 1.111.2 to 1.111.3 [\#1709](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1709) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.15.1 [\#1708](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1708) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.15.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.1) (2022-01-24)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.0...v3.15.1)
