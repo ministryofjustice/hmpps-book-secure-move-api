@@ -46,8 +46,6 @@ private
       @current_move = nil
 
       results.save(move, record)
-
-      sleep 3
     end
   end
 
