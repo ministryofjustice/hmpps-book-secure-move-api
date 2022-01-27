@@ -485,6 +485,15 @@
             items:
               type: string
               format: uuid
+        - name: filter[reference]
+          description: Filters results to only include moves with a given reference
+          in: query
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
         - name: sort[by]
           description: field to sort results by
           in: query
