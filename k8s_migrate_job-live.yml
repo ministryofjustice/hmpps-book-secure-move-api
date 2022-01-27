@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hmpps-book-secure-move-api-migrate-db-__ENV__
+  namespace: hmpps-book-secure-move-api-__ENV__
+spec:
+  template:
+    metadata:
+      name: hmpps-book-secure-move-api-migrate-db-__ENV__
+      labels:
+        app: hmpps-book-secure-move-api-web-__ENV__
+        job: migrate-db
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: app
+          image: DF366E49809688A3B16EEC29707D8C09.gr7.eu-west-2.eks.amazonaws.com/book-a-secure-move/hmpps-book-secure-move-api:__ENV__.latest
+          command: ["bundle", "exec", "rake", "db:migrate"]
+          imagePullPolicy: Always
+          env:
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: hmpps-book-secure-move-api-secrets-__ENV__
+                  key: secret_key_base_key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rds-instance-hmpps-book-secure-move-api-__ENV__
+                  key: url
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: book-a-secure-move-documents-s3-bucket
+                  key: access_key_id
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: book-a-secure-move-documents-s3-bucket
+                  key: secret_access_key
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: book-a-secure-move-documents-s3-bucket
+                  key: bucket_name
