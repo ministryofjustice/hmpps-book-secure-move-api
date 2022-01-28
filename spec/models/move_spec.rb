@@ -235,6 +235,23 @@ RSpec.describe Move do
     it { is_expected.to validate_presence_of(:reference) }
   end
 
+  describe '#for_supplier' do
+    subject(:moves) { described_class.for_supplier(supplier) }
+
+    let(:supplier) { create(:supplier) }
+    let(:location) { create(:location, suppliers: [supplier]) }
+
+    let(:move1) { create(:move, supplier: supplier) }
+    let(:move2) { create(:move, to_location: location) }
+    let(:move3) { create(:move, from_location: location) }
+    let(:move4) { create(:move) }
+
+    it { is_expected.to include(move1) }
+    it { is_expected.to include(move2) }
+    it { is_expected.to include(move3) }
+    it { is_expected.not_to include(move4) }
+  end
+
   describe '#reference' do
     subject(:move) { described_class.new }
 

@@ -135,6 +135,12 @@ class Move < VersionedModel
            :cancelled?,
            to: :state_machine
 
+  def self.for_supplier(supplier)
+    where(supplier: supplier)
+      .or(Move.where(from_location: supplier.locations))
+      .or(Move.where(to_location: supplier.locations))
+  end
+
   def approve(date:)
     assign_attributes(date: date) if date.present?
     state_machine.approve
