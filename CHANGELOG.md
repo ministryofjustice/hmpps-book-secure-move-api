@@ -1,5 +1,26 @@
 # Changelog
 
+## [v3.16.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.16.0) (2022-01-31)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.2...v3.16.0)
+
+**Closed issues:**
+
+- A branch protection setting is not enabled: codeowners require reviews [\#1719](https://github.com/ministryofjustice/hmpps-book-secure-move-api/issues/1719)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-athena from 1.45.0 to 1.46.0 [\#1721](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1721) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add CODEOWNERS file [\#1720](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1720) ([thomasleese](https://github.com/thomasleese))
+- Document how to filter moves on the reference [\#1718](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1718) ([thomasleese](https://github.com/thomasleese))
+- Revert "Add delay to import move start events" [\#1717](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1717) ([thomasleese](https://github.com/thomasleese))
+- Bump rspec-rails from 5.0.2 to 5.1.0 [\#1716](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1716) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.6.0 to 5.6.1 [\#1715](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1715) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.15.2 [\#1714](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1714) ([thomasleese](https://github.com/thomasleese))
+- Bump bootsnap from 1.10.1 to 1.10.2 [\#1707](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1707) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pg from 1.2.3 to 1.3.0 [\#1706](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1706) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Allow suppliers to manage moves of other suppliers [\#1704](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1704) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.15.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.15.2) (2022-01-26)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.1...v3.15.2)
