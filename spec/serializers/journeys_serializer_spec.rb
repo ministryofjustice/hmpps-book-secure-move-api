@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe JourneysSerializer do
   subject(:serializer) { described_class.new(journey, adapter_options) }
 
-  let(:journey) { create :journey, client_timestamp: '2020-05-04T08:00:00Z' }
+  let(:journey) { create :journey, client_timestamp: '2020-05-04T08:00:00Z', date: '2020-05-04' }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:adapter_options) { {} }
 
@@ -27,6 +27,10 @@ RSpec.describe JourneysSerializer do
 
   it 'contains a `timestamp` attribute' do
     expect(result[:data][:attributes][:timestamp]).to eql '2020-05-04T09:00:00+01:00'
+  end
+
+  it 'contains a `date` attribute' do
+    expect(result[:data][:attributes][:date]).to eql '2020-05-04'
   end
 
   it 'contains vehicle attributes' do
