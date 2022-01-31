@@ -367,8 +367,9 @@ commands:
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
             --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
+            # ImageAlreadyExistsException can be thrown if we re-run a failed deployment, so ignore it
             aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
-            --image-manifest "${MANIFEST}"
+            --image-manifest "${MANIFEST}" | grep -v "ImageAlreadyExistsException"
 
   deploy_to_k8s:
     description: "Deploys a previously built Docker image to dev/staging/preprod/production k8s environment"
