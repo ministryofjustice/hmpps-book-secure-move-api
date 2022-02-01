@@ -367,8 +367,10 @@ commands:
           command: |
             MANIFEST=$(aws ecr batch-get-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" \
             --image-ids imageTag=${CIRCLE_SHA1} --query 'images[].imageManifest' --output text)
+            set +e
             PUT_RESULT=$(aws ecr put-image --repository-name "${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}" --image-tag << parameters.env >>.latest \
             --image-manifest "${MANIFEST}")
+            set -e
 
             # ImageAlreadyExistsException can be thrown if we re-run a failed deployment, so ignore it
             if [[ $? != "0" && $PUT_RESULT != *"ImageAlreadyExistsException"* ]]; then
