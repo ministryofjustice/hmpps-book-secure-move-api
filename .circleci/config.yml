@@ -339,17 +339,17 @@ commands:
             ENV_UPCASED=$(echo "<< parameters.env >>" | tr '[:lower:]' '[:upper:]')
             [[ "<< parameters.cluster >>" = "live" ]] && CLUSTER_SUFFIX="_LIVE"
 
-            ENDPOINT_VAR="ECR_ENDPOINT${CLUSTER_SUFFIX}"
+            CLUSTER_VAR="KUBE_CLUSTER${CLUSTER_SUFFIX}"
             CACERT_VAR="KUBE_ENV_${ENV_UPCASED}_CACERT${CLUSTER_SUFFIX}"
             NAME_VAR="KUBE_ENV_${ENV_UPCASED}_NAME"
             NAMESPACE_VAR="KUBE_ENV_${ENV_UPCASED}_NAMESPACE"
             TOKEN_VAR="KUBE_ENV_${ENV_UPCASED}_TOKEN${CLUSTER_SUFFIX}"
 
-            echo "export ECR_ENDPOINT=\"${!ENDPOINT_VAR}\"" >> $BASH_ENV
-            echo "export KUBE_ENV_CACERT=\"${!CACERT_VAR}\"" >> $BASH_ENV
-            echo "export KUBE_ENV_NAME=\"${!NAME_VAR}\"" >> $BASH_ENV
-            echo "export KUBE_ENV_NAMESPACE=\"${!NAMESPACE_VAR}\"" >> $BASH_ENV
-            echo "export KUBE_ENV_TOKEN=\"${!TOKEN_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_CLUSTER=\"${!ENDPOINT_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_CACERT=\"${!CACERT_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_NAME=\"${!NAME_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_NAMESPACE=\"${!NAMESPACE_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_TOKEN=\"${!TOKEN_VAR}\"" >> $BASH_ENV
 
   retag_docker_image:
     description: "Re-tag an image for deployment."
@@ -396,11 +396,11 @@ commands:
       - run:
           name: Authenticate with cluster
           command: |
-            echo -n $KUBE_ENV_CACERT | base64 -d > ./ca.crt
-            kubectl config set-cluster ${ECR_ENDPOINT} --certificate-authority=./ca.crt --server=https://${ECR_ENDPOINT}
-            kubectl config set-credentials circleci --token=${KUBE_ENV_TOKEN}
-            kubectl config set-context ${ECR_ENDPOINT} --cluster=${ECR_ENDPOINT} --user=circleci --namespace=${KUBE_ENV_NAMESPACE}
-            kubectl config use-context ${ECR_ENDPOINT}
+            echo -n $KUBE_CACERT | base64 -d > ./ca.crt
+            kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}
+            kubectl config set-credentials circleci --token=${KUBE_TOKEN}
+            kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=circleci --namespace=${KUBE_NAMESPACE}
+            kubectl config use-context ${KUBE_CLUSTER}
       - run:
           name: run db migrations
           command: |
