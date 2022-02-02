@@ -345,7 +345,7 @@ commands:
             NAMESPACE_VAR="KUBE_ENV_${ENV_UPCASED}_NAMESPACE"
             TOKEN_VAR="KUBE_ENV_${ENV_UPCASED}_TOKEN${CLUSTER_SUFFIX}"
 
-            echo "export KUBE_CLUSTER=\"${!ENDPOINT_VAR}\"" >> $BASH_ENV
+            echo "export KUBE_CLUSTER=\"${!CLUSTER_VAR}\"" >> $BASH_ENV
             echo "export KUBE_CACERT=\"${!CACERT_VAR}\"" >> $BASH_ENV
             echo "export KUBE_NAME=\"${!NAME_VAR}\"" >> $BASH_ENV
             echo "export KUBE_NAMESPACE=\"${!NAMESPACE_VAR}\"" >> $BASH_ENV
