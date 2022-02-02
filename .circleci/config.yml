@@ -404,9 +404,8 @@ commands:
       - run:
           name: run db migrations
           command: |
-            [[ "<< parameters.cluster >>" = "live" ]] && CLUSTER_SUFFIX="-live"
             set -o errexit
-            sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job${CLUSTER_SUFFIX}.yml | kubectl apply -f -
+            sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
             kubectl wait --for=condition=complete --timeout=300s job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
             exit_code=$?
             kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
