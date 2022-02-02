@@ -42,6 +42,7 @@ Please note; the automatically generated secret is hashed and cannot be retrieve
 
 To get an access token with client credentials flow, do a POST request to the `/oauth/token` endpoint:
 
+
 ```
 POST /oauth/token
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
