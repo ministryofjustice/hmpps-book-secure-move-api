@@ -13,7 +13,7 @@ RSpec.describe Rake::Task['backfill:journey_dates'] do
   let!(:journey_to_ignore) { create(:journey, date: '2020-01-01') }
 
   it 'sets the journey dates to the move date' do
-    described_class.invoke
+    described_class.invoke('10')
 
     expect(Journey.where(date: nil)).not_to exist
 
