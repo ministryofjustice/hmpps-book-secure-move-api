@@ -388,6 +388,9 @@ commands:
       notify_slack:
         type: string
         default: ""
+      run_migrations:
+        type: boolean
+        default: true
     steps:
       - checkout
       - export_kube_vars:
@@ -401,16 +404,19 @@ commands:
             kubectl config set-credentials circleci --token=${KUBE_TOKEN}
             kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=circleci --namespace=${KUBE_NAMESPACE}
             kubectl config use-context ${KUBE_CLUSTER}
-      - run:
-          name: run db migrations
-          command: |
-            set -o errexit
-            sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
-            kubectl wait --for=condition=complete --timeout=300s job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
-            exit_code=$?
-            kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
-            kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
-            exit ${exit_code}
+      - when:
+          condition: <<parameters.run_migrations>>
+          steps:
+            - run:
+                name: run db migrations
+                command: |
+                  set -o errexit
+                  sed 's/__ENV__/<< parameters.env >>/' k8s_migrate_job.yml | kubectl apply -f -
+                  kubectl wait --for=condition=complete --timeout=300s job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+                  exit_code=$?
+                  kubectl logs job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+                  kubectl delete job/hmpps-book-secure-move-api-migrate-db-<< parameters.env >>
+                  exit ${exit_code}
       - deploy:
           name: rolling update image to << parameters.env >> on << parameters.cluster >>
           command: |
@@ -535,6 +541,7 @@ jobs:
       - deploy_to_k8s:
           env: "dev"
           cluster: "live"
+          run_migrations: false
 
   deploy_uat:
     resource_class: small
