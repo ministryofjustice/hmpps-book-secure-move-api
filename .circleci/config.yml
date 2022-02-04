@@ -563,16 +563,7 @@ jobs:
           env: "staging"
       - deploy_to_k8s:
           env: "staging"
-
-  deploy_staging_live:
-    resource_class: small
-    executor: cloud-platform-executor
-    steps:
-      - setup_remote_docker
-      - deploy_to_k8s:
-          env: "staging"
           cluster: "live"
-          run_migrations: false
 
   deploy_preprod:
     resource_class: small
@@ -695,12 +686,6 @@ workflows:
           requires:
             - build_image
       - deploy_staging:
-          context:
-            - hmpps-common-vars
-          <<: *only_main
-          requires:
-            - build_image
-      - deploy_staging_live:
           context:
             - hmpps-common-vars
           <<: *only_main
