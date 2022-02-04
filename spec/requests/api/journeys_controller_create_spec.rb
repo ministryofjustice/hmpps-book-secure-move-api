@@ -13,9 +13,12 @@ RSpec.describe Api::JourneysController do
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
-    let(:move_id) { create(:move, supplier: supplier).id }
+    let(:move) { create(:move, supplier: supplier) }
+    let(:move_id) { move.id }
+
     let(:timestamp) { '2020-05-04T09:00:00+01:00' }
     let(:billable) { false }
+    let(:date) { '2020-05-04' }
 
     let(:journey_params) do
       {
@@ -24,6 +27,7 @@ RSpec.describe Api::JourneysController do
           "attributes": {
             "billable": billable,
             "timestamp": timestamp,
+            "date": date,
             "vehicle": { "id": '12345678ABC', "registration": 'AB12 CDE' },
           },
           "relationships": {
@@ -56,6 +60,7 @@ RSpec.describe Api::JourneysController do
             "billable": false,
             "state": 'proposed',
             "timestamp": '2020-05-04T09:00:00+01:00',
+            "date": '2020-05-04',
             "vehicle": { "id": '12345678ABC', "registration": 'AB12 CDE' },
           },
           "relationships": {
@@ -76,9 +81,7 @@ RSpec.describe Api::JourneysController do
       end
 
       it_behaves_like 'an endpoint that responds with success 201' do
-        before do
-          do_post
-        end
+        before { do_post }
       end
 
       it 'returns the correct data' do
@@ -94,6 +97,15 @@ RSpec.describe Api::JourneysController do
         do_post
         expect(GenericEvent.last.created_by).to eq('TEST_USER')
       end
+
+      context 'with a missing date' do
+        let(:date) { nil }
+
+        it 'sets the date to the move date' do
+          do_post
+          expect(Journey.first.date).to eq(move.date)
+        end
+      end
     end
 
     context 'when unsuccessful' do
@@ -103,9 +115,7 @@ RSpec.describe Api::JourneysController do
         let(:journey_params) { nil }
 
         it_behaves_like 'an endpoint that responds with error 400' do
-          before do
-            do_post
-          end
+          before { do_post }
         end
       end
 
@@ -113,9 +123,7 @@ RSpec.describe Api::JourneysController do
         let(:timestamp) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before do
-            do_post
-          end
+          before { do_post }
 
           let(:errors_422) do
             [{ 'title' => 'Invalid timestamp',
@@ -128,9 +136,7 @@ RSpec.describe Api::JourneysController do
         let(:billable) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before do
-            do_post
-          end
+          before { do_post }
 
           let(:errors_422) do
             [{ 'title' => 'Invalid billable',
@@ -154,9 +160,7 @@ RSpec.describe Api::JourneysController do
         let(:to_location_id) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before do
-            do_post
-          end
+          before { do_post }
 
           let(:errors_422) do
             [{ 'title' => 'Invalid location',

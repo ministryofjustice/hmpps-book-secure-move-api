@@ -23,6 +23,7 @@ class Journey < ApplicationRecord
     move_id
     billable
     state
+    date
     vehicle_registration
     client_timestamp
     created_at

@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.17.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.1) (2022-02-02)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.0...v3.17.1)
+
+**Merged pull requests:**
+
+- Add limit to backfilling journey dates [\#1727](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1727) ([thomasleese](https://github.com/thomasleese))
+- Bump pg from 1.3.0 to 1.3.1 [\#1726](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1726) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.17.0 [\#1725](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1725) ([thomasleese](https://github.com/thomasleese))
+- Add a task for backfilling journey dates  [\#1724](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1724) ([thomasleese](https://github.com/thomasleese))
+
+## [v3.17.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.0) (2022-02-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.16.0...v3.17.0)
+
+**Merged pull requests:**
+
+- Add dates to journeys [\#1723](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1723) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.16.0 [\#1722](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1722) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.16.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.16.0) (2022-01-31)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.15.2...v3.16.0)

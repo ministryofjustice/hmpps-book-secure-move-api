@@ -6,6 +6,7 @@ FactoryBot.define do
     association(:to_location, :court, factory: :location)
     client_timestamp { Time.zone.now.utc + rand(-60..60).seconds } # NB: the client_timestamp will never be perfectly in sync with system clock
     vehicle { { id: '12345678ABC', registration: 'AB12 CDE' } }
+    date { Time.zone.today }
 
     # NB we need to initialize_state because FactoryBot fires the after_initialize callback before the attributes are initialised!
     after(:build, &:initialize_state)

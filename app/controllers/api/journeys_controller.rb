@@ -12,13 +12,13 @@ module Api
 
     PERMITTED_NEW_JOURNEY_PARAMS = [
       :type,
-      { attributes: [:timestamp, :billable, { vehicle: {} }],
+      { attributes: [:timestamp, :billable, { vehicle: {} }, :date],
         relationships: [from_location: {}, to_location: {}, supplier: {}] },
     ].freeze
 
     PERMITTED_UPDATE_JOURNEY_PARAMS = [
       :type,
-      { attributes: [:timestamp, :billable, { vehicle: {} }] },
+      { attributes: [:timestamp, :billable, { vehicle: {} }, :date] },
     ].freeze
 
     def index
@@ -99,6 +99,7 @@ module Api
         attribs.merge!(
           move: move,
           client_timestamp: Time.zone.parse(timestamp),
+          date: attribs.delete(:date) || move.date,
           from_location: find_location(new_journey_params.require(:relationships).require(:from_location).require(:data).require(:id)),
           to_location: find_location(new_journey_params.require(:relationships).require(:to_location).require(:data).require(:id)),
           supplier: supplier,
@@ -138,6 +139,7 @@ module Api
     def update_journey_attributes
       @update_journey_attributes ||= update_journey_params.to_h[:attributes].tap do |attribs|
         attribs.delete(:timestamp) # throw the timestamp away for updates
+        attribs.delete(:date) if attribs[:date].nil?
       end
     end
 

@@ -124,6 +124,7 @@ RSpec.describe Journey, type: :model do
         'to_location': 'GUICCT',
         'to_location_type': 'court',
         'billable': false,
+        'date': be_a(Date),
         'state': 'proposed',
         'vehicle_registration': 'AB12 CDE',
         'client_timestamp': be_a(Time),
