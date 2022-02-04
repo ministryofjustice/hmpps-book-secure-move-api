@@ -16,11 +16,14 @@ RSpec.describe Api::JourneysController do
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
     let(:move) { create(:move, from_location_id: from_location_id, supplier: supplier) }
     let(:move_id) { move.id }
-    let(:journey) { create(:journey, move: move, supplier: supplier, billable: false, client_timestamp: '2020-05-04T08:00:00Z', from_location_id: from_location_id, to_location_id: to_location_id) }
+
+    let(:original_date) { Date.new(2020, 5, 4) }
+    let(:journey) { create(:journey, move: move, supplier: supplier, billable: false, client_timestamp: '2020-05-04T08:00:00Z', date: original_date, from_location_id: from_location_id, to_location_id: to_location_id) }
     let(:journey_id) { journey.id }
 
     let(:timestamp) { '2020-05-04T12:12:12+01:00' }
     let(:billable) { true }
+    let(:date) { '2020-05-04' }
 
     let(:journey_params) do
       {
@@ -29,6 +32,7 @@ RSpec.describe Api::JourneysController do
           "attributes": {
             "billable": billable,
             "timestamp": timestamp,
+            "date": date,
             "vehicle": { "id": '9876', "registration": 'XYZ' },
           },
         },
@@ -40,11 +44,17 @@ RSpec.describe Api::JourneysController do
       let(:access_token) { create(:access_token, application: application).token }
       let(:schema) { load_yaml_schema('get_journey_responses.yaml') }
 
+      shared_examples 'does not update the journey date' do
+        before { do_patch }
+
+        it 'does not update the journey date' do
+          expect(journey.date).to eq(original_date)
+        end
+      end
+
       context 'when updating all attributes' do
         it_behaves_like 'an endpoint that responds with success 200' do
-          before do
-            do_patch
-          end
+          before { do_patch }
         end
 
         it 'returns the correct data' do
@@ -54,6 +64,7 @@ RSpec.describe Api::JourneysController do
             "type": 'journeys',
             "attributes": {
               "billable": billable,
+              "date": date,
               "vehicle": { "id": '9876', "registration": 'XYZ' },
             },
           })
@@ -62,6 +73,11 @@ RSpec.describe Api::JourneysController do
         it 'updates the underlying journey billable' do
           do_patch
           expect(journey.billable).to be true
+        end
+
+        it 'updates the underlying journey date' do
+          do_patch
+          expect(journey.date).to eq(Date.new(2020, 5, 4))
         end
 
         it 'updates the underlying journey vehicle' do
@@ -120,6 +136,8 @@ RSpec.describe Api::JourneysController do
             do_patch
             expect(journey.to_location.id).to eql(to_location_id)
           end
+
+          include_examples 'does not update the journey date'
         end
       end
 
@@ -140,6 +158,8 @@ RSpec.describe Api::JourneysController do
           do_patch
           expect(journey.billable).to be true
         end
+
+        include_examples 'does not update the journey date'
 
         it 'does not update the underlying journey vehicle' do
           do_patch
@@ -165,10 +185,57 @@ RSpec.describe Api::JourneysController do
           expect(journey.billable).to be false
         end
 
+        include_examples 'does not update the journey date'
+
         it 'does update the underlying journey vehicle' do
           do_patch
           expect(journey.vehicle).to eql('id' => '9876', 'registration' => 'XYZ')
         end
+      end
+
+      context 'when only updating date' do
+        let(:journey_params) do
+          {
+            data: {
+              "type": 'journeys',
+              "attributes": {
+                "date": date,
+                "timestamp": timestamp,
+              },
+            },
+          }
+        end
+
+        it 'does not update the underlying journey billable' do
+          do_patch
+          expect(journey.billable).to be false
+        end
+
+        it 'updates the underlying journey date' do
+          do_patch
+          expect(journey.date).to eq(Date.new(2020, 5, 4))
+        end
+
+        it 'does not update the underlying journey vehicle' do
+          do_patch
+          expect(journey.vehicle).to eql('id' => '12345678ABC', 'registration' => 'AB12 CDE')
+        end
+      end
+
+      context 'when updating date to nil' do
+        let(:journey_params) do
+          {
+            data: {
+              "type": 'journeys',
+              "attributes": {
+                "date": nil,
+                "timestamp": timestamp,
+              },
+            },
+          }
+        end
+
+        include_examples 'does not update the journey date'
       end
     end
 
@@ -179,9 +246,7 @@ RSpec.describe Api::JourneysController do
         let(:journey_params) { nil }
 
         it_behaves_like 'an endpoint that responds with error 400' do
-          before do
-            do_patch
-          end
+          before { do_patch }
         end
       end
 
@@ -189,9 +254,7 @@ RSpec.describe Api::JourneysController do
         let(:timestamp) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before do
-            do_patch
-          end
+          before { do_patch }
 
           let(:errors_422) do
             [{ 'title' => 'Invalid timestamp',
@@ -204,9 +267,7 @@ RSpec.describe Api::JourneysController do
         let(:billable) { 'foo-bar' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before do
-            do_patch
-          end
+          before { do_patch }
 
           let(:errors_422) do
             [{ 'title' => 'Invalid billable',
@@ -220,9 +281,7 @@ RSpec.describe Api::JourneysController do
         let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404' do
-          before do
-            do_patch
-          end
+          before { do_patch }
         end
       end
 
@@ -231,9 +290,7 @@ RSpec.describe Api::JourneysController do
         let(:detail_404) { "Couldn't find Journey with 'id'=foo-bar" }
 
         it_behaves_like 'an endpoint that responds with error 404' do
-          before do
-            do_patch
-          end
+          before { do_patch }
         end
       end
     end

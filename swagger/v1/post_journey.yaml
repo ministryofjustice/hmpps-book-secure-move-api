@@ -15,6 +15,7 @@ PostJourney:
       required:
       - timestamp
       - billable
+      - date
       properties:
         timestamp:
           $ref: timestamp_attribute.yaml#/Timestamp
@@ -22,6 +23,11 @@ PostJourney:
           type: boolean
           example: true
           description: true indicates that the journey is billable, otherwise false
+        date:
+          type: string
+          format: date
+          example: '2020-04-21'
+          description: the date of when the journey is to occur
         vehicle:
           type: object
           properties:
