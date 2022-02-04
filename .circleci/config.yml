@@ -528,6 +528,8 @@ jobs:
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
+      - retag_docker_image:
+          env: "dev"
       - deploy_to_k8s:
           env: "dev"
           cluster: "live"
