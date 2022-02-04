@@ -551,7 +551,7 @@ jobs:
       - setup_remote_docker
       - deploy_to_k8s:
           env: "uat"
-          cluser: "live"
+          cluster: "live"
           run_migrations: false
 
   deploy_staging:
@@ -571,7 +571,7 @@ jobs:
       - setup_remote_docker
       - deploy_to_k8s:
           env: "staging"
-          cluser: "live"
+          cluster: "live"
           run_migrations: false
 
   deploy_preprod:
@@ -591,7 +591,7 @@ jobs:
       - setup_remote_docker
       - deploy_to_k8s:
           env: "preprod"
-          cluser: "live"
+          cluster: "live"
           run_migrations: false
 
   deploy_production:
@@ -613,7 +613,7 @@ jobs:
       - deploy_to_k8s:
           env: "production"
           notify_slack: "true"
-          cluser: "live"
+          cluster: "live"
           run_migrations: false
 
   ecr-cleanup:
