@@ -528,20 +528,9 @@ jobs:
     executor: cloud-platform-executor
     steps:
       - setup_remote_docker
-      - retag_docker_image:
-          env: "dev"
-      - deploy_to_k8s:
-          env: "dev"
-
-  deploy_dev_live:
-    resource_class: small
-    executor: cloud-platform-executor
-    steps:
-      - setup_remote_docker
       - deploy_to_k8s:
           env: "dev"
           cluster: "live"
-          run_migrations: false
 
   deploy_uat:
     resource_class: small
@@ -657,12 +646,6 @@ workflows:
             - rspec_tests
             - linters
       - deploy_dev:
-          context:
-            - hmpps-common-vars
-          <<: *only_main_and_create_dev
-          requires:
-            - build_image
-      - deploy_dev_live:
           context:
             - hmpps-common-vars
           <<: *only_main_and_create_dev
