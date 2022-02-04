@@ -544,6 +544,16 @@ jobs:
       - deploy_to_k8s:
           env: "uat"
 
+  deploy_uat_live:
+    resource_class: small
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - deploy_to_k8s:
+          env: "uat"
+          cluser: "live"
+          run_migrations: false
+
   deploy_staging:
     resource_class: small
     executor: cloud-platform-executor
@@ -553,6 +563,16 @@ jobs:
           env: "staging"
       - deploy_to_k8s:
           env: "staging"
+
+  deploy_staging_live:
+    resource_class: small
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - deploy_to_k8s:
+          env: "staging"
+          cluser: "live"
+          run_migrations: false
 
   deploy_preprod:
     resource_class: small
@@ -564,6 +584,16 @@ jobs:
       - deploy_to_k8s:
           env: "preprod"
 
+  deploy_preprod_live:
+    resource_class: small
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - deploy_to_k8s:
+          env: "preprod"
+          cluser: "live"
+          run_migrations: false
+
   deploy_production:
     resource_class: small
     executor: cloud-platform-executor
@@ -574,6 +604,17 @@ jobs:
       - deploy_to_k8s:
           env: "production"
           notify_slack: "true"
+
+  deploy_production_live:
+    resource_class: small
+    executor: cloud-platform-executor
+    steps:
+      - setup_remote_docker
+      - deploy_to_k8s:
+          env: "production"
+          notify_slack: "true"
+          cluser: "live"
+          run_migrations: false
 
   ecr-cleanup:
     resource_class: small
@@ -659,13 +700,31 @@ workflows:
           <<: *only_main
           requires:
             - build_image
+      - deploy_staging_live:
+          context:
+            - hmpps-common-vars
+          <<: *only_main
+          requires:
+            - build_image
       - deploy_uat:
           context:
             - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
             - build_image
+      - deploy_uat_live:
+          context:
+            - hmpps-common-vars
+          <<: *only_deploy_tags
+          requires:
+            - build_image
       - deploy_preprod:
+          context:
+            - hmpps-common-vars
+          <<: *only_deploy_tags
+          requires:
+            - build_image
+      - deploy_preprod_live:
           context:
             - hmpps-common-vars
           <<: *only_deploy_tags
@@ -683,6 +742,12 @@ workflows:
           requires:
             - build_image
       - deploy_production:
+          context:
+            - hmpps-common-vars
+          <<: *only_deploy_tags
+          requires:
+            - hold_production
+      - deploy_production_live:
           context:
             - hmpps-common-vars
           <<: *only_deploy_tags
