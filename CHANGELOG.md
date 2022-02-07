@@ -1,5 +1,20 @@
 # Changelog
 
+## [v3.17.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.2) (2022-02-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.1...v3.17.2)
+
+**Merged pull requests:**
+
+- Bump aws-sdk-athena from 1.47.0 to 1.48.0 [\#1734](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1734) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Migrate staging to live [\#1733](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1733) ([Thource](https://github.com/Thource))
+- Bump aws-sdk-s3 from 1.111.3 to 1.112.0 [\#1732](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1732) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.46.0 to 1.47.0 [\#1731](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1731) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.10.2 to 1.10.3 [\#1730](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1730) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 4.5.1 to 4.6.0 [\#1729](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1729) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.17.1 [\#1728](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1728) ([thomasleese](https://github.com/thomasleese))
+- Change CircleCI config to support live [\#1711](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1711) ([Thource](https://github.com/Thource))
+
 ## [v3.17.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.1) (2022-02-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.0...v3.17.1)
