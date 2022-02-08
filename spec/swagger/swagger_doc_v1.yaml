@@ -1600,7 +1600,9 @@
             The journey object to be created. It must specify `timestamp`,
             `billable`, `from_location` and `to_location`. Optionally, `supplier`
             can also be specified if required (otherwise the supplier will be taken
-            from the logged-in account).
+            from the logged-in account). `date` can also be specified to represent
+            when the journey has or will take place (otherwise this will be taken
+            from the date of the move).
           schema:
             "$ref": "../v1/post_journey.yaml#/PostJourney"
         - "$ref": "../v1/journeys_include_parameter.yaml#/JourneysIncludeParameter"
