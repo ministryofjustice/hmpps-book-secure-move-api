@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.17.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.3) (2022-02-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.2...v3.17.3)
+
+**Merged pull requests:**
+
+- Bump rswag-ui from 2.4.0 to 2.5.0 [\#1741](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1741) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-api from 2.4.0 to 2.5.0 [\#1740](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1740) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-specs from 2.4.0 to 2.5.0 [\#1739](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1739) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add line about journey dates in Swagger docs [\#1738](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1738) ([thomasleese](https://github.com/thomasleese))
+- Bump sidekiq from 6.4.0 to 6.4.1 [\#1737](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1737) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Migrate uat, preprod, production to live [\#1736](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1736) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.17.2 [\#1735](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1735) ([Thource](https://github.com/Thource))
+
 ## [v3.17.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.2) (2022-02-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.1...v3.17.2)
