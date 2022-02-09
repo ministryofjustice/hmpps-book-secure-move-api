@@ -362,10 +362,10 @@ GEM
     rspec-support (3.10.3)
     rswag-api (2.4.0)
       railties (>= 3.1, < 7.0)
-    rswag-specs (2.4.0)
-      activesupport (>= 3.1, < 7.0)
+    rswag-specs (2.5.0)
+      activesupport (>= 3.1, < 7.1)
       json-schema (~> 2.2)
-      railties (>= 3.1, < 7.0)
+      railties (>= 3.1, < 7.1)
     rswag-ui (2.4.0)
       actionpack (>= 3.1, < 7.0)
       railties (>= 3.1, < 7.0)
@@ -457,7 +457,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.5.3)
+    zeitwerk (2.5.4)
 
 PLATFORMS
   ruby
