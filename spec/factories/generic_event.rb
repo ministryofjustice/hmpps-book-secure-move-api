@@ -22,6 +22,22 @@ FactoryBot.define do
     end
   end
 
+  factory :medical, parent: :generic_event do
+    eventable { association(:person_escort_record) }
+    classification { 'medical' }
+    details do
+      {
+        advised_by: Faker::Name.name,
+        advised_at: Time.zone.now.iso8601,
+        treated_by: Faker::Name.name,
+        treated_at: Time.zone.now.iso8601,
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+        vehicle_reg: Faker::Vehicle.license_plate,
+      }
+    end
+  end
+
   factory :event_move_date_changed, parent: :generic_event, class: 'GenericEvent::MoveDateChanged' do
     eventable { association(:move) }
     details do
@@ -509,20 +525,7 @@ FactoryBot.define do
     eventable { association(:person_escort_record) }
   end
 
-  factory :event_per_medical_aid, parent: :generic_event, class: 'GenericEvent::PerMedicalAid' do
-    eventable { association(:person_escort_record) }
-    classification { 'medical' }
-    details do
-      {
-        advised_by: Faker::Name.name,
-        advised_at: Time.zone.now.iso8601,
-        treated_by: Faker::Name.name,
-        treated_at: Time.zone.now.iso8601,
-        location_id: create(:location).id,
-        supplier_personnel_number: SecureRandom.uuid,
-        vehicle_reg: Faker::Vehicle.license_plate,
-      }
-    end
+  factory :event_per_medical_aid, parent: :medical, class: 'GenericEvent::PerMedicalAid' do
   end
 
   factory :event_per_prisoner_welfare, parent: :generic_event, class: 'GenericEvent::PerPrisonerWelfare' do
