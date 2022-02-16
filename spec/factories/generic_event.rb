@@ -528,6 +528,9 @@ FactoryBot.define do
   factory :event_per_medical_aid, parent: :medical, class: 'GenericEvent::PerMedicalAid' do
   end
 
+  factory :event_per_medical_drugs_alcohol, parent: :medical, class: 'GenericEvent::PerMedicalDrugsAlcohol' do
+  end
+
   factory :event_per_prisoner_welfare, parent: :generic_event, class: 'GenericEvent::PerPrisonerWelfare' do
     eventable { association(:person_escort_record) }
     details do
