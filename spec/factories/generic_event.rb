@@ -548,6 +548,10 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_property_change, parent: :generic_event, class: 'GenericEvent::PerPropertyChange' do
+    eventable { association(:person_escort_record) }
+  end
+
   factory :event_per_confirmation, parent: :generic_event, class: 'GenericEvent::PerConfirmation' do
     eventable { association(:person_escort_record, :confirmed, confirmed_at: '2021-01-01') }
     details do
