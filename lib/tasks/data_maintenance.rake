@@ -39,7 +39,11 @@ namespace :data_maintenance do
 
   desc 'fix generic event classification for existing data'
   task fix_generic_event_classifications: :environment do
-    medical_event_type = 'GenericEvent::PerMedicalAid'
+    medical_event_type = [
+      'GenericEvent::PerMedicalAid',
+      'GenericEvent::PerMedicalDrugsAlcohol',
+      'GenericEvent::PerMedicalMentalHealth',
+    ]
     incident_event_types = [
       'GenericEvent::PersonMoveRoadTrafficAccident',
       'GenericEvent::PersonMovePersonEscaped',

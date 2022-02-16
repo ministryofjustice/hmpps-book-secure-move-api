@@ -31,7 +31,7 @@ RSpec.describe GenericEvent, type: :model do
         .sub('app/models/generic_event/', '')
         .sub('.rb', '')
         .camelcase
-    } - %w[Incident Notification]
+    } - %w[Incident Medical Notification]
 
     expect(described_class::STI_CLASSES).to match_array(expected_sti_classes)
   end
