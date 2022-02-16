@@ -76,6 +76,7 @@ class GenericEvent < ApplicationRecord
     PerHandover
     PerMedicalAid
     PerMedicalDrugsAlcohol
+    PerMedicalMentalHealth
     PerPrisonerWelfare
     PersonMoveAssault
     PersonMoveBookedIntoReceivingEstablishment

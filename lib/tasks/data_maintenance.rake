@@ -42,6 +42,7 @@ namespace :data_maintenance do
     medical_event_type = [
       'GenericEvent::PerMedicalAid',
       'GenericEvent::PerMedicalDrugsAlcohol',
+      'GenericEvent::PerMedicalMentalHealth',
     ]
     incident_event_types = [
       'GenericEvent::PersonMoveRoadTrafficAccident',
