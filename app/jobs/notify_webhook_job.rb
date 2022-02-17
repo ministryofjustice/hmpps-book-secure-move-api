@@ -34,12 +34,7 @@ class NotifyWebhookJob < ApplicationJob
         delivery_attempted_at: Time.zone.now,
       )
 
-      Sentry.with_scope do |scope|
-        scope.set_tags(supplier: subscription.supplier.key)
-        scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
-        scope.set_level(:warning) if e.is_a?(NotificationFailedResponseError)
-        Sentry.capture_exception(e)
-      end
+      record_failure(subscription, notification, e)
 
       raise RetryJobError, e
     end
@@ -53,6 +48,15 @@ private
       client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
     end
     client
+  end
+
+  def record_failure(subscription, notification, exception)
+    Sentry.with_scope do |scope|
+      scope.set_tags(supplier: subscription.supplier.key)
+      scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
+      scope.set_level(:warning) if exception.is_a?(NotificationFailedResponseError)
+      Sentry.capture_exception(exception)
+    end
   end
 end
 
