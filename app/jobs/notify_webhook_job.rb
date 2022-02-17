@@ -42,12 +42,17 @@ class NotifyWebhookJob < ApplicationJob
 
 private
 
+  FARADAY_OPTIONS = {
+    headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' },
+    request: { timeout: ENV.fetch('WEBHOOK_TIMEOUT', 10).to_i },
+  }.freeze
+
   def get_client(subscription)
-    client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' }, request: { timeout: ENV.fetch('WEBHOOK_TIMEOUT', 10).to_i })
-    if subscription.username.present? && subscription.password.present?
-      client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
+    Faraday.new(FARADAY_OPTIONS).tap do |client|
+      if subscription.username.present? && subscription.password.present?
+        client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
+      end
     end
-    client
   end
 
   def record_failure(subscription, notification, exception)
