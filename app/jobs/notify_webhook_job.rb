@@ -12,20 +12,7 @@ class NotifyWebhookJob < ApplicationJob
     return if notification.delivered_at.present?
 
     begin
-      data = NotificationSerializer.new(notification).serializable_hash.to_json
-      hmac = Encryptor.hmac(subscription.secret, data)
-      client = get_client(subscription)
-      response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
-
-      unless response.success?
-        raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
-      end
-
-      notification.update!(
-        delivered_at: Time.zone.now,
-        delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: Time.zone.now,
-      )
+      perform_request(notification, subscription)
     rescue StandardError => e
       notification.update!(
         delivery_attempts: notification.delivery_attempts.succ,
@@ -35,10 +22,30 @@ class NotifyWebhookJob < ApplicationJob
       record_failure(subscription, notification, e)
 
       raise RetryJobError, e
+    else
+      notification.update!(
+        delivered_at: Time.zone.now,
+        delivery_attempts: notification.delivery_attempts.succ,
+        delivery_attempted_at: Time.zone.now,
+      )
     end
   end
 
 private
+
+  def perform_request(notification, subscription)
+    data = NotificationSerializer.new(notification).serializable_hash.to_json
+    hmac = Encryptor.hmac(subscription.secret, data)
+    client = get_client(subscription)
+
+    response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id)
+
+    unless response.success?
+      raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
+    end
+  rescue Faraday::TimeoutError
+    raise NotificationFailedResponseError, "Timeout received from #{subscription.callback_url}."
+  end
 
   FARADAY_OPTIONS = {
     headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' },
