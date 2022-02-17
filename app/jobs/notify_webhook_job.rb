@@ -14,20 +14,11 @@ class NotifyWebhookJob < ApplicationJob
     begin
       perform_request(notification, subscription)
     rescue StandardError => e
-      notification.update!(
-        delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: Time.zone.now,
-      )
-
+      update_notification(notification, success: false)
       record_failure(subscription, notification, e)
-
       raise RetryJobError, e
     else
-      notification.update!(
-        delivered_at: Time.zone.now,
-        delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: Time.zone.now,
-      )
+      update_notification(notification, success: true)
     end
   end
 
@@ -58,6 +49,14 @@ private
         client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
       end
     end
+  end
+
+  def update_notification(notification, success:)
+    notification.update!(
+      delivered_at: success ? Time.zone.now : nil,
+      delivery_attempts: notification.delivery_attempts.succ,
+      delivery_attempted_at: Time.zone.now,
+    )
   end
 
   def record_failure(subscription, notification, exception)
