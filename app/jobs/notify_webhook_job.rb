@@ -1,58 +1,71 @@
 # frozen_string_literal: true
 
-# This job is responsible for sending the notification to the supplier's webhook endpoint
 class NotifyWebhookJob < ApplicationJob
   include QueueDeterminer
 
   def perform(notification_id:, **_)
     notification = Notification.webhooks.kept.includes(:subscription).find(notification_id)
+
     subscription = notification.subscription
     return unless subscription.enabled?
 
-    # just return if the notification has been already delivered
     return if notification.delivered_at.present?
 
     begin
-      data = NotificationSerializer.new(notification).serializable_hash.to_json
-      hmac = Encryptor.hmac(subscription.secret, data)
-      client = get_client(subscription)
-      response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification_id)
-
-      unless response.success?
-        raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
-      end
-
-      notification.update!(
-        delivered_at: Time.zone.now,
-        delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: Time.zone.now,
-      )
-      # TODO: in the future, consider suggesting that the webhook endpoint could return a UUID in the response, which we could store in notification.response_id ?
+      perform_request(notification, subscription)
     rescue StandardError => e
-      notification.update!(
-        delivery_attempts: notification.delivery_attempts.succ,
-        delivery_attempted_at: Time.zone.now,
-      )
-
-      Sentry.with_scope do |scope|
-        scope.set_tags(supplier: subscription.supplier.key)
-        scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
-        scope.set_level(:warning) if e.is_a?(NotificationFailedResponseError)
-        Sentry.capture_exception(e)
-      end
-
+      update_notification(notification, success: false)
+      record_failure(subscription, notification, e)
       raise RetryJobError, e
+    else
+      update_notification(notification, success: true)
     end
   end
 
 private
 
-  def get_client(subscription)
-    client = Faraday.new(headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' }, request: { timeout: ENV.fetch('WEBHOOK_TIMEOUT', 10).to_i })
-    if subscription.username.present? && subscription.password.present?
-      client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
+  def perform_request(notification, subscription)
+    data = NotificationSerializer.new(notification).serializable_hash.to_json
+    hmac = Encryptor.hmac(subscription.secret, data)
+    client = get_client(subscription)
+
+    response = client.post(subscription.callback_url, data, 'PECS-SIGNATURE': hmac, 'PECS-NOTIFICATION-ID': notification.id)
+
+    unless response.success?
+      raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
     end
-    client
+  rescue Faraday::TimeoutError
+    raise NotificationFailedResponseError, "Timeout received from #{subscription.callback_url}."
+  end
+
+  FARADAY_OPTIONS = {
+    headers: { 'Content-Type': 'application/vnd.api+json', 'User-Agent': 'pecs-webhooks/v1' },
+    request: { timeout: ENV.fetch('WEBHOOK_TIMEOUT', 10).to_i },
+  }.freeze
+
+  def get_client(subscription)
+    Faraday.new(FARADAY_OPTIONS).tap do |client|
+      if subscription.username.present? && subscription.password.present?
+        client.headers['Authorization'] = "Basic #{Base64.strict_encode64("#{subscription.username}:#{subscription.password}")}"
+      end
+    end
+  end
+
+  def update_notification(notification, success:)
+    notification.update!(
+      delivered_at: success ? Time.zone.now : nil,
+      delivery_attempts: notification.delivery_attempts.succ,
+      delivery_attempted_at: Time.zone.now,
+    )
+  end
+
+  def record_failure(subscription, notification, exception)
+    Sentry.with_scope do |scope|
+      scope.set_tags(supplier: subscription.supplier.key)
+      scope.set_tags(move: notification.topic.reference) if notification.topic.is_a?(Move)
+      scope.set_level(:warning) if exception.is_a?(NotificationFailedResponseError)
+      Sentry.capture_exception(exception)
+    end
   end
 end
 
