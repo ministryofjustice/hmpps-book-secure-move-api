@@ -71,7 +71,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'bundler-audit'
   gem 'listen'
   gem 'rails-erd'
   gem 'rubocop-govuk'
