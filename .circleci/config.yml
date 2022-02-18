@@ -445,17 +445,6 @@ commands:
             - *notify_slack_on_release_end
 
 jobs:
-  security_audit:
-    executor: test-executor
-    steps:
-      - checkout
-      - build-base
-      - *attach-tmp-workspace
-      - run:
-          name: Run security audit
-          command: bundle exec bundle audit check
-      - *notify_slack_on_failure
-
   notify_of_approval:
     resource_class: small
     executor: basic-executor
@@ -693,15 +682,3 @@ workflows:
       - schedule:
           cron: "0 9 * * 1"
           <<: *only_main
-
-  scheduled:
-    triggers:
-      - schedule:
-          cron: "0 6 * * 1-5"
-          filters:
-            branches:
-              only: main
-    jobs:
-      - security_audit:
-          context:
-            - hmpps-common-vars

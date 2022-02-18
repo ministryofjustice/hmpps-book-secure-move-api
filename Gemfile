@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'rails', '6.1.4.1'
+gem 'rails', '6.1.4.6'
 
 gem 'activerecord-import'
 gem 'auto_strip_attributes'
@@ -71,7 +71,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'bundler-audit'
   gem 'listen'
   gem 'rails-erd'
   gem 'rubocop-govuk'
