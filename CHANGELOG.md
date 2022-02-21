@@ -1,5 +1,29 @@
 # Changelog
 
+## [v3.18.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.18.0) (2022-02-21)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.3...v3.18.0)
+
+**Merged pull requests:**
+
+- Bump oauth2 from 1.4.7 to 1.4.9 [\#1758](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1758) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prometheus\_exporter from 1.0.1 to 2.0.0 [\#1757](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1757) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove CircleCI security job [\#1756](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1756) ([thomasleese](https://github.com/thomasleese))
+- Bump faraday from 1.9.3 to 1.10.0 [\#1755](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1755) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.23.1 to 0.24.0 [\#1754](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1754) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Refactor notification webhook job [\#1753](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1753) ([thomasleese](https://github.com/thomasleese))
+- Add GenericEvent::PerPropertyChange [\#1752](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1752) ([thomasleese](https://github.com/thomasleese))
+- Add new medical events for lockouts [\#1751](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1751) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-athena from 1.48.0 to 1.49.0 [\#1750](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1750) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pg from 1.3.1 to 1.3.2 [\#1749](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1749) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.6.1 to 5.6.2 [\#1748](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1748) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-specs from 2.5.0 to 2.5.1 [\#1747](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1747) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-ui from 2.5.0 to 2.5.1 [\#1746](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1746) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-api from 2.5.0 to 2.5.1 [\#1745](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1745) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Mark PYI as a youth offender institution [\#1744](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1744) ([thomasleese](https://github.com/thomasleese))
+- Add HMP Parc \(YOI\) location [\#1743](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1743) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.17.3 [\#1742](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1742) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.17.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.17.3) (2022-02-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.2...v3.17.3)
