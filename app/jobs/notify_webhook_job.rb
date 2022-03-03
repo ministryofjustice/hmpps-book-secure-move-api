@@ -34,6 +34,8 @@ private
     unless response.success?
       raise NotificationFailedResponseError, "Non-success status received from #{subscription.callback_url}.\nStatus: #{response.status}, Reason: #{response.reason_phrase}, Response body: '#{response.body}'"
     end
+  rescue Faraday::ConnectionFailed
+    raise NotificationFailedResponseError, "Connection failed to #{subscription.callback_url}."
   rescue Faraday::TimeoutError
     raise NotificationFailedResponseError, "Timeout received from #{subscription.callback_url}."
   end
