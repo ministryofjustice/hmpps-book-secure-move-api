@@ -4,8 +4,8 @@ module SupplierPersonnelNumberValidations
   extend ActiveSupport::Concern
 
   included do
-    validates :supplier_personnel_number, presence: true if method_defined?(:supplier_personnel_number)
-
-    validates :supplier_personnel_numbers, presence: true if method_defined?(:supplier_personnel_numbers)
+    if method_defined?(:supplier_personnel_number) || method_defined?(:supplier_personnel_numbers)
+      validates_with PersonnelNumberValidation
+    end
   end
 end
