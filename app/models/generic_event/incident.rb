@@ -17,7 +17,7 @@ class GenericEvent
       }
 
       child.include LocationValidations
-      child.include SupplierPersonnelNumberValidations
+      child.include PersonnelNumberValidations
       child.include LocationFeed
 
       child.validates :reported_at, iso_date_time: true

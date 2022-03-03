@@ -21,7 +21,7 @@ class GenericEvent
 
     include LocationValidations
     include PersonEscortRecordEventValidations
-    include SupplierPersonnelNumberValidations
+    include PersonnelNumberValidations
     include LocationFeed
 
     validates :given_at, presence: true, iso_date_time: true

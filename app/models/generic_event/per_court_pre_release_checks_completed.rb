@@ -6,7 +6,7 @@ class GenericEvent
     relationship_attributes location_id: :locations
 
     include PersonEscortRecordEventValidations
-    include SupplierPersonnelNumberValidations
+    include PersonnelNumberValidations
     include LocationValidations
     include LocationFeed
   end

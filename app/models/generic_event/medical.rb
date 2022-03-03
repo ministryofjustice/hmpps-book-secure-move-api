@@ -11,7 +11,7 @@ class GenericEvent
       child.relationship_attributes location_id: :locations
 
       child.include PersonEscortRecordEventValidations
-      child.include SupplierPersonnelNumberValidations
+      child.include PersonnelNumberValidations
       child.include LocationFeed
       child.include LocationValidations
 
