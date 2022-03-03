@@ -1,5 +1,5 @@
 RSpec.shared_examples 'an event about an incident' do
-  it_behaves_like 'an event with details', :supplier_personnel_numbers, :vehicle_reg, :reported_at, :fault_classification
+  it_behaves_like 'an event with details', :supplier_personnel_numbers, :police_personnel_numbers, :vehicle_reg, :reported_at, :fault_classification
   it_behaves_like 'an event with relationships', location_id: :locations
   it_behaves_like 'an event with eventable types', 'Person', 'Move'
   it_behaves_like 'an event requiring a location', :location_id

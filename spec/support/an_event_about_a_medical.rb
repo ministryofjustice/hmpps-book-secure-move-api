@@ -1,5 +1,5 @@
 RSpec.shared_examples 'an event about a medical' do
-  it_behaves_like 'an event with details', :advised_at, :advised_by, :treated_at, :treated_by, :supplier_personnel_number, :vehicle_reg
+  it_behaves_like 'an event with details', :advised_at, :advised_by, :treated_at, :treated_by, :supplier_personnel_number, :police_personnel_number, :vehicle_reg
   it_behaves_like 'an event with relationships', location_id: :locations
   it_behaves_like 'an event requiring a location', :location_id
   it_behaves_like 'an event with a supplier personnel number'
