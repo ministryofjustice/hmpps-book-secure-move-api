@@ -7,7 +7,7 @@ class GenericEvent
     eventable_types 'Move', 'Person'
 
     include LocationValidations
-    include SupplierPersonnelNumberValidations
+    include PersonnelNumberValidations
     include VehicleRegValidations
     include LocationFeed
 

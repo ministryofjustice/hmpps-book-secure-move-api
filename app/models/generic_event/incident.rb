@@ -7,7 +7,7 @@ class GenericEvent
     end
 
     def self.inherited(child)
-      child.details_attributes :supplier_personnel_numbers, :vehicle_reg, :reported_at, :fault_classification
+      child.details_attributes :supplier_personnel_numbers, :police_personnel_numbers, :vehicle_reg, :reported_at, :fault_classification
       child.relationship_attributes location_id: :locations
       child.eventable_types 'Move', 'Person'
       child.enum fault_classification: {
@@ -17,7 +17,7 @@ class GenericEvent
       }
 
       child.include LocationValidations
-      child.include SupplierPersonnelNumberValidations
+      child.include PersonnelNumberValidations
       child.include LocationFeed
 
       child.validates :reported_at, iso_date_time: true
