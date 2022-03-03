@@ -4,8 +4,8 @@ class GenericEvent
 
     details_attributes :subtype
     relationship_attributes court_location_id: :locations
+    eventable_types 'PersonEscortRecord'
 
-    include PersonEscortRecordEventValidations
     include LocationValidations
     include LocationFeed
 

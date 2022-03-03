@@ -4,8 +4,8 @@ class GenericEvent
 
     details_attributes :subtype, :vehicle_reg, :ended_at, :authorised_by, :authorised_at
     relationship_attributes location_id: :locations
+    eventable_types 'PersonEscortRecord'
 
-    include PersonEscortRecordEventValidations
     include AuthoriserValidations
     include LocationValidations
     include LocationFeed

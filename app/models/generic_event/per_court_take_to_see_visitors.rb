@@ -3,8 +3,8 @@ class GenericEvent
     LOCATION_ATTRIBUTE_KEY = :location_id
 
     relationship_attributes location_id: :locations
+    eventable_types 'PersonEscortRecord'
 
-    include PersonEscortRecordEventValidations
     include LocationValidations
     include LocationFeed
   end
