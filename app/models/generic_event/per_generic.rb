@@ -1,5 +1,5 @@
 class GenericEvent
   class PerGeneric < GenericEvent
-    include PersonEscortRecordEventValidations
+    eventable_types 'PersonEscortRecord'
   end
 end

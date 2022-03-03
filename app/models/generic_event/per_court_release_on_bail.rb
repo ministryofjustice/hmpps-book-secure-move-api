@@ -4,8 +4,8 @@ class GenericEvent
 
     details_attributes :supplier_personnel_number
     relationship_attributes location_id: :locations
+    eventable_types 'PersonEscortRecord'
 
-    include PersonEscortRecordEventValidations
     include PersonnelNumberValidations
     include LocationValidations
     include LocationFeed

@@ -4,6 +4,7 @@ class GenericEvent
 
     details_attributes :given_at, :outcome, :subtype, :vehicle_reg, :supplier_personnel_number
     relationship_attributes location_id: :locations
+    eventable_types 'PersonEscortRecord'
 
     enum outcome: {
       accepted: 'accepted',
@@ -20,7 +21,6 @@ class GenericEvent
     }
 
     include LocationValidations
-    include PersonEscortRecordEventValidations
     include PersonnelNumberValidations
     include LocationFeed
 

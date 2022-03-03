@@ -1,5 +1,5 @@
 class GenericEvent
   class PerHandover < GenericEvent
-    include PersonEscortRecordEventValidations
+    eventable_types 'PersonEscortRecord'
   end
 end
