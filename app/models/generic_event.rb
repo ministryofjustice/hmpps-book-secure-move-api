@@ -57,6 +57,7 @@ class GenericEvent < ApplicationRecord
     MoveReject
     MoveRequested
     MoveStart
+    PerConcealed
     PerConfirmation
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
@@ -72,6 +73,7 @@ class GenericEvent < ApplicationRecord
     PerCourtTakeFromCustodyToDock
     PerCourtTakeToSeeVisitors
     PerCourtTask
+    PerEscape
     PerGeneric
     PerHandover
     PerMedicalAid
@@ -79,6 +81,9 @@ class GenericEvent < ApplicationRecord
     PerMedicalMentalHealth
     PerPrisonerWelfare
     PerPropertyChange
+    PerSelfHarm
+    PerViolentDangerous
+    PerWeapons
     PersonMoveAssault
     PersonMoveBookedIntoReceivingEstablishment
     PersonMoveDeathInCustody

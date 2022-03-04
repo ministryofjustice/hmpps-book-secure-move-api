@@ -22,6 +22,17 @@ FactoryBot.define do
     end
   end
 
+  factory :per_incident, parent: :generic_event do
+    eventable { association(:person_escort_record) }
+    classification { 'incident' }
+    details do
+      {
+        location_id: create(:location).id,
+        supplier_personnel_number: SecureRandom.uuid,
+      }
+    end
+  end
+
   factory :medical, parent: :generic_event do
     eventable { association(:person_escort_record) }
     classification { 'medical' }
@@ -378,6 +389,9 @@ FactoryBot.define do
     eventable { association(:journey) }
   end
 
+  factory :event_per_concealed, parent: :per_incident, class: 'GenericEvent::PerConcealed' do
+  end
+
   factory :event_per_court_cell_share_risk_assessment, parent: :generic_event, class: 'GenericEvent::PerCourtCellShareRiskAssessment' do
     eventable { association(:person_escort_record) }
     details do
@@ -521,6 +535,9 @@ FactoryBot.define do
     end
   end
 
+  factory :event_per_escape, parent: :per_incident, class: 'GenericEvent::PerEscape' do
+  end
+
   factory :event_per_generic, parent: :generic_event, class: 'GenericEvent::PerGeneric' do
     eventable { association(:person_escort_record) }
   end
@@ -563,6 +580,15 @@ FactoryBot.define do
 
   factory :event_per_handover, parent: :generic_event, class: 'GenericEvent::PerHandover' do
     eventable { association(:person_escort_record, :confirmed) }
+  end
+
+  factory :event_per_self_harm, parent: :per_incident, class: 'GenericEvent::PerSelfHarm' do
+  end
+
+  factory :event_per_violent_dangerous, parent: :per_incident, class: 'GenericEvent::PerViolentDangerous' do
+  end
+
+  factory :event_per_weapons, parent: :per_incident, class: 'GenericEvent::PerWeapons' do
   end
 
   factory :event_person_move_assault, parent: :incident, class: 'GenericEvent::PersonMoveAssault' do
