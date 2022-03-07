@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.19.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.19.0) (2022-03-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.18.0...v3.19.0)
+
+**Merged pull requests:**
+
+- Bump faker from 2.19.0 to 2.20.0 [\#1773](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1773) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add lockout events [\#1772](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1772) ([thomasleese](https://github.com/thomasleese))
+- Stop using PersonEscortRecordEventValidations [\#1771](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1771) ([thomasleese](https://github.com/thomasleese))
+- Capture error when requesting webhook [\#1770](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1770) ([thomasleese](https://github.com/thomasleese))
+- Add police personnel numbers to events [\#1769](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1769) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-athena from 1.51.0 to 1.52.0 [\#1768](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1768) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.49.0 to 1.51.0 [\#1767](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1767) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prometheus\_exporter from 2.0.0 to 2.0.2 [\#1766](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1766) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.112.0 to 1.113.0 [\#1764](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1764) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.13.2 to 1.13.3 [\#1762](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1762) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pg from 1.3.2 to 1.3.3 [\#1761](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1761) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.13.1 to 1.13.2 [\#1760](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1760) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.18.0 [\#1759](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1759) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.18.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.18.0) (2022-02-21)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.17.3...v3.18.0)
