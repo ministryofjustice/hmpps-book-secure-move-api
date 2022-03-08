@@ -439,7 +439,7 @@ GEM
       sprockets (>= 3.0.0)
     sync (0.5.0)
     thor (1.2.1)
-    timecop (0.9.4)
+    timecop (0.9.5)
     timers (4.3.3)
     toml-rb (0.3.15)
       citrus (~> 3.0, > 3.0)
