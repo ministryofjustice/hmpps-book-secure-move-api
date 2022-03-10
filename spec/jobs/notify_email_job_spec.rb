@@ -143,7 +143,7 @@ RSpec.describe NotifyEmailJob, type: :job do
       end
 
       it 'raises an error' do
-        expect { perform! }.to raise_error(RetryJobError, 'govuk_notify_response is missing')
+        expect { perform! }.to raise_error(RetryJobError, 'GOV.UK Notify Response is missing')
       end
     end
 

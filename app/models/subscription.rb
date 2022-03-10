@@ -3,9 +3,10 @@
 class Subscription < ApplicationRecord
   include Discard::Model
 
-  # NB: we should not be destroying subscriptions if they have notifications, instead call the discard! method
   has_many :notifications, dependent: :restrict_with_error
   belongs_to :supplier
+
+  scope :enabled, -> { where(enabled: true) }
 
   validates :supplier, presence: true
   validates :callback_url, url: { allow_nil: true }
