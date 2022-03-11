@@ -9,15 +9,17 @@ class NotificationSerializer
 
   attribute :timestamp, &:created_at
 
-  belongs_to :move, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(Move) }, links: {
-    self: ->(object) { Rails.application.routes.url_helpers.api_move_url(object.topic.id) },
+  belongs_to :move, if: ->(object) { object.move_id }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_move_url(object.move_id) },
   }
 
-  belongs_to :person_escort_record, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(PersonEscortRecord) }, links: {
-    self: ->(object) { Rails.application.routes.url_helpers.api_person_escort_record_url(object.topic.id) },
+  belongs_to :person_escort_record, if: ->(object) { object.person_escort_record_id }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_person_escort_record_url(object.person_escort_record_id) },
   }
 
-  belongs_to :youth_risk_assessment, id_method_name: :topic_id, if: proc { |object| object.topic.is_a?(YouthRiskAssessment) }, links: {
-    self: ->(object) { Rails.application.routes.url_helpers.api_youth_risk_assessment_url(object.topic.id) },
+  belongs_to :youth_risk_assessment, if: ->(object) { object.youth_risk_assessment_id }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_youth_risk_assessment_url(object.youth_risk_assessment_id) },
   }
+
+  belongs_to :event, id_method_name: :generic_event_id, serializer: GenericEventSerializer, if: ->(object) { object.generic_event_id }
 end

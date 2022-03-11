@@ -17,6 +17,18 @@ RSpec.describe Notifier do
     clear_performed_jobs
   end
 
+  context 'when scheduled with a generic_event' do
+    let(:move) { create(:move, date: Time.zone.tomorrow) }
+    let(:topic) { create(:event_person_move_assault, eventable: move) }
+    let(:action_name) { 'create_event' }
+
+    it 'queues a job' do
+      expect(PrepareGenericEventNotificationsJob)
+        .to have_been_enqueued
+        .with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
+    end
+  end
+
   context 'when scheduled with a move for today' do
     let(:topic) { create(:move, date: Time.zone.today) }
 

@@ -44,9 +44,29 @@ RSpec.shared_examples 'a generic event endpoint' do |event_type|
 
   let(:factory) { "event_#{event_type.underscore}" }
 
+  before do
+    allow(Notifier).to receive(:prepare_notifications)
+  end
+
   describe 'POST /events' do
     it "creates a GenericEvent::#{event_type}" do
       expect { do_post }.to change("GenericEvent::#{event_type}".constantize, :count).by(1)
+    end
+
+    context 'when authenticated as a supplier user' do
+      before { create(:supplier) }
+
+      it "doesn't send out notifications to suppliers" do
+        expect(Notifier).not_to have_received(:prepare_notifications)
+      end
+    end
+
+    context 'when authenticated as a non-supplier user' do
+      it 'sends out notifications to suppliers' do
+        do_post
+
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: anything, action_name: 'create_event')
+      end
     end
   end
 

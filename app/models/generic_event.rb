@@ -133,6 +133,10 @@ class GenericEvent < ApplicationRecord
     :default
   end
 
+  def move
+    @move ||= eventable.is_a?(Move) ? eventable : eventable.try(:move)
+  end
+
   # Default trigger behaviour for all events is to do nothing
   def trigger(*); end
 

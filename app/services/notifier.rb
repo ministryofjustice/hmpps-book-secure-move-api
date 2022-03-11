@@ -5,6 +5,8 @@ class Notifier
 
   def self.prepare_notifications(topic:, action_name:)
     case topic
+    when GenericEvent
+      PrepareGenericEventNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: move_queue_priority(topic.move))
     when Move
       PrepareMoveNotificationsJob.perform_later(topic_id: topic.id, action_name: action_name, queue_as: move_queue_priority(topic))
     when Person
