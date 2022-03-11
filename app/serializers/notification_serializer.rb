@@ -21,5 +21,5 @@ class NotificationSerializer
     self: ->(object) { Rails.application.routes.url_helpers.api_youth_risk_assessment_url(object.youth_risk_assessment_id) },
   }
 
-  belongs_to :generic_event, if: ->(object) { object.generic_event_id }
+  belongs_to :event, id_method_name: :generic_event_id, serializer: GenericEventSerializer, if: ->(object) { object.generic_event_id }
 end

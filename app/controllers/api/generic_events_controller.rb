@@ -17,6 +17,10 @@ module Api
       event = event_type.constantize.create!(event_attributes)
       run_event_logs
 
+      unless doorkeeper_application_owner.is_a?(Supplier)
+        Notifier.prepare_notifications(topic: event, action_name: 'create_event')
+      end
+
       render_json event, serializer: event.class.serializer, status: :created
     end
 

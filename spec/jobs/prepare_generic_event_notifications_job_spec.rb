@@ -6,7 +6,7 @@ RSpec.describe PrepareGenericEventNotificationsJob, type: :job do
   subject(:perform) do
     described_class.perform_now(
       topic_id: generic_event.id,
-      action_name: 'create_generic_event',
+      action_name: 'create_event',
       queue_as: :some_queue_name,
       send_webhooks: true,
       send_emails: false,

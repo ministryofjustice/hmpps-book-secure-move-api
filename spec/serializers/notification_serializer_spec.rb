@@ -82,7 +82,7 @@ RSpec.describe NotificationSerializer do
       let(:notification) { create(:notification, topic: generic_event) }
 
       it 'contains generic_event relationship data' do
-        expect(result[:data][:relationships][:generic_event][:data]).to eql(id: generic_event.id, type: 'events')
+        expect(result[:data][:relationships][:event][:data]).to eql(id: generic_event.id, type: 'events')
       end
 
       it 'contains person_escort_record relationship data' do

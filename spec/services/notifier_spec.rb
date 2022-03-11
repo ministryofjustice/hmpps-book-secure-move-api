@@ -20,7 +20,7 @@ RSpec.describe Notifier do
   context 'when scheduled with a generic_event' do
     let(:move) { create(:move, date: Time.zone.tomorrow) }
     let(:topic) { create(:event_person_move_assault, eventable: move) }
-    let(:action_name) { 'create_generic_event' }
+    let(:action_name) { 'create_event' }
 
     it 'queues a job' do
       expect(PrepareGenericEventNotificationsJob)
