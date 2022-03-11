@@ -76,7 +76,25 @@ RSpec.describe NotificationSerializer do
       end
     end
 
-    context 'when topic is not a Move, PersonEscortRecord or YouthRiskAssessment' do
+    context 'when topic is a GenericEvent' do
+      let(:per) { create(:person_escort_record) }
+      let(:generic_event) { create(:event_per_generic, eventable: per) }
+      let(:notification) { create(:notification, topic: generic_event) }
+
+      it 'contains generic_event relationship data' do
+        expect(result[:data][:relationships][:generic_event][:data]).to eql(id: generic_event.id, type: 'events')
+      end
+
+      it 'contains person_escort_record relationship data' do
+        expect(result[:data][:relationships][:person_escort_record][:data]).to eql(id: per.id, type: 'person_escort_records')
+      end
+
+      it 'contains person_escort_record relationship links' do
+        expect(result[:data][:relationships][:person_escort_record][:links]).to eql(self: "http://localhost:4000/api/v1/person_escort_records/#{per.id}")
+      end
+    end
+
+    context 'when topic is not a Move, GenericEvent, PersonEscortRecord or YouthRiskAssessment' do
       let(:allocation) { create(:allocation) }
       let(:notification) { create(:notification, topic: allocation) }
 

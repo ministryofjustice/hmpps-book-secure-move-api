@@ -47,4 +47,35 @@ class Notification < ApplicationRecord
       MoveMailer
     end
   end
+
+  def generic_event_id
+    @generic_event_id ||= topic.is_a?(GenericEvent) ? topic.id : nil
+  end
+
+  def move_id
+    @move_id ||= begin
+      return topic.id if topic.is_a?(Move)
+      return topic.eventable.id if topic.is_a?(GenericEvent) && topic.eventable.is_a?(Move)
+
+      nil
+    end
+  end
+
+  def person_escort_record_id
+    @person_escort_record_id ||= begin
+      return topic.id if topic.is_a?(PersonEscortRecord)
+      return topic.eventable.id if topic.is_a?(GenericEvent) && topic.eventable.is_a?(PersonEscortRecord)
+
+      nil
+    end
+  end
+
+  def youth_risk_assessment_id
+    @youth_risk_assessment_id ||= begin
+      return topic.id if topic.is_a?(YouthRiskAssessment)
+      return topic.eventable.id if topic.is_a?(GenericEvent) && topic.eventable.is_a?(YouthRiskAssessment)
+
+      nil
+    end
+  end
 end
