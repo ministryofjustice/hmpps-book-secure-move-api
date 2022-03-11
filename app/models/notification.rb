@@ -55,7 +55,7 @@ class Notification < ApplicationRecord
   def move_id
     @move_id ||= begin
       return topic.id if topic.is_a?(Move)
-      return topic.eventable.id if topic.is_a?(GenericEvent) && topic.eventable.is_a?(Move)
+      return topic.move.id if topic.is_a?(GenericEvent)
 
       nil
     end
