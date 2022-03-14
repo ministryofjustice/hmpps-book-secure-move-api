@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.20.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.20.0) (2022-03-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.19.0...v3.20.0)
+
+**Merged pull requests:**
+
+- Bump paper\_trail from 12.2.0 to 12.3.0 [\#1783](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1783) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add support for events from notifications [\#1782](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1782) ([thomasleese](https://github.com/thomasleese))
+- Bump pg from 1.3.3 to 1.3.4 [\#1781](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1781) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Refactor code related to notifications [\#1780](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1780) ([thomasleese](https://github.com/thomasleese))
+- Upgrade Rails to 6.1.4.7 [\#1779](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1779) ([thomasleese](https://github.com/thomasleese))
+- Bump bootsnap from 1.10.3 to 1.11.1 [\#1778](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1778) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Assign PECS Developers as code owners [\#1777](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1777) ([thomasleese](https://github.com/thomasleese))
+- Bump timecop from 0.9.4 to 0.9.5 [\#1776](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1776) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rspec-rails from 5.1.0 to 5.1.1 [\#1775](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1775) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.19.0 [\#1774](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1774) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.19.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.19.0) (2022-03-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.18.0...v3.19.0)
