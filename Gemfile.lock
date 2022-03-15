@@ -182,7 +182,7 @@ GEM
     flipper-active_record (0.24.0)
       activerecord (>= 4.2, < 8)
       flipper (~> 0.24.0)
-    geocoder (1.7.3)
+    geocoder (1.7.5)
     git (1.10.2)
       rchardet (~> 1.8)
     github_changelog_generator (1.16.4)
