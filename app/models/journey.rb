@@ -91,4 +91,8 @@ class Journey < ApplicationRecord
   def handle_event_run(dry_run: false)
     save! if changed? && valid? && !dry_run
   end
+
+  def number
+    @number ||= (move.journeys.default_order.pluck(:id).index(id) + 1)
+  end
 end

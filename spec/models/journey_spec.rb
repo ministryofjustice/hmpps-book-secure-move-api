@@ -204,4 +204,15 @@ RSpec.describe Journey, type: :model do
       end
     end
   end
+
+  describe '#number' do
+    let(:move) { create(:move) }
+    let(:journey_1) { create(:journey, move: move, client_timestamp: Date.new(2020, 1, 1)) }
+    let(:journey_2) { create(:journey, move: move, client_timestamp: Date.new(2020, 1, 2)) }
+
+    it 'has the correct journey number' do
+      expect(journey_1.number).to eq(1)
+      expect(journey_2.number).to eq(2)
+    end
+  end
 end

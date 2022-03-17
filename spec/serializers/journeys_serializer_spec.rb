@@ -45,6 +45,10 @@ RSpec.describe JourneysSerializer do
     expect(result[:data][:relationships][:to_location]).to eql(data: { id: journey.to_location.id, type: 'locations' })
   end
 
+  it 'contains a number property' do
+    expect(result[:data][:attributes][:number]).to be 1
+  end
+
   describe 'included relationships' do
     let(:adapter_options) do
       {
