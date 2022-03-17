@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.21.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.21.0) (2022-03-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.20.0...v3.21.0)
+
+**Merged pull requests:**
+
+- Add numbers to journeys [\#1787](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1787) ([thomasleese](https://github.com/thomasleese))
+- Bump bcrypt from 3.1.16 to 3.1.17 [\#1786](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1786) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump geocoder from 1.7.3 to 1.7.5 [\#1785](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1785) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.20.0 [\#1784](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1784) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.20.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.20.0) (2022-03-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.19.0...v3.20.0)
