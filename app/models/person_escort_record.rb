@@ -5,7 +5,8 @@ class PersonEscortRecord < VersionedModel
   # To support legacy PERs without a move, allow the association to be optional
   belongs_to :move, optional: true
 
-  has_many :medical_events, -> { where classification: :medical }, as: :eventable, class_name: 'GenericEvent'
+  has_many :medical_events, -> { where(classification: :medical) }, as: :eventable, class_name: 'GenericEvent'
+  has_many :incident_events, -> { where(classification: :incident) }, as: :eventable, class_name: 'GenericEvent'
 
   def self.framework_name
     'person-escort-record'
