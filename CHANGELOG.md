@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.21.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.21.1) (2022-03-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.21.0...v3.21.1)
+
+**Merged pull requests:**
+
+- Expand important events for PERs [\#1789](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1789) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.21.0 [\#1788](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1788) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.21.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.21.0) (2022-03-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.20.0...v3.21.0)
