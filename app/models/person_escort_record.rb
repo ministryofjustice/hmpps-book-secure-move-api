@@ -12,6 +12,10 @@ class PersonEscortRecord < VersionedModel
     'person-escort-record'
   end
 
+  def important_events
+    medical_events + incident_events + GenericEvent::PerPropertyChange.where(eventable: self)
+  end
+
 private
 
   def previous_assessment
