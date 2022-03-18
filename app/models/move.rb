@@ -316,7 +316,7 @@ class Move < VersionedModel
   end
 
   def important_events
-    incident_events + (profile&.person_escort_record&.medical_events || [])
+    incident_events + (profile&.person_escort_record&.important_events || [])
   end
 
   def vehicle_registration

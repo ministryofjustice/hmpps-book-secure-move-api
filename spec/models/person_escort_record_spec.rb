@@ -152,4 +152,43 @@ RSpec.describe PersonEscortRecord do
   end
 
   it_behaves_like 'a framework assessment', :person_escort_record, described_class
+
+  describe '#medical_events' do
+    subject(:medical_events) { per.medical_events }
+
+    let(:per) { create(:person_escort_record) }
+
+    before { create(:event_per_medical_aid, eventable: per) }
+
+    it { is_expected.not_to be_empty }
+    it { is_expected.to include(GenericEvent::PerMedicalAid.first) }
+  end
+
+  describe '#incident_events' do
+    subject(:incident_events) { per.incident_events }
+
+    let(:per) { create(:person_escort_record) }
+
+    before { create(:event_per_escape, eventable: per) }
+
+    it { is_expected.not_to be_empty }
+    it { is_expected.to include(GenericEvent::PerEscape.first) }
+  end
+
+  describe '#important_events' do
+    subject(:important_events) { per.important_events }
+
+    let(:per) { create(:person_escort_record) }
+
+    before do
+      create(:event_per_escape, eventable: per)
+      create(:event_per_medical_aid, eventable: per)
+      create(:event_per_property_change, eventable: per)
+    end
+
+    it { is_expected.not_to be_empty }
+    it { is_expected.to include(GenericEvent::PerEscape.first) }
+    it { is_expected.to include(GenericEvent::PerMedicalAid.first) }
+    it { is_expected.to include(GenericEvent::PerPropertyChange.first) }
+  end
 end
