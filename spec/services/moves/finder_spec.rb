@@ -54,6 +54,13 @@ RSpec.describe Moves::Finder do
 
         it { is_expected.to be_empty }
       end
+
+      context 'with a journey' do
+        let(:journey) { create(:journey, move: move) }
+        let(:filter_params) { { location_id: [journey.to_location_id] } }
+
+        it { is_expected.to contain_exactly(move) }
+      end
     end
 
     describe 'by from_location_id' do
@@ -76,6 +83,13 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { from_location_id: Random.uuid } }
 
         it { is_expected.to be_empty }
+      end
+
+      context 'with a journey' do
+        let(:journey) { create(:journey, move: move) }
+        let(:filter_params) { { from_location_id: [journey.from_location_id] } }
+
+        it { is_expected.to contain_exactly(move) }
       end
     end
 
@@ -106,6 +120,13 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { to_location_id: Random.uuid } }
 
         it { is_expected.to be_empty }
+      end
+
+      context 'with a journey' do
+        let(:journey) { create(:journey, move: move) }
+        let(:filter_params) { { to_location_id: [journey.to_location_id] } }
+
+        it { is_expected.to contain_exactly(move) }
       end
     end
 
@@ -161,6 +182,18 @@ RSpec.describe Moves::Finder do
         let(:filter_params) { { date_from: (move.date + 2.days).to_s, date_to: (move.date + 5.days).to_s } }
 
         it { is_expected.to be_empty }
+      end
+
+      context 'with journey dates after move date' do
+        before do
+          create(:journey, move: move, date: move.date + 1.day)
+        end
+
+        let(:filter_params) { { date_from: (move.date + 1.day).to_s, date_to: (move.date + 5.days).to_s } }
+
+        it 'returns moves matching date range' do
+          expect(results).to match_array [move]
+        end
       end
     end
 
