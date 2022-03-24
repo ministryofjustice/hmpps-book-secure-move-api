@@ -28,9 +28,7 @@ RSpec.describe Moves::Finder do
       let!(:move_with_person_escort_record) { create(:move, :with_person_escort_record) }
       let(:filter_params) { {} }
 
-      it 'returns all moves' do
-        expect(results).to match_array [move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation, move_with_person_escort_record]
-      end
+      it { is_expected.to match_array([move, proposed_move, cancelled_supplier_declined_to_move, completed_move, move_with_allocation, move_with_person_escort_record]) }
     end
 
     describe 'by location_id' do
@@ -41,26 +39,20 @@ RSpec.describe Moves::Finder do
       context 'with matching location filter' do
         let(:filter_params) { { location_id: shared_location.id } }
 
-        it 'returns moves matching from location or to location' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with two location filters' do
         let!(:third_move) { create :move }
         let(:filter_params) { { location_id: [shared_location.id, third_move.from_location_id] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move, third_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move, third_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { location_id: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -70,26 +62,20 @@ RSpec.describe Moves::Finder do
       context 'with matching location filter' do
         let(:filter_params) { { from_location_id: [move.from_location_id] } }
 
-        it 'returns moves matching from location' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with two location filters' do
         let!(:second_move) { create :from_prison_to_court }
         let(:filter_params) { { from_location_id: [move.from_location_id, second_move.from_location_id] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { from_location_id: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -99,35 +85,27 @@ RSpec.describe Moves::Finder do
       context 'with matching location filter' do
         let(:filter_params) { { to_location_id: [move.to_location_id] } }
 
-        it 'returns moves matching from location' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with two location filters' do
         let!(:second_move) { create :from_prison_to_court }
         let(:filter_params) { { to_location_id: [move.to_location_id, second_move.to_location_id] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with empty location filter' do
         let!(:second_move) { create(:move, :video_remand) }
         let(:filter_params) { { to_location_id: [] } }
 
-        it 'returns moves matching empty location' do
-          expect(results).to contain_exactly(second_move)
-        end
+        it { is_expected.to contain_exactly(second_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { to_location_id: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -137,17 +115,13 @@ RSpec.describe Moves::Finder do
       context 'with matching location type' do
         let(:filter_params) { { location_type: move.to_location.location_type } }
 
-        it 'returns moves matching location type' do
-          expect(results).to match_array [move]
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with mis-matching location type' do
         let(:filter_params) { { location_type: 'hospital' } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -156,11 +130,9 @@ RSpec.describe Moves::Finder do
         let(:move) { create :move }
         let(:filter_params) { { supplier_id: move.supplier_id } }
 
-        it 'returns moves matching the supplier' do
-          create :move, from_location: move.from_location
+        before { create(:move, from_location: move.from_location) }
 
-          expect(results).to contain_exactly move
-        end
+        it { is_expected.to contain_exactly(move) }
       end
     end
 
@@ -176,25 +148,19 @@ RSpec.describe Moves::Finder do
           create(:move, date: move.date - 1.day)
         end
 
-        it 'returns moves matching date range' do
-          expect(results).to match_array [move, move_5_days_future]
-        end
+        it { is_expected.to contain_exactly(move, move_5_days_future) }
       end
 
       context 'with mis-matching date range in past' do
         let(:filter_params) { { date_from: (move.date - 5.days).to_s, date_to: (move.date - 2.days).to_s } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
 
       context 'with mis-matching date range in future' do
         let(:filter_params) { { date_from: (move.date + 2.days).to_s, date_to: (move.date + 5.days).to_s } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -207,57 +173,43 @@ RSpec.describe Moves::Finder do
       context 'with matching date range' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth - 2.days).to_s, date_of_birth_to: (date_of_birth + 1.day).to_s } }
 
-        it 'returns moves matching date of birth range' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with matching exact date' do
         let(:filter_params) { { date_of_birth_from: date_of_birth.to_s, date_of_birth_to: date_of_birth.to_s } }
 
-        it 'returns moves matching date of birth range' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with matching date of birth from only' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth - 1.day).to_s } }
 
-        it 'returns moves matching date of birth range' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with matching date of birth to only' do
         let(:filter_params) { { date_of_birth_to: (date_of_birth + 1.day).to_s } }
 
-        it 'returns moves matching date of birth range' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with mis-matching date of birth range in past' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth - 5.days).to_s, date_of_birth_to: (date_of_birth - 3.days).to_s } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
 
       context 'with mis-matching date of birth range in future' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth + 2.days).to_s, date_of_birth_to: (date_of_birth + 5.days).to_s } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
 
       context 'with nil values' do
         let(:filter_params) { { date_of_birth_from: nil, date_of_birth_to: nil } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -273,25 +225,19 @@ RSpec.describe Moves::Finder do
       context 'with matching status' do
         let(:filter_params) { { status: 'proposed' } }
 
-        it 'returns moves matching status' do
-          expect(results).to match_array [proposed_move]
-        end
+        it { is_expected.to contain_exactly(proposed_move) }
       end
 
       context 'with multiple statuses' do
         let(:filter_params) { { status: 'requested,completed,booked,in_transit' } }
 
-        it 'returns moves matching status' do
-          expect(results).to match_array [requested_move, completed_move, booked_move, in_transit_move]
-        end
+        it { is_expected.to contain_exactly(requested_move, completed_move, booked_move, in_transit_move) }
       end
 
       context 'with mis-matching status' do
         let(:filter_params) { { status: 'fruit bats' } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -304,25 +250,19 @@ RSpec.describe Moves::Finder do
       context 'with matching move_type' do
         let(:filter_params) { { move_type: 'court_appearance' } }
 
-        it 'returns moves matching type' do
-          expect(results).to match_array [court_appearance_move]
-        end
+        it { is_expected.to contain_exactly(court_appearance_move) }
       end
 
       context 'with multiple move_types' do
         let(:filter_params) { { move_type: 'prison_transfer,prison_recall,police_transfer' } }
 
-        it 'returns moves matching status' do
-          expect(results).to match_array [prison_recall_move, prison_transfer_move, police_transfer_move]
-        end
+        it { is_expected.to contain_exactly(prison_recall_move, prison_transfer_move, police_transfer_move) }
       end
 
       context 'with mis-matching move_type' do
         let(:filter_params) { { move_type: 'fruit bats' } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -336,42 +276,32 @@ RSpec.describe Moves::Finder do
       context 'with nil cancellation reason' do
         let(:filter_params) { { cancellation_reason: nil } }
 
-        it 'returns only moves without a cancellation reason' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
 
       context 'with empty cancellation reason' do
         let(:filter_params) { { cancellation_reason: '' } }
         let!(:prison_recall_move) { create :move, :prison_recall }
 
-        it 'returns only moves without a cancellation reason' do
-          expect(results).to contain_exactly(prison_recall_move)
-        end
+        it { is_expected.to contain_exactly(prison_recall_move) }
       end
 
       context 'with matching cancellation_reason' do
         let(:filter_params) { { cancellation_reason: 'other' } }
 
-        it 'returns moves matching type' do
-          expect(results).to match_array [cancelled_other_move]
-        end
+        it { is_expected.to contain_exactly(cancelled_other_move) }
       end
 
       context 'with multiple cancellation_reasons' do
         let(:filter_params) { { cancellation_reason: 'made_in_error,rejected' } }
 
-        it 'returns moves matching status' do
-          expect(results).to match_array [cancelled_made_in_error_move, cancelled_rejected_move]
-        end
+        it { is_expected.to contain_exactly(cancelled_made_in_error_move, cancelled_rejected_move) }
       end
 
       context 'with mis-matching cancellation_reason' do
         let(:filter_params) { { cancellation_reason: 'fruit bats' } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -382,42 +312,32 @@ RSpec.describe Moves::Finder do
       context 'with nil rejection reason' do
         let(:filter_params) { { rejection_reason: nil } }
 
-        it 'returns only moves without a rejection reason' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
 
       context 'with empty rejection reason' do
         let(:filter_params) { { rejection_reason: '' } }
         let!(:prison_recall_move) { create :move, :prison_recall }
 
-        it 'returns only moves without a rejection reason' do
-          expect(results).to contain_exactly(prison_recall_move)
-        end
+        it { is_expected.to contain_exactly(prison_recall_move) }
       end
 
       context 'with matching rejection' do
         let(:filter_params) { { rejection_reason: 'no_space_at_receiving_prison' } }
 
-        it 'returns moves matching type' do
-          expect(results).to match_array [rejected_no_space]
-        end
+        it { is_expected.to contain_exactly(rejected_no_space) }
       end
 
       context 'with multiple rejection' do
         let(:filter_params) { { rejection_reason: 'no_space_at_receiving_prison,no_transport_available' } }
 
-        it 'returns moves matching status' do
-          expect(results).to match_array [rejected_no_space, rejected_no_transport]
-        end
+        it { is_expected.to contain_exactly(rejected_no_space, rejected_no_transport) }
       end
 
       context 'with mis-matching rejection' do
         let(:filter_params) { { rejection_reason: 'arm stuck in a packet of cornflakes' } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -428,33 +348,25 @@ RSpec.describe Moves::Finder do
       context 'with wrong type passed to has_relationship_to_allocation filter' do
         let(:filter_params) { { has_relationship_to_allocation: Random.uuid } }
 
-        it 'returns all moves' do
-          expect(results).to contain_exactly(move_with_allocation, move_without_allocation)
-        end
+        it { is_expected.to contain_exactly(move_with_allocation, move_without_allocation) }
       end
 
       context 'with has_relationship_to_allocation set as `nil`' do
         let(:filter_params) { { has_relationship_to_allocation: nil } }
 
-        it 'returns all moves' do
-          expect(results).to contain_exactly(move_with_allocation, move_without_allocation)
-        end
+        it { is_expected.to contain_exactly(move_with_allocation, move_without_allocation) }
       end
 
       context 'with has_relationship_to_allocation set as `false`' do
         let(:filter_params) { { has_relationship_to_allocation: 'false' } }
 
-        it 'returns only moves without allocations' do
-          expect(results).to contain_exactly(move_without_allocation)
-        end
+        it { is_expected.to contain_exactly(move_without_allocation) }
       end
 
       context 'with has_relationship_to_allocation set as `true`' do
         let(:filter_params) { { has_relationship_to_allocation: 'true' } }
 
-        it 'returns only moves with allocations' do
-          expect(results).to contain_exactly(move_with_allocation)
-        end
+        it { is_expected.to contain_exactly(move_with_allocation) }
       end
     end
 
@@ -548,26 +460,20 @@ RSpec.describe Moves::Finder do
       context 'with matching profile filter' do
         let(:filter_params) { { profile_id: profile.id } }
 
-        it 'returns moves matching the profile' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with two profile filters' do
         let(:second_move) { create :move }
         let(:filter_params) { { profile_id: [profile.id, second_move.profile_id] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { profile_id: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -578,26 +484,20 @@ RSpec.describe Moves::Finder do
       context 'with matching profile filter' do
         let(:filter_params) { { person_id: person.id } }
 
-        it 'returns moves matching the profile' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with two profile filters' do
         let(:second_move) { create :move }
         let(:filter_params) { { person_id: [person.id, second_move.person_id] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { person_id: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
 
@@ -608,26 +508,20 @@ RSpec.describe Moves::Finder do
       context 'with matching profile filter' do
         let(:filter_params) { { reference: reference } }
 
-        it 'returns moves matching the profile' do
-          expect(results).to contain_exactly(move)
-        end
+        it { is_expected.to contain_exactly(move) }
       end
 
       context 'with two profile filters' do
         let(:second_move) { create :move }
         let(:filter_params) { { reference: [reference, second_move.reference] } }
 
-        it 'returns moves matching multiple locations' do
-          expect(results).to contain_exactly(move, second_move)
-        end
+        it { is_expected.to contain_exactly(move, second_move) }
       end
 
       context 'with mis-matching location filter' do
         let(:filter_params) { { reference: Random.uuid } }
 
-        it 'returns empty results set' do
-          expect(results).to be_empty
-        end
+        it { is_expected.to be_empty }
       end
     end
   end
