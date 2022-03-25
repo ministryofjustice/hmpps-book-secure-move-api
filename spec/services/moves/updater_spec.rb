@@ -55,13 +55,22 @@ RSpec.describe Moves::Updater do
 
     context 'when status changes to cancelled with an associated allocation' do
       let!(:allocation) { create :allocation, moves_count: 5 }
-      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation, date: date }
 
       let(:cancellation_reason) { 'other' }
       let(:status) { 'cancelled' }
 
       it 'corrects allocation moves_count' do
         expect { updater.call }.to change { move.allocation.reload.moves_count }.from(5).to(0)
+      end
+    end
+
+    context 'when dates changes with an associated allocation' do
+      let(:allocation) { create :allocation, moves_count: 5 }
+      let(:move) { create :move, :requested, allocation: allocation }
+
+      it 'fails to update the date' do
+        expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid, /cannot be changed as move is part of an allocation/)
       end
     end
 
@@ -173,7 +182,7 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with a move cancelled' do
-        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:move) { create(:move, :requested, allocation: allocation, date: date) }
         let!(:allocation) { create(:allocation, :filled) }
         let(:status) { 'cancelled' }
         let(:cancellation_reason) { 'other' }

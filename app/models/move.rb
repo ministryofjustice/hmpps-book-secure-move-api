@@ -115,6 +115,7 @@ class Move < VersionedModel
 
   validate :date_to_after_date_from
   validate :validate_prisoner_category
+  validate :validate_date_change_allocation, on: :update
 
   before_validation :set_reference
   before_validation :set_move_type
@@ -386,6 +387,12 @@ private
   def validate_prisoner_category
     if profile&.category&.move_supported == false
       errors.add(:profile, :unsupported_prisoner_category, message: "person is a category '#{profile.category.key}' prisoner and cannot be moved using this service")
+    end
+  end
+
+  def validate_date_change_allocation
+    if date_changed? && allocation
+      errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
     end
   end
 end
