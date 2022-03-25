@@ -310,14 +310,15 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=lockout' do
-      # NB: lockout events have should have no effect on a move, they are purely for auditing
       before { create(:event_move_lockout, eventable: move) }
+
+      it 'does update the moves is_lockout value' do
+        expect { runner.call }.to change(move, :is_lockout).to(true)
+      end
 
       it 'does not update the move status' do
         expect { runner.call }.not_to change(move, :status).from('requested')
       end
-
-      it_behaves_like 'it does not call the Notifier'
     end
 
     context 'when the move record fails to save' do
