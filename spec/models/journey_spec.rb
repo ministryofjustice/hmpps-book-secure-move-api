@@ -19,6 +19,28 @@ RSpec.describe Journey, type: :model do
   it { is_expected.to respond_to(:start, :reject, :cancel, :uncancel, :complete, :uncomplete) }
   it { expect(described_class).to respond_to(:default_order) }
 
+  describe '#not_rejected_or_cancelled' do
+    subject(:results) { described_class.not_rejected_or_cancelled }
+
+    context 'with a completed journey' do
+      let(:journey) { create(:journey, :completed) }
+
+      it { is_expected.to contain_exactly(journey) }
+    end
+
+    context 'with a rejected journey' do
+      before { create(:journey, :rejected) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a cancelled journey' do
+      before { create(:journey, :cancelled) }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
   shared_examples 'model is synchronised with state_machine' do |expected_state|
     describe 'machine state' do
       it { expect(state_machine_state).to eql expected_state.to_sym }

@@ -56,6 +56,7 @@ class Journey < ApplicationRecord
   validates :state, presence: true, inclusion: { in: states }
 
   scope :default_order, -> { order(client_timestamp: :asc) }
+  scope :not_rejected_or_cancelled, -> { where.not(state: %i[rejected cancelled]) }
 
   has_state_machine JourneyStateMachine
 
