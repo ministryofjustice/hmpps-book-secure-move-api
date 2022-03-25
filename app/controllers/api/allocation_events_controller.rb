@@ -31,11 +31,7 @@ module Api
     end
 
     def cancel_move_params
-      cancel_params.tap do |params|
-        # NB: we should always provide the reason other for the cancelled underlying moves regardless
-        # of the reason chosen for cancelling the allocation
-        params[:attributes][:cancellation_reason] = Move::CANCELLATION_REASON_OTHER
-      end
+      cancel_params.deep_merge(attributes: { cancellation_reason: Move::CANCELLATION_REASON_OTHER })
     end
 
     def cancellation_details
