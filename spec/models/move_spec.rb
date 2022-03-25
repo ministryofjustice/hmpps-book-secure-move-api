@@ -710,6 +710,20 @@ RSpec.describe Move do
         expect(move.reload.status).to eq('in_transit')
       end
 
+      context 'with an allocation' do
+        subject(:move) { create(:move, allocation: allocation) }
+
+        let(:allocation) { create(:allocation) }
+
+        before { allow(allocation).to receive(:refresh_status_and_moves_count!) }
+
+        it 'updates the allocation' do
+          move.handle_event_run
+
+          expect(allocation).to have_received(:refresh_status_and_moves_count!)
+        end
+      end
+
       it 'triggers a move notification' do
         move.handle_event_run
 

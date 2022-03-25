@@ -300,6 +300,8 @@ class Move < VersionedModel
 
       save! # save before notifying
 
+      allocation&.refresh_status_and_moves_count!
+
       Notifier.prepare_notifications(topic: self, action_name: action_name)
       true
     else
