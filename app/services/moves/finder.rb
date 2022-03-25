@@ -61,6 +61,7 @@ module Moves
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
       scope = apply_second_degree_filter(scope, :person_id, joins: :profile, where: :profiles)
+      scope = apply_journey_filters(scope)
       SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
     end
 
@@ -100,15 +101,8 @@ module Moves
 
     def apply_date_range_filters(scope)
       scope = apply_date_range_filter(scope, 'moves.date')
-
-      if filter_params.key?(:date_from) || filter_params.key?(:date_to)
-        journey_scope = apply_date_range_filter(Journey.not_rejected_or_cancelled.where('move_id = moves.id'), 'journeys.date')
-        scope = scope.or(Journey.where(journey_scope.arel.exists))
-      end
-
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
-
       scope
     end
 
@@ -122,22 +116,26 @@ module Moves
       scope
     end
 
-    def apply_location_filter(scope)
+    def apply_location_filters(scope)
       scope = scope.where(from_location_id: split_params(:from_location_id)) if filter_params.key?(:from_location_id)
       scope = scope.where(to_location_id: split_params(:to_location_id)) if filter_params.key?(:to_location_id)
       scope = scope.where(from_location_id: split_params(:location_id)).or(scope.where(to_location_id: split_params(:location_id))) if filter_params.key?(:location_id)
       scope
     end
 
-    def apply_location_filters(scope)
-      scope = apply_location_filter(scope)
+    def apply_journey_filters(scope)
+      should_apply_filter = filter_params.key?(:from_location_id) ||
+        filter_params.key?(:to_location_id) ||
+        filter_params.key?(:location_id) ||
+        filter_params.key?(:date_from) ||
+        filter_params.key?(:date_to)
 
-      if filter_params.key?(:from_location_id) || filter_params.key?(:to_location_id) || filter_params.key?(:location_id)
-        journey_scope = apply_location_filter(Journey.not_rejected_or_cancelled.where('move_id = moves.id'))
-        scope = scope.or(Journey.where(journey_scope.arel.exists))
-      end
+      return scope unless should_apply_filter
 
-      scope
+      journey_scope = Journey.not_rejected_or_cancelled.where('move_id = moves.id')
+      journey_scope = apply_location_filters(journey_scope)
+      journey_scope = apply_date_range_filter(journey_scope, 'journeys.date')
+      scope.or(Journey.where(journey_scope.arel.exists))
     end
 
     def apply_allocation_relationship_filters(scope)
