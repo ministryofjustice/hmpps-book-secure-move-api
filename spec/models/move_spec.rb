@@ -175,6 +175,17 @@ RSpec.describe Move do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
   end
 
+  context 'when the from_location and to_location are the same' do
+    subject(:move) { build(:move, to_location: location, from_location: location) }
+
+    let(:location) { create(:location) }
+
+    it 'is not valid' do
+      expect(move).not_to be_valid
+      expect(move.errors[:to_location_id]).to eq(['should be different to the from location'])
+    end
+  end
+
   context 'when the profile has a prisoner category' do
     it 'prevents an unsupported category from being moved' do
       expect(build(:move, profile: build(:profile, :category_not_supported))).not_to be_valid

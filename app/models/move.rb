@@ -95,6 +95,8 @@ class Move < VersionedModel
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
+  validates_with DifferentToFromLocationValidator
+
   validates :move_type, inclusion: { in: move_types }
   validates_with Moves::MoveTypeValidator
 
