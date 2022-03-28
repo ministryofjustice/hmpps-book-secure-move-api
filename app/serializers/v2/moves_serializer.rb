@@ -19,7 +19,8 @@ module V2
                 :rejection_reason,
                 :status,
                 :time_due,
-                :updated_at
+                :updated_at,
+                :is_lockout
 
     set_type :moves
 

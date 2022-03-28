@@ -10,6 +10,10 @@ class GenericEvent
     include LocationValidations
     include LocationFeed
 
+    def trigger(*)
+      eventable.is_lockout = true
+    end
+
     enum reason: {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
       no_space: 'no_space', # (PECS)

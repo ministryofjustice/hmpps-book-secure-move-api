@@ -45,7 +45,7 @@ RSpec.describe Api::MoveEventsController do
 
       describe 'webhook and email notifications' do
         it 'calls the notifier when updating a person' do
-          expect(Notifier).not_to have_received(:prepare_notifications)
+          expect(Notifier).to have_received(:prepare_notifications)
         end
       end
     end
