@@ -10,6 +10,7 @@ namespace :lockout_moves do
       move_events.each do |event|
         if event.type == "GenericEvent::MoveLockout"
           move.is_lockout = true
+          break
         end
       end
     end
