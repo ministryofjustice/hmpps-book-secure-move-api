@@ -55,8 +55,8 @@ RSpec.describe Moves::Finder do
         it { is_expected.to be_empty }
       end
 
-      context 'with a journey on a different day' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+      context 'with a journey' do
+        let(:journey) { create(:journey, move: move) }
         let(:filter_params) { { location_id: [journey.to_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
@@ -86,7 +86,7 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with a journey' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+        let(:journey) { create(:journey, move: move) }
         let(:filter_params) { { from_location_id: [journey.from_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
@@ -123,90 +123,8 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with a journey' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+        let(:journey) { create(:journey, move: move) }
         let(:filter_params) { { to_location_id: [journey.to_location_id] } }
-
-        it { is_expected.to contain_exactly(move) }
-      end
-    end
-
-    context 'with multi-day moves' do
-      let(:move) { create(:move, date: '2022-01-01') }
-      let(:middle_location) { create(:location) }
-
-      before do
-        create(:journey, move: move, date: '2022-01-01', from_location: move.from_location, to_location: middle_location)
-        create(:journey, move: move, date: '2022-01-02', from_location: middle_location, to_location: move.to_location)
-      end
-
-      context 'and day one, outgoing, first location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.from_location_id] } }
-
-        it { is_expected.to contain_exactly(move) }
-      end
-
-      context 'and day one, outgoing, second location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [middle_location] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day one, outgoing, third location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.to_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day one, incoming, first location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.from_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day one, incoming, second location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [middle_location] } }
-
-        it { is_expected.to contain_exactly(move) }
-      end
-
-      context 'and day one, incoming, third location' do
-        let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.to_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day two, outgoing, first location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.from_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day two, outgoing, second location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [middle_location] } }
-
-        it { is_expected.to contain_exactly(move) }
-      end
-
-      context 'and day two, outgoing, third location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.to_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day two, incoming, first location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.from_location_id] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day two, incoming, second location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [middle_location] } }
-
-        it { is_expected.to be_empty }
-      end
-
-      context 'and day two, incoming, third location' do
-        let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.to_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
       end
