@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_100142) do
+ActiveRecord::Schema.define(version: 2022_03_29_100906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -301,6 +301,7 @@ ActiveRecord::Schema.define(version: 2022_03_28_100142) do
     t.index ["move_id", "client_timestamp"], name: "index_journeys_on_move_id_and_client_timestamp"
     t.index ["move_id", "state"], name: "index_journeys_on_move_id_and_state"
     t.index ["move_id"], name: "index_journeys_on_move_id"
+    t.index ["state", "date"], name: "index_journeys_on_state_and_date"
     t.index ["state"], name: "index_journeys_on_state"
     t.index ["supplier_id", "billable"], name: "index_journeys_on_supplier_id_and_billable"
     t.index ["supplier_id", "client_timestamp"], name: "index_journeys_on_supplier_id_and_client_timestamp"
