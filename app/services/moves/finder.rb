@@ -86,29 +86,12 @@ module Moves
         .where(where => { param_name => filter_params[param_name] })
     end
 
-    def apply_date_range_filter(scope, field)
-      if filter_params.key?(:date_from) && filter_params.key?(:date_to)
-        scope.where("#{field} BETWEEN ? AND ?", filter_params[:date_from], filter_params[:date_to])
-      elsif filter_params.key?(:date_from)
-        scope.where("#{field} >= ?", filter_params[:date_from])
-      elsif filter_params.key?(:date_to)
-        scope.where("#{field} <= ?", filter_params[:date_to])
-      else
-        scope
-      end
-    end
-
     def apply_date_range_filters(scope)
-      scope = apply_date_range_filter(scope, 'moves.date')
-
-      if filter_params.key?(:date_from) || filter_params.key?(:date_to)
-        journey_scope = apply_date_range_filter(Journey.not_rejected_or_cancelled.where('move_id = moves.id'), 'journeys.date')
-        scope = scope.or(Journey.where(journey_scope.arel.exists))
-      end
-
+      scope = scope.where('moves.date >= ?', filter_params[:date_from]) if filter_params.key?(:date_from)
+      scope = scope.where('moves.date <= ?', filter_params[:date_to]) if filter_params.key?(:date_to)
+      # created_at is a date/time, so inclusive filtering has to be subtly different
       scope = scope.where('moves.created_at >= ?', filter_params[:created_at_from]) if filter_params.key?(:created_at_from)
       scope = scope.where('moves.created_at < ?', Date.parse(filter_params[:created_at_to]) + 1) if filter_params.key?(:created_at_to)
-
       scope
     end
 
@@ -122,21 +105,10 @@ module Moves
       scope
     end
 
-    def apply_location_filter(scope)
+    def apply_location_filters(scope)
       scope = scope.where(from_location_id: split_params(:from_location_id)) if filter_params.key?(:from_location_id)
       scope = scope.where(to_location_id: split_params(:to_location_id)) if filter_params.key?(:to_location_id)
       scope = scope.where(from_location_id: split_params(:location_id)).or(scope.where(to_location_id: split_params(:location_id))) if filter_params.key?(:location_id)
-      scope
-    end
-
-    def apply_location_filters(scope)
-      scope = apply_location_filter(scope)
-
-      if filter_params.key?(:from_location_id) || filter_params.key?(:to_location_id) || filter_params.key?(:location_id)
-        journey_scope = apply_location_filter(Journey.not_rejected_or_cancelled.where('move_id = moves.id'))
-        scope = scope.or(Journey.where(journey_scope.arel.exists))
-      end
-
       scope
     end
 
