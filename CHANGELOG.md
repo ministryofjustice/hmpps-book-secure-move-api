@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.22.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.22.0) (2022-03-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.21.1...v3.22.0)
+
+**Merged pull requests:**
+
+- Revert including journeys when finding moves [\#1800](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1800) ([thomasleese](https://github.com/thomasleese))
+- Add index on journey state and date [\#1799](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1799) ([thomasleese](https://github.com/thomasleese))
+- Add is\_lockout field to move object and trigger change when lockout occurs [\#1798](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1798) ([georgeschena](https://github.com/georgeschena))
+- Add index to journey dates [\#1797](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1797) ([thomasleese](https://github.com/thomasleese))
+- Refresh allocation status when cancelling a move [\#1794](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1794) ([thomasleese](https://github.com/thomasleese))
+- Fix finding moves with journeys [\#1793](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1793) ([thomasleese](https://github.com/thomasleese))
+- Prevent allocation moves date being updated [\#1792](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1792) ([thomasleese](https://github.com/thomasleese))
+- Include journeys when finding moves [\#1791](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1791) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.21.1 [\#1790](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1790) ([thomasleese](https://github.com/thomasleese))
+- Ensure moves and journeys locations are different [\#1657](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1657) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.21.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.21.1) (2022-03-18)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.21.0...v3.21.1)
