@@ -102,6 +102,25 @@ module Moves
       scope
     end
 
+    def apply_allocation_relationship_filters(scope)
+      return scope unless filter_params.key?(:has_relationship_to_allocation)
+
+      scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
+      scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
+      scope
+    end
+
+    def apply_ready_for_transit_filters(scope)
+      return scope unless filter_params.key?(:ready_for_transit) && %w[true false].include?(filter_params[:ready_for_transit])
+
+      scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
+      if filter_params[:ready_for_transit] == 'true'
+        scope.where('person_escort_records.status' => %w[completed confirmed])
+      else
+        scope.where.not('person_escort_records.status' => %w[completed confirmed]).or(scope.where('person_escort_records.id' => nil))
+      end
+    end
+
     def apply_date_range_filter(scope)
       if filter_params.key?(:date_from) && filter_params.key?(:date_to)
         scope.where('date BETWEEN ? AND ?', filter_params[:date_from], filter_params[:date_to])
@@ -158,25 +177,6 @@ module Moves
       unionized_sql = "((#{mapped_sql})) moves"
 
       Move.where(id: Move.from(unionized_sql))
-    end
-
-    def apply_allocation_relationship_filters(scope)
-      return scope unless filter_params.key?(:has_relationship_to_allocation)
-
-      scope = scope.where.not(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'true'
-      scope = scope.where(allocation_id: nil) if filter_params[:has_relationship_to_allocation] == 'false'
-      scope
-    end
-
-    def apply_ready_for_transit_filters(scope)
-      return scope unless filter_params.key?(:ready_for_transit) && %w[true false].include?(filter_params[:ready_for_transit])
-
-      scope = scope.joins('LEFT JOIN profiles ON moves.profile_id = profiles.id LEFT JOIN person_escort_records ON person_escort_records.profile_id = profiles.id')
-      if filter_params[:ready_for_transit] == 'true'
-        scope.where('person_escort_records.status' => %w[completed confirmed])
-      else
-        scope.where.not('person_escort_records.status' => %w[completed confirmed]).or(scope.where('person_escort_records.id' => nil))
-      end
     end
   end
 end
