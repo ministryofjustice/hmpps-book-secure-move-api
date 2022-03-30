@@ -60,8 +60,8 @@ module Moves
       scope = apply_allocation_relationship_filters(scope)
       scope = apply_ready_for_transit_filters(scope)
       scope = apply_second_degree_filter(scope, :person_id, joins: :profile, where: :profiles)
-      scope = apply_date_and_location_filters(scope)
-      SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
+      scope = SIMPLE_FIELD_FILTERS.reduce(scope) { |s, filter| apply_filter(s, filter) }
+      apply_date_and_location_filters(scope)
     end
 
     def split_params(name)
@@ -129,17 +129,17 @@ module Moves
         .arel.exists
     end
 
-    def move_date_location_filters_scope
-      moves_scope = Move.where.not(multi_date_journey_exists_scope)
-      moves_scope = apply_date_range_filter(moves_scope)
-      apply_location_filter(moves_scope)
+    def apply_move_date_location_filters_scope(scope)
+      scope = scope.where.not(multi_date_journey_exists_scope)
+      scope = apply_date_range_filter(scope)
+      apply_location_filter(scope)
     end
 
-    def journey_date_location_filters_scope
+    def apply_journey_date_location_filters_scope(scope)
       journey_scope = Journey.not_rejected_or_cancelled.where('move_id = moves.id')
       journey_scope = apply_date_range_filter(journey_scope)
       journey_scope = apply_location_filter(journey_scope)
-      Move.where(multi_date_journey_exists_scope).where(journey_scope.arel.exists)
+      scope.where(multi_date_journey_exists_scope).where(journey_scope.arel.exists)
     end
 
     def apply_date_and_location_filters(scope)
@@ -151,7 +151,13 @@ module Moves
 
       return scope unless should_apply_filter
 
-      scope.merge(move_date_location_filters_scope).or(journey_date_location_filters_scope)
+      moves_scope = apply_move_date_location_filters_scope(scope)
+      journeys_scope = apply_journey_date_location_filters_scope(scope)
+
+      mapped_sql = [moves_scope, journeys_scope].map(&:to_sql).join(') UNION (')
+      unionized_sql = "((#{mapped_sql})) moves"
+
+      Move.where(id: Move.from(unionized_sql))
     end
 
     def apply_allocation_relationship_filters(scope)
