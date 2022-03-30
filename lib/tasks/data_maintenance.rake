@@ -85,4 +85,10 @@ namespace :data_maintenance do
     ]
     GenericEvent.where(type: default_event_types).update_all(classification: 'default')
   end
+
+  desc 'Lockout moves which contain a MoveLockout event in its generic events'
+  task lockout_moves: :environment do
+    move_ids = GenericEvent::MoveLockout.pluck(:eventable_id)
+    Move.where(id: move_ids).update_all(is_lockout: true)
+  end
 end
