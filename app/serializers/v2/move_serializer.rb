@@ -21,7 +21,8 @@ module V2
                :rejection_reason,
                :status,
                :time_due,
-               :updated_at
+               :updated_at,
+               :is_lockout
 
     belongs_to :from_location,          serializer: LocationSerializer
     belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer
