@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.23.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.0) (2022-03-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.22.0...v3.23.0)
+
+**Merged pull requests:**
+
+- Filter on journey information efficiently [\#1802](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1802) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.22.0 [\#1801](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1801) ([thomasleese](https://github.com/thomasleese))
+- Add a rake task to retrospectively set is\_lockout to true [\#1796](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1796) ([georgeschena](https://github.com/georgeschena))
+
 ## [v3.22.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.22.0) (2022-03-29)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.21.1...v3.22.0)
