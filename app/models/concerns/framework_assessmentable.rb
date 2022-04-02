@@ -166,4 +166,8 @@ module FrameworkAssessmentable
 
     move.requested? || move.booked?
   end
+
+  def responded_by
+    framework_responses.pluck(:responded_by).sort.uniq
+  end
 end
