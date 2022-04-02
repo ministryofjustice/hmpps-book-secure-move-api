@@ -11,7 +11,7 @@ class FrameworkResponseSerializer
   has_many_if_included :flags, serializer: FrameworkFlagSerializer, &:framework_flags
   has_many_if_included :nomis_mappings, serializer: FrameworkNomisMappingSerializer, &:framework_nomis_mappings
 
-  attributes :value, :responded, :prefilled, :value_type
+  attributes :value, :responded, :prefilled, :value_type, :responded_by, :responded_at
 
   SUPPORTED_RELATIONSHIPS = %w[
     assessment
