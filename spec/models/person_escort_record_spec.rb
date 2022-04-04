@@ -191,4 +191,17 @@ RSpec.describe PersonEscortRecord do
     it { is_expected.to include(GenericEvent::PerMedicalAid.first) }
     it { is_expected.to include(GenericEvent::PerPropertyChange.first) }
   end
+
+  describe '#responded_by' do
+    subject(:responded_by) { per.responded_by }
+
+    let(:per) { create(:person_escort_record) }
+
+    before do
+      create(:string_response, assessmentable: per, responded_by: 'ABC')
+      create(:string_response, assessmentable: per, responded_by: 'DEF')
+    end
+
+    it { is_expected.to match_array(%w[ABC DEF]) }
+  end
 end

@@ -33,6 +33,14 @@ RSpec.describe FrameworkResponseSerializer do
     expect(result[:data][:attributes][:prefilled]).to eq(framework_response.prefilled)
   end
 
+  it 'contains a `responded_by` attribute' do
+    expect(result[:data][:attributes][:responded_by]).to eq(framework_response.responded_by)
+  end
+
+  it 'contains a `responded_at` attribute' do
+    expect(result[:data][:attributes][:responded_at]).to eq(framework_response.responded_at)
+  end
+
   it 'contains a `assessment` relationship' do
     expect(result[:data][:relationships][:assessment][:data]).to eq(
       id: framework_response.assessmentable.id,
