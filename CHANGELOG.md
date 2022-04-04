@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.23.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.1) (2022-04-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.0...v3.23.1)
+
+**Merged pull requests:**
+
+- Add framework response author information to serializers [\#1809](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1809) ([thomasleese](https://github.com/thomasleese))
+- Bump pg from 1.3.4 to 1.3.5 [\#1808](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1808) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump activerecord-import from 1.3.0 to 1.4.0 [\#1807](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1807) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump lograge from 0.11.2 to 0.12.0 [\#1806](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1806) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.6.2 to 5.6.4 [\#1805](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1805) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Expose the is\_lockout field to the move serializer [\#1804](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1804) ([georgeschena](https://github.com/georgeschena))
+- Generated changelog for v3.23.0 [\#1803](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1803) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.23.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.0) (2022-03-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.22.0...v3.23.0)
