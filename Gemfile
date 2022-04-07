@@ -84,11 +84,3 @@ group :test do
   gem 'service_mock'
   gem 'simplecov', require: false
 end
-
-group :production do
-  # usage docs for application_insights gem at
-  # https://github.com/microsoft/ApplicationInsights-Ruby
-  # Gem to add insights automatically to a Rack application
-  # enhanced to support a RequestTracker with an ignore list
-  gem 'appinsights', github: 'ministryofjustice/appinsights'
-end

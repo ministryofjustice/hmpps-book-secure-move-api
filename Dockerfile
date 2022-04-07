@@ -52,4 +52,4 @@ COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bu
 COPY --chown=appuser:appgroup . /app
 
 USER $APPUID
-CMD ["./run.sh"]
+CMD bundle exec puma -p $PUMA_PORT

@@ -42,8 +42,6 @@ coverage
 swagger/v1/swagger.yaml
 swagger/v2/swagger.yaml
 
-config/application_insights.toml
-
 # Ignore auto generated data diagram
 erd.pdf
 
