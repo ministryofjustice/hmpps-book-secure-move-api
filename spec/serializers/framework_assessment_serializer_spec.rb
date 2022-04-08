@@ -92,7 +92,7 @@ RSpec.describe FrameworkAssessmentSerializer do
 
   describe 'meta' do
     it 'includes section progress' do
-      question = create(:framework_question, framework: assessment.framework, section: 'risk-information')
+      question = create(:framework_question, framework: assessment.framework, section: 'risk-information', required: true)
       create(:string_response, value: nil, framework_question: question, assessmentable: assessment)
       assessment.update_status_and_progress!
 

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :framework_response do
-    association(:framework_question)
+    association(:framework_question, required: true)
     association(:assessmentable, factory: :person_escort_record)
     value_type { framework_question.response_type }
     section { framework_question.section }
