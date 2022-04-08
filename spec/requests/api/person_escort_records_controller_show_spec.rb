@@ -7,7 +7,7 @@ RSpec.describe Api::PersonEscortRecordsController do
     include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
-    let(:framework_question) { build(:framework_question, section: 'risk-information') }
+    let(:framework_question) { build(:framework_question, section: 'risk-information', required: true) }
     let(:flag) { build(:framework_flag, framework_question: framework_question) }
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
     let(:person_escort_record) do

@@ -6,7 +6,7 @@ FactoryBot.define do
 
     trait :with_responses do
       after(:create) do |assessment|
-        create_list(:framework_question, 2, framework: assessment.framework)
+        create_list(:framework_question, 2, framework: assessment.framework, required: true)
         assessment.framework_questions.each do |question|
           create(
             :string_response,

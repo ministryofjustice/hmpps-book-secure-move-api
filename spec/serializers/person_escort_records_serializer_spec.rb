@@ -63,7 +63,7 @@ RSpec.describe PersonEscortRecordsSerializer do
 
   describe 'meta' do
     it 'includes section progress' do
-      question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information')
+      question = create(:framework_question, framework: person_escort_record.framework, section: 'risk-information', required: true)
       create(:string_response, value: nil, framework_question: question, assessmentable: person_escort_record)
       person_escort_record.update_status_and_progress!
 
