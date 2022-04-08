@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.23.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.2) (2022-04-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.1...v3.23.2)
+
+**Merged pull requests:**
+
+- Remove application insights [\#1811](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1811) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.23.1 [\#1810](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1810) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.23.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.1) (2022-04-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.0...v3.23.1)
