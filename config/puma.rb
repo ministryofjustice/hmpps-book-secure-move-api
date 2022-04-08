@@ -38,17 +38,3 @@ preload_app!
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
-
-# Run a new process instrumenter after work boot
-if ['on', 'true'].include? ENV['PROMETHEUS_METRICS']
-  after_worker_boot do
-    require 'prometheus_exporter/instrumentation'
-
-    PrometheusExporter::Instrumentation::Puma.start
-    PrometheusExporter::Instrumentation::Process.start(type: 'web')
-    PrometheusExporter::Instrumentation::ActiveRecord.start(
-      custom_labels: { type: 'puma_worker' },
-      config_labels: %i[database host],
-    )
-  end
-end
