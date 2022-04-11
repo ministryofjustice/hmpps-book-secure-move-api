@@ -43,9 +43,5 @@ module BookASecureMoveApi
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
-
-    config.after_initialize do
-      Metrics.instance.record_move_count
-    end
   end
 end
