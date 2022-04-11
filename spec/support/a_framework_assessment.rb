@@ -423,8 +423,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns a section as `not_started` if all responded values are false' do
       assessment = create(assessment_type)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -436,8 +436,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns a section as `in_progress` if some responded values are true' do
       assessment = create(assessment_type)
-      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -450,14 +450,14 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     it 'returns a section as `in_progress` if not all required dependent responses responded' do
       assessment = create(assessment_type)
       # Non dependent Responses
-      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
-      parent_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
       # Dependent responses on parent_response
-      child_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question, required: true)
+      child_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
       # Dependent responses on child_response
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -469,8 +469,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns a section as `completed` if all responded values are true' do
       assessment = create(assessment_type)
-      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: true, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: true)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -484,14 +484,14 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       assessment = create(assessment_type)
 
       # Non dependent Responses
-      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
-      parent_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
+      parent_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true)
       # Dependent responses on parent_response
-      child_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question, required: true)
+      child_response = create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: parent_response, dependent_value: 'Yes', parent_question: parent_response.framework_question)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: parent_response, dependent_value: 'No', parent_question: parent_response.framework_question)
       # Dependent responses on child_response
-      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question, required: true)
-      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'Yes', responded: true, parent: child_response, dependent_value: 'Yes', parent_question: child_response.framework_question)
+      create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, parent: child_response, dependent_value: 'No', parent_question: child_response.framework_question)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -503,7 +503,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns a section as `not_started` if all responded values are false even if prefilled' do
       assessment = create(assessment_type, :prefilled)
-      create_response(assessmentable: assessment, section: 'risk', value: 'No', responded: false, prefilled: true, required: true)
+      create_response(assessmentable: assessment, section: 'risk', value: 'No', responded: false, prefilled: true)
 
       expect(assessment.calculate_section_progress).to contain_exactly(
         {
@@ -515,7 +515,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'allows for custom framework responses to be passed in' do
       assessment = create(assessment_type)
-      response = create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false, required: true)
+      response = create_response(assessmentable: assessment, section: 'risk', value: nil, responded: false)
 
       expect(assessment.calculate_section_progress(responses: [response])).to contain_exactly(
         {
@@ -538,8 +538,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'sets initial progress to sections' do
       assessment = create(assessment_type)
-      question1 = create(:framework_question, section: 'risk-information', required: true)
-      question2 = create(:framework_question, section: 'health-information', required: true)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
       create(:string_response, value: nil, assessmentable: assessment, framework_question: question1)
       create(:string_response, value: nil, assessmentable: assessment, framework_question: question2)
       assessment.update_status_and_progress!
@@ -561,8 +561,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'updates progress to sections in progress' do
       assessment = create(assessment_type)
-      question1 = create(:framework_question, section: 'risk-information', required: true)
-      question2 = create(:framework_question, section: 'risk-information', required: true)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'risk-information')
       create(:string_response, responded: true, assessmentable: assessment, framework_question: question1)
       create(:string_response, value: nil, responded: false, assessmentable: assessment, framework_question: question2)
       assessment.update_status_and_progress!
@@ -592,8 +592,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'updates progress to sections completed' do
       assessment = create(assessment_type)
-      question1 = create(:framework_question, section: 'risk-information', required: true)
-      question2 = create(:framework_question, section: 'health-information', required: true)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
       create(:string_response, responded: true, assessmentable: assessment, framework_question: question1)
       create(:string_response, responded: true, assessmentable: assessment, framework_question: question2)
       assessment.update_status_and_progress!
@@ -779,7 +779,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
   end
 
   def create_response(options = {})
-    question = create(:framework_question, framework: options[:assessmentable].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question], required: options[:required])
+    question = create(:framework_question, framework: options[:assessmentable].framework, section: options[:section], dependent_value: options[:dependent_value], parent: options[:parent_question])
     create(:string_response, value: options[:value], framework_question: question, assessmentable: options[:assessmentable], responded: options[:responded], parent: options[:parent])
   end
 end

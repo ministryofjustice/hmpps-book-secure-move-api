@@ -58,14 +58,13 @@ RSpec.describe FrameworkResponse::String do
 
     context 'when question not required' do
       it 'does not validate presence of value when value is nil with options' do
-        question = create(:framework_question, required: false)
-        response = create(:string_response, value: nil, framework_question: question)
+        response = create(:string_response, value: nil)
 
         expect(response).to be_valid
       end
 
       it 'does not validate presence of value when value is nil with no options' do
-        question = create(:framework_question, :text, required: false)
+        question = create(:framework_question, :text)
         response = create(:string_response, value: nil, framework_question: question)
 
         expect(response).to be_valid

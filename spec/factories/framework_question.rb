@@ -7,7 +7,6 @@ FactoryBot.define do
     section { %w[offence-information health-information risk-information].sample }
     question_type { 'radio' }
     options { %w[Yes No] }
-    required { false }
 
     trait :text do
       question_type { 'text' }
