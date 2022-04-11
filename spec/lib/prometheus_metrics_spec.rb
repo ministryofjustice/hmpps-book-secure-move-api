@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Metrics do
+RSpec.describe PrometheusMetrics do
   subject(:instance) { described_class.send(:new) }
 
   let(:registry) { instance_double(Prometheus::Client::Registry) }

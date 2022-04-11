@@ -2,7 +2,7 @@
 
 require 'prometheus/client/data_stores/direct_file_store'
 
-class Metrics
+class PrometheusMetrics
   include Singleton
 
   def configure

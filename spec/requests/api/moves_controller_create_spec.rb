@@ -44,7 +44,7 @@ RSpec.describe Api::MovesController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     before do
-      allow_any_instance_of(Metrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
     end
 
     context 'when successful' do
@@ -74,7 +74,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'records the move count metric' do
-        expect_any_instance_of(Metrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+        expect_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
         post_moves
       end
 

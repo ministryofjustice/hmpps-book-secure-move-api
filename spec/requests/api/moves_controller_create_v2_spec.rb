@@ -60,7 +60,7 @@ RSpec.describe Api::MovesController do
     before do
       allow(person).to receive(:update_nomis_data)
       allow_any_instance_of(Move).to receive(:person).and_return(person) # rubocop:disable RSpec/AnyInstance
-      allow_any_instance_of(Metrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
     end
 
     it_behaves_like 'an endpoint that responds with success 201' do
@@ -88,7 +88,7 @@ RSpec.describe Api::MovesController do
     end
 
     it 'records the move count metric' do
-      expect_any_instance_of(Metrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+      expect_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
       do_post
     end
 

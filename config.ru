@@ -6,7 +6,7 @@ require 'prometheus/middleware/exporter'
 use Prometheus::Middleware::Collector
 use Prometheus::Middleware::Exporter
 
-Metrics.instance.record_move_count
+PrometheusMetrics.instance.record_move_count
 
 run Rails.application
 Rails.application.load_server
