@@ -414,7 +414,7 @@ RSpec.describe FrameworkResponse do
       end
 
       it 'updates person escort record progress' do
-        question = create(:framework_question, section: 'risk-information', required: true)
+        question = create(:framework_question, section: 'risk-information')
         response = create(:string_response, value: nil, framework_question: question)
         response.update_with_flags!(new_value: 'Yes')
 
@@ -470,7 +470,7 @@ RSpec.describe FrameworkResponse do
 
     it 'sets the responded value to true on update with value' do
       response = create(:string_response, value: 'Yes')
-      response.update!(value: 'No')
+      response.update!(value: nil)
 
       expect(response.responded).to be(true)
     end

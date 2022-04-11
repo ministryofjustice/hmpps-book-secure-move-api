@@ -171,8 +171,8 @@ RSpec.describe FrameworkResponses::BulkUpdater do
 
     it 'updates person escort record progress' do
       per = create(:person_escort_record)
-      question1 = create(:framework_question, section: 'risk-information', required: true)
-      question2 = create(:framework_question, section: 'health-information', required: true)
+      question1 = create(:framework_question, section: 'risk-information')
+      question2 = create(:framework_question, section: 'health-information')
       response1 = create(:string_response, value: nil, assessmentable: per, framework_question: question1)
       create(:string_response, value: nil, assessmentable: per, framework_question: question2)
       described_class.new(assessment: per, response_values_hash: { response1.id => 'Yes' }).call

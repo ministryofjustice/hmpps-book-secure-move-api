@@ -140,7 +140,7 @@ module FrameworkAssessmentable
 
   def required_responses
     @required_responses ||= framework_responses.includes(:framework_question, :parent).select do |framework_response|
-      framework_response.parent ? framework_response.parent.option_selected?(framework_response.framework_question.dependent_value) : framework_response.framework_question.required
+      framework_response.parent ? framework_response.parent.option_selected?(framework_response.framework_question.dependent_value) : framework_response
     end
   end
 
