@@ -24,6 +24,8 @@ module Api::V1
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
+      PrometheusMetrics.instance.record_move_count
+
       render_move(move, :created)
     end
 

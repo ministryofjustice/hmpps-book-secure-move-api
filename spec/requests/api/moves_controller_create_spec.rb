@@ -43,6 +43,10 @@ RSpec.describe Api::MovesController do
     let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
+    before do
+      allow_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+    end
+
     context 'when successful' do
       let(:move) { Move.find_by(from_location_id: from_location.id) }
 
@@ -67,6 +71,11 @@ RSpec.describe Api::MovesController do
       it "updates the person's nomis data" do
         post_moves
         expect(person).to have_received(:update_nomis_data).once
+      end
+
+      it 'records the move count metric' do
+        expect_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+        post_moves
       end
 
       context 'with a real access token' do

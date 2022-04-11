@@ -29,6 +29,8 @@ module Api::V2
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveProposed) if move.proposed?
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveRequested) if move.requested?
 
+      PrometheusMetrics.instance.record_move_count
+
       render_move(move, :created)
     end
 
