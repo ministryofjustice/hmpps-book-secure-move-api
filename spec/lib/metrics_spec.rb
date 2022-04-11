@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Metrics do
-  subject(:instance) { Metrics.send(:new) }
+  subject(:instance) { described_class.send(:new) }
 
   let(:config) { instance_double(Prometheus::Client::Config) }
   let(:registry) { instance_double(Prometheus::Client::Registry) }
