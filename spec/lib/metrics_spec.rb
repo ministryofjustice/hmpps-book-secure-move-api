@@ -32,12 +32,16 @@ RSpec.describe Metrics do
     before do
       allow(move_count_gauge).to receive(:set)
       allow(registry).to receive(:gauge).with(:app_move_count_total, anything).and_return(move_count_gauge)
+
+      create(:move, :booked)
+      create(:move, :requested)
     end
 
     after { instance.record_move_count }
 
-    it 'sets the move count' do
-      expect(move_count_gauge).to receive(:set)
+    it 'sets the move count based on the status' do
+      expect(move_count_gauge).to receive(:set).with(1, labels: { status: 'booked' })
+      expect(move_count_gauge).to receive(:set).with(1, labels: { status: 'requested' })
     end
   end
 end

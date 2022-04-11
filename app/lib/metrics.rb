@@ -12,7 +12,9 @@ class Metrics
   end
 
   def record_move_count
-    move_count_gauge.set(Move.unscoped.count)
+    Move.unscoped.group(:status).count.each do |status, count|
+      move_count_gauge.set(count, labels: { status: status })
+    end
   end
 
 private
@@ -25,6 +27,7 @@ private
     @move_count_gauge ||= registry.gauge(
       :app_move_count_total,
       docstring: 'The total count of the number of moves.',
+      labels: %i[status],
       store_settings: { aggregation: :max },
     )
   end
