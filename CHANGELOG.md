@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.24.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.24.1) (2022-04-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.24.0...v3.24.1)
+
+**Merged pull requests:**
+
+- Record move count metrics [\#1816](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1816) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.24.0 [\#1815](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1815) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.24.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.24.0) (2022-04-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.2...v3.24.0)
