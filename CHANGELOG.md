@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.24.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.24.0) (2022-04-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.2...v3.24.0)
+
+**Merged pull requests:**
+
+- Update assessment status based on required questions [\#1814](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1814) ([thomasleese](https://github.com/thomasleese))
+- Generated changelog for v3.23.2 [\#1813](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1813) ([thomasleese](https://github.com/thomasleese))
+- Switch to prometheus-client [\#1812](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1812) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.23.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.2) (2022-04-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.23.1...v3.23.2)
