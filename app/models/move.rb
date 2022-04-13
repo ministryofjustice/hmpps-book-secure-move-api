@@ -323,7 +323,7 @@ class Move < VersionedModel
   def important_events
     all_events_for_timeline
       .where(classification: %w[medical incident])
-      .or(GenericEvent.where(type: [GenericEvent::PerPropertyChange].map(&:name)))
+      .or(GenericEvent.where(type: [GenericEvent::PerPropertyChange, GenericEvent::MoveLodgingEnd].map(&:name)))
   end
 
   def vehicle_registration
