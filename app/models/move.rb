@@ -321,7 +321,9 @@ class Move < VersionedModel
   end
 
   def important_events
-    incident_events + (profile&.person_escort_record&.important_events || [])
+    all_events_for_timeline
+      .where(classification: %w[medical incident])
+      .or(GenericEvent.where(type: [GenericEvent::PerPropertyChange].map(&:name)))
   end
 
   def vehicle_registration

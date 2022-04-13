@@ -820,9 +820,7 @@ RSpec.describe Move do
     let(:move) { create(:move, profile: create(:profile, :with_person_escort_record)) }
 
     context 'when there are no events' do
-      it 'returns an empty Array' do
-        expect(important_events).to eq([])
-      end
+      it { is_expected.to be_empty }
     end
 
     context 'when there are move incident events' do
@@ -830,9 +828,7 @@ RSpec.describe Move do
 
       before { create(:event_move_approve, eventable: move) }
 
-      it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([important_event.id])
-      end
+      it { is_expected.to match_array([important_event]) }
     end
 
     context 'when there are PER medical events' do
@@ -841,9 +837,7 @@ RSpec.describe Move do
 
       before { create(:event_per_prisoner_welfare, eventable: person_escort_record) }
 
-      it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([important_event.id])
-      end
+      it { is_expected.to match_array([important_event]) }
     end
 
     context 'when there are move incident and PER medical events' do
@@ -851,9 +845,14 @@ RSpec.describe Move do
       let!(:first_event) { create(:event_person_move_assault, eventable: move) }
       let!(:second_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
 
-      it 'returns correct events' do
-        expect(important_events.pluck(:id)).to eq([first_event.id, second_event.id])
-      end
+      it { is_expected.to match_array([first_event, second_event]) }
+    end
+
+    context 'when there are PER property change events' do
+      let(:person_escort_record) { move.profile.person_escort_record }
+      let!(:important_event) { create(:event_per_property_change, eventable: person_escort_record) }
+
+      it { is_expected.to match_array([important_event]) }
     end
   end
 
