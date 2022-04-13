@@ -321,10 +321,7 @@ class Move < VersionedModel
   end
 
   def important_events
-    eventable_types = %w[Move PersonEscortRecord]
-    classifications = %w[medical incident]
-
-    GenericEvent.where(eventable: eventable_types).where(classification: classifications).or(GenericEvent.where(type: ['GenericEvent::PerPropertyChange', 'GenericEvent::MoveLodgingEnd']))
+    incident_events + GenericEvent::MoveLodgingEnd.where(eventable: self) + (profile&.person_escort_record&.important_events || [])
   end
 
   def vehicle_registration
