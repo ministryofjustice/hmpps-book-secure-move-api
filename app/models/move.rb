@@ -321,9 +321,13 @@ class Move < VersionedModel
   end
 
   def important_events
-    all_events_for_timeline
-      .where(classification: %w[medical incident])
-      .or(GenericEvent.where(type: [GenericEvent::PerPropertyChange, GenericEvent::MoveLodgingEnd].map(&:name)))
+    eventable_ids = [id, profile&.person_escort_record_id].compact
+    eventable_types = %w[Move PersonEscortRecord]
+
+    events = GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids)
+
+    # This is more performant that doing an `OR` in SQL as the query planner gets confused by the lack of an index for the type column
+    events.where(classification: %w[medical incident]) + events.where(type: [GenericEvent::PerPropertyChange, GenericEvent::MoveLodgingEnd].map(&:name))
   end
 
   def vehicle_registration
