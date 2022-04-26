@@ -79,6 +79,7 @@ class GenericEvent < ApplicationRecord
     PerMedicalAid
     PerMedicalDrugsAlcohol
     PerMedicalMentalHealth
+    PerMedicalMedication
     PerPrisonerWelfare
     PerPropertyChange
     PerSelfHarm
