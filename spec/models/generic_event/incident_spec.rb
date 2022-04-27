@@ -19,13 +19,5 @@ RSpec.describe GenericEvent::Incident, type: :model do
 
       it { is_expected.to eq(:incident) }
     end
-
-    describe 'when a supplier_id is nil' do
-      context 'when we allow fault_classification to be nil' do
-        let(:event) { create(:event_person_move_used_force, supplier_id: nil, fault_classification: nil) }
-
-        it { is_expected.to eq(:incident) }
-      end
-    end
   end
 end
