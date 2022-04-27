@@ -13,9 +13,20 @@ RSpec.shared_examples 'an event about an incident' do
     ]
   end
 
-  it { is_expected.to validate_presence_of(:supplier_personnel_numbers) }
-  it { is_expected.to validate_inclusion_of(:fault_classification).in_array(fault_classifications) }
-  it { is_expected.to validate_presence_of(:fault_classification) }
+  context 'with a supplier' do
+    let(:supplier) { create(:supplier) }
+
+    before { generic_event.update(supplier: supplier) }
+
+    it { is_expected.to validate_inclusion_of(:fault_classification).in_array(fault_classifications) }
+    it { is_expected.to validate_presence_of(:fault_classification) }
+  end
+
+  context 'without a supplier' do
+    before { generic_event.update(supplier: nil) }
+
+    it { is_expected.not_to validate_presence_of(:fault_classification) }
+  end
 
   context 'when reported_at is not a valid iso8601 date' do
     before do
