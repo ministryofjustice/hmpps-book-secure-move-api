@@ -12,7 +12,7 @@ RSpec.shared_examples 'an event about an incident' do
       investigation
     ]
   end
-  
+
   context 'with a supplier' do
     let(:supplier) { create(:supplier) }
 
