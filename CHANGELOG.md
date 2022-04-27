@@ -1,5 +1,26 @@
 # Changelog
 
+## [v3.25.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.25.0) (2022-04-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.24.2...v3.25.0)
+
+**Merged pull requests:**
+
+- Support multiple handovers [\#1833](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1833) ([thomasleese](https://github.com/thomasleese))
+- Bump aws-sdk-s3 from 1.113.1 to 1.113.2 [\#1832](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1832) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add a PerMedicalMedication event [\#1831](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1831) ([georgeschena](https://github.com/georgeschena))
+- Bump aws-sdk-s3 from 1.113.0 to 1.113.1 [\#1830](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1830) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rspec-rails from 5.1.1 to 5.1.2 [\#1829](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1829) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk from 4.3.0 to 4.4.0 [\#1828](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1828) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sidekiq from 6.4.1 to 6.4.2 [\#1827](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1827) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump git from 1.10.2 to 1.11.0 [\#1826](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1826) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.52.0 to 1.53.0 [\#1825](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1825) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Improve performance of Move\#important\_events [\#1824](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1824) ([thomasleese](https://github.com/thomasleese))
+- Bump flipper-active\_record from 0.24.0 to 0.24.1 [\#1823](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1823) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Refactor move incident events [\#1822](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1822) ([thomasleese](https://github.com/thomasleese))
+- Bump nokogiri from 1.13.3 to 1.13.4 [\#1820](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1820) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.24.2 [\#1819](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1819) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.24.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.24.2) (2022-04-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.24.1...v3.24.2)
