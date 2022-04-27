@@ -855,6 +855,13 @@ RSpec.describe Move do
       it { is_expected.to match_array([important_event]) }
     end
 
+    context 'when there are PER handover events' do
+      let(:person_escort_record) { move.profile.person_escort_record }
+      let!(:important_event) { create(:event_per_handover, eventable: person_escort_record) }
+
+      it { is_expected.to match_array([important_event]) }
+    end
+
     context 'when there are lodging end events' do
       let!(:important_event) { create(:event_move_lodging_end, eventable: move) }
 

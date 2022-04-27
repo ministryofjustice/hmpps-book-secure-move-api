@@ -1,5 +1,9 @@
-class GenericEvent
-  class PerHandover < GenericEvent
-    eventable_types 'PersonEscortRecord'
-  end
+class GenericEvent::PerHandover < GenericEvent
+  LOCATION_ATTRIBUTE_KEY = :location_id
+
+  relationship_attributes location_id: :locations
+  eventable_types 'PersonEscortRecord'
+
+  include LocationValidations
+  include LocationFeed
 end
