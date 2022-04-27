@@ -230,15 +230,29 @@ RSpec.describe Api::PersonEscortRecordsController do
           patch_person_escort_record
         end
 
-        event = GenericEvent.find_by(eventable: person_escort_record, type: 'GenericEvent::PerHandover')
+        event = GenericEvent::PerHandover.find_by(eventable: person_escort_record)
 
         expect(event).to have_attributes(
           created_by: 'TEST_USER',
           occurred_at: occurred_timestamp,
           recorded_at: recorded_timestamp,
-          details: handover_details,
+          details: handover_details.merge('location_id' => person_escort_record.move.from_location.id),
           notes: 'Automatically generated event',
         )
+      end
+
+      context 'with a specified location' do
+        let(:location) { create(:location) }
+
+        before do
+          handover_details.merge!(location_id: location.id)
+          patch_person_escort_record
+        end
+
+        it 'stores the location in the event' do
+          event = GenericEvent::PerHandover.find_by(eventable: person_escort_record)
+          expect(event.details[:location_id]).to eq(location.id)
+        end
       end
     end
   end
