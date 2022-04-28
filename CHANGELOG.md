@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.25.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.25.1) (2022-04-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.25.0...v3.25.1)
+
+**Merged pull requests:**
+
+- Handle optional locations in event feed [\#1836](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1836) ([thomasleese](https://github.com/thomasleese))
+- Allow fault\_classification to be nil if the supplier\_id is not provided [\#1835](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1835) ([georgeschena](https://github.com/georgeschena))
+- Generated changelog for v3.25.0 [\#1834](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1834) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.25.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.25.0) (2022-04-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.24.2...v3.25.0)
