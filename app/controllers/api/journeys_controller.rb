@@ -97,7 +97,7 @@ module Api
         render(
           json: { errors: [{
             title: 'Bad request',
-            detail: /param is missing or the value is empty/,
+            detail: 'You are trying to submit a duplicate journey for this move, please try again',
           }] },
           status: :bad_request,
         )

@@ -115,11 +115,30 @@ RSpec.describe Api::JourneysController do
         let(:application) { create(:application, owner: supplier) }
         let(:access_token) { create(:access_token, application: application).token }
 
-        it_behaves_like 'an endpoint that responds with error 400' do
-          before do
-            create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
-            do_post
-          end
+        before do
+          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          do_post
+        end
+
+        it 'returns bad request error code' do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'returns errors in the body of the response' do
+          expect(JSON.parse(response.body)).to include_json(errors: [
+            {
+              'title' => 'Bad request',
+              'detail' => 'You are trying to submit a duplicate journey for this move, please try again',
+            },
+          ])
+        end
+
+        it 'returns a valid 400 JSON response' do
+          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
+        end
+
+        it 'sets the correct content type header' do
+          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
         end
       end
 
