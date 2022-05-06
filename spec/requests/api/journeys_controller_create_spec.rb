@@ -111,6 +111,18 @@ RSpec.describe Api::JourneysController do
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
 
+      context 'when you have duplicate journeys for a move' do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application: application).token }
+
+        it_behaves_like 'an endpoint that responds with error 400' do
+          before do
+            create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+            do_post
+          end
+        end
+      end
+
       context 'with a bad request' do
         let(:journey_params) { nil }
 

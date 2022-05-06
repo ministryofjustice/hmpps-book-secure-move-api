@@ -6,6 +6,7 @@ module Api
     include Eventable
 
     before_action :validate_params, only: %i[create update]
+    before_action :validate_duplicate_journey, only: %i[create]
     before_action :validate_idempotency_key, only: %i[create update]
     around_action :idempotent_action, only: %i[create update]
     after_action :create_journey_event, only: %i[create update]
@@ -83,6 +84,24 @@ module Api
 
     def validate_params
       Journeys::ParamsValidator.new(data_params).validate!(action_name.to_sym)
+    end
+
+    def validate_duplicate_journey
+      move_journeys = move.journeys
+      params_from_location = data_params['relationships']['from_location']['data']['id']
+      params_to_location = data_params['relationships']['to_location']['data']['id']
+
+      move_journeys.each do |journey|
+        next unless journey.state == 'completed' && journey.to_location_id == params_to_location && journey.from_location_id == params_from_location
+
+        render(
+          json: { errors: [{
+            title: 'Bad request',
+            detail: /param is missing or the value is empty/,
+          }] },
+          status: :bad_request,
+        )
+      end
     end
 
     def data_params
