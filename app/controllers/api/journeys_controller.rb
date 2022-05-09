@@ -92,7 +92,7 @@ module Api
       params_to_location = data_params['relationships']['to_location']['data']['id']
 
       move_journeys.each do |journey|
-        next unless journey.state != 'cancelled' || journey.state != 'rejected' && journey.to_location_id == params_to_location && journey.from_location_id == params_from_location
+        next if journey.state == 'cancelled' || journey.state == 'rejected' || journey.to_location_id != params_to_location || journey.from_location_id != params_from_location
 
         render(
           json: { errors: [{

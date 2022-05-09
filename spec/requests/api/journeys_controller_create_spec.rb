@@ -56,7 +56,7 @@ RSpec.describe Api::JourneysController do
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
       let(:data) do
         {
-          "id": Journey.last&.id,
+          "id": Journey.find_by(date: '2020-05-04')&.id,
           "type": 'journeys',
           "attributes": {
             "billable": false,
