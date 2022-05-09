@@ -13,6 +13,8 @@ RSpec.describe Api::JourneysController do
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
+    let(:alternate_from_location_id) { create(:location, suppliers: [supplier]).id }
+    let(:alternate_to_location_id) { create(:location, suppliers: [supplier]).id }
     let(:move) { create(:move, supplier: supplier) }
     let(:move_id) { move.id }
 
@@ -54,7 +56,7 @@ RSpec.describe Api::JourneysController do
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
       let(:data) do
         {
-          "id": Journey.first&.id,
+          "id": Journey.find_by(date: '2020-05-04')&.id,
           "type": 'journeys',
           "attributes": {
             "billable": false,
@@ -106,10 +108,59 @@ RSpec.describe Api::JourneysController do
           expect(Journey.first.date).to eq(move.date)
         end
       end
+
+      context 'when a move already has non-duplicate journeys' do
+        before do
+          create(:journey, :cancelled, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          create(:journey, :rejected, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          create(:journey, :completed, move: move, from_location_id: alternate_from_location_id, to_location_id: to_location_id)
+          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: alternate_to_location_id)
+        end
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { do_post }
+        end
+
+        it 'returns the correct data' do
+          do_post
+          expect(response_json).to include_json(data: data)
+        end
+      end
     end
 
     context 'when unsuccessful' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
+
+      context 'when you have duplicate journeys for a move' do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application: application).token }
+
+        before do
+          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          do_post
+        end
+
+        it 'returns bad request error code' do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'returns errors in the body of the response' do
+          expect(JSON.parse(response.body)).to include_json(errors: [
+            {
+              'title' => 'Bad request',
+              'detail' => 'You are trying to submit a duplicate journey for this move, please try again',
+            },
+          ])
+        end
+
+        it 'returns a valid 400 JSON response' do
+          expect(JSON::Validator.validate!(schema, response_json, strict: true, fragment: '#/400')).to be true
+        end
+
+        it 'sets the correct content type header' do
+          expect(response.headers['Content-Type']).to match(Regexp.escape(ApiController::CONTENT_TYPE))
+        end
+      end
 
       context 'with a bad request' do
         let(:journey_params) { nil }
