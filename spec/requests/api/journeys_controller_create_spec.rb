@@ -13,6 +13,8 @@ RSpec.describe Api::JourneysController do
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
+    let(:alternate_from_location_id) { create(:location, suppliers: [supplier]).id }
+    let(:alternate_to_location_id) { create(:location, suppliers: [supplier]).id }
     let(:move) { create(:move, supplier: supplier) }
     let(:move_id) { move.id }
 
@@ -54,7 +56,7 @@ RSpec.describe Api::JourneysController do
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
       let(:data) do
         {
-          "id": Journey.first&.id,
+          "id": Journey.last&.id,
           "type": 'journeys',
           "attributes": {
             "billable": false,
@@ -104,6 +106,24 @@ RSpec.describe Api::JourneysController do
         it 'sets the date to the move date' do
           do_post
           expect(Journey.first.date).to eq(move.date)
+        end
+      end
+
+      context 'when a move already has non-duplicate journeys' do
+        before do
+          create(:journey, :cancelled, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          create(:journey, :rejected, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          create(:journey, :completed, move: move, from_location_id: alternate_from_location_id, to_location_id: to_location_id)
+          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: alternate_to_location_id)
+        end
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { do_post }
+        end
+
+        it 'returns the correct data' do
+          do_post
+          expect(response_json).to include_json(data: data)
         end
       end
     end
