@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.26.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.0) (2022-05-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.25.1...v3.26.0)
+
+**Merged pull requests:**
+
+- Include MoveLodgingStart in important events [\#1842](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1842) ([thomasleese](https://github.com/thomasleese))
+- Bump nokogiri from 1.13.5 to 1.13.6 [\#1841](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1841) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add validation to prevent duplicate journeys [\#1840](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1840) ([georgeschena](https://github.com/georgeschena))
+- Bump nokogiri from 1.13.4 to 1.13.5 [\#1839](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1839) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-s3 from 1.113.2 to 1.114.0 [\#1838](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1838) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.25.1 [\#1837](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1837) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.25.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.25.1) (2022-04-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.25.0...v3.25.1)
