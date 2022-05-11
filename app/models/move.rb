@@ -328,9 +328,10 @@ class Move < VersionedModel
 
     medical_or_incident_events = events.where(classification: %w[medical incident])
     other_events = events.where(type: [
-      GenericEvent::PerPropertyChange,
-      GenericEvent::MoveLodgingEnd,
       GenericEvent::PerHandover,
+      GenericEvent::PerPropertyChange,
+      GenericEvent::MoveLodgingStart,
+      GenericEvent::MoveLodgingEnd,
     ].map(&:name))
 
     # This is more performant that doing an `OR` in SQL as the query planner gets confused by the lack of an index for the type column
