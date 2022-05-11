@@ -867,6 +867,12 @@ RSpec.describe Move do
 
       it { is_expected.to match_array([important_event]) }
     end
+
+    context 'when there are lodging start events' do
+      let!(:important_event) { create(:event_move_lodging_start, eventable: move) }
+
+      it { is_expected.to match_array([important_event]) }
+    end
   end
 
   describe '#vehicle_registration' do
