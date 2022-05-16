@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.26.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.1) (2022-05-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.0...v3.26.1)
+
+**Merged pull requests:**
+
+- Bump validate\_url from 1.0.13 to 1.0.15 [\#1845](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1845) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faker from 2.20.0 to 2.21.0 [\#1844](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1844) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.26.0 [\#1843](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1843) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.26.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.0) (2022-05-11)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.25.1...v3.26.0)
