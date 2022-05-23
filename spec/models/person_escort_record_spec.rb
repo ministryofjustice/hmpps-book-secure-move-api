@@ -178,13 +178,15 @@ RSpec.describe PersonEscortRecord do
   describe '#responded_by' do
     subject(:responded_by) { per.responded_by }
 
-    let(:per) { create(:person_escort_record) }
+    let(:framework) { create(:framework) }
+    let(:alert_code) { create(:framework_nomis_code, code: 'VI', code_type: 'alert') }
+    let(:question) { create(:framework_question, framework: framework, framework_nomis_codes: [alert_code]) }
+    let(:response1) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'TEST_USER') }
+    let(:response2) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'TEST_USER') }
+    let(:response3) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'OTHER_TEST_USER') }
+    let(:response4) { create(:string_response, section: 'section2', framework_question: question, responded_by: 'OTHER_TEST_USER') }
+    let(:per) { create(:person_escort_record, framework_responses: [response1, response2, response3, response4]) }
 
-    before do
-      create(:string_response, assessmentable: per, responded_by: 'ABC')
-      create(:string_response, assessmentable: per, responded_by: 'DEF')
-    end
-
-    it { is_expected.to match_array(%w[ABC DEF]) }
+    it { is_expected.to eq({ 'section1' => %w[TEST_USER OTHER_TEST_USER], 'section2' => %w[OTHER_TEST_USER] }) }
   end
 end

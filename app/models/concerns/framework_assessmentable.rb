@@ -167,7 +167,12 @@ module FrameworkAssessmentable
     move.requested? || move.booked?
   end
 
-  def responded_by
-    framework_responses.pluck(:responded_by).sort.uniq
+  def responded_by(before_datetime = Time.zone.now)
+    framework_responses.where(created_at: Time.zone.at(0)..before_datetime).each_with_object({}) do |framework_response, hash|
+      hash[framework_response.section] ||= []
+      next if hash[framework_response.section].include?(framework_response.responded_by)
+
+      hash[framework_response.section] << framework_response.responded_by
+    end
   end
 end
