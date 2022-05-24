@@ -57,6 +57,8 @@ class ApiController < ApplicationController
 private
 
   def set_sentry_transaction_id
+    return unless Sentry.initialized?
+
     Sentry.set_tags(transaction_id: request.headers['X-Transaction-Id'])
   end
 
