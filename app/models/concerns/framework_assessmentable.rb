@@ -168,7 +168,7 @@ module FrameworkAssessmentable
   end
 
   def responded_by(before_datetime = Time.zone.now)
-    framework_responses.where(created_at: Time.zone.at(0)..before_datetime).each_with_object({}) do |framework_response, hash|
+    framework_responses.order(:created_at).where(created_at: Time.zone.at(0)..before_datetime).each_with_object({}) do |framework_response, hash|
       hash[framework_response.section] ||= []
       next if hash[framework_response.section].include?(framework_response.responded_by)
 

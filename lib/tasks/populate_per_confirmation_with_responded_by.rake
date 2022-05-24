@@ -1,6 +1,4 @@
-GITHUB_FRAMEWORK_URI = 'https://github.com/ministryofjustice/hmpps-book-secure-move-frameworks.git'.freeze
-GITHUB_FRAMEWORK_NAME = 'hmpps-book-secure-move-frameworks'.freeze
-FRAMEWORK_TEMP_PATH = Rails.root.join('tmp/checkout').freeze
+# frozen_string_literal: true
 
 namespace :per_confirmation do
   desc 'Populate PerConfirmation events with responded_by'
