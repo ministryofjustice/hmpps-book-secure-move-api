@@ -59,6 +59,7 @@ class GenericEvent < ApplicationRecord
     MoveStart
     PerConcealed
     PerConfirmation
+    PerCompletion
     PerCourtAllDocumentationProvidedToSupplier
     PerCourtAssignCellInCustody
     PerCourtCellShareRiskAssessment

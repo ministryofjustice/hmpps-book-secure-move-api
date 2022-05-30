@@ -577,6 +577,11 @@ FactoryBot.define do
     details { { confirmed_at: '2021-01-01' } }
   end
 
+  factory :event_per_completion, parent: :generic_event, class: 'GenericEvent::PerCompletion' do
+    eventable { association(:person_escort_record, :completed, completed_at: '2021-01-01') }
+    details { { completed_at: '2021-01-01' } }
+  end
+
   factory :event_per_handover, parent: :generic_event, class: 'GenericEvent::PerHandover' do
     eventable { association(:person_escort_record, :confirmed) }
     details { { location_id: create(:location).id } }
