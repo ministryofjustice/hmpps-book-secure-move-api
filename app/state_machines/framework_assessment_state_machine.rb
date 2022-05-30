@@ -14,7 +14,18 @@ class FrameworkAssessmentStateMachine < FiniteMachine::Definition
   on_after :calculate do
     if completed?
       target.amended_at = Time.zone.now if target.respond_to?(:amended_at) && target.completed_at.present?
-      target.completed_at = Time.zone.now if target.completed_at.nil?
+
+      if target.completed_at.nil?
+        target.completed_at = Time.zone.now
+
+        if target.is_a?(PersonEscortRecord)
+          target.generic_events << GenericEvent::PerCompletion.new(
+            occurred_at: Time.zone.now,
+            recorded_at: Time.zone.now,
+            details: { completed_at: Time.zone.now },
+          )
+        end
+      end
     end
   end
 
