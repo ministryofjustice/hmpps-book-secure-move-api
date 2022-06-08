@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_29_100906) do
+ActiveRecord::Schema.define(version: 2022_06_08_135622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -275,6 +275,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_100906) do
     t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
     t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
     t.index ["supplier_id"], name: "index_generic_events_on_supplier_id"
+    t.index ["updated_at"], name: "index_generic_events_on_updated_at"
   end
 
   create_table "identifier_types", id: :string, force: :cascade do |t|
