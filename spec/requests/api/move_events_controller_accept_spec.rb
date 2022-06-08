@@ -39,7 +39,7 @@ RSpec.describe Api::MoveEventsController do
       end
 
       it 'writes a move accept event' do
-        expect { do_post }.to change { GenericEvent::MoveAccept.count }.by(1)
+        expect { do_post }.to change(GenericEvent::MoveAccept, :count).by(1)
       end
     end
 
