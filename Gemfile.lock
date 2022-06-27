@@ -432,7 +432,7 @@ GEM
     timers (4.3.3)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uk_postcode (2.1.7)
+    uk_postcode (2.1.8)
     unicode-display_width (2.1.0)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
