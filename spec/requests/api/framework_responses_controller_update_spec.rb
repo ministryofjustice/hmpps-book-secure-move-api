@@ -316,6 +316,15 @@ RSpec.describe Api::FrameworkResponsesController do
         it_behaves_like 'an endpoint that responds with error 403'
       end
 
+      context 'when assessment completed' do
+        let(:assessment) { create(:person_escort_record, :completed) }
+        let(:framework_response) { create(:string_response, assessmentable: assessment) }
+
+        it 'creates a PerUpdated event' do
+          expect(assessment.generic_events.pluck(:type)).to include('GenericEvent::PerUpdated')
+        end
+      end
+
       context 'when the framework_response_id is not found' do
         let(:framework_response_id) { 'foo-bar' }
         let(:detail_404) { "Couldn't find FrameworkResponse with 'id'=foo-bar" }

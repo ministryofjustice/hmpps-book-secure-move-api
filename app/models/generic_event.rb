@@ -84,6 +84,7 @@ class GenericEvent < ApplicationRecord
     PerPrisonerWelfare
     PerPropertyChange
     PerSelfHarm
+    PerUpdated
     PerViolentDangerous
     PerWeapons
     PersonMoveAssault

@@ -59,6 +59,10 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(person_escort_record.reload.status).to eq('completed')
       end
 
+      it 'creates a PerCompletion event' do
+        expect(person_escort_record.generic_events.pluck(:type)).to include('GenericEvent::PerCompletion')
+      end
+
       it 'attaches flags to the responses' do
         expect(framework_response.framework_flags).to contain_exactly(flag)
         expect(other_framework_response.framework_flags).to contain_exactly(other_flag)
@@ -326,11 +330,11 @@ RSpec.describe Api::FrameworkResponsesController do
         instance_double(
           ActionMailer::MessageDelivery,
           deliver_now!:
-          instance_double(
-            Mail::Message,
-            govuk_notify_response:
-            instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
-          ),
+            instance_double(
+              Mail::Message,
+              govuk_notify_response:
+                instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
+            ),
         )
       end
 
@@ -346,20 +350,20 @@ RSpec.describe Api::FrameworkResponsesController do
         notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
         expect(notification).to have_attributes(
-          topic: person_escort_record,
-          notification_type: notification_type_webhook,
-          event_type: 'amend_person_escort_record',
-        )
+                                  topic: person_escort_record,
+                                  notification_type: notification_type_webhook,
+                                  event_type: 'amend_person_escort_record',
+                                )
       end
 
       it 'creates an email notification' do
         notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
         expect(notification).to have_attributes(
-          topic: person_escort_record,
-          notification_type: notification_type_email,
-          event_type: 'amend_person_escort_record',
-        )
+                                  topic: person_escort_record,
+                                  notification_type: notification_type_email,
+                                  event_type: 'amend_person_escort_record',
+                                )
       end
 
       context 'when the assessment was not previously completed' do
@@ -369,10 +373,10 @@ RSpec.describe Api::FrameworkResponsesController do
           notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
           expect(notification).to have_attributes(
-            topic: person_escort_record,
-            notification_type: notification_type_webhook,
-            event_type: 'complete_person_escort_record',
-          )
+                                    topic: person_escort_record,
+                                    notification_type: notification_type_webhook,
+                                    event_type: 'complete_person_escort_record',
+                                  )
         end
 
         it 'does not create an email notification' do
