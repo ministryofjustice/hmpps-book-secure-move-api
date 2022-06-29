@@ -579,7 +579,7 @@ FactoryBot.define do
 
   factory :event_per_completion, parent: :generic_event, class: 'GenericEvent::PerCompletion' do
     eventable { association(:person_escort_record, :completed, completed_at: '2021-01-01') }
-    details { { completed_at: '2021-01-01', responded_by: {'risk-information' => ['TEST_USER']} } }
+    details { { completed_at: '2021-01-01', responded_by: { 'risk-information' => %w[TEST_USER] } } }
   end
 
   factory :event_per_updated, parent: :generic_event, class: 'GenericEvent::PerUpdated' do

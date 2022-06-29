@@ -350,20 +350,20 @@ RSpec.describe Api::FrameworkResponsesController do
         notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
         expect(notification).to have_attributes(
-                                  topic: person_escort_record,
-                                  notification_type: notification_type_webhook,
-                                  event_type: 'amend_person_escort_record',
-                                )
+          topic: person_escort_record,
+          notification_type: notification_type_webhook,
+          event_type: 'amend_person_escort_record',
+        )
       end
 
       it 'creates an email notification' do
         notification = subscription.notifications.find_by(notification_type: notification_type_email)
 
         expect(notification).to have_attributes(
-                                  topic: person_escort_record,
-                                  notification_type: notification_type_email,
-                                  event_type: 'amend_person_escort_record',
-                                )
+          topic: person_escort_record,
+          notification_type: notification_type_email,
+          event_type: 'amend_person_escort_record',
+        )
       end
 
       context 'when the assessment was not previously completed' do
@@ -373,10 +373,10 @@ RSpec.describe Api::FrameworkResponsesController do
           notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
 
           expect(notification).to have_attributes(
-                                    topic: person_escort_record,
-                                    notification_type: notification_type_webhook,
-                                    event_type: 'complete_person_escort_record',
-                                  )
+            topic: person_escort_record,
+            notification_type: notification_type_webhook,
+            event_type: 'complete_person_escort_record',
+          )
         end
 
         it 'does not create an email notification' do
