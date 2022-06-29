@@ -25,6 +25,13 @@ class FrameworkAssessmentStateMachine < FiniteMachine::Definition
             details: { completed_at: Time.zone.now },
           )
         end
+      elsif target.is_a?(PersonEscortRecord)
+        response = target.framework_responses.order(updated_at: :asc).last
+        target.generic_events << GenericEvent::PerUpdated.new(
+          occurred_at: Time.zone.now,
+          recorded_at: Time.zone.now,
+          details: { responded_by: response.responded_by, section: response.section },
+        )
       end
     end
   end

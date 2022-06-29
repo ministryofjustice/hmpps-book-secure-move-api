@@ -59,6 +59,10 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(person_escort_record.reload.status).to eq('completed')
       end
 
+      it 'creates a PerCompletion event' do
+        expect(person_escort_record.generic_events.pluck(:type)).to include('GenericEvent::PerCompletion')
+      end
+
       it 'attaches flags to the responses' do
         expect(framework_response.framework_flags).to contain_exactly(flag)
         expect(other_framework_response.framework_flags).to contain_exactly(other_flag)
@@ -326,11 +330,11 @@ RSpec.describe Api::FrameworkResponsesController do
         instance_double(
           ActionMailer::MessageDelivery,
           deliver_now!:
-          instance_double(
-            Mail::Message,
-            govuk_notify_response:
-            instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
-          ),
+            instance_double(
+              Mail::Message,
+              govuk_notify_response:
+                instance_double(Notifications::Client::ResponseNotification, id: SecureRandom.uuid),
+            ),
         )
       end
 
