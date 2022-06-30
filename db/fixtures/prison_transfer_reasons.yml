@@ -8,7 +8,11 @@ comp:
 
 court:
   key: court
-  title: Court move
+  title: Court appearance
+
+video:
+  key: video
+  title: Court video link
 
 cpa:
   key: cpa
