@@ -1,0 +1,58 @@
+require 'rails_helper'
+
+RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
+  subject(:worker) { described_class.new }
+
+  let(:supplier) { create(:supplier) }
+  let(:subscription) { create(:subscription, callback_url: 'https://foo.bar/', supplier: supplier) }
+
+  let!(:unnotified1) { create(:move, date: Time.zone.today, reference: 'TEST1', supplier: supplier) }
+  let!(:notified1) { create(:move, date: Time.zone.today, reference: 'TEST4', supplier: supplier) }
+  let!(:notified2) { create(:move, date: Time.zone.tomorrow, reference: 'TEST5', supplier: supplier) }
+
+  before do
+    create(:move, date: Time.zone.today, reference: 'TEST2', supplier: supplier)
+    create(:move, date: Time.zone.tomorrow, reference: 'TEST3', supplier: supplier)
+
+    allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
+
+    GenericEvent::MoveRequested.create!(
+      eventable: unnotified1,
+      occurred_at: unnotified1.created_at,
+      recorded_at: Time.zone.now,
+      notes: 'Automatically generated event',
+      details: {},
+    )
+    create(:notification, :webhook, subscription: subscription, topic: notified1, event_type: 'create_move')
+    create(:notification, :webhook, subscription: subscription, topic: notified2, event_type: 'create_move')
+  end
+
+  it 'only creates notifications for unnotified moves' do
+    worker.perform
+
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST1')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST1')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST1')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST1')
+
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST2')
+
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST3')
+
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST4')
+
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST5')
+  end
+end
