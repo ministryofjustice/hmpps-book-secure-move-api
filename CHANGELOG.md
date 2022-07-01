@@ -1,5 +1,71 @@
 # Changelog
 
+## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.5...HEAD)
+
+**Merged pull requests:**
+
+- Add basic logging to move creation [\#1885](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1885) ([Thource](https://github.com/Thource))
+- Bump aws-sdk-athena from 1.53.0 to 1.54.0 [\#1884](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1884) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add new PrisonTransferReason Court video link [\#1883](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1883) ([georgeschena](https://github.com/georgeschena))
+- Add PerUpdated event [\#1882](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1882) ([Thource](https://github.com/Thource))
+- Bump rack-test from 2.0.0 to 2.0.2 [\#1881](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1881) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry from 4.6.5 to 5.3.1 [\#1878](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1878) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+
+## [v3.26.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.5) (2022-06-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.4...v3.26.5)
+
+**Merged pull requests:**
+
+- Bump pg from 1.3.5 to 1.4.1 [\#1877](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1877) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rack-test from 1.1.0 to 2.0.0 [\#1876](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1876) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 4.6.0 to 4.7.0 [\#1875](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1875) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump cancancan from 3.3.0 to 3.4.0 [\#1873](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1873) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump uk\_postcode from 2.1.7 to 2.1.8 [\#1870](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1870) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Revert "P4-3715 temporary increase of the timeout for the migration job to improve chances of a long running index creation migration from working." [\#1867](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1867) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Bump rails-erd from 1.7.0 to 1.7.1 [\#1865](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1865) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.24.1 to 0.25.0 [\#1862](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1862) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.26.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.4) (2022-06-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.3...v3.26.4)
+
+**Merged pull requests:**
+
+- Revert "P4-3715 change the index creation to be locking instead of concurrent on updated\_at." [\#1866](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1866) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- P4-3715 temporary increase of the timeout for the migration job to improve chances of a long running index creation migration from working. [\#1864](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1864) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- P4-3715 change the index creation to be locking instead of concurrent on updated\_at. [\#1863](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1863) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+
+## [v3.26.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.3) (2022-06-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.2...v3.26.3)
+
+**Merged pull requests:**
+
+- P4-3715 changing migration for updated\_at on generic\_events to only create if it doesn't exist. [\#1861](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1861) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Fix issue with PerCompletion backfill without completed\_at [\#1857](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1857) ([Thource](https://github.com/Thource))
+
+## [v3.26.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.2) (2022-06-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.1...v3.26.2)
+
+**Merged pull requests:**
+
+- Add index to the updated\_at field on the generic\_events table. [\#1860](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1860) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Bump rubocop-govuk from 4.4.0 to 4.5.0 [\#1858](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1858) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.11.1 to 1.12.0 [\#1856](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1856) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rails-erd from 1.6.1 to 1.7.0 [\#1855](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1855) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Undo changes to PerConfirmation and add new PerCompletion event [\#1854](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1854) ([Thource](https://github.com/Thource))
+- Bump rack from 2.2.3 to 2.2.3.1 [\#1853](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1853) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump climate\_control from 1.1.0 to 1.1.1 [\#1852](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1852) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump climate\_control from 1.0.1 to 1.1.0 [\#1851](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1851) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add responded\_by to PerConfirmation event details [\#1849](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1849) ([Thource](https://github.com/Thource))
+- Bump geocoder from 1.7.5 to 1.8.0 [\#1848](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1848) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bcrypt from 3.1.17 to 3.1.18 [\#1847](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1847) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.26.1 [\#1846](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1846) ([thomasleese](https://github.com/thomasleese))
+
 ## [v3.26.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.1) (2022-05-16)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.0...v3.26.1)
