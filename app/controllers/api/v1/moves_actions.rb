@@ -20,11 +20,15 @@ module Api::V1
       authorize!(:create, move)
       move.save!
 
+      Rails.logger.info("V1 Move creation started - #{move.reference}")
+
       move.person.update_nomis_data if move.person.present?
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
       PrometheusMetrics.instance.record_move_count
+
+      Rails.logger.info("V1 Move creation finished - #{move.reference}")
 
       render_move(move, :created)
     end
