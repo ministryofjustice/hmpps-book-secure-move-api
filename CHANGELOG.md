@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.26.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.7) (2022-07-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.6...v3.26.7)
+
+**Merged pull requests:**
+
+- Add notify\_unnotified\_moves job [\#1889](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1889) ([Thource](https://github.com/Thource))
+- Update the deployment instructions in the README [\#1888](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1888) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.26.6 [\#1887](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1887) ([Thource](https://github.com/Thource))
+
 ## [v3.26.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.6) (2022-07-01)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.5...v3.26.6)
