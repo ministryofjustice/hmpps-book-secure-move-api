@@ -22,6 +22,8 @@ module Api::V2
       authorize!(:create, move)
       move.save!
 
+      Rails.logger.info("V2 Move creation started - #{move.reference}")
+
       move.person.update_nomis_data if move.person.present?
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
@@ -30,6 +32,8 @@ module Api::V2
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveRequested) if move.requested?
 
       PrometheusMetrics.instance.record_move_count
+
+      Rails.logger.info("V2 Move creation finished - #{move.reference}")
 
       render_move(move, :created)
     end

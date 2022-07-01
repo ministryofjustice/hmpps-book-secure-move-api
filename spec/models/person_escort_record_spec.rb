@@ -187,6 +187,9 @@ RSpec.describe PersonEscortRecord do
     let(:response4) { create(:string_response, section: 'section2', framework_question: question, responded_by: 'OTHER_TEST_USER') }
     let(:per) { create(:person_escort_record, framework_responses: [response1, response2, response3, response4]) }
 
-    it { is_expected.to eq({ 'section1' => %w[TEST_USER OTHER_TEST_USER], 'section2' => %w[OTHER_TEST_USER] }) }
+    it 'returns the correct users for the correct sections' do
+      expect(responded_by['section1']).to match_array(%w[TEST_USER OTHER_TEST_USER])
+      expect(responded_by['section2']).to match_array(%w[OTHER_TEST_USER])
+    end
   end
 end
