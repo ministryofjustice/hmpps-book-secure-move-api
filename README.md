@@ -194,12 +194,30 @@ The Git SHA is used to identify the release and is tracked  by means of the `SEN
 The associated commits are tracked by a CircleCI integration triggered on the deployment stage.
 
 ```bash
-# Get a list of tags
-git tag
-# Tag following semantic versioning rules
-git tag v1.0.1
-# Push the tag to origin
-git push origin v1.0.1
+git checkout main
+git pull
+# Get the latest tag, so we know what the next one will be
+git describe --abbrev=0
+
+DATE=$(date "+%Y-%m-%d")
+# Replace vx.x.x with the next version
+NEXT_VERSION="vx.x.x"
+
+git tag -a $NEXT_VERSION -m "Deploying on $DATE"
+git push origin $NEXT_VERSION
+git checkout -b changelog-$NEXT_VERSION
+bundle
+rake changelog
+git add CHANGELOG.md
+git commit -m "Generated changelog for $NEXT_VERSION"
+git push --set-upstream origin changelog-$NEXT_VERSION
+# Open a PR for the changelog changes
+
+# Check CircleCI to make sure the deployments are running, when they are, monitor the pods with 
+watch kubectl -n hmpps-book-secure-move-api-uat get pods
+
+# When the new pods are running nicely (no reboot loops after a few mins), click “Approve Prod” in CircleCI and monitor the pods with
+watch kubectl -n hmpps-book-secure-move-api-production get pods
 ```
 
 Tagged deploys are gated for the `production` environment and require an approval. This is typically done after
