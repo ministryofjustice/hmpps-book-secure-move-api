@@ -7,11 +7,11 @@ RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
   let(:subscription) { create(:subscription, callback_url: 'https://foo.bar/', supplier: supplier) }
 
   let!(:unnotified1) { create(:move, date: Time.zone.today, reference: 'TEST1', supplier: supplier) }
+  let!(:unnotified2) { create(:move, :proposed, date: Time.zone.today, reference: 'TEST2', supplier: supplier) }
   let!(:notified1) { create(:move, date: Time.zone.today, reference: 'TEST4', supplier: supplier) }
   let!(:notified2) { create(:move, date: Time.zone.tomorrow, reference: 'TEST5', supplier: supplier) }
 
   before do
-    create(:move, date: Time.zone.today, reference: 'TEST2', supplier: supplier)
     create(:move, date: Time.zone.tomorrow, reference: 'TEST3', supplier: supplier)
 
     allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
@@ -24,35 +24,38 @@ RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
       details: {},
     )
     create(:notification, :webhook, subscription: subscription, topic: notified1, event_type: 'create_move')
-    create(:notification, :webhook, subscription: subscription, topic: notified2, event_type: 'create_move')
+    create(:notification, :webhook, subscription: subscription, topic: notified2, event_type: 'update_move_status')
+
+    unnotified2.status = 'requested'
+    unnotified2.save!
   end
 
   it 'only creates notifications for unnotified moves' do
     worker.perform
 
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST1')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST1')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST1')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST1')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating GenericEvent::MoveRequested event for move TEST1')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created GenericEvent::MoveRequested event for move TEST1')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating notifications for move TEST1')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created notifications for move TEST1')
 
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST2')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST2')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST2')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating GenericEvent::MoveProposed event for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created GenericEvent::MoveProposed event for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating notifications for move TEST2')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created notifications for move TEST2')
 
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST3')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST3')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST3')
-    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating GenericEvent::MoveRequested event for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created GenericEvent::MoveRequested event for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating notifications for move TEST3')
+    expect(Rails.logger).to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created notifications for move TEST3')
 
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST4')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST4')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST4')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating GenericEvent::MoveRequested event for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created GenericEvent::MoveRequested event for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating notifications for move TEST4')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created notifications for move TEST4')
 
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating MoveRequested event for move TEST5')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created MoveRequested event for move TEST5')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating move_create Notification for move TEST5')
-    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created move_create Notification for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating GenericEvent::MoveRequested event for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created GenericEvent::MoveRequested event for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Creating notifications for move TEST5')
+    expect(Rails.logger).not_to have_received(:info).with('[NotifyUnnotifiedMovesWorker] Created notifications for move TEST5')
   end
 end
