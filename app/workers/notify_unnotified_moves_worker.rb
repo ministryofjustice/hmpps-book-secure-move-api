@@ -18,9 +18,9 @@ class NotifyUnnotifiedMovesWorker
         Rails.logger.info("[NotifyUnnotifiedMovesWorker] Created #{initial_event_class} event for move #{move.reference}")
       end
 
-      Rails.logger.info("[NotifyUnnotifiedMovesWorker] Creating notifications for move #{move.reference}")
+      Rails.logger.info("[NotifyUnnotifiedMovesWorker] Creating #{notification_type} notifications for move #{move.reference}")
       Notifier.prepare_notifications(topic: move, action_name: notification_type)
-      Rails.logger.info("[NotifyUnnotifiedMovesWorker] Created notifications for move #{move.reference}")
+      Rails.logger.info("[NotifyUnnotifiedMovesWorker] Created #{notification_type} notifications for move #{move.reference}")
     end
   end
 
