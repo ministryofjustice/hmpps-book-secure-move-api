@@ -22,7 +22,7 @@ module Api::V2
       authorize!(:create, move)
       move.save!
 
-      Rails.logger.info("V2 Move creation started - #{move.reference}")
+      Rails.logger.info("V2 Move creation started - #{move.reference} #{move.status}")
 
       move.person.update_nomis_data if move.person.present?
 
