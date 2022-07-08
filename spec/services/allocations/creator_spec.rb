@@ -117,7 +117,7 @@ RSpec.describe Allocations::Creator do
         eventable_type: 'Move',
         notes: 'Automatically generated for allocation',
         created_by: 'Iama Requestor',
-        supplier_id: supplier.id,
+        supplier_id: nil,
       )
     end
 

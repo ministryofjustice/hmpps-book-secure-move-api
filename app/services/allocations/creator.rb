@@ -45,7 +45,7 @@ module Allocations
             recorded_at: now,
             notes: 'Automatically generated for allocation',
             created_by: created_by,
-            supplier: supplier,
+            supplier: nil,
           )
         end
       end
