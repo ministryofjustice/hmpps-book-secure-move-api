@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.26.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.9) (2022-07-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.8...v3.26.9)
+
+**Merged pull requests:**
+
+- Bring alloction move requested events in line with single move request, supplier does not need populating for these events [\#1897](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1897) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Revert "Add sidekiq\_queue\_metrics to help diagnose the non-notifying moves" [\#1896](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1896) ([Thource](https://github.com/Thource))
+- Add sidekiq\_queue\_metrics to help diagnose the non-notifying moves [\#1894](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1894) ([Thource](https://github.com/Thource))
+- Bump redis from 4.7.0 to 4.7.1 [\#1892](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1892) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.26.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.8) (2022-07-05)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.7...v3.26.8)
+
+**Merged pull requests:**
+
+- Change NotifyUnnotifiedMovesWorker to check for moves without any notifications [\#1893](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1893) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.26.7 [\#1890](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1890) ([Thource](https://github.com/Thource))
+
 ## [v3.26.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.7) (2022-07-01)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.6...v3.26.7)
