@@ -215,6 +215,29 @@ RSpec.describe Api::FrameworkResponsesController do
         end
       end
 
+      context 'when an array is passed in the data array' do
+        let(:bulk_per_params) do
+          {
+            data: [
+              {},
+              {},
+              [],
+            ],
+          }
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [
+              {
+                "title": 'Invalid arguments',
+                "detail": 'invalid data type in bulk update array: Array',
+              },
+            ]
+          end
+        end
+      end
+
       context 'with a nested invalid value' do
         let(:framework_response) { create(:collection_response, :multiple_items, assessmentable: person_escort_record) }
         let(:framework_question) { framework_response.framework_question.dependents.first }
