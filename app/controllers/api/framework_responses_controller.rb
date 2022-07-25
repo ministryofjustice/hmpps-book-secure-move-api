@@ -39,6 +39,14 @@ module Api
       ).call
 
       render status: :no_content
+    rescue ArgumentError => e
+      render(
+        json: { errors: [{
+          title: 'Invalid arguments',
+          detail: e.to_s,
+        }] },
+        status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
+      )
     end
 
   private
@@ -52,7 +60,13 @@ module Api
     end
 
     def bulk_update_framework_response_params
-      params.require(:data).map { |response| response.permit(BULK_PERMITTED_PARAMS) }
+      data = params.require(:data)
+      data.each do |d|
+        next if d.is_a?(ActionController::Parameters)
+
+        raise ArgumentError, "invalid data type in bulk update array: #{d.class}"
+      end
+      data.map { |response| response.permit(BULK_PERMITTED_PARAMS) }
     end
 
     def bulk_update_framework_response_values
