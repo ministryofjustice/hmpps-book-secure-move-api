@@ -38,7 +38,7 @@ RSpec.describe People::RetrieveActivities do
     end
 
     let(:oauth2_response) do
-      instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '', 'error=': '')
+      instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
     end
 
     it 'returns a struct indicating calling to Nomis failed' do
