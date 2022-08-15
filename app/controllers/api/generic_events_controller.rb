@@ -3,12 +3,12 @@ module Api
     PERMITTED_EVENT_PARAMS = [
       :type,
       { attributes: [
-        :event_type,
-        :occurred_at,
-        :recorded_at,
-        :notes,
-        { details: {} },
-      ],
+          :event_type,
+          :occurred_at,
+          :recorded_at,
+          :notes,
+          { details: {} },
+        ],
         relationships: {} },
     ].freeze
 

@@ -26,25 +26,25 @@ module Api
     PROFILE_ATTRIBUTES = [
       :type,
       { attributes: [
-        :requires_youth_risk_assessment,
-        { assessment_answers: [
-          %i[
-            key
-            date
-            category
-            title
-            comments
-            assessment_question_id
-            nomis_alert_type
-            nomis_alert_type_description
-            nomis_alert_code
-            nomis_alert_description
-            created_at
-            expires_at
-            imported_from_nomis
-          ],
-        ] },
-      ],
+          :requires_youth_risk_assessment,
+          { assessment_answers: [
+            %i[
+              key
+              date
+              category
+              title
+              comments
+              assessment_question_id
+              nomis_alert_type
+              nomis_alert_type_description
+              nomis_alert_code
+              nomis_alert_description
+              created_at
+              expires_at
+              imported_from_nomis
+            ],
+          ] },
+        ],
         relationships: {} },
     ].freeze
 
