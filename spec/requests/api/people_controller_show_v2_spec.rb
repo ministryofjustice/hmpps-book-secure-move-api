@@ -87,7 +87,7 @@ RSpec.describe Api::PeopleController do
         let(:latest_nomis_booking_id) { 123 }
 
         before do
-          oauth2_response = instance_double('OAuth2::Response', body: '{"error":"server_error","error_description":"Internal Server Error"}', parsed: {}, status: '', 'error=': '')
+          oauth2_response = instance_double('OAuth2::Response', body: '{"error":"server_error","error_description":"Internal Server Error"}', parsed: {}, status: '')
           allow(NomisClient::BookingDetails).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
           get "/api/people/#{person.id}#{query_params}", params: params, headers: headers
         end

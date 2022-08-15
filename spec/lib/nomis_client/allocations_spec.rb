@@ -22,7 +22,6 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
     context 'when Nomis returns an error' do
       before do
-        allow(oauth2_response).to receive(:error=)
         allow(token).to receive(:post).and_raise(OAuth2::Error.new(oauth2_response))
       end
 
@@ -66,7 +65,6 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
     context 'when Nomis returns an error' do
       before do
-        allow(oauth2_response).to receive(:error=)
         allow(token).to receive(:put).and_raise(OAuth2::Error.new(oauth2_response))
       end
 
