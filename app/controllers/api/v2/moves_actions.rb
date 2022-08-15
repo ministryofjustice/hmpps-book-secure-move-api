@@ -70,19 +70,19 @@ module Api::V2
     PERMITTED_MOVE_PARAMS = [
       :type,
       { attributes: %i[
-        date
-        time_due
-        status
-        additional_information
-        cancellation_reason
-        cancellation_reason_comment
-        reason_comment
-        move_agreed
-        move_agreed_by
-        move_type
-        date_from
-        date_to
-      ],
+          date
+          time_due
+          status
+          additional_information
+          cancellation_reason
+          cancellation_reason_comment
+          reason_comment
+          move_agreed
+          move_agreed_by
+          move_type
+          date_from
+          date_to
+        ],
         relationships: {} },
     ].freeze
 
