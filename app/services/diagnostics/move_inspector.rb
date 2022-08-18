@@ -265,11 +265,8 @@ module Diagnostics
               questions.sort_by(&:key).each do |question|
                 @output << "question:\t#{question.key}\n"
                 question.framework_responses.each do |response|
-                  version = response.versions.first
-
-                  until version.nil?
-                    diff(version, version.next)
-                    version = version.next
+                  response.versions.each do |version|
+                    diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
                   end
                 end
               end
@@ -360,13 +357,10 @@ module Diagnostics
       @output
     end
 
-    def diff(old_paper_trail, new_paper_trail)
-      old_values = old_paper_trail.attributes
-      new_values = new_paper_trail.attributes
-
-      old_values.each do |key, old_value|
-        @output << "old value:\t#{old_value}\n" if old_value != new_values[key]
-        @output << "new value:\t#{new_values[key]}\n" if old_value != new_values[key]
+    def diff(previous_attrs, next_attrs)
+      previous_attrs.each do |key, old_value|
+        @output << "old value:\t#{old_value}\n" if old_value != next_attrs[key]
+        @output << "new value:\t#{next_attrs[key]}\n" if old_value != next_attrs[key]
       end
     end
 
