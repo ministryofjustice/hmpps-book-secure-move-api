@@ -47,6 +47,7 @@ RSpec.describe Diagnostics::MoveInspector do
     it { is_expected.not_to match(/YOUTH RISK ASSESSMENT/) }
     it { is_expected.not_to match(/id:\s+#{person.id}/) }
     it { is_expected.not_to match(/id:\s+#{profile.id}/) }
+    it { is_expected.not_to match(/PER HISTORY/) }
   end
 
   context 'when include_person_details=true' do
@@ -59,5 +60,6 @@ RSpec.describe Diagnostics::MoveInspector do
     it { is_expected.to match(/YOUTH RISK ASSESSMENT/) }
     it { is_expected.to match(/id:\s+#{person.id}/) }
     it { is_expected.to match(/id:\s+#{profile.id}/) }
+    it { is_expected.to match(/PER CHANGE HISTORY/) }
   end
 end

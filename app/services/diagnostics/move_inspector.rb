@@ -252,6 +252,28 @@ module Diagnostics
             @output << "amended at:\t#{per.amended_at}\n"
             @output << "confirmed at:\t#{per.confirmed_at}\n"
             @output << "handover at:\t#{per.handover_occurred_at}\n"
+
+            @output << <<~ENDPERHISTORY
+
+              PER CHANGE HISTORY
+              ------------------
+
+            ENDPERHISTORY
+
+            per.framework.framework_questions.group_by(&:section).each do |section, questions|
+              @output << "section:\t#{section}\n"
+              questions.sort_by(&:key).each do |question|
+                @output << "question:\t#{question.key}\n"
+                question.framework_responses.each do |response|
+                  version = response.versions.first
+
+                  until version.nil?
+                    diff(version, version.next)
+                    version = version.next
+                  end
+                end
+              end
+            end
           end
         else
           @output << "(no person escort record recorded)\n"
@@ -336,6 +358,16 @@ module Diagnostics
       end
 
       @output
+    end
+
+    def diff(old_paper_trail, new_paper_trail)
+      old_values = old_paper_trail.attributes
+      new_values = new_paper_trail.attributes
+
+      old_values.each do |key, old_value|
+        @output << "old value:\t#{old_value}\n" if old_value != new_values[key]
+        @output << "new value:\t#{new_values[key]}\n" if old_value != new_values[key]
+      end
     end
 
     def capture_events_errors(object)
