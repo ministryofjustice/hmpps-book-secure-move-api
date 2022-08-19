@@ -11,7 +11,7 @@ class DiagnosticsController < ApiController
     include_person_details = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(-(dev|staging|uat)-)/i
 
     if move.present?
-      render plain: Diagnostics::MoveInspector.new(move, include_person_details: include_person_details).generate, status: :ok
+      render plain: Diagnostics::MoveInspector.new(move, include_person_details: include_person_details, include_per_section_history: params[:include_per_section_history]).generate, status: :ok
     else
       render plain: "Move \"#{params[:id]}\" not found", status: :not_found
     end

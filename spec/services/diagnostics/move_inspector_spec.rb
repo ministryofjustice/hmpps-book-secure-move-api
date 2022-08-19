@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Diagnostics::MoveInspector do
-  subject { described_class.new(move, include_person_details: include_person_details).generate }
+  subject { described_class.new(move, include_person_details: include_person_details, include_per_section_history: include_per_section_history).generate }
 
   let(:person) { create(:person) }
   let(:profile) { create(:profile, person: person) }
@@ -10,6 +10,7 @@ RSpec.describe Diagnostics::MoveInspector do
   let(:youth_risk_assessment) { create(:youth_risk_assessment, profile: profile, move: move) }
   let(:journey) { create(:journey, move: move) }
   let(:include_person_details) { false }
+  let(:include_per_section_history) { nil }
   let(:journey_event) { create(:event_journey_start, eventable: journey) }
   let(:move_event) { create(:event_move_start, eventable: move) }
   let(:sch) { create(:location, :sch) }
@@ -47,7 +48,7 @@ RSpec.describe Diagnostics::MoveInspector do
     it { is_expected.not_to match(/YOUTH RISK ASSESSMENT/) }
     it { is_expected.not_to match(/id:\s+#{person.id}/) }
     it { is_expected.not_to match(/id:\s+#{profile.id}/) }
-    it { is_expected.not_to match(/PER HISTORY/) }
+    it { is_expected.not_to match(/PER CHANGE HISTORY/) }
   end
 
   context 'when include_person_details=true' do
@@ -60,6 +61,35 @@ RSpec.describe Diagnostics::MoveInspector do
     it { is_expected.to match(/YOUTH RISK ASSESSMENT/) }
     it { is_expected.to match(/id:\s+#{person.id}/) }
     it { is_expected.to match(/id:\s+#{profile.id}/) }
+    it { is_expected.not_to match(/PER CHANGE HISTORY/) }
+  end
+
+  context 'when include_person_details=true and include_per_section_history=the-per-section' do
+    let(:include_person_details) { true }
+    let(:include_per_section_history) { 'the-per-section' }
+
+    it { is_expected.to match(/PERSON/) }
+    it { is_expected.to match(/PROFILE/) }
+    it { is_expected.to match(/ASSESSMENT ANSWERS/) }
+    it { is_expected.to match(/PERSON ESCORT RECORD/) }
+    it { is_expected.to match(/YOUTH RISK ASSESSMENT/) }
+    it { is_expected.to match(/id:\s+#{person.id}/) }
+    it { is_expected.to match(/id:\s+#{profile.id}/) }
     it { is_expected.to match(/PER CHANGE HISTORY/) }
+    it { is_expected.to match(/the-per-section/) }
+  end
+
+  context 'when include_person_details=true and include_per_section_history=" "' do
+    let(:include_person_details) { true }
+    let(:include_per_section_history) { ' ' }
+
+    it { is_expected.to match(/PERSON/) }
+    it { is_expected.to match(/PROFILE/) }
+    it { is_expected.to match(/ASSESSMENT ANSWERS/) }
+    it { is_expected.to match(/PERSON ESCORT RECORD/) }
+    it { is_expected.to match(/YOUTH RISK ASSESSMENT/) }
+    it { is_expected.to match(/id:\s+#{person.id}/) }
+    it { is_expected.to match(/id:\s+#{profile.id}/) }
+    it { is_expected.not_to match(/PER CHANGE HISTORY/) }
   end
 end

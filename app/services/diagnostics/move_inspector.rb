@@ -2,9 +2,10 @@ module Diagnostics
   class MoveInspector
     attr_reader :move, :include_person_details
 
-    def initialize(move, include_person_details: false)
+    def initialize(move, include_person_details: false, include_per_section_history: nil)
       @move = move
       @include_person_details = include_person_details
+      @include_per_section_history = include_per_section_history
     end
 
     def generate
@@ -253,20 +254,23 @@ module Diagnostics
             @output << "confirmed at:\t#{per.confirmed_at}\n"
             @output << "handover at:\t#{per.handover_occurred_at}\n"
 
-            @output << <<~ENDPERHISTORY
+            if @include_per_section_history.present?
+              @output << <<~ENDPERHISTORY
 
-              PER CHANGE HISTORY
-              ------------------
+                PER CHANGE HISTORY
+                ------------------
 
-            ENDPERHISTORY
+              ENDPERHISTORY
 
-            per.framework.framework_questions.group_by(&:section).each do |section, questions|
-              @output << "section:\t#{section}\n"
-              questions.sort_by(&:key).each do |question|
-                @output << "question:\t#{question.key}\n"
-                question.framework_responses.each do |response|
-                  response.versions.each do |version|
-                    diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
+              @output << "section:\t#{@include_per_section_history}\n"
+
+              per.framework.framework_questions.select { |question| question.section == @include_per_section_history }.each do |questions|
+                questions.sort_by(&:key).each do |question|
+                  @output << "question:\t#{question.key}\n"
+                  question.framework_responses.each do |response|
+                    response.versions.each do |version|
+                      diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
+                    end
                   end
                 end
               end
