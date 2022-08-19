@@ -261,13 +261,15 @@ module Diagnostics
             ENDPERHISTORY
 
             per.framework_responses.group_by(&:section).each do |section, responses|
-              @output << "section:\t#{section}\n"
+              @output << "START OF SECTION:\t#{section}\n"
               responses.each do |response|
-                @output << "question:\t#{response.framework_question.key}\n"
+                @output << "QUESTION:\t#{response.framework_question.key}\n"
                 response.versions.each do |version|
-                  diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
+                  diff(version.reify&.value || {}, version.next&.reify&.value || response.value, version.whodunnit)
                 end
+                @output << '--------------------------------------------------------------------------------'
               end
+              @output << "END OF SECTION:\t#{section}\n"
             end
           end
         else
@@ -355,10 +357,13 @@ module Diagnostics
       @output
     end
 
-    def diff(previous_attrs, next_attrs)
-      previous_attrs.each do |key, old_value|
-        @output << "old value:\t#{old_value}\n" if old_value != next_attrs[key]
-        @output << "new value:\t#{next_attrs[key]}\n" if old_value != next_attrs[key]
+    def diff(old_value, new_value, whodunnit)
+      if old_value != new_value
+        @output << '--------------------------'
+        @output << "old value:\t#{old_value}\n"
+        @output << "new value:\t#{new_value}\n"
+        @output << "whodunnit:\t#{whodunnit}\n"
+        @output << '--------------------------'
       end
     end
 
