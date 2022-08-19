@@ -267,7 +267,7 @@ module Diagnostics
                 response.versions.each do |version|
                   diff(version.reify&.value, version.next&.reify&.value || response.value, version.whodunnit)
                 end
-                @output << '--------------------------------------------------------------------------------'
+                @output << "--------------------------------------------------------------------------------\n"
               end
               @output << "END OF SECTION:\t#{section}\n"
             end
@@ -359,11 +359,11 @@ module Diagnostics
 
     def diff(old_value, new_value, whodunnit)
       if old_value != new_value
-        @output << '--------------------------'
+        @output << "--------------------------\n"
         @output << "old value:\t#{old_value}\n"
         @output << "new value:\t#{new_value}\n"
         @output << "whodunnit:\t#{whodunnit}\n"
-        @output << '--------------------------'
+        @output << "--------------------------\n"
       end
     end
 
