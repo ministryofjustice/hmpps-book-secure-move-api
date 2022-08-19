@@ -260,14 +260,12 @@ module Diagnostics
 
             ENDPERHISTORY
 
-            per.framework.framework_questions.group_by(&:section).each do |section, questions|
+            per.framework_responses.group_by(&:section).each do |section, responses|
               @output << "section:\t#{section}\n"
-              questions.sort_by(&:key).each do |question|
-                @output << "question:\t#{question.key}\n"
-                question.framework_responses.each do |response|
-                  response.versions.each do |version|
-                    diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
-                  end
+              responses.each do |response|
+                @output << "question:\t#{response.framework_question.key}\n"
+                response.versions.each do |version|
+                  diff(version.reify&.attributes || {}, version.next&.reify&.attributes || response.attributes)
                 end
               end
             end
