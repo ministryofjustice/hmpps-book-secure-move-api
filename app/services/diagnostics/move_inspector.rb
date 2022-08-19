@@ -265,7 +265,7 @@ module Diagnostics
               responses.each do |response|
                 @output << "QUESTION:\t#{response.framework_question.key}\n"
                 response.versions.each do |version|
-                  diff(version.reify&.value || {}, version.next&.reify&.value || response.value, version.whodunnit)
+                  diff(version.reify&.value, version.next&.reify&.value || response.value, version.whodunnit)
                 end
                 @output << '--------------------------------------------------------------------------------'
               end
