@@ -103,6 +103,10 @@ RSpec.describe Api::PersonEscortRecordsController do
       it 'returns the correct data' do
         expect(response_json).to include_json(data: data)
       end
+
+      it 'creates a PaperTrail::Version for the response' do
+        expect(FrameworkResponse.last.versions.map(&:event)).to eq(%w[create])
+      end
     end
 
     context 'when prefilling from previous person escort record' do

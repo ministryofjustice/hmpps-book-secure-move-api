@@ -43,18 +43,16 @@ module FrameworkAssessmentable
   def build_responses!
     ApplicationRecord.retriable_transaction do
       self.prefill_source = previous_assessment
-      save!
 
       questions = framework_questions.includes(:dependents).index_by(&:id)
       questions.each_value do |question|
         next unless question.parent_id.nil?
 
-        response = question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses)
-        framework_responses.build(response.slice(:type, :framework_question, :dependents, :value, :prefilled, :value_type, :section, :assessmentable))
+        question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses).save!
       end
 
       self.section_progress = calculate_section_progress(responses: framework_responses)
-      self.class.import([self], validate: false, recursive: true, all_or_none: true, validate_uniqueness: true, on_duplicate_key_update: { conflict_target: [:id], columns: %i[section_progress] })
+      save!
     end
 
     self

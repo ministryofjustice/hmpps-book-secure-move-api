@@ -107,7 +107,7 @@ RSpec.describe FrameworkResponses::BulkUpdater do
       it 'raises an error if transaction fails twice' do
         per = create(:person_escort_record)
         response = create(:string_response, assessmentable: per, value: nil)
-        allow(FrameworkResponse).to receive(:import).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
+        allow(FrameworkResponse).to receive(:clear_dependent_values_and_flags!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
 
         expect { described_class.new(assessment: per, response_values_hash: { response.id => 'Yes' }).call }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
       end
@@ -118,7 +118,7 @@ RSpec.describe FrameworkResponses::BulkUpdater do
 
         # Allow update to fail first time, and second time to complete transaction
         return_values = [:raise, true]
-        allow(FrameworkResponse).to receive(:import).twice do
+        allow(FrameworkResponse).to receive(:clear_dependent_values_and_flags!).twice do
           return_value = return_values.shift
           return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update!(value: 'Yes')
         end

@@ -72,6 +72,11 @@ RSpec.describe Api::FrameworkResponsesController do
         expect(framework_response.reload.responded_by).to eq('TEST_USER')
       end
 
+      it 'creates PaperTrail::Versions' do
+        expect(framework_response.reload.versions.map(&:event)).to match_array(%w[create update])
+        expect(other_framework_response.reload.versions.map(&:event)).to match_array(%w[create update])
+      end
+
       it 'returns the responded at timestamp' do
         expect(framework_response.reload.responded_at).to eq(recorded_timestamp)
       end
@@ -148,6 +153,7 @@ RSpec.describe Api::FrameworkResponsesController do
             multiple_items_response => multiple_items_value,
           }.each do |response, expected_value|
             expect(response.reload.value).to eq(expected_value)
+            expect(response.versions.map(&:event)).to match_array(%w[create update])
           end
         end
       end

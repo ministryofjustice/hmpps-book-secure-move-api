@@ -52,11 +52,11 @@ module FrameworkResponses
     end
 
     def apply_bulk_response_changes(updated_responses)
-      # Bulk update all modified response values
-      FrameworkResponse.import(updated_responses, validate: false, on_duplicate_key_update: { conflict_target: [:id], columns: %i[value_text value_json responded responded_by responded_at] })
-
-      # Update associated flags for all modified response values
-      updated_responses.each(&:rebuild_flags!)
+      updated_responses.each do |response|
+        response.save!
+        # Update associated flags for the modified response values
+        response.rebuild_flags!
+      end
 
       # Clear dependent values for all modified response values
       FrameworkResponse.clear_dependent_values_and_flags!(updated_responses)

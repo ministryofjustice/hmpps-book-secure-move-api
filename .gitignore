@@ -48,3 +48,6 @@ erd.pdf
 # Ignore local data directory for docker-compose
 .data
 spec/wiremock/wiremock-standalone.jar
+
+# Ignore out dir
+out
