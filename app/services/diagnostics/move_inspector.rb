@@ -78,8 +78,8 @@ class Diagnostics::MoveInspector
     if move.generic_events.any?
       capture_events_errors(move) do |event_valid, object_valid, object_errors|
         # NB only show event params if include_person_details==true, as they could contain personal details
-        @output << Terminal::Table.new do |t|
-          t.headings = %w[TIMESTAMP EVENT VALID CREATED\ BY NOTES DETAILS]
+        @output << Terminal::Table.new { |t|
+          t.headings = ['TIMESTAMP', 'EVENT', 'VALID', 'CREATED BY', 'NOTES', 'DETAILS']
           t.rows = move.generic_events.applied_order.map do |event|
             [
               event.occurred_at,
@@ -87,11 +87,11 @@ class Diagnostics::MoveInspector
               event_valid[event.id],
               include_person_details ? event.created_by.to_s : '-',
               include_person_details ? event.notes.to_s.truncate(30) : '-',
-              include_person_details ? event.details : '-'
+              include_person_details ? event.details : '-',
             ]
           end
           t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
-        end.to_s << "\n"
+        }.to_s << "\n"
 
         @output << <<~ENDVALIDATION
 
@@ -123,8 +123,8 @@ class Diagnostics::MoveInspector
     ENDJOURNEYS
 
     @output << if move.journeys.any?
-                 Terminal::Table.new do |t|
-                   t.headings = %w[TIMESTAMP ID STATE BILLABLE SUPPLIER FROM\ -->\ TO]
+                 Terminal::Table.new { |t|
+                   t.headings = ['TIMESTAMP', 'ID', 'STATE', 'BILLABLE', 'SUPPLIER', 'FROM --> TO']
                    t.rows = move.journeys.default_order.map do |journey|
                      [
                        journey.client_timestamp,
@@ -132,11 +132,11 @@ class Diagnostics::MoveInspector
                        journey.state,
                        journey.billable,
                        journey.supplier.name,
-                       "#{journey.from_location} --> #{journey.to_location}"
+                       "#{journey.from_location} --> #{journey.to_location}",
                      ]
                    end
                    t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
-                 end.to_s << "\n"
+                 }.to_s << "\n"
                else
                  "(no journeys recorded)\n"
                end
@@ -153,8 +153,8 @@ class Diagnostics::MoveInspector
         if journey.generic_events.any?
 
           capture_events_errors(journey) do |event_valid, object_valid, object_errors|
-            @output << Terminal::Table.new do |t|
-              t.headings = %w[TIMESTAMP EVENT VALID CREATED\ BY NOTES DETAILS]
+            @output << Terminal::Table.new { |t|
+              t.headings = ['TIMESTAMP', 'EVENT', 'VALID', 'CREATED BY', 'NOTES', 'DETAILS']
               t.rows = journey.generic_events.applied_order.map do |event|
                 [
                   event.occurred_at,
@@ -162,11 +162,11 @@ class Diagnostics::MoveInspector
                   event_valid[event.id],
                   include_person_details ? event.created_by.to_s : '-',
                   include_person_details ? event.notes.to_s.truncate(30) : '-',
-                  include_person_details ? event.details : '-'
+                  include_person_details ? event.details : '-',
                 ]
               end
               t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
-            end.to_s << "\n"
+            }.to_s << "\n"
 
             @output << "\n"
             @output << "  JOURNEY EVENT VALIDATION\n"
@@ -334,18 +334,18 @@ class Diagnostics::MoveInspector
     WEBHOOKS
 
     @output << if notifications.webhooks.any?
-                 Terminal::Table.new do |t|
-                   t.headings = %w[DELIVERED\ AT TYPE ATTEMPTS ENDPOINT]
+                 Terminal::Table.new { |t|
+                   t.headings = ['DELIVERED AT', 'TYPE', 'ATTEMPTS', 'ENDPOINT']
                    t.rows = notifications.webhooks.order(:created_at).map do |notification|
                      [
                        notification.delivered_at,
                        notification.event_type,
                        notification.delivery_attempts,
-                       notification.subscription.callback_url
+                       notification.subscription.callback_url,
                      ]
                    end
                    t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
-                 end.to_s << "\n"
+                 }.to_s << "\n"
                else
                  "(no notifications recorded)\n"
                end
@@ -357,18 +357,18 @@ class Diagnostics::MoveInspector
     EMAILS
 
     @output << if notifications.emails.any?
-                 Terminal::Table.new do |t|
-                   t.headings = %w[DELIVERED\ AT TYPE ATTEMPTS EMAIL]
+                 Terminal::Table.new { |t|
+                   t.headings = ['DELIVERED AT', 'TYPE', 'ATTEMPTS', 'EMAIL']
                    t.rows = notifications.webhooks.order(:created_at).map do |notification|
                      [
                        notification.delivered_at,
                        notification.event_type,
                        notification.delivery_attempts,
-                       notification.subscription.email_address
+                       notification.subscription.email_address,
                      ]
                    end
                    t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
-                 end.to_s << "\n"
+                 }.to_s << "\n"
                else
                  "(no notifications recorded)\n"
                end
