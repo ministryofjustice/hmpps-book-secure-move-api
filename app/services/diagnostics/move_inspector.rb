@@ -267,19 +267,19 @@ class Diagnostics::MoveInspector
 
       # NB: it is better to identify PERs via profile (not via move directly), as there are some older records which are
       # only associated with a profile but not with a move
-      @output << if per_inspector.present?
-                   per_inspector.inspect
-                 else
-                   "(no person escort record recorded)\n"
-                 end
+      if per_inspector.present?
+        @output << per_inspector.inspect
 
-      @output << <<~ENDPEREVENTS
+        @output << <<~ENDPEREVENTS
 
-        PERSON ESCORT RECORD EVENTS
-        ---------------------------
-      ENDPEREVENTS
+          PERSON ESCORT RECORD EVENTS
+          ---------------------------
+        ENDPEREVENTS
 
-      @output << per_inspector.events
+        @output << per_inspector.events
+      else
+        @output << "(no person escort record recorded)\n"
+      end
     end
 
     if include_per_history && per_inspector.present?
