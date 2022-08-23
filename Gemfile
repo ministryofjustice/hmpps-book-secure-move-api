@@ -41,6 +41,7 @@ gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sidekiq'
 gem 'slack-notifier'
+gem 'terminal-table'
 gem 'uk_postcode'
 gem 'validate_url'
 
