@@ -87,7 +87,7 @@ class Diagnostics::MoveInspector
               event_valid[event.id],
               include_person_details ? event.created_by.to_s : '-',
               include_person_details ? event.notes.to_s.truncate(30) : '-',
-              include_person_details ? event.details : '-',
+              include_person_details ? event.details.to_s : '-',
             ]
           end
           t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
@@ -162,7 +162,7 @@ class Diagnostics::MoveInspector
                   event_valid[event.id],
                   include_person_details ? event.created_by.to_s : '-',
                   include_person_details ? event.notes.to_s.truncate(30) : '-',
-                  include_person_details ? event.details : '-',
+                  include_person_details ? event.details.to_s : '-',
                 ]
               end
               t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
