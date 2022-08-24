@@ -32,7 +32,7 @@ class Diagnostics::PerInspector
           event.occurred_at.to_s,
           event.event_type,
           event.notes.to_s.truncate(30),
-          event.details,
+          event.details.to_s,
         ]
       end
       t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
