@@ -59,7 +59,7 @@ private
           [
             version.created_at.to_s,
             version.whodunnit,
-            (version.next&.reify || response).value,
+            (version.next&.reify || response).value&.to_s,
           ]
         end
         t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
