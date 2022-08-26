@@ -1,5 +1,5 @@
 class Diagnostics::PerInspector
-  attr_reader :per
+  attr_reader :per, :include_per_history
 
   def initialize(per)
     @per = per
@@ -42,7 +42,7 @@ class Diagnostics::PerInspector
   def history
     per.framework_responses.group_by(&:section).map { |section, responses|
       "START OF SECTION:\t#{section}\n" <<
-        responses.map { |r| response_history(r) }.join("\n") <<
+        responses.map { |r| response_history(r) }.select(&:present?).join("\n") <<
         "END OF SECTION:\t#{section}\n"
     }.join("\n")
   end

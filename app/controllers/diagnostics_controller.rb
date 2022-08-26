@@ -7,8 +7,7 @@ class DiagnosticsController < ApiController
 
   def move
     move = Move.accessible_by(current_ability).find_by(id: params[:id]) || Move.accessible_by(current_ability).find_by(reference: params[:id])
-    # NB: personal details should only be available on localhost, dev, staging and uat; not on pre-prod or production
-    include_person_details = Rails.env.development? || ENV.fetch('HOSTNAME', 'UNKNOWN') =~ /(-(dev|staging|uat)-)/i
+    include_person_details = doorkeeper_token.acceptable?(:'diagnostics.pii')
     include_per_history = params[:include_per_history] == 'true'
 
     if move.present?

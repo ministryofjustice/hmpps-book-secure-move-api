@@ -195,11 +195,11 @@ class Diagnostics::MoveInspector
       @output << "(no journeys recorded)\n"
     end
 
-    if (include_person_details || include_per_history) && move.profile&.person_escort_record.present?
-      per_inspector = Diagnostics::PerInspector.new(move.profile.person_escort_record)
-    end
-
     if include_person_details
+      if move.profile&.person_escort_record.present?
+        per_inspector = Diagnostics::PerInspector.new(move.profile.person_escort_record)
+      end
+
       @output << <<~PERSONDETAILS
 
         PERSON
@@ -277,22 +277,20 @@ class Diagnostics::MoveInspector
         ENDPEREVENTS
 
         @output << per_inspector.events
+
+        if include_per_history
+          @output << <<~ENDPERHISTORY
+
+            PERSON ESCORT RECORD HISTORY
+            ----------------------------
+          ENDPERHISTORY
+
+          @output << per_inspector.history
+        end
       else
         @output << "(no person escort record recorded)\n"
       end
-    end
 
-    if include_per_history && per_inspector.present?
-      @output << <<~ENDPERHISTORY
-
-        PERSON ESCORT RECORD HISTORY
-        ----------------------------
-      ENDPERHISTORY
-
-      @output << per_inspector.history
-    end
-
-    if include_person_details
       @output << <<~ENDPER
 
         YOUTH RISK ASSESSMENT
