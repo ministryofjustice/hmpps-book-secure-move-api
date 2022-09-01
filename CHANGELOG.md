@@ -1,5 +1,54 @@
 # Changelog
 
+## [v3.26.11](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.11) (2022-09-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.10...v3.26.11)
+
+**Merged pull requests:**
+
+- P4-3876 - Fix issue with move finder and single active journey lockout moves [\#1948](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1948) ([Thource](https://github.com/Thource))
+- P4-3888 - lock diagnostic PII behind a scope [\#1944](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1944) ([Thource](https://github.com/Thource))
+- P4-3888 - add .to\_s to event.details [\#1942](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1942) ([Thource](https://github.com/Thource))
+- P4-3888 - add .to\_s to response values, terminal-table doesn't display hashes [\#1941](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1941) ([Thource](https://github.com/Thource))
+- Fix error thrown by move diagnostics when no PER attached to move [\#1939](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1939) ([Thource](https://github.com/Thource))
+- P4-3888 - More changes to add PER history [\#1938](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1938) ([Thource](https://github.com/Thource))
+- P4-3888 - Swap from bulk updates so that PaperTrail::Versions are made [\#1934](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1934) ([Thource](https://github.com/Thource))
+- P4-3888 adding missing new lines to some of the diagnotics per history output. [\#1930](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1930) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- P4-3888 changing to look at the response value and not the attributes too much noise with the attributes. [\#1929](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1929) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- P4-3888 correcting logic around framework responses for the PER diagnostics. Was looking across all PERs instead of the one in question. [\#1928](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1928) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Bump git from 1.11.0 to 1.12.0 [\#1926](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1926) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk from 4.6.0 to 4.7.0 [\#1925](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1925) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-ruby from 5.4.1 to 5.4.2 [\#1924](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1924) ([dependabot[bot]](https://github.com/apps/dependabot))
+- P4-3888 intitial cut at including per change history available via diagnostics [\#1923](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1923) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+- Bump pry-byebug from 3.10.0 to 3.10.1 [\#1922](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1922) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump paper\_trail from 12.3.0 to 13.0.0 [\#1921](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1921) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pry-byebug from 3.9.0 to 3.10.0 [\#1920](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1920) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rails-erd from 1.7.1 to 1.7.2 [\#1919](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1919) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faraday from 1.10.0 to 2.5.2 [\#1918](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1918) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pg from 1.4.2 to 1.4.3 [\#1917](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1917) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sidekiq from 6.5.1 to 6.5.4 [\#1915](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1915) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-sidekiq from 5.3.1 to 5.4.1 [\#1914](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1914) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-rails from 5.3.1 to 5.4.1 [\#1912](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1912) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faker from 2.21.0 to 2.22.0 [\#1910](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1910) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bootsnap from 1.12.0 to 1.13.0 [\#1909](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1909) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pg from 1.4.1 to 1.4.2 [\#1908](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1908) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-ruby from 5.3.1 to 5.4.1 [\#1907](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1907) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nokogiri from 1.13.6 to 1.13.8 [\#1906](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1906) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aws-sdk-athena from 1.55.0 to 1.56.0 [\#1904](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1904) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk from 4.5.0 to 4.6.0 [\#1903](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1903) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump climate\_control from 1.1.1 to 1.2.0 [\#1902](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1902) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump oauth2 from 1.4.9 to 2.0.6 [\#1900](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1900) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.26.10](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.10) (2022-07-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.9...v3.26.10)
+
+**Merged pull requests:**
+
+- Catch exception when invalid data is passed to bulk framework response update [\#1905](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1905) ([Thource](https://github.com/Thource))
+- Bump aws-sdk-athena from 1.54.0 to 1.55.0 [\#1901](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1901) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.26.9 [\#1898](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1898) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
+
 ## [v3.26.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.9) (2022-07-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.8...v3.26.9)
