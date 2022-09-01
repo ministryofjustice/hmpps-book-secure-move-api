@@ -144,7 +144,7 @@ module Moves
       Journey
         .not_rejected_or_cancelled
         .where('move_id = moves.id')
-        .where.not('date = moves.date')
+        .where('date != moves.date OR to_location_id != moves.to_location_id')
         .arel.exists
     end
 

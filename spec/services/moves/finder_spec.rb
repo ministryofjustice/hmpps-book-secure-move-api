@@ -61,6 +61,14 @@ RSpec.describe Moves::Finder do
 
         it { is_expected.to contain_exactly(move) }
       end
+
+      context 'with a single active journey, when journey.to_location is different from move.to_location' do
+        let(:journey) { create(:journey, move: move, date: move.date) }
+        let(:filter_params) { { location_id: [journey.to_location_id] } }
+
+        it { expect(move.to_location).not_to eq(journey.to_location) }
+        it { is_expected.to contain_exactly(move) }
+      end
     end
 
     describe 'by from_location_id' do
