@@ -157,7 +157,7 @@ GEM
     flipper-active_record (0.25.2)
       activerecord (>= 4.2, < 8)
       flipper (~> 0.25.2)
-    geocoder (1.8.0)
+    geocoder (1.8.1)
     git (1.12.0)
       addressable (~> 2.8)
       rchardet (~> 1.8)
