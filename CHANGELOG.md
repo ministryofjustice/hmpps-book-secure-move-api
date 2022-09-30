@@ -1,5 +1,29 @@
 # Changelog
 
+## [v3.26.12](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.12) (2022-09-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.11...v3.26.12)
+
+**Merged pull requests:**
+
+- Fix frontend error with occurredAt.split [\#1964](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1964) ([Thource](https://github.com/Thource))
+- Bump geocoder from 1.8.0 to 1.8.1 [\#1963](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1963) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 5.0.4 to 5.0.5 [\#1962](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1962) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Change dependabot auto-merge to only merge patches [\#1958](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1958) ([Thource](https://github.com/Thource))
+- Revert "Bump doorkeeper from 5.5.4 to 5.6.0" [\#1957](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1957) ([Thource](https://github.com/Thource))
+- Add Dependabot auto-merge from frontend [\#1956](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1956) ([Thource](https://github.com/Thource))
+- Bump redis from 4.7.1 to 5.0.4 [\#1955](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1955) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rswag-api from 2.5.1 to 2.6.0 [\#1954](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1954) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump doorkeeper from 5.5.4 to 5.6.0 [\#1953](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1953) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump faker from 2.22.0 to 2.23.0 [\#1951](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1951) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump oauth2 from 2.0.6 to 2.0.8 [\#1950](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1950) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.26.11 [\#1949](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1949) ([Thource](https://github.com/Thource))
+- Bump sidekiq from 6.5.4 to 6.5.6 [\#1946](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1946) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump flipper-active\_record from 0.25.0 to 0.25.2 [\#1943](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1943) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump puma from 5.6.4 to 5.6.5 [\#1940](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1940) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-rails from 5.4.1 to 5.4.2 [\#1932](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1932) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sentry-sidekiq from 5.4.1 to 5.4.2 [\#1931](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1931) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.26.11](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.11) (2022-09-01)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.10...v3.26.11)
