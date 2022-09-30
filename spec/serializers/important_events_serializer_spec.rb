@@ -18,6 +18,10 @@ RSpec.describe ImportantEventsSerializer do
     expect(result_data[:id]).to eql event.id
   end
 
+  it 'contains an occurred_at attribute' do
+    expect(attributes[:occurred_at]).to eql event.occurred_at.iso8601
+  end
+
   it 'contains an event_type attribute' do
     expect(attributes[:event_type]).to eql 'PersonMoveAssault'
   end
