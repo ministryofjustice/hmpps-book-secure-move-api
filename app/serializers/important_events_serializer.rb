@@ -5,5 +5,5 @@ class ImportantEventsSerializer
 
   set_type :events
 
-  attributes :event_type, :classification
+  attributes :occurred_at, :event_type, :classification
 end
