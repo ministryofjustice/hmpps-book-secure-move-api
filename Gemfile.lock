@@ -47,7 +47,7 @@ GEM
     activerecord (6.1.4.7)
       activemodel (= 6.1.4.7)
       activesupport (= 6.1.4.7)
-    activerecord-import (1.4.0)
+    activerecord-import (1.4.1)
       activerecord (>= 4.2)
     activestorage (6.1.4.7)
       actionpack (= 6.1.4.7)
@@ -434,7 +434,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.0)
+    zeitwerk (2.6.1)
 
 PLATFORMS
   ruby
