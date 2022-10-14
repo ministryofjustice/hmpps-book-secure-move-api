@@ -38,7 +38,22 @@ FactoryBot.define do
           date: allocation.date,
           status: 'requested',
           allocation: allocation,
-        )
+          )
+      end
+    end
+
+    trait :with_5_moves do
+      moves_count { 5 }
+      after(:create) do |allocation|
+        create_list(
+          :move,
+          allocation.moves_count,
+          from_location: allocation.from_location,
+          to_location: allocation.to_location,
+          date: allocation.date,
+          status: 'requested',
+          allocation: allocation,
+          )
       end
     end
   end

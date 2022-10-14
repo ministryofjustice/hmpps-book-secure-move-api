@@ -14,9 +14,11 @@ module Api
       render_allocation(creator.allocation, 201)
     end
 
-    def show
-      allocation = Allocation.find(params[:id])
+    def update
+      update_and_render
+    end
 
+    def show
       render_allocation(allocation, :ok)
     end
 
@@ -24,7 +26,7 @@ module Api
       index_and_render
     end
 
-  private
+    private
 
     PERMITTED_FILTER_PARAMS = %i[date_from date_to locations from_locations to_locations status].freeze
     PERMITTED_SORT_PARAMS = %i[by direction].freeze
@@ -34,6 +36,10 @@ module Api
       :type,
       { attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
         relationships: {} },
+    ].freeze
+
+    PERMITTED_UPDATE_PARAMS = [
+      { attributes: %i[date] },
     ].freeze
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
@@ -116,6 +122,35 @@ module Api
       else
         render json: { error: allocations_params.errors }, status: :bad_request
       end
+    end
+
+    def allocation
+      @allocation ||= Allocation
+                        .accessible_by(current_ability)
+                        .includes(active_record_relationships)
+                        .find(params[:id])
+    end
+
+    def update_and_render
+      # COPIED FROM ELSEWHERE
+      #
+      # allocation.assign_attributes(update_params)
+      # action_name = move.status_changed? ? 'update_status' : 'update'
+      # move_date_changed = move.date_changed?
+      # move.save!
+      #
+      # create_automatic_event!(eventable: move, event_class: GenericEvent::MoveDateChanged, details: { date: move.date.iso8601 }) if move_date_changed
+      #
+      # move.allocation&.refresh_status_and_moves_count!
+      #
+      # Allocations::CreateInNomis.call(move) if create_in_nomis?
+      # Notifier.prepare_notifications(topic: move, action_name: action_name)
+      #
+      # render_move(move, :ok)
+    end
+
+    def update_params
+      @move_params ||= params.require(:data).permit(PERMITTED_UPDATE_PARAMS).to_h
     end
   end
 end
