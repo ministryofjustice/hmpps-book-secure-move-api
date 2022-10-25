@@ -14,38 +14,39 @@ RSpec.describe Api::AllocationsController do
 
   let(:detail_404) { "Couldn't find Move with 'id'=UUID-not-found" }
 
-  describe 'PATCH /allocations' do
-    let(:move_params) do
-      # expect(result.from_location).to eq(allocation.from_location)
-      # expect(result.to_location).to eq(allocation.to_location)
-      # expect(result.moves_count).to eq(allocation.moves_count)
-      # expect(result.complete_in_full).to eq(allocation.complete_in_full)
-      # expect(result.other_criteria).to eq(allocation.other_criteria)
-      # expect(result.status).to eq(allocation.status)
-      # expect(result.requested_by).to eq(allocation.requested_by)
-      # expect(result.estate).to eq(allocation.estate)
-      # expect(result.sentence_length_comment).to eq(allocation.sentence_length_comment)
-      # expect(result.estate_comment).to eq(allocation.estate_comment)
+  describe 'PATCH /allocations/:allocation_id' do
+    let(:supplier) { create(:supplier) }
+    let(:update_params) do
       {
         type: 'allocations',
-        attributes: {
-          status: 'requested',
-          additional_information: 'some more info',
-          cancellation_reason: nil, # NB: cancellation_reason must only be specified if status==cancelled
-          cancellation_reason_comment: nil,
-          move_type: 'court_appearance',
-          move_agreed: true,
-          move_agreed_by: 'Fred Bloggs',
-          date_from: date_from,
-          date_to: date_to,
+        attributes: allocation_attributes,
+        relationships: {
+          from_location: { data: { type: 'locations', id: from_location.id } },
+          to_location: { data: { type: 'locations', id: to_location.id } },
         },
       }
     end
-
     let(:schema) { load_yaml_schema('patch_allocation_responses.yaml') }
     let!(:allocation) { create :allocation, :with_5_moves, date: date1 }
     let(:date1) { Date.yesterday }
     let(:date2) { Date.tomorrow }
+    let!(:from_location) { create :location, suppliers: [supplier] }
+    let!(:to_location) { create :location }
+    let(:allocation_attributes) do
+      {
+        date: date2,
+        moves_count: 2,
+        estate: :other_estate,
+        estate_comment: 'Another estate description',
+        prisoner_category: :b,
+        sentence_length: :other,
+        sentence_length_comment: '30 years',
+        other_criteria: 'curly hair',
+        requested_by: 'Iama Requestor',
+        complete_in_full: true,
+        complex_cases: [],
+      }
+    end
 
     before do
       next if RSpec.current_example.metadata[:skip_before]
@@ -87,7 +88,7 @@ RSpec.describe Api::AllocationsController do
   end
 
   def do_patch
-    patch "/api/v1/allocations/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+    patch "/api/v1/allocations/#{allocation.id}", params: { data: update_params }, headers: headers, as: :json
   end
 
   def clean_active_storage_urls(text)

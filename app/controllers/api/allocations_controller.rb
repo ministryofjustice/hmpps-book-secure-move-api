@@ -2,6 +2,8 @@
 
 module Api
   class AllocationsController < ApiController
+    include Eventable
+
     after_action :send_move_notifications, only: :create
 
     def index
@@ -126,31 +128,30 @@ module Api
 
     def allocation
       @allocation ||= Allocation
-                        .accessible_by(current_ability)
                         .includes(active_record_relationships)
                         .find(params[:id])
     end
 
     def update_and_render
-      # COPIED FROM ELSEWHERE
-      #
-      # allocation.assign_attributes(update_params)
-      # action_name = move.status_changed? ? 'update_status' : 'update'
-      # move_date_changed = move.date_changed?
-      # move.save!
-      #
-      # create_automatic_event!(eventable: move, event_class: GenericEvent::MoveDateChanged, details: { date: move.date.iso8601 }) if move_date_changed
-      #
-      # move.allocation&.refresh_status_and_moves_count!
-      #
-      # Allocations::CreateInNomis.call(move) if create_in_nomis?
-      # Notifier.prepare_notifications(topic: move, action_name: action_name)
-      #
-      # render_move(move, :ok)
+      allocation.assign_attributes(update_params)
+      allocation.save!
+
+      allocation.moves.each do |move|
+        move.date = allocation.date
+        move.save!
+
+        create_automatic_event!(eventable: move, event_class: GenericEvent::MoveDateChanged, details: { date: move.date.iso8601 })
+
+        Notifier.prepare_notifications(topic: move, action_name: 'update')
+
+        Allocations::CreateInNomis.call(move) if move.nomis_event_id?
+      end
+
+      render_allocation(allocation, :ok)
     end
 
     def update_params
-      @move_params ||= params.require(:data).permit(PERMITTED_UPDATE_PARAMS).to_h
+      @update_params ||= params.require(:data).permit(PERMITTED_UPDATE_PARAMS).to_h
     end
   end
 end
