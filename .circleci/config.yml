@@ -220,8 +220,8 @@ references:
       name: Load mappings into wiremock
       command: |
         echo "Loading wiremock mappings..."
-        find spec/wiremock/prison-api/mappings/*.json -exec curl -vv  --request POST --url http://localhost:8888/__admin/mappings/ --header 'content-type: application/json' --data-binary "@{}" \;
-        curl -vv http://localhost:8888/__admin/mappings/ 
+        find spec/wiremock/prison-api/mappings/*.json -exec curl -vv  --request POST --url http://localhost:8888/__admin/mappings --header 'content-type: application/json' --data-binary "@{}" \;
+        curl -vv http://localhost:8888/__admin/mappings 
         echo "Done"
   _notify_sentry_release: &notify_sentry_release
     run:
