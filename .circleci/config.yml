@@ -252,7 +252,7 @@ references:
 executors:
   basic-executor:
     docker:
-      - image: cimg/base:2020.06
+      - image: cimg/base:2022.11
 
   cloud-platform-executor:
     docker:
