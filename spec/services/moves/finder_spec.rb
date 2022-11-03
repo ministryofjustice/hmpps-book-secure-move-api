@@ -571,8 +571,8 @@ RSpec.describe Moves::Finder do
         create :move, to_location: location3
       end
 
-      it 'ordered by location (case-sensitive)' do
-        expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2]) # NB: case-sensitive order
+      it 'ordered by location' do
+        expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
