@@ -221,6 +221,7 @@ references:
       command: |
         echo "Loading wiremock mappings..."
         find spec/wiremock/prison-api/mappings/*.json -exec curl --request POST --url http://localhost:8888/__admin/mappings/ --header 'content-type: application/json' --data-binary "@{}" \;
+        curl http://localhost:8888/__admin/mappings/
   _notify_sentry_release: &notify_sentry_release
     run:
       name: Create release and notify Sentry of deploy
