@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::ProfilesSerializer do
   subject(:serializer) { described_class.new(profile, options) }
 
-  let(:profile) { create(:profile) }
+  let(:profile) { create(:profile, requires_youth_risk_assessment: false) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:options) { {} }
 
@@ -14,7 +14,7 @@ RSpec.describe V2::ProfilesSerializer do
       data: {
         id: profile.id,
         type: 'profiles',
-        attributes: { assessment_answers: [] },
+        attributes: { assessment_answers: [], requires_youth_risk_assessment: false },
         relationships: {
           person: {
             data: { id: profile.person.id, type: 'people' },
