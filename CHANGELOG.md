@@ -1,5 +1,23 @@
 # Changelog
 
+## [v3.27.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.0) (2022-11-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.14...v3.27.0)
+
+**Merged pull requests:**
+
+- \[P4-3998\] Include youth\_risk\_assessment in ProfilesSerializer [\#1987](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1987) ([Thource](https://github.com/Thource))
+- \[P4-3998\] Include requires\_youth\_risk\_assessment in ProfilesSerializer [\#1984](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1984) ([Thource](https://github.com/Thource))
+
+## [v3.26.14](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.14) (2022-11-03)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.13...v3.26.14)
+
+**Merged pull requests:**
+
+- \[P4-3948\] Change proposed journey dates when move date is changed [\#1982](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1982) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.26.13 [\#1980](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1980) ([Thource](https://github.com/Thource))
+
 ## [v3.26.13](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.26.13) (2022-10-26)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.12...v3.26.13)
