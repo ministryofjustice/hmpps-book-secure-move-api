@@ -12,4 +12,5 @@ class V2::ProfilesSerializer
   belongs_to :person, serializer: ::V2::PersonSerializer
 
   has_one_if_included :person_escort_record, serializer: PersonEscortRecordsSerializer
+  has_one_if_included :youth_risk_assessment, serializer: YouthRiskAssessmentsSerializer
 end

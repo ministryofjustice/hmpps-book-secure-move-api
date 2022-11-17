@@ -85,4 +85,22 @@ RSpec.describe V2::ProfilesSerializer do
       })
     end
   end
+
+  context 'with included youth risk assessment' do
+    let(:options) { { params: { included: %i[youth_risk_assessment] } } }
+    let(:profile) { create(:profile) }
+
+    it 'contains a nil `youth_risk_assessment` relationship if no youth risk assessment present' do
+      expect(result[:data][:relationships][:youth_risk_assessment][:data]).to be_nil
+    end
+
+    it 'contains a`youth_risk_assessment` relationship with youth risk assessment' do
+      youth_risk_assessment = create(:youth_risk_assessment, profile: profile)
+
+      expect(result[:data][:relationships][:youth_risk_assessment][:data]).to eq({
+        id: youth_risk_assessment.id,
+        type: 'youth_risk_assessments',
+      })
+    end
+  end
 end
