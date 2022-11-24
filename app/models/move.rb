@@ -150,8 +150,9 @@ class Move < VersionedModel
   end
 
   def approve(date:)
+    return unless state_machine.approve
+
     assign_attributes(date: date) if date.present?
-    state_machine.approve
   end
 
   def approve!(args)
