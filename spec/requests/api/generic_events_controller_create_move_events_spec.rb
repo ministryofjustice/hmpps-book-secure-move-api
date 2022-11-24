@@ -75,4 +75,77 @@ RSpec.describe Api::GenericEventsController do
       }.to change(GenericEvent::MoveNotifyPremisesOfDropOffEta, :count).by(1)
     end
   end
+
+  context 'when a move has been approved' do
+    subject(:move) { create(:move, :proposed) }
+
+    let(:original_date) { Time.zone.today }
+    let(:headers) do
+      {
+        'CONTENT_TYPE': ApiController::CONTENT_TYPE,
+        'Accept': 'application/vnd.api+json; version=2',
+        'Authorization' => 'Bearer spoofed-token',
+      }
+    end
+
+    before do
+      post '/api/events',
+           headers: headers,
+           params: { data: {
+             type: 'events',
+             attributes: {
+               event_type: 'MoveApprove',
+               occurred_at: '2019-06-16T10:20:30+01:00',
+               recorded_at: '2019-06-16T10:20:30+01:00',
+               details: {
+                 date: original_date.to_s,
+               },
+             },
+             relationships: {
+               eventable: { data: { type: 'moves', id: move.id } },
+             },
+           } },
+           as: :json
+    end
+
+    it 'is in the requested state' do
+      move.reload
+      expect(move.status).to eq('requested')
+    end
+
+    context "when the move's date has been changed" do
+      before do
+        move.date = original_date + 1
+        move.save!
+      end
+
+      context 'when a new event is added' do
+        before do
+          post '/api/events',
+               headers: headers,
+               params: { data: {
+                 type: 'events',
+                 attributes: {
+                   event_type: 'MoveCollectionByEscort',
+                   occurred_at: '2019-06-16T10:20:30+01:00',
+                   recorded_at: '2019-06-16T10:20:30+01:00',
+                   details: {
+                     vehicle_type: '2_cell',
+                   },
+                 },
+                 relationships: {
+                   eventable: { data: { type: 'moves', id: move.id } },
+                 },
+               } },
+               as: :json
+        end
+
+        it 'does not revert to the original date' do
+          move.reload
+          expect(move.generic_events.count).to eq(2)
+          expect(move.date).to eq(original_date + 1)
+        end
+      end
+    end
+  end
 end
