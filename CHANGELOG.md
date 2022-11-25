@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.1)
+
+**Merged pull requests:**
+
+- \[P4-3862\] Fix move date being reverted to original date [\#1990](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1990) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.27.0 [\#1988](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1988) ([Thource](https://github.com/Thource))
+
 ## [v3.27.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.0) (2022-11-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.26.14...v3.27.0)
