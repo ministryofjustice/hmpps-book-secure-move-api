@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   namespace :api do
     filter :versioned_path
 
-    resources :events, only: %i[create], controller: 'generic_events'
+    resources :events, only: %i[create show], controller: 'generic_events'
 
     resources :allocations, only: %i[create index show] do
       collection { post 'filtered' }

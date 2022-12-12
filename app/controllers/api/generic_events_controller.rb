@@ -21,10 +21,24 @@ module Api
         Notifier.prepare_notifications(topic: event, action_name: 'create_event')
       end
 
-      render_json event, serializer: event.class.serializer, status: :created
+      render_event(event, :created)
+    end
+
+    def show
+      render_event(event, :ok)
     end
 
   private
+
+    def render_event(event, status)
+      render_json event, serializer: event.class.serializer, status: status
+    end
+
+    def event
+      @event ||= GenericEvent
+                  .includes(active_record_relationships)
+                  .find(params[:id])
+    end
 
     def event_attributes
       {}.tap do |attributes|
