@@ -799,3 +799,57 @@
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/post_event_responses.yaml#/422"
+  "/events/{event_id}":
+    get:
+      summary: Returns the details of an event
+      tags:
+        - Events
+      consumes:
+        - application/vnd.api+json
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - name: event_id
+          in: path
+          description: The ID of the event
+          schema:
+            type: string
+          format: uuid
+          example: 00525ecb-7316-492a-aae2-f69334b2a155
+          required: true
+      responses:
+        "200":
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/200"
+        "400":
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/400"
+        "401":
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/401"
+        "404":
+          description: resource not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/404"
+        "415":
+          description: invalid media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/415"
+        "422":
+          description: unprocessable entity
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_event_responses.yaml#/422"
