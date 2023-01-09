@@ -7,7 +7,7 @@ ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat
 RUN gem update bundler --no-document
 
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
@@ -41,7 +41,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info gcompat
 
 # Fix incompatibility with slim tzdata from 2020b onwards
 RUN wget https://data.iana.org/time-zones/tzdb/tzdata.zi -O /usr/share/zoneinfo/tzdata.zi && \
