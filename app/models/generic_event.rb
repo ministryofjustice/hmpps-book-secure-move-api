@@ -52,6 +52,7 @@ class GenericEvent < ApplicationRecord
     MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
+    MoveOvernightLodge
     MoveProposed
     MoveRedirect
     MoveReject
