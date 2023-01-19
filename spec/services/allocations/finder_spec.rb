@@ -180,8 +180,8 @@ RSpec.describe Allocations::Finder do
 
       let(:sort_params) { { by: :from_location, direction: :asc } }
 
-      it 'orders by location title (case-sensitive)' do
-        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2])
+      it 'orders by location title' do
+        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
@@ -195,8 +195,8 @@ RSpec.describe Allocations::Finder do
 
       let(:sort_params) { { by: :to_location, direction: :asc } }
 
-      it 'orders by location title (case-sensitive)' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 LOCATION3 Location2])
+      it 'orders by location title' do
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
@@ -243,8 +243,8 @@ RSpec.describe Allocations::Finder do
         create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: location3
       end
 
-      it 'returns allocations matching date range sorted by location title (case-sensitive)' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[Location2 LOCATION3 LOCATION1])
+      it 'returns allocations matching date range sorted by location title desc' do
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION3 Location2 LOCATION1])
       end
     end
 

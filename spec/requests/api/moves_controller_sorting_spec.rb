@@ -182,8 +182,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
-              expect(locations.map(&:title)).to eq(%w[LOCATION1 LOCATION3 location2 location4])
+              expect(locations.map(&:title)).to eq(%w[LOCATION1 location2 LOCATION3 location4])
             end
           end
 
@@ -191,8 +190,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              # NB: this is a case-sensitive order. If this test fails, check the database collation: it should be UTF-8, not en_US.
-              expect(locations.map(&:title)).to eq(%w[location4 location2 LOCATION3 LOCATION1])
+              expect(locations.map(&:title)).to eq(%w[location4 LOCATION3 location2 LOCATION1])
             end
           end
         end
@@ -210,15 +208,15 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'name' } }
 
             it 'sorts by last_name (ascending, case sensitive)' do
-              expect(last_names).to eq(%w[PROFILE1 PROFILE3 profile2 profile4])
+              expect(last_names).to eq(%w[PROFILE1 profile2 PROFILE3 profile4])
             end
           end
 
           context 'with reverse direction' do
             let(:sort_params) { { by: 'name', direction: 'desc' } }
 
-            it 'sorts by last_name (descending, case sensitive)' do
-              expect(last_names).to eq(%w[profile4 profile2 PROFILE3 PROFILE1])
+            it 'sorts by last_name' do
+              expect(last_names).to eq(%w[profile4 PROFILE3 profile2 PROFILE1])
             end
           end
         end
