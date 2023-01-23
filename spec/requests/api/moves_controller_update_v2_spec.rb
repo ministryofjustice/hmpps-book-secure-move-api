@@ -31,6 +31,7 @@ RSpec.describe Api::MovesController do
     let(:profile) { create(:profile) }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
+    let(:recall_date) { Date.new(2023, 1, 2) }
 
     let(:move_params) do
       {
@@ -44,6 +45,7 @@ RSpec.describe Api::MovesController do
           move_agreed_by: 'Fred Bloggs',
           date_from: date_from,
           date_to: date_to,
+          recall_date: recall_date,
         },
       }
     end
@@ -58,6 +60,7 @@ RSpec.describe Api::MovesController do
         'date_to' => date_to,
         'move_agreed' => true,
         'move_agreed_by' => 'Fred Bloggs',
+        'recall_date' => recall_date,
         'status' => 'requested',
       }
     end

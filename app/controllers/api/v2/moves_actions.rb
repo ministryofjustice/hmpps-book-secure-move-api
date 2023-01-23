@@ -82,6 +82,7 @@ module Api::V2
           move_type
           date_from
           date_to
+          recall_date
         ],
         relationships: {} },
     ].freeze

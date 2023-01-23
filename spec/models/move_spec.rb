@@ -175,6 +175,18 @@ RSpec.describe Move do
     expect(build(:move, date_from: '2020-03-04', date_to: '2020-03-04')).to be_valid
   end
 
+  it 'allows a valid date for recall_date' do
+    expect(build(:move, recall_date: '2023-01-05')).to be_valid
+  end
+
+  it 'allows a nil date for recall_date' do
+    expect(build(:move, recall_date: nil)).to be_valid
+  end
+
+  it 'does not allow an invalid date for recall_date' do
+    expect(build(:move, recall_date: 'not a date')).not_to be_valid
+  end
+
   context 'when the from_location and to_location are the same' do
     subject(:move) { build(:move, to_location: location, from_location: location) }
 

@@ -11,6 +11,7 @@ FactoryBot.define do
     additional_information { 'some more info about the move that the supplier might need to know' }
     sequence(:created_at) { |n| Time.zone.now - n.minutes }
     sequence(:date_from) { |n| Time.zone.today - n.days }
+    recall_date { Time.zone.now - 1.day }
 
     association(:supplier)
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_08_135622) do
+ActiveRecord::Schema.define(version: 2023_01_19_131112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -372,6 +372,7 @@ ActiveRecord::Schema.define(version: 2022_06_08_135622) do
     t.uuid "original_move_id"
     t.uuid "supplier_id"
     t.boolean "is_lockout", default: false
+    t.date "recall_date"
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
