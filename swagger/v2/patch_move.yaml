@@ -108,6 +108,13 @@ Move:
           description:
             In case 'other' is chosen as cancellation_reason, further details
             can be specified
+        recall_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: "null"
+          example: "2023-01-02"
+          description: Date of return to Police custody (prison recall moves only)
     relationships:
       type: object
       properties:

@@ -32,6 +32,7 @@ RSpec.describe Api::MovesController do
         status: status,
         additional_information: 'some more info',
         move_type: 'court_appearance',
+        recall_date: '2023-01-02',
       }
     end
 
@@ -171,6 +172,12 @@ RSpec.describe Api::MovesController do
       do_post
 
       expect(response_json.dig('data', 'attributes', 'additional_information')).to match 'some more info'
+    end
+
+    it 'sets the recall_date' do
+      do_post
+
+      expect(response_json.dig('data', 'attributes', 'recall_date')).to match '2023-01-02'
     end
 
     context 'when the supplier has a webhook subscription' do

@@ -22,6 +22,7 @@ class Move < VersionedModel
     date_to
     allocation_id
     rejection_reason
+    recall_date
   ].freeze
 
   include StateMachineable
@@ -117,6 +118,8 @@ class Move < VersionedModel
 
   validate :date_to_after_date_from
   validate :validate_prisoner_category
+
+  validates :recall_date, date: true
 
   # Commented out for now, will return as part of P4-3938
   #

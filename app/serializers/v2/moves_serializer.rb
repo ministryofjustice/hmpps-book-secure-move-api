@@ -20,7 +20,8 @@ module V2
                 :status,
                 :time_due,
                 :updated_at,
-                :is_lockout
+                :is_lockout,
+                :recall_date
 
     set_type :moves
 

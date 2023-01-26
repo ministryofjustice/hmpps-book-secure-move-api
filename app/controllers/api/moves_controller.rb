@@ -73,6 +73,7 @@ module Api
       profile_id
       person_id
       reference
+      recall_date
     ].freeze
 
     PERMITTED_FILTERED_PARAMS = [
