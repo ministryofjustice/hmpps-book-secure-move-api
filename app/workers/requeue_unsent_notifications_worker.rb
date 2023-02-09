@@ -14,8 +14,13 @@ class RequeueUnsentNotificationsWorker
       updated_at: 1.day.ago..1.hour.ago,
       notification_type_id: [NotificationType::EMAIL, NotificationType::WEBHOOK],
     ).each do |notification|
-      NOTIFY_JOBS[notification.notification_type_id]
-        .perform_later(notification_id: notification.id, queue_as: :notifications_high)
+      notify_job = NOTIFY_JOBS[notification.notification_type_id]
+      notify_job.perform_later(notification_id: notification.id, queue_as: :notifications_high)
+
+      Rails.logger.info(
+        "[RequeueUnsentNotificationsWorker] #{notify_job} recreated for " \
+        "Notification ID #{notification.id}",
+      )
     end
   end
 end
