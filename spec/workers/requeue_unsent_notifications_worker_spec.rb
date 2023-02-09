@@ -32,6 +32,15 @@ RSpec.describe RequeueUnsentNotificationsWorker, type: :worker do
         .to have_received(:perform_later)
         .with(notification_id: notification.id, queue_as: :notifications_high)
     end
+
+    it 'logs that the job was recreated' do
+      worker.perform
+
+      expect(logger).to have_received(:info).with(
+        "[RequeueUnsentNotificationsWorker] #{notification_job} recreated for " \
+        "Notification ID #{notification.id}",
+      )
+    end
   end
 
   shared_examples 'it does not get requeued' do
