@@ -9,13 +9,17 @@ class PrepareBaseNotificationsJob < ApplicationJob
 
     subscriptions(move, only_supplier_id: only_supplier_id).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
-        notification = build_notification(subscription, NotificationType::WEBHOOK, topic, action_name)
-        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        notifications = build_notifications(subscription, NotificationType::WEBHOOK, topic, action_name)
+        notifications.each do |notification|
+          NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        end
       end
 
       if send_emails && subscription.email_address.present? && should_email?(move)
-        notification = build_notification(subscription, NotificationType::EMAIL, topic, action_name)
-        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        notifications = build_notifications(subscription, NotificationType::EMAIL, topic, action_name)
+        notifications.each do |notification|
+          NotifyEmailJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        end
       end
     end
   end
@@ -36,6 +40,10 @@ private
     end
 
     Subscription.kept.enabled.where(supplier: suppliers)
+  end
+
+  def build_notifications(subscription, type_id, topic, action_name)
+    [build_notification(subscription, type_id, topic, action_name)]
   end
 
   def build_notification(subscription, type_id, topic, action_name)

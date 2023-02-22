@@ -32,12 +32,12 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
 
     it 'schedules NotifyWebhookJob' do
       perform
-      expect(NotifyWebhookJob).to have_received(:perform_later).with(notification_id: Notification.webhooks.last.id, queue_as: :some_queue_name)
+      expect(NotifyWebhookJob).to have_received(:perform_later).once.with(notification_id: Notification.webhooks.last.id, queue_as: :some_queue_name)
     end
 
     it 'schedules NotifyEmailJob' do
       perform
-      expect(NotifyEmailJob).to have_received(:perform_later).with(notification_id: Notification.emails.last.id, queue_as: :some_queue_name)
+      expect(NotifyEmailJob).to have_received(:perform_later).once.with(notification_id: Notification.emails.last.id, queue_as: :some_queue_name)
     end
   end
 end

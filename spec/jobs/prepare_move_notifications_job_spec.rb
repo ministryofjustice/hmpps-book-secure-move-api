@@ -30,6 +30,12 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
   end
 
+  shared_examples_for 'it creates two webhook notification records' do
+    it do
+      expect { perform }.to change(Notification.webhooks, :count).by(2)
+    end
+  end
+
   shared_examples_for 'it does not create a webhook notification record' do
     it do
       expect { perform }.not_to change(Notification.webhooks, :count)
@@ -39,6 +45,12 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   shared_examples_for 'it creates an email notification record' do
     it do
       expect { perform }.to change(Notification.emails, :count).by(1)
+    end
+  end
+
+  shared_examples_for 'it creates two email notification records' do
+    it do
+      expect { perform }.to change(Notification.emails, :count).by(2)
     end
   end
 
@@ -72,6 +84,41 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     it { expect(NotifyEmailJob).not_to have_received(:perform_later) }
   end
 
+  shared_examples_for 'it creates create_move notifications if absent' do
+    context 'when no create_move notification has yet been sent' do
+      it_behaves_like 'it creates two webhook notification records'
+      it_behaves_like 'it creates two email notification records'
+    end
+
+    context 'when a create_move webhook notification has already been sent' do
+      before do
+        subscription.notifications.create!(notification_type_id: :webhook, topic: move, event_type: 'create_move')
+      end
+
+      it_behaves_like 'it creates a webhook notification record'
+      it_behaves_like 'it creates two email notification records'
+    end
+
+    context 'when a create_move email notification has already been sent' do
+      before do
+        subscription.notifications.create!(notification_type_id: :email, topic: move, event_type: 'create_move')
+      end
+
+      it_behaves_like 'it creates two webhook notification records'
+      it_behaves_like 'it creates an email notification record'
+    end
+
+    context 'when a create_move email and webhook notifications have already been sent' do
+      before do
+        subscription.notifications.create!(notification_type_id: :email, topic: move, event_type: 'create_move')
+        subscription.notifications.create!(notification_type_id: :webhook, topic: move, event_type: 'create_move')
+      end
+
+      it_behaves_like 'it creates a webhook notification record'
+      it_behaves_like 'it creates an email notification record'
+    end
+  end
+
   context 'when creating a move' do
     context 'when a subscription has both a webhook and email addresses' do
       it_behaves_like 'it creates a webhook notification record'
@@ -97,6 +144,18 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       it_behaves_like 'it schedules NotifyEmailJob'
       it_behaves_like 'it does not schedule NotifyWebhookJob'
     end
+  end
+
+  context 'when updating a move' do
+    let(:action_name) { 'update' }
+
+    it_behaves_like 'it creates create_move notifications if absent'
+  end
+
+  context 'when updating move status' do
+    let(:action_name) { 'update_status' }
+
+    it_behaves_like 'it creates create_move notifications if absent'
   end
 
   context 'when confirming a person escort record' do

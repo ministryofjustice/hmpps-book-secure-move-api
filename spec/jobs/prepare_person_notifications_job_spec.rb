@@ -14,8 +14,8 @@ RSpec.describe PreparePersonNotificationsJob, type: :job do
   end
 
   shared_examples 'it calls PrepareMoveNotificationsJob for the related moves' do
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move_today.id, action_name: action_name, queue_as: :notifications_high) }
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).with(topic_id: move_next_week.id, action_name: action_name, queue_as: :notifications_low) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_today.id, action_name: action_name, queue_as: :notifications_high) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_next_week.id, action_name: action_name, queue_as: :notifications_low) }
     it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name, queue_as: :notifications_medium) }
   end
 
