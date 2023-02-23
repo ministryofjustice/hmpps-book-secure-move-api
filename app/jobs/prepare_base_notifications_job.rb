@@ -9,17 +9,13 @@ class PrepareBaseNotificationsJob < ApplicationJob
 
     subscriptions(move, only_supplier_id: only_supplier_id).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
-        notifications = build_notifications(subscription, NotificationType::WEBHOOK, topic, action_name)
-        notifications.each do |notification|
-          NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as: queue_as)
-        end
+        notification = build_notification(subscription, NotificationType::WEBHOOK, topic, action_name)
+        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as: queue_as)
       end
 
       if send_emails && subscription.email_address.present? && should_email?(move)
-        notifications = build_notifications(subscription, NotificationType::EMAIL, topic, action_name)
-        notifications.each do |notification|
-          NotifyEmailJob.perform_later(notification_id: notification.id, queue_as: queue_as)
-        end
+        notification = build_notification(subscription, NotificationType::EMAIL, topic, action_name)
+        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as: queue_as)
       end
     end
   end
@@ -42,15 +38,11 @@ private
     Subscription.kept.enabled.where(supplier: suppliers)
   end
 
-  def build_notifications(subscription, type_id, topic, action_name)
-    [build_notification(subscription, type_id, topic, action_name)]
-  end
-
   def build_notification(subscription, type_id, topic, action_name)
     subscription.notifications.create!(
       notification_type_id: type_id,
       topic: topic,
-      event_type: event_type(action_name),
+      event_type: event_type(action_name, topic, type_id),
     )
   end
 
@@ -70,12 +62,17 @@ private
     move.current? && VALID_EMAIL_STATUSES.include?(move.status)
   end
 
-  def event_type(action_name)
-    {
+  def event_type(action_name, topic, type_id)
+    action = {
       'create' => 'create_move',
       'update' => 'update_move',
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
     }.fetch(action_name, action_name)
+
+    return action unless action == 'update_move_status'
+
+    create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
+    create_notification.nil? ? 'create_move' : 'update_move_status'
   end
 end
