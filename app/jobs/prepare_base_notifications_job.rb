@@ -73,6 +73,6 @@ private
     return action unless action == 'update_move_status'
 
     create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
-    create_notification.nil? ? 'create_move' : 'update_move_status'
+    create_notification.nil? && !topic.cancelled? ? 'create_move' : 'update_move_status'
   end
 end

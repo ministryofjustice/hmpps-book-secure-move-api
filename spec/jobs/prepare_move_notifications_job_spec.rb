@@ -117,7 +117,38 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     context 'when a create_move notification has already been sent' do
       before do
         subscription.notifications.create!(
-          notification_type_id: :webhook, topic: move, event_type: 'create_move'
+          notification_type_id: :webhook, topic: move, event_type: 'create_move',
+        )
+      end
+
+      it 'sends the notification as update_move_status' do
+        perform
+        expect(Notification.webhooks.order(:created_at).last.event_type).to eq('update_move_status')
+      end
+    end
+  end
+
+  context 'when cancelling a move' do
+    let(:action_name) { 'update_status' }
+
+    before { move.cancel!(cancellation_reason: Move::CANCELLATION_REASON_OTHER) }
+
+    it_behaves_like 'it creates a webhook notification record'
+    it_behaves_like 'it creates an email notification record'
+    it_behaves_like 'it schedules NotifyWebhookJob'
+    it_behaves_like 'it schedules NotifyEmailJob'
+
+    context 'when a create_move notification has not already been sent' do
+      it 'sends the notification as update_move_status' do
+        perform
+        expect(Notification.webhooks.order(:created_at).last.event_type).to eq('update_move_status')
+      end
+    end
+
+    context 'when a create_move notification has already been sent' do
+      before do
+        subscription.notifications.create!(
+          notification_type_id: :webhook, topic: move, event_type: 'create_move',
         )
       end
 

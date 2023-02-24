@@ -416,7 +416,7 @@ RSpec.describe Api::MovesController do
         end
 
         it 'creates email notifications for create and update' do
-          expect(subscription.notifications.count).to be 2
+          expect(subscription.notifications.count).to be 1
         end
       end
     end
