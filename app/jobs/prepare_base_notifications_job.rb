@@ -42,7 +42,7 @@ private
     subscription.notifications.create!(
       notification_type_id: type_id,
       topic: topic,
-      event_type: event_type(action_name),
+      event_type: event_type(action_name, topic, type_id),
     )
   end
 
@@ -62,12 +62,17 @@ private
     move.current? && VALID_EMAIL_STATUSES.include?(move.status)
   end
 
-  def event_type(action_name)
-    {
+  def event_type(action_name, topic, type_id)
+    action = {
       'create' => 'create_move',
       'update' => 'update_move',
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
     }.fetch(action_name, action_name)
+
+    return action unless action == 'update_move_status'
+
+    create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
+    create_notification.nil? && !topic.cancelled? ? 'create_move' : 'update_move_status'
   end
 end

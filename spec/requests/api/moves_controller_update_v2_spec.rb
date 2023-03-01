@@ -261,7 +261,7 @@ RSpec.describe Api::MovesController do
 
       context 'when the supplier has a webhook subscription' do
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
-        let(:notification) { subscription.notifications.last }
+        let(:notification) { subscription.notifications.order(:created_at).last }
         let(:faraday_client) do
           class_double(
             Faraday,
@@ -298,7 +298,7 @@ RSpec.describe Api::MovesController do
 
       context 'when the supplier has an email subscription' do
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-        let(:notification) { subscription.notifications.last }
+        let(:notification) { subscription.notifications.order(:created_at).last }
         let(:notify_response) do
           instance_double(
             ActionMailer::MessageDelivery,
@@ -346,7 +346,7 @@ RSpec.describe Api::MovesController do
         # NB: updates to existing moves should trigger a webhook notification
         let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
-        let(:notification) { subscription.notifications.last }
+        let(:notification) { subscription.notifications.order(:created_at).last }
         let(:faraday_client) do
           class_double(
             Faraday,
@@ -384,7 +384,7 @@ RSpec.describe Api::MovesController do
       context 'when the supplier has an email subscription' do
         # NB: updates to existing moves should trigger an email notification
         let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
-        let(:notification) { subscription.notifications.last }
+        let(:notification) { subscription.notifications.order(:created_at).last }
         let(:notify_response) do
           instance_double(
             ActionMailer::MessageDelivery,
@@ -415,7 +415,7 @@ RSpec.describe Api::MovesController do
           end
         end
 
-        it 'creates an email notification' do
+        it 'creates email notifications for create and update' do
           expect(subscription.notifications.count).to be 1
         end
       end
