@@ -17,7 +17,7 @@
 # Journey2: B --> C (not billable, completed)
 # The supplier is paid for only the first journey A-->B but not B-->C.
 #
-class Journey < ApplicationRecord
+class Journey < VersionedModel
   FEED_ATTRIBUTES = %w[
     id
     move_id

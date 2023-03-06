@@ -248,4 +248,18 @@ RSpec.describe Journey, type: :model do
       expect(journey_2.number).to eq(2)
     end
   end
+
+  describe 'versioning' do
+    let(:journey) { create(:journey) }
+
+    it 'has an audit' do
+      expect(journey.versions.map(&:event)).to eq(%w[create])
+    end
+
+    it 'updates the audit' do
+      journey.reject
+      journey.save!
+      expect(journey.versions.map(&:event)).to eq(%w[create update])
+    end
+  end
 end
