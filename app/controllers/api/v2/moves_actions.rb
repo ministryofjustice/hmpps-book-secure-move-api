@@ -118,7 +118,7 @@ module Api::V2
       if status.present?
         validator = Moves::StatusValidator.new(status: status, cancellation_reason: move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: move_params.fetch(:attributes, {})[:rejection_reason])
         valid = validator.valid?
-        Rails.logger.debug("Move status - [#{valid}]")
+        Rails.logger.debug("Valid Move status: - [#{valid}]")
         raise ActiveModel::ValidationError, validator unless valid
       end
       status
