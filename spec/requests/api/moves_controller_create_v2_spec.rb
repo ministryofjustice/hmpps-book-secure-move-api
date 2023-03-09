@@ -62,6 +62,7 @@ RSpec.describe Api::MovesController do
       allow(person).to receive(:update_nomis_data)
       allow_any_instance_of(Move).to receive(:person).and_return(person) # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance
+      allow(UpdateMoveNomisDataJob).to receive(:perform_later)
     end
 
     it_behaves_like 'an endpoint that responds with success 201' do
@@ -83,9 +84,9 @@ RSpec.describe Api::MovesController do
       expect(GenericEvent.last.created_by).to eq('TEST_USER')
     end
 
-    it "updates the person's nomis data" do
+    it "schedules a job to update the person's nomis data" do
       do_post
-      expect(person).to have_received(:update_nomis_data).once
+      expect(UpdateMoveNomisDataJob).to have_received(:perform_later).with(move_id: move.id)
     end
 
     it 'records the move count metric' do
