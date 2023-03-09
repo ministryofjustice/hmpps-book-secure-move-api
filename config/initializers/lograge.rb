@@ -14,4 +14,9 @@ Rails.application.configure do
       params: event.payload[:params].slice(:filter), # NB: Be careful with what you send to the logs, here.
     }
   end
+  config.lograge.custom_payload do |controller|
+    {
+      request_id: controller.request.request_id
+    }
+  end
 end
