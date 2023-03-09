@@ -25,12 +25,12 @@ module Api::V2
 
       Rails.logger.info("Move saved with reference [#{move.reference}] - status [#{move.status}]")
 
-      move.person.update_nomis_data if move.person.present?
-
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveProposed) if move.proposed?
       create_automatic_event!(eventable: move, event_class: GenericEvent::MoveRequested) if move.requested?
+
+      UpdateMoveNomisDataJob.perform_later(move_id: move.id)
 
       PrometheusMetrics.instance.record_move_count
 
