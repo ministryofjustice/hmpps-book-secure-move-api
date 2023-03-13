@@ -1,5 +1,51 @@
 # Changelog
 
+## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2...v3.30.0)
+
+**Merged pull requests:**
+
+- feat: Update person data from NOMIS asynchronously [\#2025](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2025) ([jimbali](https://github.com/jimbali))
+
+## [v3.29.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.1...v3.29.2)
+
+**Merged pull requests:**
+
+- P4-4100 Add logging to create and validate move methods [\#2024](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2024) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- chore: Add audit trail for journeys [\#2019](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2019) ([jimbali](https://github.com/jimbali))
+
+## [v3.29.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.1) (2023-03-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.0...v3.29.1)
+
+**Merged pull requests:**
+
+- chore: Always send create\_move notification [\#2015](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2015) ([jimbali](https://github.com/jimbali))
+- chore: Add logging to RequeueUnsentNotificationsWorker [\#2012](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2012) ([jimbali](https://github.com/jimbali))
+- chore: Add rake task for requeueing notifications with no delivery attempts [\#2011](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2011) ([jimbali](https://github.com/jimbali))
+
+## [v3.29.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.0) (2023-01-26)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.28.0...v3.29.0)
+
+**Merged pull requests:**
+
+- feat: Add recall\_date field to moves \[P4-3970\] [\#2008](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2008) ([jimbali](https://github.com/jimbali))
+- \[P4-3956\] Add new event: MoveOvernightLodge [\#2004](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2004) ([Thource](https://github.com/Thource))
+- P4 3947 upgrade postgres [\#1981](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1981) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.28.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.28.0) (2022-12-12)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.28.0)
+
+**Merged pull requests:**
+
+- \[P4-3910\] Add new endpoint: GET /events/:event\_id [\#1993](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1993) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.27.2 [\#1992](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1992) ([Thource](https://github.com/Thource))
+
 ## [v3.27.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.2) (2022-11-24)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.27.2)
