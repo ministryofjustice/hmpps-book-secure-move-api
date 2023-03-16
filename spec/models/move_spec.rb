@@ -198,6 +198,19 @@ RSpec.describe Move do
     end
   end
 
+  context 'with a lockout move' do
+    subject(:move) { create(:move) }
+
+    before do
+      create(:event_move_lockout, eventable: move)
+    end
+
+    it 'allows identical to and from locations' do
+      move.to_location = move.from_location
+      expect(move).to be_valid
+    end
+  end
+
   context 'when the profile has a prisoner category' do
     it 'prevents an unsupported category from being moved' do
       expect(build(:move, profile: build(:profile, :category_not_supported))).not_to be_valid

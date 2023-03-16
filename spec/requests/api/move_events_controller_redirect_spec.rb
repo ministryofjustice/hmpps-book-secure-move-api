@@ -29,9 +29,11 @@ RSpec.describe Api::MoveEventsController do
         },
       }
     end
+    let(:before_post) { nil }
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
+      before_post
       post "/api/v1/moves/#{move_id}/redirects", params: redirect_params, headers: headers, as: :json
     end
 
@@ -100,6 +102,21 @@ RSpec.describe Api::MoveEventsController do
       let(:detail_404) { "Couldn't find Move with 'id'=foo-bar" }
 
       it_behaves_like 'an endpoint that responds with error 404'
+    end
+
+    context 'with a lockout move with to_location the same as from_location' do
+      let(:new_location) { move.from_location }
+      let(:before_post) { create(:event_move_lockout, eventable: move) }
+
+      it_behaves_like 'an endpoint that responds with success 204'
+
+      it 'updates the move to_location' do
+        expect(move.reload.to_location).to eql(new_location)
+      end
+
+      it 'creates a move redirect event' do
+        expect(GenericEvent::MoveRedirect.count).to eq(1)
+      end
     end
 
     context 'with validation errors' do
@@ -202,6 +219,19 @@ RSpec.describe Api::MoveEventsController do
               'detail' => 'To location must be an active location',
               'source' => { 'pointer' => '/data/attributes/to_location' },
               'code' => 'inactive_location',
+            }]
+          end
+        end
+      end
+
+      context 'with a to_location the same as from_location' do
+        let(:new_location) { move.from_location }
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          let(:errors_422) do
+            [{
+              'title' => 'Unprocessable entity',
+              'detail' => 'To location id should be different to the from location',
             }]
           end
         end
