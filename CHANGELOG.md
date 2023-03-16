@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.30.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.1) (2023-03-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.30.1)
+
+**Merged pull requests:**
+
+- fix: Disable DifferentToFromLocationValidator for lockouts [\#2028](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2028) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.30.0 [\#2026](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2026) ([jimbali](https://github.com/jimbali))
+
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2...v3.30.0)
