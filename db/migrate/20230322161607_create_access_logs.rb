@@ -9,6 +9,9 @@ class CreateAccessLogs < ActiveRecord::Migration[6.1]
       t.string :controller_name
       t.string :path
       t.string :params
+
+      t.index :controller_name
+      t.index :client
     end
   end
 end

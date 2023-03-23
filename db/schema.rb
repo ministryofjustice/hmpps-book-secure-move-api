@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 2023_03_22_161607) do
     t.string "controller_name"
     t.string "path"
     t.string "params"
+    t.index ["client"], name: "index_access_logs_on_client"
+    t.index ["controller_name"], name: "index_access_logs_on_controller_name"
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
