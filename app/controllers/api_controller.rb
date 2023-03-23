@@ -324,7 +324,7 @@ private
       controller_name: controller_name,
       path: request.path,
       params: request.query_parameters,
-      body: request.body.to_s,
+      body: request.raw_post,
     )
   end
 end
