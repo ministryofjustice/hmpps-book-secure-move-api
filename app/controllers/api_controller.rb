@@ -6,6 +6,7 @@ class ApiController < ApplicationController
 
   DEFAULT_API_VERSION = '1'
 
+  before_action :write_access_log
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :restrict_request_api_version
@@ -311,5 +312,18 @@ private
     payload[:client_name] = current_user&.name
     payload[:supplier_name] = doorkeeper_application_owner&.name || 'none'
     payload[:api_version] = api_version || DEFAULT_API_VERSION
+  end
+
+  def write_access_log
+    AccessLog.create!(
+      request_id: request.request_id,
+      timestamp: Time.zone.now,
+      whodunnit: created_by,
+      client: current_user&.name,
+      verb: request.method,
+      controller_name: controller_name,
+      path: request.path,
+      params: request.params,
+    )
   end
 end
