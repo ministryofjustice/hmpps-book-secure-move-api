@@ -323,7 +323,7 @@ private
       verb: request.method,
       controller_name: controller_name,
       path: request.path,
-      params: request.query_parameters,
+      params: request.params,
     )
   end
 end
