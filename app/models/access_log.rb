@@ -1,5 +1,4 @@
 class AccessLog < ApplicationRecord
-
   validates :verb, presence: true
 
   VERBS = [

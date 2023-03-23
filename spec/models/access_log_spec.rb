@@ -1,10 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe AccessLog, type: :model do
-
   describe 'http verb' do
     it 'validates presence of `verb` ' do
-
       expect(build(:access_log)).to(validate_presence_of(:verb))
     end
 
