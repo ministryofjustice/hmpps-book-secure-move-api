@@ -24,5 +24,4 @@ class AccessLog < ApplicationRecord
     OPTIONS: HTTP_OPTIONS,
     TRACE: HTTP_TRACE,
   }
-
 end

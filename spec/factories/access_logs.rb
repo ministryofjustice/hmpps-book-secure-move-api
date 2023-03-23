@@ -34,5 +34,4 @@ FactoryBot.define do
   trait :head do
     verb { AccessLog::HTTP_HEAD }
   end
-
 end
