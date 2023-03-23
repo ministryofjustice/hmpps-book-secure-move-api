@@ -9,6 +9,7 @@ FactoryBot.define do
     controller_name { 'Move' }
     path { '/moves/787595a8-7052-4de5-b991-33a4b4f4bc47/' }
     params { '?include=court_hearings' }
+    body { 'body' }
   end
 
   trait :get do
