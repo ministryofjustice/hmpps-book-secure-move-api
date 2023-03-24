@@ -317,6 +317,8 @@ private
   def write_access_log
     yield
   ensure
+    create_doc = controller_name == 'documents' && request.params['action'] == 'create'
+    body = request.raw_post unless create_doc
     AccessLog.create!(
       request_id: request.request_id,
       timestamp: Time.zone.now,
@@ -326,9 +328,9 @@ private
       controller_name: controller_name,
       path: request.path,
       params: request.query_parameters,
-      body: request.raw_post,
       code: response.code,
       idempotency_key: request.headers['Idempotency-Key'],
+      body: body,
     )
   end
 end
