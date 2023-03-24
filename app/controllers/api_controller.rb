@@ -6,7 +6,7 @@ class ApiController < ApplicationController
 
   DEFAULT_API_VERSION = '1'
 
-  before_action :write_access_log
+  around_action :write_access_log
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :restrict_request_api_version
@@ -315,6 +315,10 @@ private
   end
 
   def write_access_log
+    yield
+  ensure
+    create_doc = controller_name == 'documents' && request.params['action'] == 'create'
+    body = request.raw_post unless create_doc
     AccessLog.create!(
       request_id: request.request_id,
       timestamp: Time.zone.now,
@@ -324,7 +328,9 @@ private
       controller_name: controller_name,
       path: request.path,
       params: request.query_parameters,
-      body: request.body.to_s,
+      code: response.code,
+      idempotency_key: request.headers['Idempotency-Key'],
+      body: body,
     )
   end
 end
