@@ -6,7 +6,7 @@ class ApiController < ApplicationController
 
   DEFAULT_API_VERSION = '1'
 
-  before_action :write_access_log
+  around_action :write_access_log
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :restrict_request_api_version
@@ -315,6 +315,8 @@ private
   end
 
   def write_access_log
+    yield
+  ensure
     AccessLog.create!(
       request_id: request.request_id,
       timestamp: Time.zone.now,
@@ -325,6 +327,8 @@ private
       path: request.path,
       params: request.query_parameters,
       body: request.raw_post,
+      code: response.code,
+      idempotency_key: request.headers['Idempotency-Key'],
     )
   end
 end

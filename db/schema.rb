@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_23_145412) do
+ActiveRecord::Schema.define(version: 2023_03_22_161607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -19,10 +19,12 @@ ActiveRecord::Schema.define(version: 2023_03_23_145412) do
 
   create_table "access_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "request_id"
+    t.uuid "idempotency_key"
     t.datetime "timestamp"
     t.string "whodunnit"
     t.string "client"
-    t.string "verb", null: false
+    t.string "verb"
+    t.string "code"
     t.string "controller_name"
     t.string "path"
     t.string "params"
