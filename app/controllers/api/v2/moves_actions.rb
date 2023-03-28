@@ -15,7 +15,7 @@ module Api::V2
     end
 
     def create_and_render
-      Rails.logger.info('V2 Move creation started')
+      log_with_request(:info, 'V2 Move creation started')
       validate_move_status
       move = Move.new(move_attributes)
       move.supplier = doorkeeper_application_owner || SupplierChooser.new(move).call
@@ -23,7 +23,7 @@ module Api::V2
       authorize!(:create, move)
       move.save!
 
-      Rails.logger.info("Move saved with reference [#{move.reference}] - status [#{move.status}]")
+      log_with_request(:info, "Move saved with reference [#{move.reference}] - status [#{move.status}]")
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 
@@ -34,7 +34,7 @@ module Api::V2
 
       PrometheusMetrics.instance.record_move_count
 
-      Rails.logger.info("V2 Move creation finished - #{move.reference}")
+      log_with_request(:info, "V2 Move creation finished - #{move.reference}")
 
       render_move(move, :created)
     end
@@ -114,11 +114,11 @@ module Api::V2
 
     def validate_move_status
       status = move_params.fetch(:attributes, {})[:status]
-      Rails.logger.debug("Validating current status of move - [#{status}]")
+      log_with_request(:debug, "Validating current status of move - [#{status}]")
       if status.present?
         validator = Moves::StatusValidator.new(status: status, cancellation_reason: move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: move_params.fetch(:attributes, {})[:rejection_reason])
         valid = validator.valid?
-        Rails.logger.debug("Valid Move status: - [#{valid}]")
+        log_with_request(:debug, "Valid Move status: - [#{valid}]")
         raise ActiveModel::ValidationError, validator unless valid
       end
       status
