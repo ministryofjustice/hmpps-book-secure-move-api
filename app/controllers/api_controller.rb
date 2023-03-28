@@ -304,6 +304,10 @@ private
   def append_info_to_payload(payload)
     super
 
+    enrich_payload!(payload)
+  end
+
+  def enrich_payload!(payload)
     payload[:remote_ip] = request.remote_ip
     payload[:request_id] = request.request_id
     payload[:transaction_id] = request.headers['X-Transaction-Id']
@@ -312,6 +316,12 @@ private
     payload[:client_name] = current_user&.name
     payload[:supplier_name] = doorkeeper_application_owner&.name || 'none'
     payload[:api_version] = api_version || DEFAULT_API_VERSION
+  end
+
+  def log_with_request(severity, message)
+    payload = { msg: message, severity: severity }
+    enrich_payload!(payload)
+    Rails.logger.public_send(severity, payload.to_json)
   end
 
   def write_access_log
