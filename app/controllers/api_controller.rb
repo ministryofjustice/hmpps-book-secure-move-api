@@ -7,6 +7,7 @@ class ApiController < ApplicationController
   DEFAULT_API_VERSION = '1'
 
   around_action :write_access_log
+  before_action :log_controller_entry
   before_action :doorkeeper_authorize!, if: :authentication_enabled?
   before_action :restrict_request_content_type
   before_action :restrict_request_api_version
@@ -322,6 +323,18 @@ private
     payload = { msg: message, severity: severity }
     enrich_payload!(payload)
     Rails.logger.public_send(severity, payload.to_json)
+  end
+
+  def log_controller_entry
+    payload = {
+      method: request.method,
+      path: request.fullpath,
+      controller: self.class.name,
+      action: action_name,
+      msg: 'Started processing request',
+    }
+    enrich_payload!(payload)
+    Rails.logger.info(payload.to_json)
   end
 
   def write_access_log
