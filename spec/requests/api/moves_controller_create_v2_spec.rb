@@ -21,6 +21,7 @@ RSpec.describe Api::MovesController do
       'Accept': 'application/vnd.api+json; version=2',
       'Authorization' => "Bearer #{access_token}",
       'X-Current-User' => 'TEST_USER',
+      'Idempotency-Key' => SecureRandom.uuid,
     }
   end
 

@@ -40,8 +40,15 @@ RSpec.describe Api::MovesController do
     end
     let(:supplier) { create(:supplier) }
     let(:access_token) { 'spoofed-token' }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
     let(:content_type) { ApiController::CONTENT_TYPE }
+
+    let(:headers) do
+      {
+        'Content-Type' => content_type,
+        'Authorization' => "Bearer #{access_token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
 
     before do
       allow_any_instance_of(PrometheusMetrics).to receive(:record_move_count) # rubocop:disable RSpec/AnyInstance

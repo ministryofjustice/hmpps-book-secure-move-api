@@ -3,8 +3,11 @@
 module Api
   class MovesController < ApiController
     include Eventable
+    include Idempotentable
 
     before_action :validate_filter_params, only: %i[index filtered]
+    before_action :validate_idempotency_key, only: %i[create update]
+    around_action :idempotent_action, only: %i[create update]
 
     CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, { person: %i[gender ethnicity] }].freeze
 
