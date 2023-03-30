@@ -4,10 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Api::MovesController do
   let(:access_token) { 'spoofed-token' }
-  let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization' => "Bearer #{access_token}" } }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
+
+  let(:headers) do
+    {
+      'Content-Type' => content_type,
+      'Authorization' => "Bearer #{access_token}",
+      'Idempotency-Key' => SecureRandom.uuid,
+    }
+  end
 
   describe 'GET /moves' do
     # NB sorting should be case-sensitive, i.e. LOCATION1, LOCATION3, location2, location4

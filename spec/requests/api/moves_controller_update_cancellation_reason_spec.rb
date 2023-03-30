@@ -8,8 +8,15 @@ RSpec.describe Api::MovesController do
   describe 'PATCH /moves/:move_id' do
     let(:supplier) { create(:supplier) }
     let(:access_token) { 'spoofed-token' }
-    let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
     let(:content_type) { ApiController::CONTENT_TYPE }
+
+    let(:headers) do
+      {
+        'Content-Type': content_type,
+        'Authorization' => "Bearer #{access_token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
 
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }

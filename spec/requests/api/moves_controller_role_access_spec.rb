@@ -22,9 +22,16 @@ RSpec.describe Api::MovesController do
   describe 'GET /moves' do
     subject(:get_moves) { get '/api/v1/moves', headers: headers }
 
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
     let!(:moves) { create_list(:move, 2, supplier: pentonville_supplier) }
+
+    let(:headers) do
+      {
+        'Content-Type' => content_type,
+        'Authorization' => "Bearer #{token.token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
 
     before do
       create_list(:move, 2, supplier: birmingham_supplier)
@@ -49,10 +56,17 @@ RSpec.describe Api::MovesController do
   describe 'GET /moves/{move_id}' do
     subject(:get_move) { get "/api/v1/moves/#{move_id}", headers: headers }
 
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
     let(:schema) { load_yaml_schema('get_move_responses.yaml') }
     let!(:pentonville_move) { create :move, from_location: pentonville, supplier: pentonville_supplier }
     let!(:birmingham_move) { create :move, from_location: birmingham, supplier: birmingham_supplier }
+
+    let(:headers) do
+      {
+        'Content-Type' => content_type,
+        'Authorization' => "Bearer #{token.token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
 
     before { get_move }
 
@@ -74,7 +88,14 @@ RSpec.describe Api::MovesController do
     subject(:post_moves) { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
 
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
+
+    let(:headers) do
+      {
+        'Content-Type' => content_type,
+        'Authorization' => "Bearer #{token.token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
 
     let(:move_attributes) { attributes_for(:move) }
     let!(:person) { create(:person) }
@@ -117,7 +138,14 @@ RSpec.describe Api::MovesController do
   describe 'PATCH /moves/{move_id}' do
     subject(:patch_move) { patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json }
 
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{token.token}") }
+    let(:headers) do
+      {
+        'Content-Type' => content_type,
+        'Authorization' => "Bearer #{token.token}",
+        'Idempotency-Key' => SecureRandom.uuid,
+      }
+    end
+
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
 
     let!(:pentonville_move) { create :move, from_location: pentonville, supplier: pentonville_supplier }

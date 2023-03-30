@@ -49,7 +49,14 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when authorized' do
-      let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+      let(:headers) do
+        {
+          'Content-Type': content_type,
+          'Authorization' => "Bearer #{access_token}",
+          'Idempotency-Key' => SecureRandom.uuid,
+        }
+      end
+
       let(:access_token) { 'spoofed-token' }
 
       context 'with an existing requested move', :skip_before do

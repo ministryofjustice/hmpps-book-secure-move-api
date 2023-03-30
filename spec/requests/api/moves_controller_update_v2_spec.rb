@@ -20,6 +20,7 @@ RSpec.describe Api::MovesController do
       'CONTENT_TYPE': content_type,
       'Accept': 'application/vnd.api+json; version=2',
       'Authorization' => "Bearer #{access_token}",
+      'Idempotency-Key' => SecureRandom.uuid,
     }
   end
 
