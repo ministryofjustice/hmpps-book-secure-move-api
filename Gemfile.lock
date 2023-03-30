@@ -402,7 +402,7 @@ GEM
       sidekiq (>= 3.0)
     service_mock (0.9)
       childprocess (~> 0.5)
-    shoulda-matchers (5.1.0)
+    shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
