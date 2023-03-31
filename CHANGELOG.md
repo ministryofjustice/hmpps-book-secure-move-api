@@ -1,5 +1,45 @@
 # Changelog
 
+## [v3.31.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.31.2) (2023-03-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.31.1...v3.31.2)
+
+**Merged pull requests:**
+
+- fix: Update gems to versions with no known vulnerabilities [\#2042](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2042) ([jimbali](https://github.com/jimbali))
+- fix: Make the moves controller idempotent for create and update [\#2041](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2041) ([jimbali](https://github.com/jimbali))
+
+## [v3.31.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.31.1) (2023-03-29)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.31.0...v3.31.1)
+
+**Merged pull requests:**
+
+- Log controller entry \[P4-4100\] [\#2039](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2039) ([jimbali](https://github.com/jimbali))
+- chore: Improve logging - direct calls to logger include request info [\#2038](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2038) ([jimbali](https://github.com/jimbali))
+
+## [v3.31.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.31.0) (2023-03-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.1...v3.31.0)
+
+**Merged pull requests:**
+
+- Feature/p4 4102 access log table [\#2037](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2037) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- P4-4102 Store request body as text [\#2036](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2036) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- P4-4102 Store request body as json [\#2035](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2035) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- P4-4102 add body to access log table [\#2034](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2034) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- P4-4102 change params to query\_parameters [\#2032](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2032) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- P4-4102 Add access log table [\#2031](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2031) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.30.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.1) (2023-03-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.30.1)
+
+**Merged pull requests:**
+
+- fix: Disable DifferentToFromLocationValidator for lockouts [\#2028](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2028) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.30.0 [\#2026](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2026) ([jimbali](https://github.com/jimbali))
+
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2...v3.30.0)
