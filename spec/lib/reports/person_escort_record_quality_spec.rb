@@ -39,7 +39,7 @@ RSpec.describe Reports::PersonEscortRecordQuality do
       end
 
       context 'with a new person escort record' do
-        let!(:person_escort_record) { create(:person_escort_record) } # rubocop:disable RSpec/LetSetup
+        let!(:person_escort_record) { create(:person_escort_record) }
 
         it_behaves_like 'CSV row'
 
@@ -87,7 +87,7 @@ RSpec.describe Reports::PersonEscortRecordQuality do
       end
 
       context 'with a pre-filled person escort record' do
-        let!(:person_escort_record) { create(:person_escort_record, :prefilled) } # rubocop:disable RSpec/LetSetup
+        let!(:person_escort_record) { create(:person_escort_record, :prefilled) }
 
         it_behaves_like 'CSV row'
 

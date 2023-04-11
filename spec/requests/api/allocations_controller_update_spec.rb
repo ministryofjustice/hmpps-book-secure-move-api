@@ -25,8 +25,9 @@ RSpec.describe Api::AllocationsController do
     let(:headers) { { 'Authorization' => "Bearer #{access_token}", 'CONTENT_TYPE': content_type } }
     let(:existing_date) { Date.new(2023, 1, 1) }
     let(:new_date) { existing_date.tomorrow }
+    let(:supplier) { create(:supplier) }
     let!(:allocation) { create(:allocation, date: existing_date, moves_count: moves_count) }
-    let!(:moves) { create_list(:move, moves_count, allocation: allocation, date: existing_date, person: create(:person)) }
+    let!(:moves) { create_list(:move, moves_count, allocation: allocation, date: existing_date, person: create(:person), supplier: supplier) }
 
     let(:allocation_attributes) { { date: new_date } }
 
@@ -37,26 +38,77 @@ RSpec.describe Api::AllocationsController do
       }
     end
 
-    context 'when successful' do
-      before { patch_allocations }
+    shared_context 'when the supplier has a webhook subscription' do
+      let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
 
-      it_behaves_like 'an endpoint that responds with success 200'
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+
+      before do
+        create(:notification_type, :webhook)
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+      end
+    end
+
+    shared_examples 'notifications created' do
+      include_context 'when the supplier has a webhook subscription'
+
+      it 'creates notifications for each move' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          expect { patch_allocations }
+            .to change { subscription.notifications.where(event_type: 'update_move').count }
+            .by(2)
+        end
+      end
+    end
+
+    shared_examples 'notifications not created' do
+      include_context 'when the supplier has a webhook subscription'
+
+      it 'does not create notifications for each move' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          expect { patch_allocations }
+            .not_to(change { subscription.notifications.where(event_type: 'update_move').count })
+        end
+      end
+    end
+
+    context 'when successful' do
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before { patch_allocations }
+      end
 
       it 'updates the allocation date' do
+        patch_allocations
         expect(allocation.reload.date).to eq(new_date)
       end
 
       it 'returns the correct data' do
+        patch_allocations
         expect(response_json).to include_json resource_to_json
       end
 
       it 'updates the date of all of the moves' do
+        patch_allocations
         expect(allocation.reload.moves.pluck(:date).uniq).to eq([new_date])
       end
+
+      it 'creates GenericEvent::MoveDateChanged events' do
+        patch_allocations
+        expect(GenericEvent.where(type: 'GenericEvent::MoveDateChanged').pluck('details'))
+          .to eq([{ 'date' => '2023-01-02' }, { 'date' => '2023-01-02' }])
+      end
+
+      it_behaves_like 'notifications created'
     end
 
     context 'with no moves' do
-      let!(:moves) { [] } # rubocop:disable RSpec/LetSetup
+      let!(:moves) { [] }
 
       before { patch_allocations }
 
@@ -85,17 +137,58 @@ RSpec.describe Api::AllocationsController do
         ]
       end
 
-      before { patch_allocations }
-
-      it_behaves_like 'an endpoint that responds with error 422'
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { patch_allocations }
+      end
 
       it 'does not update the allocation date' do
+        patch_allocations
         expect(allocation.reload.date).to eq(existing_date)
       end
 
       it 'does not update the date of any of the moves' do
+        patch_allocations
         expect(allocation.reload.moves.pluck(:date).uniq).to eq([existing_date])
       end
+
+      it_behaves_like 'notifications not created'
+    end
+
+    context 'when the allocation fails to save' do
+      let(:errors_422) do
+        [
+          {
+            'title' => 'Unprocessable entity',
+            'detail' => 'Moves count is invalid',
+            'source' => { 'pointer' => '/data/attributes/moves_count' },
+            'code' => 'invalid',
+          },
+        ]
+      end
+
+      before do
+        allocation.errors.add(:moves_count)
+
+        allow_any_instance_of(Allocation) # rubocop:disable RSpec/AnyInstance
+          .to receive(:save!)
+          .and_raise(ActiveRecord::RecordInvalid.new(allocation))
+      end
+
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { patch_allocations }
+      end
+
+      it 'does not update the allocation date' do
+        patch_allocations
+        expect(allocation.reload.date).to eq(existing_date)
+      end
+
+      it 'does not update the date of any of the moves' do
+        patch_allocations
+        expect(allocation.reload.moves.pluck(:date).uniq).to eq([existing_date])
+      end
+
+      it_behaves_like 'notifications not created'
     end
 
     context 'with a param that is not permitted' do
@@ -123,7 +216,6 @@ RSpec.describe Api::AllocationsController do
           from_location: moves.last.from_location,
           to_location: moves.last.to_location,
         )
-        patch_allocations
       end
 
       let(:errors_422) do
@@ -137,15 +229,21 @@ RSpec.describe Api::AllocationsController do
         ]
       end
 
-      it_behaves_like 'an endpoint that responds with error 422'
+      it_behaves_like 'an endpoint that responds with error 422' do
+        before { patch_allocations }
+      end
 
       it 'does not update the allocation date' do
+        patch_allocations
         expect(allocation.reload.date).to eq(existing_date)
       end
 
       it 'does not update the date of any of the moves' do
+        patch_allocations
         expect(allocation.reload.moves.pluck(:date).uniq).to eq([existing_date])
       end
+
+      it_behaves_like 'notifications not created'
     end
   end
 end

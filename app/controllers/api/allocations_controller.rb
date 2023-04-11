@@ -18,6 +18,8 @@ module Api
       updater = Allocations::Updater.new(
         allocation_params: update_allocation_params,
         allocation_id: params.require(:id),
+        created_by: created_by,
+        doorkeeper_application_owner: doorkeeper_application_owner,
       )
       updater.call
 

@@ -23,3 +23,8 @@ AllCops:
 # if we switched to the GDS standard.
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+
+# This cops seems defective. Sometimes it does not detect when the variable
+# is referenced elsewhere such as in shared examples.
+RSpec/LetSetup:
+  Enabled: false
