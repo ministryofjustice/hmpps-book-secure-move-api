@@ -43,5 +43,8 @@ module BookASecureMoveApi
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
+
+    # Needed for PaperTrail to be able to deserialise saved versions
+    config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]
   end
 end
