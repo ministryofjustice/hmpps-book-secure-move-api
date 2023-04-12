@@ -14,6 +14,18 @@ module Api
       render_allocation(creator.allocation, 201)
     end
 
+    def update
+      updater = Allocations::Updater.new(
+        allocation_params: update_allocation_params,
+        allocation_id: params.require(:id),
+        created_by: created_by,
+        doorkeeper_application_owner: doorkeeper_application_owner,
+      )
+      updater.call
+
+      render_allocation(updater.allocation, 200)
+    end
+
     def show
       allocation = Allocation.find(params[:id])
 
@@ -30,11 +42,12 @@ module Api
     PERMITTED_SORT_PARAMS = %i[by direction].freeze
     PERMITTED_SEARCH_PARAMS = %i[location person].freeze
 
-    PERMITTED_ALLOCATION_PARAMS = [
+    PERMITTED_CREATE_ALLOCATION_PARAMS = [
       :type,
       { attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
         relationships: {} },
     ].freeze
+    PERMITTED_UPDATE_ALLOCATION_PARAMS = [:type, { attributes: %i[date] }].freeze
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 
@@ -63,8 +76,12 @@ module Api
       params.fetch(:search, {}).permit(PERMITTED_SEARCH_PARAMS).to_h
     end
 
-    def allocation_params
-      params.require(:data).permit(PERMITTED_ALLOCATION_PARAMS).to_h
+    def create_allocation_params
+      params.require(:data).permit(PERMITTED_CREATE_ALLOCATION_PARAMS).to_h
+    end
+
+    def update_allocation_params
+      params.require(:data).permit(PERMITTED_UPDATE_ALLOCATION_PARAMS).to_h
     end
 
     def complex_case_params
@@ -87,7 +104,7 @@ module Api
     def creator
       @creator ||= Allocations::Creator.new(
         doorkeeper_application_owner: doorkeeper_application_owner,
-        allocation_params: allocation_params,
+        allocation_params: create_allocation_params,
         complex_case_params: complex_case_params,
       )
     end

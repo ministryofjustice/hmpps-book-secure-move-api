@@ -70,11 +70,8 @@ RSpec.describe Api::Reference::RegionsController do
       let(:location2) { create(:location) }
       let(:location3) { create(:location) }
 
-      # rubocop:disable RSpec/LetSetup
       let!(:region1) { create(:region, locations: [location1, location2]) }
       let!(:region2) { create(:region, locations: [location2, location3]) }
-      # rubocop:enable RSpec/LetSetup
-
       let(:expected_relationships) do
         UnorderedArray(
           {
