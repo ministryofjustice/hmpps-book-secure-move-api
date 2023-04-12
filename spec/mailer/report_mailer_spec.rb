@@ -22,6 +22,15 @@ RSpec.describe ReportMailer, type: :mailer do
     let(:start_date) { Date.new(2020, 1, 1) }
     let(:end_date) { nil }
 
+    let(:file_params) do
+      {
+        confirm_email_before_download: nil,
+        file: Base64.strict_encode64('csv'),
+        is_csv: true,
+        retention_period: nil,
+      }
+    end
+
     before do
       allow(Reports::PersonEscortRecordQuality).to receive(:call).and_return('csv')
     end
@@ -39,7 +48,7 @@ RSpec.describe ReportMailer, type: :mailer do
 
       it { is_expected.to include('report-title': 'Person Escort Record Quality') }
       it { is_expected.to include('report-description': '2020-01-01 - ') }
-      it { is_expected.to include('report-file': { file: Base64.strict_encode64('csv'), is_csv: true }) }
+      it { is_expected.to include('report-file': file_params) }
     end
 
     context 'with an end date' do
@@ -50,7 +59,7 @@ RSpec.describe ReportMailer, type: :mailer do
 
         it { is_expected.to include('report-title': 'Person Escort Record Quality') }
         it { is_expected.to include('report-description': '2020-01-01 - 2021-01-01') }
-        it { is_expected.to include('report-file': { file: Base64.strict_encode64('csv'), is_csv: true }) }
+        it { is_expected.to include('report-file': file_params) }
       end
     end
   end
