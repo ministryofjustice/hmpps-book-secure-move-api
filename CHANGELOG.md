@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.32.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.32.0) (2023-04-12)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.31.2...v3.32.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Update a bunch of gems to please Dependabot [\#2050](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2050) ([jimbali](https://github.com/jimbali))
+- Update allocation date [\#2048](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2048) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.31.2 [\#2046](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2046) ([jimbali](https://github.com/jimbali))
+
 ## [v3.31.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.31.2) (2023-03-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.31.1...v3.31.2)
