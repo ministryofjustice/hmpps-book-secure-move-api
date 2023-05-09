@@ -51,6 +51,7 @@ module V2
       prison_transfer_reason
       supplier
       important_events
+      timeline_events
     ].freeze
 
     belongs_to :from_location, serializer: ::LocationSerializer
