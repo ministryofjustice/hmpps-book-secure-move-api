@@ -62,5 +62,6 @@ module V2
     belongs_to :allocation, serializer: AllocationSerializer
 
     has_many_if_included :important_events, serializer: ImportantEventsSerializer, &:important_events
+    has_many_if_included :timeline_events, serializer: TimelineEventsSerializer, &:timeline_events
   end
 end
