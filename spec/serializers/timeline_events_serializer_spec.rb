@@ -25,5 +25,4 @@ RSpec.describe TimelineEventsSerializer do
   it 'contains an event_type attribute' do
     expect(attributes[:event_type]).to eql 'MoveOvernightLodge'
   end
-
 end
