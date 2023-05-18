@@ -18,4 +18,5 @@ MovesIncludeParameter:
       - supplier
       - to_location
       - important_events
+      - timeline_events
   example: from_location
