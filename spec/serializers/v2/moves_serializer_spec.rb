@@ -140,4 +140,21 @@ RSpec.describe V2::MovesSerializer do
       expect(meta).to be_empty
     end
   end
+
+  context 'with lodge event' do
+    let!(:event) { create(:event_move_overnight_lodge, eventable: move) }
+    let(:includes) { %i[timeline_events] }
+    let(:options) { { include: includes, params: { included: includes } } }
+    let(:included_event) { result[:included].find { |include| include[:id] == event.id } }
+
+    it 'contains a list of timeline_events' do
+      expect(result[:data][:relationships]).to include(
+        { timeline_events: { data: [{ id: event.id, type: 'events' }] } },
+      )
+    end
+
+    it 'contains the included timeline event' do
+      expect(included_event).to be_present
+    end
+  end
 end
