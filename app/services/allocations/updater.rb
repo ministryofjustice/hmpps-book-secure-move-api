@@ -31,7 +31,7 @@ module Allocations
     def update_move_dates
       allocation.moves.each do |move|
         move.date = allocation.date
-        move.save!
+        move.save!(context: :update_allocation)
 
         create_automatic_event!(
           eventable: move,
