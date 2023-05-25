@@ -69,17 +69,9 @@ RSpec.describe Moves::Updater do
       let(:allocation) { create :allocation, moves_count: 5 }
       let(:move) { create :move, :requested, allocation: allocation }
 
-      # Remove as part of P4-3938
-      it 'sets `date_changed` to `true`' do
-        updater.call
-        expect(updater.date_changed).to be true
+      it 'fails to update the date' do
+        expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid, /cannot be changed as move is part of an allocation/)
       end
-
-      # Commented out for now, will return as part of P4-3938
-      #
-      # it 'fails to update the date' do
-      #   expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid, /cannot be changed as move is part of an allocation/)
-      # end
     end
 
     context 'when status is not updated' do

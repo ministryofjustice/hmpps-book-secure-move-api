@@ -118,12 +118,9 @@ class Move < VersionedModel
 
   validate :date_to_after_date_from
   validate :validate_prisoner_category
+  validate :validate_date_change_allocation, on: :update, unless: -> { validation_context == :update_allocation }
 
   validates :recall_date, date: true
-
-  # Commented out for now, will return as part of P4-3938
-  #
-  # validate :validate_date_change_allocation, on: :update
 
   before_validation :set_reference
   before_validation :set_move_type
@@ -417,13 +414,11 @@ private
     end
   end
 
-  # Commented out for now, will return as part of P4-3938
-  #
-  # def validate_date_change_allocation
-  #   if date_changed? && allocation
-  #     errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
-  #   end
-  # end
+  def validate_date_change_allocation
+    if date_changed? && allocation
+      errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
+    end
+  end
 
   def update_proposed_journey_dates
     return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
