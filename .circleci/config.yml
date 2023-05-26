@@ -155,13 +155,6 @@ aliases:
       branches:
         only:
           - main
-  - &only_main_and_create_dev
-    filters:
-      branches:
-        only:
-          - main
-          - dev-auth-from-docs
-          - /.*-deploydev/
   - &only_for_deployment
     filters:
       tags:
@@ -637,12 +630,6 @@ workflows:
             - api_docs
             - rspec_tests
             - linters
-      - deploy_dev:
-          context:
-            - hmpps-common-vars
-          <<: *only_main_and_create_dev
-          requires:
-            - build_image
       - deploy_staging:
           context:
             - hmpps-common-vars
