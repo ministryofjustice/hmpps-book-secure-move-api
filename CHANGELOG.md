@@ -1,5 +1,33 @@
 # Changelog
 
+## [v3.34.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.34.0) (2023-05-26)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.33.0...v3.34.0)
+
+**Merged pull requests:**
+
+- ci: Delete dev environment from build config [\#2077](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2077) ([jimbali](https://github.com/jimbali))
+- \[P4-3937\] Reinstate prohibition of allocation move date changes [\#2075](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2075) ([jimbali](https://github.com/jimbali))
+
+## [v3.33.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.33.0) (2023-05-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.32.1...v3.33.0)
+
+**Merged pull requests:**
+
+- fix: Get timeline events using correct method [\#2073](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2073) ([jimbali](https://github.com/jimbali))
+- P4-3894 Include timeline\_events on move list endpoint [\#2071](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2071) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.32.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.32.1) (2023-04-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.32.0...v3.32.1)
+
+**Merged pull requests:**
+
+- Reduce Sentry Transaction Sampling from 10% to 1% [\#2066](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2066) ([connormaglynn](https://github.com/connormaglynn))
+- Upgrade CircleCI Slack orb [\#2065](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2065) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.32.0 [\#2064](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2064) ([jimbali](https://github.com/jimbali))
+
 ## [v3.32.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.32.0) (2023-04-12)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.31.2...v3.32.0)
