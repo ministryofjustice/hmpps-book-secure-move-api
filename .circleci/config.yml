@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  hmpps: ministryofjustice/hmpps@7.1.0
   slack: circleci/slack@4.12.1
 
 aliases:
@@ -630,6 +631,21 @@ workflows:
             - api_docs
             - rspec_tests
             - linters
+      - hmpps/build_docker:
+          <<: *only_for_deployment
+          requires:
+            - api_docs
+            - rspec_tests
+            - linters
+          name: build_quay
+          image_name: "quay.io/hmpps/hmpps-book-secure-move-api"
+          additional_docker_build_args: >
+            --label build.git.sha=${CIRCLE_SHA1}
+            --label build.git.branch=${CIRCLE_BRANCH}
+            --label build.date=$(date -Is)
+            --build-arg APP_BUILD_DATE=$(date -Is)
+            --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
+            --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
       - deploy_staging:
           context:
             - hmpps-common-vars
