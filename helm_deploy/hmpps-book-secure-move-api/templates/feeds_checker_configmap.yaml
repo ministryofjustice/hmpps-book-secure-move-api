@@ -1,0 +1,88 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hmpps-book-secure-move-api-feeds-checker-script
+  labels:
+    app: hmpps-book-secure-move-api-feeds
+data:
+  runme.sh: |
+    #!/bin/bash
+    S3DatePrefix=$(date -d "yesterday" '+%Y/%m/%d')
+    FeedDatePrefix=$(date -d "yesterday" '+%Y-%m-%d')
+    ExpectedFeeds=("people.jsonl" "profiles.jsonl" "events.jsonl" "journeys.jsonl" "moves.jsonl" "notifications.jsonl")
+    SlackPayload=$(cat <<-END
+    {
+      "blocks": [
+      {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": ":memo: Feed check report for ${S3DatePrefix} on '{{ .Values.buildEnv }}'",
+          "emoji": true
+        }
+      },
+      {
+        "type": "divider"
+      }
+      ]
+    }
+    END
+    )
+
+    # Creates a new slack block
+    newBlock ()
+    {
+      case $1 in
+      "OK")
+          case $2 in
+          0)
+            LINES="(*no lines*)"
+            STATUS=:warning:
+            ALERT=true
+            ;;
+          1)
+            LINES="(*$2 line*)"
+            STATUS=:white_check_mark:
+            ;;
+          *)
+            LINES="(*$2 lines*)"
+            STATUS=:white_check_mark:
+            ;;
+          esac
+          ;;
+      "FAIL")
+        ALERT=true
+        STATUS=:x:
+        LINES=""
+        ;;
+      *) STATUS="" ;;
+        esac
+        BLOCK="[{\"type\": \"section\",\"text\": { \"type\": \"mrkdwn\", \"text\": \"${STATUS} ${FeedDatePrefix}-${feed} ${LINES}\"}} ]"
+    }
+
+    # addToPayload
+    addToPayload () {
+        SlackPayload=$(echo "${SlackPayload}" | jq ".blocks += $1")
+    }
+
+    for feed in "${ExpectedFeeds[@]}"
+    do
+      echo "Checking ${FeedDatePrefix}-${feed}"
+      if (aws s3api head-object --bucket ${S3_REPORTING_BUCKET_NAME} --key "${S3DatePrefix}/${FeedDatePrefix}-${feed}" >> /dev/null 2>&1)
+      then
+        LINES=$(aws s3 cp  s3://${S3_REPORTING_BUCKET_NAME}/${S3DatePrefix}/${FeedDatePrefix}-${feed} - | jq -s '. | length')
+        newBlock "OK" "$LINES"
+        addToPayload "${BLOCK}"
+        echo "Exists: $LINES lines"
+      else
+        newBlock "FAIL"
+        addToPayload "${BLOCK}"
+        echo "Does NOT Exist"
+      fi
+      #
+    done
+
+    curl --write-out '%{http_code}' --silent --output /dev/null  -X POST -H 'Content-type: application/json' --data "$SlackPayload" $INFO_SLACKWEBHOOK
+    if [ $ALERT == "true" ]; then
+        curl --write-out '%{http_code}' --silent --output /dev/null -X POST -H 'Content-type: application/json' --data "$SlackPayload" $ALERT_SLACKWEBHOOK
+    fi

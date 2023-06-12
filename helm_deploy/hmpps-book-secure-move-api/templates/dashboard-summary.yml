@@ -1,0 +1,910 @@
+{{- if .Values.dashboards.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hmpps-book-secure-move-api-dashboard-summary
+  labels:
+    grafana_dashboard: ""
+data:
+  hmpps-book-secure-move-api-dashboard-summary.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "limit": 100,
+            "name": "Annotations & Alerts",
+            "showIn": 0,
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 1,
+      "id": 79,
+      "iteration": 1603463223104,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 15,
+          "panels": [],
+          "repeat": null,
+          "title": "Ingress",
+          "type": "row"
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": null
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 5,
+            "x": 0,
+            "y": 1
+          },
+          "id": 106,
+          "interval": "60s",
+          "links": [],
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "values": false
+            }
+          },
+          "pluginVersion": "7.0.2",
+          "repeatDirection": "v",
+          "targets": [
+            {
+              "expr": "sum(rate(ruby_http_requests_total{namespace='$namespace',status=~'2..'}[1m]) +0) ",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2XX",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(ruby_http_requests_total{namespace='$namespace',status=~'3..'}[1m]) +0)",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "3XX",
+              "refId": "D"
+            },
+            {
+              "expr": "sum(rate(ruby_http_requests_total{namespace='$namespace',status=~'4..'}[1m])+0 ) ",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "4XX",
+              "refId": "C"
+            },
+            {
+              "expr": "sum(rate(ruby_http_requests_total{namespace='$namespace',status=~'5..'}[1m]) +0) ",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "5XX",
+              "refId": "B"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "HTTP Status class breakdown (1m)",
+          "type": "stat"
+        },
+        {
+          "aliasColors": {
+            "200": "light-green",
+            "206": "dark-green",
+            "301": "dark-blue",
+            "302": "semi-dark-blue",
+            "304": "light-blue",
+            "403": "dark-orange",
+            "404": "semi-dark-orange",
+            "422": "super-light-orange",
+            "500": "dark-red",
+            "503": "semi-dark-red"
+          },
+          "bars": true,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 1,
+          "gridPos": {
+            "h": 9,
+            "w": 19,
+            "x": 5,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 105,
+          "interval": "60s",
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": false,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pluginVersion": "7.0.2",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "repeatDirection": "v",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": true,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(ruby_http_requests_total{namespace='$namespace'}[1m])) by (status)",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{`{{status_code}}`}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "HTTP request rate (rpm)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 10
+          },
+          "id": 14,
+          "panels": [],
+          "repeat": null,
+          "title": "Pods",
+          "type": "row"
+        },
+        {
+          "datasource": "Prometheus",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 0,
+            "y": 11
+          },
+          "id": 108,
+          "interval": "60s",
+          "links": [],
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "7.0.2",
+          "repeatDirection": "v",
+          "targets": [
+            {
+              "expr": "sum({namespace='$namespace',phase='Running',pod=~'.*deployment.*'} + 0)",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Running",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(kube_pod_container_status_restarts_total{namespace=\"$namespace\",container=\"webapp\",container=\"webapp\"}[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Restarting (5m)",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Pods",
+          "type": "gauge"
+        },
+        {
+          "aliasColors": {
+            "Available threads": "green",
+            "Backlog": "orange",
+            "Limit": "#bf1b00",
+            "Limit (hard limit)": "yellow",
+            "Max threads": "dark-red",
+            "Pool Size": "dark-red",
+            "Pool busy": "dark-blue",
+            "Pool connections": "yellow",
+            "Pool dead": "dark-purple",
+            "Pool idle": "light-green",
+            "Pool size": "dark-red",
+            "Pool waiting": "dark-orange",
+            "Requested (soft limit)": "#f2c96d"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 12,
+            "y": 11
+          },
+          "hiddenSeries": false,
+          "id": 21,
+          "interval": "60",
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": 150,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 2,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeatDirection": "v",
+          "seriesOverrides": [
+            {
+              "alias": "Pool Size",
+              "fill": 0,
+              "linewidth": 2
+            }
+          ],
+          "spaceLength": 10,
+          "stack": true,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum by (pod)(rate(container_cpu_usage_seconds_total{namespace='$namespace',container='webapp'}[5m]))",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{`{{pod}}`}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "CPU Usage",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "none",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {
+            "Available threads": "green",
+            "Backlog": "orange",
+            "Limit": "#bf1b00",
+            "Limit (hard limit)": "yellow",
+            "Max threads": "dark-red",
+            "Pool Size": "dark-red",
+            "Pool busy": "dark-blue",
+            "Pool connections": "yellow",
+            "Pool dead": "dark-purple",
+            "Pool idle": "light-green",
+            "Pool size": "dark-red",
+            "Pool waiting": "dark-orange",
+            "Requested (soft limit)": "#f2c96d",
+            "Rx": "light-orange",
+            "Tx": "dark-orange",
+            "backlog": "dark-orange",
+            "capacity": "dark-green",
+            "running": "green",
+            "total": "dark-red"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 0,
+            "y": 17
+          },
+          "hiddenSeries": false,
+          "id": 20,
+          "interval": "60s",
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": 150,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 2,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeatDirection": "v",
+          "seriesOverrides": [
+            {
+              "alias": "total",
+              "fill": 0,
+              "linewidth": 2
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sort_desc(avg(sum by (pod_name) (rate(container_network_transmit_bytes_total{namespace='$namespace'}[1m])))) ",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Tx",
+              "refId": "A"
+            },
+            {
+              "expr": "sort_desc(avg(sum by (pod_name) (rate(container_network_receive_bytes_total{namespace='$namespace'}[1m])))) * -1 ",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Rx",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Network",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "decbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {
+            "Available threads": "green",
+            "Backlog": "orange",
+            "Limit": "#bf1b00",
+            "Limit (hard limit)": "yellow",
+            "Max threads": "dark-red",
+            "Pool Size": "dark-red",
+            "Pool busy": "dark-blue",
+            "Pool connections": "yellow",
+            "Pool dead": "dark-purple",
+            "Pool idle": "light-green",
+            "Pool size": "dark-red",
+            "Pool waiting": "dark-orange",
+            "Requested (soft limit)": "#f2c96d",
+            "Value": "dark-red",
+            "hmpps-book-secure-move-frontend-deployment-production-5c8c9sjvj": "dark-blue",
+            "hmpps-book-secure-move-frontend-deployment-production-5c8cszp86": "dark-purple"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 0,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 12,
+            "y": 17
+          },
+          "hiddenSeries": false,
+          "id": 107,
+          "interval": "60",
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": 150,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 2,
+          "nullPointMode": "null as zero",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeatDirection": "v",
+          "seriesOverrides": [
+            {
+              "alias": "Requested",
+              "color": "#FFB357",
+              "fill": 0
+            },
+            {
+              "alias": "Hard Limit",
+              "color": "#C4162A",
+              "fill": 0,
+              "linewidth": 2
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum by (pod)(container_memory_usage_bytes{namespace='$namespace',container='webapp'})",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{`{{pod}}`}}",
+              "refId": "A"
+            },
+            {
+              "expr": "avg(kube_pod_container_resource_requests_memory_bytes{namespace='$namespace',container='webapp'})",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Requested",
+              "refId": "B"
+            },
+            {
+              "expr": "avg(kube_pod_container_resource_limits_memory_bytes{namespace='$namespace',container='webapp'})",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Hard Limit",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Memory RSS",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "decbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": true,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 23
+          },
+          "id": 16,
+          "panels": [],
+          "repeat": null,
+          "title": "Datastores",
+          "type": "row"
+        }
+      ],
+      "refresh": false,
+      "schemaVersion": 25,
+      "style": "dark",
+      "tags": [
+        "pecs",
+        "api",
+        "book a secure move"
+      ],
+      "templating": {
+        "list": [
+          {
+            "allValue": null,
+            "current": {
+              "selected": true,
+              "text": "hmpps-book-secure-move-api-uat",
+              "value": "hmpps-book-secure-move-api-uat"
+            },
+            "datasource": "Prometheus",
+            "definition": "label_values(kube_deployment_metadata_generation, namespace)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(kube_deployment_metadata_generation, namespace)",
+            "refresh": 1,
+            "regex": "/^hmpps-book-secure-move-api-/",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "selected": false,
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": "Prometheus",
+            "definition": "label_values(kube_pod_container_info{namespace=\"$namespace\", container=\"webapp\"}, pod)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Pod",
+            "multi": false,
+            "name": "pod",
+            "options": [],
+            "query": "label_values(kube_pod_container_info{namespace=\"$namespace\", container=\"webapp\"}, pod)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "isNone": true,
+              "selected": false,
+              "text": "None",
+              "value": ""
+            },
+            "datasource": "Prometheus",
+            "definition": "label_values(kube_pod_container_info{namespace=\"$namespace\",pod=\"$pod\"}, container)",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Container",
+            "multi": false,
+            "name": "container",
+            "options": [],
+            "query": "label_values(kube_pod_container_info{namespace=\"$namespace\",pod=\"$pod\"}, container)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }
+        ]
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "1d"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
+        ]
+      },
+      "timezone": "browser",
+      "title": "Book Secure Move API Summary",
+      "uid": "BaSMAPI01",
+      "version": 3
+    }
+{{- end }}

@@ -1,0 +1,123 @@
+---
+# Per environment values which override defaults in hmpps-book-secure-move-api/values.yaml
+
+buildEnv: production
+
+generic-service:
+  replicaCount: 20
+
+  ingress:
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-ingress-production-new-hmpps-book-secure-move-api-production-green
+    hosts:
+      - api.bookasecuremove.service.justice.gov.uk
+      - hmpps-book-secure-move-api-production.apps.live-1.cloud-platform.service.justice.gov.uk
+    tlsSecretName: hmpps-book-secure-move-api-production-cert
+
+  env:
+    DISABLE_WEBHOOK_CREATE_EVENT_GEOAMEY: "true"
+    DISABLE_WEBHOOK_CREATE_EVENT_SERCO: "true"
+    ENCRYPTOR_SALT: '+\xCC[#\xF7\x14\x98^\x0F\xCC\x9A\xA4\x16\xE3\x9E\xF2W8\xE6\x059\xFD\xB0\x1F.OK\x91\x85*(A'
+    SENTRY_ENVIRONMENT: "production"
+    SERVE_API_DOCS: "false"
+    SERVER_FQDN: "api.bookasecuremove.service.justice.gov.uk"
+    WEB_CONCURRENCY: "1"
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+  namespace_secrets:
+    hmpps-book-secure-move-api-secrets-production:
+      SECRET_KEY_BASE: secret_key_base_key
+      NOMIS_SITE: nomis_site_key
+      NOMIS_SITE_FOR_API: nomis_site_for_api_key
+      NOMIS_SITE_FOR_AUTH: nomis_site_for_auth_key
+      NOMIS_CLIENT_ID: nomis_client_id_key
+      NOMIS_CLIENT_SECRET: nomis_client_secret_key
+      NOMIS_AUTH_SCHEME: nomis_auth_scheme_key
+      NOMIS_API_PATH_PREFIX: nomis_api_path_prefix_key
+      NOMIS_PRISON_API_PATH_PREFIX: nomis_prison_api_path_prefix_key
+      NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
+      SENTRY_DSN: sentry_dsn_key
+      CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
+      PER_QUALITY_REPORT_RECIPIENTS: per_quality_report_recipients
+    rds-instance-hmpps-book-secure-move-api-production:
+      DATABASE_URL: url
+    book-a-secure-move-documents-s3-bucket:
+      S3_ACCESS_KEY_ID: access_key_id
+      S3_SECRET_ACCESS_KEY: secret_access_key
+      S3_BUCKET_ARN: bucket_arn
+      S3_BUCKET_NAME: bucket_name
+    book-a-secure-move-metrics-s3-bucket:
+      S3_METRICS_ACCESS_KEY_ID: access_key_id
+      S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
+      S3_METRICS_REGION: "eu-west-2"
+      S3_METRICS_BUCKET_NAME: bucket_name
+    elasticache-hmpps-book-secure-move-api-production:
+      REDIS_URL: url
+
+cronJobs:
+  - name: token-cleanup
+    schedule: "0 1 * * 0"
+    command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]
+  - name: feeds-job
+    schedule: "0 3 * * *"
+    command: ["bundle", "exec", "rake", "feed[all]"]
+  - name: feeds-checker
+    schedule: "0 7 * * *"
+    command: ["/bin/bash"]
+    args: ["/feeds/runme.sh"]
+    volumeMounts:
+      - name: script
+        mountPath: "/feeds"
+    volumes:
+      - name: script
+        configMap:
+          name: hmpps-book-secure-move-api-feeds-checker-script
+    overrideValues:
+      env:
+        AWS_DEFAULT_REGION: "eu-west-2"
+      namespace_secrets:
+        book-a-secure-move-reporting-s3-bucket:
+          AWS_ACCESS_KEY_ID: access_key_id
+          AWS_SECRET_ACCESS_KEY: secret_access_key
+          S3_REPORTING_BUCKET_NAME: bucket_name
+        hmpps-book-secure-move-api-production-feeds-secrets:
+          INFO_SLACKWEBHOOK: book-secure-move-feeds-webhook
+          ALERT_SLACKWEBHOOK: alerts-book-a-secure-move-webhook
+  - name: generate-journeys
+    schedule: "0 10,14 * * *"
+    command: ["bundle", "exec", "rake", "fake_data:create_journeys"]
+    overrideValues:
+      env:
+        AWS_DEFAULT_REGION: "eu-west-2"
+        ELASTIC_APM_ENABLED: "false"
+      namespace_secrets:
+        book-a-secure-move-reporting-s3-bucket:
+          AWS_ACCESS_KEY_ID: access_key_id
+          AWS_SECRET_ACCESS_KEY: secret_access_key
+          S3_REPORTING_BUCKET_NAME: bucket_name
+  - name: metrics
+    schedule: "*/30 * * * *"
+    command: ["bundle", "exec", "rake", "metrics:export"]
+    overrideValues:
+      env:
+        S3_METRICS_REGION: "eu-west-2"
+      namespace_secrets:
+        book-a-secure-move-metrics-s3-bucket:
+          S3_METRICS_ACCESS_KEY_ID: access_key_id
+          S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
+          S3_METRICS_BUCKET_NAME: bucket_name
+  - name: gps-data
+    schedule: "0 5 * * 4"
+    command: ["bundle", "exec", "rake", "gps_data_report"]
+  - name: notify-unnotified-moves
+    schedule: "0 * * * *"
+    command: ["bundle", "exec", "rake", "notify_unnotified_moves"]
+  - name: requeue-unsent-notifications
+    schedule: "30 * * * *"
+    command: ["bundle", "exec", "rake", "requeue_unsent_notifications"]
+
+dashboards:
+  enabled: true
