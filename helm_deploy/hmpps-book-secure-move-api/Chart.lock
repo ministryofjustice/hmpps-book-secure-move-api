@@ -1,0 +1,6 @@
+dependencies:
+- name: generic-service
+  repository: https://ministryofjustice.github.io/hmpps-helm-charts
+  version: 2.5.0
+digest: sha256:0d2a944396a000c71c884efb35c980d6fb36d04ae3f3a006391300abe44987ad
+generated: "2023-06-12T19:03:31.721695+01:00"

@@ -51,3 +51,6 @@ spec/wiremock/wiremock-standalone.jar
 
 # Ignore out dir
 out
+
+# Helm dependencies
+helm_deploy/hmpps-book-secure-move-api/charts/*

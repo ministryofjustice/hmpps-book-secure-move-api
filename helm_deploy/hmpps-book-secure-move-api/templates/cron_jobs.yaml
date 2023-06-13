@@ -1,0 +1,42 @@
+{{- $genericService := index .Values "generic-service" -}}
+{{- range .Values.cronJobs }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) .name | trunc 52 }}
+  name: {{ $fullName }}
+  labels:
+    app: {{ $fullName }}
+spec:
+  schedule: "{{ .schedule }}"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 5
+  {{- if .suspend }}
+  suspend: true
+  {{- end }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .name }}
+              image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default $.Chart.AppVersion }}"
+              command:
+                {{- toYaml .command | nindent 16 }}
+              {{- if .args }}
+              args:
+                {{- toYaml .args | nindent 16 }}
+              {{- end }}
+              imagePullPolicy: {{ $genericService.image.pullPolicy }}
+              {{- with .volumeMounts }}
+              volumeMounts:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+{{- include "deployment.envs" (merge $genericService (default (dict) .overrideValues)) | nindent 14 }}
+          {{- with .volumes }}
+          volumes:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: OnFailure
+{{- end }}

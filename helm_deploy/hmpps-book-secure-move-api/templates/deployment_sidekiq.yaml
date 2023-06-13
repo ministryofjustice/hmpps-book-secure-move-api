@@ -1,0 +1,36 @@
+{{- $genericService := index .Values "generic-service" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "generic-service.fullname" . }}-sidekiq"
+  labels:
+    helm.sh/chart: {{ include "generic-service.chart" . }}
+{{- if $genericService.image.tag }}
+    app.kubernetes.io/version: {{ $genericService.image.tag | quote }}
+{{- end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app: "{{ include "generic-service.fullname" . }}-sidekiq"
+spec:
+  replicas: {{ .Values.sidekiq.replicaCount }}
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: "{{ include "generic-service.fullname" . }}-sidekiq"
+  template:
+    metadata:
+      labels:
+        app: "{{ include "generic-service.fullname" . }}-sidekiq"
+        tier: sidekiq
+    spec:
+      containers:
+        - name: sidekiq
+          image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ $genericService.image.pullPolicy }}
+          command: ["bundle"]
+          args: ["exec", "sidekiq"]
+{{- include "deployment.envs" ($genericService | merge .Values.sidekiq.overrideValues ) | nindent 10 }}

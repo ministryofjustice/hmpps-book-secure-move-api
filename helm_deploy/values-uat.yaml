@@ -1,0 +1,75 @@
+---
+# Per environment values which override defaults in hmpps-book-secure-move-api/values.yaml
+
+buildEnv: uat
+
+generic-service:
+  replicaCount: 2
+
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/server-snippet: add_header X-Robots-Tag "noindex, nofollow";
+    hosts:
+      - hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk
+      - hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk
+
+  env:
+    ENCRYPTOR_SALT: '5xZMNA+9m9gTblE6omRvG0vAXu+vy2K+KIn7wBPrt3uMYjalx0zyq43X7UiHtr3U'
+    SENTRY_ENVIRONMENT: "uat"
+    SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk"
+
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+  namespace_secrets:
+    hmpps-book-secure-move-api-secrets-uat:
+      SECRET_KEY_BASE: secret_key_base_key
+      NOMIS_SITE: nomis_site_key
+      NOMIS_SITE_FOR_API: nomis_site_for_api_key
+      NOMIS_SITE_FOR_AUTH: nomis_site_for_auth_key
+      NOMIS_CLIENT_ID: nomis_client_id_key
+      NOMIS_CLIENT_SECRET: nomis_client_secret_key
+      NOMIS_AUTH_SCHEME: nomis_auth_scheme_key
+      NOMIS_API_PATH_PREFIX: nomis_api_path_prefix_key
+      NOMIS_PRISON_API_PATH_PREFIX: nomis_prison_api_path_prefix_key
+      NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
+      SENTRY_DSN: sentry_dsn_key
+      CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
+    rds-instance-hmpps-book-secure-move-api-uat:
+      DATABASE_URL: url
+    book-a-secure-move-documents-s3-bucket:
+      S3_ACCESS_KEY_ID: access_key_id
+      S3_SECRET_ACCESS_KEY: secret_access_key
+      S3_BUCKET_ARN: bucket_arn
+      S3_BUCKET_NAME: bucket_name
+    book-a-secure-move-metrics-s3-bucket:
+      S3_METRICS_ACCESS_KEY_ID: access_key_id
+      S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
+      S3_METRICS_REGION: "eu-west-2"
+      S3_METRICS_BUCKET_NAME: bucket_name
+    elasticache-hmpps-book-secure-move-api-uat:
+      REDIS_URL: url
+
+sidekiq:
+  overrideValues:
+    namespace_secrets:
+      hmpps-book-secure-move-api-secrets-uat:
+        GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
+
+cronJobs:
+  - name: token-cleanup
+    schedule: "0 1 * * 0"
+    command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]
+  - name: metrics
+    schedule: "*/30 * * * *"
+    command: ["bundle", "exec", "rake", "metrics:export"]
+    overrideValues:
+      env:
+        S3_METRICS_REGION: "eu-west-2"
+      namespace_secrets:
+        book-a-secure-move-metrics-s3-bucket:
+          S3_METRICS_ACCESS_KEY_ID: access_key_id
+          S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
+          S3_METRICS_BUCKET_NAME: bucket_name

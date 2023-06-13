@@ -1,0 +1,59 @@
+---
+buildEnv: unknown_environment # override per environment
+
+generic-service:
+  nameOverride: hmpps-book-secure-move-api
+
+  replicaCount: 4
+
+  image:
+    repository: quay.io/hmpps/hmpps-book-secure-move-api
+    tag: app_version    # override at deployment time
+    port: 3000
+
+  ingress:
+    annotations:
+      external-dns.alpha.kubernetes.io/aws-weight: "100"
+      nginx.ingress.kubernetes.io/server-snippet: |
+        location = /metrics {
+          deny all;
+        }
+    enabled: true
+    hosts: [] # override per environment
+    tlsSecretName: '' # blank string for cluster secret, or override for prod using cloud platforms secret
+
+  livenessProbe:
+    httpGet:
+      path: /ping.json
+
+  readinessProbe:
+    httpGet:
+      path: /ping.json
+
+  # Environment variables to load into the deployment
+  env:
+    DB_POOL: "8"
+    GOVUK_NOTIFY_STATUS_URL: "https://status.notifications.service.gov.uk"
+    LOG_LEVEL: "debug"
+    PROMETHEUS_METRICS: "on"
+    RAILS_LOG_TO_STDOUT: "true"
+    RAILS_MAX_THREADS: "5"
+    SERVE_API_DOCS: "true"
+    SIDEKIQ_PROCESSES: "3"
+
+  allowlist: false
+
+  poddisruptionbudget:
+    minAvailable: 50%
+  
+sidekiq:
+  replicaCount: 2
+  overrideValues:
+    env:
+      AWS_DEFAULT_REGION: "eu-west-2"
+      GOVUK_NOTIFY_ENABLED: "TRUE"
+      GOVUK_NOTIFY_MOVE_TEMPLATE_ID: "8f2e5473-15f2-4db8-a2de-153f26a0524c"
+      GOVUK_NOTIFY_PER_TEMPLATE_ID: "e2aa6021-d0a7-475f-afce-68b49ec9c2c6"
+
+dashboards:
+  enabled: false
