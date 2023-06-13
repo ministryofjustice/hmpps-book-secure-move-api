@@ -16,7 +16,7 @@ generic-service:
   env:
     ENCRYPTOR_SALT: ':D\xCD\xF4\xCE&v\x9C\xA6\xBC3`~\xCEDA\vn\xDD\xF5S1\x9B\xDD~4\xF6\xBE\x0FY\xECl'
     SENTRY_ENVIRONMENT: "staging"
-    SERVER_FQDN: "hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk"
+    SERVER_FQDN: "hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk"
     WEB_CONCURRENCY: "3"
 
 

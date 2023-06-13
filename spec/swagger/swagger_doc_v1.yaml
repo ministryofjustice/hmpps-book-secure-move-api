@@ -10,13 +10,13 @@
 :servers:
   - :url: http://localhost:3000/api/v1
     :description: Local development (localhost)
-  - :url: https://hmpps-book-secure-move-api-dev.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  - :url: https://hmpps-book-secure-move-api-dev.apps.cloud-platform.service.justice.gov.uk/api/v1
     :description: Dev API
-  - :url: https://hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  - :url: https://hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk/api/v1
     :description: Staging API
-  - :url: https://hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  - :url: https://hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk/api/v1
     :description: UAT API
-  - :url: https://hmpps-book-secure-move-api-preprod.apps.live-1.cloud-platform.service.justice.gov.uk/api/v1
+  - :url: https://hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk/api/v1
     :description: PreProd API
   - :url: https://api.bookasecuremove.service.justice.gov.uk/api/v1
     :description: Production API

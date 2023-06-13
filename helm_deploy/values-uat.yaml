@@ -16,7 +16,7 @@ generic-service:
   env:
     ENCRYPTOR_SALT: '5xZMNA+9m9gTblE6omRvG0vAXu+vy2K+KIn7wBPrt3uMYjalx0zyq43X7UiHtr3U'
     SENTRY_ENVIRONMENT: "uat"
-    SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk"
+    SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk"
 
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
