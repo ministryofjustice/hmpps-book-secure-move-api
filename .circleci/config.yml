@@ -646,12 +646,15 @@ workflows:
             --build-arg APP_BUILD_DATE=$(date -Is)
             --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
             --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
-      - deploy_staging:
+      - hmpps/deploy_env:
+          <<: *only_main
+          name: deploy_staging
+          env: "staging"
           context:
             - hmpps-common-vars
-          <<: *only_main
+            - basm-api-staging
           requires:
-            - build_image
+            - build_quay
       - deploy_uat:
           context:
             - hmpps-common-vars
