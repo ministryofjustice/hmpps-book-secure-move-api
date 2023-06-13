@@ -11,6 +11,7 @@ generic-service:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-ingress-staging-new-hmpps-book-secure-move-api-staging-green
     hosts:
       - hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk
+      - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
   env:
     ENCRYPTOR_SALT: ':D\xCD\xF4\xCE&v\x9C\xA6\xBC3`~\xCEDA\vn\xDD\xF5S1\x9B\xDD~4\xF6\xBE\x0FY\xECl'

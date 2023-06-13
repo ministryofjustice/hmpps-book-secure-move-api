@@ -12,6 +12,7 @@ generic-service:
     hosts:
       - api.bookasecuremove.service.justice.gov.uk
       - hmpps-book-secure-move-api-production.apps.live-1.cloud-platform.service.justice.gov.uk
+      - hmpps-book-secure-move-api-production.apps.cloud-platform.service.justice.gov.uk
     tlsSecretName: hmpps-book-secure-move-api-production-cert
 
   env:
@@ -86,18 +87,6 @@ cronJobs:
         hmpps-book-secure-move-api-production-feeds-secrets:
           INFO_SLACKWEBHOOK: book-secure-move-feeds-webhook
           ALERT_SLACKWEBHOOK: alerts-book-a-secure-move-webhook
-  - name: generate-journeys
-    schedule: "0 10,14 * * *"
-    command: ["bundle", "exec", "rake", "fake_data:create_journeys"]
-    overrideValues:
-      env:
-        AWS_DEFAULT_REGION: "eu-west-2"
-        ELASTIC_APM_ENABLED: "false"
-      namespace_secrets:
-        book-a-secure-move-reporting-s3-bucket:
-          AWS_ACCESS_KEY_ID: access_key_id
-          AWS_SECRET_ACCESS_KEY: secret_access_key
-          S3_REPORTING_BUCKET_NAME: bucket_name
   - name: metrics
     schedule: "*/30 * * * *"
     command: ["bundle", "exec", "rake", "metrics:export"]
@@ -118,6 +107,9 @@ cronJobs:
   - name: requeue-unsent-notifications
     schedule: "30 * * * *"
     command: ["bundle", "exec", "rake", "requeue_unsent_notifications"]
+  - name: per-report-job
+    schedule: "0 7 1 1,4,7,10 *"
+    command: ["bundle", "exec", "rake", "reports:person_escort_record_quality"]
 
 dashboards:
   enabled: true
