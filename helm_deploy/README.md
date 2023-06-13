@@ -63,7 +63,7 @@ Ensure a certificate definition exists in the cloud-platform-environments repo u
 e.g.
 
 ```sh
-cloud-platform-environments/namespaces/live-1.cloud-platform.service.justice.gov.uk/[INSERT NAMESPACE NAME]/05-certificate.yaml
+cloud-platform-environments/namespaces/live.cloud-platform.service.justice.gov.uk/[INSERT NAMESPACE NAME]/05-certificate.yaml
 ```
 
 Ensure the certificate is created and ready for use.
