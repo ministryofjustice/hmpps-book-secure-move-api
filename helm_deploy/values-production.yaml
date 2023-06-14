@@ -8,7 +8,7 @@ generic-service:
 
   ingress:
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-ingress-production-new-hmpps-book-secure-move-api-production-green
+    external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-production-green
     hosts:
       - api.bookasecuremove.service.justice.gov.uk
       - hmpps-book-secure-move-api-production.apps.live-1.cloud-platform.service.justice.gov.uk
@@ -53,7 +53,6 @@ generic-service:
     book-a-secure-move-metrics-s3-bucket:
       S3_METRICS_ACCESS_KEY_ID: access_key_id
       S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
-      S3_METRICS_REGION: "eu-west-2"
       S3_METRICS_BUCKET_NAME: bucket_name
     elasticache-hmpps-book-secure-move-api-production:
       REDIS_URL: url
