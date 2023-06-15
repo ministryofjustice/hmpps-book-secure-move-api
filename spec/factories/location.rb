@@ -34,6 +34,13 @@ FactoryBot.define do
       # This is already the default
     end
 
+    trait :approved_premises do
+      sequence(:key) { |x| "ap_#{x}" }
+      title { "#{Faker::Address.city} Approved Premises" }
+      location_type { Location::LOCATION_TYPE_APPROVED_PREMISES }
+      nomis_agency_id { 'GUIAP' }
+    end
+
     trait :court do
       sequence(:key) { |x| "court_#{x}" }
       title { "#{Faker::Address.city} Crown Court" }
