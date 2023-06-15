@@ -655,12 +655,15 @@ workflows:
             - basm-api-staging
           requires:
             - build_quay
-      - deploy_uat:
+      - hmpps/deploy_env:
+          <<: *only_deploy_tags
+          name: deploy_uat
+          env: "uat"
           context:
             - hmpps-common-vars
-          <<: *only_deploy_tags
+            - basm-api-uat
           requires:
-            - build_image
+            - build_quay
       - deploy_preprod:
           context:
             - hmpps-common-vars
