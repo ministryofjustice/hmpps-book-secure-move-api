@@ -454,6 +454,25 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'with explicit AP `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'approved_premises') }
+      let(:to_location) { create :location, :approved_premises, suppliers: [supplier] }
+
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
+      end
+
+      it 'creates a move' do
+        expect { do_post }.to change(Move, :count).by(1)
+      end
+
+      it 'sets the move_type to `approved_premises`' do
+        do_post
+
+        expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'approved_premises'
+      end
+    end
+
     context 'with a profile relationship' do
       let(:profile) { create(:profile) }
       let(:data) do
