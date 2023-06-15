@@ -18,6 +18,19 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
+FROM ruby:2.7.3-alpine as swagger-build
+
+WORKDIR /app
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata
+RUN gem update bundler --no-document
+
+COPY Gemfile Gemfile.lock .ruby-version /app/
+RUN bundle install --jobs 4 --retry 3
+
+COPY . /app
+RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
+
+############### End of Build step ###############
 FROM ruby:2.7.3-alpine
 
 ARG APP_BUILD_DATE
@@ -50,6 +63,8 @@ RUN wget https://data.iana.org/time-zones/tzdb/tzdata.zi -O /usr/share/zoneinfo/
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
 COPY --chown=appuser:appgroup . /app
+COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v1/swagger.yaml /app/swagger/v1/swagger.yaml
+COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v2/swagger.yaml /app/swagger/v2/swagger.yaml
 
 USER $APPUID
 CMD bundle exec puma -p $PUMA_PORT
