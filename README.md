@@ -166,7 +166,7 @@ Graphviz also needs to be installed (`brew install graphviz`) for this to work. 
 ## Continuous Integration
 
 We use Circle CI for continuous integration: running tests, generating swagger documentation, updating the
-Docker image and automatically deploying to development and staging environment:
+Docker image and automatically deploying to staging environment:
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-book-secure-move-api)](https://circleci.com/gh/ministryofjustice/hmpps-book-secure-move-api)
 
@@ -174,17 +174,15 @@ Docker image and automatically deploying to development and staging environment:
 
 This application is deployed to [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/).
 
-Currently we have a `dev`, `staging`, `uat`, `preprod` and `production` environments on Cloud
+Currently we have a `staging`, `uat`, `preprod` and `production` environments on Cloud
 Platform with the following namespace names:
 
-* hmpps-book-secure-move-api-dev
 * hmpps-book-secure-move-api-staging
 * hmpps-book-secure-move-api-uat
 * hmpps-book-secure-move-api-preprod
 * hmpps-book-secure-move-api-production
 
-`dev` and `staging` environments are automatically deployed on successful builds of the
-`main` branch on Circle CI.
+The `staging` environment is automatically deployed on successful builds of the `main` branch on Circle CI.
 
 `preprod`, `uat` and `production` can be deployed by generating a new tag
 following [semantic versioning](https://semver.org/) pointing to the current commit. We typically do this locally with:
