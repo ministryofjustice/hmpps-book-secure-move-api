@@ -36,7 +36,6 @@ generic-service:
       NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
-      PER_QUALITY_REPORT_RECIPIENTS: per_quality_report_recipients
     rds-instance-hmpps-book-secure-move-api-preprod:
       DATABASE_URL: url
     book-a-secure-move-documents-s3-bucket:
@@ -47,7 +46,6 @@ generic-service:
     book-a-secure-move-metrics-s3-bucket:
       S3_METRICS_ACCESS_KEY_ID: access_key_id
       S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
-      S3_METRICS_REGION: "eu-west-2"
       S3_METRICS_BUCKET_NAME: bucket_name
     elasticache-hmpps-book-secure-move-api-preprod:
       REDIS_URL: url
