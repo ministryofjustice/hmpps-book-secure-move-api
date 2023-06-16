@@ -1,6 +1,6 @@
 ### Jira link
 
-P4-<TODO>
+MAP-<TODO>
 
 ### What?
 
@@ -20,7 +20,7 @@ I am doing this because:
 ### Have you? (optional)
 
 - [ ] Updated API docs if necessary	
-- [ ] Added environment variables to [deployment repository](https://github.com/ministryofjustice/hmpps-book-secure-move-api-deploy)
+- [ ] Added any new environment variables to the [Helm chart](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/main/helm_deploy)
 
 ### Deployment risks (optional)
 

@@ -148,7 +148,7 @@ The rake task needs to be run manually to see up to date documentation in local 
 to the `spec/swagger` files. Changes to other files under `swagger/vN` should be automatically picked up by reloading the Swagger UI page.
 
 The task generates output files in `swagger/vN/swagger.yaml` - these are not tracked in git as they can be generated as needed and are
-automatically created as part of the Circle CI build pipeline. Documentation can be downloaded via Swagger UI and imported into a REST
+automatically created as part of the container image build. Documentation can be downloaded via Swagger UI and imported into a REST
 client such as Insomnia or Postman for easier manual API testing.
 
 ### Database schema
