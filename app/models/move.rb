@@ -58,6 +58,7 @@ class Move < VersionedModel
     prison_remand: 'prison_remand',
     prison_transfer: 'prison_transfer',
     video_remand: 'video_remand',
+    approved_premises: 'approved_premises',
   }
 
   CANCELLATION_REASONS = [

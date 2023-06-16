@@ -9,4 +9,5 @@ MoveType:
     - prison_remand
     - prison_transfer
     - video_remand
+    - approved_premises
   description: Indicates the type of move, e.g. prison transfer or court appearance
