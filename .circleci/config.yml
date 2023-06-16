@@ -664,12 +664,15 @@ workflows:
             - basm-api-uat
           requires:
             - build_quay
-      - deploy_preprod:
+      - hmpps/deploy_env:
+          <<: *only_deploy_tags
+          name: deploy_preprod
+          env: "preprod"
           context:
             - hmpps-common-vars
-          <<: *only_deploy_tags
+            - basm-api-preprod
           requires:
-            - build_image
+            - build_quay
       - hold_production:
           <<: *only_deploy_tags
           type: approval
