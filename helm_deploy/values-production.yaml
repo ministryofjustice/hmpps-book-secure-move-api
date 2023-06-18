@@ -57,6 +57,12 @@ generic-service:
     elasticache-hmpps-book-secure-move-api-production:
       REDIS_URL: url
 
+sidekiq:
+  overrideValues:
+    namespace_secrets:
+      hmpps-book-secure-move-api-secrets-production:
+        GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
+
 cronJobs:
   - name: token-cleanup
     schedule: "0 1 * * 0"
