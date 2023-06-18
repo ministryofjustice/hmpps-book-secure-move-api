@@ -684,12 +684,15 @@ workflows:
           <<: *only_deploy_tags
           requires:
             - build_image
-      - deploy_production:
+      - hmpps/deploy_env:
+          <<: *only_deploy_tags
+          name: deploy_production
+          env: "production"
           context:
             - hmpps-common-vars
-          <<: *only_deploy_tags
+            - basm-api-production
           requires:
-            - hold_production
+            - build_quay
   ecr-cleanup:
     jobs: [ecr-cleanup]
     triggers:

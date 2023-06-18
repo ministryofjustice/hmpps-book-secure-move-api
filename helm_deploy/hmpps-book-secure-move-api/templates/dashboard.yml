@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hmpps-book-secure-move-dashboard
+  name: hmpps-book-secure-move-grafana-dashboard
   labels:
     grafana_dashboard: ""
 data:
