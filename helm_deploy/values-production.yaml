@@ -7,8 +7,8 @@ generic-service:
   replicaCount: 20
 
   ingress:
-  annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-production-green
+    annotations:
+      external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-production-green
     hosts:
       - api.bookasecuremove.service.justice.gov.uk
       - hmpps-book-secure-move-api-production.apps.live-1.cloud-platform.service.justice.gov.uk
