@@ -500,14 +500,6 @@ jobs:
       - *attach-tmp-workspace
       - *rubocop
 
-  build_image:
-    executor: cloud-platform-executor
-    steps:
-      - checkout
-      - *attach-tmp-workspace
-      - setup_remote_docker
-      - build_docker_image
-
   deploy_dev:
     resource_class: small
     executor: cloud-platform-executor
@@ -625,12 +617,6 @@ workflows:
           <<: *all_tags
           requires:
             - setup_test_environment
-      - build_image:
-          <<: *only_for_deployment
-          requires:
-            - api_docs
-            - rspec_tests
-            - linters
       - hmpps/build_docker:
           <<: *only_for_deployment
           requires:
@@ -677,13 +663,13 @@ workflows:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - build_image
+            - build_quay
       - notify_of_approval:
           context:
             - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
-            - build_image
+            - build_quay
       - hmpps/deploy_env:
           <<: *only_deploy_tags
           name: deploy_production
