@@ -692,7 +692,7 @@ workflows:
             - hmpps-common-vars
             - basm-api-production
           requires:
-            - build_quay
+            - hold_production
   ecr-cleanup:
     jobs: [ecr-cleanup]
     triggers:
