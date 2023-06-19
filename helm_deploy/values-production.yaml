@@ -59,7 +59,16 @@ generic-service:
 
 sidekiq:
   overrideValues:
+    env:
+      ATHENA_REGION: "eu-west-2"
+      ATHENA_WORK_GROUP: track_a_move_prod
+      ATHENA_DATABASE: track_a_move_prod
     namespace_secrets:
+      book-a-secure-move-api-iam:
+        ATHENA_ACCESS_KEY_ID: access_key_id
+        ATHENA_SECRET_ACCESS_KEY: secret_access_key
+      hmpps-book-secure-move-api-production-gps-data-secrets:
+        SLACK_WEBHOOK: webhook
       hmpps-book-secure-move-api-secrets-production:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
 
