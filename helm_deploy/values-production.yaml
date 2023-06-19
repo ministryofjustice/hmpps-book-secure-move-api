@@ -67,12 +67,12 @@ sidekiq:
       book-a-secure-move-api-iam:
         ATHENA_ACCESS_KEY_ID: access_key_id
         ATHENA_SECRET_ACCESS_KEY: secret_access_key
-        S3_REPORTING_BUCKET_NAME: bucket_name
       hmpps-book-secure-move-api-production-gps-data-secrets:
         SLACK_WEBHOOK: webhook
       hmpps-book-secure-move-api-secrets-production:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
       book-a-secure-move-reporting-s3-bucket:
+        S3_REPORTING_BUCKET_NAME: bucket_name
         S3_REPORTING_ACCESS_KEY_ID: access_key_id
         S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
 
