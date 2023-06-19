@@ -350,47 +350,6 @@ jobs:
       - *attach-tmp-workspace
       - *rubocop
 
-  ecr-cleanup:
-    resource_class: small
-    executor: cloud-platform-executor
-    steps:
-      - run:
-          name: Check for too many images
-          command: |
-            COUNT=$(aws ecr list-images --repository-name 'book-a-secure-move/hmpps-book-secure-move-api' | jq '.imageIds | unique_by(.imageDigest) | length')
-            if [ "$COUNT" -lt 200 ]; then circleci step halt; exit 0;  fi
-            echo "More than 200 images found. Proceeding with cleanup"
-      - run:
-          name: Delete UNTAGGED images first
-          command: |
-            UNTAGGED_IMAGES=$( aws ecr list-images \
-              --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-              --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
-            aws ecr batch-delete-image --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-              --image-ids "$UNTAGGED_IMAGES" || true
-      - run:
-          name: Build manifest
-          command: |
-            TO_DELETE=$(aws ecr describe-images \
-              --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-              --query 'imageDetails[]' --output json |\
-              jq 'sort_by(.imagePushedAt)|map(select(any(.imageTags[]? ; contains("latest"))|not))|map({imageDigest})|.[:100]')
-            echo "Tags to be deleted:"
-            aws ecr describe-images  \
-              --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-              --image-ids "${TO_DELETE}" --output json  | jq '.[][].imageTags[]'
-            echo "Deleting:"
-            aws ecr batch-delete-image \
-            --repository-name book-a-secure-move/hmpps-book-secure-move-api \
-            --image-ids "${TO_DELETE}"
-      - run:
-          name: Confirm live latest images
-          command: |
-            echo "Images tagged latest left behind"
-            aws ecr describe-images \
-            --repository-name  book-a-secure-move/hmpps-book-secure-move-api \
-            --query 'imageDetails[]' --output json | \
-            jq 'map(select(any(.imageTags[]? ; contains("latest"))))|map(.imageTags)'
 workflows:
   version: 2
 
@@ -422,7 +381,7 @@ workflows:
             - api_docs
             - rspec_tests
             - linters
-          name: build_quay
+          name: build_image
           image_name: "quay.io/hmpps/hmpps-book-secure-move-api"
           additional_docker_build_args: >
             --label build.git.sha=${CIRCLE_SHA1}
@@ -439,7 +398,7 @@ workflows:
             - hmpps-common-vars
             - basm-api-staging
           requires:
-            - build_quay
+            - build_image
       - hmpps/deploy_env:
           <<: *only_deploy_tags
           name: deploy_uat
@@ -448,7 +407,7 @@ workflows:
             - hmpps-common-vars
             - basm-api-uat
           requires:
-            - build_quay
+            - build_image
       - hmpps/deploy_env:
           <<: *only_deploy_tags
           name: deploy_preprod
@@ -457,18 +416,18 @@ workflows:
             - hmpps-common-vars
             - basm-api-preprod
           requires:
-            - build_quay
+            - build_image
       - hold_production:
           <<: *only_deploy_tags
           type: approval
           requires:
-            - build_quay
+            - build_image
       - notify_of_approval:
           context:
             - hmpps-common-vars
           <<: *only_deploy_tags
           requires:
-            - build_quay
+            - build_image
       - hmpps/deploy_env:
           <<: *only_deploy_tags
           name: deploy_production
@@ -478,9 +437,3 @@ workflows:
             - basm-api-production
           requires:
             - hold_production
-  ecr-cleanup:
-    jobs: [ecr-cleanup]
-    triggers:
-      - schedule:
-          cron: "0 9 * * 1"
-          <<: *only_main
