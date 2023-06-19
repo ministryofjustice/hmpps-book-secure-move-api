@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: '2'
 description: Helm Chart for the Book a Secure Move API application
 name: hmpps-book-secure-move-api
-version: 0.1.0
+version: 0.2.0
 dependencies:
   - name: generic-service
     version: 2.5.0

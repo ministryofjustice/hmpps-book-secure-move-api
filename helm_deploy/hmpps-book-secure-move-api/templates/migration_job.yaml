@@ -1,0 +1,29 @@
+{{- $genericService := index .Values "generic-service" -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "migration" | trunc 52 }}
+  name: {{ $fullName }}
+  labels:
+    app: {{ $fullName }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-1"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ $fullName }}
+    spec:
+      containers:
+        - name: migration
+          image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default $.Chart.AppVersion }}"
+          command:
+            - bundle
+            - exec
+            - rails
+            - db:migrate
+          imagePullPolicy: {{ $genericService.image.pullPolicy }}
+{{- include "deployment.envs" $genericService | nindent 10 }}
+      restartPolicy: Never
