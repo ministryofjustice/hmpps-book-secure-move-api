@@ -54,6 +54,7 @@ sidekiq:
       GOVUK_NOTIFY_ENABLED: "TRUE"
       GOVUK_NOTIFY_MOVE_TEMPLATE_ID: "8f2e5473-15f2-4db8-a2de-153f26a0524c"
       GOVUK_NOTIFY_PER_TEMPLATE_ID: "e2aa6021-d0a7-475f-afce-68b49ec9c2c6"
+      GOVUK_NOTIFY_REPORT_TEMPLATE_ID: "aa5fbe87-e530-495e-8135-fcd237893be9"
 
 dashboards:
   enabled: false
