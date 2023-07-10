@@ -205,6 +205,10 @@ references:
     run:
       name: Database setup
       command: bundle exec rake db:create
+  _migrate-db: &migrate-db
+    run:
+      name: Database migrations
+      command: bundle exec rake db:migrate
   _api_docs: &api_docs
     run:
       name: Generate API Docs
@@ -289,6 +293,7 @@ commands:
     description: "Create and seed the Database"
     steps:
       - *create-db
+      - *migrate-db
 
 jobs:
   notify_of_approval:
@@ -335,7 +340,6 @@ jobs:
       - checkout
       - build-base
       - *wait-for-db
-      - *create-db
       - *attach-tmp-workspace
       - *wait-for-wiremock
       - *load_wiremock_mappings
