@@ -1,5 +1,121 @@
 # Changelog
 
+## [v3.35.11](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.11) (2023-07-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.10...v3.35.11)
+
+**Merged pull requests:**
+
+- Add index to access\_logs timestamp [\#2113](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2113) ([Thource](https://github.com/Thource))
+
+## [v3.35.10](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.10) (2023-07-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.9...v3.35.10)
+
+**Merged pull requests:**
+
+- fix: Add missing environment variable for reports [\#2114](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2114) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.9) (2023-06-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.8...v3.35.9)
+
+**Merged pull requests:**
+
+- \[MAP-26\] Add DB migration hook to Helm chart [\#2111](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2111) ([jimbali](https://github.com/jimbali))
+- ci: Fix reporting bucket name secret [\#2110](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2110) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.8) (2023-06-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.7...v3.35.8)
+
+**Merged pull requests:**
+
+- feat: Add more env vars for reporting jobs [\#2109](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2109) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.7) (2023-06-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.6...v3.35.7)
+
+**Merged pull requests:**
+
+- ci: Remove ECR cleanup job [\#2107](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2107) ([jimbali](https://github.com/jimbali))
+- \[MAP-26\] Allow non-string args for Sidekiq [\#2106](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2106) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.6) (2023-06-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.5...v3.35.6)
+
+**Merged pull requests:**
+
+- ci: Require correct build step and remove the old one [\#2105](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2105) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.5) (2023-06-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.4...v3.35.5)
+
+**Merged pull requests:**
+
+- \[MAP-26\] Fix ingresses and CircleCI config [\#2104](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2104) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.4) (2023-06-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.3...v3.35.4)
+
+**Merged pull requests:**
+
+- \[MAP-26\] Deploy to Production using Helm [\#2103](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2103) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.3) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.2...v3.35.3)
+
+**Merged pull requests:**
+
+- ci: Fix some Helm values for preprod [\#2102](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2102) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.2) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.1...v3.35.2)
+
+**Merged pull requests:**
+
+- \[MAP-26\] Deploy preprod using Helm [\#2101](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2101) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.1) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.0...v3.35.1)
+
+**Merged pull requests:**
+
+- \[MAP-26\] Generate swagger docs during container build [\#2100](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2100) ([jimbali](https://github.com/jimbali))
+
+## [v3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.0) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/3.35.0...v3.35.0)
+
+## [3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/3.35.0) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.1...3.35.0)
+
+**Merged pull requests:**
+
+- MAP-21 Add Approved premises move type [\#2098](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2098) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.34.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.34.1) (2023-06-15)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.0...v3.34.1)
+
+**Merged pull requests:**
+
+- ci: Deploy UAT using Helm [\#2099](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2099) ([jimbali](https://github.com/jimbali))
+- \[MAP-26\] tweak the Helm templates [\#2097](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2097) ([jimbali](https://github.com/jimbali))
+- \[MAP-26\] Deploy to Staging using Helm [\#2096](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2096) ([jimbali](https://github.com/jimbali))
+- \[MAP-26\] Add Helm charts [\#2095](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2095) ([jimbali](https://github.com/jimbali))
+- ci: Build and push the image to quay.io [\#2094](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2094) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Upgrade gems as suggested by Dependabot [\#2083](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2083) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.34.0 [\#2078](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2078) ([jimbali](https://github.com/jimbali))
+
 ## [v3.34.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.34.0) (2023-05-26)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.33.0...v3.34.0)
