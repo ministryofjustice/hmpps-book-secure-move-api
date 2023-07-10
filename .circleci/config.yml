@@ -208,7 +208,7 @@ references:
   _migrate-db: &migrate-db
     run:
       name: Database migrations
-      command: bundle exec rake db:migrate
+      command: bundle exec rake db:migrate RAILS_ENV=test
   _api_docs: &api_docs
     run:
       name: Generate API Docs
