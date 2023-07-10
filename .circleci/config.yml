@@ -325,6 +325,8 @@ jobs:
       - checkout
       - *attach-tmp-workspace
       - build-base
+      - *create-db
+      - *migrate-db
       - *api_docs
       - persist_to_workspace:
           root: .
