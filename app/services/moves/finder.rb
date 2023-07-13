@@ -23,7 +23,7 @@ module Moves
       apply_ordering(scope)
     end
 
-  private
+    private
 
     def apply_ordering(scope)
       case @order_by
@@ -161,6 +161,39 @@ module Moves
       scope.where(multi_date_journey_exists_scope).where(journey_scope.arel.exists)
     end
 
+    def apply_lodge_date_location_filters_scope(scope)
+      lodge_scope = Lodging.where('move_id = moves.id')
+
+      if filter_params.key?(:from_location_id)
+        lodge_scope = lodge_scope.where(location_id: split_params(:from_location_id))
+
+        if filter_params.key?(:date_from) && filter_params.key?(:date_to)
+          lodge_scope = lodge_scope.where('end_date BETWEEN ? AND ?', filter_params[:date_from], filter_params[:date_to])
+        elsif filter_params.key?(:date_from)
+          lodge_scope = lodge_scope.where('end_date >= ?', filter_params[:date_from])
+        elsif filter_params.key?(:date_to)
+          lodge_scope = lodge_scope.where('end_date <= ?', filter_params[:date_to])
+        end
+      end
+
+      if filter_params.key?(:to_location_id)
+        lodge_scope = lodge_scope.where(location_id: split_params(:to_location_id))
+
+        if filter_params.key?(:date_from) && filter_params.key?(:date_to)
+          lodge_scope = lodge_scope.where('start_date BETWEEN ? AND ?', filter_params[:date_from], filter_params[:date_to])
+        elsif filter_params.key?(:date_from)
+          lodge_scope = lodge_scope.where('start_date >= ?', filter_params[:date_from])
+        elsif filter_params.key?(:date_to)
+          lodge_scope = lodge_scope.where('start_date <= ?', filter_params[:date_to])
+        end
+      end
+
+      # need to somehow check if the lodging is the last lodging on the move, and if it is, show the move on the
+      # move end location's incoming dashboard for the end_date of the lodging
+
+      scope.where(lodge_scope.arel.exists)
+    end
+
     def apply_date_and_location_filters(scope)
       should_apply_filter = filter_params.key?(:from_location_id) ||
         filter_params.key?(:to_location_id) ||
@@ -172,8 +205,10 @@ module Moves
 
       moves_scope = apply_move_date_location_filters_scope(scope)
       journeys_scope = apply_journey_date_location_filters_scope(scope)
+      lodges_scope = apply_lodge_date_location_filters_scope(scope)
 
-      mapped_sql = [moves_scope, journeys_scope].map(&:to_sql).join(') UNION (')
+      mapped_sql = [moves_scope, journeys_scope, lodges_scope].map(&:to_sql).join(') UNION (')
+      p mapped_sql
       unionized_sql = "((#{mapped_sql})) moves"
 
       Move.where(id: Move.from(unionized_sql))
