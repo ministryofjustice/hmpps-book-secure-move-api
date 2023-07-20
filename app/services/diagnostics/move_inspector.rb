@@ -116,6 +116,27 @@ class Diagnostics::MoveInspector
       @output << "(no move events recorded)\n"
     end
 
+    @output << <<~ENDLODGINGS
+
+      LODGINGS
+      --------
+    ENDLODGINGS
+    @output << if move.lodgings.any?
+                 Terminal::Table.new { |t|
+                   t.headings = %w[START_DATE END_DATE LOCATION]
+                   t.rows = move.lodgings.map do |lodging|
+                     [
+                       lodging.start_date,
+                       lodging.end_date,
+                       lodging.location,
+                     ]
+                   end
+                   t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
+                 }.to_s << "\n"
+               else
+                 "(no lodgings planned)\n"
+               end
+
     @output << <<~ENDJOURNEYS
 
       JOURNEYS
