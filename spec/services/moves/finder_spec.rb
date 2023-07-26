@@ -805,7 +805,7 @@ RSpec.describe Moves::Finder do
     end
 
     context 'and day two, incoming, third location' do
-      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', to_location_id: [move.to_location_id] } }
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.to_location_id] } }
 
       it { is_expected.to be_empty }
     end
