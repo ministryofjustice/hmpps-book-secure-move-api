@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_22_161607) do
+ActiveRecord::Schema.define(version: 2023_07_07_133106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2023_03_22_161607) do
     t.text "body"
     t.index ["client"], name: "index_access_logs_on_client"
     t.index ["controller_name"], name: "index_access_logs_on_controller_name"
+    t.index ["timestamp"], name: "index_access_logs_on_timestamp"
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -362,6 +363,17 @@ ActiveRecord::Schema.define(version: 2023_03_22_161607) do
     t.index ["region_id"], name: "index_locations_regions_on_region_id"
   end
 
+  create_table "lodgings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "move_id", null: false
+    t.uuid "location_id", null: false
+    t.string "start_date"
+    t.string "end_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["location_id"], name: "index_lodgings_on_location_id"
+    t.index ["move_id"], name: "index_lodgings_on_move_id"
+  end
+
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.date "date"
     t.uuid "from_location_id", null: false
@@ -677,6 +689,8 @@ ActiveRecord::Schema.define(version: 2023_03_22_161607) do
   add_foreign_key "locations", "categories"
   add_foreign_key "locations_regions", "locations"
   add_foreign_key "locations_regions", "regions"
+  add_foreign_key "lodgings", "locations"
+  add_foreign_key "lodgings", "moves"
   add_foreign_key "moves", "allocations"
   add_foreign_key "moves", "locations", column: "from_location_id", name: "fk_rails_moves_from_location_id"
   add_foreign_key "moves", "locations", column: "to_location_id", name: "fk_rails_moves_to_location_id"

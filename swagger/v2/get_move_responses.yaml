@@ -15,6 +15,7 @@
           - $ref: "../v1/allocation.yaml#/Allocation"
           - $ref: "../v1/profile.yaml#/Profile"
           - $ref: "../v1/supplier.yaml#/Supplier"
+          - $ref: "../v1/lodging.yaml#/Lodging"
 "400":
   type: object
   required:

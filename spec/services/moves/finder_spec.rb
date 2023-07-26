@@ -648,4 +648,858 @@ RSpec.describe Moves::Finder do
       end
     end
   end
+
+  context 'with 1 lodging' do
+    let(:move) { create(:move, date: '2022-01-01') }
+    let(:middle_location) { create(:location) }
+
+    before do
+      create(:lodging, move: move, start_date: '2022-01-01', end_date: '2022-01-02', location: middle_location)
+    end
+
+    context 'and day one, outgoing, first location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day one, outgoing, second location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, outgoing, third location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, first location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, second location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [middle_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day one, incoming, third location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, first location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, second location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [middle_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day two, outgoing, third location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, first location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, second location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, third location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+  end
+
+  context 'with 1 lodging not on the start date of the move' do
+    let(:move) { create(:move, date: '2022-01-01') }
+    let(:middle_location) { create(:location) }
+
+    before do
+      create(:lodging, move: move, start_date: '2022-01-02', end_date: '2022-01-03', location: middle_location)
+    end
+
+    context 'and day one, outgoing, first location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, outgoing, second location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, outgoing, third location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, first location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, second location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, third location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, first location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day two, outgoing, second location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, third location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, first location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, second location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [middle_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day two, incoming, third location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day three, outgoing, first location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day three, outgoing, second location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', from_location_id: [middle_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day three, outgoing, third location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day three, incoming, first location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day three, incoming, second location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', to_location_id: [middle_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day three, incoming, third location' do
+      let(:filter_params) { { date_from: '2022-01-03', date_to: '2022-01-03', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+  end
+
+  context 'with 3 lodgings not on the start date of the move' do
+    let(:move) { create(:move, date: '2022-01-01') }
+    let!(:lodging1) { create(:lodging, move: move, start_date: '2022-01-02', end_date: '2022-01-03') }
+    let!(:lodging2) { create(:lodging, move: move, start_date: '2022-01-03', end_date: '2022-01-05') }
+    let!(:lodging3) { create(:lodging, move: move, start_date: '2022-01-05', end_date: '2022-01-09') }
+    let(:filter_params) { { date_from: date, date_to: date, id_field => location.id } }
+
+    context 'and day 1' do
+      let(:date) { '2022-01-01' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 2' do
+      let(:date) { '2022-01-02' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 3' do
+      let(:date) { '2022-01-03' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 4' do
+      let(:date) { '2022-01-04' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 5' do
+      let(:date) { '2022-01-05' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 6' do
+      let(:date) { '2022-01-06' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 7' do
+      let(:date) { '2022-01-07' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 8' do
+      let(:date) { '2022-01-08' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context 'and day 9' do
+      let(:date) { '2022-01-09' }
+
+      context 'when outgoing' do
+        let(:id_field) { :from_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'when incoming' do
+        let(:id_field) { :to_location_id }
+
+        context 'with location 1' do
+          let(:location) { move.from_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 2' do
+          let(:location) { lodging1.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 3' do
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 4' do
+          let(:location) { lodging3.location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'with location 5' do
+          let(:location) { move.to_location }
+
+          it { is_expected.to contain_exactly(move) }
+        end
+      end
+    end
+  end
 end

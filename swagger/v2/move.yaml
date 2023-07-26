@@ -153,3 +153,6 @@ Move:
         timeline_events:
           $ref: "../v1/event_reference.yaml#/EventReference"
           description: Aliased events about this record and its nested relationships
+        lodgings:
+          $ref: "../v1/lodging_reference.yaml#/LodgingReference"
+          description: Planned Lodgings related to this move

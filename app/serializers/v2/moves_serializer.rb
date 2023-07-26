@@ -52,6 +52,7 @@ module V2
       supplier
       important_events
       timeline_events
+      lodgings
     ].freeze
 
     belongs_to :from_location, serializer: ::LocationSerializer
@@ -61,6 +62,7 @@ module V2
     belongs_to :supplier, serializer: SupplierSerializer
     belongs_to :allocation, serializer: AllocationSerializer
 
+    has_many_if_included :lodgings, serializer: LodgingSerializer
     has_many_if_included :important_events, serializer: ImportantEventsSerializer, &:important_events
     has_many_if_included :timeline_events, serializer: TimelineEventsSerializer, &:all_events_for_timeline
   end
