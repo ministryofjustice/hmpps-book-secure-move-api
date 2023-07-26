@@ -1,0 +1,35 @@
+Lodging:
+  type: object
+  required:
+  - type
+  - attributes
+  properties:
+    id:
+      type: string
+      format: uuid
+      example: 7cc9c528-3301-4d69-f200-69e964ce1ed8
+      description: The unique identifier (UUID) of this object
+    type:
+      type: string
+      example: lodgings
+      enum:
+      - lodgings
+      description: The type of this object - always `lodgings`
+    attributes:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+    relationships:
+      type: object
+      properties:
+        move:
+          $ref: move_reference.yaml#/MoveReference
+          description: The Move associated with this Lodging
+        location:
+          $ref: location_reference.yaml#/LocationReference
+          description: The Location associated with this Lodging

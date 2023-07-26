@@ -38,4 +38,5 @@ MoveIncludeParameter:
       - important_events
       - timeline_events
       - timeline_events.eventable
+      - lodgings
   example: from_location
