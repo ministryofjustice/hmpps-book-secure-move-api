@@ -512,9 +512,9 @@ RSpec.describe Moves::Finder do
 
         it 'returns completed and confirmed moves' do
           expect(results).to contain_exactly(
-                               move_with_completed_person_escort_record,
-                               move_with_confirmed_person_escort_record,
-                             )
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
         end
       end
 
@@ -523,10 +523,10 @@ RSpec.describe Moves::Finder do
 
         it 'returns all non completed or confirmed moves' do
           expect(results).to contain_exactly(
-                               move_with_no_person_escort_record,
-                               move_with_unstarted_person_escort_record,
-                               move_with_in_progress_person_escort_record,
-                             )
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+          )
         end
       end
 
@@ -535,12 +535,12 @@ RSpec.describe Moves::Finder do
 
         it 'returns all moves' do
           expect(results).to contain_exactly(
-                               move_with_no_person_escort_record,
-                               move_with_unstarted_person_escort_record,
-                               move_with_in_progress_person_escort_record,
-                               move_with_completed_person_escort_record,
-                               move_with_confirmed_person_escort_record,
-                             )
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
         end
       end
 
@@ -549,12 +549,12 @@ RSpec.describe Moves::Finder do
 
         it 'returns all moves' do
           expect(results).to contain_exactly(
-                               move_with_no_person_escort_record,
-                               move_with_unstarted_person_escort_record,
-                               move_with_in_progress_person_escort_record,
-                               move_with_completed_person_escort_record,
-                               move_with_confirmed_person_escort_record,
-                             )
+            move_with_no_person_escort_record,
+            move_with_unstarted_person_escort_record,
+            move_with_in_progress_person_escort_record,
+            move_with_completed_person_escort_record,
+            move_with_confirmed_person_escort_record,
+          )
         end
       end
     end

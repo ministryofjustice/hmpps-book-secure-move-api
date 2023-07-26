@@ -1,5 +1,4 @@
 class Lodging < ApplicationRecord
-
   validates :move, presence: true
   validates :location, presence: true
   validates :start_date, presence: true
@@ -15,7 +14,6 @@ class Lodging < ApplicationRecord
 
   belongs_to :move, touch: true
   belongs_to :location
-
 private
 
   def end_date_after_start_date
