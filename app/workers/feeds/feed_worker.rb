@@ -10,7 +10,7 @@ class Feeds::FeedWorker
     time_since = TimeSince.new
 
     feed = "Feeds::#{feed_name.titleize}".constantize.new(date.beginning_of_day, date.end_of_day).call
-    CloudData::ReportsFeed.new.write(feed, "#{feed_name.pluralize}.jsonl", date)
+    CloudData::ReportsFeed.new.write(feed, feed_name.pluralize, date)
 
     Sidekiq.logger.info("Generated #{feed_name} feed in #{time_since.get} seconds")
   end

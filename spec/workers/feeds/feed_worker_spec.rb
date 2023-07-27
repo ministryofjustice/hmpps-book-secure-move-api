@@ -21,7 +21,7 @@ RSpec.describe Feeds::FeedWorker, type: :worker do
         described_class.new.perform(feed_name, Date.yesterday.to_s)
 
         expect(feed_class).to have_received(:new).once.with(Date.yesterday.beginning_of_day, Date.yesterday.end_of_day)
-        expect(reports_feed_instance).to have_received(:write).once.with('feed_data', "#{feed_name.pluralize}.jsonl", Date.yesterday)
+        expect(reports_feed_instance).to have_received(:write).once.with('feed_data', feed_name.pluralize, Date.yesterday)
       end
     end
   end

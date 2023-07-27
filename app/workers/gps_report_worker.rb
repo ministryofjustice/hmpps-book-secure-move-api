@@ -14,6 +14,7 @@ class GPSReportWorker
 
 private
 
+  DATABASE_NAME = 'gps_report'
   SUPPLIERS = %w[geoamey serco].freeze
 
   def post_results(results)
@@ -55,14 +56,19 @@ private
   def write_s3(content, supplier_name)
     return if content.blank?
 
-    folder_name = @date_range.first.strftime('%Y/%m/%d')
-    filename = "#{@date_range.first.strftime('%Y-%m-%d')}-#{@date_range.last.strftime('%Y-%m-%d')}"
-
-    full_name = "#{folder_name}/#{filename}-#{supplier_name}.csv"
-    obj = bucket.object(full_name)
+    obj = bucket.object(full_path(supplier_name))
     obj.put(body: content)
 
     obj
+  end
+
+  def full_path(supplier_name)
+    "#{ENV.fetch('S3_REPORTING_PROJECT_PATH')}/" \
+    'data/' \
+    "database_name=#{DATABASE_NAME}/" \
+    "table_name=gps_reports_#{supplier_name}/" \
+    "extraction_timestamp=#{@date_range.first.strftime('%Y%m%d%H%M%SZ')}/" \
+    "#{@date_range.first.strftime('%Y-%m-%d')}-#{@date_range.last.strftime('%Y-%m-%d')}-gps-report.csv"
   end
 
   def bucket
