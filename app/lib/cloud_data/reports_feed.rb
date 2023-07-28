@@ -1,5 +1,7 @@
 module CloudData
   class ReportsFeed
+    DATABASE_NAME = 'feeds_report'.freeze
+
     def initialize(bucket_name = ENV['S3_REPORTING_BUCKET_NAME'])
       client = Aws::S3::Client.new(
         access_key_id: ENV['S3_REPORTING_ACCESS_KEY_ID'],
@@ -9,19 +11,26 @@ module CloudData
       @bucket = @s3.bucket(bucket_name)
     end
 
-    def write(content, obj_name, report_date = Time.zone.yesterday)
-      folder_name = report_date.strftime('%Y/%m/%d')
-      filename = report_date.strftime('%Y-%m-%d')
+    def write(content, table, report_date = Time.zone.yesterday)
+      path = full_path(report_date, table)
 
-      full_name = "#{folder_name}/#{filename}-#{obj_name}"
-      obj = bucket.object(full_name)
+      obj = bucket.object(path)
       obj.put(body: content)
 
-      full_name
+      path
     end
 
   private
 
     attr_reader :bucket
+
+    def full_path(report_date, table)
+      "#{ENV.fetch('S3_REPORTING_PROJECT_PATH')}/" \
+      'data/' \
+      "database_name=#{DATABASE_NAME}/" \
+      "table_name=#{table}/" \
+      "extraction_timestamp=#{report_date.strftime('%Y%m%d%H%M%SZ')}/" \
+      "#{report_date.strftime('%Y-%m-%d')}-#{table}.jsonl"
+    end
   end
 end

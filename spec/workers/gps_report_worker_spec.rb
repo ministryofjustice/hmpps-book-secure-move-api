@@ -9,12 +9,29 @@ RSpec.describe GPSReportWorker, type: :worker do
       serco: instance_double(GPSReport),
     }
   end
+
   let(:slack_notifier) { instance_double(Slack::Notifier) }
-  let(:s3_object) { instance_double(Aws::S3::Object, presigned_url: 'aws_url') }
+  let(:s3_id) { 'my_id' }
+  let(:s3_key) { 'token123' }
+
+  let(:s3_client) do
+    Aws::S3::Client.new(
+      access_key_id: s3_id,
+      secret_access_key: s3_key,
+      stub_responses: true,
+    )
+  end
 
   around do |example|
     Timecop.freeze('2021-01-02 00:00:00')
-    example.run
+    ClimateControl.modify(
+      'S3_REPORTING_ACCESS_KEY_ID' => s3_id,
+      'S3_REPORTING_BUCKET_NAME' => 'moj-reg-dev',
+      'S3_REPORTING_SECRET_ACCESS_KEY' => s3_key,
+      'S3_REPORTING_PROJECT_PATH' => 'landing/hmpps-book-secure-move-api',
+    ) do
+      example.run
+    end
     Timecop.return
   end
 
@@ -23,8 +40,10 @@ RSpec.describe GPSReportWorker, type: :worker do
     allow(GPSReport).to receive(:new).with(anything, 'serco').and_return(gps_reports[:serco])
     allow(Slack::Notifier).to receive(:new).and_return(slack_notifier)
     allow(slack_notifier).to receive(:post)
-    allow(s3_object).to receive(:put)
-    allow(Aws::S3::Resource).to receive(:new).and_return(instance_double(Aws::S3::Resource, bucket: instance_double(Aws::S3::Bucket, object: s3_object)))
+    allow(Aws::S3::Client).to receive(:new).with(
+      access_key_id: s3_id,
+      secret_access_key: s3_key,
+    ).and_return(s3_client)
   end
 
   context 'when geoamey passes and serco fails' do
@@ -56,19 +75,19 @@ RSpec.describe GPSReportWorker, type: :worker do
         },
         failure_files: {
           geoamey: <<~STR,
+            reasons,no_gps_data
+            occurrences,1
+
+            move ids
+            ,#{move.id}
+          STR
+          serco: <<~STR,
             reasons,no_journeys,no_gps_data
             occurrences,1,2
 
             move ids
             ,#{move.id},#{move.id}
             ,,#{move.id}
-          STR
-          serco: <<~STR,
-            reasons,no_gps_data
-            occurrences,1
-
-            move ids
-            ,#{move.id}
           STR
         },
       }
@@ -83,13 +102,28 @@ RSpec.describe GPSReportWorker, type: :worker do
         failures: [{ move: move, reason: 'no_journeys' }, { move: move, reason: 'no_gps_data' }, { move: move, reason: 'no_gps_data' }],
         move_count: 7,
       })
+      allow_any_instance_of(Aws::S3::Object).to receive(:presigned_url).and_return('aws_url') # rubocop:disable RSpec/AnyInstance
 
       gps_report_worker.perform
     end
 
     it 'uploads the failure files to s3' do
-      expect(s3_object).to have_received(:put).with(body: test_data[:failure_files][:geoamey])
-      expect(s3_object).to have_received(:put).with(body: test_data[:failure_files][:serco])
+      expect(s3_client.api_requests.first.slice(:operation_name, :params)).to eq({
+        operation_name: :put_object,
+        params: {
+          bucket: 'moj-reg-dev',
+          key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_geoamey/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
+          body: test_data[:failure_files][:geoamey],
+        },
+      })
+      expect(s3_client.api_requests.second.slice(:operation_name, :params)).to eq(
+        operation_name: :put_object,
+        params: {
+          bucket: 'moj-reg-dev',
+          key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_serco/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
+          body: test_data[:failure_files][:serco],
+        },
+      )
     end
 
     it 'posts the expected results message to slack' do
