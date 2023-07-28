@@ -6,6 +6,8 @@ buildEnv: staging
 generic-service:
   replicaCount: 4
 
+  serviceAccountName: book-a-secure-move-api
+
   ingress:
     annotations:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-staging-green
