@@ -55,6 +55,10 @@ generic-service:
 sidekiq:
   overrideValues:
     namespace_secrets:
+      book-a-secure-move-reporting-s3-bucket:
+        S3_REPORTING_BUCKET_NAME: bucket_name
+        S3_REPORTING_ACCESS_KEY_ID: access_key_id
+        S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
       hmpps-book-secure-move-api-secrets-staging:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
 
