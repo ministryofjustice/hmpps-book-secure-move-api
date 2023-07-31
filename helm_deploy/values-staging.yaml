@@ -17,6 +17,8 @@ generic-service:
 
   env:
     ENCRYPTOR_SALT: ':D\xCD\xF4\xCE&v\x9C\xA6\xBC3`~\xCEDA\vn\xDD\xF5S1\x9B\xDD~4\xF6\xBE\x0FY\xECl'
+    S3_REPORTING_BUCKET_NAME: moj-reg-dev
+    S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-dev
     SENTRY_ENVIRONMENT: "staging"
     SERVER_FQDN: "hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk"
     WEB_CONCURRENCY: "3"
@@ -42,6 +44,9 @@ generic-service:
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
     rds-instance-hmpps-book-secure-move-api-staging:
       DATABASE_URL: url
+    book-a-secure-move-ap-user:
+      S3_REPORTING_ACCESS_KEY_ID: access_key_id
+      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     book-a-secure-move-documents-s3-bucket:
       S3_ACCESS_KEY_ID: access_key_id
       S3_SECRET_ACCESS_KEY: secret_access_key
@@ -57,10 +62,6 @@ generic-service:
 sidekiq:
   overrideValues:
     namespace_secrets:
-      book-a-secure-move-reporting-s3-bucket:
-        S3_REPORTING_BUCKET_NAME: bucket_name
-        S3_REPORTING_ACCESS_KEY_ID: access_key_id
-        S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
       hmpps-book-secure-move-api-secrets-staging:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
 
@@ -86,10 +87,6 @@ cronJobs:
       env:
         AWS_DEFAULT_REGION: "eu-west-2"
       namespace_secrets:
-        book-a-secure-move-reporting-s3-bucket:
-          AWS_ACCESS_KEY_ID: access_key_id
-          AWS_SECRET_ACCESS_KEY: secret_access_key
-          S3_REPORTING_BUCKET_NAME: bucket_name
         hmpps-book-secure-move-api-staging-feeds-secrets:
           INFO_SLACKWEBHOOK: book-secure-move-feeds-webhook
           ALERT_SLACKWEBHOOK: alerts-book-a-secure-move-webhook
@@ -101,11 +98,6 @@ cronJobs:
       env:
         AWS_DEFAULT_REGION: "eu-west-2"
         ELASTIC_APM_ENABLED: "false"
-      namespace_secrets:
-        book-a-secure-move-reporting-s3-bucket:
-          AWS_ACCESS_KEY_ID: access_key_id
-          AWS_SECRET_ACCESS_KEY: secret_access_key
-          S3_REPORTING_BUCKET_NAME: bucket_name
   - name: metrics
     schedule: "*/30 * * * *"
     command: ["bundle", "exec", "rake", "metrics:export"]
