@@ -59,9 +59,11 @@ RSpec.describe CloudData::ReportsFeed do
     expect(s3_client.api_requests.first.slice(:operation_name, :params)).to eq({
       operation_name: :put_object,
       params: {
+        acl: 'bucket-owner-full-control',
         body: content,
         bucket: bucket_name,
         key: full_path,
+        server_side_encryption: 'AES256',
       },
     })
   end

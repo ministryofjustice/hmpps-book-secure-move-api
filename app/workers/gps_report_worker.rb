@@ -57,7 +57,7 @@ private
     return if content.blank?
 
     obj = bucket.object(full_path(supplier_name))
-    obj.put(body: content)
+    obj.put(acl: 'bucket-owner-full-control', body: content, server_side_encryption: 'AES256')
 
     obj
   end

@@ -15,7 +15,7 @@ module CloudData
       path = full_path(report_date, table)
 
       obj = bucket.object(path)
-      obj.put(body: content)
+      obj.put(acl: 'bucket-owner-full-control', body: content, server_side_encryption: 'AES256')
 
       path
     end
