@@ -111,17 +111,21 @@ RSpec.describe GPSReportWorker, type: :worker do
       expect(s3_client.api_requests.first.slice(:operation_name, :params)).to eq({
         operation_name: :put_object,
         params: {
+          acl: 'bucket-owner-full-control',
+          body: test_data[:failure_files][:geoamey],
           bucket: 'moj-reg-dev',
           key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_geoamey/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
-          body: test_data[:failure_files][:geoamey],
+          server_side_encryption: 'AES256',
         },
       })
       expect(s3_client.api_requests.second.slice(:operation_name, :params)).to eq(
         operation_name: :put_object,
         params: {
+          acl: 'bucket-owner-full-control',
+          body: test_data[:failure_files][:serco],
           bucket: 'moj-reg-dev',
           key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_serco/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
-          body: test_data[:failure_files][:serco],
+          server_side_encryption: 'AES256',
         },
       )
     end
