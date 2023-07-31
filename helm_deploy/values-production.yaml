@@ -19,6 +19,8 @@ generic-service:
     DISABLE_WEBHOOK_CREATE_EVENT_GEOAMEY: "true"
     DISABLE_WEBHOOK_CREATE_EVENT_SERCO: "true"
     ENCRYPTOR_SALT: '+\xCC[#\xF7\x14\x98^\x0F\xCC\x9A\xA4\x16\xE3\x9E\xF2W8\xE6\x059\xFD\xB0\x1F.OK\x91\x85*(A'
+    S3_REPORTING_BUCKET_NAME: moj-reg-prod
+    S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-prod
     SENTRY_ENVIRONMENT: "production"
     SERVE_API_DOCS: "false"
     SERVER_FQDN: "api.bookasecuremove.service.justice.gov.uk"
@@ -45,6 +47,9 @@ generic-service:
       PER_QUALITY_REPORT_RECIPIENTS: per_quality_report_recipients
     rds-instance-hmpps-book-secure-move-api-production:
       DATABASE_URL: url
+    book-a-secure-move-ap-user:
+      S3_REPORTING_ACCESS_KEY_ID: access_key_id
+      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     book-a-secure-move-documents-s3-bucket:
       S3_ACCESS_KEY_ID: access_key_id
       S3_SECRET_ACCESS_KEY: secret_access_key
@@ -71,10 +76,6 @@ sidekiq:
         SLACK_WEBHOOK: webhook
       hmpps-book-secure-move-api-secrets-production:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
-      book-a-secure-move-reporting-s3-bucket:
-        S3_REPORTING_BUCKET_NAME: bucket_name
-        S3_REPORTING_ACCESS_KEY_ID: access_key_id
-        S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
 
 cronJobs:
   - name: token-cleanup
@@ -98,10 +99,6 @@ cronJobs:
       env:
         AWS_DEFAULT_REGION: "eu-west-2"
       namespace_secrets:
-        book-a-secure-move-reporting-s3-bucket:
-          AWS_ACCESS_KEY_ID: access_key_id
-          AWS_SECRET_ACCESS_KEY: secret_access_key
-          S3_REPORTING_BUCKET_NAME: bucket_name
         hmpps-book-secure-move-api-production-feeds-secrets:
           INFO_SLACKWEBHOOK: book-secure-move-feeds-webhook
           ALERT_SLACKWEBHOOK: alerts-book-a-secure-move-webhook

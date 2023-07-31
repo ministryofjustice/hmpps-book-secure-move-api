@@ -38,7 +38,6 @@ generic-service:
     PROMETHEUS_METRICS: "on"
     RAILS_LOG_TO_STDOUT: "true"
     RAILS_MAX_THREADS: "5"
-    S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api
     SERVE_API_DOCS: "true"
     SIDEKIQ_PROCESSES: "3"
 
