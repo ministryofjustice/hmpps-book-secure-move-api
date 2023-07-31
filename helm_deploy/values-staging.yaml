@@ -72,24 +72,6 @@ cronJobs:
   - name: feeds-job
     schedule: "0 3 * * *"
     command: ["bundle", "exec", "rake", "feed[all]"]
-  - name: feeds-checker
-    schedule: "0 7 * * *"
-    command: ["/bin/bash"]
-    args: ["/feeds/runme.sh"]
-    volumeMounts:
-      - name: script
-        mountPath: "/feeds"
-    volumes:
-      - name: script
-        configMap:
-          name: hmpps-book-secure-move-api-feeds-checker-script
-    overrideValues:
-      env:
-        AWS_DEFAULT_REGION: "eu-west-2"
-      namespace_secrets:
-        hmpps-book-secure-move-api-staging-feeds-secrets:
-          INFO_SLACKWEBHOOK: book-secure-move-feeds-webhook
-          ALERT_SLACKWEBHOOK: alerts-book-a-secure-move-webhook
   - name: generate-journeys
     suspend: true
     schedule: "0 10,14 * * *"
