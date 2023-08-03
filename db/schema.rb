@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_07_133106) do
+ActiveRecord::Schema.define(version: 2023_08_02_145421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -404,9 +404,11 @@ ActiveRecord::Schema.define(version: 2023_07_07_133106) do
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
+    t.index ["from_location_id"], name: "index_moves_on_from_location_id"
     t.index ["prison_transfer_reason_id"], name: "index_moves_on_prison_transfer_reason_id"
     t.index ["reference"], name: "index_moves_on_reference", unique: true
     t.index ["supplier_id"], name: "index_moves_on_supplier_id"
+    t.index ["to_location_id"], name: "index_moves_on_to_location_id"
     t.index ["updated_at"], name: "index_moves_on_updated_at"
   end
 
