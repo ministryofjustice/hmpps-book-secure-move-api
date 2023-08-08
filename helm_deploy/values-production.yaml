@@ -18,7 +18,6 @@ generic-service:
   env:
     DISABLE_WEBHOOK_CREATE_EVENT_GEOAMEY: "true"
     DISABLE_WEBHOOK_CREATE_EVENT_SERCO: "true"
-    ENCRYPTOR_SALT: '+\xCC[#\xF7\x14\x98^\x0F\xCC\x9A\xA4\x16\xE3\x9E\xF2W8\xE6\x059\xFD\xB0\x1F.OK\x91\x85*(A'
     S3_REPORTING_BUCKET_NAME: moj-reg-prod
     S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-prod
     SENTRY_ENVIRONMENT: "production"
@@ -45,6 +44,7 @@ generic-service:
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
       PER_QUALITY_REPORT_RECIPIENTS: per_quality_report_recipients
+      ENCRYPTOR_SALT: encryptor_salt
     rds-instance-hmpps-book-secure-move-api-production:
       DATABASE_URL: url
     book-a-secure-move-ap-user:
