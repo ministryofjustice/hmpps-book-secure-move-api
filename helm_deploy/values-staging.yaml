@@ -16,7 +16,6 @@ generic-service:
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
   env:
-    ENCRYPTOR_SALT: ':D\xCD\xF4\xCE&v\x9C\xA6\xBC3`~\xCEDA\vn\xDD\xF5S1\x9B\xDD~4\xF6\xBE\x0FY\xECl'
     S3_REPORTING_BUCKET_NAME: moj-reg-dev
     S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-dev
     SENTRY_ENVIRONMENT: "staging"
@@ -42,6 +41,7 @@ generic-service:
       NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
+      ENCRYPTOR_SALT: encryptor_salt
     rds-instance-hmpps-book-secure-move-api-staging:
       DATABASE_URL: url
     book-a-secure-move-ap-user:

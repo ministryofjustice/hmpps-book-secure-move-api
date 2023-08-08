@@ -14,7 +14,6 @@ generic-service:
       - hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk
 
   env:
-    ENCRYPTOR_SALT: '\xA7\xFD\xD1\xEAfu*hk\xE8\xD4Gi\xF0@:\xD1\x0Ew\xEC\xB7\xCF\xF4\xD9\xB3\xA9,\x8D\a,\x19\xEC'
     SENTRY_ENVIRONMENT: "preprod"
     SERVE_API_DOCS: "false"
     SERVER_FQDN: "hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk"
@@ -37,6 +36,7 @@ generic-service:
       NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
+      ENCRYPTOR_SALT: encryptor_salt
     rds-instance-hmpps-book-secure-move-api-preprod:
       DATABASE_URL: url
     book-a-secure-move-documents-s3-bucket:

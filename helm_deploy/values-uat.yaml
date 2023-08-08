@@ -15,7 +15,6 @@ generic-service:
       - hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk
 
   env:
-    ENCRYPTOR_SALT: '5xZMNA+9m9gTblE6omRvG0vAXu+vy2K+KIn7wBPrt3uMYjalx0zyq43X7UiHtr3U'
     SENTRY_ENVIRONMENT: "uat"
     SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk"
 
@@ -38,6 +37,7 @@ generic-service:
       NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
+      ENCRYPTOR_SALT: encryptor_salt
     rds-instance-hmpps-book-secure-move-api-uat:
       DATABASE_URL: url
     book-a-secure-move-documents-s3-bucket:
