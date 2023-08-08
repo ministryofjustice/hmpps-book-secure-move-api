@@ -168,56 +168,62 @@ module Moves
       scope.where(multi_date_journey_exists_scope).where(journey_scope.arel.exists)
     end
 
-    def apply_lodge_start_date_filter(scope)
+    def lodge_date_filter_args(field)
       if filter_params.key?(:date_from) && filter_params.key?(:date_to)
-        scope = scope.where('start_date BETWEEN ? AND ?', filter_params[:date_from], filter_params[:date_to])
+        return ["#{field} BETWEEN ? AND ?", filter_params[:date_from], filter_params[:date_to]]
       elsif filter_params.key?(:date_from)
-        scope = scope.where('start_date >= ?', filter_params[:date_from])
+        return ["#{field} >= ?", filter_params[:date_from]]
       elsif filter_params.key?(:date_to)
-        scope = scope.where('start_date <= ?', filter_params[:date_to])
+        return ["#{field} <= ?", filter_params[:date_to]]
       end
 
-      scope
-    end
-
-    def apply_lodge_end_date_filter(scope, aylias = '')
-      if filter_params.key?(:date_from) && filter_params.key?(:date_to)
-        scope = scope.where("#{aylias}end_date BETWEEN ? AND ?", filter_params[:date_from], filter_params[:date_to])
-      elsif filter_params.key?(:date_from)
-        scope = scope.where("#{aylias}end_date >= ?", filter_params[:date_from])
-      elsif filter_params.key?(:date_to)
-        scope = scope.where("#{aylias}end_date <= ?", filter_params[:date_to])
-      end
-
-      scope
+      nil
     end
 
     def apply_lodge_date_location_filters_scope(scope)
       scopes = []
-      lodge_scope = Lodging.where('move_id = moves.id')
 
       if filter_params.key?(:from_location_id)
-        first_lodge_scope = Move.from(Lodging.where('move_id = moves.id')
-                                             .where('moves.from_location_id' => split_params(:from_location_id))
-                                             .order(end_date: :asc).limit(1)).group('id')
-        scopes << apply_lodge_start_date_filter(first_lodge_scope)
+        first_lodging_scope =
+          scope.select('moves.*')
+            .joins(:lodgings)
+            .where(from_location_id: split_params(:from_location_id))
+            .group('moves.id')
 
-        lodge_scope = lodge_scope.where(location_id: split_params(:from_location_id))
-        lodge_scope = apply_lodge_end_date_filter(lodge_scope)
+        date_args = lodge_date_filter_args('MIN(lodgings.start_date)')
+        first_lodging_scope = first_lodging_scope.having(*date_args) if date_args
+        scopes << first_lodging_scope
+
+        intermediary_lodgings_scope = scope.select('moves.*')
+          .joins(:lodgings)
+          .where('lodgings.location_id' => split_params(:from_location_id))
+
+        date_args = lodge_date_filter_args('end_date')
+        intermediary_lodgings_scope = intermediary_lodgings_scope.where(*date_args) if date_args
+        scopes << intermediary_lodgings_scope
       end
 
       if filter_params.key?(:to_location_id)
-        last_lodge_scope = Move.from(Lodging.where('move_id = moves.id')
-                                            .where('moves.to_location_id' => split_params(:to_location_id))
-                                            .order(end_date: :desc).limit(1)).group('id')
-        scopes << apply_lodge_end_date_filter(last_lodge_scope)
+        last_lodging_scope =
+          scope.select('moves.*')
+            .joins(:lodgings)
+            .where(to_location_id: split_params(:to_location_id))
+            .group('moves.id')
 
-        lodge_scope = lodge_scope.where(location_id: split_params(:to_location_id))
-        lodge_scope = apply_lodge_start_date_filter(lodge_scope)
+        date_args = lodge_date_filter_args('MAX(lodgings.end_date)')
+        last_lodging_scope = last_lodging_scope.having(*date_args) if date_args
+        scopes << last_lodging_scope
+
+        intermediary_lodgings_scope = scope.select('moves.*')
+          .joins(:lodgings)
+          .where('lodgings.location_id' => split_params(:to_location_id))
+
+        date_args = lodge_date_filter_args('start_date')
+        intermediary_lodgings_scope = intermediary_lodgings_scope.where(*date_args) if date_args
+        scopes << intermediary_lodgings_scope
       end
 
-      scopes << lodge_scope
-      scopes.map { |s| scope.where(s.arel.exists) }
+      scopes
     end
 
     def apply_date_and_location_filters(scope)
