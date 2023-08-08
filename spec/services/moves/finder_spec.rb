@@ -854,6 +854,12 @@ RSpec.describe Moves::Finder do
     let!(:lodging3) { create(:lodging, move: move, start_date: '2022-01-05', end_date: '2022-01-09') }
     let(:filter_params) { { date_from: date, date_to: date, id_field => location.id } }
 
+    # Other lodgings outside of the date range
+    let(:move2) { create(:move, date: '2022-02-01', from_location: move.from_location, to_location: move.to_location) }
+    let!(:lodging4) { create(:lodging, move: move2, start_date: '2022-02-02', end_date: '2022-02-03') }
+    let!(:lodging5) { create(:lodging, move: move2, start_date: '2022-02-03', end_date: '2022-02-05') }
+    let!(:lodging6) { create(:lodging, move: move2, start_date: '2022-02-05', end_date: '2022-02-09') }
+
     context 'and day 1' do
       let(:date) { '2022-01-01' }
 
