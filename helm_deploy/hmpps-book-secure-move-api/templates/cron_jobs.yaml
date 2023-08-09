@@ -19,6 +19,7 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: book-a-secure-move-api
           containers:
             - name: {{ .name }}
               image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default $.Chart.AppVersion }}"

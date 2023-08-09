@@ -3,6 +3,7 @@ buildEnv: unknown_environment # override per environment
 
 generic-service:
   nameOverride: hmpps-book-secure-move-api
+  serviceAccountName: book-a-secure-move-api
 
   replicaCount: 4
 

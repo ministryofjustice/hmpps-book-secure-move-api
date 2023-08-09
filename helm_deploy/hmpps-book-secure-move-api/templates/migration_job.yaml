@@ -16,6 +16,7 @@ spec:
     metadata:
       name: {{ $fullName }}
     spec:
+      serviceAccountName: book-a-secure-move-api
       containers:
         - name: migration
           image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default $.Chart.AppVersion }}"
