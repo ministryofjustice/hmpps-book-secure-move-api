@@ -4,6 +4,11 @@ orbs:
   hmpps: ministryofjustice/hmpps@7.1.0
   slack: circleci/slack@4.12.1
 
+parameters:
+  alerts-slack-channel:
+    type: string
+    default: pecs-dev
+
 aliases:
   - &notify_slack_on_failure
     slack/notify:
