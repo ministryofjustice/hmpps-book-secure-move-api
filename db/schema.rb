@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_02_145421) do
+ActiveRecord::Schema.define(version: 2023_08_08_150500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -372,6 +372,7 @@ ActiveRecord::Schema.define(version: 2023_08_02_145421) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["location_id"], name: "index_lodgings_on_location_id"
     t.index ["move_id"], name: "index_lodgings_on_move_id"
+    t.index ["start_date", "move_id"], name: "index_lodgings_on_start_date_and_move_id", unique: true
   end
 
   create_table "moves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
