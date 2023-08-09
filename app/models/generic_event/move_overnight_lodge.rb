@@ -25,14 +25,16 @@ class GenericEvent
     end
 
     def trigger(dry_run: false)
-      unless dry_run
-        Lodging.create!(
-          move_id: eventable_id,
-          location_id: location_id,
-          start_date: start_date,
-          end_date: end_date,
-        )
-      end
+      return if dry_run
+
+      Lodging.create!(
+        move_id: eventable_id,
+        location_id: location_id,
+        start_date: start_date,
+        end_date: end_date,
+      )
+    rescue ActiveRecord::RecordNotUnique
+      # do nothing
     end
 
   private
