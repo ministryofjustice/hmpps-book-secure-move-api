@@ -51,13 +51,9 @@ generic-service:
       S3_REPORTING_ACCESS_KEY_ID: access_key_id
       S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     book-a-secure-move-documents-s3-bucket:
-      S3_ACCESS_KEY_ID: access_key_id
-      S3_SECRET_ACCESS_KEY: secret_access_key
       S3_BUCKET_ARN: bucket_arn
       S3_BUCKET_NAME: bucket_name
     book-a-secure-move-metrics-s3-bucket:
-      S3_METRICS_ACCESS_KEY_ID: access_key_id
-      S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
       S3_METRICS_BUCKET_NAME: bucket_name
     elasticache-hmpps-book-secure-move-api-production:
       REDIS_URL: url
@@ -92,8 +88,6 @@ cronJobs:
         S3_METRICS_REGION: "eu-west-2"
       namespace_secrets:
         book-a-secure-move-metrics-s3-bucket:
-          S3_METRICS_ACCESS_KEY_ID: access_key_id
-          S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
           S3_METRICS_BUCKET_NAME: bucket_name
   - name: gps-data
     schedule: "0 5 * * 4"

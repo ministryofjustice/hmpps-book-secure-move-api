@@ -40,13 +40,9 @@ generic-service:
     rds-instance-hmpps-book-secure-move-api-preprod:
       DATABASE_URL: url
     book-a-secure-move-documents-s3-bucket:
-      S3_ACCESS_KEY_ID: access_key_id
-      S3_SECRET_ACCESS_KEY: secret_access_key
       S3_BUCKET_ARN: bucket_arn
       S3_BUCKET_NAME: bucket_name
     book-a-secure-move-metrics-s3-bucket:
-      S3_METRICS_ACCESS_KEY_ID: access_key_id
-      S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
       S3_METRICS_BUCKET_NAME: bucket_name
     elasticache-hmpps-book-secure-move-api-preprod:
       REDIS_URL: url

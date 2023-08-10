@@ -27,6 +27,7 @@ spec:
         app: "{{ include "generic-service.fullname" . }}-sidekiq"
         tier: sidekiq
     spec:
+      serviceAccountName: book-a-secure-move-api
       containers:
         - name: sidekiq
           image: "{{ $genericService.image.repository }}:{{ $genericService.image.tag | default .Chart.AppVersion }}"
