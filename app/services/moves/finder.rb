@@ -180,47 +180,38 @@ module Moves
       nil
     end
 
+    def intermediary_lodgings_scope(scope, filter_param, field)
+      intermediary_lodgings_scope = scope.select('moves.*')
+        .joins(:lodgings)
+        .where('lodgings.location_id' => split_params(filter_param))
+
+      date_args = lodge_date_filter_args(field)
+      intermediary_lodgings_scope = intermediary_lodgings_scope.where(*date_args) if date_args
+      intermediary_lodgings_scope
+    end
+
+    def edge_lodging_scope(scope, filter_param, field)
+      edge_lodging_scope = scope.select('moves.*')
+        .joins(:lodgings)
+        .where(filter_param => split_params(filter_param))
+        .group('moves.id')
+
+      date_args = lodge_date_filter_args(field)
+      edge_lodging_scope = edge_lodging_scope.having(*date_args) if date_args
+      edge_lodging_scope
+    end
+
     def apply_lodge_date_location_filters_scope(scope)
       scopes = []
 
       if filter_params.key?(:from_location_id)
-        first_lodging_scope =
-          scope.select('moves.*')
-            .joins(:lodgings)
-            .where(from_location_id: split_params(:from_location_id))
-            .group('moves.id')
-
-        date_args = lodge_date_filter_args('MIN(lodgings.start_date)')
-        first_lodging_scope = first_lodging_scope.having(*date_args) if date_args
-        scopes << first_lodging_scope
-
-        intermediary_lodgings_scope = scope.select('moves.*')
-          .joins(:lodgings)
-          .where('lodgings.location_id' => split_params(:from_location_id))
-
-        date_args = lodge_date_filter_args('end_date')
-        intermediary_lodgings_scope = intermediary_lodgings_scope.where(*date_args) if date_args
-        scopes << intermediary_lodgings_scope
+        scopes << edge_lodging_scope(scope, :from_location_id, 'MIN(lodgings.start_date)')
+        scopes << intermediary_lodgings_scope(scope, :from_location_id, 'end_date')
       end
 
       if filter_params.key?(:to_location_id)
-        last_lodging_scope =
-          scope.select('moves.*')
-            .joins(:lodgings)
-            .where(to_location_id: split_params(:to_location_id))
-            .group('moves.id')
-
-        date_args = lodge_date_filter_args('MAX(lodgings.end_date)')
-        last_lodging_scope = last_lodging_scope.having(*date_args) if date_args
-        scopes << last_lodging_scope
-
-        intermediary_lodgings_scope = scope.select('moves.*')
-          .joins(:lodgings)
-          .where('lodgings.location_id' => split_params(:to_location_id))
-
-        date_args = lodge_date_filter_args('start_date')
-        intermediary_lodgings_scope = intermediary_lodgings_scope.where(*date_args) if date_args
-        scopes << intermediary_lodgings_scope
+        scopes << edge_lodging_scope(scope, :to_location_id, 'MAX(lodgings.end_date)')
+        scopes << intermediary_lodgings_scope(scope, :to_location_id, 'start_date')
       end
 
       scopes
