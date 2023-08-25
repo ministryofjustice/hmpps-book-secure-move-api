@@ -25,10 +25,10 @@ RSpec.describe GPSReportWorker, type: :worker do
   around do |example|
     Timecop.freeze('2021-01-02 00:00:00')
     ClimateControl.modify(
-      'S3_REPORTING_ACCESS_KEY_ID' => s3_id,
-      'S3_REPORTING_BUCKET_NAME' => 'moj-reg-dev',
-      'S3_REPORTING_SECRET_ACCESS_KEY' => s3_key,
-      'S3_REPORTING_PROJECT_PATH' => 'landing/hmpps-book-secure-move-api',
+      'S3_AP_ACCESS_KEY_ID' => s3_id,
+      'S3_AP_BUCKET_NAME' => 'moj-reg-dev',
+      'S3_AP_SECRET_ACCESS_KEY' => s3_key,
+      'S3_AP_PROJECT_PATH' => 'landing/hmpps-book-secure-move-api',
     ) do
       example.run
     end
