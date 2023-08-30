@@ -14,8 +14,8 @@ generic-service:
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
   env:
-    S3_REPORTING_BUCKET_NAME: moj-reg-dev
-    S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-dev
+    S3_AP_BUCKET_NAME: moj-reg-dev
+    S3_AP_PROJECT_PATH: landing/hmpps-book-secure-move-api-dev
     SENTRY_ENVIRONMENT: "staging"
     SERVER_FQDN: "hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk"
     WEB_CONCURRENCY: "3"
@@ -43,13 +43,17 @@ generic-service:
     rds-instance-hmpps-book-secure-move-api-staging:
       DATABASE_URL: url
     book-a-secure-move-ap-user:
-      S3_REPORTING_ACCESS_KEY_ID: access_key_id
-      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
+      S3_AP_ACCESS_KEY_ID: access_key_id
+      S3_AP_SECRET_ACCESS_KEY: secret_access_key
     book-a-secure-move-documents-s3-bucket:
       S3_BUCKET_ARN: bucket_arn
       S3_BUCKET_NAME: bucket_name
     book-a-secure-move-metrics-s3-bucket:
       S3_METRICS_BUCKET_NAME: bucket_name
+    book-a-secure-move-reporting-s3-bucket:
+      S3_REPORTING_BUCKET_NAME: bucket_name
+      S3_REPORTING_ACCESS_KEY_ID: access_key_id
+      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     elasticache-hmpps-book-secure-move-api-staging:
       REDIS_URL: url
 

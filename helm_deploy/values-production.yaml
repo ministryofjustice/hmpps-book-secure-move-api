@@ -18,8 +18,8 @@ generic-service:
   env:
     DISABLE_WEBHOOK_CREATE_EVENT_GEOAMEY: "true"
     DISABLE_WEBHOOK_CREATE_EVENT_SERCO: "true"
-    S3_REPORTING_BUCKET_NAME: moj-reg-prod
-    S3_REPORTING_PROJECT_PATH: landing/hmpps-book-secure-move-api-prod
+    S3_AP_BUCKET_NAME: moj-reg-prod
+    S3_AP_PROJECT_PATH: landing/hmpps-book-secure-move-api-prod
     SENTRY_ENVIRONMENT: "production"
     SERVE_API_DOCS: "false"
     SERVER_FQDN: "api.bookasecuremove.service.justice.gov.uk"
@@ -48,13 +48,17 @@ generic-service:
     rds-instance-hmpps-book-secure-move-api-production:
       DATABASE_URL: url
     book-a-secure-move-ap-user:
-      S3_REPORTING_ACCESS_KEY_ID: access_key_id
-      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
+      S3_AP_ACCESS_KEY_ID: access_key_id
+      S3_AP_SECRET_ACCESS_KEY: secret_access_key
     book-a-secure-move-documents-s3-bucket:
       S3_BUCKET_ARN: bucket_arn
       S3_BUCKET_NAME: bucket_name
     book-a-secure-move-metrics-s3-bucket:
       S3_METRICS_BUCKET_NAME: bucket_name
+    book-a-secure-move-reporting-s3-bucket:
+      S3_REPORTING_BUCKET_NAME: bucket_name
+      S3_REPORTING_ACCESS_KEY_ID: access_key_id
+      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     elasticache-hmpps-book-secure-move-api-production:
       REDIS_URL: url
 

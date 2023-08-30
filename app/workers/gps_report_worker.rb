@@ -63,7 +63,7 @@ private
   end
 
   def full_path(supplier_name)
-    "#{ENV.fetch('S3_REPORTING_PROJECT_PATH')}/" \
+    "#{ENV.fetch('S3_AP_PROJECT_PATH')}/" \
     'data/' \
     "database_name=#{DATABASE_NAME}/" \
     "table_name=gps_reports_#{supplier_name}/" \
@@ -75,11 +75,11 @@ private
     return @bucket if @bucket.present?
 
     client = Aws::S3::Client.new(
-      access_key_id: ENV['S3_REPORTING_ACCESS_KEY_ID'],
-      secret_access_key: ENV['S3_REPORTING_SECRET_ACCESS_KEY'],
+      access_key_id: ENV['S3_AP_ACCESS_KEY_ID'],
+      secret_access_key: ENV['S3_AP_SECRET_ACCESS_KEY'],
     )
     s3 = Aws::S3::Resource.new(client: client)
-    @bucket = s3.bucket(ENV['S3_REPORTING_BUCKET_NAME'])
+    @bucket = s3.bucket(ENV['S3_AP_BUCKET_NAME'])
   end
 
   def generate_block(supplier, results)
