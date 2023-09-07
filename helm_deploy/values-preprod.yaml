@@ -60,4 +60,4 @@ cronJobs:
         S3_METRICS_REGION: "eu-west-2"
       namespace_secrets:
         book-a-secure-move-metrics-s3-bucket:
-          S3_METRICS_SECRET_ACCESS_KEY: secret_access_key
+          S3_METRICS_BUCKET_NAME: bucket_name
