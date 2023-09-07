@@ -52,8 +52,6 @@ generic-service:
       S3_METRICS_BUCKET_NAME: bucket_name
     book-a-secure-move-reporting-s3-bucket:
       S3_REPORTING_BUCKET_NAME: bucket_name
-      S3_REPORTING_ACCESS_KEY_ID: access_key_id
-      S3_REPORTING_SECRET_ACCESS_KEY: secret_access_key
     elasticache-hmpps-book-secure-move-api-staging:
       REDIS_URL: url
 
