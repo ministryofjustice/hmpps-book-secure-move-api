@@ -1,14 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Feeds::FeedWorker, type: :worker do
-  let(:reports_feed_instance) { instance_double(CloudData::ReportsFeed) }
   let(:ap_feed_instance) { instance_double(CloudData::AnalyticalPlatformFeed) }
   let(:feed_instance) { instance_double(Feeds::Event, { call: 'feed_data' }) }
 
   before do
-    allow(reports_feed_instance).to receive(:write)
     allow(ap_feed_instance).to receive(:write)
-    allow(CloudData::ReportsFeed).to receive(:new).and_return(reports_feed_instance)
     allow(CloudData::AnalyticalPlatformFeed).to receive(:new).and_return(ap_feed_instance)
   end
 
