@@ -65,9 +65,12 @@ cronJobs:
   - name: token-cleanup
     schedule: "0 1 * * 0"
     command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]
-  - name: feeds-job
-    schedule: "0 3 * * *"
+  - name: ap-feeds-job
+    schedule: "30 3 * * *"
     command: ["bundle", "exec", "rake", "feed[all]"]
+  - name: jpc-feeds-job
+    schedule: "0 3 * * *"
+    command: ["bundle", "exec", "rake", "feed[jpc]"]
   - name: generate-journeys
     suspend: true
     schedule: "0 10,14 * * *"
