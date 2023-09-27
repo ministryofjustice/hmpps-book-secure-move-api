@@ -92,7 +92,7 @@ private
   end
 
   def restrict_request_content_type
-    return if request.content_type == restricted_request_content_type || valid_empty_request?
+    return if request.media_type == restricted_request_content_type || valid_empty_request?
 
     render_invalid_media_type_error('Invalid Media Type', "Content-Type must be #{restricted_request_content_type}")
   end
@@ -222,7 +222,7 @@ private
 
   # Allow always-bodyless requests (GET, DELETE HEAD) to omit the Content-Type
   def valid_empty_request?
-    request.content_type.nil? && (request.get? || request.delete? || request.head?)
+    request.media_type.nil? && (request.get? || request.delete? || request.head?)
   end
 
   def render_validation_error(exception)

@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_08_150500) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_09_20_171510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "access_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "request_id"
     t.uuid "idempotency_key"
-    t.datetime "timestamp"
+    t.datetime "timestamp", precision: nil
     t.string "whodunnit"
     t.string "client"
     t.string "verb"
@@ -39,7 +38,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "record_id", null: false
     t.string "record_type", null: false
     t.uuid "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
@@ -49,8 +48,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -64,8 +63,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "allocation_complex_cases", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "allocations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -78,8 +77,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.integer "moves_count", null: false
     t.boolean "complete_in_full", default: false, null: false
     t.text "other_criteria"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "status", null: false
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
@@ -93,24 +92,24 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "assessment_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "category", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "key", null: false
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
   end
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
     t.boolean "move_supported", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["key"], name: "index_categories_on_key", unique: true
   end
 
   create_table "court_hearings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id"
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: nil, null: false
     t.date "case_start_date"
     t.string "case_type"
     t.text "comments"
@@ -118,16 +117,16 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.integer "nomis_case_id"
     t.integer "nomis_hearing_id"
     t.boolean "saved_to_nomis", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["move_id"], name: "index_court_hearings_on_move_id"
   end
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "move_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "discarded_at", precision: nil
     t.string "documentable_type"
     t.uuid "documentable_id"
     t.index ["discarded_at"], name: "index_documents_on_discarded_at"
@@ -139,16 +138,16 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "key", null: false
     t.string "title", null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "nomis_code"
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
   end
 
   create_table "flipper_features", force: :cascade do |t|
     t.string "key", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["key"], name: "index_flipper_features_on_key", unique: true
   end
 
@@ -156,8 +155,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "feature_key", null: false
     t.string "key", null: false
     t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
@@ -166,8 +165,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "flag_type", null: false
     t.string "title", null: false
     t.string "question_value", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["framework_question_id"], name: "index_framework_flags_on_framework_question_id"
   end
 
@@ -182,8 +181,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "code_type", null: false
     t.string "code"
     t.boolean "fallback", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "framework_nomis_codes_questions", id: false, force: :cascade do |t|
@@ -203,8 +202,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.date "end_date"
     t.date "creation_date"
     t.date "expiry_date"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.date "approval_date"
     t.date "next_review_date"
   end
@@ -227,8 +226,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.boolean "followup_comment", default: false, null: false
     t.string "followup_comment_options", default: [], array: true
     t.uuid "parent_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "prefill"
     t.index ["framework_id"], name: "index_framework_questions_on_framework_id"
     t.index ["parent_id"], name: "index_framework_questions_on_parent_id"
@@ -240,8 +239,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.jsonb "value_json"
     t.string "type", null: false
     t.uuid "parent_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "responded", default: false, null: false
     t.boolean "prefilled", default: false, null: false
     t.uuid "assessmentable_id"
@@ -249,7 +248,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "value_type", null: false
     t.string "section", null: false
     t.string "responded_by"
-    t.datetime "responded_at"
+    t.datetime "responded_at", precision: nil
     t.index ["assessmentable_type", "assessmentable_id"], name: "index_responses_on_assessmentable_type_and_assessmentable_id"
     t.index ["framework_question_id"], name: "index_framework_responses_on_framework_question_id"
     t.index ["parent_id"], name: "index_framework_responses_on_parent_id"
@@ -259,19 +258,19 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "frameworks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "version", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name", "version"], name: "index_frameworks_on_name_and_version", unique: true
   end
 
   create_table "genders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "key", null: false
     t.string "nomis_code"
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
   end
 
   create_table "generic_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -281,10 +280,10 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.text "notes"
     t.string "created_by"
     t.jsonb "details"
-    t.datetime "occurred_at", null: false
-    t.datetime "recorded_at", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "occurred_at", precision: nil, null: false
+    t.datetime "recorded_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "supplier_id"
     t.string "classification", default: "default"
     t.index ["eventable_id", "eventable_type", "classification"], name: "index_on_generic_event_classification"
@@ -298,7 +297,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "identifier_types", id: :string, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
   end
 
   create_table "journeys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -309,9 +308,9 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.boolean "billable", default: false, null: false
     t.string "state", null: false
     t.jsonb "vehicle"
-    t.datetime "client_timestamp", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "client_timestamp", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.date "date"
     t.index ["client_timestamp"], name: "index_journeys_on_client_timestamp"
     t.index ["date"], name: "index_journeys_on_date"
@@ -331,11 +330,11 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "location_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "nomis_agency_id"
     t.string "key", null: false
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
     t.boolean "can_upload_documents", default: false, null: false
     t.uuid "category_id"
     t.boolean "young_offender_institution", default: false
@@ -355,8 +354,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "locations_regions", id: false, force: :cascade do |t|
     t.uuid "location_id", null: false
     t.uuid "region_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["location_id", "region_id"], name: "index_locations_regions_on_location_id_and_region_id", unique: true
     t.index ["location_id"], name: "index_locations_regions_on_location_id"
     t.index ["region_id", "location_id"], name: "index_locations_regions_on_region_id_and_location_id", unique: true
@@ -368,8 +367,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "location_id", null: false
     t.string "start_date"
     t.string "end_date"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["location_id"], name: "index_lodgings_on_location_id"
     t.index ["move_id"], name: "index_lodgings_on_move_id"
     t.index ["start_date", "move_id"], name: "index_lodgings_on_start_date_and_move_id", unique: true
@@ -380,13 +379,13 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "from_location_id", null: false
     t.uuid "to_location_id"
     t.string "status", default: "requested", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "reference", null: false
     t.string "move_type"
     t.string "additional_information"
     t.integer "nomis_event_id"
-    t.datetime "time_due"
+    t.datetime "time_due", precision: nil
     t.string "cancellation_reason"
     t.text "cancellation_reason_comment"
     t.uuid "profile_id"
@@ -416,10 +415,10 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "nationalities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "key", null: false
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
   end
 
   create_table "nomis_alerts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -428,8 +427,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "description", null: false
     t.string "type_description", null: false
     t.uuid "assessment_question_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "notification_types", id: :string, force: :cascade do |t|
@@ -442,11 +441,11 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "topic_id", null: false
     t.string "topic_type", null: false
     t.integer "delivery_attempts", default: 0, null: false
-    t.datetime "delivery_attempted_at"
-    t.datetime "delivered_at"
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "delivery_attempted_at", precision: nil
+    t.datetime "delivered_at", precision: nil
+    t.datetime "discarded_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "response_id"
     t.string "notification_type_id", null: false
     t.index ["delivered_at"], name: "index_notifications_on_delivered_at"
@@ -465,8 +464,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "token", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
-    t.datetime "created_at", null: false
-    t.datetime "revoked_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "revoked_at", precision: nil
     t.string "scopes"
     t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
     t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
@@ -479,8 +478,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "token", null: false
     t.string "refresh_token"
     t.integer "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at", null: false
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
     t.string "scopes"
     t.string "previous_refresh_token", default: "", null: false
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
@@ -496,8 +495,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.text "redirect_uri"
     t.string "scopes", default: "", null: false
     t.boolean "confidential", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "owner_id"
     t.string "owner_type"
     t.index ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type"
@@ -505,8 +504,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   end
 
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.citext "nomis_prison_number"
     t.citext "prison_number"
     t.citext "criminal_records_office"
@@ -517,7 +516,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "gender_additional_information"
     t.uuid "ethnicity_id"
     t.uuid "gender_id"
-    t.datetime "last_synced_with_nomis"
+    t.datetime "last_synced_with_nomis", precision: nil
     t.integer "latest_nomis_booking_id"
     t.index ["criminal_records_office"], name: "index_people_on_criminal_records_office"
     t.index ["date_of_birth"], name: "index_people_on_date_of_birth"
@@ -533,17 +532,17 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "framework_id", null: false
     t.uuid "profile_id", null: false
     t.string "status", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "confirmed_at", precision: nil
     t.uuid "move_id"
     t.jsonb "nomis_sync_status", default: [], null: false
     t.uuid "prefill_source_id"
-    t.datetime "completed_at"
+    t.datetime "completed_at", precision: nil
     t.jsonb "section_progress", default: [], null: false
-    t.datetime "amended_at"
+    t.datetime "amended_at", precision: nil
     t.jsonb "handover_details", default: {}, null: false
-    t.datetime "handover_occurred_at"
+    t.datetime "handover_occurred_at", precision: nil
     t.index ["framework_id"], name: "index_person_escort_records_on_framework_id"
     t.index ["move_id"], name: "index_person_escort_records_on_move_id"
     t.index ["prefill_source_id"], name: "index_person_escort_records_on_prefill_source_id"
@@ -562,8 +561,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.integer "out_of_area_courts", null: false
     t.integer "discharges", null: false
     t.string "updated_by"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["date"], name: "index_populations_on_date"
     t.index ["location_id", "date"], name: "index_on_population_uniqueness", unique: true
     t.index ["location_id"], name: "index_populations_on_location_id"
@@ -572,7 +571,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "prison_transfer_reasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "title", null: false
-    t.datetime "disabled_at"
+    t.datetime "disabled_at", precision: nil
     t.index ["key"], name: "index_prison_transfer_reasons_on_key"
   end
 
@@ -585,8 +584,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "gender_id"
     t.uuid "ethnicity_id"
     t.uuid "nationality_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.jsonb "assessment_answers"
     t.jsonb "profile_identifiers"
     t.string "gender_additional_information"
@@ -604,8 +603,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "key", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["key"], name: "index_regions_on_key"
   end
 
@@ -614,9 +613,9 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "callback_url"
     t.string "encrypted_secret"
     t.boolean "enabled", default: true, null: false
-    t.datetime "discarded_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "email_address"
     t.string "encrypted_username"
     t.string "encrypted_password"
@@ -630,8 +629,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "location_id", null: false
     t.date "effective_from"
     t.date "effective_to"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["effective_from"], name: "index_supplier_locations_on_effective_from"
     t.index ["effective_to"], name: "index_supplier_locations_on_effective_to"
     t.index ["location_id"], name: "index_supplier_locations_on_location_id"
@@ -641,8 +640,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
   create_table "suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "key", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["key"], name: "index_suppliers_on_key"
   end
 
@@ -652,7 +651,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.uuid "supplier_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
@@ -664,10 +663,10 @@ ActiveRecord::Schema.define(version: 2023_08_08_150500) do
     t.uuid "prefill_source_id"
     t.string "status", null: false
     t.jsonb "nomis_sync_status", default: [], null: false
-    t.datetime "confirmed_at"
-    t.datetime "completed_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "completed_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.jsonb "section_progress", default: [], null: false
     t.index ["framework_id"], name: "index_youth_risk_assessments_on_framework_id"
     t.index ["move_id"], name: "index_youth_risk_assessments_on_move_id"

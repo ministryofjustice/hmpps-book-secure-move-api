@@ -30,4 +30,27 @@ RSpec.describe Encryptor do
 
     it { is_expected.to eql('+TILrwJJFp5zhQzWFW3tAQbiu2rYyrAbe7vr5tEGUxc=') }
   end
+
+  # Since Rails 7.0, new applications use SHA256 by default, but old apps should still use
+  # SHA1 by default. This test checks that we can still decrypt SHA1 secrets, just in case
+  # the default for existing apps changes later on.
+  describe 'decrypt' do
+    let(:sha1_key) do
+      ActiveSupport::KeyGenerator.new(
+        Rails.application.secret_key_base,
+        { hash_digest_class: OpenSSL::Digest::SHA1 }
+      ).generate_key(
+        ENV.fetch('ENCRYPTOR_SALT'),
+        ActiveSupport::MessageEncryptor.key_len,
+      )
+    end
+
+    let(:sha1_secret) do
+      ActiveSupport::MessageEncryptor.new(sha1_key).encrypt_and_sign('decrypted_secret')
+    end
+
+    subject { described_class.decrypt(sha1_secret) }
+
+    it { is_expected.to eql('decrypted_secret') }
+  end
 end

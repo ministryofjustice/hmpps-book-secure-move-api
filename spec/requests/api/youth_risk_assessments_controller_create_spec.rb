@@ -278,7 +278,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
 
       context 'with a reference to a missing framework' do
         let(:framework_version) { '0.2.1' }
-        let(:detail_404) { "Couldn't find Framework" }
+        let(:detail_404) { 'Couldn\'t find Framework with [WHERE "frameworks"."version" = $1 AND "frameworks"."name" = $2]' }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
@@ -299,7 +299,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
             },
           }
         end
-        let(:detail_404) { "Couldn't find Framework" }
+        let(:detail_404) { 'Couldn\'t find Framework with [WHERE "frameworks"."version" IS NULL AND "frameworks"."name" = $1]' }
 
         it_behaves_like 'an endpoint that responds with error 404'
       end
