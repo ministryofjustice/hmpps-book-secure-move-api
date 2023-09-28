@@ -46,5 +46,8 @@ module BookASecureMoveApi
 
     # Needed for PaperTrail to be able to deserialise saved versions
     config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]
+
+    config.active_support.cache_format_version = 7.0
+    config.active_support.disable_to_s_conversion = true
   end
 end

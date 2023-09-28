@@ -10,7 +10,7 @@ module Allocations
           fromPrisonLocation: move.from_location.nomis_agency_id,
           toPrisonLocation: move.to_location.nomis_agency_id,
           escortType: 'PECS',
-          scheduledMoveDateTime: move.date.to_s(:nomis),
+          scheduledMoveDateTime: move.date.to_fs(:nomis),
         },
       }
 

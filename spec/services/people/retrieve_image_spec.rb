@@ -21,7 +21,7 @@ RSpec.describe People::RetrieveImage do
     context 'when person.image.attached? is true' do
       before do
         person.latest_nomis_booking_id = 123
-        person.image.attach(io: StringIO.new, filename: 'filename', content_type: 'image/jpg')
+        person.image.attach(io: StringIO.new, filename: 'filename', content_type: 'image/jpeg')
         allow(person).to receive(:attach_image).and_return(true)
         allow(NomisClient::Image).to receive(:get).and_return('image_blob')
       end

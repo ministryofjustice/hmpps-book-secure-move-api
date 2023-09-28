@@ -8,7 +8,7 @@ RSpec.describe Api::MovesController do
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
   let(:resource_to_json) do
-    ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
+    ActiveStorage::Current.url_options = { protocol: 'http', host: 'www.example.com', port: 80 } # This is used in the serializer
     JSON.parse(MoveSerializer.new(move.reload, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
   end
 

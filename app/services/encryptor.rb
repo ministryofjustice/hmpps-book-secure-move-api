@@ -6,6 +6,7 @@ require 'openssl'
 class Encryptor
   KEY = ActiveSupport::KeyGenerator.new(
     Rails.application.secret_key_base,
+    { hash_digest_class: OpenSSL::Digest::SHA1 },
   ).generate_key(
     ENV.fetch('ENCRYPTOR_SALT'),
     ActiveSupport::MessageEncryptor.key_len,

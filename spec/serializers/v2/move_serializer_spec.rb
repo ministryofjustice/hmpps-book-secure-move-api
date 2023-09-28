@@ -65,7 +65,7 @@ RSpec.describe V2::MoveSerializer do
 
     let(:adapter_options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
 
-    before { ActiveStorage::Current.host = 'http://www.example.com' } # This is used in the serializer
+    before { ActiveStorage::Current.url_options = { protocol: 'http', host: 'www.example.com', port: 80 } } # This is used in the serializer
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] })

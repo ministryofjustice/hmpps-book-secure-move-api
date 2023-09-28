@@ -115,7 +115,7 @@ RSpec.describe Api::MovesController do
         before { post_moves }
 
         it 'returns the correct data' do
-          ActiveStorage::Current.host = 'http://www.example.com' # This is used in the serializer
+          ActiveStorage::Current.url_options = { protocol: 'http', host: 'www.example.com', port: 80 } # This is used in the serializer
           expected_response_json = JSON.parse(MoveSerializer.new(move, include: MoveSerializer::SUPPORTED_RELATIONSHIPS).serializable_hash.to_json)
 
           # Now, URL is a S3 url (not activestorage) hence it changes everytime we call the endpoint

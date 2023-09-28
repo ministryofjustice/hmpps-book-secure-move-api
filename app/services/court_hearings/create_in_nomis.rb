@@ -15,7 +15,7 @@ module CourtHearings
           booking_id: booking_id,
           court_case_id: hearing.nomis_case_id,
           body_params: {
-            courtHearingDateTime: hearing.start_time.to_s(:nomis),
+            courtHearingDateTime: hearing.start_time.to_fs(:nomis),
             comments: hearing.comments,
           }.merge(body_locations),
         }

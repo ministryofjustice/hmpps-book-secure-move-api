@@ -111,7 +111,7 @@ RSpec.describe V2::ProfileSerializer do
       }
     end
 
-    before { ActiveStorage::Current.host = 'http://www.example.com' } # This is used in the serializer
+    before { ActiveStorage::Current.url_options = { protocol: 'http', host: 'www.example.com', port: 80 } } # This is used in the serializer
 
     it 'returns the expected serialized `Profile`' do
       expect(result).to include_json(expected_document)
