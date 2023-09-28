@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-PrometheusMetrics.instance.configure
+Rails.application.config.to_prepare do
+  PrometheusMetrics.instance.configure
+end

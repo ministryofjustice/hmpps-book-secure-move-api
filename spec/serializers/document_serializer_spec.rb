@@ -8,7 +8,7 @@ RSpec.describe DocumentSerializer do
   let(:document) { create :document }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
-  before { ActiveStorage::Current.host = 'http://example.com' }
+  before { ActiveStorage::Current.url_options = { protocol: 'http', host: 'example.com', port: 80 } }
 
   it 'contains a type property' do
     expect(result[:data][:type]).to eql 'documents'
