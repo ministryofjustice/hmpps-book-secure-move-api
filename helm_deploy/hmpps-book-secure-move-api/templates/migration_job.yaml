@@ -1,9 +1,10 @@
 {{- $genericService := index .Values "generic-service" -}}
+{{- $hash := toJson .Values | sha256sum | trunc 7 -}}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "migration" | trunc 52 }}
+  {{- $fullName := printf "%s-%s-%s" (include "generic-service.fullname" $) "migration" $hash | trunc 52 }}
   name: {{ $fullName }}
   labels:
     app: {{ $fullName }}
