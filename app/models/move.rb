@@ -170,8 +170,8 @@ class Move < VersionedModel
     state_machine.cancel
   end
 
-  def cancel!(args)
-    cancel(args)
+  def cancel!(**args)
+    cancel(**args)
     save!
   end
 
