@@ -56,10 +56,6 @@ RUN addgroup -g $APPUID -S appgroup && \
 
 RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info
 
-# Fix incompatibility with slim tzdata from 2020b onwards
-RUN wget https://data.iana.org/time-zones/tzdb/tzdata.zi -O /usr/share/zoneinfo/tzdata.zi && \
-    /usr/sbin/zic -b fat /usr/share/zoneinfo/tzdata.zi
-
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
 COPY --chown=appuser:appgroup . /app
