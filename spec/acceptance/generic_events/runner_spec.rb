@@ -135,7 +135,7 @@ RSpec.describe GenericEvents::Runner do
       let(:create_in_nomis) { false }
 
       before do
-        create(:event_move_approve, eventable: move, details: { create_in_nomis: create_in_nomis, date: Date.tomorrow })
+        create(:event_move_approve, eventable: move, details: { create_in_nomis:, date: Date.tomorrow })
         allow(Allocations::CreateInNomis).to receive(:call)
       end
 

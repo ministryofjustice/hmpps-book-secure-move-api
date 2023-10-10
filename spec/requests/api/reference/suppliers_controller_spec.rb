@@ -40,7 +40,7 @@ RSpec.describe Api::Reference::SuppliersController do
 
     context 'when successful' do
       before do
-        get '/api/v1/reference/suppliers', headers: headers
+        get '/api/v1/reference/suppliers', headers:
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -66,7 +66,7 @@ RSpec.describe Api::Reference::SuppliersController do
     end
 
     context 'when successful' do
-      before { get "/api/v1/reference/suppliers/#{supplier1.key}", params: params, headers: headers }
+      before { get "/api/v1/reference/suppliers/#{supplier1.key}", params:, headers: }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -79,7 +79,7 @@ RSpec.describe Api::Reference::SuppliersController do
       let(:supplier_key) { 'UUID-not-found' }
       let(:detail_404) { "Couldn't find Supplier with UUID-not-found" }
 
-      before { get "/api/v1/reference/suppliers/#{supplier_key}", params: params, headers: headers }
+      before { get "/api/v1/reference/suppliers/#{supplier_key}", params:, headers: }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

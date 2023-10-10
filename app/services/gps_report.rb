@@ -27,7 +27,7 @@ class GPSReport
     Rails.logger.info "Found #{pluralize(moves.count, "#{@supplier.key} move")} with #{pluralize(journeys.count, 'journey')}."
 
     {
-      failures: failures,
+      failures:,
       move_count: moves.count,
     }
   end
@@ -36,7 +36,7 @@ private
 
   def failures
     @failures ||= moves.filter_map { |move|
-      { move: move, reason: 'no_journeys' } if move.journeys.empty?
+      { move:, reason: 'no_journeys' } if move.journeys.empty?
     }.concat(journey_failures)
   end
 
@@ -104,7 +104,7 @@ private
 
     next_token = nil
     while results.count.zero? || next_token.present?
-      res = athena_client.get_query_results(query_execution_id: query_id, next_token: next_token)
+      res = athena_client.get_query_results(query_execution_id: query_id, next_token:)
       results << res
       next_token = res.next_token
     end

@@ -9,11 +9,11 @@ RSpec.describe Api::MoveEventsController do
     include_context 'with supplier with spoofed access token'
 
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, :booked, from_location: from_location) }
+    let(:move) { create(:move, :booked, from_location:) }
     let(:move_id) { move.id }
 
     before do
-      post("/api/v1/moves/#{move_id}/start", params: params, headers: headers, as: :json)
+      post("/api/v1/moves/#{move_id}/start", params:, headers:, as: :json)
     end
 
     context 'with happy params' do

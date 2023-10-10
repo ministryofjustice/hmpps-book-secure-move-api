@@ -62,7 +62,7 @@ module Api
     end
 
     def render_assessment(assessment, status)
-      render_json assessment, serializer: assessment_serializer, include: included_relationships, status: status
+      render_json assessment, serializer: assessment_serializer, include: included_relationships, status:
     end
 
     def assessment_class

@@ -22,8 +22,8 @@ RSpec.describe Api::AllocationEventsController do
         data: {
           type: 'cancel',
           attributes: {
-            timestamp: timestamp,
-            cancellation_reason: cancellation_reason,
+            timestamp:,
+            cancellation_reason:,
             cancellation_reason_comment: 'FUBAR',
           },
         },
@@ -32,7 +32,7 @@ RSpec.describe Api::AllocationEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/allocations/#{allocation_id}/cancel", params: cancel_params, headers: headers, as: :json
+      post "/api/v1/allocations/#{allocation_id}/cancel", params: cancel_params, headers:, as: :json
     end
 
     context 'when successful' do

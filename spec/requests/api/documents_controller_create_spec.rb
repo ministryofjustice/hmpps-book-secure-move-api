@@ -18,7 +18,7 @@ RSpec.describe Api::DocumentsController do
       {
         data: {
           attributes: {
-            file: file,
+            file:,
           },
         },
       }
@@ -36,7 +36,7 @@ RSpec.describe Api::DocumentsController do
     end
 
     it 'returns the correct data' do
-      post '/api/documents', params: document_params, headers: headers
+      post('/api/documents', params: document_params, headers:)
 
       expected_document_id = Document.last.id
 
@@ -45,7 +45,7 @@ RSpec.describe Api::DocumentsController do
     end
 
     context 'with a bad request' do
-      before { post '/api/documents', params: {}, headers: headers }
+      before { post '/api/documents', params: {}, headers: }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end

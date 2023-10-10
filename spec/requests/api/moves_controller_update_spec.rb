@@ -19,7 +19,7 @@ RSpec.describe Api::MovesController do
     let(:supplier) { create(:supplier) }
     let!(:from_location) { create :location, :police, suppliers: [supplier] }
     let(:profile) { create(:profile, documents: before_documents) }
-    let!(:move) { create :move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier }
+    let!(:move) { create :move, :proposed, :prison_recall, from_location:, profile:, supplier: }
     let(:move_id) { move.id }
     let(:date_from) { Date.yesterday }
     let(:date_to) { Date.tomorrow }
@@ -36,8 +36,8 @@ RSpec.describe Api::MovesController do
           move_type: 'court_appearance',
           move_agreed: true,
           move_agreed_by: 'Fred Bloggs',
-          date_from: date_from,
-          date_to: date_to,
+          date_from:,
+          date_to:,
         },
       }
     end
@@ -64,11 +64,11 @@ RSpec.describe Api::MovesController do
           create(
             :move,
             :requested,
-            profile: profile,
+            profile:,
             from_location: move.from_location,
             to_location: move.to_location,
             date: move.date,
-            supplier: supplier,
+            supplier:,
           )
           do_patch
         end
@@ -148,8 +148,8 @@ RSpec.describe Api::MovesController do
                 move_type: 'court_appearance',
                 move_agreed: true,
                 move_agreed_by: 'Fred Bloggs',
-                date_from: date_from,
-                date_to: date_to,
+                date_from:,
+                date_to:,
               },
               relationships: { documents: { data: documents } },
             }
@@ -276,7 +276,7 @@ RSpec.describe Api::MovesController do
 
           context 'when there is no relationship defined' do
             let(:before_person) { create(:person) }
-            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: before_person.latest_profile }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location:, profile: before_person.latest_profile }
             let(:move_params) do
               {
                 type: 'moves',
@@ -336,7 +336,7 @@ RSpec.describe Api::MovesController do
 
           context 'when there is no relationship defined' do
             let(:before_profile) { create(:profile) }
-            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location: from_location, profile: before_profile }
+            let!(:move) { create :move, :proposed, move_type: 'prison_recall', from_location:, profile: before_profile }
             let(:move_params) do
               {
                 type: 'moves',
@@ -394,7 +394,7 @@ RSpec.describe Api::MovesController do
 
           context 'with an associated allocation' do
             let!(:allocation) { create :allocation, moves_count: 1 }
-            let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation }
+            let!(:move) { create :move, :requested, from_location:, allocation: }
 
             it 'updates the allocation moves_count' do
               expect(allocation.reload.moves_count).to eq(0)
@@ -406,7 +406,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has a webhook subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.order(:created_at).last }
             let(:faraday_client) do
@@ -436,7 +436,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when the supplier has an email subscription', :skip_before do
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier:) }
             let!(:notification_type_email) { create(:notification_type, :email) }
             let(:notification) { subscription.notifications.order(:created_at).last }
             let(:notify_response) do
@@ -465,18 +465,18 @@ RSpec.describe Api::MovesController do
                 topic: move,
                 notification_type: notification_type_email,
                 event_type: 'update_move_status',
-                response_id: response_id,
+                response_id:,
               )
             end
           end
         end
 
         context 'when updating an existing requested move without a change of move_status' do
-          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location: from_location, supplier: supplier }
+          let!(:move) { create :move, :requested, move_type: 'prison_recall', from_location:, supplier: }
 
           context 'when the supplier has a webhook subscription', :skip_before do
             # NB: updates to existing moves should trigger a webhook notification
-            let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
             let!(:notification_type_webhook) { create(:notification_type, :webhook) }
             let(:notification) { subscription.notifications.order(:created_at).last }
             let(:faraday_client) do
@@ -515,7 +515,7 @@ RSpec.describe Api::MovesController do
 
           context 'when the supplier has an email subscription', :skip_before do
             # NB: updates to existing moves should trigger an email notification
-            let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+            let!(:subscription) { create(:subscription, :no_callback_url, supplier:) }
             let(:notification) { subscription.notifications.order(:created_at).last }
             let(:notify_response) do
               instance_double(
@@ -554,7 +554,7 @@ RSpec.describe Api::MovesController do
         end
 
         context 'when move is associated to an allocation' do
-          let!(:move) { create :move, :with_allocation, profile: profile, supplier: supplier }
+          let!(:move) { create :move, :with_allocation, profile:, supplier: }
           let(:move_params) do
             {
               type: 'moves',
@@ -587,7 +587,7 @@ RSpec.describe Api::MovesController do
           end
 
           context 'when unlinking a person' do
-            let!(:move) { create :move, :with_allocation, profile: profile }
+            let!(:move) { create :move, :with_allocation, profile: }
             let(:move_params) do
               {
                 type: 'moves',
@@ -623,7 +623,7 @@ RSpec.describe Api::MovesController do
 
           context 'when unlinking a profile' do
             let(:profile) { create(:profile) }
-            let!(:move) { create :move, :with_allocation, profile: profile }
+            let!(:move) { create :move, :with_allocation, profile: }
             let(:move_params) do
               {
                 type: 'moves',
@@ -731,7 +731,7 @@ RSpec.describe Api::MovesController do
   end
 
   def do_patch
-    patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json
+    patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers:, as: :json
   end
 
   def clean_active_storage_urls(text)

@@ -6,7 +6,7 @@ RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /person_escort_records/:per_id/framework_responses' do
     subject(:bulk_update_framework_responses) do
       Timecop.freeze(recorded_timestamp) do
-        patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers: headers, as: :json
+        patch "/api/person_escort_records/#{per_id}/framework_responses", params: bulk_per_params, headers:, as: :json
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe Api::FrameworkResponsesController do
             id: framework_response_id,
             type: 'framework_responses',
             attributes: {
-              value: value,
+              value:,
             },
           },
           {
@@ -109,7 +109,7 @@ RSpec.describe Api::FrameworkResponsesController do
                 id: string_response.id,
                 type: 'framework_responses',
                 attributes: {
-                  value: value,
+                  value:,
                 },
               },
               {
@@ -341,12 +341,12 @@ RSpec.describe Api::FrameworkResponsesController do
     end
 
     context 'with subscriptions' do
-      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:subscription) { create(:subscription, supplier:) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
-      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
-      let(:person_escort_record) { create(:person_escort_record, :completed, move: move) }
+      let(:move) { create(:move, from_location:, supplier:) }
+      let(:person_escort_record) { create(:person_escort_record, :completed, move:) }
 
       let(:faraday_client) do
         class_double(
@@ -396,7 +396,7 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when the assessment was not previously completed' do
-        let(:person_escort_record) { create(:person_escort_record, :in_progress, move: move) }
+        let(:person_escort_record) { create(:person_escort_record, :in_progress, move:) }
 
         it 'creates a webhook notification' do
           notification = subscription.notifications.find_by(notification_type: notification_type_webhook)
@@ -427,7 +427,7 @@ RSpec.describe Api::FrameworkResponsesController do
 
   describe 'PATCH /youth_risk_assessments/:youth_risk_assessment_id/framework_responses' do
     subject(:bulk_update_framework_responses) do
-      patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}/framework_responses", params: bulk_youth_risk_assessment_params, headers: headers, as: :json
+      patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}/framework_responses", params: bulk_youth_risk_assessment_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'
@@ -442,7 +442,7 @@ RSpec.describe Api::FrameworkResponsesController do
             id: framework_response_id,
             type: 'framework_responses',
             attributes: {
-              value: value,
+              value:,
             },
           },
           {

@@ -15,7 +15,7 @@ namespace :notifications do
 
     # moves directly assigned to the supplier
     moves_assigned = Move
-      .where(supplier: supplier)
+      .where(supplier:)
       .where('date >= ?', from_date)
       .where(status: statuses)
 
@@ -56,7 +56,7 @@ namespace :notifications do
 
     puts 'Processing assigned moves...'
     moves_assigned.find_each do |move|
-      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name: action_name, queue_as: :notifications_low, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: supplier.id)
+      PrepareMoveNotificationsJob.perform_now(topic_id: move.id, action_name:, queue_as: :notifications_low, send_webhooks:, send_emails:, only_supplier_id: supplier.id)
       sleep(rand(0..0.4)) # small random delay to allow servers to recover
     end
 

@@ -5,7 +5,7 @@ FactoryBot.define do
     name { 'person-escort-record' }
     version { '0.1' }
 
-    initialize_with { Framework.find_or_create_by(name: name, version: version) }
+    initialize_with { Framework.find_or_create_by(name:, version:) }
 
     trait :youth_risk_assessment do
       name { 'youth-risk-assessment' }
@@ -13,7 +13,7 @@ FactoryBot.define do
 
     trait :with_questions do
       after(:create) do |framework|
-        create_list(:framework_question, 2, framework: framework)
+        create_list(:framework_question, 2, framework:)
       end
     end
   end

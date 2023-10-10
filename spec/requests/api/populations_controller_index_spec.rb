@@ -9,7 +9,7 @@ RSpec.describe Api::PopulationsController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /locations_free_spaces' do
-    subject(:get_locations_free_spaces) { get '/api/locations_free_spaces', params: params.merge(date_params), headers: headers }
+    subject(:get_locations_free_spaces) { get '/api/locations_free_spaces', params: params.merge(date_params), headers: }
 
     let(:schema) { load_yaml_schema('get_locations_responses.yaml') }
     let(:params) { {} }
@@ -25,7 +25,7 @@ RSpec.describe Api::PopulationsController do
 
     describe 'meta data' do
       let!(:location) { create(:location, :prison) }
-      let!(:population) { create(:population, location: location, date: date_from) }
+      let!(:population) { create(:population, location:, date: date_from) }
       let(:expected_json) do
         {
           data: [
@@ -100,7 +100,7 @@ RSpec.describe Api::PopulationsController do
             foo: 'foo',
           }
         end
-        let(:params) { { sort: sort } }
+        let(:params) { { sort: } }
 
         it 'delegates the query execution to Locations::Finder with the correct sorting' do
           get_locations_free_spaces
@@ -117,7 +117,7 @@ RSpec.describe Api::PopulationsController do
       let!(:category) { create :category }
 
       before do
-        create :location, category: category
+        create(:location, category:)
         get_locations_free_spaces
       end
 
@@ -175,7 +175,7 @@ RSpec.describe Api::PopulationsController do
     end
 
     describe 'validating mandatory date parameters' do
-      let(:date_params) { { date_from: date_from } }
+      let(:date_params) { { date_from: } }
 
       before { get_locations_free_spaces }
 
@@ -189,7 +189,7 @@ RSpec.describe Api::PopulationsController do
     end
 
     describe 'validating dates before running queries' do
-      let(:date_params) { { date_from: 'yyyy-09-Tu', date_to: date_to } }
+      let(:date_params) { { date_from: 'yyyy-09-Tu', date_to: } }
 
       before { get_locations_free_spaces }
 

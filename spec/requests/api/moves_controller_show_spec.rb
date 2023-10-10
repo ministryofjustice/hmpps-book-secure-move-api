@@ -11,7 +11,7 @@ RSpec.describe Api::MovesController do
     let(:move_id) { move.id }
 
     before do
-      get "/api/moves/#{move_id}", headers: headers, as: :json
+      get "/api/moves/#{move_id}", headers:, as: :json
     end
 
     context 'when successful' do
@@ -85,7 +85,7 @@ RSpec.describe Api::MovesController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

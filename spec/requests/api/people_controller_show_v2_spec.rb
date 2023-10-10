@@ -11,7 +11,7 @@ RSpec.describe Api::PeopleController do
   let(:query_params) { '' }
   let(:params) { {} }
 
-  let(:person) { create(:person, profiles: profiles, latest_nomis_booking_id: latest_nomis_booking_id) }
+  let(:person) { create(:person, profiles:, latest_nomis_booking_id:) }
   let(:profiles) { create_list(:profile, 2) }
   let(:category) { create(:category) }
   let(:latest_nomis_booking_id) { nil }
@@ -32,7 +32,7 @@ RSpec.describe Api::PeopleController do
     before do
       allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ category: category.title, category_code: category.key })
       allow(NomisClient::BookingDetails).to receive(:get).with(456).and_return({})
-      get "/api/people/#{person.id}#{query_params}", params: params, headers: headers
+      get "/api/people/#{person.id}#{query_params}", params:, headers:
     end
 
     it 'returns serialized data' do
@@ -89,7 +89,7 @@ RSpec.describe Api::PeopleController do
         before do
           oauth2_response = instance_double('OAuth2::Response', body: '{"error":"server_error","error_description":"Internal Server Error"}', parsed: {}, status: '')
           allow(NomisClient::BookingDetails).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
-          get "/api/people/#{person.id}#{query_params}", params: params, headers: headers
+          get "/api/people/#{person.id}#{query_params}", params:, headers:
         end
 
         it_behaves_like 'an endpoint that responds with error 502'

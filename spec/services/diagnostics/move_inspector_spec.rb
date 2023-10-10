@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Diagnostics::MoveInspector do
-  subject { described_class.new(move, include_person_details: include_person_details, include_per_history: include_per_history).generate }
+  subject { described_class.new(move, include_person_details:, include_per_history:).generate }
 
   let(:person) { create(:person) }
-  let(:profile) { create(:profile, person: person) }
-  let(:move) { create(:move, :in_transit, :court_appearance, profile: profile, from_location: sch) }
-  let(:person_escort_record) { create(:person_escort_record, profile: profile, move: move) }
-  let(:youth_risk_assessment) { create(:youth_risk_assessment, profile: profile, move: move) }
-  let(:journey) { create(:journey, move: move) }
+  let(:profile) { create(:profile, person:) }
+  let(:move) { create(:move, :in_transit, :court_appearance, profile:, from_location: sch) }
+  let(:person_escort_record) { create(:person_escort_record, profile:, move:) }
+  let(:youth_risk_assessment) { create(:youth_risk_assessment, profile:, move:) }
+  let(:journey) { create(:journey, move:) }
   let(:include_person_details) { false }
   let(:include_per_history) { false }
   let(:journey_event) { create(:event_journey_start, eventable: journey) }

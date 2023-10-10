@@ -23,11 +23,11 @@ module GenericEvents
 
     def trigger_events
       eventable.generic_events.applied_order.each do |event|
-        event.trigger(dry_run: dry_run)
+        event.trigger(dry_run:)
         yield event if block_given?
       end
 
-      eventable.handle_event_run(dry_run: dry_run)
+      eventable.handle_event_run(dry_run:)
     end
   end
 end

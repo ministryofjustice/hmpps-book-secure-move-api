@@ -19,7 +19,7 @@ module People
     def call
       people_from_nomis.each do |nomis_person|
         prison_number = nomis_person[:prison_number]
-        person = Person.find_or_initialize_by(prison_number: prison_number)
+        person = Person.find_or_initialize_by(prison_number:)
 
         attributes = person_attributes(nomis_person)
         person.assign_attributes(attributes)

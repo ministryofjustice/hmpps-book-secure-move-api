@@ -18,7 +18,7 @@ RSpec.describe Api::PeopleController do
 
   describe 'GET /people/:id' do
     before do
-      get "/api/people/#{person.id}", headers: headers
+      get "/api/people/#{person.id}", headers:
     end
 
     it_behaves_like 'an endpoint that responds with error 406'

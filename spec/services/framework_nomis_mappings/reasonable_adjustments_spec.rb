@@ -15,14 +15,14 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
       .to receive(:get)
       .with(booking_id: 111_111, reasonable_adjustment_types: 'A,C CB')
       .and_return([nomis_reasonable_adjustment])
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings.first).to be_a(FrameworkNomisMapping)
   end
 
   it 'sets the correct attributes on framework NOMIS mappings' do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([nomis_reasonable_adjustment])
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings.first).to have_attributes(
       raw_nomis_mapping: nomis_reasonable_adjustment,
@@ -37,14 +37,14 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
 
   it 'imports reasonable adjustments if end date is not set' do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([nomis_reasonable_adjustment])
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings.count).to eq(1)
   end
 
   it 'ignores reasonable adjustments that have ended' do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([nomis_reasonable_adjustment(end_date: '2010-06-21')])
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings).to be_empty
   end
@@ -66,14 +66,14 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
   it 'returns an empty result if importing NOMIS reasonable adjustments fails' do
     oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings).to be_empty
   end
 
   it 'returns an empty result if no reasonable adjustments found for booking id' do
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([])
-    mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes).call
+    mappings = described_class.new(booking_id: 111_111, nomis_codes:).call
 
     expect(mappings).to be_empty
   end
@@ -81,7 +81,7 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
   context 'with NOMIS sync status' do
     it 'sets the NOMIS sync status as successful if NOMIS client is successful' do
       allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([nomis_reasonable_adjustment])
-      mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes)
+      mappings = described_class.new(booking_id: 111_111, nomis_codes:)
       mappings.call
 
       expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::SUCCESS)
@@ -89,7 +89,7 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
 
     it 'sets the NOMIS sync status as successful if NOMIS client is successful but no personal care needs returned' do
       allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([])
-      mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes)
+      mappings = described_class.new(booking_id: 111_111, nomis_codes:)
       mappings.call
 
       expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::SUCCESS)
@@ -98,7 +98,7 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
     it 'sets the NOMIS sync status as failed if NOMIS client throws an error' do
       oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
       allow(NomisClient::ReasonableAdjustments).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
-      mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes)
+      mappings = described_class.new(booking_id: 111_111, nomis_codes:)
       mappings.call
 
       expect(mappings.nomis_sync_status.status).to eq(FrameworkNomisMappings::NomisSyncStatus::FAILED)
@@ -107,7 +107,7 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
     it 'sets the NOMIS sync failure message if NOMIS client throws an error' do
       oauth2_response = instance_double('OAuth2::Response', body: '{"error": "BOOM"}', parsed: {}, status: '')
       allow(NomisClient::ReasonableAdjustments).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
-      mappings = described_class.new(booking_id: 111_111, nomis_codes: nomis_codes)
+      mappings = described_class.new(booking_id: 111_111, nomis_codes:)
       mappings.call
 
       expect(mappings.nomis_sync_status.message).to match(/BOOM/)
@@ -118,8 +118,8 @@ RSpec.describe FrameworkNomisMappings::ReasonableAdjustments do
     {
       treatment_code: 'DA',
       comment_text: 'Some comment',
-      start_date: start_date,
-      end_date: end_date,
+      start_date:,
+      end_date:,
       agency_id: 'LGI',
       treatment_description: 'Some treatment description about DA',
     }.with_indifferent_access

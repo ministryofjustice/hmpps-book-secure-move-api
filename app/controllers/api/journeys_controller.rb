@@ -44,7 +44,7 @@ module Api
   private
 
     def render_journey(journey, status)
-      render_json journey, serializer: JourneySerializer, include: included_relationships, status: status
+      render_json journey, serializer: JourneySerializer, include: included_relationships, status:
     end
 
     def supported_relationships
@@ -116,12 +116,12 @@ module Api
       @new_journey_attributes ||= new_journey_params.to_h[:attributes].tap do |attribs|
         timestamp = attribs.delete(:timestamp) # throw the timestamp away as we are using client_timestamp instead
         attribs.merge!(
-          move: move,
+          move:,
           client_timestamp: Time.zone.parse(timestamp),
           date: attribs.delete(:date) || move.date,
           from_location: find_location(new_journey_params.require(:relationships).require(:from_location).require(:data).require(:id)),
           to_location: find_location(new_journey_params.require(:relationships).require(:to_location).require(:data).require(:id)),
-          supplier: supplier,
+          supplier:,
         )
       end
     end
@@ -170,7 +170,7 @@ module Api
                       GenericEvent::JourneyCreate
                     end
 
-      create_automatic_event!(eventable: journey, event_class: event_class, supplier_id: supplier.id)
+      create_automatic_event!(eventable: journey, event_class:, supplier_id: supplier.id)
     end
   end
 end

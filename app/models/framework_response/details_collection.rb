@@ -13,8 +13,8 @@ class FrameworkResponse
       @collection = Array(collection).map do |item|
         DetailsObject.new(
           attributes: item,
-          question_options: question_options,
-          details_options: details_options,
+          question_options:,
+          details_options:,
         )
       end
     end

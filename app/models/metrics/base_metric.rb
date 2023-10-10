@@ -47,7 +47,7 @@ module Metrics
     def to_fixed_key_json
       calculate_all_values
       JSON.pretty_generate({
-        label: label,
+        label:,
         timestamp: timestamp.iso8601,
         data: rows.map do |row|
           {
@@ -71,7 +71,7 @@ module Metrics
     def to_d3_json
       calculate_all_values
       JSON.pretty_generate({
-        label: label,
+        label:,
         timestamp: timestamp.iso8601,
         data: rows.map { |row| ([[rows_name, row_key(row)]] + columns.map { |column| [column_key(column), value(column, row)] }).to_h },
       })

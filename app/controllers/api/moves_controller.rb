@@ -40,15 +40,15 @@ module Api
 
     def find_moves(active_record_relationships:)
       Moves::Finder.new(
-        filter_params: filter_params,
+        filter_params:,
         ability: current_ability,
         order_params: params[:sort] || {},
-        active_record_relationships: active_record_relationships,
+        active_record_relationships:,
       ).call
     end
 
     def moves
-      @moves ||= find_moves(active_record_relationships: active_record_relationships)
+      @moves ||= find_moves(active_record_relationships:)
     end
 
     def validate_filter_params

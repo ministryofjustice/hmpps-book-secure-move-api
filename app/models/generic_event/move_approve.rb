@@ -12,7 +12,7 @@ class GenericEvent
     end
 
     def trigger(dry_run: false)
-      eventable.approve(date: date)
+      eventable.approve(date:)
 
       Allocations::CreateInNomis.call(eventable) if !dry_run && create_in_nomis
     end

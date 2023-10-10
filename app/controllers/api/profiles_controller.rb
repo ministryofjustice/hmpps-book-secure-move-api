@@ -81,7 +81,7 @@ module Api
     end
 
     def render_profile(profile, status)
-      render_json profile, serializer: ProfileSerializer, include: included_relationships, status: status
+      render_json profile, serializer: ProfileSerializer, include: included_relationships, status:
     end
   end
 end

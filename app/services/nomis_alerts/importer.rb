@@ -188,7 +188,7 @@ module NomisAlerts
     def assessment_question_mapping(alert_code)
       key = ALERT_CODE_TO_ASSESSMENT_QUESTION_KEY_MAPPINGS[alert_code]
 
-      key ? AssessmentQuestion.find_by(key: key) : nil
+      key ? AssessmentQuestion.find_by(key:) : nil
     end
 
     def alert_type_for(alert)
@@ -200,10 +200,10 @@ module NomisAlerts
       type_code = alert[:parent_code]
       description = alert[:description]
 
-      nomis_alert = NomisAlert.find_or_initialize_by(code: code, type_code: type_code)
+      nomis_alert = NomisAlert.find_or_initialize_by(code:, type_code:)
       nomis_alert.update!(
-        description: description,
-        type_description: type_description,
+        description:,
+        type_description:,
         assessment_question: assessment_question_mapping(code),
       )
     end

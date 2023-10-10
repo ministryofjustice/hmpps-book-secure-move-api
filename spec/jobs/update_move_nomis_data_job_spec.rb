@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe UpdateMoveNomisDataJob, type: :job do
   subject(:perform) do
-    described_class.perform_now(move_id: move_id)
+    described_class.perform_now(move_id:)
   end
 
   let(:move) { create :move }

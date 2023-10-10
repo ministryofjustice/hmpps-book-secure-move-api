@@ -50,7 +50,7 @@ RSpec.describe LocationFreeSpacesSerializer do
 
     context 'with a category' do
       let(:category) { create(:category) }
-      let(:location) { create(:location, category: category) }
+      let(:location) { create(:location, category:) }
 
       it 'contains a category relationship' do
         expect(result_data[:relationships][:category]).to eq(data: { id: category.id, type: 'categories' })

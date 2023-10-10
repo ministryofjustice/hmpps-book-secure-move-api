@@ -34,14 +34,14 @@ RSpec.describe Api::Reference::PrisonTransferReasonsController do
     end
 
     before do
-      get '/api/reference/prison_transfer_reasons', headers: headers
+      get '/api/reference/prison_transfer_reasons', headers:
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
   end

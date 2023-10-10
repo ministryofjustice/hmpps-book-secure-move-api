@@ -24,7 +24,7 @@ RSpec.describe Imports::MissingMoveStartEvents do
   end
 
   describe '#call' do
-    subject(:results) { described_class.call(csv_path: csv_path, columns: columns) }
+    subject(:results) { described_class.call(csv_path:, columns:) }
 
     it 'imports all rows' do
       expect(results.total).to eq(2)

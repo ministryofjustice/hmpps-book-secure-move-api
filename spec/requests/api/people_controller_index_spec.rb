@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  subject(:get_people) { get '/api/v1/people', headers: headers, params: params }
+  subject(:get_people) { get '/api/v1/people', headers:, params: }
 
   let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
@@ -74,10 +74,10 @@ RSpec.describe Api::PeopleController do
       let(:gender) { create(:gender) }
       let(:ethnicity) { create(:ethnicity) }
 
-      let(:params) { { filter: { prison_number: prison_number } } }
+      let(:params) { { filter: { prison_number: } } }
       let(:people_finder) { instance_double('People::Finder', call: Person.all) }
 
-      before { create_list :person, 5, gender: gender, ethnicity: ethnicity }
+      before { create_list :person, 5, gender:, ethnicity: }
 
       context 'when Nomis replies with success' do
         before do
@@ -114,7 +114,7 @@ RSpec.describe Api::PeopleController do
     describe 'included relationships' do
       before do
         create_list :person, 2, police_national_computer: 'AB/1234567'
-        get "/api/v1/people#{query_params}", headers: headers, params: params
+        get "/api/v1/people#{query_params}", headers:, params:
       end
 
       context 'when not including the include query param' do

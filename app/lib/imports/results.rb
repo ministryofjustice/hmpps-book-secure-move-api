@@ -15,7 +15,7 @@ class Imports::Results
   end
 
   def record_failure(record, reason:)
-    failures.append(record.merge(reason: reason))
+    failures.append(record.merge(reason:))
   end
 
   def save(obj, record)

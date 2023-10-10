@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe JourneyEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
-  let(:params) { { type: type, attributes: { timestamp: timestamp } } }
+  let(:params) { { type:, attributes: { timestamp: } } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
 
   context 'when type=starts' do
@@ -60,8 +60,8 @@ RSpec.describe JourneyEvents::ParamsValidator do
     let(:type) { 'lodgings' }
     let(:location_id) { create(:location).id }
     let(:params) do
-      { type: type,
-        attributes: { timestamp: timestamp },
+      { type:,
+        attributes: { timestamp: },
         relationships: {
           to_location: { data: { type: 'locations', id: location_id } },
         } }
@@ -88,8 +88,8 @@ RSpec.describe JourneyEvents::ParamsValidator do
     let(:type) { 'lockouts' }
     let(:location_id) { create(:location).id }
     let(:params) do
-      { type: type,
-        attributes: { timestamp: timestamp },
+      { type:,
+        attributes: { timestamp: },
         relationships: {
           from_location: { data: { type: 'locations', id: location_id } },
         } }

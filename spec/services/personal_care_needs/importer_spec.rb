@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe PersonalCareNeeds::Importer do
   subject(:importer) do
     described_class.new(
-      profile: profile,
-      personal_care_needs: personal_care_needs,
+      profile:,
+      personal_care_needs:,
     )
   end
 
@@ -17,7 +17,7 @@ RSpec.describe PersonalCareNeeds::Importer do
       {
         offender_no: person.nomis_prison_number,
         problem_type: 'foo',
-        problem_code: problem_code,
+        problem_code:,
         problem_status: 'bar',
         problem_description: 'baz',
         start_date: '2010-06-21',

@@ -7,15 +7,15 @@ class PrepareBaseNotificationsJob < ApplicationJob
     topic = find_topic(topic_id)
     move = associated_move(topic)
 
-    subscriptions(move, only_supplier_id: only_supplier_id).find_each do |subscription|
+    subscriptions(move, only_supplier_id:).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
         notification = build_notification(subscription, NotificationType::WEBHOOK, topic, action_name)
-        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as:)
       end
 
       if send_emails && subscription.email_address.present? && should_email?(move)
         notification = build_notification(subscription, NotificationType::EMAIL, topic, action_name)
-        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as: queue_as)
+        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as:)
       end
     end
   end
@@ -41,7 +41,7 @@ private
   def build_notification(subscription, type_id, topic, action_name)
     subscription.notifications.create!(
       notification_type_id: type_id,
-      topic: topic,
+      topic:,
       event_type: event_type(action_name, topic, type_id),
     )
   end

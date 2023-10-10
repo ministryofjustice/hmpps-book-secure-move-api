@@ -30,7 +30,7 @@ RSpec.describe Population do
     it 'includes non-cancelled prison transfer moves from same location on same date' do
       location = create(:location, :prison)
       move = create(:move, :prison_transfer, date: Time.zone.today, from_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_from).to contain_exactly(move)
     end
@@ -38,7 +38,7 @@ RSpec.describe Population do
     it 'excludes cancelled moves' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, :cancelled, date: Time.zone.today, from_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_from).to be_empty
     end
@@ -46,7 +46,7 @@ RSpec.describe Population do
     it 'excludes other types of move' do
       location = create(:location, :prison)
       create(:move, :court_appearance, date: Time.zone.today, from_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_from).to be_empty
     end
@@ -54,7 +54,7 @@ RSpec.describe Population do
     it 'excludes moves on a different date' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, date: Date.tomorrow, from_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_from).to be_empty
     end
@@ -62,7 +62,7 @@ RSpec.describe Population do
     it 'excludes moves from a different location' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, date: Time.zone.today)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_from).to be_empty
     end
@@ -72,7 +72,7 @@ RSpec.describe Population do
     it 'includes non-cancelled prison transfer moves to same location on same date' do
       location = create(:location, :prison)
       move = create(:move, :prison_transfer, date: Time.zone.today, to_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_to).to contain_exactly(move)
     end
@@ -80,7 +80,7 @@ RSpec.describe Population do
     it 'excludes cancelled moves' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, :cancelled, date: Time.zone.today, to_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_to).to be_empty
     end
@@ -88,7 +88,7 @@ RSpec.describe Population do
     it 'excludes other types of move' do
       location = create(:location, :prison)
       create(:move, :prison_recall, date: Time.zone.today, to_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_to).to be_empty
     end
@@ -96,7 +96,7 @@ RSpec.describe Population do
     it 'excludes moves on a different date' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, date: Date.tomorrow, to_location: location)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_to).to be_empty
     end
@@ -104,7 +104,7 @@ RSpec.describe Population do
     it 'excludes moves from a different location' do
       location = create(:location, :prison)
       create(:move, :prison_transfer, date: Time.zone.today)
-      population = create(:population, date: Time.zone.today, location: location)
+      population = create(:population, date: Time.zone.today, location:)
 
       expect(population.moves_to).to be_empty
     end
@@ -152,7 +152,7 @@ RSpec.describe Population do
   end
 
   describe '.new_with_defaults' do
-    subject(:new_population) { described_class.new_with_defaults(location: location, date: date) }
+    subject(:new_population) { described_class.new_with_defaults(location:, date:) }
 
     let(:location) { create(:location, :prison) }
     let(:date) { Time.zone.today }
@@ -162,15 +162,15 @@ RSpec.describe Population do
     end
 
     context 'with a previous population record for same location' do
-      before { create(:population, location: location, date: date - 2.days) }
+      before { create(:population, location:, date: date - 2.days) }
 
-      let!(:previous_population) { create(:population, location: location, date: date - 1.day) }
+      let!(:previous_population) { create(:population, location:, date: date - 1.day) }
 
       it 'populates details from most recent previous record' do
         expect(new_population).to have_attributes({
           id: nil,
           location_id: location.id,
-          date: date,
+          date:,
           operational_capacity: previous_population.operational_capacity,
           usable_capacity: previous_population.usable_capacity,
           bedwatch: previous_population.bedwatch,
@@ -188,7 +188,7 @@ RSpec.describe Population do
         expect(new_population).to have_attributes({
           id: nil,
           location_id: location.id,
-          date: date,
+          date:,
           operational_capacity: nil,
           usable_capacity: nil,
           unlock: nil,

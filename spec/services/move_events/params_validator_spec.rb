@@ -6,8 +6,8 @@ RSpec.describe MoveEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
   let(:move) { nil }
-  let(:attributes) { { timestamp: timestamp } }
-  let(:params) { { type: type, attributes: attributes } }
+  let(:attributes) { { timestamp: } }
+  let(:params) { { type:, attributes: } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
   let(:type) { 'accepts' }
 
@@ -16,7 +16,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   end
 
   describe 'cancellation_reason' do
-    let(:attributes) { { timestamp: timestamp, cancellation_reason: cancellation_reason } }
+    let(:attributes) { { timestamp:, cancellation_reason: } }
     let(:cancellation_reason) { 'supplier_declined_to_move' }
     let(:type) { 'cancel' }
 
@@ -44,7 +44,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   end
 
   describe 'rejection_reason' do
-    let(:attributes) { { timestamp: timestamp, rejection_reason: rejection_reason } }
+    let(:attributes) { { timestamp:, rejection_reason: } }
     let(:rejection_reason) { 'no_transport_available' }
     let(:type) { 'reject' }
 
@@ -72,7 +72,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   end
 
   describe 'date' do
-    let(:attributes) { { timestamp: timestamp, date: date } }
+    let(:attributes) { { timestamp:, date: } }
     let(:date) { '2020-06-10' }
     let(:type) { 'approve' }
 
@@ -158,7 +158,7 @@ RSpec.describe MoveEvents::ParamsValidator do
   end
 
   describe 'from_location_id' do
-    let(:params) { { type: type, attributes: attributes, relationships: relationships } }
+    let(:params) { { type:, attributes:, relationships: } }
     let(:relationships) { { from_location: { data: { type: 'locations', id: location_id } } } }
     let(:type) { 'lockouts' }
     let(:location_id) { create(:location).id }
@@ -188,7 +188,7 @@ RSpec.describe MoveEvents::ParamsValidator do
 
   describe 'to_location_id' do
     let(:move) { build(:move, :prison_recall) }
-    let(:params) { { type: type, attributes: attributes, relationships: relationships } }
+    let(:params) { { type:, attributes:, relationships: } }
     let(:relationships) { { to_location: { data: { type: 'locations', id: location_id } } } }
     let(:type) { 'redirects' }
     let(:location_id) { create(:location).id }

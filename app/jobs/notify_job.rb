@@ -16,7 +16,7 @@ class NotifyJob < ApplicationJob
       record_failure(subscription, notification, e)
       raise RetryJobError, e
     else
-      update_notification(notification, success: true, response_id: response_id)
+      update_notification(notification, success: true, response_id:)
     end
   end
 
@@ -35,7 +35,7 @@ private
       delivered_at: success ? Time.zone.now : nil,
       delivery_attempts: notification.delivery_attempts.succ,
       delivery_attempted_at: Time.zone.now,
-      response_id: response_id,
+      response_id:,
     )
   end
 

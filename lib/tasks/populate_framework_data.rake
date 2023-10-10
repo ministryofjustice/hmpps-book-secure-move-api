@@ -29,7 +29,7 @@ namespace :frameworks do
 end
 
 def import_framework(filepath, version)
-  framework_importer = Frameworks::Importer.new(filepath: filepath, version: version)
+  framework_importer = Frameworks::Importer.new(filepath:, version:)
   framework_importer.call
 
   print("Errors: #{framework_importer.errors}\n") if framework_importer.errors.any?

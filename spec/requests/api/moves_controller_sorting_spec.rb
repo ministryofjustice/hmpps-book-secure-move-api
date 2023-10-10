@@ -37,7 +37,7 @@ RSpec.describe Api::MovesController do
       create :move, profile: profile1, to_location: location1
       create :move, profile: profile4, to_location: location4
 
-      get '/api/v1/moves', headers: headers, params: { sort: sort_params }
+      get '/api/v1/moves', headers:, params: { sort: sort_params }
     end
 
     describe 'sorting' do
@@ -83,7 +83,7 @@ RSpec.describe Api::MovesController do
           let(:expected) { Move.all.sort_by(&:date).reverse }
 
           it 'sorts by move date descending', :skip_before do
-            get '/api/v1/moves', headers: headers
+            get('/api/v1/moves', headers:)
 
             expect(move_ids).to eq(expected.map(&:id))
           end

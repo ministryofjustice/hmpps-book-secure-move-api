@@ -113,10 +113,10 @@ RSpec.describe FrameworkNomisMappings::PersonalCareNeeds do
   def nomis_personal_care_need(start_date: '2010-06-21', end_date: '2100-06-21', problem_status: 'ON')
     {
       problem_code: 'ACCU9',
-      problem_status: problem_status,
+      problem_status:,
       problem_description: 'Preg, acc under 9mths',
-      start_date: start_date,
-      end_date: end_date,
+      start_date:,
+      end_date:,
       offender_no: '321',
     }.with_indifferent_access
   end

@@ -11,7 +11,7 @@ RSpec.describe YouthRiskAssessment do
     it 'is valid if the move from location is from an stc' do
       location = create(:location, :stc)
       move = create(:move, from_location: location)
-      youth_risk_assessment = build(:youth_risk_assessment, move: move)
+      youth_risk_assessment = build(:youth_risk_assessment, move:)
 
       expect(youth_risk_assessment).to be_valid
     end
@@ -19,7 +19,7 @@ RSpec.describe YouthRiskAssessment do
     it 'is valid if the move from location is from an sch' do
       location = create(:location, :sch)
       move = create(:move, from_location: location)
-      youth_risk_assessment = build(:youth_risk_assessment, move: move)
+      youth_risk_assessment = build(:youth_risk_assessment, move:)
 
       expect(youth_risk_assessment).to be_valid
     end
@@ -27,7 +27,7 @@ RSpec.describe YouthRiskAssessment do
     it 'is valid if the move from location is a youth offender institution' do
       location = create(:location, young_offender_institution: true)
       move = create(:move, from_location: location)
-      youth_risk_assessment = build(:youth_risk_assessment, move: move)
+      youth_risk_assessment = build(:youth_risk_assessment, move:)
 
       expect(youth_risk_assessment).to be_valid
     end
@@ -35,7 +35,7 @@ RSpec.describe YouthRiskAssessment do
     it 'is invalid if the move from location is not from an sch or stc or youth offender institution' do
       location = create(:location, :prison, young_offender_institution: false)
       move = create(:move, from_location: location)
-      youth_risk_assessment = build(:youth_risk_assessment, move: move)
+      youth_risk_assessment = build(:youth_risk_assessment, move:)
 
       expect(youth_risk_assessment).not_to be_valid
       expect(youth_risk_assessment.errors.messages[:move]).to eq(["'from_location' must be from either a secure training centre or a secure children's home"])

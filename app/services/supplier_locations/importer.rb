@@ -21,7 +21,7 @@ module SupplierLocations
         locations = codes.collect { |code| Location.find_by(nomis_agency_id: code) }.compact
 
         message("Updating #{locations.size} locations for supplier #{supplier.name}...")
-        SupplierLocation.link_locations(effective_from: effective_from, effective_to: effective_to, supplier: supplier, locations: locations)
+        SupplierLocation.link_locations(effective_from:, effective_to:, supplier:, locations:)
       end
 
       message('Done.')

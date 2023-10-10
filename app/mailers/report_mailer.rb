@@ -12,7 +12,7 @@ class ReportMailer < ApplicationMailer
     start_date = params[:start_date]
     end_date = params[:end_date]
 
-    csv = Reports::PersonEscortRecordQuality.call(start_date: start_date, end_date: end_date)
+    csv = Reports::PersonEscortRecordQuality.call(start_date:, end_date:)
 
     set_personalisation(
       'report-title': 'Person Escort Record Quality',

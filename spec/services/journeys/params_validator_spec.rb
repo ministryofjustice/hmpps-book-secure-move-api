@@ -8,7 +8,7 @@ RSpec.describe Journeys::ParamsValidator do
   let(:billable) { false }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
   let(:date) { '2020-04-29' }
-  let(:params) { { attributes: { billable: billable, timestamp: timestamp, date: date } } }
+  let(:params) { { attributes: { billable:, timestamp:, date: } } }
 
   shared_examples('it validates required billable') do
     context 'when invalid' do

@@ -22,10 +22,10 @@ RSpec.describe PersonEscortRecord do
   it { is_expected.to have_many(:medical_events) }
 
   it 'creates NOMIS mappings for framework responses' do
-    move = create(:move, from_location: from_location)
+    move = create(:move, from_location:)
     framework = create(:framework)
     alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-    create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+    create(:framework_question, framework:, framework_nomis_codes: [alert_code])
     allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
     person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
@@ -33,10 +33,10 @@ RSpec.describe PersonEscortRecord do
   end
 
   it 'updates nomis sync status if successful' do
-    move = create(:move, from_location: from_location)
+    move = create(:move, from_location:)
     framework = create(:framework)
     alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-    create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+    create(:framework_question, framework:, framework_nomis_codes: [alert_code])
     allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
     person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
@@ -68,9 +68,9 @@ RSpec.describe PersonEscortRecord do
         framework = create(:framework)
         profile = create(:profile)
         alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-        question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+        question = create(:framework_question, framework:, framework_nomis_codes: [alert_code])
         response = create(:string_response, framework_question: question)
-        person_escort_record = create(:person_escort_record, framework: framework, profile: profile, framework_responses: [response])
+        person_escort_record = create(:person_escort_record, framework:, profile:, framework_responses: [response])
 
         expect { person_escort_record.import_nomis_mappings! }.not_to change(FrameworkNomisMapping, :count)
       end
@@ -84,11 +84,11 @@ RSpec.describe PersonEscortRecord do
 
     it 'imports nomis mappings if move is a prison' do
       framework = create(:framework)
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-      question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+      question = create(:framework_question, framework:, framework_nomis_codes: [alert_code])
       response = create(:string_response, framework_question: question)
-      person_escort_record = create(:person_escort_record, framework: framework, move: move, framework_responses: [response])
+      person_escort_record = create(:person_escort_record, framework:, move:, framework_responses: [response])
 
       expect { person_escort_record.import_nomis_mappings! }.to change(FrameworkNomisMapping, :count).by(1)
     end
@@ -180,7 +180,7 @@ RSpec.describe PersonEscortRecord do
 
     let(:framework) { create(:framework) }
     let(:alert_code) { create(:framework_nomis_code, code: 'VI', code_type: 'alert') }
-    let(:question) { create(:framework_question, framework: framework, framework_nomis_codes: [alert_code]) }
+    let(:question) { create(:framework_question, framework:, framework_nomis_codes: [alert_code]) }
     let(:response1) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'TEST_USER') }
     let(:response2) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'TEST_USER') }
     let(:response3) { create(:string_response, section: 'section1', framework_question: question, responded_by: 'OTHER_TEST_USER') }

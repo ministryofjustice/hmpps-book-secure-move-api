@@ -13,7 +13,7 @@ RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
   include_context 'with Nomis alerts reference data'
 
   let(:police_national_computer) { '05/886838E' }
-  let(:person) { create(:person_without_profiles, police_national_computer: police_national_computer, prison_number: nil, criminal_records_office: nil) }
+  let(:person) { create(:person_without_profiles, police_national_computer:, prison_number: nil, criminal_records_office: nil) }
   let(:police1) { create(:location, :police) }
   let(:police2) { create(:location, :police) }
   let(:assessment_special_diet) { AssessmentQuestion.where(key: 'special_diet_or_allergy').first }

@@ -38,15 +38,15 @@ RSpec.describe MockMetricsMoves do
     let(:supplier) { create(:supplier, key: 'supplier') }
 
     describe 'database' do
-      subject { described_class.new(supplier: supplier).database }
+      subject { described_class.new(supplier:).database }
 
       it { is_expected.to eql('moves_supplier') }
     end
 
     describe 'moves' do
-      subject { described_class.new(supplier: supplier).moves }
+      subject { described_class.new(supplier:).moves }
 
-      let(:moves) { create_list(:move, 2, supplier: supplier) }
+      let(:moves) { create_list(:move, 2, supplier:) }
       let(:other_moves) { create_list(:move, 2) }
 
       before do

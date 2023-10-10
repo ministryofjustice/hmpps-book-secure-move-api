@@ -8,7 +8,7 @@ RSpec.describe CourtHearing, type: :model do
   end
 
   describe 'start_time field' do
-    subject { build(:court_hearing, start_time: start_time) }
+    subject { build(:court_hearing, start_time:) }
 
     context 'when nil' do
       let(:start_time) { nil }
@@ -24,7 +24,7 @@ RSpec.describe CourtHearing, type: :model do
   end
 
   describe 'comments field' do
-    subject { build(:court_hearing, comments: comments) }
+    subject { build(:court_hearing, comments:) }
 
     context 'when nil' do
       let(:comments) { nil }

@@ -62,7 +62,7 @@ RSpec.describe Location do
       end
 
       it 'generates a feed document' do
-        expect(location.for_feed(prefix: prefix)).to include_json(expected_json)
+        expect(location.for_feed(prefix:)).to include_json(expected_json)
       end
     end
 

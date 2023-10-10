@@ -6,7 +6,7 @@ RSpec.describe FrameworkAssessmentSerializer do
   subject(:serializer) { described_class.new(assessment, includes) }
 
   let(:move) { create(:move) }
-  let(:assessment) { create(:person_escort_record, move: move, profile: move.profile) }
+  let(:assessment) { create(:person_escort_record, move:, profile: move.profile) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 

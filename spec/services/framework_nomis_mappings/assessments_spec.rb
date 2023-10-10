@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkNomisMappings::Assessments do
-  subject(:mappings) { described_class.new(booking_id: booking_id, nomis_sync_status: nomis_sync_status).call }
+  subject(:mappings) { described_class.new(booking_id:, nomis_sync_status:).call }
 
   let(:nomis_sync_status) { FrameworkNomisMappings::NomisSyncStatus.new(resource_type: 'assessments') }
 
@@ -123,9 +123,9 @@ RSpec.describe FrameworkNomisMappings::Assessments do
       assessment_code: 'CSR',
       assessment_description: 'Cell Share Risk Assessment',
       assessment_comment: comment,
-      classification: classification,
-      approval_date: approval_date,
-      next_review_date: next_review_date,
+      classification:,
+      approval_date:,
+      next_review_date:,
       offender_no: '321',
     }.with_indifferent_access
   end

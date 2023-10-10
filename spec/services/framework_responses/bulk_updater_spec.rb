@@ -77,10 +77,10 @@ RSpec.describe FrameworkResponses::BulkUpdater do
   it 'detaches flag if answer changed' do
     per = create(:person_escort_record)
     framework_question = create(:framework_question)
-    flag1 = create(:framework_flag, framework_question: framework_question)
-    flag2 = create(:framework_flag, framework_question: framework_question)
-    response1 = create(:string_response, framework_question: framework_question, framework_flags: [flag1, flag2], assessmentable: per)
-    response2 = create(:string_response, framework_question: framework_question, framework_flags: [flag1, flag2], assessmentable: per)
+    flag1 = create(:framework_flag, framework_question:)
+    flag2 = create(:framework_flag, framework_question:)
+    response1 = create(:string_response, framework_question:, framework_flags: [flag1, flag2], assessmentable: per)
+    response2 = create(:string_response, framework_question:, framework_flags: [flag1, flag2], assessmentable: per)
     described_class.new(assessment: per, response_values_hash: { response1.id => 'No', response2.id => 'Yes' }).call
 
     expect(response1.reload.framework_flags).to be_empty

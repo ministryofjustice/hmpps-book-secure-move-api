@@ -9,7 +9,7 @@ RSpec.describe Notification, type: :model do
   it { is_expected.to validate_presence_of(:topic) }
 
   describe 'kept?' do
-    subject(:notification) { build(:notification, :webhook, subscription: subscription, discarded_at: discarded_at) }
+    subject(:notification) { build(:notification, :webhook, subscription:, discarded_at:) }
 
     context 'when parent subscription is discarded' do
       let(:subscription) { create(:subscription, discarded_at: Time.zone.now) }
@@ -47,7 +47,7 @@ RSpec.describe Notification, type: :model do
   describe 'relationships' do
     it 'updates the parent record when updated' do
       topic = create(:move)
-      notification = create(:notification, topic: topic)
+      notification = create(:notification, topic:)
 
       expect { notification.update(delivery_attempted_at: notification.delivery_attempted_at + 1.day) }.to(change { topic.reload.updated_at })
     end
@@ -55,7 +55,7 @@ RSpec.describe Notification, type: :model do
     it 'updates the parent record when created' do
       topic = create(:move)
 
-      expect { create(:notification, topic: topic) }.to(change { topic.reload.updated_at })
+      expect { create(:notification, topic:) }.to(change { topic.reload.updated_at })
     end
   end
 
@@ -87,14 +87,14 @@ RSpec.describe Notification, type: :model do
   describe 'mailer' do
     it 'returns correct mailer class for a PersonEscortRecord' do
       topic = create(:person_escort_record)
-      notification = build(:notification, topic: topic)
+      notification = build(:notification, topic:)
 
       expect(notification.mailer).to eq(PersonEscortRecordMailer)
     end
 
     it 'returns correct mailer class for a Move' do
       topic = create(:move)
-      notification = build(:notification, topic: topic)
+      notification = build(:notification, topic:)
 
       expect(notification.mailer).to eq(MoveMailer)
     end

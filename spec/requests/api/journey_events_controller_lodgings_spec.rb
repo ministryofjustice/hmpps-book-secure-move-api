@@ -5,13 +5,13 @@ require 'rails_helper'
 RSpec.describe Api::JourneyEventsController do
   describe 'POST /moves/:move_id/journeys/:journey_id/lodgings' do
     subject(:do_post) do
-      post("/api/v1/moves/#{move.id}/journeys/#{journey.id}/lodgings", params: params, headers: headers, as: :json)
+      post("/api/v1/moves/#{move.id}/journeys/#{journey.id}/lodgings", params:, headers:, as: :json)
     end
 
     include_context 'with supplier with spoofed access token'
 
     let(:move) { create(:move, from_location: create(:location, suppliers: [supplier])) }
-    let(:journey) { create(:journey, initial_journey_state, move: move, supplier: supplier) }
+    let(:journey) { create(:journey, initial_journey_state, move:, supplier:) }
     let(:initial_journey_state) { :in_progress }
     let(:location) { create(:location) }
 

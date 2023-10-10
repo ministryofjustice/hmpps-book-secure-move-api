@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context 'with NomisClient authentication', shared_context: :metadata do
-  let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials: client_credentials) }
+  let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials:) }
   let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
   let(:response_json) { JSON.parse(response_body) }
   let(:token_expires_at) { 1.hour.from_now.to_i }

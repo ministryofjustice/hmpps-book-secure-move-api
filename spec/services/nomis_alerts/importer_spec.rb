@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe NomisAlerts::Importer do
-  subject(:importer) { described_class.new(alert_codes: alert_codes) }
+  subject(:importer) { described_class.new(alert_codes:) }
 
   let(:alert_types) do
     [

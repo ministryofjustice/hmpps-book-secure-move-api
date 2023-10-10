@@ -8,7 +8,7 @@ module Moves
           PERMISSIBLE_CHARACTERS.sample(REFERENCE_PART1_LENGTH).join +
           PERMISSIBLE_NUMBERS.sample(REFERENCE_PART2_LENGTH).join +
           PERMISSIBLE_CHARACTERS.sample(REFERENCE_PART3_LENGTH).join
-        break reference unless Move.where(reference: reference).exists?
+        break reference unless Move.where(reference:).exists?
       end
     end
 

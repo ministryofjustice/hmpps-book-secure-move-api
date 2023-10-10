@@ -15,7 +15,7 @@ RSpec.describe Api::Reference::RegionsController do
     let!(:region2) { create(:region, locations: [location]) }
 
     before do
-      get '/api/v1/reference/regions', headers: headers
+      get '/api/v1/reference/regions', headers:
     end
 
     context 'when successful' do
@@ -61,7 +61,7 @@ RSpec.describe Api::Reference::RegionsController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

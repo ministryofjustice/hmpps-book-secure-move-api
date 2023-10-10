@@ -6,7 +6,7 @@ RSpec.describe IdentifierTypeSerializer do
   subject(:serializer) { described_class.new(identifier_type) }
 
   let(:disabled_at) { Time.zone.local(2019, 1, 1) }
-  let(:identifier_type) { create :identifier_type, disabled_at: disabled_at }
+  let(:identifier_type) { create :identifier_type, disabled_at: }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do

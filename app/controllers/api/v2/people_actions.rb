@@ -81,7 +81,7 @@ module Api::V2
     end
 
     def render_person(person, status)
-      render_json person, serializer: ::V2::PersonWithCategorySerializer, include: included_relationships, status: status
+      render_json person, serializer: ::V2::PersonWithCategorySerializer, include: included_relationships, status:
     end
 
     def supported_relationships

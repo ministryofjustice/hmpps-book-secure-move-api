@@ -27,7 +27,7 @@ class FrameworkResponse
       return {} unless item.present? && responses.any?
 
       {
-        item: item,
+        item:,
         responses: response_objects.map { |response| response_as_json(response) },
       }
     end

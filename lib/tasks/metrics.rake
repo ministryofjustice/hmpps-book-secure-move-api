@@ -19,7 +19,7 @@ namespace :metrics do
       end
 
       suppliers.each do |supplier|
-        metric_class.new(supplier: supplier).tap do |metric|
+        metric_class.new(supplier:).tap do |metric|
           metric_class::FORMATS.each do |format_key, format_file|
             key = "#{metric.database}/#{metric.file}/#{format_file}"
             expired_before = Time.zone.now - (metric.interval || 0)

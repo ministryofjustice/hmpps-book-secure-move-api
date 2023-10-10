@@ -90,7 +90,7 @@ RSpec.describe Profile, type: :model do
   end
 
   describe '#merge_assessment_answers!' do
-    subject(:profile) { build :profile, assessment_answers: assessment_answers }
+    subject(:profile) { build :profile, assessment_answers: }
 
     let(:assessment_answers) do
       [
@@ -175,7 +175,7 @@ RSpec.describe Profile, type: :model do
     it 'updates the parent record when created' do
       person = create(:person_without_profiles)
 
-      expect { create(:profile, person: person) }.to(change { person.reload.updated_at })
+      expect { create(:profile, person:) }.to(change { person.reload.updated_at })
     end
   end
 

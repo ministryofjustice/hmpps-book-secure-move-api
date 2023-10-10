@@ -9,9 +9,9 @@ namespace :reports do
     recipients = ENV.fetch('PER_QUALITY_REPORT_RECIPIENTS').split(',')
 
     ReportMailer.with(
-      recipients: recipients,
-      start_date: start_date,
-      end_date: end_date,
+      recipients:,
+      start_date:,
+      end_date:,
     ).person_escort_record_quality.deliver_later
   end
 end

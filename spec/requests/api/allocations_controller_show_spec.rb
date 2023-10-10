@@ -11,7 +11,7 @@ RSpec.describe Api::AllocationsController do
     let(:allocation_id) { allocation.id }
 
     before do
-      get "/api/allocations/#{allocation_id}", headers: headers, as: :json
+      get "/api/allocations/#{allocation_id}", headers:, as: :json
     end
 
     context 'when successful' do
@@ -73,7 +73,7 @@ RSpec.describe Api::AllocationsController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

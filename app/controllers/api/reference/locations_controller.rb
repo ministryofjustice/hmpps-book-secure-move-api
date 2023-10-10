@@ -4,7 +4,7 @@ module Api
   module Reference
     class LocationsController < ApiController
       def index
-        locations = Locations::Finder.new(filter_params: filter_params, active_record_relationships: active_record_relationships).call
+        locations = Locations::Finder.new(filter_params:, active_record_relationships:).call
         paginate locations, serializer: LocationSerializer, include: included_relationships
       end
 
@@ -24,7 +24,7 @@ module Api
       end
 
       def render_location(location, status)
-        render_json location, serializer: LocationSerializer, include: included_relationships, status: status
+        render_json location, serializer: LocationSerializer, include: included_relationships, status:
       end
 
       PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id young_offender_institution created_at].freeze

@@ -5,9 +5,9 @@ require 'rails_helper'
 RSpec.describe Locations::Finder do
   subject(:location_finder) do
     described_class.new(
-      filter_params: filter_params,
-      sort_params: sort_params,
-      active_record_relationships: active_record_relationships,
+      filter_params:,
+      sort_params:,
+      active_record_relationships:,
     )
   end
 
@@ -67,9 +67,9 @@ RSpec.describe Locations::Finder do
 
       before do
         create(:location) # Not linked to supplier
-        create(:supplier_location, supplier: supplier, location: other_location, effective_to: Date.yesterday) # Not effective today
-        create(:supplier_location, supplier: supplier, location: location1) # Linked and effective
-        create(:supplier_location, supplier: supplier, location: location2) # Linked and effective
+        create(:supplier_location, supplier:, location: other_location, effective_to: Date.yesterday) # Not effective today
+        create(:supplier_location, supplier:, location: location1) # Linked and effective
+        create(:supplier_location, supplier:, location: location2) # Linked and effective
       end
 
       it 'returns currently effective locations linked to the supplier' do

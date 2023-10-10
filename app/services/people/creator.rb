@@ -23,7 +23,7 @@ module People
     end
 
     def create_profile!
-      @profile = Profile.new(profile_assessment_answers.merge(person: person))
+      @profile = Profile.new(profile_assessment_answers.merge(person:))
       @profile.save!
     end
   end

@@ -69,10 +69,10 @@ module Tasks
           client_timestamp: timestamp,
           from_location: journey_from,
           to_location: journey_to,
-          supplier: supplier,
+          supplier:,
           state: 'completed',
-          billable: billable,
-          vehicle: vehicle,
+          billable:,
+          vehicle:,
         )
       end
 

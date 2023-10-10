@@ -29,9 +29,9 @@ class GenericEvent
 
       Lodging.create!(
         move_id: eventable_id,
-        location_id: location_id,
-        start_date: start_date,
-        end_date: end_date,
+        location_id:,
+        start_date:,
+        end_date:,
       )
     rescue ActiveRecord::RecordNotUnique
       # do nothing

@@ -6,7 +6,7 @@ module NomisClient
       def get(booking_id:)
         return [] if booking_id.blank?
 
-        get_response(booking_id: booking_id).map { |assessment| attributes_for(assessment) }
+        get_response(booking_id:).map { |assessment| attributes_for(assessment) }
       end
 
       def get_response(booking_id:)

@@ -43,7 +43,7 @@ RSpec.describe Api::ProfilesController do
 
     context 'with no pre-existing assessment_answers on profile' do
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -85,7 +85,7 @@ RSpec.describe Api::ProfilesController do
 
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -116,18 +116,18 @@ RSpec.describe Api::ProfilesController do
       end
 
       it 'updates the profiles documents' do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
 
         expect(profile.reload.documents).to match_array(after_documents)
       end
 
       it 'does not affect other relationships' do
-        expect { patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+        expect { patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json }
           .not_to(change { profile.reload.person })
       end
 
       it 'returns the updated documents in the response body' do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
 
         expect(
           response_json.dig('data', 'relationships', 'documents', 'data').map { |document| document['id'] },
@@ -147,7 +147,7 @@ RSpec.describe Api::ProfilesController do
         it 'removes the documents from the move' do
           expect(profile.documents).to match_array(before_documents)
 
-          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
 
           expect(profile.reload.documents).to match_array([])
         end
@@ -162,7 +162,7 @@ RSpec.describe Api::ProfilesController do
         end
 
         it 'does not remove documents from the profile' do
-          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+          patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
 
           expect(profile.reload.documents).to match_array(before_documents)
         end
@@ -186,7 +186,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -251,7 +251,7 @@ RSpec.describe Api::ProfilesController do
 
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
@@ -274,7 +274,7 @@ RSpec.describe Api::ProfilesController do
       let(:profile_params) { nil }
 
       before do
-        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json
+        patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
       end
 
       it_behaves_like 'an endpoint that responds with error 400'
@@ -284,13 +284,13 @@ RSpec.describe Api::ProfilesController do
       let(:move_id) { 'foo-bar' }
       let(:detail_404) { "Couldn't find Profile with 'id'=foo-bar" }
 
-      before { patch "/api/v1/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/#{profile.person.id}/profiles/foo-bar", params: profile_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'when the person_id is not found' do
-      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers: headers, as: :json }
+      before { patch "/api/v1/people/foo-bar/profiles/#{profile.id}", params: profile_params, headers:, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 

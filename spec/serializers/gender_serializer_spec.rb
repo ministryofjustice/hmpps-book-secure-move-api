@@ -6,7 +6,7 @@ RSpec.describe GenderSerializer do
   subject(:serializer) { described_class.new(gender) }
 
   let(:disabled_at) { Time.zone.local(2019, 1, 1) }
-  let(:gender) { create :gender, disabled_at: disabled_at }
+  let(:gender) { create :gender, disabled_at: }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
 
   it 'contains a type property' do

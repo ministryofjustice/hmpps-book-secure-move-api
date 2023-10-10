@@ -11,7 +11,7 @@ RSpec.describe NotifyEmailJob, type: :job do
     nil
   end
   let(:subscription) { create(:subscription, :no_callback_url) }
-  let(:notification) { create(:notification, :email, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
+  let(:notification) { create(:notification, :email, subscription:, delivered_at:, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
   let(:govuk_notify_api_key) { 'GOVUK_NOTIFY_API_KEY' }
   let(:govuk_notify_move_template_id) { 'GOVUK_NOTIFY_MOVE_TEMPLATE_ID' }

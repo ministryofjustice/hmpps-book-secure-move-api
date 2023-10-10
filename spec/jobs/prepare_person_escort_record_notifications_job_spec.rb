@@ -10,8 +10,8 @@ RSpec.describe PreparePersonEscortRecordNotificationsJob, type: :job do
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
-  let(:move) { create :move, from_location: location, supplier: supplier }
-  let(:per) { create :person_escort_record, :amended, move: move }
+  let(:move) { create :move, from_location: location, supplier: }
+  let(:per) { create :person_escort_record, :amended, move: }
 
   before do
     create(:notification_type, :webhook)

@@ -118,8 +118,8 @@ RSpec.describe Person do
     end
 
     it 'returns a confirmed person escort record for a person' do
-      profile1 = create(:profile, person: person)
-      profile2 = create(:profile, person: person)
+      profile1 = create(:profile, person:)
+      profile2 = create(:profile, person:)
       confirmed_person_escort_record = create(:person_escort_record, :confirmed, profile: profile1)
       create(:person_escort_record, profile: profile2)
 
@@ -127,8 +127,8 @@ RSpec.describe Person do
     end
 
     it 'returns the newest confirmed person escort record for a person' do
-      profile1 = create(:profile, person: person)
-      profile2 = create(:profile, person: person)
+      profile1 = create(:profile, person:)
+      profile2 = create(:profile, person:)
       newest_person_escort_record = create(:person_escort_record, :confirmed, confirmed_at: Time.zone.today, profile: profile1)
       create(:person_escort_record, :confirmed, confirmed_at: Time.zone.yesterday, profile: profile2)
 
@@ -148,8 +148,8 @@ RSpec.describe Person do
     end
 
     it 'returns a confirmed youth risk assessment for a person' do
-      profile1 = create(:profile, person: person)
-      profile2 = create(:profile, person: person)
+      profile1 = create(:profile, person:)
+      profile2 = create(:profile, person:)
       confirmed_youth_risk_assessment = create(:youth_risk_assessment, :confirmed, profile: profile1)
       create(:youth_risk_assessment, profile: profile2)
 
@@ -157,8 +157,8 @@ RSpec.describe Person do
     end
 
     it 'returns the newest confirmed youth risk assessment for a person' do
-      profile1 = create(:profile, person: person)
-      profile2 = create(:profile, person: person)
+      profile1 = create(:profile, person:)
+      profile2 = create(:profile, person:)
       newest_youth_risk_assessment = create(:youth_risk_assessment, :confirmed, confirmed_at: Time.zone.today, profile: profile1)
       create(:youth_risk_assessment, :confirmed, confirmed_at: Time.zone.yesterday, profile: profile2)
 

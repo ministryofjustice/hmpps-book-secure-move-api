@@ -24,7 +24,7 @@ class FrameworkResponse
       return {} unless option.present? || details.present?
 
       {
-        option: option,
+        option:,
         details: details.to_s.presence,
       }
     end

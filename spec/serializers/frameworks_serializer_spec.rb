@@ -34,7 +34,7 @@ RSpec.describe FrameworksSerializer do
     end
 
     it 'contains a `questions` relationship with framework questions' do
-      question = create(:framework_question, framework: framework)
+      question = create(:framework_question, framework:)
 
       expect(result[:data][:relationships][:questions][:data]).to contain_exactly(
         id: question.id,

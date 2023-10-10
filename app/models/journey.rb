@@ -79,7 +79,7 @@ class Journey < VersionedModel
       .merge(from_location.for_feed(prefix: :from))
       .merge(to_location.for_feed(prefix: :to))
       .merge(supplier.for_feed)
-      .merge(vehicle_registration: vehicle_registration)
+      .merge(vehicle_registration:)
   end
 
   def vehicle_registration

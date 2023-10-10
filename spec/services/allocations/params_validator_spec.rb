@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Allocations::ParamsValidator do
   subject(:params_validator) { described_class.new(filter_params, sort_params) }
 
-  let(:filter_params) { { date_from: date_from, date_to: date_to } }
+  let(:filter_params) { { date_from:, date_to: } }
   let(:sort_params) { { by: 'date', direction: 'asc' } }
   let(:good_date) { '2019-05-05' }
   let(:date_from) { good_date }

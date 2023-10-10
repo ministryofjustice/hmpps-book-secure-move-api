@@ -279,7 +279,7 @@ RSpec.describe Api::GenericEventsController do
 
     context 'when using a real access token' do
       let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
+      let(:access_token) { create(:access_token, application:).token }
 
       it 'sets the supplier_id' do
         do_post
@@ -357,6 +357,6 @@ RSpec.describe Api::GenericEventsController do
   end
 
   def do_post
-    post '/api/events', params: { data: data }, headers: headers, as: :json
+    post '/api/events', params: { data: }, headers:, as: :json
   end
 end

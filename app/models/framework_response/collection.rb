@@ -41,17 +41,17 @@ class FrameworkResponse
     def details_collection(collection)
       details_options = framework_nomis_mappings.any? ? [] : framework_question.followup_comment_options
       DetailsCollection.new(
-        collection: collection,
+        collection:,
         question_options: framework_question.options,
-        details_options: details_options,
+        details_options:,
       )
     end
 
     def multiple_items_collection(collection)
       MultipleItemsCollection.new(
-        collection: collection,
+        collection:,
         questions: framework_question.dependents,
-        assessmentable: assessmentable,
+        assessmentable:,
       )
     end
 

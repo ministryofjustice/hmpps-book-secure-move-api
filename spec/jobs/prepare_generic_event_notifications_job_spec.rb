@@ -17,8 +17,8 @@ RSpec.describe PrepareGenericEventNotificationsJob, type: :job do
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
-  let(:move) { create :move, from_location: location, supplier: supplier }
-  let(:per) { create :person_escort_record, move: move }
+  let(:move) { create :move, from_location: location, supplier: }
+  let(:per) { create :person_escort_record, move: }
   let(:generic_event) { create :event_per_generic, eventable: per }
 
   before do

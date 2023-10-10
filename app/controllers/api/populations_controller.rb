@@ -7,7 +7,7 @@ module Api
     rescue_from Date::Error, with: :render_invalid_date_error
 
     def new
-      new_population = Population.new_with_defaults(location: location, date: date)
+      new_population = Population.new_with_defaults(location:, date:)
 
       render_population(new_population, :ok)
     end
@@ -84,9 +84,9 @@ module Api
 
     def locations
       @locations ||= Locations::Finder.new(
-        filter_params: filter_params,
-        sort_params: sort_params,
-        active_record_relationships: active_record_relationships,
+        filter_params:,
+        sort_params:,
+        active_record_relationships:,
       ).call
     end
 
@@ -109,7 +109,7 @@ module Api
     end
 
     def render_population(population, status)
-      render_json population, serializer: PopulationSerializer, include: included_relationships, status: status
+      render_json population, serializer: PopulationSerializer, include: included_relationships, status:
     end
 
     def supported_relationships

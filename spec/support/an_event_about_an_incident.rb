@@ -16,7 +16,7 @@ RSpec.shared_examples 'an event about an incident' do
   context 'with a supplier' do
     let(:supplier) { create(:supplier) }
 
-    before { generic_event.update(supplier: supplier) }
+    before { generic_event.update(supplier:) }
 
     it { is_expected.to validate_inclusion_of(:fault_classification).in_array(fault_classifications) }
     it { is_expected.to validate_presence_of(:fault_classification) }

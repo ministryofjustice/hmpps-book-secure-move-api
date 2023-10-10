@@ -7,7 +7,7 @@ FactoryBot.define do
 
   trait :with_person_escort_record do
     after(:create) do |profile|
-      create(:person_escort_record, profile: profile)
+      create(:person_escort_record, profile:)
     end
   end
 

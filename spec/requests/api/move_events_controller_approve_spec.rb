@@ -8,7 +8,7 @@ RSpec.describe Api::MoveEventsController do
 
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
-    let(:move) { create(:move, :proposed, from_location: create(:location, suppliers: [supplier]), supplier: supplier) }
+    let(:move) { create(:move, :proposed, from_location: create(:location, suppliers: [supplier]), supplier:) }
     let(:approved_date) { move.date + 1.day }
     let(:move_id) { move.id }
     let(:approve_params) do
@@ -27,7 +27,7 @@ RSpec.describe Api::MoveEventsController do
     before do
       allow(Allocations::CreateInNomis).to receive(:call)
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/approve", params: approve_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/approve", params: approve_params, headers:, as: :json
     end
 
     context 'when successful' do

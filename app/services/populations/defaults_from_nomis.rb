@@ -6,8 +6,8 @@ module Populations
       nomis_agency_id = location.nomis_agency_id
       assigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: false)
       unassigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: true)
-      movements = NomisClient::Movements.get(agency_id: nomis_agency_id, date: date)
-      discharges = NomisClient::Discharges.get(agency_id: nomis_agency_id, date: date)
+      movements = NomisClient::Movements.get(agency_id: nomis_agency_id, date:)
+      discharges = NomisClient::Discharges.get(agency_id: nomis_agency_id, date:)
 
       return {} unless assigned_cells.present? && unassigned_cells.present? && movements.present?
 
@@ -18,7 +18,7 @@ module Populations
 
       {
         unlock: cell_total - arrivals + discharges,
-        discharges: discharges,
+        discharges:,
       }
     end
   end

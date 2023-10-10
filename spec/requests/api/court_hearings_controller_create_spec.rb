@@ -29,13 +29,13 @@ RSpec.describe Api::CourtHearingsController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     it 'returns 201' do
-      post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
+      post '/api/v1/court_hearings', params: { data: }, headers:, as: :json
 
       expect(response).to have_http_status(:created)
     end
 
     it 'creates a court_hearing' do
-      expect { post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json }
+      expect { post '/api/v1/court_hearings', params: { data: }, headers:, as: :json }
         .to change(CourtHearing, :count).by(1)
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Api::CourtHearingsController do
       end
 
       it 'sets the correct relationship with the move' do
-        post '/api/v1/court_hearings', params: { data: data }, headers: headers, as: :json
+        post '/api/v1/court_hearings', params: { data: }, headers:, as: :json
 
         court_hearing = CourtHearing.find(response_json['data']['id'])
 
@@ -66,7 +66,7 @@ RSpec.describe Api::CourtHearingsController do
         let(:query_params) { '?do_not_save_to_nomis=true' }
 
         it 'creates the court hearings in Nomis' do
-          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+          post "/api/v1/court_hearings#{query_params}", params: { data: }, headers:, as: :json
 
           expect(CourtHearings::CreateInNomis).not_to have_received(:call).with(move, move.court_hearings)
         end
@@ -76,7 +76,7 @@ RSpec.describe Api::CourtHearingsController do
         let(:query_params) { '?do_not_save_to_nomis=foo' }
 
         it 'creates the court hearings in Nomis' do
-          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+          post "/api/v1/court_hearings#{query_params}", params: { data: }, headers:, as: :json
 
           expect(CourtHearings::CreateInNomis).to have_received(:call).with(move, move.court_hearings)
         end
@@ -86,7 +86,7 @@ RSpec.describe Api::CourtHearingsController do
         let(:query_params) { '' }
 
         it 'creates the court hearings in Nomis' do
-          post "/api/v1/court_hearings#{query_params}", params: { data: data }, headers: headers, as: :json
+          post "/api/v1/court_hearings#{query_params}", params: { data: }, headers:, as: :json
 
           expect(CourtHearings::CreateInNomis).to have_received(:call).with(move, move.court_hearings)
         end

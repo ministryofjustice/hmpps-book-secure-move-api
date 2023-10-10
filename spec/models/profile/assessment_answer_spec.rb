@@ -9,9 +9,9 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
   let(:assessment_question_id) { 'c1913bca-04f2-4688-b372-a547db9a6ce8' }
   let(:attribute_values) do
     {
-      title: title,
+      title:,
       comments: 'just a test',
-      assessment_question_id: assessment_question_id,
+      assessment_question_id:,
       created_at: Date.civil(2019, 5, 30),
       expires_at: Date.civil(2019, 6, 30),
       category: 'risk',
@@ -28,7 +28,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
     context 'without an assessment_question_id or nomis_alert_type and nomis_alert_code' do
       let(:attribute_values) do
         {
-          title: title,
+          title:,
           comments: 'just a test',
         }
       end

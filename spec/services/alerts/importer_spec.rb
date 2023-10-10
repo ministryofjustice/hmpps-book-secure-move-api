@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Alerts::Importer do
   subject(:importer) do
     described_class.new(
-      profile: profile,
-      alerts: alerts,
+      profile:,
+      alerts:,
     )
   end
 

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::PeopleController do
-  subject(:get_image) { get "/api/v1/people/#{id}/images", headers: headers }
+  subject(:get_image) { get "/api/v1/people/#{id}/images", headers: }
 
   let(:id) { person.id }
   let(:access_token) { 'spoofed-token' }

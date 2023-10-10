@@ -52,7 +52,7 @@ RSpec.describe Mock::ValidationController, type: :request do
       Rails.application.reload_routes!
     end
 
-    before { get '/mock/data', headers: headers }
+    before { get '/mock/data', headers: }
 
     it_behaves_like 'an endpoint that responds with success 200'
   end

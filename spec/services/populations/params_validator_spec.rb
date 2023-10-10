@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Populations::ParamsValidator do
   subject(:params_validator) { described_class.new(date_params, sort_params) }
 
-  let(:date_params) { { date_from: date_from, date_to: date_to } }
+  let(:date_params) { { date_from:, date_to: } }
   let(:sort_params) { { by: 'title', direction: 'asc' } }
   let(:good_date) { '2019-05-05' }
   let(:date_from) { good_date }

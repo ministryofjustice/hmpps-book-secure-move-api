@@ -8,11 +8,11 @@ RSpec.describe Api::PersonEscortRecordsController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_question) { build(:framework_question, section: 'risk-information') }
-    let(:flag) { build(:framework_flag, framework_question: framework_question) }
+    let(:flag) { build(:framework_flag, framework_question:) }
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
     let(:person_escort_record) do
       person_escort_record = create(:person_escort_record)
-      create(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
+      create(:string_response, framework_question:, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
 
       person_escort_record
     end
@@ -20,7 +20,7 @@ RSpec.describe Api::PersonEscortRecordsController do
 
     before do
       person_escort_record.update_status_and_progress!
-      get "/api/v1/person_escort_records/#{person_escort_record_id}?include=responses,flags", headers: headers, as: :json
+      get "/api/v1/person_escort_records/#{person_escort_record_id}?include=responses,flags", headers:, as: :json
     end
 
     context 'when successful' do
@@ -79,7 +79,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

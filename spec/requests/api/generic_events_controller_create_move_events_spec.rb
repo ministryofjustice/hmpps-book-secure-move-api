@@ -69,8 +69,8 @@ RSpec.describe Api::GenericEventsController do
     it 'correctly remaps the old event' do
       expect {
         post '/api/events',
-             headers: headers,
-             params: { data: data },
+             headers:,
+             params: { data: },
              as: :json
       }.to change(GenericEvent::MoveNotifyPremisesOfDropOffEta, :count).by(1)
     end
@@ -90,7 +90,7 @@ RSpec.describe Api::GenericEventsController do
 
     before do
       post '/api/events',
-           headers: headers,
+           headers:,
            params: { data: {
              type: 'events',
              attributes: {
@@ -122,7 +122,7 @@ RSpec.describe Api::GenericEventsController do
       context 'when a new event is added' do
         before do
           post '/api/events',
-               headers: headers,
+               headers:,
                params: { data: {
                  type: 'events',
                  attributes: {

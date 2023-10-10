@@ -9,14 +9,14 @@ RSpec.describe Profile::AssessmentAnswers, type: :model do
   let(:data) do
     [
       {
-        title: title,
+        title:,
         comments: 'just a test',
         assessment_question_id: 123,
         created_at: Date.civil(2019, 6, 30),
         expires_at: Date.civil(2019, 7, 30),
       },
       {
-        title: title,
+        title:,
         comments: 'just a test',
         assessment_question_id: 456,
         created_at: Date.civil(2019, 5, 30),

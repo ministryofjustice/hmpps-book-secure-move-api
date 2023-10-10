@@ -12,7 +12,7 @@ RSpec.describe People::Updater do
       assessment_answers: [
         { title: risk_type_1.title, assessment_question_id: risk_type_1.id },
       ],
-      person: person,
+      person:,
     }
   end
   let(:original_person_attributes) do

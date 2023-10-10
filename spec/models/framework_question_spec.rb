@@ -25,7 +25,7 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       response = question1.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
         question: question2,
       )
 
@@ -37,7 +37,7 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.assessmentable).to eq(person_escort_record)
@@ -48,7 +48,7 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.framework_question).to eq(question)
@@ -59,7 +59,7 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.value_type).to eq('string')
@@ -70,7 +70,7 @@ RSpec.describe FrameworkQuestion do
       person_escort_record = create(:person_escort_record)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.section).to eq(question.section)
@@ -83,7 +83,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.dependents.size).to eq(2)
@@ -95,7 +95,7 @@ RSpec.describe FrameworkQuestion do
       dependent_question = create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.dependents.first.framework_question).to eq(dependent_question)
@@ -106,7 +106,7 @@ RSpec.describe FrameworkQuestion do
       question = create(:framework_question, :add_multiple_items)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.dependents).to be_empty
@@ -118,7 +118,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :checkbox, parent: question)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.dependents.first.assessmentable).to eq(person_escort_record)
@@ -131,7 +131,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, :textarea, parent: question)
       response = question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       expect(response.dependents.map(&:type)).to contain_exactly(
@@ -148,7 +148,7 @@ RSpec.describe FrameworkQuestion do
       create(:framework_question, parent: child_question)
       response = parent_question.build_responses(
         assessmentable: person_escort_record,
-        questions: questions,
+        questions:,
       )
 
       dependent_responses = response.dependents
@@ -166,9 +166,9 @@ RSpec.describe FrameworkQuestion do
         person_escort_record = create(:person_escort_record)
         response = question1.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
+          questions:,
           question: question2,
-          previous_responses: previous_responses,
+          previous_responses:,
         )
 
         expect(response.value).to eq('No')
@@ -184,8 +184,8 @@ RSpec.describe FrameworkQuestion do
         }
         response = question.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
-          previous_responses: previous_responses,
+          questions:,
+          previous_responses:,
         )
 
         expect(response.dependents.first.value).to contain_exactly('Level 1')
@@ -201,8 +201,8 @@ RSpec.describe FrameworkQuestion do
         }
         response = question.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
-          previous_responses: previous_responses,
+          questions:,
+          previous_responses:,
         )
 
         expect(response.dependents.first).to be_prefilled
@@ -218,8 +218,8 @@ RSpec.describe FrameworkQuestion do
         }
         response = question.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
-          previous_responses: previous_responses,
+          questions:,
+          previous_responses:,
         )
 
         expect(response.dependents.first.value_type).to eq('array')
@@ -235,8 +235,8 @@ RSpec.describe FrameworkQuestion do
         }
         response = question.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
-          previous_responses: previous_responses,
+          questions:,
+          previous_responses:,
         )
 
         expect(response.dependents.first.section).to eq(dependent_question.section)
@@ -251,8 +251,8 @@ RSpec.describe FrameworkQuestion do
         }
         response = question.build_responses(
           assessmentable: person_escort_record,
-          questions: questions,
-          previous_responses: previous_responses,
+          questions:,
+          previous_responses:,
         )
 
         expect(response.value).to eq(value)

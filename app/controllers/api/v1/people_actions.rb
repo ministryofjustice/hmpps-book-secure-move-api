@@ -53,7 +53,7 @@ module Api::V1
   private
 
     def render_person(person, status)
-      render_json person, serializer: PersonSerializer, include: included_relationships, status: status
+      render_json person, serializer: PersonSerializer, include: included_relationships, status:
     end
 
     def creator

@@ -13,7 +13,7 @@ module Metrics
 
     def moves
       if supplier.present?
-        Move.where(supplier: supplier)
+        Move.where(supplier:)
       else
         Move.all
       end

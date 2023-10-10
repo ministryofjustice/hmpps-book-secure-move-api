@@ -7,7 +7,7 @@ module Metrics
 
       def initialize(supplier: nil)
         setup_metric(
-          supplier: supplier,
+          supplier:,
           label: 'Move counts by time bin',
           file: 'counts_by_time_bin',
           interval: 5.minutes,

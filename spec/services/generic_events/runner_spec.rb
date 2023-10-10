@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvents::Runner do
-  subject(:runner) { described_class.new(eventable, dry_run: dry_run) }
+  subject(:runner) { described_class.new(eventable, dry_run:) }
 
   let(:eventable)           { create(:move) }
-  let(:move_start_event)    { create(:event_move_start, eventable: eventable) }
-  let(:move_complete_event) { create(:event_move_complete, eventable: eventable) }
-  let(:move_cancel_event)   { create(:event_move_cancel, eventable: eventable) }
+  let(:move_start_event)    { create(:event_move_start, eventable:) }
+  let(:move_complete_event) { create(:event_move_complete, eventable:) }
+  let(:move_cancel_event)   { create(:event_move_cancel, eventable:) }
 
   let!(:events) { [move_start_event, move_complete_event, move_cancel_event] }
 

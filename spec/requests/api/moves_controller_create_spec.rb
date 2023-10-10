@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::MovesController do
   include ActiveJob::TestHelper
 
-  subject(:post_moves) { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+  subject(:post_moves) { post '/api/v1/moves', params: { data: }, headers:, as: :json }
 
   let(:response_json) { JSON.parse(response.body) }
 
@@ -87,7 +87,7 @@ RSpec.describe Api::MovesController do
 
       context 'with a real access token' do
         let(:application) { create(:application, owner: supplier) }
-        let(:access_token) { create(:access_token, application: application).token }
+        let(:access_token) { create(:access_token, application:).token }
 
         before { post_moves }
 
@@ -139,7 +139,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'when the supplier has a webhook subscription' do
-        let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+        let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
         let(:faraday_client) do
@@ -170,7 +170,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'when the supplier has an email subscription' do
-        let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+        let!(:subscription) { create(:subscription, :no_callback_url, supplier:) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
         let(:notify_response) do
@@ -199,7 +199,7 @@ RSpec.describe Api::MovesController do
             topic: move,
             notification_type: notification_type_email,
             event_type: 'create_move',
-            response_id: response_id,
+            response_id:,
           )
         end
       end
@@ -278,8 +278,8 @@ RSpec.describe Api::MovesController do
             date: Time.zone.today,
             move_agreed: 'true',
             move_agreed_by: 'John Doe',
-            date_from: date_from,
-            date_to: date_to,
+            date_from:,
+            date_to:,
           }
         end
 

@@ -146,7 +146,7 @@ class Move < VersionedModel
            to: :state_machine
 
   def self.for_supplier(supplier)
-    where(supplier: supplier)
+    where(supplier:)
       .or(Move.where(from_location: supplier.locations))
       .or(Move.where(to_location: supplier.locations))
   end
@@ -154,7 +154,7 @@ class Move < VersionedModel
   def approve(date:)
     return unless state_machine.approve
 
-    assign_attributes(date: date) if date.present?
+    assign_attributes(date:) if date.present?
   end
 
   def approve!(args)
@@ -164,8 +164,8 @@ class Move < VersionedModel
 
   def cancel(cancellation_reason:, cancellation_reason_comment: nil)
     assign_attributes(
-      cancellation_reason: cancellation_reason,
-      cancellation_reason_comment: cancellation_reason_comment,
+      cancellation_reason:,
+      cancellation_reason_comment:,
     )
     state_machine.cancel
   end
@@ -177,9 +177,9 @@ class Move < VersionedModel
 
   def reject(rejection_reason:, cancellation_reason_comment: nil)
     assign_attributes(
-      rejection_reason: rejection_reason,
+      rejection_reason:,
       cancellation_reason: Move::CANCELLATION_REASON_REJECTED,
-      cancellation_reason_comment: cancellation_reason_comment,
+      cancellation_reason_comment:,
     )
     state_machine.reject
   end
@@ -214,7 +214,7 @@ class Move < VersionedModel
     transition = { status => new_status }
     case transition
     when { Move::MOVE_STATUS_PROPOSED => Move::MOVE_STATUS_REQUESTED }
-      approve(date: date)
+      approve(date:)
     when { Move::MOVE_STATUS_REQUESTED => Move::MOVE_STATUS_BOOKED }
       accept
     when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_IN_TRANSIT }
@@ -225,12 +225,12 @@ class Move < VersionedModel
       # NB: Usually Proposed --> Cancelled is a Rejection; however some systems may still expect this to be a cancellation
       # NB: Usually Requested --> Cancelled is a Rejection; however some systems may still expect this to be a cancellation
       if cancellation_reason.present?
-        cancel(cancellation_reason: cancellation_reason, cancellation_reason_comment: cancellation_reason_comment)
+        cancel(cancellation_reason:, cancellation_reason_comment:)
       elsif rejection_reason.present?
-        reject(rejection_reason: rejection_reason, cancellation_reason_comment: cancellation_reason_comment)
+        reject(rejection_reason:, cancellation_reason_comment:)
       end
     when { Move::MOVE_STATUS_BOOKED => Move::MOVE_STATUS_CANCELLED }
-      cancel(cancellation_reason: cancellation_reason, cancellation_reason_comment: cancellation_reason_comment)
+      cancel(cancellation_reason:, cancellation_reason_comment:)
     end
   end
 
@@ -248,15 +248,15 @@ class Move < VersionedModel
 
     Move.create!(
       original_move_id: id,
-      from_location_id: from_location_id,
-      to_location_id: to_location_id,
-      allocation_id: allocation_id,
-      profile_id: profile_id,
+      from_location_id:,
+      to_location_id:,
+      allocation_id:,
+      profile_id:,
       status: MOVE_STATUS_PROPOSED,
       date: date && date + 7.days,
       date_from: date_from && date_from + 7.days,
       date_to: date_to && date_to + 7.days,
-      supplier: supplier,
+      supplier:,
     )
   end
 
@@ -275,12 +275,12 @@ class Move < VersionedModel
         .not_cancelled
         .not_proposed
         .where(
-          from_location_id: from_location_id,
-          to_location_id: to_location_id,
-          date: date,
+          from_location_id:,
+          to_location_id:,
+          date:,
         )
         .where.not(profile: nil)
-        .where.not(id: id) # When updating an existing move, don't consider self a duplicate
+        .where.not(id:) # When updating an existing move, don't consider self a duplicate
   end
 
   def existing_id
@@ -312,7 +312,7 @@ class Move < VersionedModel
 
       allocation&.refresh_status_and_moves_count!
 
-      Notifier.prepare_notifications(topic: self, action_name: action_name)
+      Notifier.prepare_notifications(topic: self, action_name:)
       true
     else
       false

@@ -38,7 +38,7 @@ module Moves
     def validate_move_status
       status = attributes.delete(:status)
       if status.present?
-        validator = Moves::StatusValidator.new(status: status, cancellation_reason: attributes[:cancellation_reason], rejection_reason: attributes[:rejection_reason])
+        validator = Moves::StatusValidator.new(status:, cancellation_reason: attributes[:cancellation_reason], rejection_reason: attributes[:rejection_reason])
         raise ActiveModel::ValidationError, validator unless validator.valid?
       end
       status

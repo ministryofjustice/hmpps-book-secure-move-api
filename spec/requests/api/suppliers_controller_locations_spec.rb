@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::SuppliersController do
-  subject(:get_supplier_locations) { get "/api/v1/suppliers/#{supplier_id}/locations#{query_params}", headers: headers, params: {} }
+  subject(:get_supplier_locations) { get "/api/v1/suppliers/#{supplier_id}/locations#{query_params}", headers:, params: {} }
 
   let(:access_token) { 'spoofed-token' }
   let(:headers) { { 'Authorization': "Bearer #{access_token}" } }
@@ -20,15 +20,15 @@ RSpec.describe Api::SuppliersController do
 
     it_behaves_like 'an endpoint that responds with success 200' do
       before do
-        create(:move, :requested, supplier: supplier)
+        create(:move, :requested, supplier:)
 
         get_supplier_locations
       end
     end
 
     it 'returns the locations' do
-      create_list(:move, 2, :requested, supplier: supplier, from_location: location_a) # to tests that duplicates locations are not shown
-      create(:move, :requested, supplier: supplier, from_location: location_b)
+      create_list(:move, 2, :requested, supplier:, from_location: location_a) # to tests that duplicates locations are not shown
+      create(:move, :requested, supplier:, from_location: location_b)
 
       get_supplier_locations
 
@@ -44,7 +44,7 @@ RSpec.describe Api::SuppliersController do
         another_supplier = create(:supplier)
         another_location = create(:location, suppliers: [another_supplier])
         create(:move, :requested, supplier: another_supplier, from_location: another_location)
-        create(:move, :requested, supplier: supplier, from_location: location_a)
+        create(:move, :requested, supplier:, from_location: location_a)
 
         get_supplier_locations
 
@@ -77,7 +77,7 @@ RSpec.describe Api::SuppliersController do
 
     it 'returns the valid provided includes' do
       location = create(:location, suppliers: [supplier])
-      create(:move, :requested, supplier: supplier, from_location: location)
+      create(:move, :requested, supplier:, from_location: location)
 
       get_supplier_locations
 

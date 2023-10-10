@@ -61,7 +61,7 @@ module Api::V2
       move.allocation&.refresh_status_and_moves_count!
 
       Allocations::CreateInNomis.call(move) if create_in_nomis?
-      Notifier.prepare_notifications(topic: move, action_name: action_name)
+      Notifier.prepare_notifications(topic: move, action_name:)
 
       render_move(move, :ok)
     end
@@ -116,7 +116,7 @@ module Api::V2
       status = move_params.fetch(:attributes, {})[:status]
       log_with_request(:debug, "Validating current status of move - [#{status}]")
       if status.present?
-        validator = Moves::StatusValidator.new(status: status, cancellation_reason: move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: move_params.fetch(:attributes, {})[:rejection_reason])
+        validator = Moves::StatusValidator.new(status:, cancellation_reason: move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: move_params.fetch(:attributes, {})[:rejection_reason])
         valid = validator.valid?
         log_with_request(:debug, "Valid Move status: - [#{valid}]")
         raise ActiveModel::ValidationError, validator unless valid
@@ -178,7 +178,7 @@ module Api::V2
     end
 
     def render_move(move, status)
-      render_json move, serializer: ::V2::MoveSerializer, include: included_relationships, fields: ::V2::MoveSerializer::INCLUDED_FIELDS, status: status
+      render_json move, serializer: ::V2::MoveSerializer, include: included_relationships, fields: ::V2::MoveSerializer::INCLUDED_FIELDS, status:
     end
 
     def move

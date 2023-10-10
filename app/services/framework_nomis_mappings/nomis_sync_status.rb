@@ -22,10 +22,10 @@ module FrameworkNomisMappings
 
     def as_json(_options = {})
       {
-        resource_type: resource_type,
-        status: status,
-        synced_at: synced_at,
-        message: message,
+        resource_type:,
+        status:,
+        synced_at:,
+        message:,
       }
     end
 

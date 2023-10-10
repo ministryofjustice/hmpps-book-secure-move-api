@@ -5,16 +5,16 @@ require 'rails_helper'
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'POST /person_escort_records' do
     subject(:post_person_escort_record) do
-      post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+      post '/api/v1/person_escort_records', params: person_escort_record_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:person) { create(:person) }
-    let(:profile) { create(:profile, person: person) }
+    let(:profile) { create(:profile, person:) }
     let(:profile_id) { profile.id }
-    let(:move) { create(:move, profile: profile) }
+    let(:move) { create(:move, profile:) }
     let(:move_id) { move.id }
     let(:framework) { create(:framework, framework_questions: [build(:framework_question, section: 'risk-information', prefill: true)]) }
     let(:framework_version) { framework.version }
@@ -101,7 +101,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
 
       it 'creates a PaperTrail::Version for the response' do
@@ -113,10 +113,10 @@ RSpec.describe Api::PersonEscortRecordsController do
       subject(:post_person_escort_record) do
         previous_pesron_escort_record
 
-        post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+        post '/api/v1/person_escort_records', params: person_escort_record_params, headers:, as: :json
       end
 
-      let(:previous_profile) { create(:profile, person: person) }
+      let(:previous_profile) { create(:profile, person:) }
       let(:previous_pesron_escort_record) do
         create(:person_escort_record, :confirmed, profile: previous_profile, framework_responses: [create(:string_response, framework_question: framework.framework_questions.first)])
       end
@@ -202,7 +202,7 @@ RSpec.describe Api::PersonEscortRecordsController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -235,8 +235,8 @@ RSpec.describe Api::PersonEscortRecordsController do
         end
 
         before do
-          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
-          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers:, as: :json
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers:, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -259,7 +259,7 @@ RSpec.describe Api::PersonEscortRecordsController do
           allow(PersonEscortRecord).to receive(:new).and_return(person_escort_record)
           allow(person_escort_record).to receive(:build_responses!).and_raise(PG::UniqueViolation, 'duplicate key value violates unique constraint')
 
-          post '/api/v1/person_escort_records', params: person_escort_record_params, headers: headers, as: :json
+          post '/api/v1/person_escort_records', params: person_escort_record_params, headers:, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'

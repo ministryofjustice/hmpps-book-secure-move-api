@@ -38,15 +38,15 @@ RSpec.describe MockMetricsPersonEscortRecords do
     let(:supplier) { create(:supplier, key: 'supplier') }
 
     describe 'database' do
-      subject { described_class.new(supplier: supplier).database }
+      subject { described_class.new(supplier:).database }
 
       it { is_expected.to eql('person_escort_records_supplier') }
     end
 
     describe 'person_escort_records_with_moves' do
-      subject { described_class.new(supplier: supplier).person_escort_records_with_moves }
+      subject { described_class.new(supplier:).person_escort_records_with_moves }
 
-      let(:person_escort_records) { create_list(:person_escort_record, 2, move_attr: [supplier: supplier]) }
+      let(:person_escort_records) { create_list(:person_escort_record, 2, move_attr: [supplier:]) }
       let(:other_person_escort_records) { create_list(:person_escort_record, 2) }
 
       before do

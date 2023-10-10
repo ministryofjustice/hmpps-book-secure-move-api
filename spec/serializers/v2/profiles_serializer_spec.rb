@@ -63,14 +63,14 @@ RSpec.describe V2::ProfilesSerializer do
   context 'with included person escort record' do
     let(:options) { { params: { included: %i[person_escort_record category] } } }
     let(:category) { create(:category) }
-    let(:profile) { create(:profile, category: category) }
+    let(:profile) { create(:profile, category:) }
 
     it 'contains a nil `person_escort_record` relationship if no person escort record present' do
       expect(result[:data][:relationships][:person_escort_record][:data]).to be_nil
     end
 
     it 'contains a`person_escort_record` relationship with person escort record' do
-      person_escort_record = create(:person_escort_record, profile: profile)
+      person_escort_record = create(:person_escort_record, profile:)
 
       expect(result[:data][:relationships][:person_escort_record][:data]).to eq({
         id: person_escort_record.id,
@@ -95,7 +95,7 @@ RSpec.describe V2::ProfilesSerializer do
     end
 
     it 'contains a`youth_risk_assessment` relationship with youth risk assessment' do
-      youth_risk_assessment = create(:youth_risk_assessment, profile: profile)
+      youth_risk_assessment = create(:youth_risk_assessment, profile:)
 
       expect(result[:data][:relationships][:youth_risk_assessment][:data]).to eq({
         id: youth_risk_assessment.id,

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::PopulationsController do
   describe 'PATCH /populations/:population_id' do
     subject(:patch_population) do
-      patch "/api/populations/#{population_id}", params: population_params, headers: headers, as: :json
+      patch "/api/populations/#{population_id}", params: population_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'

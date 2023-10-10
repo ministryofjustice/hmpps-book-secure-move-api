@@ -28,9 +28,9 @@ module Moves
 
         new_person_count += 1 if profile.new_record?
 
-        Alerts::Importer.new(profile: profile, alerts: alerts.fetch(offender_no, [])).call
+        Alerts::Importer.new(profile:, alerts: alerts.fetch(offender_no, [])).call
 
-        PersonalCareNeeds::Importer.new(profile: profile, personal_care_needs: personal_care_needs.fetch(offender_no, [])).call
+        PersonalCareNeeds::Importer.new(profile:, personal_care_needs: personal_care_needs.fetch(offender_no, [])).call
 
         next unless profile.changed? || profile.person.changed?
 

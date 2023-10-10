@@ -52,7 +52,7 @@ RSpec.describe GenericEvent::MoveCancel do
   end
 
   describe '#for_feed' do
-    subject(:generic_event) { create(:event_move_cancel, details: details) }
+    subject(:generic_event) { create(:event_move_cancel, details:) }
 
     context 'when the cancellation_reason_comment is present' do
       let(:details) do

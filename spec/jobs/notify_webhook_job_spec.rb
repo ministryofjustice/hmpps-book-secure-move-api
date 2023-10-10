@@ -11,7 +11,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
     nil
   end
   let(:subscription) { create(:subscription, :no_email_address) }
-  let(:notification) { create(:notification, :webhook, subscription: subscription, delivered_at: delivered_at, delivery_attempted_at: nil) }
+  let(:notification) { create(:notification, :webhook, subscription:, delivered_at:, delivery_attempted_at: nil) }
   let(:delivered_at) { nil }
   let(:client) { class_double(Faraday, post: nil, headers: client_headers) }
   let(:client_headers) { {} }

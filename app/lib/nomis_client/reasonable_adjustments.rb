@@ -6,7 +6,7 @@ module NomisClient
       def get(booking_id:, reasonable_adjustment_types:)
         return [] unless booking_id.present? && reasonable_adjustment_types.present?
 
-        reasonable_adjustments_response = get_response(booking_id: booking_id, reasonable_adjustment_types: reasonable_adjustment_types)
+        reasonable_adjustments_response = get_response(booking_id:, reasonable_adjustment_types:)
 
         reasonable_adjustments_response['reasonableAdjustments'].map do |reasonable_adjustment_attributes|
           attributes_for(reasonable_adjustment_attributes)

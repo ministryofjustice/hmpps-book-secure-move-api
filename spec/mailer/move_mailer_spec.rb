@@ -6,8 +6,8 @@ RSpec.describe MoveMailer, type: :mailer do
   subject(:mail) { described_class.notify(notification) }
 
   let(:supplier) { create(:supplier, name: 'Test Supplier') }
-  let(:subscription) { create(:subscription, supplier: supplier, email_address: 'user@foo.bar') }
-  let(:notification) { create(:notification, :email, subscription: subscription, topic: move) }
+  let(:subscription) { create(:subscription, supplier:, email_address: 'user@foo.bar') }
+  let(:notification) { create(:notification, :email, subscription:, topic: move) }
   let(:move) { create(:move, reference: 'MOVEREF1', status: Move::MOVE_STATUS_REQUESTED) }
 
   before do

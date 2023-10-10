@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvent::MoveOvernightLodge do
-  subject(:generic_event) { build(:event_move_overnight_lodge, details: details) }
+  subject(:generic_event) { build(:event_move_overnight_lodge, details:) }
 
   let(:details) do
     {
-      start_date: start_date,
-      end_date: end_date,
+      start_date:,
+      end_date:,
       described_class::LOCATION_ATTRIBUTE_KEY => create(:location).id,
     }
   end

@@ -14,7 +14,7 @@ RSpec.describe CourtHearings::CreateInNomis do
 
     let(:court_hearings) do
       [
-        create(:court_hearing, nomis_case_id: nomis_case_id, move: move, start_time: hearing_date_time, comments: comments),
+        create(:court_hearing, nomis_case_id:, move:, start_time: hearing_date_time, comments:),
       ]
     end
 
@@ -35,7 +35,7 @@ RSpec.describe CourtHearings::CreateInNomis do
       let(:nomis_response_status) { 201 }
       let(:nomis_client_args) do
         [
-          booking_id: booking_id,
+          booking_id:,
           court_case_id: nomis_case_id,
           body_params: {
             'fromPrisonLocation': from_nomis_agency_id,

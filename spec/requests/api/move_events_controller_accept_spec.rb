@@ -4,14 +4,14 @@ require 'rails_helper'
 
 RSpec.describe Api::MoveEventsController do
   subject(:do_post) do
-    post("/api/v1/moves/#{move_id}/accept", params: params, headers: headers, as: :json)
+    post("/api/v1/moves/#{move_id}/accept", params:, headers:, as: :json)
   end
 
   describe 'POST /moves/:move_id/accept' do
     include_context 'with supplier with spoofed access token'
 
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, :requested, from_location: from_location) }
+    let(:move) { create(:move, :requested, from_location:) }
     let(:move_id) { move.id }
 
     context 'with happy params' do

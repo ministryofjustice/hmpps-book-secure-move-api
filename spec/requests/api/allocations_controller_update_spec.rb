@@ -15,7 +15,7 @@ RSpec.describe Api::AllocationsController do
 
   describe 'PATCH /allocations' do
     subject(:patch_allocations) do
-      patch "/api/allocations/#{allocation.id}", params: { data: data }, headers: headers, as: :json
+      patch "/api/allocations/#{allocation.id}", params: { data: }, headers:, as: :json
     end
 
     let(:schema) { load_yaml_schema('patch_allocation_responses.yaml') }
@@ -26,8 +26,8 @@ RSpec.describe Api::AllocationsController do
     let(:existing_date) { Date.new(2023, 1, 1) }
     let(:new_date) { existing_date.tomorrow }
     let(:supplier) { create(:supplier) }
-    let!(:allocation) { create(:allocation, date: existing_date, moves_count: moves_count) }
-    let!(:moves) { create_list(:move, moves_count, allocation: allocation, date: existing_date, person: create(:person), supplier: supplier) }
+    let!(:allocation) { create(:allocation, date: existing_date, moves_count:) }
+    let!(:moves) { create_list(:move, moves_count, allocation:, date: existing_date, person: create(:person), supplier:) }
 
     let(:allocation_attributes) { { date: new_date } }
 
@@ -39,7 +39,7 @@ RSpec.describe Api::AllocationsController do
     end
 
     shared_context 'when the supplier has a webhook subscription' do
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+      let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
 
       let(:faraday_client) do
         class_double(

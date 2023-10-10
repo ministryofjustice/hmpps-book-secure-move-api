@@ -34,12 +34,12 @@ RSpec.describe Api::MovesController do
     before do
       expected_moves # forces creation of expected and unexpected moves prior to querying data
       unexpected_moves
-      get '/api/moves', params: filter_params, headers: headers
+      get '/api/moves', params: filter_params, headers:
     end
 
     describe 'by supplier_id' do
       let(:filter_params) { { filter: { supplier_id: supplier.id } } }
-      let(:expected_moves) { create_list :move, 1, supplier: supplier }
+      let(:expected_moves) { create_list :move, 1, supplier: }
       let(:unexpected_moves) { create_list :move, 1, supplier: alternative_supplier }
 
       it_behaves_like 'an api that filters moves correctly'
@@ -131,7 +131,7 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'by move_type' do
-      let(:filter_params) { { filter: { move_type: move_type } } }
+      let(:filter_params) { { filter: { move_type: } } }
       let(:court_appearance_moves) { create_list :move, 1, :court_appearance }
       let(:prison_recall_moves) { create_list :move, 1, :prison_recall }
       let(:prison_transfer_moves) { create_list :move, 1, :prison_transfer }
@@ -208,7 +208,7 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'by cancellation_reason' do
-      let(:filter_params) { { filter: { cancellation_reason: cancellation_reason } } }
+      let(:filter_params) { { filter: { cancellation_reason: } } }
       let(:made_in_error_moves) { create_list :move, 1, :cancelled_made_in_error }
       let(:supplier_declined_to_move_moves) { create_list :move, 1, :cancelled_supplier_declined_to_move }
       let(:rejected_moves) { create_list :move, 1, :cancelled_rejected }
@@ -248,7 +248,7 @@ RSpec.describe Api::MovesController do
     end
 
     describe 'by rejection_reason' do
-      let(:filter_params) { { filter: { rejection_reason: rejection_reason } } }
+      let(:filter_params) { { filter: { rejection_reason: } } }
       let(:rejected_no_space_moves) { create_list :move, 1, :rejected_no_space }
       let(:rejected_no_transport_moves) { create_list :move, 1, :rejected_no_transport }
 
@@ -272,7 +272,7 @@ RSpec.describe Api::MovesController do
     describe 'by profile_id' do
       let(:profile) { create(:profile) }
       let(:filter_params) { { filter: { profile_id: profile.id } } }
-      let(:expected_moves) { create_list :move, 1, profile: profile }
+      let(:expected_moves) { create_list :move, 1, profile: }
       let(:unexpected_moves) { create_list :move, 1 }
 
       it_behaves_like 'an api that filters moves correctly'
@@ -281,7 +281,7 @@ RSpec.describe Api::MovesController do
     describe 'by person_id' do
       let(:person) { create(:person) }
       let(:filter_params) { { filter: { person_id: person.id } } }
-      let(:expected_moves) { create_list :move, 1, person: person }
+      let(:expected_moves) { create_list :move, 1, person: }
       let(:unexpected_moves) { create_list :move, 1 }
 
       it_behaves_like 'an api that filters moves correctly'
@@ -289,8 +289,8 @@ RSpec.describe Api::MovesController do
 
     describe 'by reference' do
       let(:reference) { SecureRandom.uuid }
-      let(:filter_params) { { filter: { reference: reference } } }
-      let(:expected_moves) { create_list :move, 1, reference: reference }
+      let(:filter_params) { { filter: { reference: } } }
+      let(:expected_moves) { create_list :move, 1, reference: }
       let(:unexpected_moves) { create_list :move, 1 }
 
       it_behaves_like 'an api that filters moves correctly'

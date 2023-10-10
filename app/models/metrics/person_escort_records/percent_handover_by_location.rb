@@ -11,7 +11,7 @@ module Metrics
         @reporting_date = ENV['REPORTING_DATE'].present? ? Date.parse(ENV['REPORTING_DATE']) : Date.yesterday
 
         setup_metric(
-          supplier: supplier,
+          supplier:,
           label: 'PER handover by location',
           file: "#{reporting_date.year}/#{reporting_date.month}/#{reporting_date.day}/per_handover_by_location",
           interval: 6.hours,

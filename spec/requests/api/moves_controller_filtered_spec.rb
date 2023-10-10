@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::MovesController do
   subject(:post_moves) do
-    post '/api/moves/filtered', params: { data: data }.merge(params), headers: headers, as: :json
+    post '/api/moves/filtered', params: { data: }.merge(params), headers:, as: :json
   end
 
   let(:supplier) { create(:supplier) }
@@ -23,7 +23,7 @@ RSpec.describe Api::MovesController do
   let(:data) do
     {
       type: 'moves',
-      attributes: attributes,
+      attributes:,
     }
   end
 
@@ -42,7 +42,7 @@ RSpec.describe Api::MovesController do
       let(:filters) do
         {
           bar: 'bar',
-          from_location_id: from_location_id,
+          from_location_id:,
           foo: 'foo',
         }
       end
@@ -112,8 +112,8 @@ RSpec.describe Api::MovesController do
         create_list(
           :move,
           1,
-          from_location: from_location,
-          to_location: to_location,
+          from_location:,
+          to_location:,
         )
       end
       let(:to_location) { create(:location, suppliers: [supplier]) }

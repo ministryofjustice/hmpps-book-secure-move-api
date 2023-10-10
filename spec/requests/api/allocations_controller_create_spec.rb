@@ -13,7 +13,7 @@ RSpec.describe Api::AllocationsController do
   end
 
   describe 'POST /allocations' do
-    subject(:post_allocations) { post '/api/v1/allocations', params: { data: data }, headers: headers, as: :json }
+    subject(:post_allocations) { post '/api/v1/allocations', params: { data: }, headers:, as: :json }
 
     let(:schema) { load_yaml_schema('post_allocations_responses.yaml') }
 
@@ -43,7 +43,7 @@ RSpec.describe Api::AllocationsController do
     let(:allocation_attributes) do
       {
         date: Time.zone.today,
-        moves_count: moves_count,
+        moves_count:,
         estate: :other_estate,
         estate_comment: 'Another estate description',
         prisoner_category: :b,
@@ -97,7 +97,7 @@ RSpec.describe Api::AllocationsController do
 
       context 'with a real access token' do
         let(:application) { create(:application, owner: supplier) }
-        let(:access_token) { create(:access_token, application: application).token }
+        let(:access_token) { create(:access_token, application:).token }
 
         it 'audits the supplier' do
           post_allocations
@@ -117,7 +117,7 @@ RSpec.describe Api::AllocationsController do
       end
 
       context 'when the supplier has a webhook subscription' do
-        let!(:subscription) { create(:subscription, :no_email_address, supplier: supplier) }
+        let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
         let!(:notification_type_webhook) { create(:notification_type, :webhook) }
         let(:notification) { subscription.notifications.last }
         let(:faraday_client) do
@@ -156,7 +156,7 @@ RSpec.describe Api::AllocationsController do
       end
 
       context 'when the supplier has an email subscription', :skip_before do
-        let!(:subscription) { create(:subscription, :no_callback_url, supplier: supplier) }
+        let!(:subscription) { create(:subscription, :no_callback_url, supplier:) }
         let!(:notification_type_email) { create(:notification_type, :email) }
         let(:notification) { subscription.notifications.last }
         let(:notify_response) do
@@ -192,7 +192,7 @@ RSpec.describe Api::AllocationsController do
               topic: allocation.moves.last,
               notification_type: notification_type_email,
               event_type: 'create_move',
-              response_id: response_id,
+              response_id:,
             )
           end
         end

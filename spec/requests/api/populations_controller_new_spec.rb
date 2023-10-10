@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::PopulationsController do
   subject(:get_new_population) do
-    get '/api/populations/new', params: params, headers: headers
+    get '/api/populations/new', params:, headers:
   end
 
   include_context 'with supplier with spoofed access token'
@@ -14,7 +14,7 @@ RSpec.describe Api::PopulationsController do
   let(:location) { create(:location, :prison) }
   let(:location_id) { location.id }
   let(:date) { Time.zone.today.iso8601 }
-  let(:params) { { location_id: location_id, date: date } }
+  let(:params) { { location_id:, date: } }
 
   before do
     allow(Populations::DefaultsFromNomis).to receive(:call).and_return({})
@@ -85,7 +85,7 @@ RSpec.describe Api::PopulationsController do
       end
 
       context 'when including the include query param' do
-        let(:params) { { location_id: location_id, date: date, include: 'location' } }
+        let(:params) { { location_id:, date:, include: 'location' } }
 
         before { get_new_population }
 
@@ -96,7 +96,7 @@ RSpec.describe Api::PopulationsController do
       end
 
       context 'when including an invalid include query param' do
-        let(:params) { { location_id: location_id, date: date, include: 'foo.bar,location' } }
+        let(:params) { { location_id:, date:, include: 'foo.bar,location' } }
 
         let(:expected_error) do
           {
@@ -130,7 +130,7 @@ RSpec.describe Api::PopulationsController do
 
     context 'when location is omitted' do
       let(:schema) { load_yaml_schema('error_responses.yaml') }
-      let(:params) { { date: date } }
+      let(:params) { { date: } }
       let(:detail_404) { "Couldn't find Location without an ID" }
 
       before { get_new_population }

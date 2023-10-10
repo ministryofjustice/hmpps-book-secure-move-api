@@ -6,10 +6,10 @@ RSpec.describe PersonEscortRecordMailer, type: :mailer do
   subject(:mail) { described_class.notify(notification) }
 
   let(:supplier) { create(:supplier, name: 'Test Supplier') }
-  let(:subscription) { create(:subscription, supplier: supplier, email_address: 'user@foo.bar') }
-  let(:notification) { create(:notification, :email, subscription: subscription, topic: per) }
+  let(:subscription) { create(:subscription, supplier:, email_address: 'user@foo.bar') }
+  let(:notification) { create(:notification, :email, subscription:, topic: per) }
   let(:move) { create(:move, reference: 'MOVEREF1', status: Move::MOVE_STATUS_REQUESTED) }
-  let(:per) { create(:person_escort_record, :amended, move: move) }
+  let(:per) { create(:person_escort_record, :amended, move:) }
 
   before do
     allow(ENV).to receive(:fetch).and_call_original

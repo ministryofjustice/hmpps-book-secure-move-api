@@ -47,7 +47,7 @@ RSpec.describe Moves::ImportPeople do
 
   context 'with an existing record' do
     before do
-      create(:person, nomis_prison_number: nomis_prison_number, prison_number: nomis_prison_number)
+      create(:person, nomis_prison_number:, prison_number: nomis_prison_number)
     end
 
     it 'keeps people the same' do

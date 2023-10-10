@@ -13,7 +13,7 @@ class PrometheusMetrics
 
   def record_move_count
     Move.unscoped.group(:status).count.each do |status, count|
-      move_count_gauge.set(count, labels: { status: status })
+      move_count_gauge.set(count, labels: { status: })
     end
   end
 

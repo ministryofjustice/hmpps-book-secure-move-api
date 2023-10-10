@@ -11,7 +11,7 @@ namespace :import do
         event_timestamp: :timeofendingevent,
       }
 
-      print Imports::CancelOrRejectJourneys.call(csv_path: csv_path, columns: columns).summary
+      print Imports::CancelOrRejectJourneys.call(csv_path:, columns:).summary
     end
   end
 
@@ -24,7 +24,7 @@ namespace :import do
         eventable_id: :moveid,
       }
 
-      print Imports::DeleteEvents.call(csv_path: csv_path, columns: columns).summary
+      print Imports::DeleteEvents.call(csv_path:, columns:).summary
     end
   end
 
@@ -38,7 +38,7 @@ namespace :import do
         occurred_at: :timetoupdate,
       }
 
-      print Imports::EventsIncorrectOccurredAt.call(csv_path: csv_path, columns: columns).summary
+      print Imports::EventsIncorrectOccurredAt.call(csv_path:, columns:).summary
     end
   end
 
@@ -52,7 +52,7 @@ namespace :import do
         vehicle_registration: :sers_vehiclereg,
       }
 
-      print Imports::JourneysMissingVehicle.call(csv_path: csv_path, columns: columns).summary
+      print Imports::JourneysMissingVehicle.call(csv_path:, columns:).summary
     end
   end
 
@@ -67,7 +67,7 @@ namespace :import do
         new_state: :sers_status,
       }
 
-      print Imports::JourneysWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
+      print Imports::JourneysWithoutEndingState.call(csv_path:, columns:).summary
     end
   end
 
@@ -82,7 +82,7 @@ namespace :import do
         event_timestamp: :basm_client_timestamp,
       }
 
-      print Imports::MissingJourneyEndingEvents.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MissingJourneyEndingEvents.call(csv_path:, columns:).summary
     end
   end
 
@@ -95,7 +95,7 @@ namespace :import do
         event_timestamp: :timeofjourneystartevent,
       }
 
-      print Imports::MissingJourneyStartEvents.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MissingJourneyStartEvents.call(csv_path:, columns:).summary
     end
   end
 
@@ -111,7 +111,7 @@ namespace :import do
         rejection_reason: :cancellationreason,
       }
 
-      print Imports::MissingMoveEndingEvents.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MissingMoveEndingEvents.call(csv_path:, columns:).summary
     end
   end
 
@@ -124,7 +124,7 @@ namespace :import do
         event_timestamp: :timeofmovestartevent,
       }
 
-      print Imports::MissingMoveStartEvents.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MissingMoveStartEvents.call(csv_path:, columns:).summary
     end
   end
 
@@ -138,7 +138,7 @@ namespace :import do
         new_status: :sersstatus,
       }
 
-      print Imports::MovesWithoutEndingState.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MovesWithoutEndingState.call(csv_path:, columns:).summary
     end
   end
 
@@ -151,7 +151,7 @@ namespace :import do
         location_key: :mojdestlocationcode,
       }
 
-      print Imports::MovesWithoutToLocation.call(csv_path: csv_path, columns: columns).summary
+      print Imports::MovesWithoutToLocation.call(csv_path:, columns:).summary
     end
   end
 end

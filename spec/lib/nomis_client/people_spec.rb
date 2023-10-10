@@ -84,7 +84,7 @@ RSpec.describe NomisClient::People do
     end
     let(:nomis_response) { instance_double('response', parsed: JSON.parse(json_response)) }
     let(:nomis_offender_numbers) { %w[A1378MN A138MNO A1389MN] }
-    let(:response) { described_class.get_response(nomis_offender_numbers: nomis_offender_numbers) }
+    let(:response) { described_class.get_response(nomis_offender_numbers:) }
 
     before do
       allow(NomisClient::Base).to(

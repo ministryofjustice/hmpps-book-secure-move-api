@@ -10,9 +10,9 @@ RSpec.describe Allocations::RemoveFromNomis do
       create(
         :move,
         :prison_transfer,
-        nomis_event_id: nomis_event_id,
-        from_location: from_location,
-        to_location: to_location,
+        nomis_event_id:,
+        from_location:,
+        to_location:,
       )
     end
 
@@ -30,7 +30,7 @@ RSpec.describe Allocations::RemoveFromNomis do
       let(:nomis_response_status) { 200 }
       let(:nomis_client_args) do
         {
-          booking_id: booking_id,
+          booking_id:,
           event_id: nomis_event_id,
           body_params: {
             'reasonCode': 'ADMI',
@@ -53,7 +53,7 @@ RSpec.describe Allocations::RemoveFromNomis do
       it 'returns debugging information' do
         expect(remove_transfer_from_nomis).to include(
           request_params: nomis_client_args,
-          response_body: response_body,
+          response_body:,
           response_status: 200,
         )
       end

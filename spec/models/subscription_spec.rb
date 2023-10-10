@@ -50,7 +50,7 @@ RSpec.describe Subscription do
   end
 
   describe 'email_address' do
-    subject { build(:subscription, email_address: email_address) }
+    subject { build(:subscription, email_address:) }
 
     context 'when invalid email_address' do
       let(:email_address) { 'foo bar' }
@@ -114,7 +114,7 @@ RSpec.describe Subscription do
   end
 
   describe 'kept?' do
-    subject(:subscription) { build(:subscription, discarded_at: discarded_at) }
+    subject(:subscription) { build(:subscription, discarded_at:) }
 
     context 'when subscription is discarded' do
       let(:discarded_at) { Time.zone.now }

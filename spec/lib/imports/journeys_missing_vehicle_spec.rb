@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Imports::JourneysMissingVehicle do
   let(:move) { create(:move) }
-  let(:journey) { create(:journey, move: move, vehicle_registration: nil) }
+  let(:journey) { create(:journey, move:, vehicle_registration: nil) }
 
   let(:csv) do
     "move_id,journey_id,vehicle_registration\n#{move.id},#{journey.id},ABC DEF\nabc,#{journey.id},ABC DEF\nabc,abc,ABC DEF"
@@ -26,7 +26,7 @@ RSpec.describe Imports::JourneysMissingVehicle do
   end
 
   describe '#call' do
-    subject(:results) { described_class.call(csv_path: csv_path, columns: columns) }
+    subject(:results) { described_class.call(csv_path:, columns:) }
 
     it 'imports all rows' do
       expect(results.total).to eq(3)

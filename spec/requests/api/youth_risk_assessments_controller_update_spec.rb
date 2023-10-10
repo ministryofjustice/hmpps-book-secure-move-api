@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::YouthRiskAssessmentsController do
   describe 'PATCH /youth_risk_assessments/:youth_risk_assessment_id' do
     subject(:patch_youth_risk_assessment) do
-      patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}", params: youth_risk_assessment_params, headers: headers, as: :json
+      patch "/api/youth_risk_assessments/#{youth_risk_assessment_id}", params: youth_risk_assessment_params, headers:, as: :json
 
       youth_risk_assessment.reload
     end
@@ -94,12 +94,12 @@ RSpec.describe Api::YouthRiskAssessmentsController do
     end
 
     context 'with subscriptions' do
-      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:subscription) { create(:subscription, supplier:) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
       let(:from_location) { create(:location, :stc, suppliers: [supplier]) }
-      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
-      let(:youth_risk_assessment) { create(:youth_risk_assessment, :with_responses, :completed, move: move) }
+      let(:move) { create(:move, from_location:, supplier:) }
+      let(:youth_risk_assessment) { create(:youth_risk_assessment, :with_responses, :completed, move:) }
 
       let(:faraday_client) do
         class_double(

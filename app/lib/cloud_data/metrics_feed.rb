@@ -12,13 +12,13 @@ module CloudData
       # * it doesn't exist, or
       # * expired_before == nil, or
       # * the object was last modified before expired_before
-      expired_before.nil? || @client.head_object(bucket: bucket, key: key).last_modified < expired_before
+      expired_before.nil? || @client.head_object(bucket:, key:).last_modified < expired_before
     rescue Aws::S3::Errors::NotFound
       true
     end
 
     def update(key, body)
-      @client.put_object(bucket: bucket, key: key, body: body)
+      @client.put_object(bucket:, key:, body:)
     end
   end
 end

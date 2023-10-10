@@ -35,6 +35,6 @@ RSpec.describe Api::GenericEventsController do
   end
 
   def do_get
-    get "/api/events/#{subject.id}", headers: headers, as: :json
+    get "/api/events/#{subject.id}", headers:, as: :json
   end
 end

@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe Moves::Finder do
   subject(:results) do
     described_class.new(
-      filter_params: filter_params,
-      ability: ability,
-      order_params: order_params,
-      active_record_relationships: active_record_relationships,
+      filter_params:,
+      ability:,
+      order_params:,
+      active_record_relationships:,
     ).call
   end
 
@@ -56,14 +56,14 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with a journey on a different day' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+        let(:journey) { create(:journey, move:, date: '2022-01-01') }
         let(:filter_params) { { location_id: [journey.to_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
       end
 
       context 'with a single active journey, when journey.to_location is different from move.to_location' do
-        let(:journey) { create(:journey, move: move, date: move.date) }
+        let(:journey) { create(:journey, move:, date: move.date) }
         let(:filter_params) { { location_id: [journey.to_location_id] } }
 
         it { expect(move.to_location).not_to eq(journey.to_location) }
@@ -94,7 +94,7 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with a journey' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+        let(:journey) { create(:journey, move:, date: '2022-01-01') }
         let(:filter_params) { { from_location_id: [journey.from_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
@@ -131,7 +131,7 @@ RSpec.describe Moves::Finder do
       end
 
       context 'with a journey' do
-        let(:journey) { create(:journey, move: move, date: '2022-01-01') }
+        let(:journey) { create(:journey, move:, date: '2022-01-01') }
         let(:filter_params) { { to_location_id: [journey.to_location_id] } }
 
         it { is_expected.to contain_exactly(move) }
@@ -143,8 +143,8 @@ RSpec.describe Moves::Finder do
       let(:middle_location) { create(:location) }
 
       before do
-        create(:journey, move: move, date: '2022-01-01', from_location: move.from_location, to_location: middle_location)
-        create(:journey, move: move, date: '2022-01-02', from_location: middle_location, to_location: move.to_location)
+        create(:journey, move:, date: '2022-01-01', from_location: move.from_location, to_location: middle_location)
+        create(:journey, move:, date: '2022-01-02', from_location: middle_location, to_location: move.to_location)
       end
 
       context 'and day one, outgoing, first location' do
@@ -276,7 +276,7 @@ RSpec.describe Moves::Finder do
 
       context 'with journey dates after move date' do
         before do
-          create(:journey, move: move, date: move.date + 1.day)
+          create(:journey, move:, date: move.date + 1.day)
         end
 
         let(:filter_params) { { date_from: (move.date + 1.day).to_s, date_to: (move.date + 5.days).to_s } }
@@ -289,9 +289,9 @@ RSpec.describe Moves::Finder do
 
     describe 'by date of birth' do
       let(:date_of_birth) { 18.years.ago }
-      let!(:person) { create :person, date_of_birth: date_of_birth }
-      let!(:profile) { create :profile, person: person }
-      let!(:move) { create :move, profile: profile }
+      let!(:person) { create :person, date_of_birth: }
+      let!(:profile) { create :profile, person: }
+      let!(:move) { create :move, profile: }
 
       context 'with matching date range' do
         let(:filter_params) { { date_of_birth_from: (date_of_birth - 2.days).to_s, date_of_birth_to: (date_of_birth + 1.day).to_s } }
@@ -578,7 +578,7 @@ RSpec.describe Moves::Finder do
 
     describe 'by profile_id' do
       let(:profile) { create :profile }
-      let!(:move) { create :move, profile: profile }
+      let!(:move) { create :move, profile: }
 
       context 'with matching profile filter' do
         let(:filter_params) { { profile_id: profile.id } }
@@ -602,7 +602,7 @@ RSpec.describe Moves::Finder do
 
     describe 'by person_id' do
       let(:person) { create :person }
-      let!(:move) { create :move, person: person }
+      let!(:move) { create :move, person: }
 
       context 'with matching profile filter' do
         let(:filter_params) { { person_id: person.id } }
@@ -626,10 +626,10 @@ RSpec.describe Moves::Finder do
 
     describe 'by reference' do
       let(:reference) { SecureRandom.uuid }
-      let!(:move) { create :move, reference: reference }
+      let!(:move) { create :move, reference: }
 
       context 'with matching profile filter' do
-        let(:filter_params) { { reference: reference } }
+        let(:filter_params) { { reference: } }
 
         it { is_expected.to contain_exactly(move) }
       end
@@ -654,7 +654,7 @@ RSpec.describe Moves::Finder do
     let(:middle_location) { create(:location) }
 
     before do
-      create(:lodging, move: move, start_date: '2022-01-01', end_date: '2022-01-02', location: middle_location)
+      create(:lodging, move:, start_date: '2022-01-01', end_date: '2022-01-02', location: middle_location)
     end
 
     context 'and day one, outgoing, first location' do
@@ -735,7 +735,7 @@ RSpec.describe Moves::Finder do
     let(:middle_location) { create(:location) }
 
     before do
-      create(:lodging, move: move, start_date: '2022-01-02', end_date: '2022-01-03', location: middle_location)
+      create(:lodging, move:, start_date: '2022-01-02', end_date: '2022-01-03', location: middle_location)
     end
 
     context 'and day one, outgoing, first location' do
@@ -849,9 +849,9 @@ RSpec.describe Moves::Finder do
 
   context 'with 3 lodgings not on the start date of the move' do
     let(:move) { create(:move, date: '2022-01-01') }
-    let!(:lodging1) { create(:lodging, move: move, start_date: '2022-01-02', end_date: '2022-01-03') }
-    let!(:lodging2) { create(:lodging, move: move, start_date: '2022-01-03', end_date: '2022-01-05') }
-    let!(:lodging3) { create(:lodging, move: move, start_date: '2022-01-05', end_date: '2022-01-09') }
+    let!(:lodging1) { create(:lodging, move:, start_date: '2022-01-02', end_date: '2022-01-03') }
+    let!(:lodging2) { create(:lodging, move:, start_date: '2022-01-03', end_date: '2022-01-05') }
+    let!(:lodging3) { create(:lodging, move:, start_date: '2022-01-05', end_date: '2022-01-09') }
     let(:filter_params) { { date_from: date, date_to: date, id_field => location.id } }
 
     # Other lodgings outside of the date range

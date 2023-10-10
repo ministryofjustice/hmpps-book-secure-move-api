@@ -10,7 +10,7 @@ class StatusController < ApplicationController
       'build_tag' => ENV['APP_BUILD_TAG'] || NOT_AVAILABLE,
     }.to_json
 
-    render json: json
+    render json:
   end
 
   def health
@@ -19,9 +19,9 @@ class StatusController < ApplicationController
     }
 
     status = checks.values.all? ? :ok : :bad_gateway
-    render status: status,
+    render status:,
            json: {
-             checks: checks,
+             checks:,
              healthy: checks.values.all? { |val| val == true },
            }
   end

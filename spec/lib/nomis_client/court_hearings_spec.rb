@@ -28,7 +28,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
 
   describe '.post' do
     subject(:court_hearing_post) do
-      described_class.post(booking_id: booking_id, court_case_id: court_case_id, body_params: {})
+      described_class.post(booking_id:, court_case_id:, body_params: {})
     end
 
     let(:booking_id) { 1111 }

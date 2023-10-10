@@ -37,14 +37,14 @@ module Allocations
           from_location: allocation.from_location,
           to_location: allocation.to_location,
           date: allocation.date,
-          supplier: supplier,
+          supplier:,
           status: Move::MOVE_STATUS_REQUESTED,
         ).tap do |move|
           move.generic_events << GenericEvent::MoveRequested.new(
             occurred_at: now,
             recorded_at: now,
             notes: 'Automatically generated for allocation',
-            created_by: created_by,
+            created_by:,
             supplier: nil,
           )
         end
@@ -53,8 +53,8 @@ module Allocations
 
     def attributes
       allocation_params[:attributes].merge(
-        from_location: from_location,
-        to_location: to_location,
+        from_location:,
+        to_location:,
         complex_cases: Allocation::ComplexCaseAnswers.new(complex_case_params),
       )
     end

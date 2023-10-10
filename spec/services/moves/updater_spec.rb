@@ -8,7 +8,7 @@ RSpec.describe Moves::Updater do
   let(:before_documents) { create_list(:document, 2) }
   let(:supplier) { create(:supplier) }
   let!(:from_location) { create(:location, :police) }
-  let!(:move) { create(:move, :proposed, :prison_recall, from_location: from_location, profile: profile, supplier: supplier) }
+  let!(:move) { create(:move, :proposed, :prison_recall, from_location:, profile:, supplier:) }
   let(:profile) { create(:profile, documents: before_documents) }
   let(:date_from) { Date.yesterday }
   let(:date_to) { Date.tomorrow }
@@ -20,15 +20,15 @@ RSpec.describe Moves::Updater do
     {
       type: 'moves',
       attributes: {
-        status: status,
+        status:,
         additional_information: 'some more info',
-        cancellation_reason: cancellation_reason,
+        cancellation_reason:,
         cancellation_reason_comment: nil,
         move_agreed: true,
         move_agreed_by: 'Fred Bloggs',
-        date_from: date_from,
-        date_to: date_to,
-        date: date,
+        date_from:,
+        date_to:,
+        date:,
       },
     }
   end
@@ -41,8 +41,8 @@ RSpec.describe Moves::Updater do
         additional_information: 'some more info',
         move_agreed: true,
         move_agreed_by: 'Fred Bloggs',
-        date_from: date_from,
-        date_to: date_to,
+        date_from:,
+        date_to:,
       )
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Moves::Updater do
 
     context 'when status changes to cancelled with an associated allocation' do
       let!(:allocation) { create :allocation, moves_count: 5 }
-      let!(:move) { create :move, :requested, from_location: from_location, allocation: allocation, date: date }
+      let!(:move) { create :move, :requested, from_location:, allocation:, date: }
 
       let(:cancellation_reason) { 'other' }
       let(:status) { 'cancelled' }
@@ -67,7 +67,7 @@ RSpec.describe Moves::Updater do
 
     context 'when dates changes with an associated allocation' do
       let(:allocation) { create :allocation, moves_count: 5 }
-      let(:move) { create :move, :requested, allocation: allocation }
+      let(:move) { create :move, :requested, allocation: }
 
       it 'fails to update the date' do
         expect { updater.call }.to raise_error(ActiveRecord::RecordInvalid, /cannot be changed as move is part of an allocation/)
@@ -119,7 +119,7 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with a move unlinked to a person' do
-        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:move) { create(:move, :requested, allocation:) }
         let!(:allocation) { create(:allocation, :filled) }
         let(:move_params) do
           {
@@ -149,7 +149,7 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with a move unlinked to a profile' do
-        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:move) { create(:move, :requested, allocation:) }
         let!(:allocation) { create(:allocation, :filled) }
         let(:move_params) do
           {
@@ -164,7 +164,7 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with a move profile or status unchanged' do
-        let!(:move) { create(:move, :requested, allocation: allocation) }
+        let!(:move) { create(:move, :requested, allocation:) }
         let!(:allocation) { create(:allocation, :filled) }
 
         let(:move_params) do
@@ -182,7 +182,7 @@ RSpec.describe Moves::Updater do
       end
 
       context 'with a move cancelled' do
-        let!(:move) { create(:move, :requested, allocation: allocation, date: date) }
+        let!(:move) { create(:move, :requested, allocation:, date:) }
         let!(:allocation) { create(:allocation, :filled) }
         let(:status) { 'cancelled' }
         let(:cancellation_reason) { 'other' }

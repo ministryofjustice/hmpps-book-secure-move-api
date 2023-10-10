@@ -87,13 +87,13 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'with valid params' do
-      before { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: person_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 200'
     end
 
     it 'returns the correct data' do
-      patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json
+      patch "/api/people/#{person.id}", params: person_params, headers:, as: :json
 
       expect(response_json).to include_json(data: expected_data.merge(id: person.id))
     end
@@ -111,7 +111,7 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'does not change the gender' do
-        expect { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
+        expect { patch "/api/people/#{person.id}", params: person_params, headers:, as: :json }
           .not_to(change { person.reload.gender_id })
       end
     end
@@ -127,14 +127,14 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'sets the ethnicity to nil' do
-        expect { patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json }
+        expect { patch "/api/people/#{person.id}", params: person_params, headers:, as: :json }
           .to change { person.reload.ethnicity_id }.to(nil)
       end
     end
 
     describe 'include query param' do
       before do
-        patch "/api/people/#{person.id}#{query_params}", params: person_params, headers: headers, as: :json
+        patch "/api/people/#{person.id}#{query_params}", params: person_params, headers:, as: :json
       end
 
       context 'when including multiple relationships' do
@@ -169,7 +169,7 @@ RSpec.describe Api::PeopleController do
     describe 'webhook and email notifications' do
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        patch "/api/people/#{person.id}", params: person_params, headers: headers, as: :json
+        patch "/api/people/#{person.id}", params: person_params, headers:, as: :json
       end
 
       it 'calls the notifier when updating a person' do
@@ -178,7 +178,7 @@ RSpec.describe Api::PeopleController do
     end
 
     context 'with a bad request' do
-      before { patch "/api/people/#{person.id}", params: {}, headers: headers, as: :json }
+      before { patch "/api/people/#{person.id}", params: {}, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end

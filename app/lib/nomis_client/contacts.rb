@@ -6,7 +6,7 @@ module NomisClient
       def get(booking_id:)
         return [] if booking_id.blank?
 
-        response = get_response(booking_id: booking_id)
+        response = get_response(booking_id:)
 
         next_of_kin = response.fetch('nextOfKin', []).map { |contact| attributes_for(contact, next_of_kin: true) }
         other_contacts = response.fetch('otherContacts', []).map { |contact| attributes_for(contact, next_of_kin: false) }
@@ -19,7 +19,7 @@ module NomisClient
       end
 
       def attributes_for(contact, next_of_kin:)
-        contact.transform_keys { |key| key.underscore.to_sym }.merge(next_of_kin: next_of_kin)
+        contact.transform_keys { |key| key.underscore.to_sym }.merge(next_of_kin:)
       end
     end
   end

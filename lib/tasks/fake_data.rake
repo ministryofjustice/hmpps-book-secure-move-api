@@ -19,9 +19,9 @@ namespace :fake_data do
         date_of_birth: Faker::Date.between(from: 80.years.ago, to: 20.years.ago),
         ethnicity: ethnicities.sample,
         gender: genders.sample,
-        criminal_records_office: criminal_records_office,
-        prison_number: prison_number,
-        police_national_computer: police_national_computer,
+        criminal_records_office:,
+        prison_number:,
+        police_national_computer:,
       )
       person.profiles << Profile.new(
         assessment_answers: fake_assessment_answers,
@@ -136,15 +136,15 @@ namespace :fake_data do
       profile = profiles.sample
       from_location = prisons.sample
       to_location = courts.sample
-      next if Move.find_by(date: date, profile: profile, from_location: from_location, to_location: to_location)
+      next if Move.find_by(date:, profile:, from_location:, to_location:)
 
       Move.create!(
-        date: date,
+        date:,
         date_from: date,
         time_due: time,
-        profile: profile,
-        from_location: from_location,
-        to_location: to_location,
+        profile:,
+        from_location:,
+        to_location:,
         status: %w[proposed requested booked in_transit completed].sample,
         supplier: Supplier.all.sample,
       )
@@ -163,7 +163,7 @@ namespace :fake_data do
     50.times do
       date = Faker::Date.between(from: 10.days.ago, to: 20.days.from_now)
       Allocation.create!(
-        date: date,
+        date:,
         from_location: prisons.sample,
         to_location: prisons.sample,
         prisoner_category: Allocation.prisoner_categories.values.sample,
@@ -230,7 +230,7 @@ namespace :fake_data do
     Location.prison.find_each do |location|
       (10.days.ago.to_date..20.days.from_now.to_date).each do |date|
         Population.create!(
-          date: date,
+          date:,
           location_id: location.id,
           operational_capacity: Faker::Number.between(from: 200, to: 500),
           usable_capacity: Faker::Number.between(from: 250, to: 450),

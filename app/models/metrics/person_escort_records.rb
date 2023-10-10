@@ -14,7 +14,7 @@ module Metrics
     def person_escort_records_with_moves
       # NB: this excludes a handful of historic PERs without moves
       if supplier.present?
-        PersonEscortRecord.joins(:move).where(moves: { supplier: supplier })
+        PersonEscortRecord.joins(:move).where(moves: { supplier: })
       else
         PersonEscortRecord.joins(:move)
       end

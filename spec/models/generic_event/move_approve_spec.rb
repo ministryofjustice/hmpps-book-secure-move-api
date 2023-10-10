@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe GenericEvent::MoveApprove do
-  subject(:generic_event) { build(:event_move_approve, eventable: eventable, details: details) }
+  subject(:generic_event) { build(:event_move_approve, eventable:, details:) }
 
   let(:details) do
     {
-      date: date,
-      create_in_nomis: create_in_nomis,
+      date:,
+      create_in_nomis:,
     }
   end
 
