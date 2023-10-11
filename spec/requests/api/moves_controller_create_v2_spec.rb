@@ -30,7 +30,7 @@ RSpec.describe Api::MovesController do
       {
         date: Time.zone.today,
         time_due: Time.zone.now,
-        status: status,
+        status:,
         additional_information: 'some more info',
         move_type: 'court_appearance',
         recall_date: '2023-01-02',
@@ -131,7 +131,7 @@ RSpec.describe Api::MovesController do
 
     context 'with a real access token' do
       let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
+      let(:access_token) { create(:access_token, application:).token }
 
       it 'audits the supplier' do
         do_post
@@ -352,8 +352,8 @@ RSpec.describe Api::MovesController do
           date: Time.zone.today,
           move_agreed: 'true',
           move_agreed_by: 'John Doe',
-          date_from: date_from,
-          date_to: date_to,
+          date_from:,
+          date_to:,
           move_type: 'court_appearance',
         }
       end
@@ -606,7 +606,7 @@ RSpec.describe Api::MovesController do
       let(:move_attributes) { attributes_for(:move).merge(move_type: 'court_appearance', date: move.date) }
 
       context 'when there are cancelled duplicates' do
-        before { create(:move, :cancelled, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
+        before { create(:move, :cancelled, :court_appearance, profile:, from_location:, to_location:) }
 
         it_behaves_like 'an endpoint that responds with success 201' do
           before { do_post }
@@ -614,7 +614,7 @@ RSpec.describe Api::MovesController do
       end
 
       context 'when the Move has been already created' do
-        let!(:move) { create(:move, :court_appearance, profile: profile, from_location: from_location, to_location: to_location) }
+        let!(:move) { create(:move, :court_appearance, profile:, from_location:, to_location:) }
         let(:errors_422) do
           [
             {
@@ -688,6 +688,6 @@ RSpec.describe Api::MovesController do
   end
 
   def do_post
-    post '/api/moves', params: { data: data }, headers: headers, as: :json
+    post '/api/moves', params: { data: }, headers:, as: :json
   end
 end

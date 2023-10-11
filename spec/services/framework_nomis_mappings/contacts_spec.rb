@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FrameworkNomisMappings::Contacts do
-  subject(:mappings) { described_class.new(booking_id: booking_id, nomis_sync_status: nomis_sync_status).call }
+  subject(:mappings) { described_class.new(booking_id:, nomis_sync_status:).call }
 
   let(:nomis_sync_status) { FrameworkNomisMappings::NomisSyncStatus.new(resource_type: 'contacts') }
 
@@ -123,7 +123,7 @@ RSpec.describe FrameworkNomisMappings::Contacts do
   def nomis_contact(active: true, next_of_kin: true, relationship: nil, comment: nil)
     {
       active_flag: active,
-      next_of_kin: next_of_kin,
+      next_of_kin:,
       create_date_time: '2020-01-01',
       expiry_date: '2100-01-01',
       first_name: 'First',

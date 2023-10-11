@@ -10,13 +10,13 @@ RSpec.describe PreparePersonNotificationsJob, type: :job do
 
   before do
     allow(PrepareMoveNotificationsJob).to receive(:perform_now)
-    described_class.perform_now(topic_id: person.id, action_name: action_name)
+    described_class.perform_now(topic_id: person.id, action_name:)
   end
 
   shared_examples 'it calls PrepareMoveNotificationsJob for the related moves' do
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_today.id, action_name: action_name, queue_as: :notifications_high) }
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_next_week.id, action_name: action_name, queue_as: :notifications_low) }
-    it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name, queue_as: :notifications_medium) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_today.id, action_name:, queue_as: :notifications_high) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_next_week.id, action_name:, queue_as: :notifications_low) }
+    it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name:, queue_as: :notifications_medium) }
   end
 
   # NB: we are testing here that creating a person and updating a person behave in the same way from the perspective of PreparePersonNotificationsJob.

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::JourneysController do
   describe 'PATCH /moves/:move_id/journeys/:journey_id' do
     subject(:do_patch) do
-      patch "/api/v1/moves/#{move_id}/journeys/#{journey_id}", params: journey_params, headers: headers, as: :json
+      patch "/api/v1/moves/#{move_id}/journeys/#{journey_id}", params: journey_params, headers:, as: :json
       journey.reload
     end
 
@@ -14,11 +14,11 @@ RSpec.describe Api::JourneysController do
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
-    let(:move) { create(:move, from_location_id: from_location_id, supplier: supplier) }
+    let(:move) { create(:move, from_location_id:, supplier:) }
     let(:move_id) { move.id }
 
     let(:original_date) { Date.new(2020, 5, 4) }
-    let(:journey) { create(:journey, move: move, supplier: supplier, billable: false, client_timestamp: '2020-05-04T08:00:00Z', date: original_date, from_location_id: from_location_id, to_location_id: to_location_id) }
+    let(:journey) { create(:journey, move:, supplier:, billable: false, client_timestamp: '2020-05-04T08:00:00Z', date: original_date, from_location_id:, to_location_id:) }
     let(:journey_id) { journey.id }
 
     let(:timestamp) { '2020-05-04T12:12:12+01:00' }
@@ -41,7 +41,7 @@ RSpec.describe Api::JourneysController do
 
     context 'when successful' do
       let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
+      let(:access_token) { create(:access_token, application:).token }
       let(:schema) { load_yaml_schema('get_journey_responses.yaml') }
 
       shared_examples 'does not update the journey date' do

@@ -6,7 +6,7 @@ RSpec.describe Rake::Task['backfill:journey_dates'] do
   before do
     3.times do
       move = create(:move, date: Faker::Date.in_date_period)
-      create(:journey, move: move, date: nil)
+      create(:journey, move:, date: nil)
     end
   end
 

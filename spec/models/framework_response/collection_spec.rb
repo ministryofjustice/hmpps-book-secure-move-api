@@ -79,7 +79,7 @@ RSpec.describe FrameworkResponse::Collection do
 
       it 'validates presence of value when empty item and responses supplied' do
         framework_question = create(:framework_question, :add_multiple_items, required: true)
-        response = create(:collection_response, :multiple_items, value: [{ item: nil, responses: nil }], framework_question: framework_question)
+        response = create(:collection_response, :multiple_items, value: [{ item: nil, responses: nil }], framework_question:)
 
         expect(response).not_to be_valid
         expect(response.errors.messages[:value]).to eq(["can't be blank"])
@@ -342,7 +342,7 @@ RSpec.describe FrameworkResponse::Collection do
 
     it 'returns default if collection not multiple items and question is to be prefilled' do
       framework_question = create(:framework_question, followup_comment: true, prefill: true)
-      response = create(:collection_response, :details, framework_question: framework_question)
+      response = create(:collection_response, :details, framework_question:)
 
       expect(response.prefill_value).to eq([{ 'details' => 'some comment', 'option' => 'Level 1' }, { 'details' => 'another comment', 'option' => 'Level 2' }])
     end
@@ -368,7 +368,7 @@ RSpec.describe FrameworkResponse::Collection do
         :collection_response,
         :multiple_items,
         framework_question: question,
-        value: value,
+        value:,
       )
 
       expect(response.prefill_value).to eq(value)
@@ -382,7 +382,7 @@ RSpec.describe FrameworkResponse::Collection do
         { 'item' => '1', responses: [{ 'value' => ['Level 1'], framework_question_id: dependent_question1.id }] },
         { 'item' => '2', responses: [{ 'value' => ['Level 2'], framework_question_id: dependent_question1.id }, { 'value' => 'Yes', framework_question_id: dependent_question2.id }] },
       ]
-      response = create(:collection_response, :multiple_items, framework_question: question, value: value)
+      response = create(:collection_response, :multiple_items, framework_question: question, value:)
 
       expect(response.prefill_value).to eq(
         [

@@ -71,7 +71,7 @@ RSpec.describe V2::ProfileSerializer do
 
   describe 'with supported includes' do
     let(:category) { create(:category) }
-    let(:profile) { create(:profile, documents: [create(:document)], category: category) }
+    let(:profile) { create(:profile, documents: [create(:document)], category:) }
     let(:adapter_options) { { include: %i[documents person category] } }
     let(:serialized_person) do
       serializer = V2::PersonSerializer.new(profile.person)

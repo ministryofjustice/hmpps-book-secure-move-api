@@ -12,9 +12,9 @@ RSpec.describe ReportMailer, type: :mailer do
   describe '#person_escort_record_quality' do
     subject(:mail) do
       described_class.with(
-        recipients: recipients,
-        start_date: start_date,
-        end_date: end_date,
+        recipients:,
+        start_date:,
+        end_date:,
       ).person_escort_record_quality
     end
 

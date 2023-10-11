@@ -50,7 +50,7 @@ RSpec.describe Mock::SentryController, type: :request do
 
   context 'without an X-Transaction-Id header' do
     before do
-      get '/mock/sentry', headers: headers
+      get '/mock/sentry', headers:
     end
 
     it 'returns a success code' do

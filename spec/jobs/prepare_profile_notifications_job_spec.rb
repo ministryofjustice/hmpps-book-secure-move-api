@@ -4,22 +4,22 @@ require 'rails_helper'
 
 RSpec.describe PrepareProfileNotificationsJob, type: :job do
   let(:person) { create(:person) }
-  let(:profile) { create :profile, person: person }
-  let(:other_profile) { create :profile, person: person }
+  let(:profile) { create :profile, person: }
+  let(:other_profile) { create :profile, person: }
 
-  let!(:move_today) { create :move, profile: profile, date: Time.zone.today }
-  let!(:move_next_week) { create :move, profile: profile, date: Time.zone.today + 7 }
+  let!(:move_today) { create :move, profile:, date: Time.zone.today }
+  let!(:move_next_week) { create :move, profile:, date: Time.zone.today + 7 }
   let!(:other_move) { create :move, profile: other_profile, date: Time.zone.tomorrow }
 
   before do
     allow(PrepareMoveNotificationsJob).to receive(:perform_now)
-    described_class.perform_now(topic_id: profile.id, action_name: action_name)
+    described_class.perform_now(topic_id: profile.id, action_name:)
   end
 
   shared_examples 'it calls PrepareMoveNotificationsJob for the related moves' do
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_today.id, action_name: action_name, queue_as: :notifications_high) }
-    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_next_week.id, action_name: action_name, queue_as: :notifications_low) }
-    it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name: action_name, queue_as: :notifications_medium) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_today.id, action_name:, queue_as: :notifications_high) }
+    it { expect(PrepareMoveNotificationsJob).to have_received(:perform_now).once.with(topic_id: move_next_week.id, action_name:, queue_as: :notifications_low) }
+    it { expect(PrepareMoveNotificationsJob).not_to have_received(:perform_now).with(topic_id: other_move.id, action_name:, queue_as: :notifications_medium) }
   end
 
   # NB: we are testing here that creating a person and updating a person behave in the same way from the perspective of PreparePersonNotificationsJob.

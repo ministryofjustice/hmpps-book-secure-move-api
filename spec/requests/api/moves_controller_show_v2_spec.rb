@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::MovesController do
-  subject(:do_get) { get "/api/moves/#{move.id}", params: params, headers: headers }
+  subject(:do_get) { get "/api/moves/#{move.id}", params:, headers: }
 
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
@@ -45,16 +45,16 @@ RSpec.describe Api::MovesController do
       before do
         create(
           :move,
-          profile: profile,
-          from_location: from_location,
-          to_location: to_location,
+          profile:,
+          from_location:,
+          to_location:,
           court_hearings: [court_hearing],
         )
 
         create(:event_move_accept, eventable: move)
         create(:event_move_redirect, eventable: move)
 
-        get "/api/moves/#{move.id}#{query_params}", params: params, headers: headers
+        get "/api/moves/#{move.id}#{query_params}", params:, headers:
       end
 
       context 'when not including the include query param' do

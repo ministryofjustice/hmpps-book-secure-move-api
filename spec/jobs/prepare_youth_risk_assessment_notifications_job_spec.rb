@@ -10,8 +10,8 @@ RSpec.describe PrepareYouthRiskAssessmentNotificationsJob, type: :job do
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, :secure_childrens_home, suppliers: [supplier] }
-  let(:move) { create :move, from_location: location, supplier: supplier }
-  let(:assessment) { create :youth_risk_assessment, :completed, move: move }
+  let(:move) { create :move, from_location: location, supplier: }
+  let(:assessment) { create :youth_risk_assessment, :completed, move: }
 
   before do
     create(:notification_type, :webhook)

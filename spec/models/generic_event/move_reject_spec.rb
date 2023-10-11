@@ -9,7 +9,7 @@ RSpec.describe GenericEvent::MoveReject do
   it { is_expected.to validate_inclusion_of(:rejection_reason).in_array(Move::REJECTION_REASONS) }
 
   describe '#trigger' do
-    subject(:generic_event) { build(:event_move_reject, details: details, eventable: eventable) }
+    subject(:generic_event) { build(:event_move_reject, details:, eventable:) }
 
     before do
       allow(eventable).to receive(:rebook)
@@ -19,7 +19,7 @@ RSpec.describe GenericEvent::MoveReject do
       {
         rejection_reason: 'no_space_at_receiving_prison',
         cancellation_reason_comment: 'Wibble',
-        rebook: rebook,
+        rebook:,
       }
     end
     let(:eventable) { build(:move) }

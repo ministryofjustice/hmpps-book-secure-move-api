@@ -8,11 +8,11 @@ RSpec.describe Api::YouthRiskAssessmentsController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:framework_question) { build(:framework_question, section: 'risk-information') }
-    let(:flag) { build(:framework_flag, framework_question: framework_question) }
+    let(:flag) { build(:framework_flag, framework_question:) }
     let(:framework) { create(:framework, framework_questions: [framework_question]) }
     let(:youth_risk_assessment) do
       youth_risk_assessment = create(:youth_risk_assessment)
-      create(:string_response, framework_question: framework_question, responded: true, framework_flags: [flag], assessmentable: youth_risk_assessment)
+      create(:string_response, framework_question:, responded: true, framework_flags: [flag], assessmentable: youth_risk_assessment)
 
       youth_risk_assessment
     end
@@ -20,7 +20,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
 
     before do
       youth_risk_assessment.update_status_and_progress!
-      get "/api/youth_risk_assessments/#{youth_risk_assessment_id}?include=flags,responses", headers: headers, as: :json
+      get "/api/youth_risk_assessments/#{youth_risk_assessment_id}?include=flags,responses", headers:, as: :json
     end
 
     context 'when successful' do
@@ -78,7 +78,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

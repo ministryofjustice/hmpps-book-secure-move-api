@@ -15,7 +15,7 @@ module Frameworks
         Dir.glob("#{filepath}/**") do |framework|
           basename = File.basename(framework)
 
-          next unless File.directory?(framework) && Framework.find_by(name: basename, version: version).blank?
+          next unless File.directory?(framework) && Framework.find_by(name: basename, version:).blank?
 
           questions = {}
 
@@ -41,7 +41,7 @@ module Frameworks
     end
 
     def persist_framework(name, questions)
-      framework = Framework.new(name: name, version: version, framework_questions: questions.values)
+      framework = Framework.new(name:, version:, framework_questions: questions.values)
 
       if framework.save
         return log("Successfully persisted Framework: '#{name}' with version: '#{version}'\n")

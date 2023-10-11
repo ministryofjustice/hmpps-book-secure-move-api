@@ -8,7 +8,7 @@ RSpec.describe Frameworks::Manifest do
 
     it 'returns a list of question keys mapped to questions' do
       filepath = Rails.root.join(framework_path, 'person-escort-record/manifests/health-information.yml')
-      questions = described_class.new(filepath: filepath).call
+      questions = described_class.new(filepath:).call
       expect(questions.keys).to contain_exactly(
         'sensitive-medication',
         'regular-medication',
@@ -23,7 +23,7 @@ RSpec.describe Frameworks::Manifest do
         'youth-risk-assessment/manifests/offence-details.yml',
       )
 
-      questions = described_class.new(filepath: filepath).call
+      questions = described_class.new(filepath:).call
       expect(questions.values.first).to have_attributes(
         'section' => 'offence-details',
         'key' => 'wheelchair-user',
@@ -36,7 +36,7 @@ RSpec.describe Frameworks::Manifest do
         'person-escort-record/manifests/health-information.yml',
       )
 
-      questions = described_class.new(filepath: filepath).call
+      questions = described_class.new(filepath:).call
 
       expect(questions['medical-details-information']).to have_attributes(
         'section' => 'health-information',
@@ -50,7 +50,7 @@ RSpec.describe Frameworks::Manifest do
         'person-escort-record/manifests/health-information.yml',
       )
 
-      questions = described_class.new(filepath: filepath).call
+      questions = described_class.new(filepath:).call
 
       expect(questions['medical-details-information'].parent.key).to eq('regular-medication')
     end

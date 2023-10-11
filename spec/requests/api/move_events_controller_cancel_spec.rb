@@ -9,7 +9,7 @@ RSpec.describe Api::MoveEventsController do
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:response_json) { JSON.parse(response.body) }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, from_location: from_location) }
+    let(:move) { create(:move, from_location:) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location) }
     let(:cancel_params) do
@@ -29,7 +29,7 @@ RSpec.describe Api::MoveEventsController do
     before do
       allow(Allocations::RemoveFromNomis).to receive(:call)
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/cancel", params: cancel_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/cancel", params: cancel_params, headers:, as: :json
     end
 
     context 'when successful' do

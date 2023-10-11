@@ -30,8 +30,8 @@ RSpec.describe SupplierLocations::Importer do
       call_importer
       supplier_location = SupplierLocation.find_by(supplier: supplier1, location: location1)
       expect(supplier_location).to have_attributes(
-        effective_from: effective_from,
-        effective_to: effective_to,
+        effective_from:,
+        effective_to:,
       )
     end
   end

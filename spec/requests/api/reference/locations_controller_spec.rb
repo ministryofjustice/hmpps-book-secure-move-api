@@ -35,7 +35,7 @@ RSpec.describe Api::Reference::LocationsController do
           suppliers: [supplier],
         )
 
-        get '/api/v1/reference/locations', params: params, headers: headers
+        get '/api/v1/reference/locations', params:, headers:
       end
 
       let(:expected_document) do
@@ -73,7 +73,7 @@ RSpec.describe Api::Reference::LocationsController do
     describe 'still works when authenticated' do
       it_behaves_like 'an endpoint that responds with success 200' do
         before do
-          get '/api/v1/reference/locations', params: params, headers: headers.merge('Authorization' => "Bearer #{access_token}")
+          get '/api/v1/reference/locations', params:, headers: headers.merge('Authorization' => "Bearer #{access_token}")
         end
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe Api::Reference::LocationsController do
       before do
         create(:location, suppliers: create_list(:supplier, 1))
 
-        get "/api/v1/reference/locations#{query_params}", headers: headers
+        get "/api/v1/reference/locations#{query_params}", headers:
       end
 
       context 'when not including the include query param' do
@@ -163,7 +163,7 @@ RSpec.describe Api::Reference::LocationsController do
         create_list :location, 4
         create_list :location, 2, :court
 
-        get '/api/v1/reference/locations', params: params, headers: headers
+        get '/api/v1/reference/locations', params:, headers:
       end
 
       it_behaves_like 'an endpoint that paginates resources'
@@ -173,14 +173,14 @@ RSpec.describe Api::Reference::LocationsController do
       let!(:supplier) { create :supplier }
       let!(:location) { create :location, suppliers: [supplier] }
       let(:created_at) { Date.new(2020, 5, 6) }
-      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_id: supplier.id, young_offender_institution: nil, created_at: created_at } }
+      let(:filters) { { location_type: 'prison', nomis_agency_id: 'PEI', supplier_id: supplier.id, young_offender_institution: nil, created_at: } }
       let(:params) { { filter: filters } }
 
       before do
         locations_finder = instance_double('Locations::Finder', call: Location.all)
         allow(Locations::Finder).to receive(:new).and_return(locations_finder)
 
-        get '/api/v1/reference/locations', params: params, headers: headers
+        get '/api/v1/reference/locations', params:, headers:
       end
 
       it 'delegates the query execution to Locations::Finder with the correct filters' do
@@ -222,12 +222,12 @@ RSpec.describe Api::Reference::LocationsController do
     let(:location_id) { location.id }
 
     context 'when successful' do
-      before { get "/api/v1/reference/locations/#{location_id}", params: params, headers: headers }
+      before { get "/api/v1/reference/locations/#{location_id}", params:, headers: }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -235,7 +235,7 @@ RSpec.describe Api::Reference::LocationsController do
       let(:location_id) { 'UUID-not-found' }
       let(:detail_404) { "Couldn't find Location with 'id'=UUID-not-found" }
 
-      before { get "/api/v1/reference/locations/#{location_id}", params: params, headers: headers }
+      before { get "/api/v1/reference/locations/#{location_id}", params:, headers: }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end

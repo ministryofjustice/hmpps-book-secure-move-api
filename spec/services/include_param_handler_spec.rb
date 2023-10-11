@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe IncludeParamHandler do
   subject(:service) { described_class.new(params) }
 
-  let(:params) { ActionController::Parameters.new(include: include, meta: meta) }
+  let(:params) { ActionController::Parameters.new(include:, meta:) }
   let(:include) { nil }
   let(:meta) { nil }
 

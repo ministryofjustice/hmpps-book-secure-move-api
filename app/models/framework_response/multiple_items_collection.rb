@@ -12,8 +12,8 @@ class FrameworkResponse
       @collection = Array(collection).map do |item|
         MultipleItemObject.new(
           attributes: item,
-          questions: questions,
-          assessmentable: assessmentable,
+          questions:,
+          assessmentable:,
         )
       end
     end

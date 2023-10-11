@@ -9,7 +9,7 @@ RSpec.describe Api::PopulationsController do
   let(:resource_to_json) { JSON.parse(PopulationSerializer.new(population).serializable_hash.to_json) }
 
   describe 'POST /populations' do
-    subject(:post_populations) { post '/api/populations', params: { data: data }, headers: headers, as: :json }
+    subject(:post_populations) { post '/api/populations', params: { data: }, headers:, as: :json }
 
     let(:schema) { load_yaml_schema('post_populations_responses.yaml') }
 
@@ -109,7 +109,7 @@ RSpec.describe Api::PopulationsController do
       end
 
       before do
-        create(:population, date: population_date, location: location)
+        create(:population, date: population_date, location:)
         post_populations
       end
 

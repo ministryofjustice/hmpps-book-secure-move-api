@@ -35,7 +35,7 @@ RSpec.describe Api::ProfilesController do
     end
 
     context 'with valid params' do
-      before { post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 201'
 
@@ -45,14 +45,14 @@ RSpec.describe Api::ProfilesController do
 
       it 'creates a new profile' do
         expect {
-          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         }.to change(Profile, :count).by(1)
       end
     end
 
     # TODO: Mocking Nomis calls are broken and need fixing everywhere. We know these tests pass so are keeping this comment here
     describe 'updating assessment answers from Nomis' do
-      let(:person) { create(:person_without_profiles, prison_number: prison_number) }
+      let(:person) { create(:person_without_profiles, prison_number:) }
       let(:profile_params) do
         {
           data: {
@@ -69,7 +69,7 @@ RSpec.describe Api::ProfilesController do
           allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
                                             .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true))
 
-          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         end
 
         context 'when assessment_answers param is present' do
@@ -113,7 +113,7 @@ RSpec.describe Api::ProfilesController do
           allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
                                                                  .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
 
-          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         end
 
         it 'does NOT import the assessment answers from Nomis' do
@@ -127,7 +127,7 @@ RSpec.describe Api::ProfilesController do
         person = create(:person, prison_number: nil)
 
         expect {
-          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+          post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         }.to change(Profile, :count).from(1).to(2)
       end
     end
@@ -149,7 +149,7 @@ RSpec.describe Api::ProfilesController do
       end
 
       before do
-        post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers: headers, as: :json
+        post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
       end
 
       context 'when the include query param is empty' do
@@ -191,13 +191,13 @@ RSpec.describe Api::ProfilesController do
     end
 
     context 'with a bad request' do
-      before { post "/api/v1/people/#{person.id}/profiles", params: {}, headers: headers, as: :json }
+      before { post "/api/v1/people/#{person.id}/profiles", params: {}, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
 
     context 'when the person_id is not found' do
-      before { post '/api/v1/people/foo-bar/profiles', params: profile_params, headers: headers, as: :json }
+      before { post '/api/v1/people/foo-bar/profiles', params: profile_params, headers:, as: :json }
 
       let(:detail_404) { "Couldn't find Person with 'id'=foo-bar" }
 

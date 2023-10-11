@@ -31,7 +31,7 @@ RSpec.describe Api::MovesController do
       let(:filters) do
         {
           bar: 'bar',
-          from_location_id: from_location_id,
+          from_location_id:,
           foo: 'foo',
         }
       end
@@ -47,8 +47,8 @@ RSpec.describe Api::MovesController do
         do_get
 
         expect(Moves::Finder).to have_received(:new).with(
-          filter_params: { from_location_id: from_location_id },
-          ability: ability,
+          filter_params: { from_location_id: },
+          ability:,
           order_params: {},
           active_record_relationships: nil,
         )
@@ -70,7 +70,7 @@ RSpec.describe Api::MovesController do
     context 'with a cancelled move' do
       let(:move) { create(:move, :cancelled) }
       let(:from_location_id) { move.from_location_id }
-      let(:filters) { { from_location_id: from_location_id } }
+      let(:filters) { { from_location_id: } }
       let(:params) { { filter: filters } }
       let(:expected_move) do
         {
@@ -96,7 +96,7 @@ RSpec.describe Api::MovesController do
     context 'with a booked move' do
       let(:move) { create(:move, :booked) }
       let(:from_location_id) { move.from_location_id }
-      let(:filters) { { from_location_id: from_location_id } }
+      let(:filters) { { from_location_id: } }
       let(:params) { { filter: filters } }
 
       it 'returns the correct attributes values for moves' do
@@ -158,8 +158,8 @@ RSpec.describe Api::MovesController do
         create_list(
           :move,
           1,
-          from_location: from_location,
-          to_location: to_location,
+          from_location:,
+          to_location:,
         )
       end
 
@@ -223,7 +223,7 @@ RSpec.describe Api::MovesController do
           :move,
           1,
           :with_journey,
-          notification_events: notification_events,
+          notification_events:,
         )
 
         do_get(query_params)
@@ -254,6 +254,6 @@ RSpec.describe Api::MovesController do
   end
 
   def do_get(query_params = nil)
-    get "/api/moves#{query_params}", params: params, headers: headers
+    get "/api/moves#{query_params}", params:, headers:
   end
 end

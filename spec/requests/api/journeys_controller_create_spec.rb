@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
     subject(:do_post) do
-      post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'
@@ -15,7 +15,7 @@ RSpec.describe Api::JourneysController do
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
     let(:alternate_from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:alternate_to_location_id) { create(:location, suppliers: [supplier]).id }
-    let(:move) { create(:move, supplier: supplier) }
+    let(:move) { create(:move, supplier:) }
     let(:move_id) { move.id }
 
     let(:timestamp) { '2020-05-04T09:00:00+01:00' }
@@ -52,7 +52,7 @@ RSpec.describe Api::JourneysController do
 
     context 'when successful' do
       let(:application) { create(:application, owner: supplier) }
-      let(:access_token) { create(:access_token, application: application).token }
+      let(:access_token) { create(:access_token, application:).token }
       let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
       let(:data) do
         {
@@ -88,7 +88,7 @@ RSpec.describe Api::JourneysController do
 
       it 'returns the correct data' do
         do_post
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
 
       it 'creates a JourneyCreate generic event' do
@@ -111,10 +111,10 @@ RSpec.describe Api::JourneysController do
 
       context 'when a move already has non-duplicate journeys' do
         before do
-          create(:journey, :cancelled, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
-          create(:journey, :rejected, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
-          create(:journey, :completed, move: move, from_location_id: alternate_from_location_id, to_location_id: to_location_id)
-          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: alternate_to_location_id)
+          create(:journey, :cancelled, move:, from_location_id:, to_location_id:)
+          create(:journey, :rejected, move:, from_location_id:, to_location_id:)
+          create(:journey, :completed, move:, from_location_id: alternate_from_location_id, to_location_id:)
+          create(:journey, :completed, move:, from_location_id:, to_location_id: alternate_to_location_id)
         end
 
         it_behaves_like 'an endpoint that responds with success 201' do
@@ -123,7 +123,7 @@ RSpec.describe Api::JourneysController do
 
         it 'returns the correct data' do
           do_post
-          expect(response_json).to include_json(data: data)
+          expect(response_json).to include_json(data:)
         end
       end
     end
@@ -133,10 +133,10 @@ RSpec.describe Api::JourneysController do
 
       context 'when you have duplicate journeys for a move' do
         let(:application) { create(:application, owner: supplier) }
-        let(:access_token) { create(:access_token, application: application).token }
+        let(:access_token) { create(:access_token, application:).token }
 
         before do
-          create(:journey, :completed, move: move, from_location_id: from_location_id, to_location_id: to_location_id)
+          create(:journey, :completed, move:, from_location_id:, to_location_id:)
           do_post
         end
 

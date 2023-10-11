@@ -48,7 +48,7 @@ module FrameworkAssessmentable
       questions.each_value do |question|
         next unless question.parent_id.nil?
 
-        question.build_responses(assessmentable: self, questions: questions, previous_responses: previous_responses).save!
+        question.build_responses(assessmentable: self, questions:, previous_responses:).save!
       end
 
       self.section_progress = calculate_section_progress(responses: framework_responses)
@@ -108,9 +108,9 @@ module FrameworkAssessmentable
       move = Move.find(move_id)
       profile = move.profile
 
-      framework = Framework.find_by!(version: version, name: framework_name)
+      framework = Framework.find_by!(version:, name: framework_name)
 
-      record = new(profile: profile, move: move, framework: framework)
+      record = new(profile:, move:, framework:)
       record.build_responses!
       record.import_nomis_mappings!
 

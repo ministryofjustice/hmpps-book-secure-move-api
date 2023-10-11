@@ -4,15 +4,15 @@ RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
   subject(:worker) { described_class.new }
 
   let(:supplier) { create(:supplier) }
-  let(:subscription) { create(:subscription, callback_url: 'https://foo.bar/', supplier: supplier) }
+  let(:subscription) { create(:subscription, callback_url: 'https://foo.bar/', supplier:) }
 
-  let!(:unnotified1) { create(:move, date: Time.zone.today, reference: 'TEST1', supplier: supplier) }
-  let!(:unnotified2) { create(:move, :proposed, date: Time.zone.today, reference: 'TEST2', supplier: supplier) }
-  let!(:notified1) { create(:move, date: Time.zone.today, reference: 'TEST4', supplier: supplier) }
-  let!(:notified2) { create(:move, date: Time.zone.tomorrow, reference: 'TEST5', supplier: supplier) }
+  let!(:unnotified1) { create(:move, date: Time.zone.today, reference: 'TEST1', supplier:) }
+  let!(:unnotified2) { create(:move, :proposed, date: Time.zone.today, reference: 'TEST2', supplier:) }
+  let!(:notified1) { create(:move, date: Time.zone.today, reference: 'TEST4', supplier:) }
+  let!(:notified2) { create(:move, date: Time.zone.tomorrow, reference: 'TEST5', supplier:) }
 
   before do
-    create(:move, date: Time.zone.tomorrow, reference: 'TEST3', supplier: supplier)
+    create(:move, date: Time.zone.tomorrow, reference: 'TEST3', supplier:)
 
     allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
 
@@ -23,8 +23,8 @@ RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
       notes: 'Automatically generated event',
       details: {},
     )
-    create(:notification, :webhook, subscription: subscription, topic: notified1, event_type: 'create_move')
-    create(:notification, :webhook, subscription: subscription, topic: notified2, event_type: 'update_move_status')
+    create(:notification, :webhook, subscription:, topic: notified1, event_type: 'create_move')
+    create(:notification, :webhook, subscription:, topic: notified2, event_type: 'update_move_status')
 
     unnotified2.status = 'requested'
     unnotified2.save!

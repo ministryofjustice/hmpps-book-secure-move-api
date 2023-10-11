@@ -11,9 +11,9 @@ RSpec.describe Allocations::Creator do
 
   let(:creator) do
     described_class.new(
-      doorkeeper_application_owner: doorkeeper_application_owner,
-      allocation_params: allocation_params,
-      complex_case_params: complex_case_params,
+      doorkeeper_application_owner:,
+      allocation_params:,
+      complex_case_params:,
     )
   end
 
@@ -48,14 +48,14 @@ RSpec.describe Allocations::Creator do
     {
       type: 'allocations',
       attributes: {
-        date: date,
-        moves_count: moves_count,
+        date:,
+        moves_count:,
         estate: :adult_female,
         prisoner_category: :b,
         sentence_length: :other,
         sentence_length_comment: '30 years',
         other_criteria: 'curly hair',
-        requested_by: requested_by,
+        requested_by:,
         complete_in_full: true,
         complex_cases: complex_case_params,
       },
@@ -76,7 +76,7 @@ RSpec.describe Allocations::Creator do
       call_creator
       expect(creator.allocation).to have_attributes(
         status: 'unfilled',
-        date: date,
+        date:,
         moves_count: 2,
         prisoner_category: 'b',
         sentence_length: 'other',
@@ -85,8 +85,8 @@ RSpec.describe Allocations::Creator do
         other_criteria: 'curly hair',
         requested_by: 'Iama Requestor',
         complete_in_full: true,
-        to_location: to_location,
-        from_location: from_location,
+        to_location:,
+        from_location:,
       )
     end
 
@@ -97,9 +97,9 @@ RSpec.describe Allocations::Creator do
     it 'sets the correct attributes to associated moves' do
       call_creator
       expect(creator.allocation.moves.first).to have_attributes(
-        date: date,
-        to_location: to_location,
-        from_location: from_location,
+        date:,
+        to_location:,
+        from_location:,
         status: 'requested',
         move_type: 'prison_transfer',
       )

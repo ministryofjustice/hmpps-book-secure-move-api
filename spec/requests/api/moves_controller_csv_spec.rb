@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::MovesController do
-  subject(:post_moves_csv) { post '/api/moves/csv', params: params, headers: headers, as: :json }
+  subject(:post_moves_csv) { post '/api/moves/csv', params:, headers:, as: :json }
 
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
@@ -40,7 +40,7 @@ RSpec.describe Api::MovesController do
       let(:filters) do
         {
           bar: 'bar',
-          from_location_id: from_location_id,
+          from_location_id:,
           foo: 'foo',
         }
       end
@@ -56,8 +56,8 @@ RSpec.describe Api::MovesController do
         post_moves_csv
 
         expect(Moves::Finder).to have_received(:new).with(
-          filter_params: { from_location_id: from_location_id },
-          ability: ability,
+          filter_params: { from_location_id: },
+          ability:,
           order_params: {},
           active_record_relationships: [:from_location, :to_location, { profile: :documents }, { person: %i[gender ethnicity] }],
         )

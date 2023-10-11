@@ -39,13 +39,13 @@ module Tasks
             tracking_id: SecureRandom.uuid, # mandatory
             journey_id: journey.id, # mandatory
             tracking_timestamp: journey.client_timestamp + step.minutes + rand(-10..10).seconds, # mandatory
-            vehicle_registration: vehicle_registration, # mandatory
+            vehicle_registration:, # mandatory
             altitude: [(rand * 100).round(1), nil].sample,
             precision_hdop: [(rand * 20).round(1), nil].sample,
             precision_vdop: [(rand * 20).round(1), nil].sample,
             bearing: [rand(360), nil].sample,
             speed: (rand * 100).round(1),
-            vehicle_vin: vehicle_vin,
+            vehicle_vin:,
           }.merge(random_waypoint(steps, step)).compact
         end
       end

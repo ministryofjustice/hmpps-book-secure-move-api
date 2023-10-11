@@ -4,13 +4,13 @@ require 'rails_helper'
 
 RSpec.describe PrepareMoveNotificationsJob, type: :job do
   subject(:perform) do
-    described_class.perform_now(topic_id: move.id, action_name: action_name, queue_as: :some_queue_name, send_webhooks: send_webhooks, send_emails: send_emails, only_supplier_id: only_supplier_id)
+    described_class.perform_now(topic_id: move.id, action_name:, queue_as: :some_queue_name, send_webhooks:, send_emails:, only_supplier_id:)
   end
 
   let(:subscription) { create :subscription }
   let(:supplier) { create :supplier, name: 'test', subscriptions: [subscription] }
   let(:location) { create :location, suppliers: [supplier] }
-  let(:move) { create :move, from_location: location, supplier: supplier }
+  let(:move) { create :move, from_location: location, supplier: }
   let(:action_name) { 'create' }
   let(:send_webhooks) { true }
   let(:send_emails) { true }
@@ -169,7 +169,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a back-dated move' do
-    let(:move) { create :move, from_location: location, date: 2.days.ago, supplier: supplier }
+    let(:move) { create :move, from_location: location, date: 2.days.ago, supplier: }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it does not create an email notification record'
@@ -178,7 +178,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a move for today' do
-    let(:move) { create :move, from_location: location, date: Time.zone.today, supplier: supplier }
+    let(:move) { create :move, from_location: location, date: Time.zone.today, supplier: }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it creates an email notification record'
@@ -187,7 +187,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a forward-dated move' do
-    let(:move) { create :move, from_location: location, date: 2.days.from_now, supplier: supplier }
+    let(:move) { create :move, from_location: location, date: 2.days.from_now, supplier: }
 
     it_behaves_like 'it creates a webhook notification record'
     it_behaves_like 'it creates an email notification record'
@@ -196,7 +196,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   end
 
   context 'when creating a proposed move' do
-    let(:move) { create :move, :proposed, from_location: location, date_from: Time.zone.today, supplier: supplier }
+    let(:move) { create :move, :proposed, from_location: location, date_from: Time.zone.today, supplier: }
 
     it_behaves_like 'it does not create a webhook notification record'
     it_behaves_like 'it does not create an email notification record'

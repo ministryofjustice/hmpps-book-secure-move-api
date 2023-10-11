@@ -9,12 +9,12 @@ RSpec.describe Allocation::ComplexCaseAnswers, type: :model do
   let(:data) do
     [
       {
-        title: title,
+        title:,
         answer: true,
         allocation_complex_case_id: 123,
       },
       {
-        title: title,
+        title:,
         answer: false,
         allocation_complex_case_id: 456,
       },

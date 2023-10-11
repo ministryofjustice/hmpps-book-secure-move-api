@@ -17,9 +17,9 @@ RSpec.configure do |_config|
         # NB: we get more helpful error messages by calling fully_validate and checking for an empty array
         raise 'Please specify a schema' if schema.blank?
 
-        schema_file = load_yaml_schema(schema, version: version)
+        schema_file = load_yaml_schema(schema, version:)
         json_body = JSON.parse(response.body)
-        expect(JSON::Validator.fully_validate(schema_file, json_body, strict: strict, fragment: "#/#{status}")).to be_empty
+        expect(JSON::Validator.fully_validate(schema_file, json_body, strict:, fragment: "#/#{status}")).to be_empty
         json_body
       end
     else

@@ -7,12 +7,12 @@ RSpec.describe SupplierChooser do
   let(:supplier2) { create(:supplier) }
   let(:location) { create(:location) }
   let(:date) { Time.zone.today }
-  let(:move_or_allocation) { build(:move, from_location: location, date: date) }
+  let(:move_or_allocation) { build(:move, from_location: location, date:) }
 
   context 'with a move with a date' do
-    let(:move_or_allocation) { build(:move, from_location: location, date: date, date_from: nil) }
+    let(:move_or_allocation) { build(:move, from_location: location, date:, date_from: nil) }
 
-    before { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+    before { create(:supplier_location, supplier: supplier1, location:, effective_from: date) }
 
     it 'returns matching supplier, effective on move date' do
       expect(service.call).to eq(supplier1)
@@ -22,7 +22,7 @@ RSpec.describe SupplierChooser do
   context 'with a move without a date' do
     let(:move_or_allocation) { build(:move, from_location: location, date: nil, date_from: date) }
 
-    before { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+    before { create(:supplier_location, supplier: supplier1, location:, effective_from: date) }
 
     it 'returns matching supplier, effective on move from_date' do
       expect(service.call).to eq(supplier1)
@@ -30,9 +30,9 @@ RSpec.describe SupplierChooser do
   end
 
   context 'with an allocation with a date' do
-    let(:move_or_allocation) { build(:move, from_location: location, date: date) }
+    let(:move_or_allocation) { build(:move, from_location: location, date:) }
 
-    before { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+    before { create(:supplier_location, supplier: supplier1, location:, effective_from: date) }
 
     it 'returns matching supplier, effective on allocation date' do
       expect(service.call).to eq(supplier1)
@@ -42,7 +42,7 @@ RSpec.describe SupplierChooser do
   context 'with an allocation without a date' do
     let(:move_or_allocation) { build(:allocation, from_location: location, date: nil) }
 
-    before { create(:supplier_location, supplier: supplier1, location: location, effective_from: date) }
+    before { create(:supplier_location, supplier: supplier1, location:, effective_from: date) }
 
     it 'returns nil' do
       expect(service.call).to be_nil
@@ -50,7 +50,7 @@ RSpec.describe SupplierChooser do
   end
 
   context 'without an effective from or to date' do
-    before { create(:supplier_location, supplier: supplier1, location: location) }
+    before { create(:supplier_location, supplier: supplier1, location:) }
 
     it 'returns matching supplier, ignoring effective dates completely' do
       expect(service.call).to eq(supplier1)
@@ -59,8 +59,8 @@ RSpec.describe SupplierChooser do
 
   context 'with only an effective from date' do
     before do
-      create(:supplier_location, supplier: supplier1, location: location, effective_from: date)
-      create(:supplier_location, supplier: supplier2, location: location, effective_from: date.tomorrow)
+      create(:supplier_location, supplier: supplier1, location:, effective_from: date)
+      create(:supplier_location, supplier: supplier2, location:, effective_from: date.tomorrow)
     end
 
     it 'returns matching supplier, excluding ineffective future matches' do
@@ -70,8 +70,8 @@ RSpec.describe SupplierChooser do
 
   context 'with only an effective to date' do
     before do
-      create(:supplier_location, supplier: supplier1, location: location, effective_to: date)
-      create(:supplier_location, supplier: supplier2, location: location, effective_to: date.yesterday)
+      create(:supplier_location, supplier: supplier1, location:, effective_to: date)
+      create(:supplier_location, supplier: supplier2, location:, effective_to: date.yesterday)
     end
 
     it 'returns matching supplier, excluding ineffective expired matches' do
@@ -81,9 +81,9 @@ RSpec.describe SupplierChooser do
 
   context 'with an effective from and to date' do
     before do
-      create(:supplier_location, supplier: supplier1, location: location, effective_from: date, effective_to: date)
-      create(:supplier_location, supplier: supplier2, location: location, effective_to: date.yesterday)
-      create(:supplier_location, supplier: supplier2, location: location, effective_from: date.tomorrow)
+      create(:supplier_location, supplier: supplier1, location:, effective_from: date, effective_to: date)
+      create(:supplier_location, supplier: supplier2, location:, effective_to: date.yesterday)
+      create(:supplier_location, supplier: supplier2, location:, effective_from: date.tomorrow)
     end
 
     it 'returns matching supplier, excluding ineffective future and expired matches' do
@@ -106,7 +106,7 @@ RSpec.describe SupplierChooser do
   end
 
   context 'with no matching effective date' do
-    before { create(:supplier_location, supplier: supplier1, location: location, effective_from: date.tomorrow, effective_to: date.tomorrow) }
+    before { create(:supplier_location, supplier: supplier1, location:, effective_from: date.tomorrow, effective_to: date.tomorrow) }
 
     it 'returns nil' do
       expect(service.call).to be_nil

@@ -86,20 +86,20 @@ RSpec.describe Api::PeopleController do
     end
 
     it 'returns the correct data' do
-      post '/api/people', params: person_params, headers: headers, as: :json
+      post '/api/people', params: person_params, headers:, as: :json
 
       expect(response_json).to include_json(data: expected_data.merge(id: Person.last.id))
     end
 
     context 'with valid params' do
-      before { post '/api/people', params: person_params, headers: headers, as: :json }
+      before { post '/api/people', params: person_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with success 201'
     end
 
     describe 'include query param' do
       before do
-        post "/api/people#{query_params}", params: person_params, headers: headers, as: :json
+        post "/api/people#{query_params}", params: person_params, headers:, as: :json
       end
 
       context 'when including multiple relationships' do
@@ -133,7 +133,7 @@ RSpec.describe Api::PeopleController do
 
     it 'creates a new person' do
       expect {
-        post '/api/people', params: person_params, headers: headers, as: :json
+        post '/api/people', params: person_params, headers:, as: :json
       }.to change(Person, :count).by(1)
     end
 
@@ -142,7 +142,7 @@ RSpec.describe Api::PeopleController do
       # and consider that this implementation does not validate any Person's attributes for now (explicitly required)
       before do
         allow(Notifier).to receive(:prepare_notifications)
-        post '/api/people', params: person_params, headers: headers, as: :json
+        post '/api/people', params: person_params, headers:, as: :json
       end
 
       it 'does NOT call the notifier when creating a person' do
@@ -154,13 +154,13 @@ RSpec.describe Api::PeopleController do
       let(:ethnicity_id) { 999 }
       let(:detail_404) { "Couldn't find Ethnicity with 'id'=999" }
 
-      before { post '/api/people#', params: person_params, headers: headers, as: :json }
+      before { post '/api/people#', params: person_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
 
     context 'with a bad request' do
-      before { post '/api/people', params: {}, headers: headers, as: :json }
+      before { post '/api/people', params: {}, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end

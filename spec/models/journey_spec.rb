@@ -132,7 +132,7 @@ RSpec.describe Journey, type: :model do
   describe 'relationships' do
     it 'updates the parent record when updated' do
       move = create(:move)
-      journey = create(:journey, move: move)
+      journey = create(:journey, move:)
 
       expect { journey.update(billable: !journey.billable) }.to(change { move.reload.updated_at })
     end
@@ -140,7 +140,7 @@ RSpec.describe Journey, type: :model do
     it 'updates the parent record when created' do
       move = create(:move)
 
-      expect { create(:journey, move: move) }.to(change { move.reload.updated_at })
+      expect { create(:journey, move:) }.to(change { move.reload.updated_at })
     end
   end
 
@@ -240,8 +240,8 @@ RSpec.describe Journey, type: :model do
 
   describe '#number' do
     let(:move) { create(:move) }
-    let(:journey_1) { create(:journey, move: move, client_timestamp: Date.new(2020, 1, 1)) }
-    let(:journey_2) { create(:journey, move: move, client_timestamp: Date.new(2020, 1, 2)) }
+    let(:journey_1) { create(:journey, move:, client_timestamp: Date.new(2020, 1, 1)) }
+    let(:journey_2) { create(:journey, move:, client_timestamp: Date.new(2020, 1, 2)) }
 
     it 'has the correct journey number' do
       expect(journey_1.number).to eq(1)

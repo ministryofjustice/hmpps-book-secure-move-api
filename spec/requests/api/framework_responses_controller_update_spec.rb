@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::FrameworkResponsesController do
   describe 'PATCH /framework_responses/:framework_response_id' do
     subject(:patch_response) do
-      patch "/api/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers: headers, as: :json
+      patch "/api/framework_responses/#{framework_response_id}?include=#{includes}", params: framework_response_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'
@@ -334,12 +334,12 @@ RSpec.describe Api::FrameworkResponsesController do
     end
 
     context 'with subscriptions' do
-      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:subscription) { create(:subscription, supplier:) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
-      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
-      let(:person_escort_record) { create(:person_escort_record, :completed, move: move) }
+      let(:move) { create(:move, from_location:, supplier:) }
+      let(:person_escort_record) { create(:person_escort_record, :completed, move:) }
       let(:framework_response) { create(:string_response, assessmentable: person_escort_record) }
 
       let(:faraday_client) do
@@ -390,7 +390,7 @@ RSpec.describe Api::FrameworkResponsesController do
       end
 
       context 'when the assessment was not previously completed' do
-        let(:person_escort_record) { create(:person_escort_record, :in_progress, move: move) }
+        let(:person_escort_record) { create(:person_escort_record, :in_progress, move:) }
 
         it 'creates a webhook notification' do
           notification = subscription.notifications.find_by(notification_type: notification_type_webhook)

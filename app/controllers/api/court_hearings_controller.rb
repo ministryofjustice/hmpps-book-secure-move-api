@@ -23,7 +23,7 @@ module Api
   private
 
     def court_hearings_attributes
-      court_hearings_params.merge(move: move)
+      court_hearings_params.merge(move:)
     end
 
     def court_hearings_params

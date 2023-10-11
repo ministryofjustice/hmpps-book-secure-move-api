@@ -166,7 +166,7 @@ RSpec.describe MoveSerializer do
 
     context 'with an original_move' do
       let(:original_move) { create(:move) }
-      let(:move) { create(:move, original_move: original_move) }
+      let(:move) { create(:move, original_move:) }
 
       it 'contains an original_move relationship' do
         expect(result_data[:relationships][:original_move]).to eq(data: { id: original_move.id, type: 'moves' })

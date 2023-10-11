@@ -11,7 +11,7 @@ class DiagnosticsController < ApiController
     include_per_history = params[:include_per_history] == 'true'
 
     if move.present?
-      render plain: Diagnostics::MoveInspector.new(move, include_person_details: include_person_details, include_per_history: include_per_history).generate, status: :ok
+      render plain: Diagnostics::MoveInspector.new(move, include_person_details:, include_per_history:).generate, status: :ok
     else
       render plain: "Move \"#{params[:id]}\" not found", status: :not_found
     end

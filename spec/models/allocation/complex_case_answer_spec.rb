@@ -9,9 +9,9 @@ RSpec.describe Allocation::ComplexCaseAnswer, type: :model do
   let(:allocation_complex_case_id) { 'c1913bca-04f2-4688-b372-a547db9a6ce8' }
   let(:attribute_values) do
     {
-      title: title,
+      title:,
       answer: true,
-      allocation_complex_case_id: allocation_complex_case_id,
+      allocation_complex_case_id:,
       key: 'just_a_test',
     }
   end
@@ -20,7 +20,7 @@ RSpec.describe Allocation::ComplexCaseAnswer, type: :model do
     context 'without an allocation_complex_case_id' do
       let(:attribute_values) do
         {
-          title: title,
+          title:,
           answer: true,
         }
       end

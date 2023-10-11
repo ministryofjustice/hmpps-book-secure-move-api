@@ -14,7 +14,7 @@ RSpec.describe Moves::Exporter do
   let(:from_location) { create(:location, title: 'From Location', nomis_agency_id: 'FROM1') }
   let(:to_location) { create(:location, title: 'To Location', nomis_agency_id: 'TO1') }
   let(:person) { create(:person) }
-  let!(:move) { create(:move, from_location: from_location, to_location: to_location, person: person) }
+  let!(:move) { create(:move, from_location:, to_location:, person:) }
   let(:moves) { Move.all }
 
   it 'includes correct header names' do

@@ -9,7 +9,7 @@ RSpec.describe Api::AllocationsController do
   let(:content_type) { ApiController::CONTENT_TYPE }
 
   describe 'GET /allocations' do
-    subject(:get_allocations) { get '/api/v1/allocations', params: params, headers: headers }
+    subject(:get_allocations) { get '/api/v1/allocations', params:, headers: }
 
     let(:schema) { load_yaml_schema('get_allocations_responses.yaml') }
     let(:params) { {} }
@@ -88,7 +88,7 @@ RSpec.describe Api::AllocationsController do
             foo: 'foo',
           }
         end
-        let(:params) { { sort: sort } }
+        let(:params) { { sort: } }
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations
@@ -110,7 +110,7 @@ RSpec.describe Api::AllocationsController do
             foo: 'foo',
           }
         end
-        let(:params) { { search: search } }
+        let(:params) { { search: } }
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           get_allocations

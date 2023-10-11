@@ -6,7 +6,7 @@ module Metrics
 
       def initialize(supplier: nil)
         setup_metric(
-          supplier: supplier,
+          supplier:,
           label: 'PER counts by PER status for past 100 days',
           file: 'counts_by_per_status_100_day',
           interval: 1.hour, # we don't need to re-calculate this report very often as it concerns old data

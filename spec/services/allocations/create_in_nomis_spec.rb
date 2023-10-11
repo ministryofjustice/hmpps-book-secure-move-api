@@ -11,9 +11,9 @@ RSpec.describe Allocations::CreateInNomis do
         :move,
         :prison_recall,
         date: move_date,
-        nomis_event_id: nomis_event_id,
-        from_location: from_location,
-        to_location: to_location,
+        nomis_event_id:,
+        from_location:,
+        to_location:,
       )
     end
 
@@ -34,7 +34,7 @@ RSpec.describe Allocations::CreateInNomis do
       let(:nomis_response_status) { 201 }
       let(:nomis_client_args) do
         {
-          booking_id: booking_id,
+          booking_id:,
           body_params: {
             'fromPrisonLocation': from_nomis_agency_id,
             'toPrisonLocation': to_nomis_agency_id,
@@ -59,7 +59,7 @@ RSpec.describe Allocations::CreateInNomis do
       it 'returns debugging information' do
         expect(create_transfer_in_nomis).to include(
           request_params: nomis_client_args,
-          response_body: response_body,
+          response_body:,
           response_status: 201,
         )
       end

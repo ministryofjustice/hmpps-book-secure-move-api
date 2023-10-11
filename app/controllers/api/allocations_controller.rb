@@ -18,8 +18,8 @@ module Api
       updater = Allocations::Updater.new(
         allocation_params: update_allocation_params,
         allocation_id: params.require(:id),
-        created_by: created_by,
-        doorkeeper_application_owner: doorkeeper_application_owner,
+        created_by:,
+        doorkeeper_application_owner:,
       )
       updater.call
 
@@ -89,7 +89,7 @@ module Api
     end
 
     def render_allocation(allocation, status)
-      render_json allocation, serializer: AllocationSerializer, include: included_relationships, status: status
+      render_json allocation, serializer: AllocationSerializer, include: included_relationships, status:
     end
 
     def allocations
@@ -97,15 +97,15 @@ module Api
         filters: filter_params,
         ordering: sort_params,
         search: search_params,
-        active_record_relationships: active_record_relationships,
+        active_record_relationships:,
       ).call
     end
 
     def creator
       @creator ||= Allocations::Creator.new(
-        doorkeeper_application_owner: doorkeeper_application_owner,
+        doorkeeper_application_owner:,
         allocation_params: create_allocation_params,
-        complex_case_params: complex_case_params,
+        complex_case_params:,
       )
     end
 

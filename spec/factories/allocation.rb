@@ -37,7 +37,7 @@ FactoryBot.define do
           to_location: allocation.to_location,
           date: allocation.date,
           status: 'requested',
-          allocation: allocation,
+          allocation:,
         )
       end
     end

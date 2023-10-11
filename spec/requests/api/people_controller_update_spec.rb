@@ -43,7 +43,7 @@ RSpec.describe Api::PeopleController do
               { identifier_type: 'police_national_computer', value: 'ABC123' },
               { identifier_type: 'prison_number', value: 'XYZ987' },
             ],
-            gender_additional_information: gender_additional_information,
+            gender_additional_information:,
           },
           relationships: {
             ethnicity: {
@@ -93,31 +93,31 @@ RSpec.describe Api::PeopleController do
       end
 
       context 'with valid params' do
-        before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+        before { put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json }
 
         it_behaves_like 'an endpoint that responds with success 200'
       end
 
       it 'returns the correct data' do
-        put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
         expect(JSON.parse(response.body)).to include_json(data: expected_data.merge(id: person.id))
       end
 
       it 'updates an existing person' do
         expect {
-          put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+          put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
         }.to change(Person, :count).by(0)
       end
 
       it 'changes the first_names' do
-        put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
         expect(person.reload.first_names).to include(expected_data[:attributes][:first_names])
       end
 
       describe 'webhook and email notifications' do
         before do
           allow(Notifier).to receive(:prepare_notifications)
-          put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+          put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
         end
 
         it 'calls the notifier when updating a person' do
@@ -130,13 +130,13 @@ RSpec.describe Api::PeopleController do
       let(:gender_additional_information) { 'some additional info' }
 
       it 'updates an existing person' do
-        put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json
+        put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
         expect(person.reload.gender_additional_information).to eq gender_additional_information
       end
     end
 
     context 'with a bad request' do
-      before { put "/api/v1/people/#{person.id}", params: {}, headers: headers, as: :json }
+      before { put "/api/v1/people/#{person.id}", params: {}, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 400'
     end
@@ -162,7 +162,7 @@ RSpec.describe Api::PeopleController do
         ]
       end
 
-      before { put "/api/v1/people/#{person.id}", params: person_params, headers: headers, as: :json }
+      before { put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json }
 
       it_behaves_like 'an endpoint that responds with error 422'
     end

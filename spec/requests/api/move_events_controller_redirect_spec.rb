@@ -9,7 +9,7 @@ RSpec.describe Api::MoveEventsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, :prison_transfer, from_location: from_location) }
+    let(:move) { create(:move, :prison_transfer, from_location:) }
     let(:move_id) { move.id }
     let(:new_location) { create(:location, :prison) }
     let(:attributes) do
@@ -22,7 +22,7 @@ RSpec.describe Api::MoveEventsController do
       {
         data: {
           type: 'redirects',
-          attributes: attributes,
+          attributes:,
           relationships: {
             to_location: { data: { type: 'locations', id: new_location.id } },
           },
@@ -34,7 +34,7 @@ RSpec.describe Api::MoveEventsController do
     before do
       allow(Notifier).to receive(:prepare_notifications)
       before_post
-      post "/api/v1/moves/#{move_id}/redirects", params: redirect_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/redirects", params: redirect_params, headers:, as: :json
     end
 
     context 'when successful' do

@@ -105,8 +105,8 @@ RSpec.describe FrameworkNomisMappings::Alerts do
       comment: 'Some comment',
       created_at: '2013-03-29',
       expires_at: '2100-06-08',
-      expired: expired,
-      active: active,
+      expired:,
+      active:,
       offender_no: 'A9127EK',
     }.with_indifferent_access
   end

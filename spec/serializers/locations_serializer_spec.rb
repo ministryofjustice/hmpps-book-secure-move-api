@@ -7,7 +7,7 @@ RSpec.describe LocationsSerializer do
 
   let(:created_at) { Time.zone.local(2018, 6, 1) }
   let(:disabled_at) { Time.zone.local(2019, 1, 1) }
-  let(:location) { create :location, :with_address, :with_coordinates, created_at: created_at, disabled_at: disabled_at }
+  let(:location) { create :location, :with_address, :with_coordinates, created_at:, disabled_at: }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:result_data) { result[:data] }
   let(:attributes) { result_data[:attributes] }

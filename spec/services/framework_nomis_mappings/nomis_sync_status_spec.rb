@@ -30,7 +30,7 @@ RSpec.describe FrameworkNomisMappings::NomisSyncStatus do
     let(:message) { nil }
 
     before do
-      travel_to(sync_date) { nomis_sync_status.set_failure(message: message) }
+      travel_to(sync_date) { nomis_sync_status.set_failure(message:) }
     end
 
     it 'sets the status to success' do

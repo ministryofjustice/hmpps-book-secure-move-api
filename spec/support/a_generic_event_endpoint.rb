@@ -71,6 +71,6 @@ RSpec.shared_examples 'a generic event endpoint' do |event_type|
   end
 
   def do_post
-    post '/api/events', params: { data: data }, headers: headers, as: :json
+    post '/api/events', params: { data: }, headers:, as: :json
   end
 end

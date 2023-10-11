@@ -8,13 +8,13 @@ RSpec.describe Allocations::Finder do
       filters: filter_params,
       ordering: sort_params,
       search: search_params,
-      active_record_relationships: active_record_relationships,
+      active_record_relationships:,
     )
   end
 
   let(:from_location) { create :location }
   let(:to_location) { create :location }
-  let!(:allocation) { create :allocation, from_location: from_location, to_location: to_location }
+  let!(:allocation) { create :allocation, from_location:, to_location: }
 
   let(:filter_params) { {} }
   let(:sort_params) { {} }
@@ -56,7 +56,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { from_locations: from_location.id } }
       let(:active_record_relationships) { %i[from_location] }
 
-      before { create(:allocation, to_location: to_location) }
+      before { create(:allocation, to_location:) }
 
       it 'returns allocations matching specified from_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -67,7 +67,7 @@ RSpec.describe Allocations::Finder do
       let(:filter_params) { { to_locations: to_location.id } }
       let(:active_record_relationships) { %i[to_location] }
 
-      before { create(:allocation, from_location: from_location) }
+      before { create(:allocation, from_location:) }
 
       it 'returns allocations matching specified to_location' do
         expect(allocation_finder.call).to contain_exactly(allocation)
@@ -128,8 +128,8 @@ RSpec.describe Allocations::Finder do
     end
 
     describe 'by status' do
-      let!(:filled_allocation) { create :allocation, :filled, from_location: from_location, to_location: to_location }
-      let!(:cancelled_allocation) { create :allocation, :cancelled, from_location: from_location, to_location: to_location }
+      let!(:filled_allocation) { create :allocation, :filled, from_location:, to_location: }
+      let!(:cancelled_allocation) { create :allocation, :cancelled, from_location:, to_location: }
 
       context 'with matching status' do
         let(:filter_params) { { status: 'filled' } }
@@ -173,9 +173,9 @@ RSpec.describe Allocations::Finder do
     context 'when by from_location' do
       before do
         Allocation.delete_all
-        create :allocation, from_location: location1, to_location: to_location
-        create :allocation, from_location: location2, to_location: to_location
-        create :allocation, from_location: location3, to_location: to_location
+        create(:allocation, from_location: location1, to_location:)
+        create(:allocation, from_location: location2, to_location:)
+        create :allocation, from_location: location3, to_location:
       end
 
       let(:sort_params) { { by: :from_location, direction: :asc } }
@@ -188,9 +188,9 @@ RSpec.describe Allocations::Finder do
     context 'when by to_location' do
       before do
         Allocation.delete_all
-        create :allocation, from_location: from_location, to_location: location1
-        create :allocation, from_location: from_location, to_location: location2
-        create :allocation, from_location: from_location, to_location: location3
+        create :allocation, from_location:, to_location: location1
+        create :allocation, from_location:, to_location: location2
+        create :allocation, from_location:, to_location: location3
       end
 
       let(:sort_params) { { by: :to_location, direction: :asc } }
@@ -203,9 +203,9 @@ RSpec.describe Allocations::Finder do
     context 'when by moves_count' do
       before do
         Allocation.delete_all
-        create :allocation, moves_count: 1, from_location: from_location, to_location: to_location
-        create :allocation, moves_count: 2, from_location: from_location, to_location: to_location
-        create :allocation, moves_count: 3, from_location: from_location, to_location: to_location
+        create(:allocation, moves_count: 1, from_location:, to_location:)
+        create(:allocation, moves_count: 2, from_location:, to_location:)
+        create :allocation, moves_count: 3, from_location:, to_location:
       end
 
       let(:sort_params) { { by: :moves_count, direction: :desc } }
@@ -216,8 +216,8 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'when by date' do
-      let!(:allocation2) { create :allocation, date: allocation.date + 2.days, from_location: from_location, to_location: to_location }
-      let!(:allocation3) { create :allocation, date: allocation.date + 5.days, from_location: from_location, to_location: to_location }
+      let!(:allocation2) { create :allocation, date: allocation.date + 2.days, from_location:, to_location: }
+      let!(:allocation3) { create :allocation, date: allocation.date + 5.days, from_location:, to_location: }
 
       let(:sort_params) { { by: :date, direction: :desc } }
 
@@ -236,11 +236,11 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :to_location, direction: :desc } }
       let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
 
-      let!(:allocation) { create :allocation, :with_moves, from_location: from_location, to_location: location1 }
+      let!(:allocation) { create :allocation, :with_moves, from_location:, to_location: location1 }
 
       before do
-        create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: location2
-        create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: location3
+        create :allocation, :with_moves, date: allocation.date + 2.days, from_location:, to_location: location2
+        create :allocation, :with_moves, date: allocation.date + 5.days, from_location:, to_location: location3
       end
 
       it 'returns allocations matching date range sorted by location title desc' do
@@ -249,8 +249,8 @@ RSpec.describe Allocations::Finder do
     end
 
     context 'when filtering and sorting by date' do
-      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location: from_location, to_location: to_location }
-      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location: from_location, to_location: to_location }
+      let!(:allocation2) { create :allocation, :with_moves, date: allocation.date + 2.days, from_location:, to_location: }
+      let!(:allocation3) { create :allocation, :with_moves, date: allocation.date + 5.days, from_location:, to_location: }
 
       let(:sort_params) { { by: :date, direction: :desc } }
       let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
@@ -264,11 +264,11 @@ RSpec.describe Allocations::Finder do
   describe 'searching' do
     let!(:from_location) { create :location, title: 'HMP Bedford' }
     let!(:to_location) { create :location, title: 'HMP Bradford' }
-    let!(:other_allocation) { create :allocation, from_location: from_location }
+    let!(:other_allocation) { create :allocation, from_location: }
     let!(:person) { create :person, last_name: 'Kray' }
-    let!(:profile) { create :profile, person: person }
+    let!(:profile) { create :profile, person: }
 
-    before { create :move, profile: profile, allocation: allocation }
+    before { create :move, profile:, allocation: }
 
     context 'with blank location' do
       let(:search_params) { { location: '' } }

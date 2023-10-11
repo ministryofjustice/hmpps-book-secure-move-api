@@ -21,7 +21,7 @@ module Locations
         log "\r#{i + 1}/#{data.count}"
 
         nomis_agency_id = row['nomis_agency_id']
-        location = Location.find_by(nomis_agency_id: nomis_agency_id)
+        location = Location.find_by(nomis_agency_id:)
         if location.nil? || location.discarded? || location.prison?
           ignore_location(nomis_agency_id, location)
         else
@@ -38,7 +38,7 @@ module Locations
     end
 
     def update_location(nomis_agency_id, location, postcode)
-      location.update!(postcode: postcode)
+      location.update!(postcode:)
     rescue Geocoder::InvalidRequest => e
       log "\nError geocoding: #{nomis_agency_id} #{e.message}\n"
 

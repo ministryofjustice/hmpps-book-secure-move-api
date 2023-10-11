@@ -112,7 +112,7 @@ RSpec.describe FrameworkResponse do
     it 'updates responded at value' do
       responded_at = Time.zone.parse('2010-06-21')
       response = create(:string_response, value: nil)
-      response.update_with_flags!(new_value: 'Yes', responded_at: responded_at)
+      response.update_with_flags!(new_value: 'Yes', responded_at:)
 
       expect(response.responded_at).to eq(responded_at)
     end
@@ -167,9 +167,9 @@ RSpec.describe FrameworkResponse do
 
     it 'attaches multiple flags if answer supplied matches flag' do
       framework_question = create(:framework_question)
-      flag1 = create(:framework_flag, framework_question: framework_question)
-      flag2 = create(:framework_flag, framework_question: framework_question)
-      response = create(:string_response, value: nil, framework_question: framework_question)
+      flag1 = create(:framework_flag, framework_question:)
+      flag2 = create(:framework_flag, framework_question:)
+      response = create(:string_response, value: nil, framework_question:)
       response.update_with_flags!(new_value: 'Yes')
 
       expect(response.framework_flags).to contain_exactly(flag1, flag2)
@@ -177,9 +177,9 @@ RSpec.describe FrameworkResponse do
 
     it 'detaches flag if answer changed' do
       framework_question = create(:framework_question)
-      flag1 = create(:framework_flag, framework_question: framework_question)
-      flag2 = create(:framework_flag, framework_question: framework_question)
-      response = create(:string_response, framework_question: framework_question, framework_flags: [flag1, flag2])
+      flag1 = create(:framework_flag, framework_question:)
+      flag2 = create(:framework_flag, framework_question:)
+      response = create(:string_response, framework_question:, framework_flags: [flag1, flag2])
       response.update_with_flags!(new_value: 'No')
 
       expect(response.reload.framework_flags).to be_empty
@@ -187,9 +187,9 @@ RSpec.describe FrameworkResponse do
 
     it 'attaches another flag if answer changed' do
       framework_question = create(:framework_question)
-      flag1 = create(:framework_flag, framework_question: framework_question)
-      flag2 = create(:framework_flag, question_value: 'No', framework_question: framework_question)
-      response = create(:string_response, framework_question: framework_question, framework_flags: [flag1])
+      flag1 = create(:framework_flag, framework_question:)
+      flag2 = create(:framework_flag, question_value: 'No', framework_question:)
+      response = create(:string_response, framework_question:, framework_flags: [flag1])
       response.update_with_flags!(new_value: 'No')
 
       expect(response.framework_flags).to contain_exactly(flag2)

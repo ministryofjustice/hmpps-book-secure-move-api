@@ -27,13 +27,13 @@ module Eventable
     now = Time.zone.now
 
     event_class.create!(
-      eventable: eventable,
+      eventable:,
       occurred_at: occurred_at || now,
       recorded_at: now,
       notes: 'Automatically generated event',
-      details: details,
+      details:,
       supplier_id: supplier_id || api_supplier_id,
-      created_by: created_by,
+      created_by:,
     )
   end
 

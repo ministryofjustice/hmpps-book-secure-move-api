@@ -20,10 +20,10 @@ module NomisClient
 
     def json_api_error
       {
-        code: code,
-        status: status,
-        title: title,
-        details: details,
+        code:,
+        status:,
+        title:,
+        details:,
       }
     end
   end

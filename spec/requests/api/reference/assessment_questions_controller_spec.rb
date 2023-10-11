@@ -25,14 +25,14 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
     let(:params) { {} }
 
     before do
-      get '/api/v1/reference/assessment_questions', params: params, headers: { 'Authorization' => 'Bearer spoofed-token' }
+      get '/api/v1/reference/assessment_questions', params:, headers: { 'Authorization' => 'Bearer spoofed-token' }
     end
 
     context 'when successful' do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
 
       context 'with matching filters' do
         it 'returns the matching item' do
-          expect(response_json).to include_json(data: data)
+          expect(response_json).to include_json(data:)
         end
       end
 
@@ -57,7 +57,7 @@ RSpec.describe Api::Reference::AssessmentQuestionsController do
         let(:category_filter) { :risk }
 
         it 'does not return the mis-matched item' do
-          expect(response_json).not_to include_json(data: data)
+          expect(response_json).not_to include_json(data:)
         end
       end
     end

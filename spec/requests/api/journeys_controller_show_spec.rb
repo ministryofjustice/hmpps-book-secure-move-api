@@ -8,11 +8,11 @@ RSpec.describe Api::JourneysController do
 
     let(:response_json) { JSON.parse(response.body) }
     let(:locations) { create_list(:location, 2, suppliers: [supplier]) }
-    let(:move) { create(:move, from_location: locations.first, to_location: locations.last, supplier: supplier) }
-    let(:journey) { create(:journey, move: move, supplier: supplier, client_timestamp: '2020-05-04T08:00:00Z', from_location: locations.first, to_location: locations.last) }
+    let(:move) { create(:move, from_location: locations.first, to_location: locations.last, supplier:) }
+    let(:journey) { create(:journey, move:, supplier:, client_timestamp: '2020-05-04T08:00:00Z', from_location: locations.first, to_location: locations.last) }
 
     before do
-      get "/api/v1/moves/#{move.id}/journeys/#{journey.id}", headers: headers, as: :json
+      get "/api/v1/moves/#{move.id}/journeys/#{journey.id}", headers:, as: :json
     end
 
     context 'when successful' do
@@ -50,7 +50,7 @@ RSpec.describe Api::JourneysController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -59,15 +59,15 @@ RSpec.describe Api::JourneysController do
 
       context "when attempting to access another supplier's journey" do
         let(:application) { create(:application, owner: supplier) }
-        let(:access_token) { create(:access_token, application: application).token }
-        let(:journey) { create(:journey, move: move) } # another journey for a different supplier, same move
+        let(:access_token) { create(:access_token, application:).token }
+        let(:journey) { create(:journey, move:) } # another journey for a different supplier, same move
         let(:detail_401) { 'Not authorized' }
 
         it_behaves_like 'an endpoint that responds with error 401'
       end
 
       context "when attempting to access another move's journey" do
-        let(:journey) { create(:journey, supplier: supplier) } # another journey for a different move, same supplier
+        let(:journey) { create(:journey, supplier:) } # another journey for a different move, same supplier
         let(:detail_404) { "Couldn't find Journey with 'id'=#{journey.id}" }
 
         it_behaves_like 'an endpoint that responds with error 404'

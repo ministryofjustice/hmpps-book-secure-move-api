@@ -6,7 +6,7 @@ RSpec.describe FrameworkResponse::DetailsCollection, type: :model do
   context 'with validations' do
     it 'validates the details object passed' do
       collection = [{ option: 'No' }, { option: 'Yes' }]
-      details_collection = described_class.new(collection: collection, question_options: %w[No])
+      details_collection = described_class.new(collection:, question_options: %w[No])
 
       expect(details_collection).not_to be_valid
       expect(details_collection.errors.messages[:option]).to eq(['is not included in the list'])
@@ -14,7 +14,7 @@ RSpec.describe FrameworkResponse::DetailsCollection, type: :model do
 
     it 'validates uniqueness of options' do
       collection = [{ option: 'No', details: 'some detail' }, { option: 'No' }]
-      details_collection = described_class.new(collection: collection, question_options: %w[No])
+      details_collection = described_class.new(collection:, question_options: %w[No])
 
       expect(details_collection).not_to be_valid
       expect(details_collection.errors.messages[:option]).to eq(['Duplicate options selected'])
@@ -34,7 +34,7 @@ RSpec.describe FrameworkResponse::DetailsCollection, type: :model do
         },
       ]
 
-      details_collection = described_class.new(collection: collection)
+      details_collection = described_class.new(collection:)
       expect(details_collection.to_a.first).to be_a(FrameworkResponse::DetailsObject)
     end
 
@@ -50,7 +50,7 @@ RSpec.describe FrameworkResponse::DetailsCollection, type: :model do
         },
       ]
 
-      details_collection = described_class.new(collection: collection)
+      details_collection = described_class.new(collection:)
       expect(details_collection.to_a.count).to eq(2)
     end
 

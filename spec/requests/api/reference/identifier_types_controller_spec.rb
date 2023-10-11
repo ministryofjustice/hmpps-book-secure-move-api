@@ -34,7 +34,7 @@ RSpec.describe Api::Reference::IdentifierTypesController do
 
     context 'when successful' do
       before do
-        get '/api/v1/reference/identifier_types', headers: headers
+        get '/api/v1/reference/identifier_types', headers:
       end
 
       it_behaves_like 'an endpoint that responds with success 200'

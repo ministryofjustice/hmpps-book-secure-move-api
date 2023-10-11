@@ -32,7 +32,7 @@ module Api
 
     def bulk_update
       FrameworkResponses::BulkUpdater.new(
-        assessment: assessment,
+        assessment:,
         response_values_hash: bulk_update_framework_response_values,
         responded_by: created_by,
         responded_at: Time.zone.now.iso8601,
@@ -105,7 +105,7 @@ module Api
     def render_bulk_update_error(exception)
       errors = exception.errors.map do |id, error_message|
         {
-          id: id,
+          id:,
           title: 'Invalid value',
           detail: error_message,
           source: { pointer: '/data/attributes/value' },
@@ -113,7 +113,7 @@ module Api
       end
 
       render(
-        json: { errors: errors },
+        json: { errors: },
         status: :unprocessable_entity,
       )
     end

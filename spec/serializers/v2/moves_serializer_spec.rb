@@ -60,7 +60,7 @@ RSpec.describe V2::MovesSerializer do
       }
     end
 
-    let!(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
+    let!(:person_escort_record) { create(:person_escort_record, move:, profile: move.profile) }
     let!(:flag) { create(:framework_flag) }
 
     before { create(:string_response, assessmentable: person_escort_record, framework_flags: [flag]) }

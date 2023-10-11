@@ -93,7 +93,7 @@ module Api::V1
 
         attributes.merge!(
           profile: profile_or_person_latest_profile,
-          from_location: from_location,
+          from_location:,
           to_location: Location.find_by(id: new_move_params.dig(:relationships, :to_location, :data, :id)),
           court_hearings: CourtHearing.where(id: (new_move_params.dig(:relationships, :court_hearings, :data) || []).map { |court_hearing| court_hearing[:id] }),
           prison_transfer_reason: PrisonTransferReason.find_by(id: new_move_params.dig(:relationships, :prison_transfer_reason, :data, :id)),
@@ -104,7 +104,7 @@ module Api::V1
     def validate_move_status
       status = update_move_params.fetch(:attributes, {})[:status]
       if status.present?
-        validator = Moves::StatusValidator.new(status: status, cancellation_reason: update_move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: update_move_params.fetch(:attributes, {})[:rejection_reason])
+        validator = Moves::StatusValidator.new(status:, cancellation_reason: update_move_params.fetch(:attributes, {})[:cancellation_reason], rejection_reason: update_move_params.fetch(:attributes, {})[:rejection_reason])
         raise ActiveModel::ValidationError, validator unless validator.valid?
       end
       status
@@ -123,7 +123,7 @@ module Api::V1
     end
 
     def render_move(move, status)
-      render_json move, serializer: MoveSerializer, include: included_relationships, status: status
+      render_json move, serializer: MoveSerializer, include: included_relationships, status:
     end
 
     def move

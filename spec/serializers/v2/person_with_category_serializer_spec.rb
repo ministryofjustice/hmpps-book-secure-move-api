@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::PersonWithCategorySerializer do
   subject(:serializer) { described_class.new(person, adapter_options) }
 
-  let(:person) { create :person, gender_additional_information: 'additional information', latest_nomis_booking_id: latest_nomis_booking_id }
+  let(:person) { create :person, gender_additional_information: 'additional information', latest_nomis_booking_id: }
   let(:latest_nomis_booking_id) { 123 }
   let(:adapter_options) { {} }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe NomisClient::Rollcount, with_nomis_client_authentication: true do
   describe '.get' do
-    let(:response) { described_class.get(agency_id: agency_id, unassigned: unassigned) }
+    let(:response) { described_class.get(agency_id:, unassigned:) }
     let(:agency_id) { 'PRI' }
     let(:unassigned) { true }
 

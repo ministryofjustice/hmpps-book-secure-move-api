@@ -13,7 +13,7 @@ RSpec.describe 'police to unknown prison recall', type: :request, api_story: tru
   include_context 'with Nomis alerts reference data'
 
   let(:police_national_computer) { '05/886838E' }
-  let(:person) { create(:person_without_profiles, police_national_computer: police_national_computer, prison_number: nil) }
+  let(:person) { create(:person_without_profiles, police_national_computer:, prison_number: nil) }
   let(:police) { create(:location, :police) }
   let(:prison) { create(:location, :prison) }
   let(:assessment_special_diet) { AssessmentQuestion.where(key: 'special_diet_or_allergy').first }

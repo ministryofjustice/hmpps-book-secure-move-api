@@ -6,7 +6,7 @@ RSpec.describe NomisClient::ReasonableAdjustments, with_nomis_client_authenticat
   describe '.get' do
     let(:booking_id) { 321 }
     let(:reasonable_adjustment_types) { 'DA,LEARN SUPP' }
-    let(:response) { described_class.get(booking_id: booking_id, reasonable_adjustment_types: reasonable_adjustment_types) }
+    let(:response) { described_class.get(booking_id:, reasonable_adjustment_types:) }
     let(:client_response) do
       [
         {

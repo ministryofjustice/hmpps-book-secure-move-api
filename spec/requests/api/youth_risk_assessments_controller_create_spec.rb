@@ -5,16 +5,16 @@ require 'rails_helper'
 RSpec.describe Api::YouthRiskAssessmentsController do
   describe 'POST /youth_risk_assessments' do
     subject(:post_youth_risk_assessment) do
-      post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+      post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers:, as: :json
     end
 
     include_context 'with supplier with spoofed access token'
 
     let(:response_json) { JSON.parse(response.body) }
     let(:person) { create(:person) }
-    let(:profile) { create(:profile, person: person) }
+    let(:profile) { create(:profile, person:) }
     let(:profile_id) { profile.id }
-    let(:move) { create(:move, :from_stc_to_court, profile: profile) }
+    let(:move) { create(:move, :from_stc_to_court, profile:) }
     let(:move_id) { move.id }
     let(:framework) { create(:framework, :youth_risk_assessment, framework_questions: [build(:framework_question, section: 'risk-information', prefill: true)]) }
     let(:framework_version) { framework.version }
@@ -101,7 +101,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -109,10 +109,10 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       subject(:post_youth_risk_assessment) do
         previous_pesron_escort_record
 
-        post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+        post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers:, as: :json
       end
 
-      let(:previous_profile) { create(:profile, person: person) }
+      let(:previous_profile) { create(:profile, person:) }
       let(:previous_pesron_escort_record) do
         create(:youth_risk_assessment, :confirmed, profile: previous_profile, framework_responses: [create(:string_response, framework_question: framework.framework_questions.first)])
       end
@@ -198,7 +198,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       it_behaves_like 'an endpoint that responds with success 201'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 
@@ -219,7 +219,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
       end
 
       context 'when move location is not from sch or stc' do
-        let(:move) { create(:move, profile: profile) }
+        let(:move) { create(:move, profile:) }
         let(:errors_422) do
           [
             {
@@ -246,8 +246,8 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         end
 
         before do
-          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
-          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers:, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers:, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'
@@ -270,7 +270,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
           allow(YouthRiskAssessment).to receive(:new).and_return(youth_risk_assessment)
           allow(youth_risk_assessment).to receive(:build_responses!).and_raise(PG::UniqueViolation, 'duplicate key value violates unique constraint')
 
-          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers: headers, as: :json
+          post '/api/youth_risk_assessments', params: youth_risk_assessment_params, headers:, as: :json
         end
 
         it_behaves_like 'an endpoint that responds with error 422'

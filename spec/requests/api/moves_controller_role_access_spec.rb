@@ -4,7 +4,7 @@ require 'swagger_helper'
 
 RSpec.describe Api::MovesController do
   let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }
-  let(:token) { create(:access_token, application: application) }
+  let(:token) { create(:access_token, application:) }
   let(:content_type) { ApiController::CONTENT_TYPE }
   let(:response_json) { JSON.parse(response.body) }
 
@@ -20,7 +20,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'GET /moves' do
-    subject(:get_moves) { get '/api/v1/moves', headers: headers }
+    subject(:get_moves) { get '/api/v1/moves', headers: }
 
     let(:schema) { load_yaml_schema('get_moves_responses.yaml') }
     let!(:moves) { create_list(:move, 2, supplier: pentonville_supplier) }
@@ -54,7 +54,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'GET /moves/{move_id}' do
-    subject(:get_move) { get "/api/v1/moves/#{move_id}", headers: headers }
+    subject(:get_move) { get "/api/v1/moves/#{move_id}", headers: }
 
     let(:schema) { load_yaml_schema('get_move_responses.yaml') }
     let!(:pentonville_move) { create :move, from_location: pentonville, supplier: pentonville_supplier }
@@ -85,7 +85,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'POST /moves' do
-    subject(:post_moves) { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+    subject(:post_moves) { post '/api/v1/moves', params: { data: }, headers:, as: :json }
 
     let(:schema) { load_yaml_schema('post_moves_responses.yaml') }
 
@@ -124,7 +124,7 @@ RSpec.describe Api::MovesController do
       end
 
       it 'creates a move' do
-        expect { post '/api/v1/moves', params: { data: data }, headers: headers, as: :json }
+        expect { post '/api/v1/moves', params: { data: }, headers:, as: :json }
           .to change(Move, :count).by(1)
       end
 
@@ -136,7 +136,7 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'PATCH /moves/{move_id}' do
-    subject(:patch_move) { patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers: headers, as: :json }
+    subject(:patch_move) { patch "/api/v1/moves/#{move_id}", params: { data: move_params }, headers:, as: :json }
 
     let(:headers) do
       {

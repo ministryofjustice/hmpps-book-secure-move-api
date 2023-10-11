@@ -5,7 +5,7 @@ module Allocations
       return unless booking_id.present? && move.to_location_id? && move.nomis_event_id.nil?
 
       body = {
-        booking_id: booking_id,
+        booking_id:,
         body_params: {
           fromPrisonLocation: move.from_location.nomis_agency_id,
           toPrisonLocation: move.to_location.nomis_agency_id,

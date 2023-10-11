@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AllocationEvents::ParamsValidator do
   subject(:params_validator) { described_class.new(params) }
 
-  let(:params) { { attributes: { timestamp: timestamp } } }
+  let(:params) { { attributes: { timestamp: } } }
   let(:timestamp) { '2020-04-29T22:45:59.000Z' }
 
   context 'when valid' do

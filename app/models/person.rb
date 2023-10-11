@@ -53,7 +53,7 @@ class Person < VersionedModel
     "#{id}.jpg".tap do |filename|
       image_io = StringIO.new(image_blob).binmode
       begin
-        image.attach(io: image_io, filename: filename, content_type: 'image/jpeg')
+        image.attach(io: image_io, filename:, content_type: 'image/jpeg')
       ensure
         image_io.close
       end

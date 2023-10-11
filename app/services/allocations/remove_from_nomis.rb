@@ -5,7 +5,7 @@ module Allocations
       return unless booking_id.present? && move.nomis_event_id?
 
       body = {
-        booking_id: booking_id,
+        booking_id:,
         event_id: move.nomis_event_id,
         body_params: {
           reasonCode: 'ADMI',

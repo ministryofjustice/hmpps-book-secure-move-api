@@ -45,21 +45,21 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns error if move is not associated to a profile' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move, from_location: from_location, profile: nil)
+      move = create(:move, from_location:, profile: nil)
 
       expect { assessment_class.save_with_responses!(move_id: move.id, version: '1.2.1') }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'returns error if no move is passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      create(:move, from_location: from_location)
+      create(:move, from_location:)
 
       expect { assessment_class.save_with_responses!(move_id: nil, version: '1.2.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns framework with version specified' do
       framework = create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       assessment_class.save_with_responses!(move_id: move.id, version: '1.2.1')
 
       expect(assessment_class.last.framework).to eq(framework)
@@ -67,26 +67,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     it 'returns error if wrong framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.2.1')
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
 
       expect { assessment_class.save_with_responses!(move_id: move.id, version: '1.0.1') }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if no framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.0.0')
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       expect { assessment_class.save_with_responses!(move_id: move.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns error if nil framework version passed' do
       create(:framework, name: assessment_type.to_s.dasherize, version: '1.0.0')
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       expect { assessment_class.save_with_responses!(move_id: move.id, version: nil) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'does not allow multiple assessments on a profile through move' do
       profile = create(:profile)
-      move = create(:move, from_location: from_location, profile: profile)
+      move = create(:move, from_location:, profile:)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
@@ -94,26 +94,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'sets initial status to unstarted' do
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
 
       expect(assessment_class.save_with_responses!(move_id: move.id, version: framework.version).status).to eq('unstarted')
     end
 
     it 'creates responses for framework questions' do
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
-      create(:framework_question, :checkbox, framework: framework)
-      create(:framework_question, :checkbox, framework: framework)
+      create(:framework_question, :checkbox, framework:)
+      create(:framework_question, :checkbox, framework:)
       assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(assessment.framework_responses.count).to eq(2)
     end
 
     it 'sets correct response for framework questions' do
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
-      checkbox_question = create(:framework_question, :checkbox, framework: framework)
+      checkbox_question = create(:framework_question, :checkbox, framework:)
       assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(assessment.framework_responses.first).to have_attributes(
@@ -123,9 +123,9 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'allows access to framework question through assessment' do
-      move = create(:move, from_location: from_location)
+      move = create(:move, from_location:)
       framework = create(:framework, name: assessment_type.to_s.dasherize)
-      create(:framework_question, :checkbox, framework: framework)
+      create(:framework_question, :checkbox, framework:)
       assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
       expect(assessment.framework_questions.count).to eq(1)
@@ -133,15 +133,15 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
     context 'when prefilling' do
       let(:person) { create(:person) }
-      let(:profile1) { create(:profile, person: person) }
-      let(:profile2) { create(:profile, person: person) }
-      let(:move1) { create(:move, from_location: from_location, profile: profile1) }
-      let(:move2) { create(:move, from_location: from_location, profile: profile2) }
+      let(:profile1) { create(:profile, person:) }
+      let(:profile2) { create(:profile, person:) }
+      let(:move1) { create(:move, from_location:, profile: profile1) }
+      let(:move2) { create(:move, from_location:, profile: profile2) }
       let(:framework) { create(:framework, name: assessment_type.to_s.dasherize) }
 
       it 'sets prefill_source on assessment' do
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        prefill_source = create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        framework_question = create(:framework_question, framework:, prefill: true)
+        prefill_source = create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: 'No')])
 
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
@@ -149,41 +149,41 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       end
 
       it 'does not prefill responses if no previous confirmed assessment exists for person' do
-        move = create(:move, from_location: from_location)
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        move = create(:move, from_location:)
+        framework_question = create(:framework_question, framework:, prefill: true)
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: 'No')])
         assessment = assessment_class.save_with_responses!(move_id: move.id, version: framework.version)
 
         expect(assessment.framework_responses.first.value).to be_nil
       end
 
       it 'prefills responses from confirmed previous assessment' do
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        framework_question = create(:framework_question, framework:, prefill: true)
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: 'No')])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first.value).to eq('No')
       end
 
       it 'maintains responded value as false after prefill' do
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        framework_question = create(:framework_question, framework:, prefill: true)
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: 'No')])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first).not_to be_responded
       end
 
       it 'sets prefilled value as true on responses' do
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: 'No')])
+        framework_question = create(:framework_question, framework:, prefill: true)
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: 'No')])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first).to be_prefilled
       end
 
       it 'maps values correctly to question response' do
-        framework_question1 = create(:framework_question, framework: framework, prefill: true)
-        framework_question2 = create(:framework_question, framework: framework, prefill: true)
+        framework_question1 = create(:framework_question, framework:, prefill: true)
+        framework_question2 = create(:framework_question, framework:, prefill: true)
         create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No'), create(:string_response, framework_question: framework_question2, value: 'Yes')])
         assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
@@ -191,8 +191,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       end
 
       it 'does not prefill responses with previous empty values' do
-        framework_question = create(:framework_question, framework: framework, prefill: true)
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question, value: nil)])
+        framework_question = create(:framework_question, framework:, prefill: true)
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question:, value: nil)])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first.value).to be_nil
@@ -200,7 +200,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
       it 'does not prefill responses with no previous question' do
         framework2 = create(:framework, name: assessment_type.to_s.dasherize, version: '1.1.0')
-        framework_question1 = create(:framework_question, framework: framework, prefill: true)
+        framework_question1 = create(:framework_question, framework:, prefill: true)
         framework_question2 = create(:framework_question, framework: framework2, prefill: true)
         create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:string_response, framework_question: framework_question1, value: 'No')])
         assessment_class.save_with_responses!(move_id: move2.id, version: framework2.version)
@@ -211,8 +211,8 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       it 'does not prefill response if type of question changed' do
         old_framework = create(:framework, name: assessment_type.to_s.dasherize, version: '0.01')
         framework_question = create(:framework_question, framework: old_framework, followup_comment: true, prefill: true, key: 'same-question')
-        create(:framework_question, framework: framework, prefill: true, key: 'same-question')
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question: framework_question)])
+        create(:framework_question, framework:, prefill: true, key: 'same-question')
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question:)])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first.value).to be_nil
@@ -221,18 +221,18 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       it 'sets prefilled value to false if type of question changed' do
         old_framework = create(:framework, name: assessment_type.to_s.dasherize, version: '0.01')
         framework_question = create(:framework_question, framework: old_framework, followup_comment: true, prefill: true, key: 'same-question')
-        create(:framework_question, framework: framework, prefill: true, key: 'same-question')
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question: framework_question)])
+        create(:framework_question, framework:, prefill: true, key: 'same-question')
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:object_response, :details, framework_question:)])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first).not_to be_prefilled
       end
 
       it 'prefills responses for add_multiple_items questions' do
-        dependent_framework_question = create(:framework_question, :checkbox, framework: framework, prefill: true)
-        framework_question = create(:framework_question, :add_multiple_items, framework: framework, dependents: [dependent_framework_question])
+        dependent_framework_question = create(:framework_question, :checkbox, framework:, prefill: true)
+        framework_question = create(:framework_question, :add_multiple_items, framework:, dependents: [dependent_framework_question])
         value = [{ 'item' => 1, 'responses' => [{ 'value' => ['Level 1'], 'framework_question_id' => framework_question.dependents.first.id }] }.with_indifferent_access]
-        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:collection_response, :multiple_items, framework_question: framework_question, value: value)])
+        create(assessment_type, :confirmed, profile: profile1, move: move1, framework_responses: [create(:collection_response, :multiple_items, framework_question:, value:)])
         assessment = assessment_class.save_with_responses!(move_id: move2.id, version: framework.version)
 
         expect(assessment.framework_responses.first.value).to eq(value)
@@ -244,26 +244,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     let(:framework) { create(:framework, name: assessment_type.to_s.dasherize) }
 
     it 'persists the assessment' do
-      create(:framework_question, framework: framework)
+      create(:framework_question, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
 
       expect { assessment.build_responses! }.to change(assessment_class, :count).by(1)
     end
 
     it 'calculates section progress' do
-      question = create(:framework_question, framework: framework)
+      question = create(:framework_question, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
       assessment.build_responses!
 
       expect(assessment.reload.section_progress).to contain_exactly('key' => question.section, 'status' => 'not_started')
     end
 
     it 'creates responses for a question' do
-      radio_question = create(:framework_question, framework: framework)
+      radio_question = create(:framework_question, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
       assessment.build_responses!
 
       expect(assessment.framework_responses.first).to have_attributes(
@@ -276,27 +276,27 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'creates responses for multiple questions' do
-      create(:framework_question, framework: framework)
-      create(:framework_question, :checkbox, framework: framework)
+      create(:framework_question, framework:)
+      create(:framework_question, :checkbox, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
 
       expect { assessment.build_responses! }.to change(FrameworkResponse, :count).by(2)
     end
 
     it 'creates responses for multiple items questions' do
-      create(:framework_question, :add_multiple_items, framework: framework)
+      create(:framework_question, :add_multiple_items, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
 
       expect { assessment.build_responses! }.to change(FrameworkResponse, :count).by(1)
     end
 
     it 'creates responses for dependent questions' do
-      parent_question = create(:framework_question, framework: framework)
-      child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
+      parent_question = create(:framework_question, framework:)
+      child_question = create(:framework_question, :checkbox, framework:, parent: parent_question)
 
-      assessment = build(assessment_type, framework: framework, profile: create(:profile))
+      assessment = build(assessment_type, framework:, profile: create(:profile))
       assessment.build_responses!
       dependent_response = FrameworkResponse.find_by(framework_question: child_question, assessmentable: assessment)
 
@@ -310,11 +310,11 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'creates responses for multiple dependent questions' do
-      parent_question = create(:framework_question, framework: framework)
-      create(:framework_question, framework: framework, parent: parent_question)
-      create(:framework_question, framework: framework, parent: parent_question)
+      parent_question = create(:framework_question, framework:)
+      create(:framework_question, framework:, parent: parent_question)
+      create(:framework_question, framework:, parent: parent_question)
 
-      assessment = build(assessment_type, framework: framework, profile: create(:profile))
+      assessment = build(assessment_type, framework:, profile: create(:profile))
       assessment.build_responses!
       dependent_responses = FrameworkResponse.find_by(framework_question: parent_question, assessmentable: assessment).dependents
 
@@ -322,11 +322,11 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'creates responses for deeply nested dependent questions' do
-      parent_question = create(:framework_question, framework: framework)
-      child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
-      grand_child_question = create(:framework_question, :text, framework: framework, parent: child_question)
+      parent_question = create(:framework_question, framework:)
+      child_question = create(:framework_question, :checkbox, framework:, parent: parent_question)
+      grand_child_question = create(:framework_question, :text, framework:, parent: child_question)
 
-      assessment = build(assessment_type, framework: framework, profile: create(:profile))
+      assessment = build(assessment_type, framework:, profile: create(:profile))
       assessment.build_responses!
       dependent_response = FrameworkResponse.find_by(framework_question: grand_child_question, assessmentable: assessment)
 
@@ -338,12 +338,12 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'creates responses for multiple deeply nested dependent questions' do
-      parent_question = create(:framework_question, framework: framework)
-      child_question = create(:framework_question, :checkbox, framework: framework, parent: parent_question)
-      create(:framework_question, :text, framework: framework, parent: child_question)
-      create(:framework_question, :text, framework: framework, parent: child_question)
+      parent_question = create(:framework_question, framework:)
+      child_question = create(:framework_question, :checkbox, framework:, parent: parent_question)
+      create(:framework_question, :text, framework:, parent: child_question)
+      create(:framework_question, :text, framework:, parent: child_question)
 
-      assessment = build(assessment_type, framework: framework, profile: create(:profile))
+      assessment = build(assessment_type, framework:, profile: create(:profile))
       assessment.build_responses!
       dependent_responses = FrameworkResponse.find_by(framework_question: child_question, assessmentable: assessment).dependents
 
@@ -351,26 +351,26 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
     end
 
     it 'returns assessment validation error if record is not valid' do
-      create(:framework_question, framework: framework)
-      create(:framework_question, :checkbox, framework: framework)
-      assessment = build(assessment_type, framework: framework, status: 'some-status', profile: create(:profile))
+      create(:framework_question, framework:)
+      create(:framework_question, :checkbox, framework:)
+      assessment = build(assessment_type, framework:, status: 'some-status', profile: create(:profile))
 
       expect { assessment.build_responses! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'raises an error if transaction fails twice' do
-      create(:framework_question, framework: framework)
+      create(:framework_question, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
       allow(assessment).to receive(:save!).and_raise(ActiveRecord::PreparedStatementCacheExpired).twice
 
       expect { assessment.build_responses! }.to raise_error(ActiveRecord::PreparedStatementCacheExpired)
     end
 
     it 'retries the transaction if it fails only once and saves assessment' do
-      radio_question = create(:framework_question, framework: framework)
+      radio_question = create(:framework_question, framework:)
       profile = create(:profile)
-      assessment = build(assessment_type, framework: framework, profile: profile)
+      assessment = build(assessment_type, framework:, profile:)
 
       # Allow update to fail first time, and second time to complete transaction
       return_values = [:raise, true]
@@ -398,9 +398,9 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
       framework = create(:framework, name: assessment_type.to_s.dasherize)
       move = create(:move, :from_stc_to_court)
       alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
-      question = create(:framework_question, framework: framework, framework_nomis_codes: [alert_code])
+      question = create(:framework_question, framework:, framework_nomis_codes: [alert_code])
       response = create(:string_response, framework_question: question)
-      assessment = create(assessment_type, framework: framework, move: move, framework_responses: [response])
+      assessment = create(assessment_type, framework:, move:, framework_responses: [response])
 
       expect { assessment.import_nomis_mappings! }.not_to change(FrameworkNomisMapping, :count)
     end
@@ -743,36 +743,36 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
   describe '#editable?' do
     it 'is editable if a move is requested' do
-      move = create(:move, :requested, from_location: from_location)
-      assessment = create(assessment_type, move: move)
+      move = create(:move, :requested, from_location:)
+      assessment = create(assessment_type, move:)
 
       expect(assessment).to be_editable
     end
 
     it 'is editable if a move is booked' do
-      move = create(:move, :booked, from_location: from_location)
-      assessment = create(assessment_type, move: move)
+      move = create(:move, :booked, from_location:)
+      assessment = create(assessment_type, move:)
 
       expect(assessment).to be_editable
     end
 
     it 'is not editable if a move is not booked or requested' do
-      move = create(:move, :in_transit, from_location: from_location)
-      assessment = create(assessment_type, move: move)
+      move = create(:move, :in_transit, from_location:)
+      assessment = create(assessment_type, move:)
 
       expect(assessment).not_to be_editable
     end
 
     it 'is editable if an assessment is not confirmed' do
-      move = create(:move, :booked, from_location: from_location)
-      assessment = create(assessment_type, :with_responses, move: move)
+      move = create(:move, :booked, from_location:)
+      assessment = create(assessment_type, :with_responses, move:)
 
       expect(assessment).to be_editable
     end
 
     it 'is not editable if an assessment is confirmed' do
-      move = create(:move, :booked, from_location: from_location)
-      assessment = create(assessment_type, :confirmed, :with_responses, move: move)
+      move = create(:move, :booked, from_location:)
+      assessment = create(assessment_type, :confirmed, :with_responses, move:)
 
       expect(assessment).not_to be_editable
     end

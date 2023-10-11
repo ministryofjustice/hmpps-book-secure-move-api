@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::Reference::CategoriesController do
-  subject(:get_categories) { get '/api/reference/categories', headers: headers }
+  subject(:get_categories) { get '/api/reference/categories', headers: }
 
   let(:response_json) { JSON.parse(response.body) }
   let(:headers) do

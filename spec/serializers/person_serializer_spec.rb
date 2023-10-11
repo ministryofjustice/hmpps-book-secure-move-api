@@ -139,7 +139,7 @@ RSpec.describe PersonSerializer do
 
   describe 'gender' do
     before do
-      person.update(gender_additional_information: gender_additional_information)
+      person.update(gender_additional_information:)
     end
 
     let(:adapter_options) { { include: %i[gender] } }

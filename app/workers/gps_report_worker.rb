@@ -78,7 +78,7 @@ private
       access_key_id: ENV['S3_AP_ACCESS_KEY_ID'],
       secret_access_key: ENV['S3_AP_SECRET_ACCESS_KEY'],
     )
-    s3 = Aws::S3::Resource.new(client: client)
+    s3 = Aws::S3::Resource.new(client:)
     @bucket = s3.bucket(ENV['S3_AP_BUCKET_NAME'])
   end
 

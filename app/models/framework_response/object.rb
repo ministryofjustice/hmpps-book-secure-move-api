@@ -27,9 +27,9 @@ class FrameworkResponse
     def details_object(attributes:)
       details_options = framework_nomis_mappings.any? ? [] : framework_question.followup_comment_options
       DetailsObject.new(
-        attributes: attributes,
+        attributes:,
         question_options: framework_question.options,
-        details_options: details_options,
+        details_options:,
       )
     end
 

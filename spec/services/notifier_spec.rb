@@ -9,7 +9,7 @@ RSpec.describe Notifier do
   let(:action_name) { 'create' }
 
   before do
-    described_class.prepare_notifications(topic: topic, action_name: action_name)
+    described_class.prepare_notifications(topic:, action_name:)
   end
 
   after do
@@ -25,7 +25,7 @@ RSpec.describe Notifier do
     it 'queues a job' do
       expect(PrepareGenericEventNotificationsJob)
         .to have_been_enqueued
-        .with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
+        .with(topic_id: topic.id, action_name:, send_emails: false, queue_as: :notifications_medium)
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Notifier do
     let(:topic) { create(:move, date: Time.zone.today) }
 
     it 'queues a job with high priority' do
-      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_high)
+      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, queue_as: :notifications_high)
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe Notifier do
     let(:topic) { create(:move, date: Time.zone.tomorrow) }
 
     it 'queues a job medium priority' do
-      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, queue_as: :notifications_medium)
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe Notifier do
     let(:topic) { create(:move, date: Time.zone.today + 7) }
 
     it 'queues a job with low priority' do
-      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_low)
+      expect(PrepareMoveNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, queue_as: :notifications_low)
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe Notifier do
     let(:topic) { create(:person) }
 
     it 'queues a job with medium priority' do
-      expect(PreparePersonNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+      expect(PreparePersonNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, queue_as: :notifications_medium)
     end
   end
 
@@ -65,36 +65,36 @@ RSpec.describe Notifier do
     let(:topic) { create(:profile) }
 
     it 'queues a job' do
-      expect(PrepareProfileNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, queue_as: :notifications_medium)
+      expect(PrepareProfileNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, queue_as: :notifications_medium)
     end
   end
 
   context 'when scheduled with a person_escort_record amendment' do
     let(:move) { create(:move, date: Time.zone.tomorrow) }
-    let(:topic) { create(:person_escort_record, move: move) }
+    let(:topic) { create(:person_escort_record, move:) }
     let(:action_name) { 'amend_person_escort_record' }
 
     it 'queues a job' do
-      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: true, queue_as: :notifications_medium)
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, send_emails: true, queue_as: :notifications_medium)
     end
   end
 
   context 'when scheduled with another person_escort_record action' do
     let(:move) { create(:move, date: Time.zone.tomorrow) }
-    let(:topic) { create(:person_escort_record, move: move) }
+    let(:topic) { create(:person_escort_record, move:) }
 
     it 'queues a job' do
-      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
+      expect(PreparePersonEscortRecordNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, send_emails: false, queue_as: :notifications_medium)
     end
   end
 
   context 'when scheduled with a youth_risk_assessment' do
     let(:location) { create(:location, :stc) }
     let(:move) { create(:move, from_location: location, date: Time.zone.tomorrow) }
-    let(:topic) { create(:youth_risk_assessment, move: move) }
+    let(:topic) { create(:youth_risk_assessment, move:) }
 
     it 'queues a job' do
-      expect(PrepareYouthRiskAssessmentNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name: action_name, send_emails: false, queue_as: :notifications_medium)
+      expect(PrepareYouthRiskAssessmentNotificationsJob).to have_been_enqueued.with(topic_id: topic.id, action_name:, send_emails: false, queue_as: :notifications_medium)
     end
   end
 

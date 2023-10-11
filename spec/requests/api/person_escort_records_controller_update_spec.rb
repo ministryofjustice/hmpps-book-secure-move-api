@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::PersonEscortRecordsController do
   describe 'PATCH /person_escort_records/:person_escort_record_id' do
     subject(:patch_person_escort_record) do
-      patch "/api/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers: headers, as: :json
+      patch "/api/person_escort_records/#{person_escort_record_id}", params: person_escort_record_params, headers:, as: :json
 
       person_escort_record.reload
     end
@@ -129,12 +129,12 @@ RSpec.describe Api::PersonEscortRecordsController do
     end
 
     context 'with subscriptions' do
-      let!(:subscription) { create(:subscription, supplier: supplier) }
+      let!(:subscription) { create(:subscription, supplier:) }
       let!(:notification_type_email) { create(:notification_type, :email) }
       let!(:notification_type_webhook) { create(:notification_type, :webhook) }
       let(:from_location) { create(:location, suppliers: [supplier]) }
-      let(:move) { create(:move, from_location: from_location, supplier: supplier) }
-      let(:person_escort_record) { create(:person_escort_record, :with_responses, :completed, move: move) }
+      let(:move) { create(:move, from_location:, supplier:) }
+      let(:person_escort_record) { create(:person_escort_record, :with_responses, :completed, move:) }
 
       let(:faraday_client) do
         class_double(

@@ -9,9 +9,9 @@ RSpec.describe RequeueUnsentNotificationsWorker, type: :worker do
   let!(:notification) do
     create(
       :notification,
-      notification_type: notification_type,
-      updated_at: updated_at,
-      delivery_attempts: delivery_attempts,
+      notification_type:,
+      updated_at:,
+      delivery_attempts:,
     )
   end
 

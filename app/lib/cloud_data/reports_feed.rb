@@ -2,7 +2,7 @@ module CloudData
   class ReportsFeed
     def initialize(bucket_name = ENV['S3_REPORTING_BUCKET_NAME'])
       client = Aws::S3::Client.new
-      @s3 = Aws::S3::Resource.new(client: client)
+      @s3 = Aws::S3::Resource.new(client:)
       @bucket = @s3.bucket(bucket_name)
     end
 

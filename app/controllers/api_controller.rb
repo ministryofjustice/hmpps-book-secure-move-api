@@ -18,7 +18,7 @@ class ApiController < ApplicationController
   before_action :validate_include_params
 
   CONTENT_TYPE = 'application/vnd.api+json'
-  REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}.freeze
+  REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
@@ -129,7 +129,7 @@ private
     render(
       json: { errors: [{
         title: 'Resource not found',
-        detail: detail,
+        detail:,
       }] },
       status: :not_found,
     )
@@ -138,8 +138,8 @@ private
   def render_invalid_media_type_error(title, detail)
     render(
       json: { errors: [{
-        title: title,
-        detail: detail,
+        title:,
+        detail:,
       }] },
       status: :unsupported_media_type,
     )
@@ -320,7 +320,7 @@ private
   end
 
   def log_with_request(severity, message)
-    payload = { msg: message, severity: severity }
+    payload = { msg: message, severity: }
     enrich_payload!(payload)
     Rails.logger.public_send(severity, payload.to_json)
   end
@@ -348,12 +348,12 @@ private
       whodunnit: created_by,
       client: current_user&.name,
       verb: request.method,
-      controller_name: controller_name,
+      controller_name:,
       path: request.path,
       params: request.query_parameters,
       code: response.code,
       idempotency_key: request.headers['Idempotency-Key'],
-      body: body,
+      body:,
     )
   end
 end

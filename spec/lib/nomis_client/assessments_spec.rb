@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe NomisClient::Assessments, with_nomis_client_authentication: true do
   describe '#get' do
-    subject(:response) { described_class.get(booking_id: booking_id) }
+    subject(:response) { described_class.get(booking_id:) }
 
     let(:booking_id) { 321 }
 

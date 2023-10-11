@@ -94,7 +94,7 @@ RSpec.describe GenericEvent::MoveRedirect do
   end
 
   describe '#trigger' do
-    subject(:generic_event) { build(:event_move_redirect, details: details, eventable: eventable) }
+    subject(:generic_event) { build(:event_move_redirect, details:, eventable:) }
 
     let(:details) { { move_type: 'court_appearance' } }
 

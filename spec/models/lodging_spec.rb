@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Lodging do
-  subject(:lodging) { build(:lodging, start_date: start_date, end_date: end_date) }
+  subject(:lodging) { build(:lodging, start_date:, end_date:) }
 
   let(:start_date) { '2023-01-01' }
   let(:end_date) { '2023-01-02' }

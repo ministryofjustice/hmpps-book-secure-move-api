@@ -9,7 +9,7 @@ RSpec.describe Api::MoveEventsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:schema) { load_yaml_schema('post_move_events_responses.yaml') }
     let(:from_location) { create(:location, suppliers: [supplier]) }
-    let(:move) { create(:move, from_location: from_location) }
+    let(:move) { create(:move, from_location:) }
     let(:move_id) { move.id }
     let(:lockout_location) { create(:location) }
     let(:lockout_params) do
@@ -29,7 +29,7 @@ RSpec.describe Api::MoveEventsController do
 
     before do
       allow(Notifier).to receive(:prepare_notifications)
-      post "/api/v1/moves/#{move_id}/lockouts", params: lockout_params, headers: headers, as: :json
+      post "/api/v1/moves/#{move_id}/lockouts", params: lockout_params, headers:, as: :json
     end
 
     context 'when successful' do

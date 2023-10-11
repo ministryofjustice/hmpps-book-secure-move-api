@@ -277,7 +277,7 @@ RSpec.describe Move do
     let(:supplier) { create(:supplier) }
     let(:location) { create(:location, suppliers: [supplier]) }
 
-    let(:move1) { create(:move, supplier: supplier) }
+    let(:move1) { create(:move, supplier:) }
     let(:move2) { create(:move, to_location: location) }
     let(:move3) { create(:move, from_location: location) }
     let(:move4) { create(:move) }
@@ -303,7 +303,7 @@ RSpec.describe Move do
   end
 
   describe '#move_type' do
-    subject(:move) { build :move, from_location: from_location, to_location: to_location, move_type: move_type, version: version }
+    subject(:move) { build :move, from_location:, to_location:, move_type:, version: }
 
     let(:from_location) { build :location, :police }
     let(:move_type) { nil }
@@ -700,7 +700,7 @@ RSpec.describe Move do
   describe 'relationships' do
     it 'updates the parent record when updated' do
       profile = create(:profile)
-      move = create(:move, profile: profile)
+      move = create(:move, profile:)
 
       expect { move.update(date: move.date + 1.day) }.to(change { profile.reload.updated_at })
     end
@@ -708,7 +708,7 @@ RSpec.describe Move do
     it 'updates the parent record when created' do
       profile = create(:profile)
 
-      expect { create(:move, profile: profile) }.to(change { profile.reload.updated_at })
+      expect { create(:move, profile:) }.to(change { profile.reload.updated_at })
     end
   end
 
@@ -747,7 +747,7 @@ RSpec.describe Move do
       end
 
       context 'with an allocation' do
-        subject(:move) { create(:move, allocation: allocation) }
+        subject(:move) { create(:move, allocation:) }
 
         let(:allocation) { create(:allocation) }
 

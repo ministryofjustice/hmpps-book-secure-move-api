@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_authentication: true do
   let(:person) { create :person, :nomis_synced }
   let(:prison_number) { person.prison_number }
-  let(:profile) { create(:profile, person: person) }
+  let(:profile) { create(:profile, person:) }
   let(:alerts_response_body) { [] }
   let(:personal_care_needs_response_body) { [{ 'offenderNo' => prison_number, 'personalCareNeeds' => [] }] }
 

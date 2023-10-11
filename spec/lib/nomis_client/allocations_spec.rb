@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true do
   describe '.post' do
     subject(:prison_transfer_post) do
-      described_class.post(booking_id: booking_id, body_params: {})
+      described_class.post(booking_id:, body_params: {})
     end
 
     let(:booking_id) { 1111 }
@@ -47,7 +47,7 @@ RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true 
 
   describe '.put' do
     subject(:prison_transfer_put) do
-      described_class.put(booking_id: booking_id, event_id: event_id, body_params: {})
+      described_class.put(booking_id:, event_id:, body_params: {})
     end
 
     let(:booking_id) { 1111 }

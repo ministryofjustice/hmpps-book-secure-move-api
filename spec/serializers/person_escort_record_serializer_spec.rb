@@ -6,7 +6,7 @@ RSpec.describe PersonEscortRecordSerializer do
   subject(:serializer) { described_class.new(person_escort_record, include: includes) }
 
   let(:move) { create(:move) }
-  let(:person_escort_record) { create(:person_escort_record, move: move, profile: move.profile) }
+  let(:person_escort_record) { create(:person_escort_record, move:, profile: move.profile) }
   let(:result) { JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys }
   let(:includes) { {} }
 

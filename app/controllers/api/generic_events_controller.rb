@@ -31,7 +31,7 @@ module Api
   private
 
     def render_event(event, status)
-      render_json event, serializer: event.class.serializer, status: status
+      render_json event, serializer: event.class.serializer, status:
     end
 
     def event

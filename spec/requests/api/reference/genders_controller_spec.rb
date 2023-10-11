@@ -45,13 +45,13 @@ RSpec.describe Api::Reference::GendersController do
 
     context 'when successful' do
       before do
-        get '/api/v1/reference/genders', headers: headers
+        get '/api/v1/reference/genders', headers:
       end
 
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
   end

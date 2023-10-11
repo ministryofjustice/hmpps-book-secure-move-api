@@ -79,7 +79,7 @@ RSpec.describe GenericEvent::MoveStart do
     it_behaves_like 'the move status changes to in_transit'
 
     context 'when the move has an associated PER' do
-      subject(:generic_event) { build(:event_move_start, eventable: create(:move, move_status, :with_person_escort_record, person_escort_record_status: person_escort_record_status)) }
+      subject(:generic_event) { build(:event_move_start, eventable: create(:move, move_status, :with_person_escort_record, person_escort_record_status:)) }
 
       let(:person_escort_record) { move.person_escort_record }
 

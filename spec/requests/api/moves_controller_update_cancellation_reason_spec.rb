@@ -21,7 +21,7 @@ RSpec.describe Api::MovesController do
     let(:schema) { load_yaml_schema('patch_move_responses.yaml') }
     let(:from_location_id) { create(:location, suppliers: [supplier]).id }
     let(:to_location_id) { create(:location, suppliers: [supplier]).id }
-    let(:move) { create(:move, status: initial_status, date: date, date_from: date_from, from_location_id: from_location_id, to_location_id: to_location_id) }
+    let(:move) { create(:move, status: initial_status, date:, date_from:, from_location_id:, to_location_id:) }
     let(:move_id) { move.id }
     let(:cancellation_reason_comment) { nil }
 
@@ -31,14 +31,14 @@ RSpec.describe Api::MovesController do
           type: 'moves',
           attributes: {
             status: final_status,
-            cancellation_reason: cancellation_reason,
-          }.merge(cancellation_reason_comment.nil? ? {} : { cancellation_reason_comment: cancellation_reason_comment }),
+            cancellation_reason:,
+          }.merge(cancellation_reason_comment.nil? ? {} : { cancellation_reason_comment: }),
         },
       }
     end
 
     before do
-      patch "/api/v1/moves/#{move_id}", params: move_params, headers: headers, as: :json
+      patch "/api/v1/moves/#{move_id}", params: move_params, headers:, as: :json
       move.reload
     end
 

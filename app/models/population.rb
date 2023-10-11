@@ -14,11 +14,11 @@ class Population < ApplicationRecord
   validates :discharges, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   def moves_from
-    location.moves_from.prison_transfer.not_cancelled.where(date: date)
+    location.moves_from.prison_transfer.not_cancelled.where(date:)
   end
 
   def moves_to
-    location.moves_to.prison_transfer.not_cancelled.where(date: date)
+    location.moves_to.prison_transfer.not_cancelled.where(date:)
   end
 
   def free_spaces
@@ -42,7 +42,7 @@ class Population < ApplicationRecord
     # Obtain unlock and discharge counts from Nomis
     nomis_counts = Populations::DefaultsFromNomis.call(location, date)
 
-    new(location: location, date: date).tap do |new_population|
+    new(location:, date:).tap do |new_population|
       new_population.operational_capacity = previous_population&.operational_capacity
       new_population.usable_capacity = previous_population&.usable_capacity
       new_population.bedwatch = previous_population&.bedwatch
@@ -64,8 +64,8 @@ class Population < ApplicationRecord
           free_space_details = {
             id: population_id,
             free_spaces: (free_spaces_excluding_transfers - transfers_in + transfers_out if population_id.present?),
-            transfers_in: transfers_in,
-            transfers_out: transfers_out,
+            transfers_in:,
+            transfers_out:,
           }
 
           locations_hash[location_id] = [] unless locations_hash.key?(location_id)
@@ -78,9 +78,9 @@ class Population < ApplicationRecord
   def self.free_spaces_for_date(locations, date)
     locations
       # Join with matching populations for location and given date (if any). Can't use a where clause as there may not be a population record
-      .joins(sanitize_sql(['LEFT OUTER JOIN populations p ON p.location_id = locations.id AND p.date = :date', { date: date }]))
+      .joins(sanitize_sql(['LEFT OUTER JOIN populations p ON p.location_id = locations.id AND p.date = :date', { date: }]))
       # Join with matching (non cancelled) prison transfers on the given date (if any) so we can count them
-      .joins(sanitize_sql(["LEFT OUTER JOIN moves m ON m.move_type = 'prison_transfer' AND m.status <> 'cancelled' AND m.date = :date", { date: date }]))
+      .joins(sanitize_sql(["LEFT OUTER JOIN moves m ON m.move_type = 'prison_transfer' AND m.status <> 'cancelled' AND m.date = :date", { date: }]))
       # Group by columns used in the free space calculation
       .group(:id, :'p.id')
       # Need to wrap derived columns in pointless Arel.sql call to resolve annoying deprecation warning, even though this is safe :(

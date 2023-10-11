@@ -6,7 +6,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
   context 'with validations' do
     it 'ignores other keys passed in' do
       attributes = { options: 'No', details: 'some comment' }
-      details_object = described_class.new(attributes: attributes, question_options: %w[No])
+      details_object = described_class.new(attributes:, question_options: %w[No])
 
       expect(details_object).not_to be_valid
       expect(details_object.errors.messages[:option]).to eq(["can't be blank"])
@@ -14,7 +14,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
 
     it 'validates the presence of an option' do
       attributes = { details: 'some comment' }
-      details_object = described_class.new(attributes: attributes)
+      details_object = described_class.new(attributes:)
 
       expect(details_object).not_to be_valid
       expect(details_object.errors.messages[:option]).to eq(["can't be blank"])
@@ -22,7 +22,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
 
     it 'validates values included in option if question options are supplied' do
       attributes = { option: 'Yes' }
-      details_object = described_class.new(attributes: attributes, question_options: %w[No])
+      details_object = described_class.new(attributes:, question_options: %w[No])
 
       expect(details_object).not_to be_valid
       expect(details_object.errors.messages[:option]).to eq(['is not included in the list'])
@@ -30,14 +30,14 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
 
     it 'does not validate the inclusion of an option if no question options supplied' do
       attributes = { option: 'Yes' }
-      details_object = described_class.new(attributes: attributes)
+      details_object = described_class.new(attributes:)
 
       expect(details_object).to be_valid
     end
 
     it 'validates the presence of details if detail options are supplied' do
       attributes = { option: 'No' }
-      details_object = described_class.new(attributes: attributes, details_options: %w[No])
+      details_object = described_class.new(attributes:, details_options: %w[No])
 
       expect(details_object).not_to be_valid
       expect(details_object.errors.messages[:details]).to eq(["can't be blank"])
@@ -45,14 +45,14 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
 
     it 'does not validate the presence of details if no detail options supplied' do
       attributes = { option: 'No' }
-      details_object = described_class.new(attributes: attributes, question_options: %w[No])
+      details_object = described_class.new(attributes:, question_options: %w[No])
 
       expect(details_object).to be_valid
     end
 
     it 'does not validate the presence of details if detail options supplied but option is answered different' do
       attributes = { option: 'Yes' }
-      details_object = described_class.new(attributes: attributes, details_options: %w[No])
+      details_object = described_class.new(attributes:, details_options: %w[No])
 
       expect(details_object).to be_valid
     end
@@ -64,7 +64,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
         option: 'Yes',
         details: 'some comment',
       }
-      details_object = described_class.new(attributes: attributes)
+      details_object = described_class.new(attributes:)
 
       expect(details_object.as_json).to eq(attributes)
     end
@@ -80,7 +80,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
         option: nil,
         details: nil,
       }
-      details_object = described_class.new(attributes: attributes)
+      details_object = described_class.new(attributes:)
 
       expect(details_object.as_json).to be_empty
     end
@@ -90,7 +90,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
         option: nil,
         details: ['Level 1', { "option": 'details' }],
       }
-      details_object = described_class.new(attributes: attributes)
+      details_object = described_class.new(attributes:)
 
       expect(details_object.as_json).to eq(details: '["Level 1", {:option=>"details"}]', option: nil)
     end

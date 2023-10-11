@@ -71,7 +71,7 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'returns 200' do
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(response).to have_http_status(:success)
       end
@@ -79,14 +79,14 @@ RSpec.describe Api::PeopleController do
       it 'returns location relationships' do
         create :location
 
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(response_json['included']).to be_a_kind_of Array
         expect(response_json['included'].first['type']).to eq 'locations'
       end
 
       it 'calls the People::RetrieveTimetable service with the correct filter params' do
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(People::RetrieveCourtHearings).to have_received(:call).with(an_instance_of(Person), date_from, date_to)
       end
@@ -94,13 +94,13 @@ RSpec.describe Api::PeopleController do
       context 'when we pass an include in the query params' do
         it 'includes location in the response' do
           create(:location)
-          get "/api/v1/people/#{person.id}/timetable?include=location", headers: headers, params: params
+          get("/api/v1/people/#{person.id}/timetable?include=location", headers:, params:)
 
           expect(response_json['included'].first['type']).to eq('locations')
         end
 
         it 'throws an error if query param invalid ' do
-          get "/api/v1/people/#{person.id}/timetable?include=foo.bar", headers: headers, params: params
+          get("/api/v1/people/#{person.id}/timetable?include=foo.bar", headers:, params:)
 
           expect(response).to have_http_status(:bad_request)
         end
@@ -111,7 +111,7 @@ RSpec.describe Api::PeopleController do
       it 'returns 404' do
         person_id = 'non-existent-person'
 
-        get "/api/v1/people/#{person_id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person_id}/timetable", headers:, params:)
 
         expect(response_json['errors'][0]['title']).to eq('Resource not found')
         expect(response).to have_http_status(:not_found)
@@ -129,7 +129,7 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'returns 400' do
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(response_json['errors'][0]['detail']).to eq('is not a valid iso8601 date.')
         expect(response).to have_http_status(:bad_request)
@@ -141,7 +141,7 @@ RSpec.describe Api::PeopleController do
       let(:nomis_court_hearings) { [] }
 
       it 'return an empty data key' do
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(response_json['data']).to eq([])
         expect(response).to have_http_status(:success)
@@ -155,7 +155,7 @@ RSpec.describe Api::PeopleController do
       let(:params) { {} }
 
       it 'returns an error' do
-        get "/api/v1/people/#{person.id}/timetable", headers: headers, params: params
+        get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
         expect(response_json['errors'][0]['detail']).to match(/param is missing or the value is empty: filter/)
         expect(response).to have_http_status(:bad_request)

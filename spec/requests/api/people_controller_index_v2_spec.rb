@@ -31,7 +31,7 @@ RSpec.describe Api::PeopleController do
 
     context 'when the API client does NOT require compressions' do
       it 'returns non compressed response' do
-        get '/api/people', headers: headers
+        get('/api/people', headers:)
 
         expect(response.headers['Content-Encoding']).to be nil
       end
@@ -40,7 +40,7 @@ RSpec.describe Api::PeopleController do
     context 'when there are no filters' do
       let(:params) { {} }
 
-      before { get '/api/people', params: params, headers: headers }
+      before { get '/api/people', params:, headers: }
 
       it_behaves_like 'an endpoint that responds with success 200'
 
@@ -74,14 +74,14 @@ RSpec.describe Api::PeopleController do
       end
 
       it 'updates the person from nomis' do
-        get "/api/people#{query}", headers: headers
+        get("/api/people#{query}", headers:)
 
         expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
         expect(import_from_nomis).to have_received(:call)
       end
 
       it 'returns the correct people' do
-        get "/api/people#{query}", headers: headers
+        get("/api/people#{query}", headers:)
 
         prison_numbers = response_json['data'].map { |resource| resource.dig('attributes', 'prison_number') }
         expect(prison_numbers).to match_array(%w[G3239GV GV345VG])
@@ -91,14 +91,14 @@ RSpec.describe Api::PeopleController do
         let(:query) { '?filter[prison_number]=g3239gv,gv345vg' }
 
         it 'updates the person from nomis' do
-          get "/api/people#{query}", headers: headers
+          get("/api/people#{query}", headers:)
 
           expect(People::ImportFromNomis).to have_received(:new).with(%w[G3239GV GV345VG])
           expect(import_from_nomis).to have_received(:call)
         end
 
         it 'returns the correct people' do
-          get "/api/people#{query}", headers: headers
+          get("/api/people#{query}", headers:)
 
           prison_numbers = response_json['data'].map { |resource| resource.dig('attributes', 'prison_number') }
           expect(prison_numbers).to match_array(%w[G3239GV GV345VG])
@@ -117,7 +117,7 @@ RSpec.describe Api::PeopleController do
       end
       let(:params) { { filter: filters } }
 
-      before { get '/api/people', params: params, headers: headers }
+      before { get '/api/people', params:, headers: }
 
       it 'returns the correct number of people' do
         expect(response_json['data'].size).to eq(1)
@@ -142,7 +142,7 @@ RSpec.describe Api::PeopleController do
       end
       let(:params) { { filter: filters } }
 
-      before { get '/api/people', params: params, headers: headers }
+      before { get '/api/people', params:, headers: }
 
       it 'returns the correct number of people' do
         expect(response_json['data'].size).to eq(1)
@@ -163,7 +163,7 @@ RSpec.describe Api::PeopleController do
       end
       let(:params) { { filter: filters } }
 
-      before { get '/api/people', params: params, headers: headers }
+      before { get '/api/people', params:, headers: }
 
       it 'returns the correct number of people' do
         expect(response_json['data'].size).to eq(2)
@@ -196,7 +196,7 @@ RSpec.describe Api::PeopleController do
 
       before do
         create_list :person, 4
-        get '/api/people', params: params, headers: headers
+        get '/api/people', params:, headers:
       end
 
       it_behaves_like 'an endpoint that paginates resources'
@@ -205,7 +205,7 @@ RSpec.describe Api::PeopleController do
     describe 'included relationships' do
       before do
         create_list :person, 2
-        get '/api/people', params: params, headers: headers
+        get '/api/people', params:, headers:
       end
 
       context 'when the include query param is empty' do

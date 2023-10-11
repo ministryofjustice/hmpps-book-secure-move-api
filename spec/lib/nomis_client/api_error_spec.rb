@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe NomisClient::ApiError do
   describe '#json_api_error' do
-    subject(:error) { described_class.new(status: status, error_body: error_body) }
+    subject(:error) { described_class.new(status:, error_body:) }
 
     let(:status) { 400 }
 

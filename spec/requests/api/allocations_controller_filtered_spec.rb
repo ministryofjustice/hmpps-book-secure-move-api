@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::AllocationsController do
   subject(:post_allocations) do
-    post '/api/allocations/filtered', params: { data: data }.merge(params), headers: headers, as: :json
+    post '/api/allocations/filtered', params: { data: }.merge(params), headers:, as: :json
   end
 
   include_context 'with supplier with spoofed access token'
@@ -13,7 +13,7 @@ RSpec.describe Api::AllocationsController do
   let(:data) do
     {
       type: 'moves',
-      attributes: attributes,
+      attributes:,
     }
   end
 
@@ -96,7 +96,7 @@ RSpec.describe Api::AllocationsController do
             foo: 'foo',
           }
         end
-        let(:params) { { sort: sort } }
+        let(:params) { { sort: } }
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           post_allocations
@@ -118,7 +118,7 @@ RSpec.describe Api::AllocationsController do
             foo: 'foo',
           }
         end
-        let(:params) { { search: search } }
+        let(:params) { { search: } }
 
         it 'delegates the query execution to Allocations::Finder with the correct sorting' do
           post_allocations

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::PopulationsController do
   subject(:get_population) do
-    get "/api/populations/#{population_id}", params: params, headers: headers
+    get "/api/populations/#{population_id}", params:, headers:
   end
 
   include_context 'with supplier with spoofed access token'

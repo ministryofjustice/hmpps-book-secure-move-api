@@ -39,7 +39,7 @@ RSpec.describe Mock::PaperTrailController, type: :request do
 
   before do
     allow(described_class).to receive(:current_user).and_return(current_user)
-    get '/mock/paper_trail', headers: headers
+    get '/mock/paper_trail', headers:
   end
 
   context 'when the current_user does not have an owner (frontend)' do

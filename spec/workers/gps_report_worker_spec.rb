@@ -95,11 +95,11 @@ RSpec.describe GPSReportWorker, type: :worker do
 
     before do
       allow(gps_reports[:geoamey]).to receive(:generate).and_return({
-        failures: [{ move: move, reason: 'no_gps_data' }],
+        failures: [{ move:, reason: 'no_gps_data' }],
         move_count: 20,
       })
       allow(gps_reports[:serco]).to receive(:generate).and_return({
-        failures: [{ move: move, reason: 'no_journeys' }, { move: move, reason: 'no_gps_data' }, { move: move, reason: 'no_gps_data' }],
+        failures: [{ move:, reason: 'no_journeys' }, { move:, reason: 'no_gps_data' }, { move:, reason: 'no_gps_data' }],
         move_count: 7,
       })
       allow_any_instance_of(Aws::S3::Object).to receive(:presigned_url).and_return('aws_url') # rubocop:disable RSpec/AnyInstance

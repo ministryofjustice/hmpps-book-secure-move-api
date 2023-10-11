@@ -16,7 +16,7 @@ module FrameworkNomisMappings
   private
 
     def imported_assessments
-      @imported_assessments ||= NomisClient::Assessments.get(booking_id: booking_id).tap do
+      @imported_assessments ||= NomisClient::Assessments.get(booking_id:).tap do
         nomis_sync_status.set_success
       end
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e

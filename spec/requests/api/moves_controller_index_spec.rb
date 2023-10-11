@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::MovesController do
-  subject(:get_moves) { get '/api/v1/moves', params: params, headers: headers }
+  subject(:get_moves) { get '/api/v1/moves', params:, headers: }
 
   let(:supplier) { create(:supplier) }
   let(:access_token) { 'spoofed-token' }
@@ -29,7 +29,7 @@ RSpec.describe Api::MovesController do
         let(:filters) do
           {
             bar: 'bar',
-            from_location_id: from_location_id,
+            from_location_id:,
             foo: 'foo',
           }
         end
@@ -58,8 +58,8 @@ RSpec.describe Api::MovesController do
           get_moves
 
           expect(Moves::Finder).to have_received(:new).with(
-            filter_params: { from_location_id: from_location_id },
-            ability: ability,
+            filter_params: { from_location_id: },
+            ability:,
             order_params: {},
             active_record_relationships: v1_active_record_relationships,
           )
@@ -83,7 +83,7 @@ RSpec.describe Api::MovesController do
         let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
-            from_location_id: from_location_id,
+            from_location_id:,
           }
         end
         let(:params) { { filter: filters } }
@@ -113,7 +113,7 @@ RSpec.describe Api::MovesController do
         let(:from_location_id) { move.from_location_id }
         let(:filters) do
           {
-            from_location_id: from_location_id,
+            from_location_id:,
           }
         end
         let(:params) { { filter: filters } }
@@ -177,8 +177,8 @@ RSpec.describe Api::MovesController do
           create_list(
             :move,
             1,
-            from_location: from_location,
-            to_location: to_location,
+            from_location:,
+            to_location:,
           )
         end
 
@@ -188,7 +188,7 @@ RSpec.describe Api::MovesController do
         before do
           create(:court_hearing, move: moves.first)
 
-          get "/api/v1/moves#{query_params}", params: params, headers: headers
+          get "/api/v1/moves#{query_params}", params:, headers:
         end
 
         context 'when not including the include query param' do

@@ -24,7 +24,7 @@ RSpec.describe Mock::AuthenticationController, type: :request do
     Rails.application.reload_routes!
   end
 
-  before { get '/mock/secure', headers: headers }
+  before { get '/mock/secure', headers: }
 
   context 'with valid authentication' do
     it 'returns a success code' do

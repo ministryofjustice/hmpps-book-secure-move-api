@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Reports::PersonEscortRecordQuality do
   describe '#call' do
     subject(:csv) do
-      csv = described_class.call(start_date: start_date, end_date: end_date)
+      csv = described_class.call(start_date:, end_date:)
       CSV.parse(csv, headers: :first_row)
     end
 

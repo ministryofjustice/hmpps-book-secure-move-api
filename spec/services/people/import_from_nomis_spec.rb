@@ -14,7 +14,7 @@ RSpec.describe People::ImportFromNomis do
 
     context 'when the Person exists in the database' do
       before do
-        create(:person, prison_number: prison_number, first_names: before_first_name)
+        create(:person, prison_number:, first_names: before_first_name)
       end
 
       let(:before_first_name) { 'foo' }
@@ -27,7 +27,7 @@ RSpec.describe People::ImportFromNomis do
       end
 
       it 'updates the existing person' do
-        person = Person.find_by(prison_number: prison_number)
+        person = Person.find_by(prison_number:)
 
         expect { import.call }.to change { person.reload.first_names }.from(before_first_name).to(after_first_name)
       end
@@ -56,7 +56,7 @@ RSpec.describe People::ImportFromNomis do
       it 'creates a Person with the correct attributes' do
         import.call
 
-        person = Person.find_by(prison_number: prison_number)
+        person = Person.find_by(prison_number:)
 
         expect(person.attributes).to include(expected_attributes)
       end

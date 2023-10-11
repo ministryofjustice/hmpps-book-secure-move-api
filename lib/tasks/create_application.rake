@@ -7,7 +7,7 @@ namespace :auth do
 
     puts "What's the application's name?"
     name = $stdin.gets.chomp
-    application = Doorkeeper::Application.new(name: name)
+    application = Doorkeeper::Application.new(name:)
 
     keys = Supplier.pluck(:key).sort + %w[none]
     puts "Which application owner should your tokens be associated with? #{keys}"

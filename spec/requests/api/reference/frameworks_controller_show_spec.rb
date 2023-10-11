@@ -12,8 +12,8 @@ RSpec.describe Api::Reference::FrameworksController do
     let(:schema) { load_yaml_schema('get_framework_responses.yaml') }
 
     let(:framework) { create(:framework) }
-    let(:dependent_question) { create(:framework_question, framework: framework) }
-    let(:question) { create(:framework_question, framework: framework, dependents: [dependent_question]) }
+    let(:dependent_question) { create(:framework_question, framework:) }
+    let(:question) { create(:framework_question, framework:, dependents: [dependent_question]) }
 
     let(:data) do
       {
@@ -29,7 +29,7 @@ RSpec.describe Api::Reference::FrameworksController do
     before do
       create(:framework_flag, framework_question: question)
 
-      get "/api/reference/frameworks/#{framework_id}", headers: headers, params: params
+      get "/api/reference/frameworks/#{framework_id}", headers:, params:
     end
 
     context 'when successful' do
@@ -38,7 +38,7 @@ RSpec.describe Api::Reference::FrameworksController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'returns the correct data' do
-        expect(response_json).to include_json(data: data)
+        expect(response_json).to include_json(data:)
       end
     end
 

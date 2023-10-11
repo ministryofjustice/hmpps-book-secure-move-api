@@ -140,7 +140,7 @@ FactoryBot.define do
 
     trait :with_journey do
       after(:create) do |move|
-        create(:journey, from_location: move.from_location, to_location: move.to_location, move: move, supplier: move.supplier)
+        create(:journey, from_location: move.from_location, to_location: move.to_location, move:, supplier: move.supplier)
       end
     end
 
@@ -152,7 +152,7 @@ FactoryBot.define do
       after(:create) do |move, evaluator|
         create(
           :person_escort_record,
-          move: move,
+          move:,
           status: evaluator.person_escort_record_status,
           confirmed_at: evaluator.person_escort_record_status == 'confirmed' ? Time.zone.now : nil,
           completed_at: evaluator.person_escort_record_status == 'completed' ? Time.zone.now : nil,
@@ -170,7 +170,7 @@ FactoryBot.define do
 
     trait :with_court_hearings do
       after(:create) do |move|
-        create_list(:court_hearing, 1, move: move)
+        create_list(:court_hearing, 1, move:)
       end
     end
 
