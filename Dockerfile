@@ -12,7 +12,10 @@ RUN gem update bundler --no-document
 
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
 COPY Gemfile Gemfile.lock .ruby-version /app/
-RUN bundle install --jobs 4 --retry 3 \
+
+RUN gem install bundler -v '2.1.4'
+
+RUN bundle _2.1.4_ install --jobs 4 --retry 3 \
      && rm -rf /usr/local/bundle/cache/*.gem \
      && find /usr/local/bundle/gems/ -name "*.c" -delete \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
