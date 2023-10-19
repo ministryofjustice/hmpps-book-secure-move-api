@@ -19,7 +19,7 @@ module CourtHearings
             comments: hearing.comments,
           }.merge(body_locations),
         }
-        response = NomisClient::CourtHearings.post(body)
+        response = NomisClient::CourtHearings.post(**body)
 
         log_attributes << { response_status: response&.status, response_body: response&.body, request_params: body }
 

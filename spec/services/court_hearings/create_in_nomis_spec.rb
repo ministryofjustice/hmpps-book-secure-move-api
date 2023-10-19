@@ -26,8 +26,19 @@ RSpec.describe CourtHearings::CreateInNomis do
     let(:booking_id) { 123 }
 
     before do
-      allow(NomisClient::CourtHearings).to receive(:post)
-                                              .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
+      allow(NomisClient::CourtHearings)
+        .to receive(:post)
+        .with(**{
+          booking_id:,
+          court_case_id: nomis_case_id,
+          body_params: {
+            'fromPrisonLocation': from_nomis_agency_id,
+            'toCourtLocation': to_nomis_agency_id,
+            'courtHearingDateTime': '2020-04-15T17:36:02',
+            'comments': comments,
+          },
+        })
+        .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
       move.person.update!(latest_nomis_booking_id: booking_id)
     end
 
