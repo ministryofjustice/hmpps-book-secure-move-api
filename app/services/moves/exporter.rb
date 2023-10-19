@@ -6,7 +6,7 @@ module Moves
   class Exporter
     attr_reader :moves
 
-    HEADINGS = [
+    STATIC_HEADINGS = [
       'Status',
       'Reference',
       'Move type',
@@ -70,7 +70,7 @@ module Moves
     def call
       Tempfile.new('export', Rails.root.join('tmp')).tap do |file|
         csv = CSV.new(file)
-        csv << HEADINGS
+        csv << STATIC_HEADINGS + flags_by_section
         moves.find_each do |move|
           csv << attributes_row(move)
         end
@@ -85,7 +85,7 @@ module Moves
       profile = move.profile
       answers = profile&.assessment_answers
 
-      [
+      row = [
         move.status, # Status
         move.reference, # Reference
         move.move_type, # Move type
@@ -123,7 +123,12 @@ module Moves
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
         profile&.documents&.size || 0, # 'Uploaded documents',
-      ].flatten # Expand answer_details column pairs into individual columns
+      ]
+
+      move_flags = move.person_escort_record&.framework_flags&.pluck(:title)
+      row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
+
+      row.flatten # Expand answer_details column pairs into individual columns
     end
 
     def answer_details(answers, key)
@@ -135,6 +140,16 @@ module Moves
 
       # Return the flag and comments together so we only need a single pass through the assessment answers for each key
       [comments.present?.to_s, comments&.join("\n\n")]
+    end
+
+    def flags_by_section
+      FrameworkFlag
+        .select('DISTINCT ON (title) *')
+        .joins(:framework_question)
+        .sort { |a, b|
+          a.framework_question.section <=> b.framework_question.section
+        }
+        .pluck(:title)
     end
   end
 end
