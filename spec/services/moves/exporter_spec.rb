@@ -15,10 +15,10 @@ RSpec.describe Moves::Exporter do
   let(:to_location) { create(:location, title: 'To Location', nomis_agency_id: 'TO1') }
   let(:person) { create(:person) }
   let!(:move) { create(:move, from_location:, to_location:, person:) }
-  let(:moves) { Move.all }
+  let(:moves) { Move.where(id: move.id) }
 
   it 'includes correct header names' do
-    expect(header).to eq(described_class::HEADINGS)
+    expect(header).to eq(described_class::STATIC_HEADINGS)
   end
 
   it 'has correct number of header columns' do
@@ -93,5 +93,45 @@ RSpec.describe Moves::Exporter do
   it 'includes 0 documents count if no profile' do
     move.person = nil
     expect(row.last).to eq '0'
+  end
+
+  context 'with PER' do
+    let(:framework_questions) do
+      [
+        create(:framework_question, section: 'risk-information'),
+        create(:framework_question, section: 'risk-information'),
+        create(:framework_question, section: 'health-information'),
+        create(:framework_question, section: 'health-information'),
+      ]
+    end
+    let(:flag) { build(:framework_flag, title: 'Flag 1', framework_question: framework_questions.second) }
+    let(:flag2) { build(:framework_flag, title: 'Flag 2', framework_question: framework_questions.third) }
+    let(:framework) { create(:framework, framework_questions:) }
+    let(:person_escort_record) do
+      person_escort_record = create(:person_escort_record)
+      create(:string_response, framework_question: framework_questions.first, responded: true, assessmentable: person_escort_record)
+      create(:string_response, framework_question: framework_questions.second, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
+      create(:string_response, framework_question: framework_questions.third, responded: true, framework_flags: [flag2], assessmentable: person_escort_record)
+
+      person_escort_record
+    end
+
+    before { move.person_escort_record = person_escort_record }
+
+    it 'includes correct header names' do
+      expect(header).to eq(described_class::STATIC_HEADINGS + ['Flag 2', 'Flag 1'])
+    end
+
+    it 'has correct number of header columns' do
+      expect(header.count).to eq(56)
+    end
+
+    it 'has correct number of body columns' do
+      expect(row.count).to eq(56)
+    end
+
+    it 'has the correct rows' do
+      expect(row.last(2)).to eq(%w[TRUE TRUE])
+    end
   end
 end
