@@ -39,13 +39,13 @@ RSpec.describe Ability, type: :model do
       end
     end
 
-    context 'as supplier A' do
+    context 'with supplier A' do
       let(:supplier) { supplier_a }
 
       include_examples 'move is accessible'
     end
 
-    context 'as supplier B' do
+    context 'with supplier B' do
       let(:supplier) { supplier_b }
 
       include_examples 'move is accessible'
@@ -60,7 +60,7 @@ RSpec.describe Ability, type: :model do
       location_b = create(:location, suppliers: [supplier_a])
       lodge_location = create(:location, suppliers: [supplier_b])
       move = create(:move, from_location: location_a, to_location: location_b)
-      create(:lodging, move: move, location: lodge_location)
+      create(:lodging, move:, location: lodge_location)
 
       move
     end
@@ -75,13 +75,13 @@ RSpec.describe Ability, type: :model do
       end
     end
 
-    context 'as supplier A' do
+    context 'with supplier A' do
       let(:supplier) { supplier_a }
 
       include_examples 'move is accessible'
     end
 
-    context 'as supplier B' do
+    context 'with supplier B' do
       let(:supplier) { supplier_b }
 
       include_examples 'move is accessible'
