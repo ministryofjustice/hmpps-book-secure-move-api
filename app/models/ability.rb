@@ -10,7 +10,8 @@ class Ability
       can :manage, Move, Move.for_supplier(application.owner) do |move|
         move.supplier == application.owner ||
           move.from_location&.suppliers&.include?(application.owner) ||
-          move.to_location&.suppliers&.include?(application.owner)
+          move.to_location&.suppliers&.include?(application.owner) ||
+          move.lodgings.any? { |lodging| lodging.location.suppliers.include?(application.owner) }
       end
 
       can :manage, Journey, supplier_id: application.owner_id
