@@ -37,6 +37,7 @@ RSpec.describe Move do
             supplier_declined_to_move
             cancelled_by_pmu
             rejected
+            incomplete_per
             other
           ])
       }

@@ -67,6 +67,7 @@ class Move < VersionedModel
     CANCELLATION_REASON_CANCELLED_BY_PMU = 'cancelled_by_pmu',
     CANCELLATION_REASON_REJECTED = 'rejected',
     CANCELLATION_REASON_DATABASE_CORRECTION = 'database_correction',
+    CANCELLATION_REASON_INCOMPLETE_PER = 'incomplete_per',
     CANCELLATION_REASON_OTHER = 'other',
   ].freeze
 

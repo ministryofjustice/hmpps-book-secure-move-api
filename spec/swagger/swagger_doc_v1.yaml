@@ -721,6 +721,7 @@
                 - supplier_declined_to_move
                 - cancelled_by_pmu
                 - rejected
+                - incomplete_per
                 - other
         - name: filter[rejection_reason]
           in: query
