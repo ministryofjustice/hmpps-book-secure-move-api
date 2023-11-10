@@ -100,6 +100,7 @@ Move:
             - supplier_declined_to_move
             - cancelled_by_pmu
             - rejected
+            - incomplete_per
             - other
           - type: 'null'
           description: Reason the move has been cancelled
