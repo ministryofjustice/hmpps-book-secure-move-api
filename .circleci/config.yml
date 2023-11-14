@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.1.0
+  hmpps: ministryofjustice/hmpps@7
   slack: circleci/slack@4.12.1
 
 parameters:
@@ -47,111 +47,15 @@ aliases:
   - &notify_slack_on_release_start
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      custom: '{
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*API is being prepared for release :building_construction:*"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "A new release was created by ${CIRCLE_USERNAME}"
-                  },
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "@here"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Changelog"
-                      },
-                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/main/CHANGELOG.md"
-                    }
-                  ]
-                }
-              ]
-            }'
+      custom: '{ "blocks": [ { "type": "section", "fields": [ { "type": "mrkdwn", "text": "*API is being prepared for release :building_construction:*" } ] }, { "type": "section", "text": { "type": "mrkdwn", "text": "A new release was created by ${CIRCLE_USERNAME}" }, "fields": [ { "type": "mrkdwn", "text": "@here" } ] }, { "type": "actions", "elements": [ { "type": "button", "text": { "type": "plain_text", "text": "Changelog" }, "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/blob/main/CHANGELOG.md" } ] } ] }'
   - &notify_slack_of_approval
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      custom: '{
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "API release *requires your approval* before it can be deployed :eyes:"
-                  },
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "${BUILD_NOTIFICATIONS_MENTION_ID}"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Workflow"
-                      },
-                      "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}"
-                    }
-                  ]
-                }
-              ]
-            }'
+      custom: '{ "blocks": [ { "type": "section", "text": { "type": "mrkdwn", "text": "API release *requires your approval* before it can be deployed :eyes:" }, "fields": [ { "type": "mrkdwn", "text": "${BUILD_NOTIFICATIONS_MENTION_ID}" } ] }, { "type": "actions", "elements": [ { "type": "button", "text": { "type": "plain_text", "text": "View Workflow" }, "url": "https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}" } ] } ] }'
   - &notify_slack_on_release_end
     slack/notify:
       channel: $BUILD_NOTIFICATIONS_CHANNEL_ID
-      custom: '{
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*API has been deployed* :rocket:"
-                  },
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "@here This release was successfully deployed to production"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Release"
-                      },
-                      "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases"
-                    }
-                  ]
-                }
-              ]
-            }'
+      custom: '{ "blocks": [ { "type": "section", "text": { "type": "mrkdwn", "text": "*API has been deployed* :rocket:" }, "fields": [ { "type": "mrkdwn", "text": "@here This release was successfully deployed to production" } ] }, { "type": "actions", "elements": [ { "type": "button", "text": { "type": "plain_text", "text": "Release" }, "url": "https://github.com/ministryofjustice/hmpps-book-secure-move-api/releases" } ] } ] }'
   - &all_tags
     filters:
       tags:
@@ -404,13 +308,8 @@ workflows:
           name: test_build_image
           image_name: "quay.io/hmpps/hmpps-book-secure-move-api"
           publish: false
-          additional_docker_build_args: >
-            --label build.git.sha=${CIRCLE_SHA1}
-            --label build.git.branch=${CIRCLE_BRANCH}
-            --label build.date=$(date -Is)
-            --build-arg APP_BUILD_DATE=$(date -Is)
-            --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
-            --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
+          additional_docker_build_args: |
+            --label build.git.sha=${CIRCLE_SHA1} --label build.git.branch=${CIRCLE_BRANCH} --label build.date=$(date -Is) --build-arg APP_BUILD_DATE=$(date -Is) --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
       - hmpps/build_docker:
           <<: *only_for_deployment
           requires:
@@ -419,13 +318,8 @@ workflows:
             - linters
           name: build_image
           image_name: "quay.io/hmpps/hmpps-book-secure-move-api"
-          additional_docker_build_args: >
-            --label build.git.sha=${CIRCLE_SHA1}
-            --label build.git.branch=${CIRCLE_BRANCH}
-            --label build.date=$(date -Is)
-            --build-arg APP_BUILD_DATE=$(date -Is)
-            --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
-            --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
+          additional_docker_build_args: |
+            --label build.git.sha=${CIRCLE_SHA1} --label build.git.branch=${CIRCLE_BRANCH} --label build.date=$(date -Is) --build-arg APP_BUILD_DATE=$(date -Is) --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
       - hmpps/deploy_env:
           <<: *only_main
           name: deploy_staging
