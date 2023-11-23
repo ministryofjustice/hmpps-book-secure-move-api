@@ -1,5 +1,63 @@
 # Changelog
 
+## [v3.40.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.0) (2023-11-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.39.1...v3.40.0)
+
+**Merged pull requests:**
+
+- MAP-293: Add `incomplete_per` as a cancellation reason for moves [\#2185](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2185) ([jimbali](https://github.com/jimbali))
+- Add lodgings into supplier move accessibility check [\#2183](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2183) ([Thource](https://github.com/Thource))
+
+## [v3.39.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.39.1) (2023-10-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.39.0...v3.39.1)
+
+**Merged pull requests:**
+
+- fix: Splat court case params to be compatible with Ruby 3.x [\#2182](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2182) ([jimbali](https://github.com/jimbali))
+- MAP-346: Add PER alert flags to moves CSV download [\#2181](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2181) ([jimbali](https://github.com/jimbali))
+
+## [v3.39.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.39.0) (2023-10-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.37.0...v3.39.0)
+
+**Merged pull requests:**
+
+- \[MAP-359\] Pin Bundler to 2.1.4 as the newest version seems to not work in Docker [\#2180](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2180) ([jimbali](https://github.com/jimbali))
+- MAP-359: Upgrade Ruby to 3.2.2 [\#2177](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2177) ([jimbali](https://github.com/jimbali))
+- ci: Make migration job name unique per release [\#2174](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2174) ([jimbali](https://github.com/jimbali))
+- \[MAP-253\] Rails 7 upgrade [\#2173](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2173) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump puma from 6.3.0 to 6.4.0 [\#2168](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2168) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.37.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.37.0) (2023-09-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.38.0...v3.37.0)
+
+## [v3.38.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.38.0) (2023-09-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.6...v3.38.0)
+
+**Merged pull requests:**
+
+- MAP-319: Add JPC feed cron jobs [\#2172](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2172) ([jimbali](https://github.com/jimbali))
+- MAP-319: Fix JPC feed [\#2171](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2171) ([jimbali](https://github.com/jimbali))
+- MAP-319: Add new feed for JPC with more useful data [\#2169](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2169) ([jimbali](https://github.com/jimbali))
+
+## [v3.36.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.6) (2023-09-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.7...v3.36.6)
+
+## [v3.36.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.7) (2023-09-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.5...v3.36.7)
+
+**Merged pull requests:**
+
+- fix: Use IRSA for JPC reports [\#2164](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2164) ([jimbali](https://github.com/jimbali))
+- MAP-270 Remove refs to secret access keys for basm reporting bucket [\#2163](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2163) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- Generated changelog for v3.36.5 [\#2161](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2161) ([jimbali](https://github.com/jimbali))
+
 ## [v3.36.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.5) (2023-08-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.4...v3.36.5)
@@ -252,12 +310,24 @@
 
 ## [v3.30.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.1) (2023-03-16)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.30.1)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2c...v3.30.1)
 
 **Merged pull requests:**
 
 - fix: Disable DifferentToFromLocationValidator for lockouts [\#2028](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2028) ([jimbali](https://github.com/jimbali))
 - Generated changelog for v3.30.0 [\#2026](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2026) ([jimbali](https://github.com/jimbali))
+
+## [v3.29.2c](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2c) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...v3.29.2c)
+
+## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2b)
+
+## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...log-test)
 
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
@@ -298,20 +368,20 @@
 
 ## [v3.28.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.28.0) (2022-12-12)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.28.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.28.0)
 
 **Merged pull requests:**
 
 - \[P4-3910\] Add new endpoint: GET /events/:event\_id [\#1993](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1993) ([Thource](https://github.com/Thource))
 - Generated changelog for v3.27.2 [\#1992](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1992) ([Thource](https://github.com/Thource))
 
-## [v3.27.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.2) (2022-11-24)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.27.2)
-
 ## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.1)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.27.1)
+
+## [v3.27.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.2) (2022-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.2)
 
 **Merged pull requests:**
 
