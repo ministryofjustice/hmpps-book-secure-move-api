@@ -150,8 +150,7 @@ class Move < VersionedModel
     where(supplier:)
       .or(Move.where(from_location: supplier.locations))
       .or(Move.where(to_location: supplier.locations))
-      .includes(:lodgings)
-      .or(Lodging.where('lodgings.location' => supplier.locations))
+      .or(Move.where(id: Move.joins(:lodgings).where('lodgings.location' => supplier.locations)))
   end
 
   def approve(date:)

@@ -277,16 +277,21 @@ RSpec.describe Move do
 
     let(:supplier) { create(:supplier) }
     let(:location) { create(:location, suppliers: [supplier]) }
+    let(:location2) { create(:location, suppliers: [supplier]) }
 
     let(:move1) { create(:move, supplier:) }
     let(:move2) { create(:move, to_location: location) }
     let(:move3) { create(:move, from_location: location) }
     let(:move4) { create(:move) }
+    let(:move5) { create(:move) }
+
+    before { create(:lodging, location: location2, move: move5) }
 
     it { is_expected.to include(move1) }
     it { is_expected.to include(move2) }
     it { is_expected.to include(move3) }
     it { is_expected.not_to include(move4) }
+    it { is_expected.to include(move5) }
   end
 
   describe '#reference' do
