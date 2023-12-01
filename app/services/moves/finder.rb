@@ -206,12 +206,18 @@ module Moves
 
       if filter_params.key?(:from_location_id)
         scopes << edge_lodging_scope(scope, :from_location_id, 'MIN(lodgings.start_date)')
-        scopes << intermediary_lodgings_scope(scope, :from_location_id, 'end_date')
+
+        intermediary_lodges = intermediary_lodgings_scope(scope, :from_location_id, 'end_date')
+        lodge_journey_collisions = intermediary_lodges.joins(:journeys).where("journeys.date = TO_DATE(lodgings.end_date, 'YYYY-MM-DD')")
+        scopes << intermediary_lodges.where.not(id: Move.from(lodge_journey_collisions))
       end
 
       if filter_params.key?(:to_location_id)
         scopes << edge_lodging_scope(scope, :to_location_id, 'MAX(lodgings.end_date)')
-        scopes << intermediary_lodgings_scope(scope, :to_location_id, 'start_date')
+
+        intermediary_lodges = intermediary_lodgings_scope(scope, :to_location_id, 'start_date')
+        lodge_journey_collisions = intermediary_lodges.joins(:journeys).where("journeys.date = TO_DATE(lodgings.start_date, 'YYYY-MM-DD')")
+        scopes << intermediary_lodges.where.not(id: Move.from(lodge_journey_collisions))
       end
 
       scopes

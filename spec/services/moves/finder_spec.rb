@@ -1183,6 +1183,14 @@ RSpec.describe Moves::Finder do
 
           it { is_expected.to be_empty }
         end
+
+        context 'when the journey does not go from location 3' do
+          let(:journey_location) { create(:location) }
+          let!(:journey) { create(:journey, move:, date: '2022-01-05', from_location: journey_location, to_location: lodging3.location) }
+          let(:location) { lodging2.location }
+
+          it { is_expected.to be_empty }
+        end
       end
 
       context 'when incoming' do
@@ -1214,6 +1222,14 @@ RSpec.describe Moves::Finder do
 
         context 'with location 5' do
           let(:location) { move.to_location }
+
+          it { is_expected.to be_empty }
+        end
+
+        context 'when the journey does not go to location 4' do
+          let(:journey_location) { create(:location) }
+          let!(:journey) { create(:journey, move:, date: '2022-01-05', from_location: lodging2.location, to_location: journey_location) }
+          let(:location) { lodging3.location }
 
           it { is_expected.to be_empty }
         end
@@ -1506,6 +1522,114 @@ RSpec.describe Moves::Finder do
           it { is_expected.to contain_exactly(move) }
         end
       end
+    end
+  end
+
+  context 'with different lodging and journey locations' do
+    let(:move) { create(:move, date: '2022-01-01') }
+    let(:lodge_location) { create(:location) }
+    let(:journey_location) { create(:location) }
+
+    before do
+      create(:lodging, move:, start_date: '2022-01-01', end_date: '2022-01-02', location: lodge_location)
+      create(:journey, move:, date: '2022-01-01', from_location: move.from_location, to_location: journey_location)
+      create(:journey, move:, date: '2022-01-02', from_location: journey_location, to_location: move.to_location)
+    end
+
+    context 'and day one, outgoing, start location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day one, outgoing, lodge location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [lodge_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, outgoing, journey location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [journey_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, outgoing, final location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, start location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, lodge location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [lodge_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day one, incoming, journey location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [journey_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day one, incoming, final location' do
+      let(:filter_params) { { date_from: '2022-01-01', date_to: '2022-01-01', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, start location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, lodge location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [lodge_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, outgoing, journey location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [journey_location] } }
+
+      it { is_expected.to contain_exactly(move) }
+    end
+
+    context 'and day two, outgoing, final location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', from_location_id: [move.to_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, start location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.from_location_id] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, lodge location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [lodge_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, journey location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [journey_location] } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'and day two, incoming, final location' do
+      let(:filter_params) { { date_from: '2022-01-02', date_to: '2022-01-02', to_location_id: [move.to_location_id] } }
+
+      it { is_expected.to contain_exactly(move) }
     end
   end
 end
