@@ -1,5 +1,30 @@
 # Changelog
 
+## [v3.40.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.3) (2024-01-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.2...v3.40.3)
+
+**Merged pull requests:**
+
+- MAP-582: Log correct response codes in access logs [\#2200](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2200) ([jimbali](https://github.com/jimbali))
+
+## [v3.40.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.2) (2023-12-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.1...v3.40.2)
+
+**Merged pull requests:**
+
+- MAP-340: Let journey take precedence over lodge when filtering [\#2195](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2195) ([jimbali](https://github.com/jimbali))
+
+## [v3.40.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.1) (2023-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.0...v3.40.1)
+
+**Merged pull requests:**
+
+- \[MAP-480\] Fix error in move for\_supplier method that was causing 500 errors [\#2192](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2192) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.40.0 [\#2187](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2187) ([jimbali](https://github.com/jimbali))
+
 ## [v3.40.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.0) (2023-11-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.39.1...v3.40.0)
