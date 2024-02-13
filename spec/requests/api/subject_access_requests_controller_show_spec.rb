@@ -3,11 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe SubjectAccessRequestsController do
-  let(:access_token) { 'spoofed-token' }
-  let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
-  let(:response_json) { JSON.parse(response.body) }
-  let(:content_type) { ApiController::CONTENT_TYPE }
-
   describe 'GET /subject-access-request' do
     subject(:get_sar) { get '/subject-access-request', params:, headers: }
 
@@ -15,10 +10,10 @@ RSpec.describe SubjectAccessRequestsController do
     let(:params) { {} }
     let(:application) { Doorkeeper::Application.create(name: 'test') }
     let(:doorkeeper_token) { Doorkeeper::AccessToken.create(application:, scopes: 'subject-access-request') }
-
-    before do
-      allow(controller).to receive(:doorkeeper_token).and_return(doorkeeper_token)
-    end
+    let(:access_token) { doorkeeper_token.token }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+    let(:response_json) { JSON.parse(response.body) }
+    let(:content_type) { ApiController::CONTENT_TYPE }
 
     context 'when the token is missing the subject-access-request scope' do
       let(:doorkeeper_token) { Doorkeeper::AccessToken.create(application:) }
