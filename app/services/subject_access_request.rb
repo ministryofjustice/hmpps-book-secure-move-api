@@ -17,7 +17,7 @@ class SubjectAccessRequest
     { content: people.map { |p| serialize_person(p) } }
   end
 
-  private
+private
 
   def before_to_date
     @before_to_date ||= Date.new(1000)..to_date
@@ -54,7 +54,7 @@ class SubjectAccessRequest
   def assessment_relationships(assessment)
     {
       events: assessment.generic_events.map { |e| serialize_event(e) },
-      framework_responses: assessment.framework_responses.map { |fr| serialize_framework_response(fr) }
+      framework_responses: assessment.framework_responses.map { |fr| serialize_framework_response(fr) },
     }
   end
 

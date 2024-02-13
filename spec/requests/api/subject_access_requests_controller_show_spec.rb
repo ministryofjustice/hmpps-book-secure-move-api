@@ -17,7 +17,7 @@ RSpec.describe SubjectAccessRequestsController do
     let(:doorkeeper_token) { Doorkeeper::AccessToken.create(application:, scopes: 'subject-access-request') }
 
     before do
-      allow_any_instance_of(described_class).to receive(:doorkeeper_token).and_return(doorkeeper_token)
+      allow(controller).to receive(:doorkeeper_token).and_return(doorkeeper_token)
     end
 
     context 'when the token is missing the subject-access-request scope' do

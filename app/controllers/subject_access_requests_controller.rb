@@ -26,7 +26,7 @@ class SubjectAccessRequestsController < ApiController
     render json: sar.fetch, status: :ok
   end
 
-  private
+private
 
   PERMITTED_SHOW_PARAMS = %i[
     prn crn from_date to_date
