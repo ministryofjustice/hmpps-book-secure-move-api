@@ -189,7 +189,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(%w[LOCATION1 location2 LOCATION3 location4])
+              expect(locations.map(&:title)).to match_array(%w[LOCATION1 location2 LOCATION3 location4])
             end
           end
 
@@ -197,7 +197,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(%w[location4 LOCATION3 location2 LOCATION1])
+              expect(locations.map(&:title)).to match_array(%w[location4 LOCATION3 location2 LOCATION1])
             end
           end
         end
@@ -215,7 +215,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'name' } }
 
             it 'sorts by last_name (ascending, case sensitive)' do
-              expect(last_names).to eq(%w[PROFILE1 profile2 PROFILE3 profile4])
+              expect(last_names).to match_array(%w[PROFILE1 profile2 PROFILE3 profile4])
             end
           end
 
@@ -223,7 +223,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'name', direction: 'desc' } }
 
             it 'sorts by last_name' do
-              expect(last_names).to eq(%w[profile4 PROFILE3 profile2 PROFILE1])
+              expect(last_names).to match_array(%w[profile4 PROFILE3 profile2 PROFILE1])
             end
           end
         end

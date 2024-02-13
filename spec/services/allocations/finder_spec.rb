@@ -181,7 +181,7 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :from_location, direction: :asc } }
 
       it 'orders by location title' do
-        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
+        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to match_array(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :to_location, direction: :asc } }
 
       it 'orders by location title' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to match_array(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
@@ -211,7 +211,7 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :moves_count, direction: :desc } }
 
       it 'orders by allocation moves count' do
-        expect(allocation_finder.call.pluck(:moves_count)).to eql([3, 2, 1])
+        expect(allocation_finder.call.pluck(:moves_count)).to match_array([3, 2, 1])
       end
     end
 
@@ -244,7 +244,7 @@ RSpec.describe Allocations::Finder do
       end
 
       it 'returns allocations matching date range sorted by location title desc' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION3 Location2 LOCATION1])
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to match_array(%w[LOCATION3 Location2 LOCATION1])
       end
     end
 

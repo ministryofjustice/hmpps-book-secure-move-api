@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get '/health', to: 'status#health', format: :json
   get '/ping', to: 'status#ping', format: :json
   get '/diagnostics/moves/:id', to: 'diagnostics#move'
+  get '/subject-access-request', to: 'subject_access_requests#show'
 
   namespace :api do
     filter :versioned_path

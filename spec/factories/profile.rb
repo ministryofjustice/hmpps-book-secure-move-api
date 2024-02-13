@@ -11,6 +11,24 @@ FactoryBot.define do
     end
   end
 
+  trait :with_person_escort_record_with_responses do
+    after(:create) do |profile|
+      create(:person_escort_record, :with_responses, profile:)
+    end
+  end
+
+  trait :with_youth_risk_assessment do
+    after(:create) do |profile|
+      create(:youth_risk_assessment, profile:)
+    end
+  end
+
+  trait :with_youth_risk_assessment_with_responses do
+    after(:create) do |profile|
+      create(:youth_risk_assessment, :with_responses, profile:)
+    end
+  end
+
   trait :with_documents do
     after(:create) do |profile|
       create_list(:document, 1, documentable: profile)
