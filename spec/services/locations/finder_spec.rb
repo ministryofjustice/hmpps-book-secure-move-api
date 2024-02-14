@@ -149,7 +149,7 @@ RSpec.describe Locations::Finder do
       let(:sort_params) { { by: :title, direction: :asc } }
 
       it 'orders by location title' do
-        expect(location_finder.call.pluck(:title)).to match_array(%w[LOCATION1 Location2 LOCATION3]) # NB: case-sensitive order
+        expect(location_finder.call.pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3]) # NB: case-sensitive order
       end
     end
 

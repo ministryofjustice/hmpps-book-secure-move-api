@@ -572,7 +572,7 @@ RSpec.describe Moves::Finder do
       end
 
       it 'ordered by location' do
-        expect(results.map(&:to_location).pluck(:title)).to match_array(%w[LOCATION1 Location2 LOCATION3])
+        expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
       end
     end
 
