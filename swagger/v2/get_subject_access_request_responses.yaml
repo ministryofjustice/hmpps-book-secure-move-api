@@ -1,0 +1,15 @@
+'200':
+  type: object
+  required:
+    - data
+'204': # no content
+'209': # passed param is unsupported (no CRN in BaSM)
+'400':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        $ref: errors.yaml#/BadRequest
