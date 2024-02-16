@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-class SubjectAccessRequestsController < ApiController
-  before_action :check_scope
-
-  def check_scope
-    unless doorkeeper_token.acceptable?(:'subject-access-request')
-      render json: { error: 'missing scope: subject-access-request' }, status: :forbidden
-    end
-  end
+class SubjectAccessRequestsController < HmppsAuthApiController
+  SAR_ROLE = 'ROLE_SAR_DATA_ACCESS'
 
   def show
     validated_params = SubjectAccessRequests::ParamsValidator.new(show_params)
@@ -31,6 +25,23 @@ private
   PERMITTED_SHOW_PARAMS = %i[
     prn crn from_date to_date
   ].freeze
+
+
+  # Overrides parent due to endpoint-specific roles
+  def verify_token
+    unless token.valid_token_with_scope?('read', role: SAR_ROLE)
+      render_error('Valid authorisation token required', 1, 401)
+    end
+  end
+
+  # Overrides parent due to endpoint-specific error schema
+  def render_error(msg, error_code, status)
+    render json: {
+      developerMessage: msg,
+      errorCode: error_code,
+      status: status,
+      userMessage: msg }, status: status.to_s
+  end
 
   def show_params
     @show_params ||= params.permit(PERMITTED_SHOW_PARAMS)

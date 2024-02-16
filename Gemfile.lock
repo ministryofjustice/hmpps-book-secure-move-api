@@ -156,6 +156,8 @@ GEM
     faraday-net_http_persistent (2.1.0)
       faraday (~> 2.5)
       net-http-persistent (~> 4.0)
+    faraday-retry (2.2.0)
+      faraday (~> 2.0)
     ffi (1.15.5)
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
@@ -479,6 +481,7 @@ DEPENDENCIES
   faker
   faraday
   faraday-net_http_persistent
+  faraday-retry
   finite_machine
   flipper-active_record
   geocoder
