@@ -25,7 +25,7 @@ module HmppsApi
         @oauth_client.get(route)
       end
 
-      private
+    private
 
       def api_deserialiser
         @api_deserialiser ||= ApiDeserialiser.new

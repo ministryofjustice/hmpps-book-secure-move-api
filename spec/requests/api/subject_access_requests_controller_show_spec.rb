@@ -10,7 +10,7 @@ RSpec.describe SubjectAccessRequestsController do
     let(:params) { {} }
     let(:application) { Doorkeeper::Application.create(name: 'test') }
     let(:token_payload) { { 'scope' => 'read', 'authorities' => %w[ROLE_SAR_DATA_ACCESS] } }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer blahblah")  }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => 'Bearer blahblah') }
     let(:response_json) { JSON.parse(response.body) }
     let(:content_type) { ApiController::CONTENT_TYPE }
 

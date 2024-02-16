@@ -26,7 +26,6 @@ private
     prn crn from_date to_date
   ].freeze
 
-
   # Overrides parent due to endpoint-specific roles
   def verify_token
     unless token.valid_token_with_scope?('read', role: SAR_ROLE)
@@ -39,8 +38,9 @@ private
     render json: {
       developerMessage: msg,
       errorCode: error_code,
-      status: status,
-      userMessage: msg }, status: status.to_s
+      status:,
+      userMessage: msg,
+    }, status: status.to_s
   end
 
   def show_params

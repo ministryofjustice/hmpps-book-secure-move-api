@@ -16,8 +16,8 @@ class JwksDecoder
         nil,
         true,
         algorithm: algorithms,
-        jwks: jwks,
-        )
+        jwks:,
+      )
     end
   end
 end
