@@ -9,25 +9,27 @@ RSpec.describe SubjectAccessRequestsController do
     let(:schema) { load_yaml_schema('get_subject_access_request_responses.yaml') }
     let(:params) { {} }
     let(:application) { Doorkeeper::Application.create(name: 'test') }
-    let(:doorkeeper_token) { Doorkeeper::AccessToken.create(application:, scopes: 'subject-access-request') }
-    let(:access_token) { doorkeeper_token.token }
-    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => "Bearer #{access_token}") }
+    let(:token_payload) { { 'scope' => 'read', 'authorities' => %w[ROLE_SAR_DATA_ACCESS] } }
+    let(:headers) { { 'CONTENT_TYPE': content_type }.merge('Authorization' => 'Bearer blahblah') }
     let(:response_json) { JSON.parse(response.body) }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
-    context 'when the token is missing the subject-access-request scope' do
-      let(:doorkeeper_token) { Doorkeeper::AccessToken.create(application:) }
+    before do
+      allow(JwksDecoder).to receive(:decode_token).and_return([token_payload])
+    end
 
+    context 'when the token is missing the ROLE_SAR_DATA_ACCESS role' do
       before do
+        token_payload['authorities'] = []
         get_sar
       end
 
-      it 'returns a response object with status 403' do
-        expect(response.status).to eq 403
+      it 'returns a response object with status 401' do
+        expect(response.status).to eq 401
       end
     end
 
-    context 'when the token includes the subject-access-request scope' do
+    context 'when the token has the ROLE_SAR_DATA_ACCESS scope' do
       context 'when a crn is provided' do
         let(:params) { { crn: 'test' } }
 
