@@ -18,6 +18,8 @@ class Notifier
       PreparePersonEscortRecordNotificationsJob.perform_later(topic_id: topic.id, action_name:, send_emails:, queue_as: move_queue_priority(topic.move))
     when YouthRiskAssessment
       PrepareYouthRiskAssessmentNotificationsJob.perform_later(topic_id: topic.id, action_name:, send_emails: false, queue_as: move_queue_priority(topic.move))
+    when Lodging
+      PrepareLodgingNotificationsJob.perform_later(topic_id: topic.id, action_name:, queue_as: :notifications_medium)
     end
   end
 end

@@ -22,4 +22,8 @@ class NotificationSerializer
   }
 
   belongs_to :event, id_method_name: :generic_event_id, serializer: GenericEventSerializer, if: ->(object) { object.generic_event_id }
+
+  belongs_to :lodging, if: ->(object) { object.lodging_id }, links: {
+    self: ->(object) { Rails.application.routes.url_helpers.api_move_lodging_url(move_id: object.move_id, id: object.lodging_id) },
+  }
 end

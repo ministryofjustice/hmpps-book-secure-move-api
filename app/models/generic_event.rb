@@ -58,6 +58,9 @@ class GenericEvent < ApplicationRecord
     MoveReject
     MoveRequested
     MoveStart
+    LodgingCancel
+    LodgingCreate
+    LodgingUpdate
     PerConcealed
     PerConfirmation
     PerCompletion
