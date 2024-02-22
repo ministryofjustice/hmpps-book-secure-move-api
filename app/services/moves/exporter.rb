@@ -143,7 +143,7 @@ module Moves
     end
 
     def flags_by_section
-      FrameworkFlag
+      @flags_by_section ||= FrameworkFlag
         .select('DISTINCT ON (title) *')
         .joins(:framework_question)
         .sort { |a, b|
