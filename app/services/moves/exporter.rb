@@ -4,7 +4,7 @@ require 'csv'
 
 module Moves
   class Exporter
-    attr_reader :moves
+    attr_reader :alert_columns, :moves
 
     STATIC_HEADINGS = [
       'Status',
@@ -65,12 +65,15 @@ module Moves
 
     def initialize(moves)
       @moves = moves
+      @alert_columns = ENV.fetch('FEATURE_FLAG_CSV_ALERT_COLUMNS', 'false') == 'true'
     end
 
     def call
       Tempfile.new('export', Rails.root.join('tmp')).tap do |file|
         csv = CSV.new(file)
-        csv << STATIC_HEADINGS + flags_by_section
+        headings = STATIC_HEADINGS
+        headings += flags_by_section if alert_columns
+        csv << headings
         moves.find_each do |move|
           csv << attributes_row(move)
         end
@@ -125,8 +128,10 @@ module Moves
         profile&.documents&.size || 0, # 'Uploaded documents',
       ]
 
-      move_flags = move.person_escort_record&.framework_flags&.pluck(:title)
-      row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
+      if alert_columns
+        move_flags = move.person_escort_record&.framework_flags&.pluck(:title)
+        row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
+      end
 
       row.flatten # Expand answer_details column pairs into individual columns
     end

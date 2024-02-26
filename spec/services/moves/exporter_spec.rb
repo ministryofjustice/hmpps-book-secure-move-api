@@ -118,20 +118,48 @@ RSpec.describe Moves::Exporter do
 
     before { move.person_escort_record = person_escort_record }
 
-    it 'includes correct header names' do
-      expect(header).to eq(described_class::STATIC_HEADINGS + ['Flag 2', 'Flag 1'])
+    context 'when feature flag enabled' do
+      around do |example|
+        ClimateControl.modify(FEATURE_FLAG_CSV_ALERT_COLUMNS: 'true') do
+          example.run
+        end
+      end
+
+      it 'includes correct header names' do
+        expect(header).to eq(described_class::STATIC_HEADINGS + ['Flag 2', 'Flag 1'])
+      end
+
+      it 'has correct number of header columns' do
+        expect(header.count).to eq(56)
+      end
+
+      it 'has correct number of body columns' do
+        expect(row.count).to eq(56)
+      end
+
+      it 'has the correct rows' do
+        expect(row.last(2)).to eq(%w[TRUE TRUE])
+      end
     end
 
-    it 'has correct number of header columns' do
-      expect(header.count).to eq(56)
-    end
+    context 'when feature flag disabled' do
+      around do |example|
+        ClimateControl.modify(FEATURE_FLAG_CSV_ALERT_COLUMNS: 'false') do
+          example.run
+        end
+      end
 
-    it 'has correct number of body columns' do
-      expect(row.count).to eq(56)
-    end
+      it 'includes correct header names' do
+        expect(header).to eq(described_class::STATIC_HEADINGS)
+      end
 
-    it 'has the correct rows' do
-      expect(row.last(2)).to eq(%w[TRUE TRUE])
+      it 'has correct number of header columns' do
+        expect(header.count).to eq(54)
+      end
+
+      it 'has correct number of body columns' do
+        expect(row.count).to eq(54)
+      end
     end
   end
 end
