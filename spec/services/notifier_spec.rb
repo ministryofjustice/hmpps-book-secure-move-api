@@ -98,6 +98,16 @@ RSpec.describe Notifier do
     end
   end
 
+  context 'when scheduled with a lodging' do
+    let(:topic) { create(:lodging) }
+
+    it 'queues a job' do
+      expect(PrepareLodgingNotificationsJob)
+        .to have_been_enqueued
+        .with(topic_id: topic.id, action_name:, queue_as: :notifications_medium)
+    end
+  end
+
   context 'when called with another object' do
     let(:topic) { Object.new }
 

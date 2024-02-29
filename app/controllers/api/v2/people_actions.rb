@@ -1,7 +1,7 @@
 module Api::V2
   module PeopleActions
     def index_and_render
-      #::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
+      ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
 
       people = V2::People::Finder.new(filter_params).call
 

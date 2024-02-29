@@ -824,14 +824,16 @@ RSpec.describe Move do
     end
 
     context 'when there are events for each eventable' do
+      let(:lodging) { create(:lodging, move:) }
       let!(:first_event) { create(:event_move_cancel, eventable: move, occurred_at: now + 2.seconds) }
       let!(:second_event) { create(:event_person_move_death_in_custody, eventable: move.profile.person, occurred_at: now + 1.second) }
       let!(:third_event) { create(:event_move_approve, eventable: move, occurred_at: now) }
       let!(:fourth_event) { create(:event_per_court_cell_share_risk_assessment, eventable: move.profile.person_escort_record, occurred_at: now - 1.second) }
       let!(:fifth_event) { create(:event_journey_person_boards_vehicle, eventable: move.journeys.first, occurred_at: now - 2.seconds) }
+      let!(:sixth_event) { create(:event_lodging_create, eventable: lodging, occurred_at: now - 3.seconds) }
 
       it 'returns generic events in the correct order' do
-        expect(all_events_for_timeline.pluck(:id)).to eq([fifth_event, fourth_event, third_event, second_event, first_event].map(&:id))
+        expect(all_events_for_timeline.pluck(:id)).to eq([sixth_event, fifth_event, fourth_event, third_event, second_event, first_event].map(&:id))
       end
     end
 

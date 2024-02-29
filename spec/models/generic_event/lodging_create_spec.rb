@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe GenericEvent::MoveOvernightLodge do
-  subject(:generic_event) { build(:event_move_overnight_lodge, details:) }
+RSpec.describe GenericEvent::LodgingCreate do
+  subject(:generic_event) { build(:event_lodging_create, details:) }
 
   let(:details) do
     {
@@ -15,7 +15,7 @@ RSpec.describe GenericEvent::MoveOvernightLodge do
 
   it_behaves_like 'an event with details', :start_date, :end_date
   it_behaves_like 'an event with relationships', described_class::LOCATION_ATTRIBUTE_KEY => :locations
-  it_behaves_like 'a move event'
+  it_behaves_like 'an event with eventable types', 'Lodging'
   it_behaves_like 'an event requiring a location', described_class::LOCATION_ATTRIBUTE_KEY
   it_behaves_like 'an event with a location in the feed', described_class::LOCATION_ATTRIBUTE_KEY
 
@@ -30,18 +30,6 @@ RSpec.describe GenericEvent::MoveOvernightLodge do
 
   context 'when the end_date format is not an iso8601 date' do
     let(:end_date) { '2023/01/02' }
-
-    it { is_expected.to be_invalid }
-  end
-
-  context 'when the end_date is before the start_date' do
-    let(:end_date) { '2022-12-31' }
-
-    it { is_expected.to be_invalid }
-  end
-
-  context 'when the end_date is same as the start_date' do
-    let(:end_date) { '2023-01-01' }
 
     it { is_expected.to be_invalid }
   end

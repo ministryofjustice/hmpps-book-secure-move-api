@@ -39,6 +39,8 @@ module Api
     end
 
     def update
+      authorize!(:update, lodging)
+
       details = {}
 
       if update_lodging_attributes.start_date != lodging.start_date
@@ -62,6 +64,8 @@ module Api
     end
 
     def cancel
+      authorize!(:cancel, Lodging)
+
       if lodging.cancel
         lodging.save!
 
@@ -74,6 +78,8 @@ module Api
     end
 
     def cancel_all
+      authorize!(:cancel, Lodging)
+
       Lodging.transaction do
         move.lodgings.not_cancelled.each do |lodging|
           lodging.cancel
