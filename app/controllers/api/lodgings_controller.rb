@@ -100,7 +100,7 @@ module Api
       render status: :no_content
     end
 
-    private
+  private
 
     def render_lodging(lodging, status)
       render_json lodging, serializer: LodgingSerializer, include: included_relationships, status:
