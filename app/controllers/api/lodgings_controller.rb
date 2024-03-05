@@ -19,7 +19,7 @@ module Api
 
     PERMITTED_UPDATE_PARAMS = [
       :type,
-      { attributes: %i[start_date end_date],
+      { attributes: %i[end_date],
         relationships: [location: {}] },
     ].freeze
 
@@ -43,24 +43,27 @@ module Api
 
       details = {}
 
-      if update_lodging_attributes.start_date != lodging.start_date
-        details[:old_start_date] = lodging.start_date
-        details[:start_date] = update_lodging_attributes.start_date
-      end
-
-      if update_lodging_attributes.end_date != lodging.end_date
+      if update_lodging_attributes[:end_date].present? && update_lodging_attributes[:end_date] != lodging.end_date
         details[:old_end_date] = lodging.end_date
-        details[:end_date] = update_lodging_attributes.end_date
+        details[:end_date] = update_lodging_attributes[:end_date]
       end
 
-      if update_lodging_attributes.location_id != lodging.location_id
+      if update_lodging_attributes[:location_id].present? && update_lodging_attributes[:location_id] != lodging.location_id
         details[:old_location_id] = lodging.location_id
-        details[:location_id] = update_lodging_attributes.location_id
+        details[:location_id] = update_lodging_attributes[:location_id]
       end
 
-      lodging.update!(update_lodging_attributes)
+      if details.present?
+        Lodging.transaction do
+          update_future_lodgings(details)
+
+          lodging.update!(update_lodging_attributes)
+
+          create_automatic_event!(eventable: lodging, event_class: GenericEvent::LodgingUpdate, details:)
+        end
+      end
+
       render_lodging(lodging, :ok)
-      create_automatic_event!(eventable: lodging, event_class: GenericEvent::LodgingUpdate, details:)
     end
 
     def cancel
@@ -101,6 +104,22 @@ module Api
     end
 
   private
+
+    def update_future_lodgings(details)
+      return if details[:end_date].blank? || move.lodgings.count < 2
+
+      start_date = Date.parse(lodging.start_date)
+      old_length = Date.parse(lodging.end_date) - start_date
+      new_length = Date.parse(update_lodging_attributes[:end_date]) - start_date
+      length_difference = new_length - old_length
+
+      move.lodgings.each do |l|
+        l_start_date = Date.parse(l.start_date)
+        next if start_date >= l_start_date
+
+        l.update!(start_date: l_start_date + length_difference.days, end_date: Date.parse(l.end_date) + length_difference.days)
+      end
+    end
 
     def render_lodging(lodging, status)
       render_json lodging, serializer: LodgingSerializer, include: included_relationships, status:
