@@ -121,10 +121,10 @@ class Diagnostics::MoveInspector
       LODGINGS
       --------
     ENDLODGINGS
-    @output << if move.lodgings.any?
+    @output << if move.lodgings.not_cancelled.any?
                  Terminal::Table.new { |t|
                    t.headings = %w[START_DATE END_DATE LOCATION]
-                   t.rows = move.lodgings.map do |lodging|
+                   t.rows = move.lodgings.default_order.not_cancelled.map do |lodging|
                      [
                        lodging.start_date,
                        lodging.end_date,
@@ -136,6 +136,38 @@ class Diagnostics::MoveInspector
                else
                  "(no lodgings planned)\n"
                end
+
+    @output << <<~ENDLODGINGEVENTS
+
+      LODGING EVENTS
+      --------------
+    ENDLODGINGEVENTS
+    if move.lodgings.not_cancelled.any?
+      move.lodgings.default_order.not_cancelled.each do |lodging|
+        # NB use each to preserve sort order
+        @output << "#{lodging.start_date} - #{lodging.end_date}: #{lodging.location}\n"
+        if lodging.generic_events.any?
+          @output << Terminal::Table.new { |t|
+            t.headings = ['TIMESTAMP', 'EVENT', 'CREATED BY', 'NOTES', 'DETAILS']
+            t.rows = lodging.generic_events.applied_order.map do |event|
+              [
+                event.occurred_at,
+                event.event_type,
+                include_person_details ? event.created_by.to_s : '-',
+                include_person_details ? event.notes.to_s.truncate(30) : '-',
+                include_person_details ? event.details.to_s : '-',
+              ]
+            end
+            t.style = { border_top: false, border_bottom: false, border_left: false, border_right: false }
+          }.to_s << "\n"
+        else
+          @output << "  (no events recorded)\n"
+        end
+        @output << "\n"
+      end
+    else
+      @output << "(no lodgings recorded)\n"
+    end
 
     @output << <<~ENDJOURNEYS
 

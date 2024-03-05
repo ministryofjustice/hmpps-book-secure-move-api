@@ -38,6 +38,7 @@ Rails.application.routes.draw do
         post 'csv'
         post 'filtered'
       end
+
       resources :journeys, only: %i[index show create update] do
         member do
           post 'cancel', controller: 'journey_events'
@@ -50,6 +51,17 @@ Rails.application.routes.draw do
           post 'uncomplete', controller: 'journey_events'
         end
       end
+
+      resources :lodgings, only: %i[index create update] do
+        member do
+          post 'cancel'
+        end
+
+        collection do
+          post 'cancel', to: 'lodgings#cancel_all'
+        end
+      end
+
       member do
         post 'accept', controller: 'move_events'
         post 'approve', controller: 'move_events'

@@ -92,6 +92,8 @@ RSpec.describe Ability, type: :model do
     let(:application) { Doorkeeper::Application.create(name: 'test') }
 
     it { is_expected.to be_able_to(:manage, Move.new) }
+    it { is_expected.to be_able_to(:manage, Journey.new) }
+    it { is_expected.to be_able_to(:manage, Lodging.new) }
   end
 
   context 'when application is absent' do

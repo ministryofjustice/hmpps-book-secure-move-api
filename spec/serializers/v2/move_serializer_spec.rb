@@ -60,16 +60,18 @@ RSpec.describe V2::MoveSerializer do
         :prison_transfer,
         profile: create(:profile, :with_documents),
         supplier: create(:supplier),
+        lodgings: create_list(:lodging, 1),
       )
     end
 
-    let(:adapter_options) { { include: described_class::SUPPORTED_RELATIONSHIPS } }
+    let(:includes) { described_class::SUPPORTED_RELATIONSHIPS.map(&:to_sym) }
+    let(:adapter_options) { { include: includes, params: { included: includes } } }
 
     before { ActiveStorage::Current.url_options = { protocol: 'http', host: 'www.example.com', port: 80 } } # This is used in the serializer
 
     it 'contains all included relationships' do
-      expect(result[:included].map { |r| r[:type] })
-        .to match_array(%w[people ethnicities genders locations locations profiles moves documents prison_transfer_reasons court_hearings suppliers])
+      expect(result[:included].map { |r| r[:type] }.uniq)
+        .to match_array(%w[people ethnicities genders locations profiles moves documents prison_transfer_reasons court_hearings suppliers lodgings])
     end
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them

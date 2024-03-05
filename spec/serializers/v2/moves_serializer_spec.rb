@@ -142,7 +142,8 @@ RSpec.describe V2::MovesSerializer do
   end
 
   context 'with lodge event' do
-    let!(:event) { create(:event_move_overnight_lodge, eventable: move) }
+    let(:lodging) { create(:lodging, move:) }
+    let!(:event) { create(:event_lodging_create, eventable: lodging) }
     let(:includes) { %i[timeline_events] }
     let(:options) { { include: includes, params: { included: includes } } }
     let(:included_event) { result[:included].find { |include| include[:id] == event.id } }

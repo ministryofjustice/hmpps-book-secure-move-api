@@ -18,6 +18,7 @@ class Ability
     else
       can :manage, Move
       can :manage, Journey
+      can :manage, Lodging
     end
   end
 end
