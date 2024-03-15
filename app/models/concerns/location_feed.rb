@@ -1,8 +1,8 @@
 module LocationFeed
   def for_feed
     super.tap do |common_feed_attributes|
-      location_keys = self.class::LOCATION_ATTRIBUTE_KEYS&.map(&:to_s)
-      location_keys = self.class::LOCATION_ATTRIBUTE_KEY.to_s if location_keys.blank?
+      location_keys = self.class.const_defined?('LOCATION_ATTRIBUTE_KEYS') && self.class::LOCATION_ATTRIBUTE_KEYS&.map(&:to_s)
+      location_keys = [self.class::LOCATION_ATTRIBUTE_KEY.to_s] if location_keys.blank?
 
       location_keys.each { |location_key| add_location(common_feed_attributes, location_key) }
     end

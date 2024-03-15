@@ -6,7 +6,7 @@ module Api
       profile = person.profiles.create!(profile_attributes)
 
       if person.prison_number.present? && profile_attributes[:assessment_answers].blank?
-        #Profiles::ImportAlertsAndPersonalCareNeeds.new(profile, person.prison_number).call
+        Profiles::ImportAlertsAndPersonalCareNeeds.new(profile, person.prison_number).call
       end
 
       render_profile(profile, :created)

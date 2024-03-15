@@ -32,7 +32,7 @@ module Api::V2
 
       UpdateMoveNomisDataJob.perform_later(move_id: move.id)
 
-      #PrometheusMetrics.instance.record_move_count
+      PrometheusMetrics.instance.record_move_count
 
       log_with_request(:info, "V2 Move creation finished - #{move.reference}")
 

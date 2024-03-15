@@ -201,6 +201,18 @@ FactoryBot.define do
     end
   end
 
+  factory :event_lodging_cancel, parent: :generic_event, class: 'GenericEvent::LodgingCancel' do
+    eventable { association(:lodging) }
+    details do
+      {
+        start_date: '2020-01-01',
+        end_date: '2020-01-02',
+        location_id: create(:location).id,
+        cancellation_reason: 'made_in_error',
+      }
+    end
+  end
+
   factory :event_move_lodging_end, parent: :generic_event, class: 'GenericEvent::MoveLodgingEnd' do
     eventable { association(:move) }
     details do
@@ -726,28 +738,5 @@ FactoryBot.define do
 
   factory :generic_event_notification, parent: :generic_event, class: 'GenericEvent::Notification' do
     eventable { association(:move) }
-  end
-
-  factory :event_lodging_create, parent: :generic_event, class: 'GenericEvent::LodgingCreate' do
-    eventable { association(:lodging) }
-    details do
-      {
-        start_date: '2020-01-01',
-        end_date: '2020-01-02',
-        location_id: create(:location).id,
-      }
-    end
-  end
-
-  factory :event_lodging_cancel, parent: :generic_event, class: 'GenericEvent::LodgingCancel' do
-    eventable { association(:lodging) }
-    details do
-      {
-        start_date: '2020-01-01',
-        end_date: '2020-01-02',
-        location_id: create(:location).id,
-        cancellation_reason: 'made_in_error',
-      }
-    end
   end
 end
