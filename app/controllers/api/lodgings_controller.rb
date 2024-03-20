@@ -60,6 +60,8 @@ module Api
           lodging.update!(update_lodging_attributes)
 
           create_automatic_event!(eventable: lodging, event_class: GenericEvent::LodgingUpdate, details:)
+
+          Notifier.prepare_notifications(topic: lodging, action_name: 'update')
         end
       end
 
@@ -118,6 +120,10 @@ module Api
         next if start_date >= l_start_date
 
         l.update!(start_date: l_start_date + length_difference.days, end_date: Date.parse(l.end_date) + length_difference.days)
+
+        create_automatic_event!(eventable: l, event_class: GenericEvent::LodgingUpdate, details:)
+
+        Notifier.prepare_notifications(topic: l, action_name: 'update')
       end
     end
 
