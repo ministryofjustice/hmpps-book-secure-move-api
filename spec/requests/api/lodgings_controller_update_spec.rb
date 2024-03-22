@@ -85,6 +85,18 @@ RSpec.describe Api::LodgingsController do
         expect(Notifier).to have_received(:prepare_notifications).with(topic: lodging, action_name: 'update')
       end
 
+      context 'when requested by a supplier' do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application:).token }
+
+        it_behaves_like 'an endpoint that responds with error 401' do
+          let(:detail_401) { 'Not authorized' }
+          let(:schema) { load_yaml_schema('error_responses.yaml') }
+
+          before { do_patch }
+        end
+      end
+
       context 'with other lodgings' do
         let!(:lodging2) { create(:lodging, move:, location:, start_date: '2020-05-03', end_date: '2020-05-04') }
         let!(:lodging3) { create(:lodging, move:, location:, start_date: '2020-05-05', end_date: '2020-05-06') }
