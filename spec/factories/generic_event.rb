@@ -146,13 +146,69 @@ FactoryBot.define do
     end
   end
 
-  factory :event_move_overnight_lodge, parent: :generic_event, class: 'GenericEvent::MoveOvernightLodge' do
-    eventable { association(:move) }
+  factory :event_lodging_create, parent: :generic_event, class: 'GenericEvent::LodgingCreate' do
+    eventable { association(:lodging) }
     details do
       {
         start_date: '2020-01-01',
         end_date: '2020-01-02',
         location_id: create(:location).id,
+      }
+    end
+  end
+
+  factory :event_lodging_update, parent: :generic_event, class: 'GenericEvent::LodgingUpdate' do
+    eventable { association(:lodging) }
+
+    trait :start_date do
+      details do
+        {
+          old_start_date: '2020-01-01',
+          start_date: '2020-01-02',
+        }
+      end
+    end
+
+    trait :end_date do
+      details do
+        {
+          old_end_date: '2020-01-02',
+          end_date: '2020-01-03',
+        }
+      end
+    end
+
+    trait :location_id do
+      details do
+        {
+          old_location_id: create(:location).id,
+          location_id: create(:location).id,
+        }
+      end
+    end
+
+    trait :all do
+      details do
+        {
+          old_start_date: '2020-01-01',
+          start_date: '2020-01-02',
+          old_end_date: '2020-01-02',
+          end_date: '2020-01-03',
+          old_location_id: create(:location).id,
+          location_id: create(:location).id,
+        }
+      end
+    end
+  end
+
+  factory :event_lodging_cancel, parent: :generic_event, class: 'GenericEvent::LodgingCancel' do
+    eventable { association(:lodging) }
+    details do
+      {
+        start_date: '2020-01-01',
+        end_date: '2020-01-02',
+        location_id: create(:location).id,
+        cancellation_reason: 'made_in_error',
       }
     end
   end
@@ -682,28 +738,5 @@ FactoryBot.define do
 
   factory :generic_event_notification, parent: :generic_event, class: 'GenericEvent::Notification' do
     eventable { association(:move) }
-  end
-
-  factory :event_lodging_create, parent: :generic_event, class: 'GenericEvent::LodgingCreate' do
-    eventable { association(:lodging) }
-    details do
-      {
-        start_date: '2020-01-01',
-        end_date: '2020-01-02',
-        location_id: create(:location).id,
-      }
-    end
-  end
-
-  factory :event_lodging_cancel, parent: :generic_event, class: 'GenericEvent::LodgingCancel' do
-    eventable { association(:lodging) }
-    details do
-      {
-        start_date: '2020-01-01',
-        end_date: '2020-01-02',
-        location_id: create(:location).id,
-        cancellation_reason: 'made_in_error',
-      }
-    end
   end
 end
