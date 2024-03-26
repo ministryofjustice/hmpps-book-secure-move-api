@@ -285,7 +285,7 @@ executors:
           EXTERNAL_URL: mocked_in_tests
           ENCRYPTOR_SALT: "2EREZ8Xub/vt0ya1ZM6YKUwIMN72MbmqeWMq7KS4BV8oSJJc27rDpZYmA6AQGYcS"
           EXTERNAL_WIREMOCK: "true"
-      - image: cimg/postgres:12.11
+      - image: cimg/postgres:13.14
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: hmpps-book-secure-move-api
