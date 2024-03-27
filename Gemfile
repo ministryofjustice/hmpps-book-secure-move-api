@@ -15,7 +15,7 @@ gem 'bcrypt', require: false
 gem 'bootsnap', require: false
 gem 'cancancan'
 gem 'discard'
-gem 'doorkeeper'
+gem 'doorkeeper', '5.5.4'
 gem 'faraday'
 gem 'faraday-net_http_persistent'
 gem 'faraday-retry'
