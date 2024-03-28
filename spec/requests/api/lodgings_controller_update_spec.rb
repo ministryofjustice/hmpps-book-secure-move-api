@@ -24,6 +24,7 @@ RSpec.describe Api::LodgingsController do
     let(:access_token) { 'spoofed-token' }
     let(:content_type) { ApiController::CONTENT_TYPE }
     let(:location) { create(:location, suppliers: [supplier]) }
+    let(:other_location) { create(:location, suppliers: [supplier]) }
     let(:move) { create(:move, supplier:) }
     let(:start_date) { '2020-05-04' }
     let(:end_date) { '2020-05-05' }
@@ -41,6 +42,14 @@ RSpec.describe Api::LodgingsController do
           attributes: {
             start_date: '2020-05-04',
             end_date: '2020-05-06',
+          },
+          relationships: {
+            location: {
+              data: {
+                type: 'locations',
+                id: location.id,
+              },
+            },
           },
         }
       end
@@ -144,6 +153,84 @@ RSpec.describe Api::LodgingsController do
           expect(Notifier).to receive(:prepare_notifications).with(topic: lodging4, action_name: 'update').ordered
           expect(Notifier).to receive(:prepare_notifications).with(topic: lodging, action_name: 'update').ordered
           do_patch
+        end
+      end
+    end
+
+    context 'with valid location param' do
+      let(:data) do
+        {
+          id: lodging.id,
+          type: 'lodgings',
+          attributes: {
+            start_date: '2020-05-04',
+            end_date: '2020-05-05',
+          },
+          relationships: {
+            location: {
+              data: {
+                type: 'locations',
+                id: other_location.id,
+              },
+            },
+          },
+        }
+      end
+
+      let(:params) do
+        {
+          data: {
+            id: lodging.id,
+            type: 'lodgings',
+            relationships: {
+              location: {
+                data: {
+                  type: 'locations',
+                  id: other_location.id,
+                },
+              },
+            },
+          },
+        }
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before { do_patch }
+      end
+
+      it 'returns the correct data' do
+        do_patch
+        expect(response_json).to include_json(data:)
+      end
+
+      it 'updates the lodging' do
+        do_patch
+        expect(lodging.reload.location_id).to eq(other_location.id)
+      end
+
+      it 'creates a LodgingUpdate generic event' do
+        expect { do_patch }.to change(GenericEvent::LodgingUpdate, :count).by(1)
+      end
+
+      it 'sets the created by on the GenericEvent' do
+        do_patch
+        expect(GenericEvent.last.created_by).to eq('TEST_USER')
+      end
+
+      it 'sends a notification' do
+        do_patch
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: lodging, action_name: 'update')
+      end
+
+      context 'when requested by a supplier' do
+        let(:application) { create(:application, owner: supplier) }
+        let(:access_token) { create(:access_token, application:).token }
+
+        it_behaves_like 'an endpoint that responds with error 401' do
+          let(:detail_401) { 'Not authorized' }
+          let(:schema) { load_yaml_schema('error_responses.yaml') }
+
+          before { do_patch }
         end
       end
     end
