@@ -560,10 +560,10 @@ RSpec.describe Moves::Finder do
     end
 
     describe 'sort order' do
-      let(:location1) { create :location, title: 'LOCATION1' }
+      let(:location1) { create :location, title: 'location1' }
       let(:order_params) { { by: :to_location, direction: :asc } }
-      let(:location2) { create :location, title: 'Location2' }
-      let(:location3) { create :location, title: 'LOCATION3' }
+      let(:location2) { create :location, title: 'location2' }
+      let(:location3) { create :location, title: 'location3' }
 
       before do
         create :move, to_location: location1
@@ -572,7 +572,7 @@ RSpec.describe Moves::Finder do
       end
 
       it 'ordered by location' do
-        expect(results.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
+        expect(results.map(&:to_location).pluck(:title)).to eql(%w[location1 location2 location3])
       end
     end
 

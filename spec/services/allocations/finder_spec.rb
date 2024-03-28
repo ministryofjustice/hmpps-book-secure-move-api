@@ -166,9 +166,9 @@ RSpec.describe Allocations::Finder do
   end
 
   describe 'sorting' do
-    let(:location1) { create :location, title: 'LOCATION1' }
-    let(:location2) { create :location, title: 'Location2' }
-    let(:location3) { create :location, title: 'LOCATION3' }
+    let(:location1) { create :location, title: 'location1' }
+    let(:location2) { create :location, title: 'location2' }
+    let(:location3) { create :location, title: 'location3' }
 
     context 'when by from_location' do
       before do
@@ -181,7 +181,7 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :from_location, direction: :asc } }
 
       it 'orders by location title' do
-        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
+        expect(allocation_finder.call.map(&:from_location).pluck(:title)).to eql(%w[location1 location2 location3])
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Allocations::Finder do
       let(:sort_params) { { by: :to_location, direction: :asc } }
 
       it 'orders by location title' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3])
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[location1 location2 location3])
       end
     end
 
@@ -229,9 +229,9 @@ RSpec.describe Allocations::Finder do
 
   describe 'combined filtering and sorting' do
     context 'when filtering by date and sorting by location' do
-      let!(:location1) { create :location, title: 'LOCATION1' }
-      let!(:location2) { create :location, title: 'Location2' }
-      let!(:location3) { create :location, title: 'LOCATION3' }
+      let!(:location1) { create :location, title: 'location1' }
+      let!(:location2) { create :location, title: 'location2' }
+      let!(:location3) { create :location, title: 'location3' }
 
       let(:sort_params) { { by: :to_location, direction: :desc } }
       let(:filter_params) { { date_from: allocation.date.to_s, date_to: (allocation.date + 5.days).to_s, from_locations: from_location.id } }
@@ -244,7 +244,7 @@ RSpec.describe Allocations::Finder do
       end
 
       it 'returns allocations matching date range sorted by location title desc' do
-        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[LOCATION3 Location2 LOCATION1])
+        expect(allocation_finder.call.map(&:to_location).pluck(:title)).to eql(%w[location3 location2 location1])
       end
     end
 
