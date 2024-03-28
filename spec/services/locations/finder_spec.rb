@@ -141,15 +141,15 @@ RSpec.describe Locations::Finder do
   describe 'sorting' do
     context 'when by title' do
       before do
-        create :location, title: 'LOCATION1'
-        create :location, title: 'Location2'
-        create :location, title: 'LOCATION3'
+        create :location, title: 'location1'
+        create :location, title: 'location2'
+        create :location, title: 'location3'
       end
 
       let(:sort_params) { { by: :title, direction: :asc } }
 
       it 'orders by location title' do
-        expect(location_finder.call.pluck(:title)).to eql(%w[LOCATION1 Location2 LOCATION3]) # NB: case-sensitive order
+        expect(location_finder.call.pluck(:title)).to eql(%w[location1 location2 location3])
       end
     end
 

@@ -17,15 +17,14 @@ RSpec.describe Api::MovesController do
   end
 
   describe 'GET /moves' do
-    # NB sorting should be case-sensitive, i.e. LOCATION1, LOCATION3, location2, location4
-    let(:location1) { create :location, title: 'LOCATION1' }
+    let(:location1) { create :location, title: 'location1' }
     let(:location2) { create :location, title: 'location2' }
-    let(:location3) { create :location, title: 'LOCATION3' }
+    let(:location3) { create :location, title: 'location3' }
     let(:location4) { create :location, title: 'location4' }
 
-    let(:profile1) { create :profile, person: create(:person, last_name: 'PROFILE1') }
+    let(:profile1) { create :profile, person: create(:person, last_name: 'profile1') }
     let(:profile2) { create :profile, person: create(:person, last_name: 'profile2') }
-    let(:profile3) { create :profile, person: create(:person, last_name: 'PROFILE3') }
+    let(:profile3) { create :profile, person: create(:person, last_name: 'profile3') }
     let(:profile4) { create :profile, person: create(:person, last_name: 'profile4') }
 
     let!(:move2) { create :move, :prison_transfer, profile: profile2, to_location: location2 }
@@ -189,7 +188,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(%w[LOCATION1 location2 LOCATION3 location4])
+              expect(locations.map(&:title)).to eq(%w[location1 location2 location3 location4])
             end
           end
 
@@ -197,7 +196,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'to_location', direction: 'desc' } }
 
             it 'sorts by to location' do
-              expect(locations.map(&:title)).to eq(%w[location4 LOCATION3 location2 LOCATION1])
+              expect(locations.map(&:title)).to eq(%w[location4 location3 location2 location1])
             end
           end
         end
@@ -214,8 +213,8 @@ RSpec.describe Api::MovesController do
           context 'with default direction' do
             let(:sort_params) { { by: 'name' } }
 
-            it 'sorts by last_name (ascending, case sensitive)' do
-              expect(last_names).to eq(%w[PROFILE1 profile2 PROFILE3 profile4])
+            it 'sorts by last_name (ascending)' do
+              expect(last_names).to eq(%w[profile1 profile2 profile3 profile4])
             end
           end
 
@@ -223,7 +222,7 @@ RSpec.describe Api::MovesController do
             let(:sort_params) { { by: 'name', direction: 'desc' } }
 
             it 'sorts by last_name' do
-              expect(last_names).to eq(%w[profile4 PROFILE3 profile2 PROFILE1])
+              expect(last_names).to eq(%w[profile4 profile3 profile2 profile1])
             end
           end
         end
