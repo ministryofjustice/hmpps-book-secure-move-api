@@ -202,7 +202,11 @@ module Api
     end
 
     def update_lodging_attributes
-      @update_lodging_attributes ||= update_lodging_params.to_h[:attributes].tap do |attribs|
+      attributes = update_lodging_params.to_h[:attributes] || {}
+      location_id = update_lodging_params.dig(:relationships, :location, :data, :id)
+      attributes[:location_id] = location_id if location_id.present?
+
+      @update_lodging_attributes ||= attributes.tap do |attribs|
         attribs.delete(:timestamp) # throw the timestamp away for updates
         attribs.delete(:date) if attribs[:date].nil?
       end
