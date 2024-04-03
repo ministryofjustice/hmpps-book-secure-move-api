@@ -18,14 +18,26 @@ RSpec.describe SubjectAccessRequestsController do
       allow(JwksDecoder).to receive(:decode_token).and_return([token_payload])
     end
 
-    context 'when the token is missing the ROLE_SAR_DATA_ACCESS role' do
+    context 'when the token is invalid' do
+      let(:token_payload) { {} }
+
       before do
-        token_payload['authorities'] = []
         get_sar
       end
 
       it 'returns a response object with status 401' do
         expect(response.status).to eq 401
+      end
+    end
+
+    context 'when the token is missing the ROLE_SAR_DATA_ACCESS role' do
+      before do
+        token_payload['authorities'] = ['']
+        get_sar
+      end
+
+      it 'returns a response object with status 403' do
+        expect(response.status).to eq 403
       end
     end
 
