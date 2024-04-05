@@ -9,7 +9,6 @@ module Api
     before_action :validate_idempotency_key, only: %i[create update cancel]
     around_action :idempotent_action, only: %i[create update cancel]
     after_action :create_modify_event, only: %i[create cancel]
-    after_action :send_notification, only: %i[create update cancel]
 
     PERMITTED_NEW_PARAMS = [
       :type,
@@ -34,8 +33,11 @@ module Api
 
     def create
       authorize!(:create, lodging)
+
       lodging.save!
       render_lodging(lodging, :created)
+
+      Notifier.prepare_notifications(topic: lodging, action_name: 'create')
     end
 
     def update
@@ -246,10 +248,6 @@ module Api
                 end
 
       create_automatic_event!(eventable: lodging, event_class:, details:)
-    end
-
-    def send_notification
-      Notifier.prepare_notifications(topic: self, action_name:)
     end
   end
 end
