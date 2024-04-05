@@ -50,6 +50,10 @@ RSpec.describe Api::LodgingsController do
       }
     end
 
+    before do
+      allow(Notifier).to receive(:prepare_notifications)
+    end
+
     context 'when successful' do
       let(:data) do
         {
@@ -89,6 +93,13 @@ RSpec.describe Api::LodgingsController do
       it 'sets the created by on the GenericEvent' do
         do_post
         expect(GenericEvent.last.created_by).to eq('TEST_USER')
+      end
+
+      it 'sends a notification' do
+        do_post
+        expect(Notifier)
+          .to have_received(:prepare_notifications)
+          .with(topic: Lodging.find_by!(start_date: '2020-05-04'), action_name: 'create')
       end
     end
 
