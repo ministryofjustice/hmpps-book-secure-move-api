@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-temp-tables
+data:
+  createTables.sql: |-
+    BEGIN;
+    CREATE TABLE framework_flags_temp (LIKE framework_flags);
+    CREATE TABLE framework_nomis_codes_temp (LIKE framework_nomis_codes);
+    CREATE TABLE framework_nomis_mappings_temp (LIKE framework_nomis_mappings);
+    CREATE TABLE framework_questions_temp (LIKE framework_questions);
+    CREATE TABLE framework_responses_temp (LIKE framework_responses);
+    CREATE TABLE frameworks_temp (LIKE frameworks);
+    CREATE TABLE framework_flags_responses_temp (LIKE framework_flags_responses);
+    CREATE TABLE framework_nomis_codes_questions_temp (LIKE framework_nomis_codes_questions);
+    CREATE TABLE framework_nomis_mappings_responses_temp (LIKE framework_nomis_mappings_responses);
+    CREATE TABLE locations_temp (LIKE locations);
+    CREATE TABLE moves_temp (LIKE moves);
+    CREATE TABLE journeys_temp (LIKE journeys);
+    CREATE TABLE people_temp (LIKE people);
+    CREATE TABLE profiles_temp (LIKE profiles);
+    CREATE TABLE person_escort_records_temp (LIKE person_escort_records);
+    CREATE TABLE court_hearings_temp (LIKE court_hearings);
+    CREATE TABLE allocation_complex_cases_temp (LIKE allocation_complex_cases);
+    CREATE TABLE allocations_temp (LIKE allocations);
+    CREATE TABLE assessment_questions_temp (LIKE assessment_questions);
+    CREATE TABLE categories_temp (LIKE categories);
+    CREATE TABLE documents_temp (LIKE documents);
+    CREATE TABLE ethnicities_temp (LIKE ethnicities);
+    CREATE TABLE flipper_features_temp (LIKE flipper_features);
+    CREATE TABLE flipper_gates_temp (LIKE flipper_gates);
+    CREATE TABLE genders_temp (LIKE genders);
+    CREATE TABLE locations_regions_temp (LIKE locations_regions);
+    CREATE TABLE nationalities_temp (LIKE nationalities);
+    CREATE TABLE nomis_alerts_temp (LIKE nomis_alerts);
+    CREATE TABLE notifications_temp (LIKE notifications);
+    CREATE TABLE populations_temp (LIKE populations);
+    CREATE TABLE regions_temp (LIKE regions);
+    CREATE TABLE subscriptions_temp (LIKE subscriptions);
+    CREATE TABLE supplier_locations_temp (LIKE supplier_locations);
+    CREATE TABLE suppliers_temp (LIKE suppliers);
+    CREATE TABLE youth_risk_assessments_temp (LIKE youth_risk_assessments);
+    CREATE TABLE generic_events_temp (LIKE generic_events);
+    -- CREATE TABLE versions_temp (LIKE versions);
+    COMMIT;
