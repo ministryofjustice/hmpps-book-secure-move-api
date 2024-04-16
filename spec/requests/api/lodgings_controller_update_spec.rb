@@ -107,6 +107,7 @@ RSpec.describe Api::LodgingsController do
       end
 
       context 'with other lodgings' do
+        let!(:cancelled_lodging) { create(:lodging, move:, location:, start_date: '2020-05-05', end_date: '2020-05-06', status: :cancelled) }
         let!(:lodging2) { create(:lodging, move:, location:, start_date: '2020-05-03', end_date: '2020-05-04') }
         let!(:lodging3) { create(:lodging, move:, location:, start_date: '2020-05-05', end_date: '2020-05-06') }
         let!(:lodging4) { create(:lodging, move:, location:, start_date: '2020-05-06', end_date: '2020-05-08') }
@@ -124,6 +125,14 @@ RSpec.describe Api::LodgingsController do
           expect(lodging2.reload.attributes).to include({
             'start_date' => '2020-05-03',
             'end_date' => '2020-05-04',
+          })
+        end
+
+        it 'does not update the cancelled lodging' do
+          do_patch
+          expect(cancelled_lodging.reload.attributes).to include({
+            'start_date' => '2020-05-05',
+            'end_date' => '2020-05-06',
           })
         end
 
