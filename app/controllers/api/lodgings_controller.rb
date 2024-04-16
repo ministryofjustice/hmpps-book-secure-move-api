@@ -110,14 +110,14 @@ module Api
   private
 
     def update_future_lodgings(details)
-      return if details[:end_date].blank? || move.lodgings.count < 2
+      return if details[:end_date].blank? || move.lodgings.not_cancelled.count < 2
 
       start_date = Date.parse(lodging.start_date)
       old_length = Date.parse(lodging.end_date) - start_date
       new_length = Date.parse(update_lodging_attributes[:end_date]) - start_date
       length_difference = new_length - old_length
 
-      move.lodgings.each do |l|
+      move.lodgings.not_cancelled.each do |l|
         l_start_date = Date.parse(l.start_date)
         next if start_date >= l_start_date
 
