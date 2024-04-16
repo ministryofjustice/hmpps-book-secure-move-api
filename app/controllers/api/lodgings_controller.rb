@@ -121,9 +121,16 @@ module Api
         l_start_date = Date.parse(l.start_date)
         next if start_date >= l_start_date
 
-        l.update!(start_date: l_start_date + length_difference.days, end_date: Date.parse(l.end_date) + length_difference.days)
+        l_details = {
+          old_start_date: l.start_date,
+          start_date: l_start_date + length_difference.days,
+          old_end_date: l.end_date,
+          end_date: Date.parse(l.end_date) + length_difference.days,
+        }
 
-        create_automatic_event!(eventable: l, event_class: GenericEvent::LodgingUpdate, details:)
+        l.update!(l_details.slice(:start_date, :end_date))
+
+        create_automatic_event!(eventable: l, event_class: GenericEvent::LodgingUpdate, details: l_details)
 
         Notifier.prepare_notifications(topic: l, action_name: 'update')
       end
