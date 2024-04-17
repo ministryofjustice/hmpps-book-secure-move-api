@@ -5,7 +5,7 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/bash
-    from=$(date --date="5 days ago" '+%Y-%m-%d')
+    from=$(date --date="2 days ago" '+%Y-%m-%d')
     to=$(date '+%Y-%m-%d')
     echo "Refreshing data from ${from} to ${to}" 
         
