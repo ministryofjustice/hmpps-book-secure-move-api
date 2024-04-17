@@ -153,8 +153,30 @@ RSpec.describe Api::LodgingsController do
         end
 
         it 'adds an event for each' do
+          update_event_count = GenericEvent::LodgingUpdate.count
           do_patch
-          expect(GenericEvent.order(:created_at).last(3).pluck(:eventable_id)).to eq([lodging3.id, lodging4.id, lodging.id])
+          expect(GenericEvent::LodgingUpdate.count).to eq(update_event_count + 3)
+
+          lodging3_event, lodging4_event, lodging_event = *GenericEvent::LodgingUpdate.order(:created_at).last(3)
+
+          expect(lodging3_event.details).to eq({
+            'old_start_date' => '2020-05-05',
+            'start_date' => '2020-05-06',
+            'old_end_date' => '2020-05-06',
+            'end_date' => '2020-05-07',
+          })
+
+          expect(lodging4_event.details).to eq({
+            'old_start_date' => '2020-05-06',
+            'start_date' => '2020-05-07',
+            'old_end_date' => '2020-05-08',
+            'end_date' => '2020-05-09',
+          })
+
+          expect(lodging_event.details).to eq({
+            'old_end_date' => '2020-05-05',
+            'end_date' => '2020-05-06',
+          })
         end
 
         it 'sends notifications for the other lodgings' do
