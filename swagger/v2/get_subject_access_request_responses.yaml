@@ -12,4 +12,36 @@
     errors:
       type: array
       items:
-        $ref: errors.yaml#/BadRequest
+        $ref: "../v1/errors.yaml#/BadRequest"
+'401':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            example: Not authorized
+          detail:
+            type: string
+            example: Valid authorisation token required
+'403':
+  type: object
+  required:
+    - errors
+  properties:
+    errors:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            example: Forbidden
+          detail:
+            type: string
+            example: "Missing role: ROLE_SAR_DATA_ACCESS"

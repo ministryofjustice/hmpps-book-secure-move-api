@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   if !Rails.env.production? || ENV['SERVE_API_DOCS']
     mount Rswag::Ui::Engine => '/api-docs'
     mount Rswag::Api::Engine => '/api-docs'
+    get '/swagger-ui.html', to: 'sre_swagger_docs#swagger_ui'
+    get '/v3/api-docs', to: 'sre_swagger_docs#open_api_json'
   end
 
   get '/health', to: 'status#health', format: :json
