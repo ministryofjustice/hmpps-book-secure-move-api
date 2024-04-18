@@ -52,10 +52,14 @@ class Notification < ApplicationRecord
     @generic_event_id ||= topic.is_a?(GenericEvent) ? topic.id : nil
   end
 
+  def lodging_id
+    @lodging_id ||= topic.is_a?(Lodging) ? topic.id : nil
+  end
+
   def move_id
     @move_id ||= begin
       return topic.id if topic.is_a?(Move)
-      return topic.move.id if topic.is_a?(GenericEvent)
+      return topic.move.id if topic.is_a?(GenericEvent) || topic.is_a?(Lodging)
 
       nil
     end

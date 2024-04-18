@@ -37,4 +37,16 @@ RSpec.describe Lodging do
 
     it { is_expected.to be_invalid }
   end
+
+  context 'when it is not unique' do
+    subject(:lodging) { build(:lodging, start_date:, end_date:, move: existing_lodging.move) }
+
+    let(:existing_lodging) { create(:lodging, start_date:, end_date:) }
+
+    it { is_expected.to be_invalid }
+  end
+
+  it 'has state machine' do
+    expect(described_class.state_machine_class).to eq(LodgingStateMachine)
+  end
 end

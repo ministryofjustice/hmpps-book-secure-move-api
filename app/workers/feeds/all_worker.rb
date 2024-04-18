@@ -6,7 +6,16 @@ module Feeds
 
     def perform(date)
       date = Date.parse(date)
-      self.class.feed_names.each { |feed_name| Feeds::FeedWorker.perform_async(feed_name, date) }
+
+      Sidekiq.logger.info('Generating analytics feeds...')
+      time_since = TimeSince.new
+
+      feeds = Feeds::Jpc.new(date.beginning_of_day, date.end_of_day).call
+      feeds.each do |feed_name, feed_data|
+        CloudData::AnalyticalPlatformFeed.new.write(feed_data, feed_name.to_s.pluralize, date)
+      end
+
+      Sidekiq.logger.info("Generated analytics feeds in #{time_since.get} seconds")
     end
 
     def self.feed_names

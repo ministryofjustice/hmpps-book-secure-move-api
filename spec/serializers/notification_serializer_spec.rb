@@ -63,6 +63,19 @@ RSpec.describe NotificationSerializer do
       end
     end
 
+    context 'when topic is a Lodging' do
+      let(:lodging) { create(:lodging) }
+      let(:notification) { create(:notification, topic: lodging) }
+
+      it 'contains lodging relationship data' do
+        expect(result[:data][:relationships][:lodging][:data]).to eql(id: lodging.id, type: 'lodgings')
+      end
+
+      it 'contains lodging relationship links' do
+        expect(result[:data][:relationships][:lodging][:links]).to eql(self: "http://localhost:4000/api/v1/moves/#{lodging.move.id}/lodgings/#{lodging.id}")
+      end
+    end
+
     context 'when topic is a YouthRiskAssessment' do
       let(:yra) { create(:youth_risk_assessment) }
       let(:notification) { create(:notification, topic: yra) }

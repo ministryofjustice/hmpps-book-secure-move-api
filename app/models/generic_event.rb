@@ -52,12 +52,14 @@ class GenericEvent < ApplicationRecord
     MoveOperationHmcts
     MoveOperationSafeguard
     MoveOperationTornado
-    MoveOvernightLodge
     MoveProposed
     MoveRedirect
     MoveReject
     MoveRequested
     MoveStart
+    LodgingCancel
+    LodgingCreate
+    LodgingUpdate
     PerConcealed
     PerConfirmation
     PerCompletion

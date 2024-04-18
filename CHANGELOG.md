@@ -1,5 +1,39 @@
 # Changelog
 
+## [v3.41.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.41.0) (2024-02-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.3...v3.41.0)
+
+**Merged pull requests:**
+
+- MAP-634: Add SAR endpoint [\#2202](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2202) ([Thource](https://github.com/Thource))
+- Generated changelog for v3.40.3 [\#2201](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2201) ([jimbali](https://github.com/jimbali))
+
+## [v3.40.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.3) (2024-01-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.2...v3.40.3)
+
+**Merged pull requests:**
+
+- MAP-582: Log correct response codes in access logs [\#2200](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2200) ([jimbali](https://github.com/jimbali))
+
+## [v3.40.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.2) (2023-12-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.1...v3.40.2)
+
+**Merged pull requests:**
+
+- MAP-340: Let journey take precedence over lodge when filtering [\#2195](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2195) ([jimbali](https://github.com/jimbali))
+
+## [v3.40.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.1) (2023-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.40.0...v3.40.1)
+
+**Merged pull requests:**
+
+- \[MAP-480\] Fix error in move for\_supplier method that was causing 500 errors [\#2192](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2192) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.40.0 [\#2187](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2187) ([jimbali](https://github.com/jimbali))
+
 ## [v3.40.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.40.0) (2023-11-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.39.1...v3.40.0)
@@ -207,19 +241,19 @@
 
 ## [v3.35.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.1) (2023-06-16)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.0...v3.35.1)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/3.35.0...v3.35.1)
 
 **Merged pull requests:**
 
 - \[MAP-26\] Generate swagger docs during container build [\#2100](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2100) ([jimbali](https://github.com/jimbali))
 
-## [v3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.0) (2023-06-16)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/3.35.0...v3.35.0)
-
 ## [3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/3.35.0) (2023-06-16)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.1...3.35.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.0...3.35.0)
+
+## [v3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.0) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.1...v3.35.0)
 
 **Merged pull requests:**
 
@@ -368,20 +402,20 @@
 
 ## [v3.28.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.28.0) (2022-12-12)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.28.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.28.0)
 
 **Merged pull requests:**
 
 - \[P4-3910\] Add new endpoint: GET /events/:event\_id [\#1993](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1993) ([Thource](https://github.com/Thource))
 - Generated changelog for v3.27.2 [\#1992](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1992) ([Thource](https://github.com/Thource))
 
-## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.27.1)
-
 ## [v3.27.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.2) (2022-11-24)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.2)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.27.2)
+
+## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.1)
 
 **Merged pull requests:**
 
@@ -529,7 +563,7 @@
 
 - Add basic logging to move creation [\#1885](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1885) ([Thource](https://github.com/Thource))
 - Bump aws-sdk-athena from 1.53.0 to 1.54.0 [\#1884](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1884) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Add new PrisonTransferReason Court video link [\#1883](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1883) ([georgeschena](https://github.com/georgeschena))
+- Add new PrisonTransferReason Court video link [\#1883](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1883) ([georges1996](https://github.com/georges1996))
 - Add PerUpdated event [\#1882](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1882) ([Thource](https://github.com/Thource))
 - Bump rack-test from 2.0.0 to 2.0.2 [\#1881](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1881) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump sentry from 4.6.5 to 5.3.1 [\#1878](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1878) ([matt-crowson-moj](https://github.com/matt-crowson-moj))
@@ -605,7 +639,7 @@
 
 - Include MoveLodgingStart in important events [\#1842](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1842) ([thomasleese](https://github.com/thomasleese))
 - Bump nokogiri from 1.13.5 to 1.13.6 [\#1841](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1841) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Add validation to prevent duplicate journeys [\#1840](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1840) ([georgeschena](https://github.com/georgeschena))
+- Add validation to prevent duplicate journeys [\#1840](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1840) ([georges1996](https://github.com/georges1996))
 - Bump nokogiri from 1.13.4 to 1.13.5 [\#1839](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1839) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump aws-sdk-s3 from 1.113.2 to 1.114.0 [\#1838](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1838) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Generated changelog for v3.25.1 [\#1837](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1837) ([thomasleese](https://github.com/thomasleese))
@@ -617,7 +651,7 @@
 **Merged pull requests:**
 
 - Handle optional locations in event feed [\#1836](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1836) ([thomasleese](https://github.com/thomasleese))
-- Allow fault\_classification to be nil if the supplier\_id is not provided [\#1835](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1835) ([georgeschena](https://github.com/georgeschena))
+- Allow fault\_classification to be nil if the supplier\_id is not provided [\#1835](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1835) ([georges1996](https://github.com/georges1996))
 - Generated changelog for v3.25.0 [\#1834](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1834) ([thomasleese](https://github.com/thomasleese))
 
 ## [v3.25.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.25.0) (2022-04-27)
@@ -628,7 +662,7 @@
 
 - Support multiple handovers [\#1833](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1833) ([thomasleese](https://github.com/thomasleese))
 - Bump aws-sdk-s3 from 1.113.1 to 1.113.2 [\#1832](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1832) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Add a PerMedicalMedication event [\#1831](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1831) ([georgeschena](https://github.com/georgeschena))
+- Add a PerMedicalMedication event [\#1831](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1831) ([georges1996](https://github.com/georges1996))
 - Bump aws-sdk-s3 from 1.113.0 to 1.113.1 [\#1830](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1830) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump rspec-rails from 5.1.1 to 5.1.2 [\#1829](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1829) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump rubocop-govuk from 4.3.0 to 4.4.0 [\#1828](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1828) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -688,7 +722,7 @@
 - Bump activerecord-import from 1.3.0 to 1.4.0 [\#1807](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1807) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lograge from 0.11.2 to 0.12.0 [\#1806](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1806) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump puma from 5.6.2 to 5.6.4 [\#1805](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1805) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Expose the is\_lockout field to the move serializer [\#1804](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1804) ([georgeschena](https://github.com/georgeschena))
+- Expose the is\_lockout field to the move serializer [\#1804](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1804) ([georges1996](https://github.com/georges1996))
 - Generated changelog for v3.23.0 [\#1803](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1803) ([thomasleese](https://github.com/thomasleese))
 
 ## [v3.23.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.23.0) (2022-03-30)
@@ -699,7 +733,7 @@
 
 - Filter on journey information efficiently [\#1802](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1802) ([thomasleese](https://github.com/thomasleese))
 - Generated changelog for v3.22.0 [\#1801](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1801) ([thomasleese](https://github.com/thomasleese))
-- Add a rake task to retrospectively set is\_lockout to true [\#1796](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1796) ([georgeschena](https://github.com/georgeschena))
+- Add a rake task to retrospectively set is\_lockout to true [\#1796](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1796) ([georges1996](https://github.com/georges1996))
 
 ## [v3.22.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.22.0) (2022-03-29)
 
@@ -709,7 +743,7 @@
 
 - Revert including journeys when finding moves [\#1800](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1800) ([thomasleese](https://github.com/thomasleese))
 - Add index on journey state and date [\#1799](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1799) ([thomasleese](https://github.com/thomasleese))
-- Add is\_lockout field to move object and trigger change when lockout occurs [\#1798](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1798) ([georgeschena](https://github.com/georgeschena))
+- Add is\_lockout field to move object and trigger change when lockout occurs [\#1798](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1798) ([georges1996](https://github.com/georges1996))
 - Add index to journey dates [\#1797](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1797) ([thomasleese](https://github.com/thomasleese))
 - Refresh allocation status when cancelling a move [\#1794](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1794) ([thomasleese](https://github.com/thomasleese))
 - Fix finding moves with journeys [\#1793](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1793) ([thomasleese](https://github.com/thomasleese))
