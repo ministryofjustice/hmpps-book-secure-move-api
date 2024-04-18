@@ -270,6 +270,10 @@ class Move < VersionedModel
     cancellation_reason == CANCELLATION_REASON_REJECTED
   end
 
+  def active_lodgings
+    lodgings.not_cancelled
+  end
+
   def existing_moves
     Move
         .joins(:profile)
@@ -324,8 +328,9 @@ class Move < VersionedModel
   def all_events_for_timeline
     eventable_ids = [id, profile&.person_escort_record_id, profile&.person_id].compact
     eventable_ids += journeys.pluck(:id)
+    eventable_ids += lodgings.pluck(:id)
 
-    eventable_types = %w[Move PersonEscortRecord Person Journey]
+    eventable_types = %w[Move PersonEscortRecord Person Journey Lodging]
 
     GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids).applied_order
   end

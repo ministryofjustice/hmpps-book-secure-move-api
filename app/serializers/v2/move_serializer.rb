@@ -32,7 +32,7 @@ module V2
     belongs_to :to_location,            serializer: LocationSerializer
 
     has_many :court_hearings, serializer: CourtHearingSerializer
-    has_many_if_included :lodgings, serializer: LodgingSerializer
+    has_many_if_included :lodgings, serializer: LodgingSerializer, &:active_lodgings
     has_many_if_included :journeys, serializer: JourneySerializer
 
     has_many_if_included :timeline_events, serializer: ->(record, _params) { record.class.serializer }, &:all_events_for_timeline
@@ -82,6 +82,7 @@ module V2
       journeys.from_location
       journeys.to_location
       lodgings
+      lodgings.location
     ].freeze
 
     INCLUDED_FIELDS = {

@@ -87,6 +87,30 @@ RSpec.describe GenericEvent, type: :model do
 
       expect(generic_event.for_feed).to include_json(expected_attributes)
     end
+
+    context 'with multiple location attribute keys' do
+      subject(:generic_event) do
+        create(:event_lodging_update, :end_date)
+      end
+
+      it 'returns the expected attributes' do
+        expected_attributes = {
+          'id' => generic_event.id,
+          'type' => 'LodgingUpdate',
+          'notes' => 'Flibble',
+          'created_by' => 'TEST_USER',
+          'created_at' => be_a(Time),
+          'updated_at' => be_a(Time),
+          'occurred_at' => be_a(Time),
+          'recorded_at' => be_a(Time),
+          'eventable_id' => generic_event.eventable_id,
+          'eventable_type' => 'Lodging',
+          'details' => { 'end_date' => '2020-01-03', 'location' => nil, 'old_end_date' => '2020-01-02', 'old_location' => nil },
+        }
+
+        expect(generic_event.for_feed).to include_json(expected_attributes)
+      end
+    end
   end
 
   describe '.updated_at_range scope' do

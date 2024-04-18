@@ -20,6 +20,7 @@ class ApiController < ApplicationController
   CONTENT_TYPE = 'application/vnd.api+json'
   REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}
 
+  # NOTE: these may need to be added to EXTRA_RESCUE_RESPONSES below to show up correctly in the access logs
   rescue_from ActionController::ParameterMissing, with: :render_bad_request_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_resource_not_found_error
   rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_error
@@ -33,6 +34,18 @@ class ApiController < ApplicationController
   rescue_from Faraday::ConnectionFailed, with: :render_connection_error
   rescue_from Faraday::TimeoutError, with: :render_timeout_error
   rescue_from OAuth2::Error, with: :render_nomis_bad_gateway
+
+  # Response codes for the access logs which aren't automatically converted by Rails
+  EXTRA_RESCUE_RESPONSES = {
+    'ActiveRecord::ReadOnlyRecord' => :forbidden,
+    'CanCan::AccessDenied' => :unauthorized,
+    'ActiveModel::ValidationError' => :unprocessable_entity,
+    'IncludeParamsValidator::ValidationError' => :bad_request,
+    'NotSupportedInOldVersionError' => :not_acceptable,
+    'Faraday::ConnectionFailed' => :service_unavailable,
+    'Faraday::TimeoutError' => :gateway_timeout,
+    'OAuth2::Error' => :bad_gateway,
+  }.freeze
 
   def current_user
     return Doorkeeper::Application.new unless authentication_enabled?
@@ -339,6 +352,11 @@ private
 
   def write_access_log
     yield
+    status_code = response.code
+  rescue StandardError => e
+    rescue_responses = ActionDispatch::ExceptionWrapper.rescue_responses.merge(EXTRA_RESCUE_RESPONSES)
+    status_code = Rack::Utils.status_code(rescue_responses[e.class.to_s])
+    raise
   ensure
     create_doc = controller_name == 'documents' && request.params['action'] == 'create'
     body = request.raw_post unless create_doc
@@ -351,7 +369,7 @@ private
       controller_name:,
       path: request.path,
       params: request.query_parameters,
-      code: response.code,
+      code: status_code,
       idempotency_key: request.headers['Idempotency-Key'],
       body:,
     )
