@@ -109,3 +109,13 @@ cronJobs:
 
 dashboards:
   enabled: true
+
+scripts:
+  preprodRefresh:
+    enabled: false
+    schedule: "15 6 * * *"
+  reports:
+    enabled: false
+    dailyIpt:
+      enabled: false
+      schedule: "30 6 * * *"

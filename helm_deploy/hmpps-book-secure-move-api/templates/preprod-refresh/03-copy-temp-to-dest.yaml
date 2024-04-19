@@ -1,0 +1,460 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "copy-from-temp-sql" | trunc 52 }}
+{{- if .Values.scripts.preprodRefresh.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+data:
+  copyFromTemp.sql: |-
+    BEGIN;
+    INSERT INTO frameworks SELECT * FROM frameworks_temp ON CONFLICT (id) DO UPDATE
+    SET
+    name = EXCLUDED.name,
+    version = EXCLUDED.version,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    
+    INSERT INTO framework_questions SELECT * FROM framework_questions_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_id = EXCLUDED.framework_id,
+    key = EXCLUDED.key,
+    section = EXCLUDED.section,
+    required = EXCLUDED.required,
+    question_type = EXCLUDED.question_type,
+    options = EXCLUDED.options,
+    dependent_value = EXCLUDED.dependent_value,
+    followup_comment = EXCLUDED.followup_comment,
+    followup_comment_options = EXCLUDED.followup_comment_options,
+    parent_id = EXCLUDED.parent_id,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    prefill = EXCLUDED.prefill;
+    
+    INSERT INTO framework_flags SELECT * FROM framework_flags_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_question_id = EXCLUDED.framework_question_id,
+    flag_type = EXCLUDED.flag_type,
+    title = EXCLUDED.title,
+    question_value = EXCLUDED.question_value,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    
+    
+    INSERT INTO framework_nomis_codes SELECT * FROM framework_nomis_codes_temp ON CONFLICT (id) DO UPDATE
+    SET
+    code_type = EXCLUDED.code_type,
+    code = EXCLUDED.code,
+    fallback = EXCLUDED.fallback,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    
+    INSERT INTO framework_nomis_mappings SELECT * FROM framework_nomis_mappings_temp ON CONFLICT (id) DO UPDATE
+    SET
+    raw_nomis_mapping = EXCLUDED.raw_nomis_mapping,
+    code = EXCLUDED.code,
+    code_type = EXCLUDED.code_type,
+    code_description = EXCLUDED.code_description,
+    comments = EXCLUDED.comments,
+    start_date = EXCLUDED.start_date,
+    end_date = EXCLUDED.end_date,
+    creation_date = EXCLUDED.creation_date,
+    expiry_date = EXCLUDED.expiry_date,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    approval_date = EXCLUDED.approval_date,
+    next_review_date = EXCLUDED.next_review_date;
+    
+    
+    INSERT INTO framework_responses SELECT * FROM framework_responses_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_question_id = EXCLUDED.framework_question_id,
+    value_text = EXCLUDED.value_text,
+    value_json = EXCLUDED.value_json,
+    type = EXCLUDED.type,
+    parent_id = EXCLUDED.parent_id,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    responded = EXCLUDED.responded,
+    prefilled = EXCLUDED.prefilled,
+    assessmentable_id = EXCLUDED.assessmentable_id,
+    assessmentable_type = EXCLUDED.assessmentable_type,
+    value_type = EXCLUDED.value_type,
+    section = EXCLUDED.section,
+    responded_by = EXCLUDED.responded_by,
+    responded_at = EXCLUDED.responded_at;
+    
+    
+    
+    INSERT INTO framework_flags_responses_temp SELECT * FROM framework_flags_responses ON CONFLICT DO NOTHING;
+    TRUNCATE table framework_flags_responses;
+    INSERT INTO framework_flags_responses select DISTINCT framework_response_id, framework_flag_id from framework_flags_responses_temp;
+    
+    INSERT INTO framework_nomis_codes_questions_temp SELECT * FROM framework_nomis_codes_questions ON CONFLICT DO NOTHING;
+    TRUNCATE TABLE framework_nomis_codes_questions;
+    INSERT INTO framework_nomis_codes_questions SELECT DISTINCT framework_question_id, framework_nomis_code_id FROM framework_nomis_codes_questions_temp ON CONFLICT DO NOTHING;
+    
+    INSERT INTO framework_nomis_mappings_responses SELECT * FROM framework_nomis_mappings_responses_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_response_id = EXCLUDED.framework_response_id,
+    framework_nomis_mapping_id = EXCLUDED.framework_nomis_mapping_id;
+    
+    
+    INSERT INTO categories SELECT * FROM categories_temp ON CONFLICT (id) DO UPDATE
+    SET
+    key = EXCLUDED.key,
+    title = EXCLUDED.title,
+    move_supported = EXCLUDED.move_supported,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    INSERT INTO ethnicities SELECT * FROM ethnicities_temp ON CONFLICT (id) DO UPDATE
+    SET
+    key = EXCLUDED.key,
+    title = EXCLUDED.title,
+    description = EXCLUDED.description,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    nomis_code = EXCLUDED.nomis_code,
+    disabled_at = EXCLUDED.disabled_at;
+    --
+    
+    INSERT INTO genders SELECT * FROM genders_temp ON CONFLICT (id) DO UPDATE
+    SET
+    title = EXCLUDED.title,
+    description = EXCLUDED.description,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    key = EXCLUDED.key,
+    nomis_code = EXCLUDED.nomis_code,
+    disabled_at = EXCLUDED.disabled_at;
+    --
+    
+    INSERT INTO locations SELECT * FROM locations_temp ON CONFLICT (id) DO UPDATE
+    SET
+    title = EXCLUDED.title,
+    location_type = EXCLUDED.location_type,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    nomis_agency_id = EXCLUDED.nomis_agency_id,
+    key = EXCLUDED.key,
+    disabled_at = EXCLUDED.disabled_at,
+    can_upload_documents = EXCLUDED.can_upload_documents,
+    category_id = EXCLUDED.category_id,
+    young_offender_institution = EXCLUDED.young_offender_institution,
+    premise = EXCLUDED.premise,
+    locality = EXCLUDED.locality,
+    city = EXCLUDED.city,
+    country = EXCLUDED.country,
+    postcode = EXCLUDED.postcode,
+    latitude = EXCLUDED.latitude,
+    longitude = EXCLUDED.longitude;
+    --
+    INSERT INTO regions SELECT * FROM regions_temp ON CONFLICT (id) DO UPDATE
+    SET
+    name = EXCLUDED.name,
+    key = EXCLUDED.key,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO suppliers SELECT * FROM suppliers_temp ON CONFLICT (id) DO UPDATE
+    SET
+    name = EXCLUDED.name,
+    key = EXCLUDED.key,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO supplier_locations SELECT * FROM supplier_locations_temp ON CONFLICT (id) DO UPDATE
+    SET
+    supplier_id = EXCLUDED.supplier_id,
+    location_id = EXCLUDED.location_id,
+    effective_from = EXCLUDED.effective_from,
+    effective_to = EXCLUDED.effective_to,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO locations_regions SELECT * FROM locations_regions_temp ON CONFLICT DO NOTHING;
+    --
+    
+    INSERT INTO assessment_questions SELECT * FROM assessment_questions_temp ON CONFLICT (id) DO UPDATE
+    SET
+    title = EXCLUDED.title,
+    category = EXCLUDED.category,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    key = EXCLUDED.key,
+    disabled_at = EXCLUDED.disabled_at;
+    --
+    
+    INSERT INTO nationalities SELECT * FROM nationalities_temp ON CONFLICT (id) DO UPDATE
+    SET
+    title = EXCLUDED.title,
+    description = EXCLUDED.description,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    key = EXCLUDED.key,
+    disabled_at = EXCLUDED.disabled_at;
+    --
+    
+    INSERT INTO nomis_alerts SELECT * FROM nomis_alerts_temp ON CONFLICT (id) DO UPDATE
+    SET
+    type_code = EXCLUDED.type_code,
+    code = EXCLUDED.code,
+    description = EXCLUDED.description,
+    type_description = EXCLUDED.type_description,
+    assessment_question_id = EXCLUDED.assessment_question_id,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    INSERT INTO populations SELECT * FROM populations_temp ON CONFLICT (id) DO UPDATE
+    SET
+    location_id = EXCLUDED.location_id,
+    date = EXCLUDED.date,
+    operational_capacity = EXCLUDED.operational_capacity,
+    usable_capacity = EXCLUDED.usable_capacity,
+    unlock = EXCLUDED.unlock,
+    bedwatch = EXCLUDED.bedwatch,
+    overnights_in = EXCLUDED.overnights_in,
+    overnights_out = EXCLUDED.overnights_out,
+    out_of_area_courts = EXCLUDED.out_of_area_courts,
+    discharges = EXCLUDED.discharges,
+    updated_by = EXCLUDED.updated_by,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO moves SELECT * FROM moves_temp ON CONFLICT (id) DO UPDATE
+    SET
+    date = EXCLUDED.date,
+    from_location_id = EXCLUDED.from_location_id,
+    to_location_id = EXCLUDED.to_location_id,
+    status = EXCLUDED.status,
+    updated_at = EXCLUDED.updated_at,
+    reference = EXCLUDED.reference,
+    move_type = EXCLUDED.move_type,
+    additional_information = EXCLUDED.additional_information,
+    nomis_event_id = EXCLUDED.nomis_event_id,
+    time_due = EXCLUDED.time_due,
+    cancellation_reason = EXCLUDED.cancellation_reason,
+    cancellation_reason_comment = EXCLUDED.cancellation_reason_comment,
+    profile_id = EXCLUDED.profile_id,
+    prison_transfer_reason_id = EXCLUDED.prison_transfer_reason_id,
+    reason_comment = EXCLUDED.reason_comment,
+    move_agreed = EXCLUDED.move_agreed,
+    move_agreed_by = EXCLUDED.move_agreed_by,
+    date_from = EXCLUDED.date_from,
+    date_to = EXCLUDED.date_to,
+    allocation_id = EXCLUDED.allocation_id,
+    rejection_reason = EXCLUDED.rejection_reason,
+    original_move_id = EXCLUDED.original_move_id,
+    supplier_id = EXCLUDED.supplier_id,
+    is_lockout = EXCLUDED.is_lockout;
+    --
+    
+    INSERT INTO journeys SELECT * FROM journeys_temp ON CONFLICT (id) DO UPDATE
+    SET
+    move_id = EXCLUDED.move_id,
+    supplier_id = EXCLUDED.supplier_id,
+    from_location_id = EXCLUDED.from_location_id,
+    to_location_id = EXCLUDED.to_location_id,
+    billable = EXCLUDED.billable,
+    state = EXCLUDED.state,
+    vehicle = EXCLUDED.vehicle,
+    client_timestamp = EXCLUDED.client_timestamp,
+    updated_at = EXCLUDED.updated_at,
+    date = EXCLUDED.date;
+    --
+    INSERT INTO people SELECT * FROM people_temp ON CONFLICT (id) DO UPDATE
+    SET
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    nomis_prison_number = EXCLUDED.nomis_prison_number,
+    prison_number = EXCLUDED.prison_number,
+    criminal_records_office = EXCLUDED.criminal_records_office,
+    police_national_computer = EXCLUDED.police_national_computer,
+    first_names = EXCLUDED.first_names,
+    last_name = EXCLUDED.last_name,
+    date_of_birth = EXCLUDED.date_of_birth,
+    gender_additional_information = EXCLUDED.gender_additional_information,
+    ethnicity_id = EXCLUDED.ethnicity_id,
+    gender_id = EXCLUDED.gender_id,
+    last_synced_with_nomis = EXCLUDED.last_synced_with_nomis,
+    latest_nomis_booking_id = EXCLUDED.latest_nomis_booking_id;
+    --
+    
+    INSERT INTO profiles SELECT * FROM profiles_temp ON CONFLICT (id) DO UPDATE
+    SET
+    person_id = EXCLUDED.person_id,
+    last_name = EXCLUDED.last_name,
+    first_names = EXCLUDED.first_names,
+    date_of_birth = EXCLUDED.date_of_birth,
+    aliases = EXCLUDED.aliases,
+    gender_id = EXCLUDED.gender_id,
+    ethnicity_id = EXCLUDED.ethnicity_id,
+    nationality_id = EXCLUDED.nationality_id,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    assessment_answers = EXCLUDED.assessment_answers,
+    profile_identifiers = EXCLUDED.profile_identifiers,
+    gender_additional_information = EXCLUDED.gender_additional_information,
+    latest_nomis_booking_id = EXCLUDED.latest_nomis_booking_id,
+    category = EXCLUDED.category,
+    category_code = EXCLUDED.category_code,
+    category_id = EXCLUDED.category_id,
+    requires_youth_risk_assessment = EXCLUDED.requires_youth_risk_assessment,
+    csra = EXCLUDED.csra;
+    --
+    commit;
+    begin;
+    INSERT INTO person_escort_records SELECT * FROM person_escort_records_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_id = EXCLUDED.framework_id,
+    profile_id = EXCLUDED.profile_id,
+    status = EXCLUDED.status,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    confirmed_at = EXCLUDED.confirmed_at,
+    move_id = EXCLUDED.move_id,
+    nomis_sync_status = EXCLUDED.nomis_sync_status,
+    prefill_source_id = EXCLUDED.prefill_source_id,
+    completed_at = EXCLUDED.completed_at,
+    section_progress = EXCLUDED.section_progress,
+    amended_at = EXCLUDED.amended_at,
+    handover_details = EXCLUDED.handover_details,
+    handover_occurred_at = EXCLUDED.handover_occurred_at;
+    --
+    
+    INSERT INTO allocation_complex_cases SELECT * FROM allocation_complex_cases_temp ON CONFLICT (id) DO UPDATE
+    SET
+    key = EXCLUDED.key,
+    title = EXCLUDED.title,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    
+    
+    INSERT INTO documents SELECT * FROM documents_temp ON CONFLICT (id) DO UPDATE
+    SET
+    move_id = EXCLUDED.move_id,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    discarded_at = EXCLUDED.discarded_at,
+    documentable_type = EXCLUDED.documentable_type,
+    documentable_id = EXCLUDED.documentable_id;
+    --
+    
+    INSERT INTO flipper_features SELECT * FROM flipper_features_temp ON CONFLICT (id) DO UPDATE
+    SET
+    key = EXCLUDED.key,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO flipper_gates SELECT * FROM flipper_gates_temp ON CONFLICT (id) DO UPDATE
+    SET
+    feature_key = EXCLUDED.feature_key,
+    key = EXCLUDED.key,
+    value = EXCLUDED.value,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    
+    INSERT INTO subscriptions SELECT * FROM subscriptions_temp ON CONFLICT DO NOTHING;
+    --
+    
+    INSERT INTO notifications SELECT * FROM notifications_temp ON CONFLICT (id) DO UPDATE
+    SET
+    subscription_id = EXCLUDED.subscription_id,
+    event_type = EXCLUDED.event_type,
+    topic_id = EXCLUDED.topic_id,
+    topic_type = EXCLUDED.topic_type,
+    delivery_attempts = EXCLUDED.delivery_attempts,
+    delivery_attempted_at = EXCLUDED.delivery_attempted_at,
+    delivered_at = EXCLUDED.delivered_at,
+    discarded_at = EXCLUDED.discarded_at,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    response_id = EXCLUDED.response_id,
+    notification_type_id = EXCLUDED.notification_type_id;
+    --
+    
+    
+    INSERT INTO allocations SELECT * FROM allocations_temp ON CONFLICT (id) DO UPDATE
+    SET
+    from_location_id = EXCLUDED.from_location_id,
+    to_location_id = EXCLUDED.to_location_id,
+    date = EXCLUDED.date,
+    prisoner_category = EXCLUDED.prisoner_category,
+    sentence_length = EXCLUDED.sentence_length,
+    complex_cases = EXCLUDED.complex_cases,
+    moves_count = EXCLUDED.moves_count,
+    complete_in_full = EXCLUDED.complete_in_full,
+    other_criteria = EXCLUDED.other_criteria,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    status = EXCLUDED.status,
+    cancellation_reason = EXCLUDED.cancellation_reason,
+    cancellation_reason_comment = EXCLUDED.cancellation_reason_comment,
+    requested_by = EXCLUDED.requested_by,
+    estate = EXCLUDED.estate,
+    sentence_length_comment = EXCLUDED.sentence_length_comment,
+    estate_comment = EXCLUDED.estate_comment;
+    --
+    
+    
+    
+    INSERT INTO court_hearings SELECT * FROM court_hearings_temp ON CONFLICT (id) DO UPDATE
+    SET
+    move_id = EXCLUDED.move_id,
+    start_time = EXCLUDED.start_time,
+    case_start_date = EXCLUDED.case_start_date,
+    case_type = EXCLUDED.case_type,
+    comments = EXCLUDED.comments,
+    case_number = EXCLUDED.case_number,
+    nomis_case_id = EXCLUDED.nomis_case_id,
+    nomis_hearing_id = EXCLUDED.nomis_hearing_id,
+    saved_to_nomis = EXCLUDED.saved_to_nomis,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
+    --
+    
+    INSERT INTO youth_risk_assessments SELECT * FROM youth_risk_assessments_temp ON CONFLICT (id) DO UPDATE
+    SET
+    framework_id = youth_risk_assessments.framework_id,
+    profile_id = EXCLUDED.profile_id,
+    move_id = EXCLUDED.move_id,
+    prefill_source_id = EXCLUDED.prefill_source_id,
+    status = EXCLUDED.status,
+    nomis_sync_status = EXCLUDED.nomis_sync_status,
+    confirmed_at = EXCLUDED.confirmed_at,
+    completed_at = EXCLUDED.completed_at,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    section_progress = EXCLUDED.section_progress;
+    --
+    COMMIT;
+    --
+    BEGIN;
+    INSERT INTO generic_events SELECT * FROM generic_events_temp ON CONFLICT (id) DO UPDATE
+    SET
+    eventable_id = EXCLUDED.eventable_id,
+    eventable_type = EXCLUDED.eventable_type,
+    type = EXCLUDED.type,
+    notes = EXCLUDED.notes,
+    created_by = EXCLUDED.created_by,
+    details = EXCLUDED.details,
+    occurred_at = EXCLUDED.occurred_at,
+    recorded_at = EXCLUDED.recorded_at,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at,
+    supplier_id = EXCLUDED.supplier_id,
+    classification = EXCLUDED.classification;
+    --
+    
+    -- INSERT INTO versions (id, item_type, item_id, event, whodunnit, object, created_at, supplier_id)  SELECT nextval('versions_id_seq'::regclass), item_type, item_id, event, whodunnit, object, created_at, supplier_id FROM versions_temp;
+    COMMIT;
+{{- end }}
