@@ -1,0 +1,99 @@
+---
+basePath: "/api/base"
+openapi: 3.0.1
+info:
+  title: PECS4 Base API Docs
+  version: v2
+  description: 'Book A Secure Move supplier and frontend API.
+
+    '
+consumes:
+- application/vnd.api+json
+produces:
+- application/vnd.api+json; version=2
+servers:
+- url: http://localhost:3000/
+  description: Local development (localhost)
+- url: https://hmpps-book-secure-move-api-dev.apps.cloud-platform.service.justice.gov.uk/
+  description: Dev API
+- url: https://hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk/
+  description: Staging API
+- url: https://hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk/
+  description: UAT API
+- url: https://hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk/a
+  description: PreProd API
+- url: https://api.bookasecuremove.service.justice.gov.uk/
+  description: Production API
+security:
+- oauth2: []
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          authorizationUrl: "/oauth/authorize"
+          tokenUrl: "/oauth/token/"
+          scopes: {}
+  schemas:
+    Category:
+      "$ref": "../v2/category.yaml#/Category"
+paths:
+  "/subject-access-request":
+    get:
+      summary: Returns all information related to the specified PRN
+      tags:
+      - SubjectAccessRequest
+      consumes:
+      - application/vnd.api+json
+      parameters:
+      - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
+      - name: pnr
+        in: query
+        description: Filters results to only include people identified by their police_national_computer.
+          This is a case insensitive search. Either filter[police_national_computer],
+          filter[prison_number] or filter[criminal_records_office] are supported.
+        schema:
+          type: string
+          example: 07/1435713R
+        format: string
+        required: false
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/200"
+        '204':
+          description: no content
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/204"
+        '209':
+          description: unsuppoted parameter
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/209"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/401"
+        '403':
+          description: forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/403"
