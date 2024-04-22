@@ -41,5 +41,5 @@ data:
     DROP TABLE IF EXISTS suppliers_temp CASCADE;
     DROP TABLE IF EXISTS youth_risk_assessments_temp CASCADE;
     DROP TABLE IF EXISTS generic_events_temp CASCADE;
-    DROP TABLE IF EXISTS versions_temp CASCADE;
+    -- DROP TABLE IF EXISTS versions_temp CASCADE;
     COMMIT;
