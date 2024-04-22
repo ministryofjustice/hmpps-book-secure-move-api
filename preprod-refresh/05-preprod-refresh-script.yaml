@@ -5,8 +5,8 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/bash
-    from=$(date --date="2 days ago" '+%Y-%m-%d')
-    to=$(date '+%Y-%m-%d')
+    from=$(date --date="6 hours ago" '+%Y-%m-%d %T') #Job runs every four hours - extra 2 hours should account for clock changes
+    to=$(date '+%Y-%m-%d %T')
     echo "Refreshing data from ${from} to ${to}" 
         
     createTemp='/tmp/sql/createTables.sql'

@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: preprod-refresh-job
+  name: preprod-refresh-versions-job
 spec:
-  schedule: "15 */4 * * *"
+  schedule: "15 7 * * *"
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3
@@ -17,24 +17,12 @@ spec:
         spec:
           serviceAccountName: "book-a-secure-move-api"
           containers:
-            - name: preprod-refresh
+            - name: preprod-versions-refresh
               image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
               command:
                 - /bin/entrypoint.sh
               volumeMounts:
-                - name: create-temp-tables
-                  mountPath: /tmp/sql/createTables.sql
-                  readOnly: true
-                  subPath: createTables.sql
-                - name: copy-from-temp-sql
-                  mountPath: /tmp/sql/copyFromTemp.sql
-                  readOnly: true
-                  subPath: copyFromTemp.sql
-                - name: drop-temp-tables
-                  mountPath: /tmp/sql/dropTables.sql
-                  readOnly: true
-                  subPath: dropTables.sql
-                - name: preprod-refresh-script
+                - name: preprod-refresh-versions-script
                   mountPath: /bin/entrypoint.sh
                   readOnly: true
                   subPath: entrypoint.sh
@@ -53,19 +41,7 @@ spec:
                   value: "eu-west-2"
           restartPolicy: "Never"
           volumes:
-            - name: create-temp-tables
+            - name: preprod-refresh-versions-script
               configMap:
-                name: create-temp-tables
-                defaultMode: 0755
-            - name: copy-from-temp-sql
-              configMap:
-                name: copy-from-temp-sql
-                defaultMode: 0755
-            - name: drop-temp-tables
-              configMap:
-                name: drop-temp-tables
-                defaultMode: 0755
-            - name: preprod-refresh-script
-              configMap:
-                name: preprod-refresh-script
+                name: preprod-refresh-versions-script
                 defaultMode: 0755
