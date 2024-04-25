@@ -7,7 +7,7 @@ data:
   to-date: "7 days"
   subject: "BaSM Cancelled Court Moves Report [TODAY_DATE]"
   body: "BaSM Cancelled Court Moves report for yesterday ([FROM_DATE_FULL]) to [TO_DATE_FULL] is available at the link below."
-  filename: "basm-cancelled-moves-report-[TODAY_DATE]"
+  filename: "basm-cancelled-court-moves-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "true"
   recipients: "daniel.benton@digital.justice.gov.uk, josh.jones4@digital.justice.gov.uk"

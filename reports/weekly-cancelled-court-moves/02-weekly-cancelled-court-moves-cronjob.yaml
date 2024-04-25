@@ -17,7 +17,7 @@ spec:
         spec:
           serviceAccountName: "book-a-secure-move-api"
           containers:
-            - name: weekly-cancelled-moves
+            - name: weekly-cancelled-court-moves
               image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
               command: ["bash", "/scripts/run-report.sh"]
               volumeMounts:
