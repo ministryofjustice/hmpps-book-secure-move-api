@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: preprod-refresh-versions-script
+data:
+  entrypoint.sh: |-
+    #!/bin/bash
+    from=$(date --date="26 hours ago" '+%Y-%m-%d %T')
+    to=$(date '+%Y-%m-%d %T')
+    echo "Refreshing versions from ${from} to ${to}" 
+        
+    
+    execDest() {
+      cmd=$1
+      psql $DEST_DB_INSTANCE -c "${cmd}"
+    }
+  
+    execSource() {
+      cmd=$1
+      psql $SOURCE_DB_INSTANCE -c "${cmd}"
+    }
+    
+    
+    execSource "DROP TABLE IF EXISTS versions_temp CASCADE;"
+    execSource "CREATE TABLE versions_temp (LIKE versions);"
+    execDest "DROP TABLE IF EXISTS versions_temp CASCADE;"
+    execDest "CREATE TABLE versions_temp (LIKE versions);"
+    
+    echo "Copying versions to source temp table"
+    execSource "INSERT INTO versions_temp SELECT * FROM versions where created_at >= '${from}' and created_at < '${to}';"
+    
+    echo "Starting dump of data to preprod"
+    pg_dump $SOURCE_DB_INSTANCE -t "versions_temp" -O --section=data | psql $DEST_DB_INSTANCE 
+    echo "Finished dumping data"
+
+    echo "Copying data from destination temp table to actual table"    
+    execDest "INSERT INTO versions (id, item_type, item_id, event, whodunnit, object, created_at, supplier_id)  SELECT nextval('versions_id_seq'::regclass), item_type, item_id, event, whodunnit, object, created_at, supplier_id FROM versions_temp ON CONFLICT (item_id, item_type, created_at) DO NOTHING;"
+    echo "Dropping temporary tables"
+    execDest "DROP TABLE IF EXISTS versions_temp CASCADE;"
+    execSource "DROP TABLE IF EXISTS versions_temp CASCADE;"
+    echo "All done!"
