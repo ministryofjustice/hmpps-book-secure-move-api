@@ -40,6 +40,7 @@ These dates and the current day's date are also available to be used in the emai
 - `[TO_DATE_FULL]` The date defined by the `to-date` key in the configmap, as text eg `Wednesday, 17 April`
 - `[TODAY_DATE]`  Today's date in the format `YYYY-MM-DD`
 - `[TODAY_FULL]`  Today's date as text eg `Wednesday, 17 April`
+- `[LAST_MONTH]`  Last month's name and year eg `April 2023`
 
 
 # Monthly Incomplete PER report

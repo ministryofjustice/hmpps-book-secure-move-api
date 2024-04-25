@@ -42,7 +42,7 @@ data:
     
     echo "CSV created - $(wc -l /tmp/out.csv | awk '{print $1}') lines"
     echo "Base64 encoding..."
-    b64=$(base64 -i /tmp/out.csv)
+    base64 -i /tmp/out.csv > /tmp/out.b64
     echo "Base64 encoding complete"
     
     notify='api.notifications.service.gov.uk/v2/notifications/email'
@@ -61,9 +61,9 @@ data:
     email_address="$i" \
     template_id='e8b1811b-e02f-4fe3-bddc-5f240965c789' \
     personalisation[main-text]="$(cat /tmp/body.txt)" \
-    personalisation[email-subject]="$(cat /tmp/subject.txt).csv" \
-    personalisation[link_to_file][file]="${b64}" \
-    personalisation[link_to_file][filename]="$(cat /tmp/filename.txt)" \
+    personalisation[email-subject]="$(cat /tmp/subject.txt)" \
+    personalisation[link_to_file][file]="@/tmp/out.b64" \
+    personalisation[link_to_file][filename]="$(cat /tmp/filename.txt).csv" \
     personalisation[link_to_file][confirm_email_before_download]:=${CONFIRM_EMAIL} \
     personalisation[link_to_file][retention_period]="${RETENTION_PERIOD}"
     
@@ -76,6 +76,7 @@ data:
     TO_DATE_FULL=$(date --date="$REPORT_END" '+%A, %e %B')
     TODAY_DATE=$(date '+%Y-%m-%d')
     TODAY_FULL=$(date '+%A, %e %B')
+    LAST_MONTH=$(date --date="$(date +%Y-%m-15) -1 month" '+%B %Y')
     
     sed -i ${INPUT} -e "s/\[FROM_DATE\]/${FROM_DATE}/g"
     sed -i ${INPUT} -e "s/\[FROM_DATE_FULL\]/${FROM_DATE_FULL}/g" 
@@ -83,3 +84,4 @@ data:
     sed -i ${INPUT} -e "s/\[TO_DATE_FULL\]/${TO_DATE_FULL}/g"
     sed -i ${INPUT} -e "s/\[TODAY_DATE\]/${TODAY_DATE}/g"
     sed -i ${INPUT} -e "s/\[TODAY_FULL\]/${TODAY_FULL}/g"
+    sed -i ${INPUT} -e "s/\[LAST_MONTH\]/${LAST_MONTH}/g"
