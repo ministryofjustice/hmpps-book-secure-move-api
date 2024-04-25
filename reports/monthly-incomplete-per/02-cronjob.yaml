@@ -1,0 +1,117 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: monthly-incomplete-per-report
+spec:
+  schedule: "30 6 1 * *"
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 7200
+      template:
+        spec:
+          serviceAccountName: "book-a-secure-move-api"
+          containers:
+            - name: monthly-per
+              image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
+              resources:
+                requests:
+                  memory: "8Gi"
+                limits:
+                  memory: "8Gi"
+              command: ["bash", "/report/combine-reports.sh"]
+              volumeMounts:
+                - name: report-scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: report-sql
+                  mountPath: /report
+                  readOnly: false
+              env:
+                - name: DB_INSTANCE
+                  valueFrom:
+                    secretKeyRef:
+                      name: rds-instance-hmpps-book-secure-move-api-production
+                      key: url
+                - name: NOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: hmpps-book-secure-move-api-secrets-production
+                      key: govuk_notify_api_key
+                - name: REPORT_START
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: from-date
+                - name: REPORT_END
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: to-date
+                - name: EMAIL_SUBJECT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: subject
+                - name: EMAIL_BODY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: body
+                - name: FILENAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: filename
+                - name: RETENTION_PERIOD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: retention
+                - name: EMAIL_ADDRESSEES
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: recipients
+                - name: CONFIRM_EMAIL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: incomplete-per-config
+                      key: confirm_email
+                - name: AWS_DEFAULT_REGION
+                  value: "eu-west-2"
+          restartPolicy: "Never"
+          volumes:
+            - name: report-scripts
+              configMap:
+                name: automated-reports-scripts
+                defaultMode: 0755
+                items:
+                  - key: "notify-token.sh"
+                    path: "notify-token.sh"
+                  - key: "run-report.sh"
+                    path: "run-report.sh"
+                  - key: "placeholders"
+                    path: "placeholders.sh"
+            - name: report-sql
+              configMap:
+                name: incomplete-per-config
+                defaultMode: 0755
+                items:
+                  - key: "section_status_func_sql"
+                    path: "function.sql"
+                  - key: "per_stats_sql"
+                    path: "stats.sql"
+                  - key: "section_status_sql"
+                    path: "status.sql"
+                  - key: "duplicates_sql"
+                    path: "duplicates.sql"
+                  - key: "combine_reports.sh"
+                    path: "combine-reports.sh"
+                  - key: "template"
+                    path: "template.b64"
