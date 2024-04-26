@@ -56,10 +56,12 @@ FROM crosstab('
 			where m.date between ''2024-03-01'' and ''2024-04-01''
 			and m.status = ''completed''
 			and (per.id is null or per.status not in (''completed'', ''confirmed''))
-		)') as ct (profile_id uuid,
-				"property-information" text,
-				"offence-information" text,
+			)
+			order by profile_id, section.key
+		') as ct (profile_id uuid,
 				"health-information" text,
+				"offence-information" text,
+				"property-information" text,				
 				"risk-information" text)
     ) as info
 	on info.profile_id = pro.id
