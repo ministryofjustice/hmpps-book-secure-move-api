@@ -9,6 +9,9 @@ class GenericEvent
 
     def trigger(*)
       eventable.vehicle_registration = vehicle_reg
+      if vehicle_depot.present?
+        eventable.vehicle_depot = vehicle_depot
+      end
     end
   end
 end

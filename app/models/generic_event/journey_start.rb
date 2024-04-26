@@ -11,6 +11,9 @@ class GenericEvent
       else
         Sentry.capture_message("#{self.class} created without vehicle_reg", level: 'warning', extra: { supplier: supplier&.key })
       end
+      if vehicle_depot.present?
+        eventable.vehicle_depot = vehicle_depot
+      end
 
       eventable.start
     end
