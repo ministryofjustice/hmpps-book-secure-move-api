@@ -39,12 +39,12 @@ RSpec.describe GenericEvent::JourneyStart do
     end
   end
 
-  context 'when not supplied a vehicle_reg' do
+  context 'when not supplied a vehicle_depot' do
     before do
       generic_event.vehicle_depot = nil
     end
 
-    it 'does not set the vehicle_registration on the eventable' do
+    it 'does not set the vehicle_depot on the eventable' do
       generic_event.trigger
       expect(generic_event.eventable.vehicle_depot).to eq(nil)
     end
