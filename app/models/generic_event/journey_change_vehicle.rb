@@ -1,6 +1,6 @@
 class GenericEvent
   class JourneyChangeVehicle < GenericEvent
-    details_attributes :vehicle_reg, :previous_vehicle_reg
+    details_attributes :vehicle_reg, :previous_vehicle_reg, :vehicle_depot
     eventable_types 'Journey'
 
     include VehicleRegValidations
