@@ -19,7 +19,7 @@ RSpec.describe GenericEvent::JourneyChangeVehicle do
       expect { generic_event.trigger }.to change { generic_event.eventable.vehicle_registration }
         .from(generic_event.eventable.vehicle_registration)
         .to(generic_event.vehicle_reg)
-      end
+    end
 
     it 'sets the eventable `vehicle_depot` to the event `vehicle_depot`' do
       expect { generic_event.trigger }.to change { generic_event.eventable.vehicle_depot }
