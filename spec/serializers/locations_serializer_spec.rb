@@ -79,4 +79,8 @@ RSpec.describe LocationsSerializer do
   it 'contains a disabled_at attribute' do
     expect(attributes[:disabled_at]).to eql disabled_at.iso8601
   end
+
+  it 'contains an extradition_capable attribute' do
+    expect(attributes[:extradition_capable]).to be nil
+  end
 end

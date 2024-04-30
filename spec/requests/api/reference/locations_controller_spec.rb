@@ -200,6 +200,49 @@ RSpec.describe Api::Reference::LocationsController do
         expect(response_json).to include_json(data: [{ id: location.id }])
       end
     end
+
+    context 'with an extradition_capable location' do
+      before do
+        create(
+          :location,
+          key: 'heathrow_custody_suite',
+          title: 'Heathrow Custody Suite',
+          location_type: 'police',
+          nomis_agency_id: 'HCS',
+          can_upload_documents: false,
+          suppliers: [supplier],
+          extradition_capable: true,
+        )
+      end
+
+      it_behaves_like 'an endpoint that responds with success 200' do
+        before do
+          get '/api/v1/reference/locations', params:, headers:
+        end
+
+        let(:expected_document) do
+          {
+            data: [
+              {
+                type: 'locations',
+                attributes: {
+                  key: 'heathrow_custody_suite',
+                  title: 'Heathrow Custody Suite',
+                  location_type: 'police',
+                  nomis_agency_id: 'HCS',
+                  can_upload_documents: false,
+                  extradition_capable: true,
+                },
+              },
+            ],
+          }
+        end
+
+        it 'returns the correct data' do
+          expect(response_json).to include_json(expected_document)
+        end
+      end
+    end
   end
 
   describe 'GET /api/v1/reference/locations/:id' do
