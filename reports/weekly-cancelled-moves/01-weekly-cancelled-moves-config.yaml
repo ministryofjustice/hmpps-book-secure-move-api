@@ -3,14 +3,14 @@ kind: ConfigMap
 metadata:
   name: weekly-cancelled-moves-config
 data:
-  from-date: "1 day ago"
-  to-date: "7 days"
+  from-date: "1 week ago"
+  to-date: "1 day ago"
   subject: "BaSM Cancelled Moves Report [TODAY_DATE]"
-  body: "BaSM Cancelled moves report for yesterday ([FROM_DATE_FULL]) to [TO_DATE_FULL] is available at the link below."
+  body: "BaSM Cancelled moves report for last week ([FROM_DATE_FULL] to [TO_DATE_FULL]) is available at the link below."
   filename: "basm-cancelled-moves-report-[TODAY_DATE]"
-  retention: "1 week"
+  retention: "4 weeks"
   confirm_email: "true"
-  recipients: "daniel.benton@digital.justice.gov.uk, josh.jones4@digital.justice.gov.uk"
+  recipients: "daniel.benton@digital.justice.gov.uk,josh.jones4@digital.justice.gov.uk,bill.bone@digital.justice.gov.uk"
   report_sql: |-
       select m.status,
       m.reference,

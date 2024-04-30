@@ -31,12 +31,12 @@ spec:
                 - name: DB_INSTANCE
                   valueFrom:
                     secretKeyRef:
-                      name: read-rds-instance-hmpps-book-secure-move-api-preprod
+                      name: read-rds-instance-hmpps-book-secure-move-api-production
                       key: url
                 - name: NOTIFY_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      name: hmpps-book-secure-move-api-secrets-preprod
+                      name: hmpps-book-secure-move-api-secrets-production
                       key: govuk_notify_api_key
                 - name: REPORT_START
                   valueFrom:
