@@ -473,6 +473,51 @@ RSpec.describe Api::MovesController do
       end
     end
 
+    context 'with explicit extradition `move_type`' do
+      let(:move_attributes) { attributes_for(:move, move_type: 'extradition') }
+
+      context 'when to an extradition capable location' do
+        let(:to_location) { create :location, suppliers: [supplier], extradition_capable: true }
+
+        it_behaves_like 'an endpoint that responds with success 201' do
+          before { do_post }
+        end
+
+        it 'creates a move' do
+          expect { do_post }.to change(Move, :count).by(1)
+        end
+
+        it 'sets the move_type to `extradition`' do
+          do_post
+
+          expect(response_json.dig('data', 'attributes', 'move_type')).to eq 'extradition'
+        end
+      end
+
+      context 'when to an extradition incapable location' do
+        let(:to_location) { create :location, suppliers: [supplier], extradition_capable: nil }
+
+        let(:errors_422) do
+          [
+            {
+              'title' => 'Unprocessable entity',
+              'detail' => 'Move type extradition is only valid if extradition capable is true for destination location',
+              'source' => { 'pointer' => '/data/attributes/move_type' },
+              'code' => 'exclusion',
+            },
+          ]
+        end
+
+        it_behaves_like 'an endpoint that responds with error 422' do
+          before { do_post }
+        end
+
+        it 'does not create a move' do
+          expect { do_post }.not_to change(Move, :count)
+        end
+      end
+    end
+
     context 'with a profile relationship' do
       let(:profile) { create(:profile) }
       let(:data) do

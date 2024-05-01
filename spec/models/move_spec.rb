@@ -188,6 +188,16 @@ RSpec.describe Move do
     expect(build(:move, recall_date: 'not a date')).not_to be_valid
   end
 
+  it 'allows a move_type of `extradition` if the `to_location` is permitted' do
+    to_location = build(:location, extradition_capable: true)
+    expect(build(:move, move_type: 'extradition', to_location:)).to be_valid
+  end
+
+  it 'does not allow a move_type of `extradition` if the `to_location` is not permitted' do
+    to_location = build(:location, extradition_capable: nil)
+    expect(build(:move, move_type: 'extradition', to_location:)).not_to be_valid
+  end
+
   context 'when the from_location and to_location are the same' do
     subject(:move) { build(:move, to_location: location, from_location: location) }
 
