@@ -27,10 +27,23 @@ module Api
         render_json location, serializer: LocationSerializer, include: included_relationships, status:
       end
 
-      PERMITTED_FILTER_PARAMS = %i[location_type nomis_agency_id supplier_id location_id region_id young_offender_institution created_at].freeze
+      PERMITTED_FILTER_PARAMS = %i[
+        location_type
+        nomis_agency_id
+        supplier_id
+        location_id
+        region_id
+        young_offender_institution
+        created_at
+        extradition_capable
+      ].freeze
 
       def filter_params
-        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h
+        params.fetch(:filter, {}).permit(PERMITTED_FILTER_PARAMS).to_h.tap do |params_hash|
+          if params_hash['extradition_capable']
+            params_hash['extradition_capable'] = ActiveRecord::Type::Boolean.new.deserialize(params_hash['extradition_capable'])
+          end
+        end
       end
 
       def supported_relationships
