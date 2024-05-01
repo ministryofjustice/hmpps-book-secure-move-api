@@ -136,6 +136,19 @@ RSpec.describe Locations::Finder do
         expect(location_finder.call.pluck(:title)).to contain_exactly('Non YOI')
       end
     end
+
+    context 'with extradition_capable true' do
+      let(:filter_params) { { extradition_capable: true } }
+
+      before do
+        create(:location, extradition_capable: true, title: 'Extradition Location')
+        create(:location, extradition_capable: false, title: 'Normal Location')
+      end
+
+      it 'returns only extradition locations' do
+        expect(location_finder.call.pluck(:title)).to contain_exactly('Extradition Location')
+      end
+    end
   end
 
   describe 'sorting' do
