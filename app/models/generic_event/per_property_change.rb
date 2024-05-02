@@ -10,3 +10,4 @@ class GenericEvent
     include PersonnelNumberValidations
     include LocationFeed
   end
+end
