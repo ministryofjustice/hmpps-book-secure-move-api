@@ -116,3 +116,9 @@ Location:
           type: boolean
           example: true
           description: A flag to indicate whether this location allows document uploads
+        extradition_capable:
+          oneOf:
+          - type: boolean
+          - type: 'null'
+          example: false
+          description: Indicates that this location can be set as a destination for extradition moves
