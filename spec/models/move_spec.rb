@@ -15,6 +15,7 @@ RSpec.describe Move do
   it { is_expected.to have_many(:notification_events) }
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
+  it { is_expected.to have_one(:flight_details) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
