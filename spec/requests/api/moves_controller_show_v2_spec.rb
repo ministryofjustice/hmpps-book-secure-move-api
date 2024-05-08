@@ -53,12 +53,12 @@ RSpec.describe Api::MovesController do
 
         create(:event_move_accept, eventable: move)
         create(:event_move_redirect, eventable: move)
-
-        get "/api/moves/#{move.id}#{query_params}", params:, headers:
       end
 
       context 'when not including the include query param' do
         let(:query_params) { '' }
+
+        before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
 
         it 'returns the default includes' do
           returned_types = response_json['included']
@@ -69,6 +69,8 @@ RSpec.describe Api::MovesController do
       context 'when including the include query param' do
         let(:query_params) { '?include=profile' }
 
+        before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
+
         it 'includes the requested includes in the response' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
           expect(returned_types).to contain_exactly('profiles')
@@ -77,6 +79,8 @@ RSpec.describe Api::MovesController do
 
       context 'when including non-database fields' do
         let(:query_params) { '?include=timeline_events,timeline_events.to_location' }
+
+        before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
 
         it 'includes the requested includes in the response' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
@@ -98,9 +102,23 @@ RSpec.describe Api::MovesController do
           }
         end
 
+        before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
+
         it 'returns a validation error' do
           expect(response).to have_http_status(:bad_request)
           expect(response_json).to include(expected_error)
+        end
+      end
+
+      context 'when including flight details' do
+        let!(:flight_details) { create(:flight_details, move:) }
+        let(:query_params) { '?include=flight_details' }
+
+        before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
+
+        it 'includes the flight details in the response' do
+          returned_types = response_json['included'].map { |r| r['type'] }.uniq
+          expect(returned_types).to contain_exactly('flight_details')
         end
       end
     end

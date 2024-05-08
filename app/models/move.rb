@@ -84,6 +84,7 @@ class Move < VersionedModel
   has_one :person, through: :profile
   has_one :person_escort_record
   has_one :youth_risk_assessment
+  has_one :flight_details
 
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true

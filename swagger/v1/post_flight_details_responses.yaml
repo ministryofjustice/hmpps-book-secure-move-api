@@ -1,0 +1,12 @@
+'201':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: flight_details.yaml#/FlightDetails
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: move.yaml#/Move
