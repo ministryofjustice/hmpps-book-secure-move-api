@@ -66,5 +66,6 @@ class MoveSerializer
     prison_transfer_reason
     court_hearings
     original_move
+    flight_details
   ].freeze
 end
