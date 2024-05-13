@@ -110,15 +110,15 @@ RSpec.describe Api::MovesController do
         end
       end
 
-      context 'when including flight details' do
-        let!(:flight_details) { create(:flight_details, move:) }
-        let(:query_params) { '?include=flight_details' }
+      context 'when including extradition flight' do
+        let!(:extradition_flight) { create(:extradition_flight, move:) }
+        let(:query_params) { '?include=extradition_flight' }
 
         before { get "/api/moves/#{move.id}#{query_params}", params:, headers: }
 
-        it 'includes the flight details in the response' do
+        it 'includes the extradition flight in the response' do
           returned_types = response_json['included'].map { |r| r['type'] }.uniq
-          expect(returned_types).to contain_exactly('flight_details')
+          expect(returned_types).to contain_exactly('extradition_flight')
         end
       end
     end

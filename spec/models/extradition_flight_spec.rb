@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe FlightDetails do
-  subject(:flight_details) { build(:flight_details, flight_time:) }
+RSpec.describe ExtraditionFlight do
+  subject(:extradition_flight) { build(:extradition_flight, flight_time:) }
 
   let(:flight_time) { '2024-01-01T12:00:00Z' }
 

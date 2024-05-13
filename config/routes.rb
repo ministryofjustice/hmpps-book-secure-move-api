@@ -64,7 +64,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :flight_details, only: %i[index create update]
+      resources :extradition_flight, only: %i[index create update]
 
       member do
         post 'accept', controller: 'move_events'

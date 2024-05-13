@@ -1,10 +1,10 @@
-'201':
+'200':
   type: object
   required:
   - data
   properties:
     data:
-      $ref: flight_details.yaml#/FlightDetails
+      $ref: extradtion_flight.yaml#/ExtraditionFlight
     included:
       type: array
       items:

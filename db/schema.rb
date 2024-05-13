@@ -144,13 +144,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_02_112955) do
     t.datetime "disabled_at", precision: nil
   end
 
-  create_table "flight_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "extradition_flights", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "flight_number", null: false
     t.string "flight_time", null: false
     t.uuid "move_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["move_id"], name: "index_flight_details_on_move_id"
+    t.index ["move_id"], name: "index_extradition_flights_on_move_id"
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -691,7 +691,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_02_112955) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
-  add_foreign_key "flight_details", "moves"
+  add_foreign_key "extradition_flights", "moves"
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"
