@@ -1,4 +1,4 @@
-FlightDetails:
+ExtraditionFlight:
   type: object
   required:
   - type
@@ -11,10 +11,10 @@ FlightDetails:
       description: The unique identifier (UUID) of this object
     type:
       type: string
-      example: flight_details
+      example: extradition_flight
       enum:
-      - flight_details
-      description: The type of this object - always `flight_details`
+      - extradition_flight
+      description: The type of this object - always `extradition_flight`
     attributes:
       type: object
       properties:
@@ -28,4 +28,4 @@ FlightDetails:
       properties:
         move:
           $ref: move_reference.yaml#/MoveReference
-          description: The Move associated with these FlightDetails
+          description: The Move associated with this ExtraditionFlight

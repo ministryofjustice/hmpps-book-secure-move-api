@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class FlightDetailsSerializer
+class ExtraditionFlightSerializer
   include JSONAPI::Serializer
 
-  set_type :flight_details
+  set_type :extradition_flight
 
   attributes :flight_number,
              :flight_time

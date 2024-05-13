@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::FlightDetailsController do
-  describe 'PATCH /moves/:move_id/flight_details/:flight_details_id' do
-    subject(:do_patch) do
-      patch "/api/moves/#{move_id}/flight_details/#{flight_details.id}", params:, headers:, as: :json
+RSpec.describe Api::ExtraditionFlightController do
+  describe 'POST /moves/:move_id/extradition_flight' do
+    subject(:do_post) do
+      post "/api/moves/#{move_id}/extradition_flight", params:, headers:, as: :json
     end
 
     let(:headers) do
@@ -26,13 +26,12 @@ RSpec.describe Api::FlightDetailsController do
     let(:move) { create(:move, supplier:) }
     let(:move_id) { move.id }
     let(:flight_number) { 'BA0123' }
-    let(:flight_time) { '2024-01-01' }
-    let(:flight_details) { create(:flight_details, flight_number: 'AA0234', flight_time: '2024-01-01', move:) }
+    let(:flight_time) { '2020-05-04' }
 
     let(:params) do
       {
         data: {
-          type: 'flight_details',
+          type: 'extradition_flight',
           attributes: {
             flight_number:,
             flight_time:,
@@ -52,8 +51,8 @@ RSpec.describe Api::FlightDetailsController do
     context 'when successful' do
       let(:data) do
         {
-          id: flight_details.id,
-          type: 'flight_details',
+          id: ExtraditionFlight.last.id,
+          type: 'extradition_flight',
           attributes: {
             flight_number:,
             flight_time:,
@@ -69,20 +68,24 @@ RSpec.describe Api::FlightDetailsController do
         }
       end
 
-      let(:schema) { load_yaml_schema('patch_flight_details_responses.yaml') }
+      let(:schema) { load_yaml_schema('post_extradition_flight_responses.yaml') }
 
-      it_behaves_like 'an endpoint that responds with success 200' do
-        before { do_patch }
+      it_behaves_like 'an endpoint that responds with success 201' do
+        before { do_post }
       end
 
       it 'returns the correct data' do
-        do_patch
+        do_post
         expect(response_json).to include_json(data:)
       end
 
-      it 'updates the flight number in the database' do
-        do_patch
-        expect(flight_details.reload.flight_number).to eq(flight_number)
+      it 'creates the extradition flight in the DB' do
+        do_post
+        expect(move.extradition_flight.attributes.symbolize_keys.slice(:flight_number, :flight_time, :move_id)).to eq({
+          flight_number:,
+          flight_time:,
+          move_id:,
+        })
       end
     end
 
@@ -93,7 +96,7 @@ RSpec.describe Api::FlightDetailsController do
         let(:flight_time) { '9999-A1-02' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          before { do_patch }
+          before { do_post }
 
           let(:errors_422) do
             [
@@ -110,7 +113,7 @@ RSpec.describe Api::FlightDetailsController do
         let(:params) { nil }
 
         it_behaves_like 'an endpoint that responds with error 400' do
-          before { do_patch }
+          before { do_post }
         end
       end
 
@@ -120,7 +123,7 @@ RSpec.describe Api::FlightDetailsController do
 
         it_behaves_like 'an endpoint that responds with error 404' do
           before do
-            do_patch
+            do_post
           end
         end
       end

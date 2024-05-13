@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::FlightDetailsController do
-  describe 'GET /moves/:move_id/flight_details' do
+RSpec.describe Api::ExtraditionFlightController do
+  describe 'GET /moves/:move_id/extradition_flight' do
     subject(:do_get) do
-      get "/api/moves/#{move_id}/flight_details", headers:, as: :json
+      get "/api/moves/#{move_id}/extradition_flight", headers:, as: :json
     end
 
     let(:headers) do
@@ -28,13 +28,13 @@ RSpec.describe Api::FlightDetailsController do
     let(:flight_number) { 'BA0123' }
     let(:flight_time) { '2024-01-01' }
 
-    context 'when flight details exist' do
-      let!(:flight_details) { create(:flight_details, flight_number:, flight_time:, move:) }
+    context 'when an extradition flight exists' do
+      let!(:extradition_flight) { create(:extradition_flight, flight_number:, flight_time:, move:) }
 
       let(:data) do
         {
-          id: flight_details.id,
-          type: 'flight_details',
+          id: extradition_flight.id,
+          type: 'extradition_flight',
           attributes: {
             flight_number:,
             flight_time:,
@@ -50,7 +50,7 @@ RSpec.describe Api::FlightDetailsController do
         }
       end
 
-      let(:schema) { load_yaml_schema('get_flight_details_responses.yaml') }
+      let(:schema) { load_yaml_schema('get_extradition_flight_responses.yaml') }
 
       it_behaves_like 'an endpoint that responds with success 200' do
         before { do_get }
@@ -63,7 +63,7 @@ RSpec.describe Api::FlightDetailsController do
 
       it 'updates the flight number in the database' do
         do_get
-        expect(flight_details.reload.flight_number).to eq(flight_number)
+        expect(extradition_flight.reload.flight_number).to eq(flight_number)
       end
 
       describe 'with included move' do
@@ -101,8 +101,8 @@ RSpec.describe Api::FlightDetailsController do
         end
       end
 
-      context 'when there are no flight details associated with the move' do
-        let(:detail_404) { "Couldn't find FlightDetails with [WHERE \"flight_details\".\"move_id\" = $1]" }
+      context 'when there is no extradition flight associated with the move' do
+        let(:detail_404) { "Couldn't find ExtraditionFlight with [WHERE \"extradition_flights\".\"move_id\" = $1]" }
 
         it_behaves_like 'an endpoint that responds with error 404' do
           before do

@@ -41,7 +41,7 @@ module V2
     belongs_to :allocation, serializer: AllocationSerializer
     belongs_to :original_move, serializer: V2::MoveSerializer
 
-    has_one_if_included :flight_details, serializer: FlightDetailsSerializer
+    has_one_if_included :extradition_flight, serializer: ExtraditionFlightSerializer
 
     SUPPORTED_RELATIONSHIPS = %w[
       profile.documents
@@ -85,7 +85,7 @@ module V2
       journeys.to_location
       lodgings
       lodgings.location
-      flight_details
+      extradition_flight
     ].freeze
 
     INCLUDED_FIELDS = {

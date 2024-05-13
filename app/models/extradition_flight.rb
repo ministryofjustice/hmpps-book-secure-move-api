@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FlightDetails < ApplicationRecord
+class ExtraditionFlight < ApplicationRecord
   belongs_to :move
 
   validates :flight_number, presence: true
