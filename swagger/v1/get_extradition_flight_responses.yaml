@@ -4,7 +4,7 @@
   - data
   properties:
     data:
-      $ref: extradtion_flight.yaml#/ExtraditionFlight
+      $ref: extradition_flight.yaml#/ExtraditionFlight
     included:
       type: array
       items:
