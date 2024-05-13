@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::FlightDetailsController do
+RSpec.describe Api::ExtraditionFlightController do
   describe 'PATCH /moves/:move_id/extradition_flight/:extradition_flight_id' do
     subject(:do_patch) do
       patch "/api/moves/#{move_id}/extradition_flight/#{extradition_flight.id}", params:, headers:, as: :json
