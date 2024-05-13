@@ -1,4 +1,4 @@
-FlightDetails:
+ExtraditionFlight:
   type: object
   required:
   - type
@@ -28,4 +28,4 @@ FlightDetails:
       properties:
         move:
           $ref: move_reference.yaml#/MoveReference
-          description: The Move associated with these FlightDetails
+          description: The Move associated with this ExtraditionFlight

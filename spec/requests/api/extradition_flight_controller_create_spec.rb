@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::FlightDetailsController do
+RSpec.describe Api::ExtraditionFlightController do
   describe 'POST /moves/:move_id/extradition_flight' do
     subject(:do_post) do
       post "/api/moves/#{move_id}/extradition_flight", params:, headers:, as: :json
@@ -51,7 +51,7 @@ RSpec.describe Api::FlightDetailsController do
     context 'when successful' do
       let(:data) do
         {
-          id: FlightDetails.last.id,
+          id: ExtraditionFlight.last.id,
           type: 'extradition_flight',
           attributes: {
             flight_number:,
