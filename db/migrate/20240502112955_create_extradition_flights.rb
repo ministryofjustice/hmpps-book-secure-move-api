@@ -1,4 +1,4 @@
-class CreateExtraditionFlight < ActiveRecord::Migration[7.0]
+class CreateExtraditionFlights < ActiveRecord::Migration[7.0]
   def change
     create_table :extradition_flights, id: :uuid do |t|
       t.string :flight_number, null: false
