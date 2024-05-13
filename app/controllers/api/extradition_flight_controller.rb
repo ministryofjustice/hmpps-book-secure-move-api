@@ -17,8 +17,8 @@ module Api
     end
 
     def create
-      @extradition_flight = ExtraditionFlight.create!(new_extradition_flight_attributes)
-
+      @extradition_flight = ExtraditionFlight.new(new_extradition_flight_attributes)
+      @extradition_flight.save!
       render_extradition_flight(@extradition_flight, :created)
     end
 
