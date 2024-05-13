@@ -102,7 +102,7 @@ RSpec.describe Api::ExtraditionFlightController do
       end
 
       context 'when there is no extradition flight associated with the move' do
-        let(:detail_404) { "Couldn't find ExtraditionFlight with [WHERE \"extradition_flight\".\"move_id\" = $1]" }
+        let(:detail_404) { "Couldn't find ExtraditionFlight with [WHERE \"extradition_flights\".\"move_id\" = $1]" }
 
         it_behaves_like 'an endpoint that responds with error 404' do
           before do
