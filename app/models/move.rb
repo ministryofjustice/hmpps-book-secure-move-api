@@ -59,6 +59,7 @@ class Move < VersionedModel
     prison_transfer: 'prison_transfer',
     video_remand: 'video_remand',
     approved_premises: 'approved_premises',
+    extradition: 'extradition',
   }
 
   CANCELLATION_REASONS = [
@@ -83,6 +84,7 @@ class Move < VersionedModel
   has_one :person, through: :profile
   has_one :person_escort_record
   has_one :youth_risk_assessment
+  has_one :extradition_flight
 
   belongs_to :prison_transfer_reason, optional: true
   belongs_to :allocation, inverse_of: :moves, optional: true
@@ -124,6 +126,13 @@ class Move < VersionedModel
   validate :validate_date_change_allocation, on: :update, unless: -> { validation_context == :update_allocation }
 
   validates :recall_date, date: true
+
+  validates :move_type,
+            exclusion: {
+              in: %w[extradition],
+              message: '%{value} is only valid if extradition_capable is true for destination location',
+            },
+            unless: -> { to_location&.extradition_capable }
 
   before_validation :set_reference
   before_validation :set_move_type

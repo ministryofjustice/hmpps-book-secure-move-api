@@ -15,6 +15,7 @@ RSpec.describe Move do
   it { is_expected.to have_many(:notification_events) }
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
+  it { is_expected.to have_one(:extradition_flight) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
@@ -186,6 +187,16 @@ RSpec.describe Move do
 
   it 'does not allow an invalid date for recall_date' do
     expect(build(:move, recall_date: 'not a date')).not_to be_valid
+  end
+
+  it 'allows a move_type of `extradition` if the `to_location` is permitted' do
+    to_location = build(:location, extradition_capable: true)
+    expect(build(:move, move_type: 'extradition', to_location:)).to be_valid
+  end
+
+  it 'does not allow a move_type of `extradition` if the `to_location` is not permitted' do
+    to_location = build(:location, extradition_capable: nil)
+    expect(build(:move, move_type: 'extradition', to_location:)).not_to be_valid
   end
 
   context 'when the from_location and to_location are the same' do

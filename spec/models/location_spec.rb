@@ -136,4 +136,14 @@ RSpec.describe Location do
       expect(location).to have_received(:geocode).twice
     end
   end
+
+  describe 'extradition_capable' do
+    let(:location) { build(:location) }
+
+    it 'has an extradition_capable field' do
+      location.extradition_capable = true
+      location.save!
+      expect(location.reload.extradition_capable).to eq(true)
+    end
+  end
 end

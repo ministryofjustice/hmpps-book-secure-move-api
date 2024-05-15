@@ -37,6 +37,7 @@ module Locations
       scope = apply_location_filters(scope)
       scope = apply_region_filters(scope)
       scope = apply_young_offender_institution_filters(scope)
+      scope = apply_extradition_filters(scope)
       apply_created_at_filters(scope)
     end
 
@@ -76,6 +77,11 @@ module Locations
     def apply_young_offender_institution_filters(scope)
       scope = scope.where(young_offender_institution: true) if filter_params[:young_offender_institution].to_s == 'true'
       scope = scope.where(young_offender_institution: false) if filter_params[:young_offender_institution].to_s == 'false'
+      scope
+    end
+
+    def apply_extradition_filters(scope)
+      scope = scope.where(extradition_capable: true) if filter_params.key?(:extradition_capable)
       scope
     end
 

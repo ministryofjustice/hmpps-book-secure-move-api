@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_18_133654) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_02_112955) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -142,6 +142,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_133654) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "nomis_code"
     t.datetime "disabled_at", precision: nil
+  end
+
+  create_table "extradition_flights", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "flight_number", null: false
+    t.string "flight_time", null: false
+    t.uuid "move_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["move_id"], name: "index_extradition_flights_on_move_id"
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -345,6 +354,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_133654) do
     t.string "postcode"
     t.float "latitude"
     t.float "longitude"
+    t.boolean "extradition_capable"
     t.index ["category_id"], name: "index_locations_on_category_id"
     t.index ["location_type"], name: "index_locations_on_location_type"
     t.index ["nomis_agency_id"], name: "index_locations_on_nomis_agency_id"
@@ -646,7 +656,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_133654) do
   end
 
   create_table "versions", force: :cascade do |t|
-    t.string "item_type", null: false
+    t.string "item_type"
+    t.string "{:null=>false}"
     t.uuid "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
@@ -680,6 +691,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_133654) do
   add_foreign_key "allocations", "locations", column: "to_location_id", name: "fk_rails_allocations_to_location_id"
   add_foreign_key "court_hearings", "moves"
   add_foreign_key "documents", "moves"
+  add_foreign_key "extradition_flights", "moves"
   add_foreign_key "framework_flags", "framework_questions"
   add_foreign_key "framework_questions", "frameworks"
   add_foreign_key "framework_responses", "framework_questions"

@@ -23,7 +23,7 @@ module NomisClient
           alert_type_description: alert['alertTypeDescription'],
           alert_code: alert['alertCode'],
           alert_code_description: alert['alertCodeDescription'],
-          comment: alert['comment'],
+          comments: alert['comment'],
           created_at: alert['dateCreated'],
           expires_at: alert['dateExpires'],
           expired: alert['expired'],

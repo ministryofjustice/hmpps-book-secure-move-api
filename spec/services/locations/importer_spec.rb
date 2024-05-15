@@ -42,11 +42,20 @@ RSpec.describe Locations::Importer do
         location_type: :high_security_hospital,
         can_upload_documents: false,
       },
-      { nomis_agency_id: 'FOO1',
+      {
+        nomis_agency_id: 'FOO1',
         key: 'bar',
         title: "Don't import me",
         location_type: 'FOO',
-        can_upload_documents: false },
+        can_upload_documents: false,
+      },
+      {
+        nomis_agency_id: 'CUSTARD',
+        key: 'custard',
+        title: 'Heathrow Custody Suite (changed name)',
+        location_type: :police,
+        can_upload_documents: false,
+      },
     ]
   end
 
@@ -78,7 +87,7 @@ RSpec.describe Locations::Importer do
 
   context 'with no existing records' do
     it 'creates all the supported input items' do
-      expect { importer.call }.to change(Location, :count).by(5)
+      expect { importer.call }.to change(Location, :count).by(6)
     end
 
     it 'creates all the known location types' do
@@ -121,7 +130,7 @@ RSpec.describe Locations::Importer do
 
     it 'does not import unknown location types' do
       importer.call
-      expect(Location.find_by(input_data.last)).not_to be_present
+      expect(Location.find_by(input_data[5])).not_to be_present
     end
 
     it 'does not populate missing address details' do
@@ -138,7 +147,7 @@ RSpec.describe Locations::Importer do
 
     it 'returns a list of new locations' do
       importer.call
-      expect(importer.added_locations).to match_array(%w[ABDRCT ACI FOO1 HOSP1 SCH1 STC1])
+      expect(importer.added_locations).to match_array(%w[ABDRCT ACI CUSTARD FOO1 HOSP1 SCH1 STC1])
     end
   end
 
@@ -148,7 +157,7 @@ RSpec.describe Locations::Importer do
     end
 
     it 'creates only the missing items' do
-      expect { importer.call }.to change(Location, :count).by(4)
+      expect { importer.call }.to change(Location, :count).by(5)
     end
 
     it 'does not return the existing location in the list of updated records' do
@@ -203,6 +212,23 @@ RSpec.describe Locations::Importer do
       importer.call
       expect(importer.disabled_locations).to be_empty
       expect(importer.updated_locations).to match_array(%w[ABDRCT])
+    end
+  end
+
+  context 'with an existing extradition_capable location' do
+    let!(:custody_suite) do
+      Location.create!(input_data[6].merge(extradition_capable: true, title: 'Heathrow (old name)'))
+    end
+
+    it 'does not change the extradition_capable attribute of the existing record' do
+      importer.call
+      expect(custody_suite.reload.extradition_capable).to eq(true)
+    end
+
+    it 'returns the existing record in the list of updated records' do
+      importer.call
+      expect(importer.disabled_locations).to be_empty
+      expect(importer.updated_locations).to match_array(%w[CUSTARD])
     end
   end
 end

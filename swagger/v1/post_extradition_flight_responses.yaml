@@ -1,0 +1,12 @@
+'201':
+  type: object
+  required:
+  - data
+  properties:
+    data:
+      $ref: extradition_flight.yaml#/ExtraditionFlight
+    included:
+      type: array
+      items:
+        anyOf:
+        - $ref: move.yaml#/Move

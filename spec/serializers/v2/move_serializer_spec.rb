@@ -61,6 +61,7 @@ RSpec.describe V2::MoveSerializer do
         profile: create(:profile, :with_documents),
         supplier: create(:supplier),
         lodgings: create_list(:lodging, 1),
+        extradition_flight: create(:extradition_flight),
       )
     end
 
@@ -71,7 +72,7 @@ RSpec.describe V2::MoveSerializer do
 
     it 'contains all included relationships' do
       expect(result[:included].map { |r| r[:type] }.uniq)
-        .to match_array(%w[people ethnicities genders locations profiles moves documents prison_transfer_reasons court_hearings suppliers lodgings])
+        .to match_array(%w[people ethnicities genders locations profiles moves documents prison_transfer_reasons court_hearings suppliers lodgings extradition_flight])
     end
 
     # TODO: Remove me when we're done with location suppliers - this is used to distinguish between them
