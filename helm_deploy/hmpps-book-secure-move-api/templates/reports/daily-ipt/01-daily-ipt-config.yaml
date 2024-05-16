@@ -12,7 +12,7 @@ data:
   filename: "basm-ipt-moves-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "false"
-  recipients: "daniel.benton@digital.justice.gov.uk,bill.bone@digital.justice.gov.uk,cell.certification@justice.gov.uk"
+  recipients: {{ .Values.scripts.reports.dailyIpt.recipients }}
   report_sql: |-
     SELECT DISTINCT from_loc, 
                     to_loc, 
