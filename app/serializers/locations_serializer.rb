@@ -19,5 +19,6 @@ class LocationsSerializer
              :latitude,
              :longitude,
              :created_at,
-             :disabled_at
+             :disabled_at,
+             :extradition_capable
 end

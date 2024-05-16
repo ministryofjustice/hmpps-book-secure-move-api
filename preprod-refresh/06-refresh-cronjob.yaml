@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: preprod-refresh-job
 spec:
-  schedule: "15 6 * * *"
+  schedule: "15 */4 * * *"
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3

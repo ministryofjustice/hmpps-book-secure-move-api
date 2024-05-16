@@ -10,4 +10,5 @@ MoveType:
     - prison_transfer
     - video_remand
     - approved_premises
+    - extradition
   description: Indicates the type of move, e.g. prison transfer or court appearance

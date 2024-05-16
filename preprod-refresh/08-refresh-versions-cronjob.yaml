@@ -1,0 +1,47 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: preprod-refresh-versions-job
+spec:
+  schedule: "15 7 * * *"
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 7200
+      template:
+        spec:
+          serviceAccountName: "book-a-secure-move-api"
+          containers:
+            - name: preprod-versions-refresh
+              image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
+              command:
+                - /bin/entrypoint.sh
+              volumeMounts:
+                - name: preprod-refresh-versions-script
+                  mountPath: /bin/entrypoint.sh
+                  readOnly: true
+                  subPath: entrypoint.sh
+              env:
+                - name: DEST_DB_INSTANCE
+                  valueFrom:
+                    secretKeyRef:
+                      name: preprod-rds-creds
+                      key: url
+                - name: SOURCE_DB_INSTANCE
+                  valueFrom:
+                    secretKeyRef:
+                      name: rds-instance-hmpps-book-secure-move-api-production
+                      key: url
+                - name: AWS_DEFAULT_REGION
+                  value: "eu-west-2"
+          restartPolicy: "Never"
+          volumes:
+            - name: preprod-refresh-versions-script
+              configMap:
+                name: preprod-refresh-versions-script
+                defaultMode: 0755

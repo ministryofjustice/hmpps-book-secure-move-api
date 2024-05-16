@@ -8,4 +8,5 @@ Rswag::Ui.configure do |c|
 
   c.swagger_endpoint '/api-docs/v2/swagger.yaml', 'PECS4 API V2 Docs'
   c.swagger_endpoint '/api-docs/v1/swagger.yaml', 'PECS4 API V1 Docs'
+  c.swagger_endpoint '/api-docs/base/swagger.yaml', 'PECS4 API Base Docs'
 end
