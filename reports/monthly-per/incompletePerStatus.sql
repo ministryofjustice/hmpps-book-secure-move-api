@@ -30,9 +30,13 @@ m.status,
 	getstatus(info."property-information") as property,
 	dupe.dupe as dupe,
 	CASE
-		WHEN s.name is not null and l.location_type = 'court' then 'true'
+		WHEN l.location_type = 'court' then 'true'
 		ELSE null
-	END as supplier_from_court,
+	END as from_location_court,
+	CASE
+		WHEN t.location_type = 'court' then 'true'
+		ELSE null
+	END as to_location_court,
 	m.allocation_id as allocation,
 	'https://bookasecuremove.service.justice.gov.uk/move/' || m.id as url
 	from moves m 
