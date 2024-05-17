@@ -1,0 +1,84 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-config" | trunc 52 }}
+{{- if .Values.scripts.reports.dailyIpt.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+data:
+  from-date: "1 day ago"
+  to-date: "14 days"
+  subject: "BaSM IPT Moves Report [TODAY_DATE]"
+  body: "BaSM IPT moves report for yesterday ([FROM_DATE_FULL]) to [TO_DATE_FULL] is available at the link below."
+  filename: "basm-ipt-moves-report-[TODAY_DATE]"
+  retention: "1 week"
+  confirm_email: "false"
+  recipients: {{ .Values.scripts.reports.dailyIpt.recipients }}
+  report_sql: |-
+    SELECT DISTINCT from_loc, 
+                    to_loc, 
+                    l.allocation_id, 
+                    date, 
+                    moves_booked, 
+                    completed_moves, 
+                    cancelled_moves, 
+                    nomis_ids_comp as offenders_booked_or_moved, 
+                    nomis_ids_can  as offenders_cancelled 
+    from (SELECT from_loc, 
+                 to_loc, 
+                 allocation_id, 
+                 join_id, 
+                 date, 
+                 coalesce(initial_moves_count::integer,
+                          count(reference) filter (where allocation_id = 'Single Moves')) as moves_booked,
+                 count(reference) filter (where move_status = 'completed')                as completed_moves,
+                 count(reference) filter (where move_status = 'cancelled')                as cancelled_moves
+          FROM (SELECT m.reference,
+                       f.title                                                  as from_loc,
+                       t.title                                                  as to_loc,
+                       m.date,
+                       coalesce(m.allocation_id::text, 'Single Moves')          as allocation_id,
+                       CASE
+                           WHEN m.allocation_id is Null THEN profile_id
+                           ELSE m.allocation_id
+                           END                                                  as join_id,
+                       a.moves_count                                            as current_moves_in_allocation,
+                       m.status                                                    move_status,
+                       a.status                                                 as allocation_status,
+                       coalesce(update_entry.initial_size, a.moves_count::text) as initial_moves_count
+                FROM moves m
+                         JOIN locations f on m.from_location_id = f.id
+                         JOIN locations t on m.to_location_id = t.id
+                         LEFT OUTER JOIN allocations a on a.id = m.allocation_id
+                         
+                         LEFT OUTER JOIN (SELECT allocation_id,
+                                                 split_part(keyval, ':', 2) AS initial_size
+                                          from (SELECT DISTINCT ON (item_id) item_id                             AS allocation_id,
+                                                                             regexp_split_to_table(object, '\n') as keyval
+                                                from versions
+                                                where item_type = 'Allocation'
+                                                  and item_id in (select distinct allocation_id
+                                                                  from moves m
+                                                                  where m.date between '[FROM]' and '[TO]'
+                                                                    and allocation_id is not null)
+                                                  and event = 'update'
+                                                order by item_id, created_at)
+                                          where split_part(keyval, ':', 1) = 'moves_count') update_entry
+                                         on update_entry.allocation_id = m.allocation_id
+                where m.move_type = 'prison_transfer'
+                  and m.date between '[FROM]' and '[TO]'
+                order by m.date, m.allocation_id) a
+          group by a.allocation_id, a.join_id, a.from_loc, a.to_loc, a.date, a.initial_moves_count
+          order by date) as l
+             LEFT JOIN(select DISTINCT CASE
+                                           WHEN m.allocation_id is Null THEN profile_id
+                                           ELSE m.allocation_id
+                                           END                                                          as join_id,
+                                       string_agg(nomis_id, ';') filter (where m.status <> 'cancelled') as nomis_ids_comp,
+                                       string_agg(nomis_id, ';') filter (where m.status = 'cancelled')  as nomis_ids_can
+                       from moves as m
+                                LEFT JOIN profiles pro on m.profile_id = pro.id
+                                LEFT JOIN (select id, coalesce(prison_number, nomis_prison_number) as nomis_id
+                                           from people) as p on pro.person_id = p.id
+                       group by join_id) as r on l.join_id = r.join_id
+    order by date, from_loc, to_loc 
+{{- end }}

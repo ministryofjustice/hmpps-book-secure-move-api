@@ -109,3 +109,26 @@ cronJobs:
 
 dashboards:
   enabled: true
+
+scripts:
+  preprodRefresh:
+    enabled: false
+    schedule: "15 6 * * *"
+  reports:
+    enabled: true
+    dailyIpt:
+      enabled: true
+      schedule: "30 6 * * *"
+      recipients: "daniel.benton@digital.justice.gov.uk,bill.bone@digital.justice.gov.uk,cell.certification@justice.gov.uk"
+    monthlyIncomPer:
+      enabled: true
+      schedule: "30 6 1 * *"
+      recipients: "daniel.benton@digital.justice.gov.uk,bill.bone@digital.justice.gov.uk" 
+    weeklyCanMoves:
+      enabled: true
+      schedule: "30 6 * * 1"
+      recipients: "daniel.benton@digital.justice.gov.uk, josh.jones4@digital.justice.gov.uk" 
+    weeklyCanCourtMoves:
+      enabled: true
+      schedule: "30 6 * * 1"
+      recipients: "daniel.benton@digital.justice.gov.uk, josh.jones4@digital.justice.gov.uk"       

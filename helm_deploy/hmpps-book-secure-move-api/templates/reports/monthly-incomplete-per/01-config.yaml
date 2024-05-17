@@ -1,0 +1,365 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "incomplete-per-config" | trunc 52 }}
+{{- if .Values.scripts.reports.monthlyIncomPer.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+data:
+  from-date: "1 month ago"
+  to-date: "1 day ago"
+  subject: "BaSM Incomplete PER Report [LAST_MONTH]"
+  body: "BaSM Incomplete PER report for [LAST_MONTH] is available at the link below."
+  filename: "basm-incomplete-per-report-[LAST_MONTH]"
+  retention: "24 weeks"
+  confirm_email: "true"
+  recipients: {{ .Values.scripts.reports.monthlyIncomPer.recipients }}
+  combine_reports.sh: |-
+    FROM_DATE=$(date --date="$REPORT_START" '+%Y-%m-%d')
+    FROM_DATE_FULL=$(date --date="$REPORT_START" '+%A, %e %B')
+    TO_DATE=$(date --date="$REPORT_END" '+%Y-%m-%d')
+    TO_DATE_FULL=$(date --date="$REPORT_END" '+%A, %e %B')
+    TODAY_DATE=$(date '+%Y-%m-%d')
+    TODAY_FULL=$(date '+%A, %e %B')
+    
+    
+    echo "Report start date: $FROM_DATE ($REPORT_START)"
+    echo "Report end date: $TO_DATE ($REPORT_END)"
+    cp /report/stats.sql /tmp/stats.sql
+    cp /report/status.sql /tmp/status.sql
+    cp /report/duplicates.sql /tmp/duplicates.sql
+    echo "Replacing start and end date placeholders in template SQL"
+    
+    sed -i '/tmp/stats.sql' -e "s/\[FROM\]/${FROM_DATE}/g"
+    sed -i '/tmp/stats.sql' -e "s/\[TO\]/${TO_DATE}/g" 
+    
+    sed -i '/tmp/status.sql' -e "s/\[FROM\]/${FROM_DATE}/g"
+    sed -i '/tmp/status.sql' -e "s/\[TO\]/${TO_DATE}/g"     
+    
+    sed -i '/tmp/duplicates.sql' -e "s/\[FROM\]/${FROM_DATE}/g"
+    sed -i '/tmp/duplicates.sql' -e "s/\[TO\]/${TO_DATE}/g" 
+        
+    echo -n  ' \COPY (' > /tmp/cmd.sql
+    echo -n $(tr '\n' ' ' < /tmp/stats.sql) >> /tmp/cmd.sql
+    echo -n ") TO '/tmp/stats.csv' csv;" >> /tmp/cmd.sql
+    
+    echo -n  ' \COPY (' > /tmp/cmd2.sql
+    echo -n $(tr '\n' ' ' < /tmp/status.sql) >> /tmp/cmd2.sql
+    echo -n ") TO '/tmp/status.csv' csv;" >> /tmp/cmd2.sql 
+    
+    echo -n  ' \COPY (' > /tmp/cmd3.sql
+    echo -n $(tr '\n' ' ' < /tmp/duplicates.sql) >> /tmp/cmd3.sql
+    echo -n ") TO '/tmp/duplicates.csv' csv;" >> /tmp/cmd3.sql
+        
+    echo -n $(tr '\n' ' ' < /report/function.sql) > /tmp/func.sql
+    
+
+    #echo "Ensuring the section status function is created" #This only works on main instance, not replica
+    #psql $DB_INSTANCE -f /tmp/func.sql    
+    echo "Querying the database for PER stats"
+    psql $DB_INSTANCE -f /tmp/cmd.sql
+    
+    echo "Querying the database for Section Status"
+    psql $DB_INSTANCE -f /tmp/cmd2.sql
+
+    echo "Querying the database for Duplicates"
+    psql $DB_INSTANCE -f /tmp/cmd3.sql
+        
+    https -d --ignore-stdin  https://github.com/mentax/csv2xlsx/releases/download/v0.5.1/csv2xlsx_Linux_x86_64.tar.gz -o /tmp/csv2xlsx.tar.gz
+  
+    mkdir /tmp/csv2xlsx 
+    tar -xzf /tmp/csv2xlsx.tar.gz -C /tmp/csv2xlsx 
+    
+    echo "Decoding template"
+    base64 -d /report/template.b64 > /tmp/template.xltm
+    
+    /tmp/csv2xlsx/csv2xlsx -t /tmp/template.xltm -s 'PER Stats' -s 'Section Status' -s 'Duplicates' --output /tmp/report.xlsx /tmp/stats.csv /tmp/status.csv /tmp/duplicates.csv
+    
+    ls -lh /tmp/report.xlsx 
+    base64 -i /tmp/report.xlsx > /tmp/report.b64
+    
+
+    notify='api.notifications.service.gov.uk/v2/notifications/email'
+    
+    echo ${EMAIL_BODY} > /tmp/body.txt
+    echo ${EMAIL_SUBJECT} > /tmp/subject.txt
+    echo ${FILENAME} > /tmp/filename.txt
+    INPUT='/tmp/body.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
+    INPUT='/tmp/subject.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
+    INPUT='/tmp/filename.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
+    
+    for i in ${EMAIL_ADDRESSEES//,/ }
+    do
+    
+    https --timeout 30 --ignore-stdin  -A bearer -a $(bash /scripts/notify-token.sh) $notify \
+    email_address="$i" \
+    template_id='e8b1811b-e02f-4fe3-bddc-5f240965c789' \
+    personalisation[main-text]="$(cat /tmp/body.txt)" \
+    personalisation[email-subject]="$(cat /tmp/subject.txt).xlsx" \
+    personalisation[link_to_file][file]="@/tmp/report.b64" \
+    personalisation[link_to_file][filename]="$(cat /tmp/filename.txt).xlsx" \
+    personalisation[link_to_file][confirm_email_before_download]:=${CONFIRM_EMAIL} \
+    personalisation[link_to_file][retention_period]="${RETENTION_PERIOD}"
+    
+    done
+  section_status_func_sql: |-
+    CREATE EXTENSION IF NOT EXISTS tablefunc;
+        create or replace function getstatus(varchar) RETURNS varchar
+        AS $$
+        BEGIN
+
+        if $1 = 'completed' then
+        return 'Completed';
+        elsif $1 = 'not_started' then
+        return 'Not started';
+        elsif $1 = 'in_progress' then
+        return 'In progress';
+        else
+        return null;
+        end if;
+        END;
+        $$ LANGUAGE plpgsql;
+  per_stats_sql: |-
+      SELECT 
+      lf.title,
+      count(L.flid) as completed_moves,
+      NULLIF(count(L.flid) filter (where L.per_status in ('completed', 'confirmed')),0) as completed_per,
+      NULLIF(count(L.flid) filter (where L.pro_requires_yra = 'true'),0) as needs_yra,
+      NULLIF(count(L.flid) filter (where (L.pro_requires_yra = 'true') and (L.yra_id is null or L.yra_status not in ('completed', 'confirmed'))),0) as incomplete_yra,
+      NULLIF(count(L.flid) filter (where L.per_id is null),0) as no_per,
+      NULLIF(count(L.flid) filter (where L.per_status = 'unstarted'),0) as unstarted_per,
+      NULLIF(count(L.flid) filter (where L.per_status = 'in_progress'),0) as in_progress_pers,
+      NULLIF(round(((count(L.flid) filter (where (per_id is null or per_status not in ('completed', 'confirmed'))))::decimal / count(L.flid)::decimal), 3),0) as pc_incomplete
+      FROM (
+      select
+      m.from_location_id as flid,
+      per.status as per_status,
+      per.id as per_id,
+      pro.requires_youth_risk_assessment as pro_requires_yra,
+      yra.id as yra_id,
+      yra.status as yra_status
+      from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join youth_risk_assessments yra on pro.id = yra.profile_id
+      left outer join versions v on v.item_id = m.id and v.item_type = 'Move' and v.event = 'create'
+      where m.date between '[FROM]' and '[[TO]]'
+      and m.status = 'completed') as L
+      left join locations lf on L.flid = lf.id
+      group by lf.title
+      order by pc_incomplete desc NULLS LAST, (count(L.flid) filter (where (per_id is null or per_status not in ('completed', 'confirmed')))) desc NULLS LAST
+
+  section_status_sql: |-    
+    select l.title as from_loc,
+    t.title as to_loc,
+    COALESCE(s.name, 'BaSM Frontend') as created_by,
+    m.status,
+    m.date,
+    m.reference,
+    person.first_names,
+    person.last_name,
+    getstatus(info."risk-information") as risk,
+    getstatus(info."offence-information") as offence,
+    getstatus(info."health-information") as health,
+    getstatus(info."property-information") as property,
+    dupe.dupe as dupe,
+    CASE
+    WHEN l.location_type = 'court' then 'true'
+    ELSE null
+    END as from_location_court,
+    CASE
+    WHEN t.location_type = 'court' then 'true'
+    ELSE null
+    END as to_location_court,
+    m.allocation_id as allocation,
+    'https://bookasecuremove.service.justice.gov.uk/move/' || m.id as url
+    from moves m
+    left join profiles pro on m.profile_id = pro.id
+    left join person_escort_records per on pro.id = per.profile_id
+    left join people person on  pro.person_id = person.id
+    left join locations l on  m.from_location_id = l.id
+    left join locations t on  m.to_location_id = t.id
+    left outer join versions v on v.item_id = m.id and v.item_type = 'Move' and v.event = 'create'
+    left outer join suppliers s on v.supplier_id = s.id
+    left join (
+    select ct.* FROM crosstab('
+    select profile_id, section.key, section.status from person_escort_records, jsonb_to_recordset(person_escort_records.section_progress) as section(key text, status text)
+    
+    where profile_id in (
+    select pro.id from moves m
+    left join profiles pro on m.profile_id = pro.id
+    left join person_escort_records per on pro.id = per.profile_id
+    left join people person on  pro.person_id = person.id
+    where m.date between ''[FROM]'' and ''[TO]''
+    and m.status = ''completed''
+    and (per.id is null or per.status not in (''completed'', ''confirmed''))
+    )') as ct (profile_id uuid,
+    "property-information" text,
+    "offence-information" text,
+    "health-information" text,
+    "risk-information" text)
+    ) as info
+    on info.profile_id = pro.id
+    
+    left join (
+    select m.id, m.from_location_id, 'true' as dupe
+    from (
+    select  i.date, i.first_names, i.last_name, i.from_location_id from (
+    select count(*) as occ,
+    m.date,
+    upper(ps.last_name) as last_name,
+    upper(ps.first_names) as first_names,
+    m.from_location_id
+    from moves m
+    join profiles p on m.profile_id = p.id
+    join people ps on p.person_id = ps.id
+    and m.date between '[FROM]' and '[TO]'
+    group by m.date,
+    upper(ps.last_name),
+    upper(ps.first_names),
+    
+    m.from_location_id
+    ) as i
+    
+    where i.occ > 1
+    
+    ) as j
+    
+    join people ps on j.last_name = upper(ps.last_name) and j.first_names = upper(ps.first_names)
+    join profiles p on p.person_id = ps.id
+    join moves m on m.date = j.date and m.profile_id = p.id and m.from_location_id = j.from_location_id
+    ) as dupe
+    on dupe.id = m.id and dupe.from_location_id = m.from_location_id
+    
+    
+    where m.date between '[FROM]' and '[TO]'
+    and m.status = 'completed'
+    and (per.id is null or per.status not in ('completed', 'confirmed'))
+    order by from_loc, date 
+
+  duplicates_sql: |-
+      select l.title as from_loc,
+      t.title as to_loc,
+      m.date,
+      m.reference,
+      person.first_names,
+      person.last_name,
+      getstatus(risk.status) as risk,
+      getstatus(offence.status) as offence,
+      getstatus(health.status) as health,
+      getstatus(property.status) as property,
+      m.status as move_status,
+      COALESCE(per.status, 'No PER') as per_status,
+      m.allocation_id as allocation,
+      COALESCE(s.name, 'BaSM Frontend') as created_by,
+      'https://bookasecuremove.service.justice.gov.uk/move/' || m.id as url
+      from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      left join locations l on  m.from_location_id = l.id
+      left join locations t on  m.to_location_id = t.id
+      left outer join versions v on v.item_id = m.id and v.item_type = 'Move' and v.event = 'create'
+      left outer join suppliers s on v.supplier_id = s.id
+      left join (
+      select profile_id, section.key, section.status from person_escort_records, jsonb_to_recordset(person_escort_records.section_progress) as section(key text, status text)
+      where section.key = 'offence-information'
+      and profile_id in (
+      select pro.id from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      where m.date between '[FROM]' and '[TO]'
+      )
+      ) as offence
+      on offence.profile_id = pro.id
+      
+      left join (
+      select profile_id, section.key, section.status from person_escort_records, jsonb_to_recordset(person_escort_records.section_progress) as section(key text, status text)
+      where section.key = 'property-information'
+      and profile_id in (
+      select pro.id from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      where m.date between '[FROM]' and '[TO]'
+      )
+      ) as property
+      on property.profile_id = pro.id
+      
+      left join (
+      select profile_id, section.key, section.status from person_escort_records, jsonb_to_recordset(person_escort_records.section_progress) as section(key text, status text)
+      where section.key = 'risk-information'
+      and profile_id in (
+      select pro.id from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      where m.date between '[FROM]' and '[TO]'
+      )
+      ) as risk
+      on risk.profile_id = pro.id
+      
+      left join (
+      select profile_id, section.key, section.status from person_escort_records, jsonb_to_recordset(person_escort_records.section_progress) as section(key text, status text)
+      where section.key = 'health-information'
+      and profile_id in (
+      select pro.id from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      where m.date between '[FROM]' and '[TO]'
+      )
+      ) as health
+      on health.profile_id = pro.id
+      
+      join (
+      select distinct(first_names, last_name, date), first_names, last_name, date from (
+      select m.date,
+      upper(person.first_names) as first_names,
+      upper(person.last_name) as last_name
+      from moves m
+      left join profiles pro on m.profile_id = pro.id
+      left join person_escort_records per on pro.id = per.profile_id
+      left join people person on  pro.person_id = person.id
+      left join (
+      select m.id, 'true' as dupe
+      from (
+      select  i.date, i.first_names, i.last_name, i.from_location_id from (
+      select count(*) as occ,
+      m.date,
+      upper(ps.last_name) as last_name,
+      upper(ps.first_names) as first_names,
+      m.from_location_id
+      from moves m
+      join profiles p on m.profile_id = p.id
+      join people ps on p.person_id = ps.id
+      and m.date between '[FROM]' and '[TO]'
+      group by m.date,
+      upper(ps.last_name),
+      upper(ps.first_names),
+      
+      m.from_location_id
+      ) as i
+      
+      where i.occ > 1
+      
+      ) as j
+      
+      join people ps on j.last_name = upper(ps.last_name) and j.first_names = upper(ps.first_names)
+      join profiles p on p.person_id = ps.id
+      join moves m on m.date = j.date and m.profile_id = p.id
+      ) as dupe
+      on dupe.id = m.id
+      where m.date between '[FROM]' and '[TO]'
+      and m.status = 'completed'
+      and (per.id is null or per.status not in ('completed', 'confirmed'))
+      and dupe.dupe = 'true'
+      ) as dupe_people ) as dupes
+      on dupes.last_name = upper(person.last_name) and dupes.first_names= upper(person.first_names) and m.date = dupes.date
+      
+      where m.date between '[FROM]' and '[TO]'
+      
+      order by date, last_name, first_names, move_status, per_status
+
+  template: "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"
+  {{- end }}
