@@ -29,6 +29,7 @@ module NomisClient
           problem_description: personal_care_need['problemDescription'],
           start_date: personal_care_need['startDate'],
           end_date: personal_care_need['endDate'],
+          comment: personal_care_need['commentText']
         }
       end
     end
