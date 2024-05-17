@@ -16,6 +16,7 @@ RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication:
           start_date: '2010-06-21',
           end_date: '2010-06-21',
           offender_no: '321',
+          commentText: 'Disclosed on arrival',
         },
         {
           problem_type: 'MATSTAT',
@@ -25,6 +26,7 @@ RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication:
           start_date: '2010-06-22',
           end_date: '2010-06-22',
           offender_no: '123',
+          commentText: 'Disclosed on arrival',
         },
       ]
     end
