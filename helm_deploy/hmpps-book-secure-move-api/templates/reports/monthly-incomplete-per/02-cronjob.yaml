@@ -91,7 +91,7 @@ spec:
                   value: "eu-west-2"
           restartPolicy: "Never"
           volumes:
-            - name: report-scripts
+            - name: {{ $script }}
               configMap:
                 name: automated-reports-scripts
                 defaultMode: 0755
@@ -104,7 +104,7 @@ spec:
                     path: "placeholders.sh"
             - name: report-sql
               configMap:
-                name: incomplete-per-config
+                name: {{ $sql }}
                 defaultMode: 0755
                 items:
                   - key: "section_status_func_sql"
