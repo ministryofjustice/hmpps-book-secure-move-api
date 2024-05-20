@@ -99,7 +99,7 @@ spec:
                     path: "placeholders.sh"
             - name: report-sql
               configMap:
-                name: weekly-cancelled-moves-config
+                name: {{ $sql }}
                 defaultMode: 0755
                 items:
                   - key: "report_sql"

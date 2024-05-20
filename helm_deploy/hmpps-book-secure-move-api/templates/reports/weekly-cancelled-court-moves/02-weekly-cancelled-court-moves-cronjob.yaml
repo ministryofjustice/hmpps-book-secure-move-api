@@ -88,7 +88,7 @@ spec:
           volumes:
             - name: report-scripts
               configMap:
-                name: automated-reports-scripts
+                name: {{ $script }}
                 defaultMode: 0755
                 items:
                   - key: "notify-token.sh"
@@ -99,7 +99,7 @@ spec:
                     path: "placeholders.sh"
             - name: report-sql
               configMap:
-                name: weekly-cancelled-court-moves-config
+                name: {{ $sql }}
                 defaultMode: 0755
                 items:
                   - key: "report_sql"
