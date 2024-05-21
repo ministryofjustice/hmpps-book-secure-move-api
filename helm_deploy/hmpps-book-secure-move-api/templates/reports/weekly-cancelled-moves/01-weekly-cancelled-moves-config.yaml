@@ -8,7 +8,7 @@ data:
   from-date: "7 days ago"
   to-date: "1 day ago"
   subject: "BaSM Cancelled Moves Report [TODAY_DATE]"
-  body: "BaSM Cancelled moves report for yesterday ([FROM_DATE_FULL]) to [TO_DATE_FULL] is available at the link below."
+  body: "BaSM Cancelled moves report for last week ([FROM_DATE_FULL] to [TO_DATE_FULL]) is available at the link below."
   filename: "basm-cancelled-moves-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "true"
