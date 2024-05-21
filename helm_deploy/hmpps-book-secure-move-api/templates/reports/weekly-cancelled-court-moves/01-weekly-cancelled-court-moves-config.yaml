@@ -5,8 +5,8 @@ kind: ConfigMap
 metadata:
   name: {{ $fullName }}
 data:
-  from-date: "1 day ago"
-  to-date: "7 days"
+  from-date: "7 days ago"
+  to-date: "1 day ago"
   subject: "BaSM Cancelled Court Moves Report [TODAY_DATE]"
   body: "BaSM Cancelled Court Moves report for yesterday ([FROM_DATE_FULL]) to [TO_DATE_FULL] is available at the link below."
   filename: "basm-cancelled-court-moves-report-[TODAY_DATE]"
