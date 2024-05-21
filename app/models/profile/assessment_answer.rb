@@ -67,7 +67,6 @@ class Profile
         assessment_question_id: assessment_question.id,
         category: assessment_question.category,
         key: assessment_question.key,
-        comments: personal_care_need[:commentText],
         nomis_alert_type_description: alert_type_description, # Needs to be oneOf Medical, Maternity status, Disability
         imported_from_nomis: true,
       ).tap(&:set_timestamps)
