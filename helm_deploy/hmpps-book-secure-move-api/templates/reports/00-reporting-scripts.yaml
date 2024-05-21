@@ -51,7 +51,7 @@ data:
     
     echo ${EMAIL_BODY} > /tmp/body.txt
     echo ${EMAIL_SUBJECT} > /tmp/subject.txt
-    echo ${FILENAME} > /tmp/filename.txt
+    echo ${FILENAME}.csv > /tmp/filename.txt
     INPUT='/tmp/body.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
     INPUT='/tmp/subject.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
     INPUT='/tmp/filename.txt' REPORT_START="${REPORT_START}" REPORT_END="${REPORT_END}" /scripts/placeholders.sh
