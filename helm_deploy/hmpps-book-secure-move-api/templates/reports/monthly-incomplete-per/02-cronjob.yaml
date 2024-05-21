@@ -1,6 +1,6 @@
 {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "incomplete-per-report" | trunc 52 }}
 {{- $script := printf "%s-%s" (include "generic-service.fullname" $) "automated-reports-scripts" | trunc 52 }}
-{{- $sql := printf "%s-%s" (include "generic-service.fullname" $) "incomplete-per-config" | trunc 52 }}
+{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "incomplete-per-config" | trunc 52 }}
 {{- if .Values.scripts.reports.monthlyIncomPer.enabled }}
 ---
 apiVersion: batch/v1
@@ -50,42 +50,42 @@ spec:
                 - name: REPORT_START
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: from-date
                 - name: REPORT_END
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: to-date
                 - name: EMAIL_SUBJECT
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: subject
                 - name: EMAIL_BODY
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: body
                 - name: FILENAME
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: filename
                 - name: RETENTION_PERIOD
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: retention
                 - name: EMAIL_ADDRESSEES
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: recipients
                 - name: CONFIRM_EMAIL
                   valueFrom:
                     configMapKeyRef:
-                      name: incomplete-per-config
+                      name: {{ $config }}
                       key: confirm_email
                 - name: AWS_DEFAULT_REGION
                   value: "eu-west-2"
@@ -104,7 +104,7 @@ spec:
                     path: "placeholders.sh"
             - name: report-sql
               configMap:
-                name: {{ $sql }}
+                name: {{ $config }}
                 defaultMode: 0755
                 items:
                   - key: "section_status_func_sql"
