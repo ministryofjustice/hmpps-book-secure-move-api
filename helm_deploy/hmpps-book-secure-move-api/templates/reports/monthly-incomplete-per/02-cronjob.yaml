@@ -91,9 +91,9 @@ spec:
                   value: "eu-west-2"
           restartPolicy: "Never"
           volumes:
-            - name: {{ $script }}
+            - name: report-scripts
               configMap:
-                name: automated-reports-scripts
+                name: {{ $script }}
                 defaultMode: 0755
                 items:
                   - key: "notify-token.sh"
