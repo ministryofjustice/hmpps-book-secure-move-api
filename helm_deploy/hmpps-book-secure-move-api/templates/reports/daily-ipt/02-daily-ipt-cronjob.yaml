@@ -1,6 +1,6 @@
 {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-report" | trunc 52 }}
 {{- $script := printf "%s-%s" (include "generic-service.fullname" $) "automated-reports-scripts" | trunc 52 }}
-{{- $sql := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-config" | trunc 52 }}
+{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-config" | trunc 52 }}
 {{- if .Values.scripts.reports.dailyIpt.enabled }}
 ---
 apiVersion: batch/v1
@@ -45,42 +45,42 @@ spec:
                 - name: REPORT_START
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: from-date
                 - name: REPORT_END
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: to-date
                 - name: EMAIL_SUBJECT
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: subject
                 - name: EMAIL_BODY
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: body
                 - name: FILENAME
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: filename
                 - name: RETENTION_PERIOD
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: retention
                 - name: EMAIL_ADDRESSEES
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: recipients
                 - name: CONFIRM_EMAIL
                   valueFrom:
                     configMapKeyRef:
-                      name: daily-ipt-config
+                      name: {{ $config }}
                       key: confirm_email
                 - name: AWS_DEFAULT_REGION
                   value: "eu-west-2"
@@ -99,7 +99,7 @@ spec:
                     path: "placeholders.sh"
             - name: report-sql
               configMap:
-                name: {{ $sql }}
+                name: {{ $config }}
                 defaultMode: 0755
                 items:
                   - key: "report_sql"
