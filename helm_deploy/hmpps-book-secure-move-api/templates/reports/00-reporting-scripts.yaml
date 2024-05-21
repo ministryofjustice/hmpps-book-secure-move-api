@@ -64,7 +64,7 @@ data:
     template_id='e8b1811b-e02f-4fe3-bddc-5f240965c789' \
     personalisation[main-text]="$(cat /tmp/body.txt)" \
     personalisation[email-subject]="$(cat /tmp/subject.txt).csv" \
-    personalisation[link_to_file][file]="${b64}" \
+    personalisation[link_to_file][file]="@/tmp/report.b64" \
     personalisation[link_to_file][filename]="$(cat /tmp/filename.txt)" \
     personalisation[link_to_file][confirm_email_before_download]:=${CONFIRM_EMAIL} \
     personalisation[link_to_file][retention_period]="${RETENTION_PERIOD}"
