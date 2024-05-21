@@ -44,7 +44,7 @@ data:
     
     echo "CSV created - $(wc -l /tmp/out.csv | awk '{print $1}') lines"
     echo "Base64 encoding..."
-    b64=$(base64 -i /tmp/out.csv)
+    base64 -i /tmp/out.csv > /tmp/report.b64
     echo "Base64 encoding complete"
     
     notify='api.notifications.service.gov.uk/v2/notifications/email'
