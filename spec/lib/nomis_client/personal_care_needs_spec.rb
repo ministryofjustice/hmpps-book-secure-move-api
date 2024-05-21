@@ -38,8 +38,7 @@ RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication:
         let(:response_body) { file_fixture('nomis/post_personal_care_needs_200.json').read }
 
         it 'returns the correct person data' do
-          expected_response = client_response.map { _1.transform_keys({ commentText: :comments }) }
-          expect(response.map(&:symbolize_keys)).to eq expected_response
+          expect(response.map(&:symbolize_keys)).to eq client_response
         end
       end
 
