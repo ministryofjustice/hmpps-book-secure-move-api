@@ -22,7 +22,8 @@ data:
                     completed_moves, 
                     cancelled_moves, 
                     nomis_ids_comp as offenders_booked_or_moved, 
-                    nomis_ids_can  as offenders_cancelled 
+                    nomis_ids_can  as offenders_cancelled,
+                    nomis_ids_can_reasons  as cancelled_move_reasons
     from (SELECT from_loc, 
                  to_loc, 
                  allocation_id, 
@@ -74,7 +75,8 @@ data:
                                            ELSE m.allocation_id
                                            END                                                          as join_id,
                                        string_agg(nomis_id, ';') filter (where m.status <> 'cancelled') as nomis_ids_comp,
-                                       string_agg(nomis_id, ';') filter (where m.status = 'cancelled')  as nomis_ids_can
+                                       string_agg(nomis_id, ';') filter (where m.status = 'cancelled')  as nomis_ids_can,
+                                       string_agg(CONCAT_WS(' - ', cancellation_reason, cancellation_reason_comment), ';') filter (where m.status = 'cancelled')  as nomis_ids_can_reasons
                        from moves as m
                                 LEFT JOIN profiles pro on m.profile_id = pro.id
                                 LEFT JOIN (select id, coalesce(prison_number, nomis_prison_number) as nomis_id
