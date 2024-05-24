@@ -79,9 +79,9 @@ spec:
                       key: retention
                 - name: EMAIL_ADDRESSEES
                   valueFrom:
-                    configMapKeyRef:
-                      name: {{ $config }}
-                      key: recipients
+                    secretKeyRef:
+                      name: automated-report-recipients
+                      key: monthly-incomplete-per
                 - name: CONFIRM_EMAIL
                   valueFrom:
                     configMapKeyRef:

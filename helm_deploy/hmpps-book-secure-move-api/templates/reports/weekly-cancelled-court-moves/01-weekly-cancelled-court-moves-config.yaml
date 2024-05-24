@@ -12,7 +12,6 @@ data:
   filename: "basm-cancelled-court-moves-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "true"
-  recipients: {{ .Values.scripts.reports.weeklyCanCourtMoves.recipients }}
   report_sql: |-
       select m.status, 
         m.reference, 
