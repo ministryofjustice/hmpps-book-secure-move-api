@@ -12,7 +12,6 @@ data:
   filename: "basm-incomplete-per-report-[LAST_MONTH]"
   retention: "24 weeks"
   confirm_email: "true"
-  recipients: {{ .Values.scripts.reports.monthlyIncomPer.recipients }}
   combine_reports.sh: |-
     FROM_DATE=$(date --date="$REPORT_START" '+%Y-%m-%d')
     FROM_DATE_FULL=$(date --date="$REPORT_START" '+%A, %e %B')

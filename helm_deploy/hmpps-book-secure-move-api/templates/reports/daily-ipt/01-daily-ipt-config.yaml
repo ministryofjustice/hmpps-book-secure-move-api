@@ -12,7 +12,6 @@ data:
   filename: "basm-ipt-moves-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "false"
-  recipients: {{ .Values.scripts.reports.dailyIpt.recipients }}
   report_sql: |-
     SELECT DISTINCT from_loc, 
                     to_loc, 
