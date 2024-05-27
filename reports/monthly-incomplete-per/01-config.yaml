@@ -18,6 +18,7 @@ data:
     TO_DATE_FULL=$(date --date="$REPORT_END" '+%A, %e %B')
     TODAY_DATE=$(date '+%Y-%m-%d')
     TODAY_FULL=$(date '+%A, %e %B')
+    LAST_MONTH=$(date --date="$(date +%Y-%m-15) -1 month" '+%B %Y')
     
     
     echo "Report start date: $FROM_DATE ($REPORT_START)"
@@ -92,7 +93,7 @@ data:
     email_address="$i" \
     template_id='e8b1811b-e02f-4fe3-bddc-5f240965c789' \
     personalisation[main-text]="$(cat /tmp/body.txt)" \
-    personalisation[email-subject]="$(cat /tmp/subject.txt).xlsx" \
+    personalisation[email-subject]="$(cat /tmp/subject.txt)" \
     personalisation[link_to_file][file]="@/tmp/report.b64" \
     personalisation[link_to_file][filename]="$(cat /tmp/filename.txt).xlsx" \
     personalisation[link_to_file][confirm_email_before_download]:=${CONFIRM_EMAIL} \
@@ -140,7 +141,7 @@ data:
       left join person_escort_records per on pro.id = per.profile_id
       left join youth_risk_assessments yra on pro.id = yra.profile_id
       left outer join versions v on v.item_id = m.id and v.item_type = 'Move' and v.event = 'create'
-      where m.date between '[FROM]' and '[[TO]]'
+      where m.date between '[FROM]' and '[TO]'
       and m.status = 'completed') as L
       left join locations lf on L.flid = lf.id
       group by lf.title
@@ -161,12 +162,12 @@ data:
     getstatus(info."property-information") as property,
     dupe.dupe as dupe,
 	  CASE
-		WHEN l.location_type = 'court' then 'true'
-		ELSE null
+	  WHEN l.location_type = 'court' then 'true'
+	  ELSE null
 	  END as from_location_court,
 	  CASE
-		WHEN t.location_type = 'court' then 'true'
-		ELSE null
+	  WHEN t.location_type = 'court' then 'true'
+	  ELSE null
 	  END as to_location_court,
     m.allocation_id as allocation,
     'https://bookasecuremove.service.justice.gov.uk/move/' || m.id as url
