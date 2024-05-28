@@ -240,6 +240,23 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
   end
 
+  context 'when explicitly notifying a cross-deck move' do
+    let(:action_name) { 'notify' }
+    let!(:initial_supplier) { create(:supplier) }
+    let!(:receiving_supplier) { create(:supplier) }
+    let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
+    let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
+    let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
+    let(:move) { create :move, from_location: location, to_location:, supplier: }
+
+    it 'sends the notify_move notification only to the receiving supplier' do
+      perform
+      expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
+        [subscription2.id, 'notify_move'],
+      )
+    end
+  end
+
   context 'when confirming a person escort record' do
     let(:action_name) { 'confirm_person_escort_record' }
 

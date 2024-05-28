@@ -7,7 +7,7 @@ class PrepareBaseNotificationsJob < ApplicationJob
     topic = find_topic(topic_id)
     move = associated_move(topic)
 
-    subscriptions(move, only_supplier_id:).find_each do |subscription|
+    subscriptions(move, action_name:, only_supplier_id:).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
         build_and_send_notifications(subscription, NotificationType::WEBHOOK, topic, action_name, queue_as)
       end
@@ -28,7 +28,12 @@ private
     raise NotImplementedError
   end
 
-  def subscriptions(move, only_supplier_id: nil)
+  def subscriptions(move, action_name:, only_supplier_id: nil)
+    # only cross-deck suppliers get `notify` notifications
+    if action_name == 'notify'
+      return Subscription.kept.enabled.where(supplier: move.to_location&.suppliers || [])
+    end
+
     suppliers = [move.supplier || move.suppliers].flatten
 
     if move.cross_deck?
@@ -73,6 +78,7 @@ private
       'update' => 'update_move',
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
+      'notify' => 'notify_move',
     }.fetch(action_name, action_name)
 
     # make sure we send a create_move notification if we haven't sent one yet

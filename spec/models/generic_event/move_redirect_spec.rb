@@ -123,5 +123,23 @@ RSpec.describe GenericEvent::MoveRedirect do
         expect { generic_event.trigger }.to change { generic_event.eventable.move_type }.from('prison_transfer').to('court_appearance')
       end
     end
+
+    context 'when it becomes a cross-deck move' do
+      subject(:generic_event) { build(:event_move_redirect, details:, eventable:) }
+
+      let(:departing_supplier) { create(:supplier) }
+      let(:receiving_supplier) { create(:supplier) }
+      let(:old_to_location) { create(:location, :court, suppliers: [departing_supplier]) }
+      let(:new_to_location) { create(:location, :court, suppliers: [receiving_supplier]) }
+      let(:eventable) { build(:move, move_type: 'prison_transfer') }
+      let(:details) { { reason: 'other', to_location_id: new_to_location.id } }
+
+      before { allow(Notifier).to receive(:prepare_notifications) }
+
+      it 'sends a notify_move notification to the receiving supplier' do
+        generic_event.trigger
+        expect(Notifier).to have_received(:prepare_notifications).with(topic: eventable, action_name: 'notify')
+      end
+    end
   end
 end
