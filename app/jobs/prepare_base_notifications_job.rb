@@ -9,13 +9,11 @@ class PrepareBaseNotificationsJob < ApplicationJob
 
     subscriptions(move, only_supplier_id:).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
-        notification = build_notification(subscription, NotificationType::WEBHOOK, topic, action_name)
-        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as:)
+        build_and_send_notifications(subscription, NotificationType::WEBHOOK, topic, action_name, queue_as)
       end
 
       if send_emails && subscription.email_address.present? && should_email?(move)
-        notification = build_notification(subscription, NotificationType::EMAIL, topic, action_name)
-        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as:)
+        build_and_send_notifications(subscription, NotificationType::EMAIL, topic, action_name, queue_as)
       end
     end
   end
@@ -31,19 +29,26 @@ private
   end
 
   def subscriptions(move, only_supplier_id: nil)
-    suppliers = [move.supplier || move.suppliers].flatten.filter do |supplier|
+    suppliers = [move.supplier || move.suppliers].flatten
+
+    if move.cross_deck?
+      suppliers += move.to_location&.suppliers || []
+    end
+
+    suppliers = suppliers.uniq.filter do |supplier|
       only_supplier_id.nil? || only_supplier_id == supplier.id
     end
 
     Subscription.kept.enabled.where(supplier: suppliers)
   end
 
-  def build_notification(subscription, type_id, topic, action_name)
-    subscription.notifications.create!(
+  def build_and_send_notifications(subscription, type_id, topic, action_name, queue_as)
+    notification = subscription.notifications.create!(
       notification_type_id: type_id,
       topic:,
-      event_type: event_type(action_name, topic, type_id),
+      event_type: event_type(action_name, topic, type_id, subscription),
     )
+    notify_job(type_id).perform_later(notification_id: notification.id, queue_as:)
   end
 
   def should_webhook?(subscription, move, action_name)
@@ -62,7 +67,7 @@ private
     move.current? && VALID_EMAIL_STATUSES.include?(move.status)
   end
 
-  def event_type(action_name, topic, type_id)
+  def event_type(action_name, topic, type_id, subscription)
     action = {
       'create' => 'create_move',
       'update' => 'update_move',
@@ -70,9 +75,30 @@ private
       'destroy' => 'destroy_move',
     }.fetch(action_name, action_name)
 
-    return action unless action == 'update_move_status'
+    # make sure we send a create_move notification if we haven't sent one yet
+    if action == 'update_move_status'
+      create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
+      action = 'create_move' if create_notification.nil? && !topic.cancelled?
+    end
 
-    create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
-    create_notification.nil? && !topic.cancelled? ? 'create_move' : 'update_move_status'
+    # send create notification as `notify_move` if we are notifying a cross-deck supplier
+    if action == 'create_move' && !topic.from_location.suppliers.include?(subscription.supplier)
+      action = 'notify_move'
+    end
+
+    # make sure we send a notify_move notification if we haven't sent one yet for a cross-deck supplier
+    if action == 'update_move' && !topic.from_location.suppliers.include?(subscription.supplier)
+      notify_notification = topic.notifications.find_by(event_type: 'notify_move', notification_type_id: type_id)
+      action = 'notify_move' if notify_notification.nil? && !topic.cancelled?
+    end
+
+    action
+  end
+
+  def notify_job(type_id)
+    {
+      NotificationType::WEBHOOK => NotifyWebhookJob,
+      NotificationType::EMAIL => NotifyEmailJob,
+    }[type_id]
   end
 end
