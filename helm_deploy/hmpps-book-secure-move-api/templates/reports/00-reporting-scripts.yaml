@@ -86,4 +86,5 @@ data:
     sed -i ${INPUT} -e "s/\[TO_DATE_FULL\]/${TO_DATE_FULL}/g"
     sed -i ${INPUT} -e "s/\[TODAY_DATE\]/${TODAY_DATE}/g"
     sed -i ${INPUT} -e "s/\[TODAY_FULL\]/${TODAY_FULL}/g"
+    sed -i ${INPUT} -e "s/\[LAST_MONTH\]/${LAST_MONTH}/g"
 {{- end }}
