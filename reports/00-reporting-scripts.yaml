@@ -25,7 +25,8 @@ data:
     TO_DATE_FULL=$(date --date="$REPORT_END" '+%A, %e %B')
     TODAY_DATE=$(date '+%Y-%m-%d')
     TODAY_FULL=$(date '+%A, %e %B')
-  
+    LAST_MONTH=$(date --date="$(date +%Y-%m-15) -1 month" '+%B %Y')    
+    
     echo "Report start date: $FROM_DATE ($REPORT_START)"
     echo "Report end date: $TO_DATE ($REPORT_END)"
     cp /report/report.sql /tmp/report.sql
