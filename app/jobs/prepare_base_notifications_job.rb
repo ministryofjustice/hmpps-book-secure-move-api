@@ -29,9 +29,13 @@ private
   end
 
   def subscriptions(move, action_name:, only_supplier_id: nil)
-    # only cross-deck suppliers get `notify` notifications
-    if action_name == 'notify'
+    # only cross-deck suppliers get `notify` or `disregard` notifications
+    case action_name
+    when 'notify'
       return Subscription.kept.enabled.where(supplier: move.to_location&.suppliers || [])
+    when 'disregard'
+      notified_sub_ids = Notification.where(topic: move, event_type: 'notify_move').pluck(:subscription_id)
+      return Subscription.kept.enabled.where(id: notified_sub_ids)
     end
 
     suppliers = [move.supplier || move.suppliers].flatten
@@ -79,6 +83,7 @@ private
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
       'notify' => 'notify_move',
+      'disregard' => 'disregard_move',
     }.fetch(action_name, action_name)
 
     # make sure we send a create_move notification if we haven't sent one yet

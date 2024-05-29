@@ -33,6 +33,10 @@ class GenericEvent
       if !was_cross_deck && eventable.cross_deck?
         Notifier.prepare_notifications(topic: eventable, action_name: 'notify')
       end
+
+      if was_cross_deck && !eventable.cross_deck?
+        Notifier.prepare_notifications(topic: eventable, action_name: 'disregard')
+      end
     end
   end
 end
