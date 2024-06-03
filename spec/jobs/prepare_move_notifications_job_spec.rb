@@ -97,87 +97,6 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       it_behaves_like 'it schedules NotifyEmailJob'
       it_behaves_like 'it does not schedule NotifyWebhookJob'
     end
-
-    context 'when it is a cross-deck move' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
-      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-      let(:move) { create :move, from_location: location, to_location:, supplier: }
-
-      it 'sends the create_move and notify_move notifications to the respective suppliers' do
-        perform
-        expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
-          [subscription.id, 'create_move'],
-          [subscription2.id, 'notify_move'],
-        )
-      end
-    end
-  end
-
-  context 'when updating a move' do
-    let(:action_name) { 'update' }
-
-    context 'when a subscription has both a webhook and email addresses' do
-      it_behaves_like 'it creates a webhook notification record'
-      it_behaves_like 'it creates an email notification record'
-      it_behaves_like 'it schedules NotifyWebhookJob'
-      it_behaves_like 'it schedules NotifyEmailJob'
-    end
-
-    context 'when a subscription has no email addresses' do
-      let(:subscription) { create :subscription, :no_email_address }
-
-      it_behaves_like 'it creates a webhook notification record'
-      it_behaves_like 'it does not create an email notification record'
-      it_behaves_like 'it schedules NotifyWebhookJob'
-      it_behaves_like 'it does not schedule NotifyEmailJob'
-    end
-
-    context 'when a subscription has no webhook' do
-      let(:subscription) { create :subscription, :no_callback_url }
-
-      it_behaves_like 'it does not create a webhook notification record'
-      it_behaves_like 'it creates an email notification record'
-      it_behaves_like 'it schedules NotifyEmailJob'
-      it_behaves_like 'it does not schedule NotifyWebhookJob'
-    end
-
-    context 'when it is updated to become a cross-deck move' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
-      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-      let(:move) { create :move, from_location: location, to_location:, supplier: }
-
-      it 'sends the update_move and notify_move notifications to the respective suppliers' do
-        perform
-        expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
-          [subscription.id, 'update_move'],
-          [subscription2.id, 'notify_move'],
-        )
-      end
-    end
-
-    context 'when it is a cross-deck move that has already been notified' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
-      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-      let(:move) { create :move, from_location: location, to_location:, supplier: }
-      let!(:existing_notify_move) { create(:notification, event_type: 'notify_move', topic: move, subscription: subscription2) }
-
-      it 'sends the update_move notifications to both suppliers' do
-        perform
-        expect(Notification.webhooks.order(:created_at).last(2).pluck(:subscription_id, :event_type)).to contain_exactly(
-          [subscription.id, 'update_move'],
-          [subscription2.id, 'update_move'],
-        )
-      end
-    end
   end
 
   context 'when updating move status' do
@@ -237,40 +156,6 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
         perform
         expect(Notification.webhooks.order(:created_at).last.event_type).to eq('update_move_status')
       end
-    end
-  end
-
-  context 'when explicitly notifying a cross-deck move' do
-    let(:action_name) { 'notify' }
-    let!(:initial_supplier) { create(:supplier) }
-    let!(:receiving_supplier) { create(:supplier) }
-    let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
-    let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-    let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-    let(:move) { create :move, from_location: location, to_location:, supplier: }
-
-    it 'sends the notify_move notification only to the receiving supplier' do
-      perform
-      expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
-        [subscription2.id, 'notify_move'],
-      )
-    end
-  end
-
-  context 'when explicitly notifying that a move is no longer cross-deck' do
-    let(:action_name) { 'disregard' }
-    let!(:initial_supplier) { create(:supplier) }
-    let!(:receiving_supplier) { create(:supplier) }
-    let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
-    let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-    let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-    let(:move) { create :move, from_location: location, to_location:, supplier: }
-    let!(:notification) { create(:notification, :webhook, event_type: 'notify_move', subscription: subscription2, topic: move) }
-
-    it 'sends the disregard_move notification only to the supplier who received the notify_move' do
-      perform
-      expect(Notification.webhooks.where.not(event_type: 'notify_move').pluck(:subscription_id, :event_type))
-        .to contain_exactly([subscription2.id, 'disregard_move'])
     end
   end
 

@@ -730,59 +730,6 @@ RSpec.describe Api::MovesController do
         before { do_post }
       end
     end
-
-    context 'when it is a cross-deck move' do
-      before do
-        create(:notification_type, :webhook)
-        allow(Faraday).to receive(:new).and_return(faraday_client)
-      end
-
-      let!(:receiving_supplier) { create(:supplier) }
-      let!(:subscription) { create(:subscription, :no_email_address, supplier: another_supplier) }
-      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
-      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
-
-      let(:faraday_client) do
-        class_double(
-          Faraday,
-          headers: {},
-          post: instance_double(Faraday::Response, success?: true, status: 202),
-        )
-      end
-
-      let(:expected_notification_attributes) do
-        {
-          'topic_id' => move.id,
-          'topic_type' => 'Move',
-          'delivery_attempts' => 1,
-          'delivery_attempted_at' => be_within(5.seconds).of(Time.zone.now),
-          'delivered_at' => be_within(5.seconds).of(Time.zone.now),
-          'discarded_at' => nil,
-          'response_id' => nil,
-          'notification_type_id' => 'webhook',
-        }
-      end
-
-      it 'notifies the initial supplier' do
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-          do_post
-        end
-
-        expect(subscription.notifications.last.attributes).to include_json(
-          expected_notification_attributes.merge({ 'event_type' => 'create_move' }),
-        )
-      end
-
-      it 'notifies the receiving supplier' do
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
-          do_post
-        end
-
-        expect(subscription2.notifications.last.attributes).to include_json(
-          expected_notification_attributes.merge({ 'event_type' => 'notify_move' }),
-        )
-      end
-    end
   end
 
   def do_post

@@ -11,7 +11,7 @@ private
     topic.move
   end
 
-  def event_type(action_name, topic, _, _)
+  def event_type(action_name, topic, _)
     "#{action_name}_#{topic.class.name&.underscore}"
   end
 end
