@@ -25,8 +25,18 @@ class GenericEvent
     delegate :generic_events, to: :eventable
 
     def trigger(*)
+      was_cross_deck = eventable.cross_deck?
+
       eventable.to_location = to_location
       eventable.move_type = move_type if move_type.present?
+
+      if !was_cross_deck && eventable.cross_deck?
+        Notifier.prepare_notifications(topic: eventable, action_name: 'notify')
+      end
+
+      if was_cross_deck && !eventable.cross_deck?
+        Notifier.prepare_notifications(topic: eventable, action_name: 'disregard')
+      end
     end
   end
 end
