@@ -28,6 +28,29 @@ RSpec.describe GenericEvent::JourneyStart do
     end
   end
 
+  context 'when supplied a vehicle_depot' do
+    before do
+      generic_event.vehicle_depot = 'a vehicle depot'
+    end
+
+    it 'sets the vehicle_depot on the journey' do
+      generic_event.trigger
+      expect(generic_event.eventable.vehicle_depot).to eq(generic_event.vehicle_depot)
+    end
+  end
+
+  context 'when not supplied a vehicle_depot' do
+    before do
+      generic_event.eventable.vehicle_depot = 'Home Depot'
+      generic_event.vehicle_depot = nil
+    end
+
+    it 'does not set the vehicle_depot on the journey' do
+      generic_event.trigger
+      expect(generic_event.eventable.vehicle_depot).to eq('Home Depot')
+    end
+  end
+
   it_behaves_like 'an event that must not occur after', 'GenericEvent::JourneyComplete'
   it_behaves_like 'an event that must not occur before', 'GenericEvent::MoveStart'
 end

@@ -9,7 +9,8 @@ module Api
     around_action :idempotent_action
 
     COMMON_PARAMS = [:type, { attributes: %i[timestamp notes] }].freeze
-    START_COMPLETE_PARAMS = [:type, { attributes: %i[timestamp notes vehicle_reg] }].freeze
+    START_PARAMS = [:type, { attributes: %i[timestamp notes vehicle_reg vehicle_depot] }].freeze
+    COMPLETE_PARAMS = [:type, { attributes: %i[timestamp notes vehicle_reg] }].freeze
     LOCKOUT_PARAMS = [:type, { attributes: %i[timestamp notes], relationships: { from_location: {} } }].freeze
     LODGING_PARAMS = [:type, { attributes: %i[timestamp notes], relationships: { to_location: {} } }].freeze
 
@@ -20,8 +21,8 @@ module Api
     end
 
     def complete
-      JourneyEvents::ParamsValidator.new(start_complete_params).validate!
-      process_event(journey, GenericEvent::JourneyComplete, start_complete_params)
+      JourneyEvents::ParamsValidator.new(complete_params).validate!
+      process_event(journey, GenericEvent::JourneyComplete, complete_params)
       render status: :no_content
     end
 
@@ -44,8 +45,8 @@ module Api
     end
 
     def start
-      JourneyEvents::ParamsValidator.new(start_complete_params).validate!
-      process_event(journey, GenericEvent::JourneyStart, start_complete_params)
+      JourneyEvents::ParamsValidator.new(start_params).validate!
+      process_event(journey, GenericEvent::JourneyStart, start_params)
       render status: :no_content
     end
 
@@ -75,8 +76,12 @@ module Api
       @common_params ||= params.require(:data).permit(COMMON_PARAMS).to_h
     end
 
-    def start_complete_params
-      @start_complete_params ||= params.require(:data).permit(START_COMPLETE_PARAMS).to_h
+    def start_params
+      @start_params ||= params.require(:data).permit(START_PARAMS).to_h
+    end
+
+    def complete_params
+      @complete_params ||= params.require(:data).permit(COMPLETE_PARAMS).to_h
     end
 
     def journey
