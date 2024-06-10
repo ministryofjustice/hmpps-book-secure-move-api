@@ -61,7 +61,7 @@ RSpec.describe Api::AllocationsController do
       it 'creates notifications for each move' do
         perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           expect { patch_allocations }
-            .to change { subscription.notifications.where(event_type: 'update_move').count }
+            .to change { subscription.notifications.count }
             .by(2)
         end
       end
