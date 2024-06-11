@@ -9,7 +9,7 @@ RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('patch_move_responses.yaml', version: 'v2') }
   let(:access_token) { 'spoofed-token' }
-  let(:supplier) { create(:supplier) }
+  let(:supplier) { create(:supplier, :serco) }
 
   let(:resource_to_json) do
     JSON.parse(V2::MoveSerializer.new(move.reload, serializer: V2::MoveSerializer).serializable_hash.to_json)
@@ -22,6 +22,14 @@ RSpec.describe Api::MovesController do
       'Authorization' => "Bearer #{access_token}",
       'Idempotency-Key' => SecureRandom.uuid,
     }
+  end
+
+  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+  around do |example|
+    ClimateControl.modify(**envs) do
+      example.run
+    end
   end
 
   describe 'PATCH /moves' do
@@ -341,7 +349,7 @@ RSpec.describe Api::MovesController do
     end
 
     context 'when it is a cross-deck move' do
-      let!(:receiving_supplier) { create(:supplier) }
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
       let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }

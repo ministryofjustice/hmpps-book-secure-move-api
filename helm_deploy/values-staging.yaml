@@ -19,7 +19,7 @@ generic-service:
     SENTRY_ENVIRONMENT: "staging"
     SERVER_FQDN: "hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk"
     WEB_CONCURRENCY: "3"
-
+    FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: "geoamey,serco"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
