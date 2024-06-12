@@ -18,7 +18,6 @@ generic-service:
     SENTRY_ENVIRONMENT: "uat"
     SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk"
 
-
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
   #   [name of kubernetes secret]:

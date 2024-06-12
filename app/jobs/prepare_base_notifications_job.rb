@@ -52,10 +52,17 @@ private
   end
 
   def build_and_send_notifications(subscription, type_id, topic, action_name, queue_as)
+    type = event_type(action_name, topic, type_id, subscription)
+
+    if type.starts_with?('cross_supplier_')
+      enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS', '').split(',')
+      return unless enabled_suppliers.include?(subscription.supplier.key)
+    end
+
     notification = subscription.notifications.create!(
       notification_type_id: type_id,
       topic:,
-      event_type: event_type(action_name, topic, type_id, subscription),
+      event_type: type,
     )
     notify_job(type_id).perform_later(notification_id: notification.id, queue_as:)
   end

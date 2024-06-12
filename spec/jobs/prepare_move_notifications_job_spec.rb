@@ -15,6 +15,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   let(:send_webhooks) { true }
   let(:send_emails) { true }
   let(:only_supplier_id) { nil }
+  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
 
   before do
     create(:notification_type, :webhook)
@@ -22,6 +23,12 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
 
     allow(NotifyWebhookJob).to receive(:perform_later)
     allow(NotifyEmailJob).to receive(:perform_later)
+  end
+
+  around do |example|
+    ClimateControl.modify(**envs) do
+      example.run
+    end
   end
 
   shared_examples_for 'it creates a webhook notification record' do
@@ -99,8 +106,8 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
 
     context 'when it is a cross-deck move' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
+      let!(:initial_supplier) { create(:supplier, :serco) }
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
       let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
@@ -112,6 +119,17 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
           [subscription.id, 'create_move'],
           [subscription2.id, 'cross_supplier_move_add'],
         )
+      end
+
+      context 'when the feature flag is not set' do
+        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+
+        it 'only sends the create_move notification to the initial supplier' do
+          perform
+          expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
+            [subscription.id, 'create_move'],
+          )
+        end
       end
     end
   end
@@ -145,8 +163,8 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
 
     context 'when it is updated to become a cross-deck move' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
+      let!(:initial_supplier) { create(:supplier, :serco) }
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
       let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
@@ -159,11 +177,22 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
           [subscription2.id, 'cross_supplier_move_add'],
         )
       end
+
+      context 'when the feature flag is not set' do
+        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+
+        it 'only sends the update_move notification to the initial supplier' do
+          perform
+          expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to contain_exactly(
+            [subscription.id, 'update_move'],
+          )
+        end
+      end
     end
 
     context 'when it is a cross-deck move that has already been notified' do
-      let!(:initial_supplier) { create(:supplier) }
-      let!(:receiving_supplier) { create(:supplier) }
+      let!(:initial_supplier) { create(:supplier, :serco) }
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
       let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
@@ -172,10 +201,25 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
 
       it 'sends the update_move and cross_supplier_move_update notifications to the suppliers' do
         perform
-        expect(Notification.webhooks.order(:created_at).last(2).pluck(:subscription_id, :event_type)).to contain_exactly(
+        expect(
+          Notification.webhooks.order(:created_at).where.not(event_type: 'cross_supplier_move_add').pluck(:subscription_id, :event_type),
+        ).to contain_exactly(
           [subscription.id, 'update_move'],
           [subscription2.id, 'cross_supplier_move_update'],
         )
+      end
+
+      context 'when the feature flag is not set' do
+        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+
+        it 'only sends the update_move notification to the initial supplier' do
+          perform
+          expect(
+            Notification.webhooks.order(:created_at).where.not(event_type: 'cross_supplier_move_add').pluck(:subscription_id, :event_type),
+          ).to contain_exactly(
+            [subscription.id, 'update_move'],
+          )
+        end
       end
     end
   end
@@ -242,8 +286,8 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
 
   context 'when explicitly notifying a cross-deck move' do
     let(:action_name) { 'cross_supplier_add' }
-    let!(:initial_supplier) { create(:supplier) }
-    let!(:receiving_supplier) { create(:supplier) }
+    let!(:initial_supplier) { create(:supplier, :serco) }
+    let!(:receiving_supplier) { create(:supplier, :geoamey) }
     let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
     let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
     let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
@@ -255,12 +299,21 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
         [subscription2.id, 'cross_supplier_move_add'],
       )
     end
+
+    context 'when the feature flag is not set' do
+      let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+
+      it 'does not notify the receiving supplier' do
+        perform
+        expect(Notification.webhooks.order(:created_at).pluck(:subscription_id, :event_type)).to be_empty
+      end
+    end
   end
 
   context 'when explicitly notifying that a move is no longer cross-deck' do
     let(:action_name) { 'cross_supplier_remove' }
-    let!(:initial_supplier) { create(:supplier) }
-    let!(:receiving_supplier) { create(:supplier) }
+    let!(:initial_supplier) { create(:supplier, :serco) }
+    let!(:receiving_supplier) { create(:supplier, :geoamey) }
     let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
     let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
     let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
@@ -271,6 +324,15 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       perform
       expect(Notification.webhooks.where.not(event_type: 'cross_supplier_move_add').pluck(:subscription_id, :event_type))
         .to contain_exactly([subscription2.id, 'cross_supplier_move_remove'])
+    end
+
+    context 'when the feature flag is not set' do
+      let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+
+      it 'does not notify the receiving supplier' do
+        perform
+        expect(Notification.webhooks.where.not(event_type: 'cross_supplier_move_add').pluck(:subscription_id, :event_type)).to be_empty
+      end
     end
   end
 

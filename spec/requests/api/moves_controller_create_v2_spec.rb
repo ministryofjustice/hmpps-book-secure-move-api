@@ -7,7 +7,7 @@ RSpec.describe Api::MovesController do
 
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('post_moves_responses.yaml', version: 'v2') }
-  let(:supplier) { create(:supplier) }
+  let(:supplier) { create(:supplier, :serco) }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
@@ -23,6 +23,14 @@ RSpec.describe Api::MovesController do
       'X-Current-User' => 'TEST_USER',
       'Idempotency-Key' => SecureRandom.uuid,
     }
+  end
+
+  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+  around do |example|
+    ClimateControl.modify(**envs) do
+      example.run
+    end
   end
 
   describe 'POST /moves' do
@@ -737,7 +745,7 @@ RSpec.describe Api::MovesController do
         allow(Faraday).to receive(:new).and_return(faraday_client)
       end
 
-      let!(:receiving_supplier) { create(:supplier) }
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: another_supplier) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
       let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
