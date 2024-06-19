@@ -148,4 +148,134 @@ RSpec.describe Api::GenericEventsController do
       end
     end
   end
+
+  context 'when it is a MoveRedirect' do
+    let(:headers) do
+      {
+        'CONTENT_TYPE': ApiController::CONTENT_TYPE,
+        'Accept': 'application/vnd.api+json; version=2',
+        'Authorization' => 'Bearer spoofed-token',
+      }
+    end
+
+    context 'when the move becomes cross-deck' do
+      let(:initial_supplier) { create(:supplier, :serco) }
+      let(:receiving_supplier) { create(:supplier, :geoamey) }
+      let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }
+      let(:old_to_location) { create(:location, :court, suppliers: [initial_supplier]) }
+      let(:new_location) { create(:location, :court, suppliers: [receiving_supplier]) }
+      let(:move) { create(:move, :court_appearance, from_location:, to_location: old_to_location) }
+
+      before do
+        # Pre-existing events to make sure we don't send new notifications for all of them
+        create(
+          :event_move_redirect,
+          eventable: move,
+          occurred_at: '2019-01-01',
+          recorded_at: '2019-01-01',
+          details: {
+            to_location_id: new_location.id,
+          },
+        )
+        create(
+          :event_move_redirect,
+          eventable: move,
+          occurred_at: '2019-01-02',
+          recorded_at: '2019-01-02',
+          details: {
+            to_location_id: old_to_location.id,
+          },
+        )
+
+        allow(Notifier).to receive(:prepare_notifications)
+
+        post(
+          '/api/events',
+          headers:,
+          params: {
+            data: {
+              type: 'events',
+              attributes: {
+                event_type: 'MoveRedirect',
+                occurred_at: '2019-06-16T10:20:30+01:00',
+                recorded_at: '2019-06-16T10:20:30+01:00',
+              },
+              relationships: {
+                eventable: { data: { type: 'moves', id: move.id } },
+                to_location: { data: { type: 'locations', id: new_location.id } },
+              },
+            },
+          },
+          as: :json,
+        )
+      end
+
+      it 'sends a cross_supplier_move_add notification to the receiving supplier' do
+        event = GenericEvent::MoveRedirect.order(:created_at).last
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'update')
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_add')
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: event, action_name: 'create_event')
+      end
+    end
+
+    context 'when the move ceases to be cross-deck' do
+      let(:initial_supplier) { create(:supplier, :serco) }
+      let(:receiving_supplier) { create(:supplier, :geoamey) }
+      let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }
+      let(:old_to_location) { create(:location, :court, suppliers: [receiving_supplier]) }
+      let(:new_location) { create(:location, :court, suppliers: [initial_supplier]) }
+      let(:move) { create(:move, :court_appearance, from_location:, to_location: old_to_location) }
+
+      before do
+        # Pre-existing events to make sure we don't send new notifications for all of them
+        create(
+          :event_move_redirect,
+          eventable: move,
+          occurred_at: '2019-01-01',
+          recorded_at: '2019-01-01',
+          details: {
+            to_location_id: new_location.id,
+          },
+        )
+        create(
+          :event_move_redirect,
+          eventable: move,
+          occurred_at: '2019-01-02',
+          recorded_at: '2019-01-02',
+          details: {
+            to_location_id: old_to_location.id,
+          },
+        )
+
+        allow(Notifier).to receive(:prepare_notifications)
+
+        post(
+          '/api/events',
+          headers:,
+          params: {
+            data: {
+              type: 'events',
+              attributes: {
+                event_type: 'MoveRedirect',
+                occurred_at: '2019-06-16T10:20:30+01:00',
+                recorded_at: '2019-06-16T10:20:30+01:00',
+              },
+              relationships: {
+                eventable: { data: { type: 'moves', id: move.id } },
+                to_location: { data: { type: 'locations', id: new_location.id } },
+              },
+            },
+          },
+          as: :json,
+        )
+      end
+
+      it 'sends a cross_supplier_move_remove notification to the receiving supplier' do
+        event = GenericEvent::MoveRedirect.order(:created_at).last
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'update')
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_remove')
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: event, action_name: 'create_event')
+      end
+    end
+  end
 end

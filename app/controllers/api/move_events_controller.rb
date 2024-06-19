@@ -47,8 +47,19 @@ module Api
     end
 
     def redirects
+      was_cross_deck = move.cross_deck?
+
       MoveEvents::ParamsValidator.new(redirect_params).validate!
       process_event(move, GenericEvent::MoveRedirect, redirect_params)
+
+      if !was_cross_deck && move.cross_deck?
+        Notifier.prepare_notifications(topic: move, action_name: 'cross_supplier_add')
+      end
+
+      if was_cross_deck && !move.cross_deck?
+        Notifier.prepare_notifications(topic: move, action_name: 'cross_supplier_remove')
+      end
+
       render status: :no_content
     end
 
