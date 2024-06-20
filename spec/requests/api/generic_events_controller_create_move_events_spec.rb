@@ -158,7 +158,7 @@ RSpec.describe Api::GenericEventsController do
       }
     end
 
-    context 'when the move becomes cross-deck' do
+    context 'when the move becomes cross-supplier' do
       let(:initial_supplier) { create(:supplier, :serco) }
       let(:receiving_supplier) { create(:supplier, :geoamey) }
       let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }
@@ -218,7 +218,7 @@ RSpec.describe Api::GenericEventsController do
       end
     end
 
-    context 'when the move ceases to be cross-deck' do
+    context 'when the move ceases to be cross-supplier' do
       let(:initial_supplier) { create(:supplier, :serco) }
       let(:receiving_supplier) { create(:supplier, :geoamey) }
       let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }

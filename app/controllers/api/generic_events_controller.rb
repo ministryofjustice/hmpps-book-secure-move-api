@@ -15,7 +15,7 @@ module Api
     def create
       GenericEvents::CommonParamsValidator.new(event_params, event_relationships).validate!
       event = event_type.constantize.create!(event_attributes)
-      was_cross_deck = cross_deck_move?(event.eventable)
+      was_cross_supplier = cross_supplier_move?(event.eventable)
 
       run_event_logs
 
@@ -23,11 +23,11 @@ module Api
         Notifier.prepare_notifications(topic: event, action_name: 'create_event')
       end
 
-      if !was_cross_deck && cross_deck_move?(event.eventable)
+      if !was_cross_supplier && cross_supplier_move?(event.eventable)
         Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_add')
       end
 
-      if was_cross_deck && !cross_deck_move?(event.eventable)
+      if was_cross_supplier && !cross_supplier_move?(event.eventable)
         Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_remove')
       end
 
@@ -40,8 +40,8 @@ module Api
 
   private
 
-    def cross_deck_move?(eventable)
-      eventable.reload.is_a?(Move) && eventable.cross_deck?
+    def cross_supplier_move?(eventable)
+      eventable.reload.is_a?(Move) && eventable.cross_supplier?
     end
 
     def render_event(event, status)

@@ -13,7 +13,7 @@ RSpec.describe Api::AllocationsController do
     resource
   end
 
-  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+  let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
 
   around do |example|
     ClimateControl.modify(**envs) do

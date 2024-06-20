@@ -31,7 +31,7 @@ RSpec.describe Api::MoveEventsController do
     end
     let(:before_post) { nil }
 
-    let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+    let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
 
     around do |example|
       ClimateControl.modify(**envs) do
@@ -245,7 +245,7 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'when it becomes a cross-deck move' do
+      context 'when it becomes a cross-supplier move' do
         let(:initial_supplier) { create(:supplier, :serco) }
         let(:receiving_supplier) { create(:supplier, :geoamey) }
         let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }
@@ -280,7 +280,7 @@ RSpec.describe Api::MoveEventsController do
         end
       end
 
-      context 'when it ceases to be a cross-deck move' do
+      context 'when it ceases to be a cross-supplier move' do
         let(:initial_supplier) { create(:supplier, :serco) }
         let(:receiving_supplier) { create(:supplier, :geoamey) }
         let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }

@@ -15,7 +15,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
   let(:send_webhooks) { true }
   let(:send_emails) { true }
   let(:only_supplier_id) { nil }
-  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+  let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
 
   before do
     create(:notification_type, :webhook)
@@ -105,7 +105,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       it_behaves_like 'it does not schedule NotifyWebhookJob'
     end
 
-    context 'when it is a cross-deck move' do
+    context 'when it is a cross-supplier move' do
       let!(:initial_supplier) { create(:supplier, :serco) }
       let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
@@ -122,7 +122,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       end
 
       context 'when the feature flag is not set' do
-        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+        let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: '' } }
 
         it 'only sends the create_move notification to the initial supplier' do
           perform
@@ -162,7 +162,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       it_behaves_like 'it does not schedule NotifyWebhookJob'
     end
 
-    context 'when it is updated to become a cross-deck move' do
+    context 'when it is updated to become a cross-supplier move' do
       let!(:initial_supplier) { create(:supplier, :serco) }
       let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
@@ -179,7 +179,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       end
 
       context 'when the feature flag is not set' do
-        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+        let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: '' } }
 
         it 'only sends the update_move notification to the initial supplier' do
           perform
@@ -190,7 +190,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       end
     end
 
-    context 'when it is a cross-deck move that has already been notified' do
+    context 'when it is a cross-supplier move that has already been notified' do
       let!(:initial_supplier) { create(:supplier, :serco) }
       let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier: initial_supplier) }
@@ -210,7 +210,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       end
 
       context 'when the feature flag is not set' do
-        let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+        let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: '' } }
 
         it 'only sends the update_move notification to the initial supplier' do
           perform
@@ -284,7 +284,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
   end
 
-  context 'when explicitly notifying a cross-deck move' do
+  context 'when explicitly notifying a cross-supplier move' do
     let(:action_name) { 'cross_supplier_add' }
     let!(:initial_supplier) { create(:supplier, :serco) }
     let!(:receiving_supplier) { create(:supplier, :geoamey) }
@@ -301,7 +301,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
 
     context 'when the feature flag is not set' do
-      let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: '' } }
 
       it 'does not notify the receiving supplier' do
         perform
@@ -310,7 +310,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
   end
 
-  context 'when explicitly notifying that a move is no longer cross-deck' do
+  context 'when explicitly notifying that a move is no longer cross-supplier' do
     let(:action_name) { 'cross_supplier_remove' }
     let!(:initial_supplier) { create(:supplier, :serco) }
     let!(:receiving_supplier) { create(:supplier, :geoamey) }
@@ -327,7 +327,7 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     end
 
     context 'when the feature flag is not set' do
-      let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: '' } }
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: '' } }
 
       it 'does not notify the receiving supplier' do
         perform

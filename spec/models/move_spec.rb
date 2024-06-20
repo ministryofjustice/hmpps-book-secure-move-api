@@ -1050,10 +1050,10 @@ RSpec.describe Move do
     end
   end
 
-  describe '#cross_deck?' do
+  describe '#cross_supplier?' do
     let(:move) { create(:move) }
 
-    it { expect(move.cross_deck?).to be false }
+    it { expect(move.cross_supplier?).to be false }
 
     context 'when the origin and destination suppliers are different' do
       let!(:supplier1) { create(:supplier) }
@@ -1062,7 +1062,7 @@ RSpec.describe Move do
       let!(:to_location) { create(:location, :court, suppliers: [supplier2]) }
       let(:move) { create(:move, from_location:, to_location:) }
 
-      it { expect(move.cross_deck?).to be true }
+      it { expect(move.cross_supplier?).to be true }
     end
   end
 end
