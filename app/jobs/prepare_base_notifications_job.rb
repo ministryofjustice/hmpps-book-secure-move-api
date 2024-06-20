@@ -29,7 +29,7 @@ private
   end
 
   def subscriptions(move, action_name:, only_supplier_id: nil)
-    # only cross-deck suppliers get `cross_supplier_add` or `cross_supplier_remove` notifications
+    # only cross-supplier suppliers get `cross_supplier_add` or `cross_supplier_remove` notifications
     case action_name
     when 'cross_supplier_add'
       return Subscription.kept.enabled.where(supplier: move.to_location&.suppliers || [])
@@ -40,7 +40,7 @@ private
 
     suppliers = [move.supplier || move.suppliers].flatten
 
-    if move.cross_deck?
+    if move.cross_supplier?
       suppliers += move.to_location&.suppliers || []
     end
 
@@ -55,7 +55,7 @@ private
     type = event_type(action_name, topic, type_id, subscription)
 
     if type.starts_with?('cross_supplier_')
-      enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS', '').split(',')
+      enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
       return unless enabled_suppliers.include?(subscription.supplier.key)
     end
 
@@ -104,12 +104,12 @@ private
       action = 'create_move' if create_notification.nil? && !topic.cancelled?
     end
 
-    # send create notification as `cross_supplier_move_add` if we are notifying a cross-deck supplier
+    # send create notification as `cross_supplier_move_add` if we are notifying a cross-supplier supplier
     if action == 'create_move' && !topic.from_location.suppliers.include?(subscription.supplier)
       action = 'cross_supplier_move_add'
     end
 
-    # make sure we send a cross_supplier_move_add notification if we haven't sent one yet for a cross-deck supplier
+    # make sure we send a cross_supplier_move_add notification if we haven't sent one yet for a cross-supplier supplier
     if %w[update_move update_move_status].include?(action) && !topic.from_location.suppliers.include?(subscription.supplier)
       add_notification = topic.notifications.find_by(event_type: 'cross_supplier_move_add', notification_type_id: type_id)
       action = add_notification.nil? ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]

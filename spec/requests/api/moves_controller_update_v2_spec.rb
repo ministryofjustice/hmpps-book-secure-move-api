@@ -24,7 +24,7 @@ RSpec.describe Api::MovesController do
     }
   end
 
-  let(:envs) { { FEATURE_FLAG_CROSS_DECK_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+  let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
 
   around do |example|
     ClimateControl.modify(**envs) do
@@ -348,7 +348,7 @@ RSpec.describe Api::MovesController do
       end
     end
 
-    context 'when it is a cross-deck move' do
+    context 'when it is a cross-supplier move' do
       let!(:receiving_supplier) { create(:supplier, :geoamey) }
       let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
       let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
