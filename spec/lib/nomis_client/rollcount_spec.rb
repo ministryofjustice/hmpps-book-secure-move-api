@@ -11,7 +11,6 @@ RSpec.describe NomisClient::Rollcount, with_nomis_client_authentication: true do
       let(:response_status) { 200 }
       let(:response_body) { file_fixture('nomis/get_rollcount_200.json').read }
 
-
       it 'returns the correct data' do
         expect(response.totals.symbolize_keys).to eq({
           bedsInUse: 53,
