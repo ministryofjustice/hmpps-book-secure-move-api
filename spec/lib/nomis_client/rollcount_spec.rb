@@ -14,13 +14,13 @@ RSpec.describe NomisClient::Rollcount, with_nomis_client_authentication: true do
 
       it 'returns the correct data' do
         expect(response.totals.symbolize_keys).to eq({
-         "bedsInUse": 53,
-         "currentlyInCell": 7,
-         "currentlyOut": 44,
-         "workingCapacity": 0,
-         "netVacancies": 0,
-         "outOfOrder": 0
-       })
+          bedsInUse: 53,
+          currentlyInCell: 7,
+          currentlyOut: 44,
+          workingCapacity: 0,
+          netVacancies: 0,
+          outOfOrder: 0,
+        })
       end
     end
   end
