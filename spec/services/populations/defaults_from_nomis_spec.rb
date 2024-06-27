@@ -9,16 +9,12 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   let(:location) { create(:location, :prison, nomis_agency_id: agency_id) }
   let(:date) { Time.zone.today }
 
-  let(:assigned_cells) do
-    [
-      { 'currentlyInCell' => 3 },
-      { 'currentlyInCell' => 4 },
-    ]
-  end
-  let(:unassigned_cells) do
-    [
-      { 'currentlyInCell' => 1 },
-    ]
+  let(:all_cells) do
+    {
+      'totals': {
+        'currentlyInCell': 8,
+      }
+    }
   end
   let(:movements) { { 'in' => 10, 'out' => 5 } }
   let(:discharges) do
@@ -29,8 +25,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   end
 
   before do
-    allow(NomisClient::Rollcount).to receive(:get).with(agency_id:, unassigned: false).and_return(assigned_cells)
-    allow(NomisClient::Rollcount).to receive(:get).with(agency_id:, unassigned: true).and_return(unassigned_cells)
+    allow(NomisClient::Rollcount).to receive(:get).with(agency_id:).and_return(all_cells)
     allow(NomisClient::Movements).to receive(:get).with(agency_id:, date:).and_return(movements)
     allow(NomisClient::Discharges).to receive(:get).with(agency_id:, date:).and_return(discharges)
   end
@@ -60,8 +55,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   end
 
   context 'with missing rollcount details from Nomis' do
-    let(:assigned_cells) { nil }
-    let(:unassigned_cells) { nil }
+    let(:all_cells) { nil }
 
     it 'returns empty hash' do
       expect(defaults).to be_empty
@@ -77,8 +71,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   end
 
   context 'with missing rollcount and movement details from Nomis' do
-    let(:assigned_cells) { nil }
-    let(:unassigned_cells) { nil }
+    let(:all_cells) { nil }
     let(:movements) { nil }
     let(:discharges) { nil }
 
