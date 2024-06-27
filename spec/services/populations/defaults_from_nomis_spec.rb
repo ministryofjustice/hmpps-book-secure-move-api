@@ -38,7 +38,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
   end
 
   context 'with blank rollcount details from Nomis' do
-    let(:unassigned_cells) do
+    let(:all_cells) do
       [
         nil,
       ]
@@ -46,7 +46,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
 
     it 'returns correct unlock and discharges' do
       expect(defaults).to eq({
-        unlock: 3 + 4 - 10 + 2,
+        unlock: 10 + 2,
         discharges: 2,
       })
     end
