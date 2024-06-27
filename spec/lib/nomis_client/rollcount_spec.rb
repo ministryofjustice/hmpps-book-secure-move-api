@@ -12,13 +12,23 @@ RSpec.describe NomisClient::Rollcount, with_nomis_client_authentication: true do
       let(:response_body) { file_fixture('nomis/get_rollcount_200.json').read }
 
       it 'returns the correct data' do
-        expect(response.symbolize_keys.totals).to eq({
-          bedsInUse: 53,
-          currentlyInCell: 7,
-          currentlyOut: 44,
-          workingCapacity: 0,
-          netVacancies: 0,
-          outOfOrder: 0,
+        expect(response.symbolize_keys).to eq({
+          prisonId: 'PRI',
+          numUnlockRollToday: 0,
+          numCurrentPopulation: 97,
+          numArrivedToday: 0,
+          numInReception: 0,
+          numStillToArrive: 0,
+          numOutToday: 0,
+          numNoCellAllocated: 0,
+          totals: {
+            bedsInUse: 53,
+            currentlyInCell: 7,
+            currentlyOut: 44,
+            workingCapacity: 0,
+            netVacancies: 0,
+            outOfOrder: 0,
+          }
         })
       end
     end
