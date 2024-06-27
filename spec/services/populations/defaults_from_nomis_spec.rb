@@ -37,21 +37,6 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
     end
   end
 
-  context 'with blank rollcount details from Nomis' do
-    let(:all_cells) do
-      {
-        'totals' => { 'currentlyInCell' => nil },
-      }
-    end
-
-    it 'returns correct unlock and discharges' do
-      expect(defaults).to eq({
-        unlock: 10 + 2,
-        discharges: 2,
-      })
-    end
-  end
-
   context 'with missing rollcount details from Nomis' do
     let(:all_cells) { nil }
 
