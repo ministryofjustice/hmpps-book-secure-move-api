@@ -10,7 +10,7 @@ module Populations
 
       return {} unless all_cells.present? && movements.present?
 
-      cell_total = all_cells.totals.currentlyInCell
+      cell_total = all_cells['totals']['currentlyInCell']
       arrivals = movements['in'].to_i
       discharges = discharges.length
 
