@@ -22,12 +22,12 @@ RSpec.describe NomisClient::Rollcount, with_nomis_client_authentication: true do
           numOutToday: 0,
           numNoCellAllocated: 0,
           totals: {
-            "bedsInUse" => 53,
-            "currentlyInCell" => 7,
-            "currentlyOut" => 44,
-            "workingCapacity" => 0,
-            "netVacancies" => 0,
-            "outOfOrder" => 0,
+            'bedsInUse' => 53,
+            'currentlyInCell' => 7,
+            'currentlyOut' => 44,
+            'workingCapacity' => 0,
+            'netVacancies' => 0,
+            'outOfOrder' => 0,
           },
         })
       end
