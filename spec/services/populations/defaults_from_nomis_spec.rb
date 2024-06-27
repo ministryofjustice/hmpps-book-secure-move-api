@@ -11,7 +11,7 @@ RSpec.describe Populations::DefaultsFromNomis, with_nomis_client_authentication:
 
   let(:all_cells) do
     {
-      'totals': { 'currentlyInCell' => 8 },
+      'totals' => { 'currentlyInCell' => 8 },
     }
   end
   let(:movements) { { 'in' => 10, 'out' => 5 } }
