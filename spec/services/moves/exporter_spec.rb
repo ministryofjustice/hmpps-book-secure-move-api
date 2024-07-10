@@ -16,17 +16,18 @@ RSpec.describe Moves::Exporter do
   let(:person) { create(:person) }
   let!(:move) { create(:move, from_location:, to_location:, person:) }
   let(:moves) { Move.where(id: move.id) }
+  let!(:cancel_event) { create(:event_move_cancel, eventable: move) }
 
   it 'includes correct header names' do
     expect(header).to eq(described_class::STATIC_HEADINGS)
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(54)
+    expect(header.count).to eq(55)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(54)
+    expect(row.count).to eq(55)
   end
 
   it 'includes move details' do
@@ -35,6 +36,10 @@ RSpec.describe Moves::Exporter do
 
   it 'includes move timestamps and date' do
     expect(row).to include(move.created_at.iso8601, move.updated_at.iso8601, move.date.strftime('%Y-%m-%d'))
+  end
+
+  it 'includes move cancelled at' do
+    expect(row).to include(cancel_event.occurred_at.iso8601)
   end
 
   it 'includes from location details' do
@@ -130,11 +135,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(56)
+        expect(header.count).to eq(57)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(56)
+        expect(row.count).to eq(57)
       end
 
       it 'has the correct rows' do
@@ -154,11 +159,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(54)
+        expect(header.count).to eq(55)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(54)
+        expect(row.count).to eq(55)
       end
     end
   end

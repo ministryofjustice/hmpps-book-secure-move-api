@@ -18,6 +18,7 @@ module Moves
       'To location code',
       'Additional information',
       'Date of travel',
+      'Cancelled at',
       'PNC number',
       'Prison number',
       'Last name',
@@ -100,6 +101,7 @@ module Moves
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
+        move.generic_events.find_by(type: 'GenericEvent::MoveCancel')&.occurred_at, # Cancelled at
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
