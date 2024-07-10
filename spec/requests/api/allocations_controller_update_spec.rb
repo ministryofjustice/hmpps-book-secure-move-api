@@ -13,6 +13,14 @@ RSpec.describe Api::AllocationsController do
     resource
   end
 
+  let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+  around do |example|
+    ClimateControl.modify(**envs) do
+      example.run
+    end
+  end
+
   describe 'PATCH /allocations' do
     subject(:patch_allocations) do
       patch "/api/allocations/#{allocation.id}", params: { data: }, headers:, as: :json
@@ -25,7 +33,7 @@ RSpec.describe Api::AllocationsController do
     let(:headers) { { 'Authorization' => "Bearer #{access_token}", 'CONTENT_TYPE': content_type } }
     let(:existing_date) { Date.new(2023, 1, 1) }
     let(:new_date) { existing_date.tomorrow }
-    let(:supplier) { create(:supplier) }
+    let(:supplier) { create(:supplier, :serco) }
     let!(:allocation) { create(:allocation, date: existing_date, moves_count:) }
     let!(:moves) { create_list(:move, moves_count, allocation:, date: existing_date, person: create(:person), supplier:) }
 
@@ -61,7 +69,7 @@ RSpec.describe Api::AllocationsController do
       it 'creates notifications for each move' do
         perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           expect { patch_allocations }
-            .to change { subscription.notifications.where(event_type: 'update_move').count }
+            .to change { subscription.notifications.count }
             .by(2)
         end
       end

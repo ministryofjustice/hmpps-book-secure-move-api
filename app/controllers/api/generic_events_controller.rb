@@ -15,10 +15,20 @@ module Api
     def create
       GenericEvents::CommonParamsValidator.new(event_params, event_relationships).validate!
       event = event_type.constantize.create!(event_attributes)
+      was_cross_supplier = cross_supplier_move?(event.eventable)
+
       run_event_logs
 
       unless doorkeeper_application_owner.is_a?(Supplier)
         Notifier.prepare_notifications(topic: event, action_name: 'create_event')
+      end
+
+      if !was_cross_supplier && cross_supplier_move?(event.eventable)
+        Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_add')
+      end
+
+      if was_cross_supplier && !cross_supplier_move?(event.eventable)
+        Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_remove')
       end
 
       render_event(event, :created)
@@ -29,6 +39,10 @@ module Api
     end
 
   private
+
+    def cross_supplier_move?(eventable)
+      eventable.reload.is_a?(Move) && eventable.cross_supplier?
+    end
 
     def render_event(event, status)
       render_json event, serializer: event.class.serializer, status:

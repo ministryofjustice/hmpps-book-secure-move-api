@@ -382,6 +382,10 @@ class Move < VersionedModel
     generic_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' }.max_by(&:occurred_at)&.expected_at
   end
 
+  def cross_supplier?
+    from_location&.suppliers != to_location&.suppliers
+  end
+
 private
 
   def date_to_after_date_from

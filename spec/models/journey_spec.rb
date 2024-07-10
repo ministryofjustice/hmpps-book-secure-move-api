@@ -238,6 +238,32 @@ RSpec.describe Journey, type: :model do
     end
   end
 
+  describe '#vehicle_depot=' do
+    subject(:journey) { build(:journey) }
+
+    let(:new_depot) { 'Depot 2' }
+
+    context 'when vehicle was already present' do
+      before do
+        journey.vehicle = { id: '12345678ABC', registration: 'AB12 CDE', depot: 'Depot 1' }
+      end
+
+      it 'assigns the new vehicle depot value' do
+        expect { journey.vehicle_depot = new_depot }.to change(journey, :vehicle_depot).from('Depot 1').to('Depot 2')
+      end
+    end
+
+    context 'when vehicle was not already present' do
+      before do
+        journey.vehicle = nil
+      end
+
+      it 'assigns the new depot' do
+        expect { journey.vehicle_depot = new_depot }.to change(journey, :vehicle_depot).from(nil).to('Depot 2')
+      end
+    end
+  end
+
   describe '#number' do
     let(:move) { create(:move) }
     let(:journey_1) { create(:journey, move:, client_timestamp: Date.new(2020, 1, 1)) }

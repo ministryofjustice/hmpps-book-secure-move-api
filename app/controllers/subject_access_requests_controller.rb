@@ -29,7 +29,7 @@ private
   # Overrides parent due to endpoint-specific roles
   def verify_token
     unless token.valid_token_with_scope?('read', role: SAR_ROLE)
-      if token.valid_token_with_scope?('read', role: '')
+      if token.valid_token_with_scope?('read')
         render_error("Missing role: #{SAR_ROLE}", 1, 403)
       else
         render_error('Valid authorisation token required', 1, 401)

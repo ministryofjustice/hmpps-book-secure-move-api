@@ -1049,4 +1049,20 @@ RSpec.describe Move do
       expect(journey3.date).to eq(Time.zone.today + 7)
     end
   end
+
+  describe '#cross_supplier?' do
+    let(:move) { create(:move) }
+
+    it { expect(move.cross_supplier?).to be false }
+
+    context 'when the origin and destination suppliers are different' do
+      let!(:supplier1) { create(:supplier) }
+      let!(:supplier2) { create(:supplier) }
+      let!(:from_location) { create(:location, suppliers: [supplier1]) }
+      let!(:to_location) { create(:location, :court, suppliers: [supplier2]) }
+      let(:move) { create(:move, from_location:, to_location:) }
+
+      it { expect(move.cross_supplier?).to be true }
+    end
+  end
 end

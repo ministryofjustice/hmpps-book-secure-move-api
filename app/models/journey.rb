@@ -90,6 +90,14 @@ class Journey < VersionedModel
     (self.vehicle ||= {})['registration'] = reg
   end
 
+  def vehicle_depot
+    vehicle['depot'] if vehicle
+  end
+
+  def vehicle_depot=(reg)
+    (self.vehicle ||= {})['depot'] = reg
+  end
+
   def handle_event_run(dry_run: false)
     save! if changed? && valid? && !dry_run
   end
