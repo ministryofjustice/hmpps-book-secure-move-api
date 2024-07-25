@@ -23,11 +23,11 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(55)
+    expect(header.count).to eq(48)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(55)
+    expect(row.count).to eq(48)
   end
 
   it 'includes move details' do
@@ -70,7 +70,7 @@ RSpec.describe Moves::Exporter do
     expect(row).to include('false', '')
   end
 
-  %w[violent escape hold_separately self_harm concealed_items other_risks special_diet_or_allergy health_issue medication wheelchair pregnant other_health solicitor interpreter other_court not_to_be_released special_vehicle].each do |alert_type|
+  %w[violent escape hold_separately self_harm concealed_items other_risks health_issue medication wheelchair pregnant other_health interpreter not_to_be_released special_vehicle].each do |alert_type|
     it "includes TRUE flag and comments when #{alert_type} is present" do
       question.update!(key: alert_type)
       move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }])
@@ -88,16 +88,6 @@ RSpec.describe Moves::Exporter do
     question.update!(key: 'violent')
     move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!' }])
     expect(row).to include("Yikes!\n\nBam!")
-  end
-
-  it 'includes move profile documents count' do
-    create(:document, documentable: move.profile)
-    expect(row.last).to eq '1'
-  end
-
-  it 'includes 0 documents count if no profile' do
-    move.person = nil
-    expect(row.last).to eq '0'
   end
 
   context 'with PER' do
@@ -135,11 +125,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(57)
+        expect(header.count).to eq(50)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(57)
+        expect(row.count).to eq(50)
       end
 
       it 'has the correct rows' do
@@ -159,11 +149,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(55)
+        expect(header.count).to eq(48)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(55)
+        expect(row.count).to eq(48)
       end
     end
   end
