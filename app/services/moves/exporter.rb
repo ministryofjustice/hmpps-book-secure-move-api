@@ -39,8 +39,6 @@ module Moves
       'Concealed items details',
       'Any other risks',
       'Any other risks details',
-      'Special diet or allergy',
-      'Special diet or allergy details',
       'Health issue',
       'Health issue details',
       'Medication',
@@ -51,17 +49,12 @@ module Moves
       'Pregnant details',
       'Any other requirements',
       'Any other requirements details',
-      'Solicitor or other legal representation',
-      'Solicitor or other legal representation details',
       'Sign or other language interpreter',
       'Sign or other language interpreter details',
-      'Any other information',
-      'Any other information details',
       'Not to be released',
       'Not to be released details',
       'Requires special vehicle',
       'Requires special vehicle details',
-      'Uploaded documents',
     ].freeze
 
     def initialize(moves)
@@ -116,18 +109,14 @@ module Moves
         answer_details(answers, 'self_harm'), # Self harm details
         answer_details(answers, 'concealed_items'), # Concealed items details
         answer_details(answers, 'other_risks'), # Any other risks details
-        answer_details(answers, 'special_diet_or_allergy'), # Special diet or allergy details
         answer_details(answers, 'health_issue'), # Health issue details
         answer_details(answers, 'medication'), # Medication details
         answer_details(answers, 'wheelchair'), # Wheelchair user details
         answer_details(answers, 'pregnant'), # Pregnant details
         answer_details(answers, 'other_health'), # Any other details
-        answer_details(answers, 'solicitor'), # Solicitor or other legal representation details
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
-        answer_details(answers, 'other_court'), # Any other information details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
-        profile&.documents&.size || 0, # 'Uploaded documents',
       ]
 
       if alert_columns
