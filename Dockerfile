@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-alpine as build-stage
+FROM ruby:3.2.5-alpine as build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -21,7 +21,7 @@ RUN bundle _2.1.4_ install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:3.2.2-alpine as swagger-build
+FROM ruby:3.2.5-alpine as swagger-build
 
 WORKDIR /app
 RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata
@@ -34,7 +34,7 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:3.2.2-alpine
+FROM ruby:3.2.5-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE ${APP_BUILD_DATE}

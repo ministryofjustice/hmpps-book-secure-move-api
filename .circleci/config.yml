@@ -276,7 +276,7 @@ executors:
   test-executor:
     docker:
       # Check https://circleci.com/docs/2.0/language-ruby/ for more details
-      - image: cimg/ruby:3.2.2
+      - image: cimg/ruby:3.2.5
         environment:
           BUNDLER_VERSION: 2.4.20
           RAILS_ENV: test
