@@ -65,9 +65,7 @@ module Moves
     def call
       Tempfile.new('export', Rails.root.join('tmp')).tap do |file|
         csv = CSV.new(file)
-        headings = STATIC_HEADINGS
-        headings += flags_by_section if alert_columns
-        csv << headings
+        csv << header_row
         moves.find_each do |move|
           csv << attributes_row(move)
         end
@@ -75,7 +73,24 @@ module Moves
       end
     end
 
+    def stream(moves, response)
+      response.content_type = Mime[:csv]
+      response.stream.write(CSV.generate_line(header_row))
+      moves.includes(:person, :profile).find_each do |move|
+        response.stream.write(CSV.generate_line(attributes_row(move)))
+      end
+    ensure
+      response.stream.close
+    end
+
   private
+
+    def header_row
+      headings = STATIC_HEADINGS
+      return headings += flags_by_section if alert_columns
+
+      headings
+    end
 
     def attributes_row(move)
       person = move.person

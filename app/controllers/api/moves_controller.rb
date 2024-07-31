@@ -17,7 +17,7 @@ module Api
 
     def csv
       csv_moves = find_moves(active_record_relationships: CSV_INCLUDES)
-      send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
+      Moves::Exporter.new(csv_moves).stream(csv_moves, response)
     end
 
     def show
