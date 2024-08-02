@@ -348,7 +348,7 @@ GEM
     regexp_parser (2.8.0)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.2)
+    rexml (3.3.3)
       strscan
     routing-filter (0.7.0)
       actionpack (>= 6.1)
