@@ -68,7 +68,7 @@ module Moves
         headings = STATIC_HEADINGS
         headings += flags_by_section if alert_columns
         csv << headings
-        moves.find_each do |move|
+        moves.includes(:generic_events).find_each do |move|
           csv << attributes_row(move)
         end
         file.flush
@@ -94,7 +94,7 @@ module Moves
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
-        move.generic_events.find_by(type: 'GenericEvent::MoveCancel')&.occurred_at, # Cancelled at
+        move.generic_events.select { _1.type == 'GenericEvent::MoveCancel' }.last&.occurred_at, # Cancelled at
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
