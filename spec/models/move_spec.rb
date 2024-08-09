@@ -678,7 +678,7 @@ RSpec.describe Move do
   end
 
   describe '#for_feed' do
-    subject(:move) { create(:move) }
+    subject(:move) { create(:move, :with_person_escort_record) }
 
     let(:expected_json) do
       {
@@ -706,6 +706,7 @@ RSpec.describe Move do
         'to_location_type' => 'court',
         'updated_at' => be_a(Time),
         'supplier' => move.supplier.key,
+        'person_escort_record_id' => move.person_escort_record_id,
       }
     end
 

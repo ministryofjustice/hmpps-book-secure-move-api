@@ -62,7 +62,12 @@ class Profile < VersionedModel
   end
 
   def for_feed
-    attributes.slice(*FEED_ATTRIBUTES)
+    feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
+
+    feed_attributes['person_escort_record_id'] = person_escort_record_id if person_escort_record_id.present?
+    feed_attributes['youth_risk_assessment_id'] = youth_risk_assessment_id if youth_risk_assessment_id.present?
+
+    feed_attributes
   end
 
 private
