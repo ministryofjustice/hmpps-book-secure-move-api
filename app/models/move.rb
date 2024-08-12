@@ -316,6 +316,9 @@ class Move < VersionedModel
     feed_attributes.merge!(to_location.for_feed(prefix: :to)) if to_location
     feed_attributes.merge!(supplier.for_feed) if supplier
 
+    feed_attributes['person_escort_record_id'] = person_escort_record_id if person_escort_record_id.present?
+    feed_attributes['youth_risk_assessment_id'] = youth_risk_assessment_id if youth_risk_assessment_id.present?
+
     feed_attributes
   end
 
