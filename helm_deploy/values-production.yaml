@@ -106,6 +106,9 @@ cronJobs:
   - name: per-report-job
     schedule: "0 7 1 1,4,7,10 *"
     command: ["bundle", "exec", "rake", "reports:person_escort_record_quality"]
+  - name: nomis-location-sync-job
+    schedule: "0 * * * *"
+    command: ["bundle", "exec", "rails", "reference_data:create_locations" ]
 
 dashboards:
   enabled: true
