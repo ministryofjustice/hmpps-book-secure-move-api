@@ -4,15 +4,13 @@ module Populations
   class DefaultsFromNomis
     def self.call(location, date)
       nomis_agency_id = location.nomis_agency_id
-      assigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: false)
-      unassigned_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id, unassigned: true)
+      all_cells = NomisClient::Rollcount.get(agency_id: nomis_agency_id)
       movements = NomisClient::Movements.get(agency_id: nomis_agency_id, date:)
       discharges = NomisClient::Discharges.get(agency_id: nomis_agency_id, date:)
 
-      return {} unless assigned_cells.present? && unassigned_cells.present? && movements.present?
+      return {} unless all_cells.present? && movements.present?
 
-      all_cells = [assigned_cells, unassigned_cells].flatten
-      cell_total = all_cells.compact.sum { |cell| cell['currentlyInCell'].to_i }
+      cell_total = all_cells['totals']['currentlyInCell']
       arrivals = movements['in'].to_i
       discharges = discharges.length
 

@@ -7,15 +7,13 @@ class PrepareBaseNotificationsJob < ApplicationJob
     topic = find_topic(topic_id)
     move = associated_move(topic)
 
-    subscriptions(move, only_supplier_id:).find_each do |subscription|
+    subscriptions(move, action_name:, only_supplier_id:).find_each do |subscription|
       if send_webhooks && subscription.callback_url.present? && should_webhook?(subscription, move, action_name)
-        notification = build_notification(subscription, NotificationType::WEBHOOK, topic, action_name)
-        NotifyWebhookJob.perform_later(notification_id: notification.id, queue_as:)
+        build_and_send_notifications(subscription, NotificationType::WEBHOOK, topic, action_name, queue_as)
       end
 
       if send_emails && subscription.email_address.present? && should_email?(move)
-        notification = build_notification(subscription, NotificationType::EMAIL, topic, action_name)
-        NotifyEmailJob.perform_later(notification_id: notification.id, queue_as:)
+        build_and_send_notifications(subscription, NotificationType::EMAIL, topic, action_name, queue_as)
       end
     end
   end
@@ -30,20 +28,43 @@ private
     raise NotImplementedError
   end
 
-  def subscriptions(move, only_supplier_id: nil)
-    suppliers = [move.supplier || move.suppliers].flatten.filter do |supplier|
+  def subscriptions(move, action_name:, only_supplier_id: nil)
+    # only cross-supplier suppliers get `cross_supplier_add` or `cross_supplier_remove` notifications
+    case action_name
+    when 'cross_supplier_add'
+      return Subscription.kept.enabled.where(supplier: move.to_location&.suppliers || [])
+    when 'cross_supplier_remove'
+      notified_sub_ids = Notification.where(topic: move, event_type: 'cross_supplier_move_add').pluck(:subscription_id)
+      return Subscription.kept.enabled.where(id: notified_sub_ids)
+    end
+
+    suppliers = [move.supplier || move.suppliers].flatten
+
+    if move.cross_supplier?
+      suppliers += move.to_location&.suppliers || []
+    end
+
+    suppliers = suppliers.uniq.filter do |supplier|
       only_supplier_id.nil? || only_supplier_id == supplier.id
     end
 
     Subscription.kept.enabled.where(supplier: suppliers)
   end
 
-  def build_notification(subscription, type_id, topic, action_name)
-    subscription.notifications.create!(
+  def build_and_send_notifications(subscription, type_id, topic, action_name, queue_as)
+    type = event_type(action_name, topic, type_id, subscription)
+
+    if type.starts_with?('cross_supplier_')
+      enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
+      return unless enabled_suppliers.include?(subscription.supplier.key)
+    end
+
+    notification = subscription.notifications.create!(
       notification_type_id: type_id,
       topic:,
-      event_type: event_type(action_name, topic, type_id),
+      event_type: type,
     )
+    notify_job(type_id).perform_later(notification_id: notification.id, queue_as:)
   end
 
   def should_webhook?(subscription, move, action_name)
@@ -62,17 +83,45 @@ private
     move.current? && VALID_EMAIL_STATUSES.include?(move.status)
   end
 
-  def event_type(action_name, topic, type_id)
+  CROSS_SUPPLIER_EQUIVALENT = {
+    'update_move' => 'cross_supplier_move_update',
+    'update_move_status' => 'cross_supplier_move_update_status',
+  }.freeze
+
+  def event_type(action_name, topic, type_id, subscription)
     action = {
       'create' => 'create_move',
       'update' => 'update_move',
       'update_status' => 'update_move_status',
       'destroy' => 'destroy_move',
+      'cross_supplier_add' => 'cross_supplier_move_add',
+      'cross_supplier_remove' => 'cross_supplier_move_remove',
     }.fetch(action_name, action_name)
 
-    return action unless action == 'update_move_status'
+    # make sure we send a create_move notification if we haven't sent one yet
+    if action == 'update_move_status'
+      create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
+      action = 'create_move' if create_notification.nil? && !topic.cancelled?
+    end
 
-    create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
-    create_notification.nil? && !topic.cancelled? ? 'create_move' : 'update_move_status'
+    # send create notification as `cross_supplier_move_add` if we are notifying a cross-supplier supplier
+    if action == 'create_move' && !topic.from_location.suppliers.include?(subscription.supplier)
+      action = 'cross_supplier_move_add'
+    end
+
+    # make sure we send a cross_supplier_move_add notification if we haven't sent one yet for a cross-supplier supplier
+    if %w[update_move update_move_status].include?(action) && !topic.from_location.suppliers.include?(subscription.supplier)
+      add_notification = topic.notifications.find_by(event_type: 'cross_supplier_move_add', notification_type_id: type_id)
+      action = add_notification.nil? ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]
+    end
+
+    action
+  end
+
+  def notify_job(type_id)
+    {
+      NotificationType::WEBHOOK => NotifyWebhookJob,
+      NotificationType::EMAIL => NotifyEmailJob,
+    }[type_id]
   end
 end

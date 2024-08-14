@@ -94,7 +94,7 @@ module Api
       move_journeys.each do |journey|
         next if journey.state == 'cancelled' || journey.state == 'rejected' || journey.to_location_id != params_to_location || journey.from_location_id != params_from_location
 
-        render(
+        return render(
           json: { errors: [{
             title: 'Bad request',
             detail: 'You are trying to submit a duplicate journey for this move, please try again',

@@ -1,7 +1,18 @@
-[
-  {"livingUnitId":8839, "livingUnitDesc":"COURT", "bedsInUse":33, "currentlyInCell":2, "currentlyOut":31, "maximumCapacity":400, "availablePhysical":367, "outOfOrder":0},
-  {"livingUnitId":180030, "livingUnitDesc":"CSWAP", "bedsInUse":0, "currentlyInCell":0, "currentlyOut":0, "maximumCapacity":50, "availablePhysical":50, "outOfOrder":0},
-  {"livingUnitId":185744, "livingUnitDesc":"REC/OUT", "bedsInUse":1, "currentlyInCell":0, "currentlyOut":1, "maximumCapacity":100, "availablePhysical":99, "outOfOrder":0},
-  {"livingUnitId":4021, "livingUnitDesc":"RECP", "bedsInUse":7, "currentlyInCell":7, "currentlyOut":0, "maximumCapacity":100, "availablePhysical":93, "outOfOrder":0},
-  {"livingUnitId":8838, "livingUnitDesc":"TAP", "bedsInUse":12, "currentlyInCell":0, "currentlyOut":12, "maximumCapacity":50, "availablePhysical":38, "outOfOrder":0}
-]
+{
+  "prisonId": "PRI",
+  "numUnlockRollToday": 0,
+  "numCurrentPopulation": 97,
+  "numArrivedToday": 0,
+  "numInReception": 0,
+  "numStillToArrive": 0,
+  "numOutToday": 0,
+  "numNoCellAllocated": 0,
+  "totals": {
+    "bedsInUse": 53,
+    "currentlyInCell": 7,
+    "currentlyOut": 44,
+    "workingCapacity": 0,
+    "netVacancies": 0,
+    "outOfOrder": 0
+  }
+}

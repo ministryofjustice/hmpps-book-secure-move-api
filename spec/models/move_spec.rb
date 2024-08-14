@@ -678,7 +678,7 @@ RSpec.describe Move do
   end
 
   describe '#for_feed' do
-    subject(:move) { create(:move) }
+    subject(:move) { create(:move, :with_person_escort_record) }
 
     let(:expected_json) do
       {
@@ -706,6 +706,7 @@ RSpec.describe Move do
         'to_location_type' => 'court',
         'updated_at' => be_a(Time),
         'supplier' => move.supplier.key,
+        'person_escort_record_id' => move.person_escort_record_id,
       }
     end
 
@@ -1047,6 +1048,22 @@ RSpec.describe Move do
       expect(journey1.date).to eq(Time.zone.today + 6)
       expect(journey2.date).to eq(Time.zone.today)
       expect(journey3.date).to eq(Time.zone.today + 7)
+    end
+  end
+
+  describe '#cross_supplier?' do
+    let(:move) { create(:move) }
+
+    it { expect(move.cross_supplier?).to be false }
+
+    context 'when the origin and destination suppliers are different' do
+      let!(:supplier1) { create(:supplier) }
+      let!(:supplier2) { create(:supplier) }
+      let!(:from_location) { create(:location, suppliers: [supplier1]) }
+      let!(:to_location) { create(:location, :court, suppliers: [supplier2]) }
+      let(:move) { create(:move, from_location:, to_location:) }
+
+      it { expect(move.cross_supplier?).to be true }
     end
   end
 end

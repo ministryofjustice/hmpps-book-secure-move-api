@@ -180,7 +180,7 @@ RSpec.describe Profile, type: :model do
   end
 
   describe '#for_feed' do
-    subject(:profile) { create(:profile) }
+    subject(:profile) { create(:profile, :with_person_escort_record) }
 
     let(:expected_json) do
       {
@@ -189,6 +189,7 @@ RSpec.describe Profile, type: :model do
         'created_at' => be_a(Time),
         'updated_at' => be_a(Time),
         'assessment_answers' => [],
+        'person_escort_record_id' => profile.person_escort_record_id,
       }
     end
 

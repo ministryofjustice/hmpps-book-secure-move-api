@@ -21,3 +21,7 @@ PostJourneyStart:
           $ref: notes_attribute.yaml#/Notes
         vehicle_reg:
           $ref: vehicle_reg_attribute.yaml#/Notes
+        vehicle_depot:
+          type: string
+          example: Leeds
+          description: The depot where the vehicle is based

@@ -23,6 +23,8 @@ RSpec.describe Api::JourneyEventsController do
             attributes: {
               timestamp: '2020-04-23T18:25:43.511Z',
               notes: 'something noteworthy',
+              vehicle_reg: 'B0RT',
+              vehicle_depot: 'Shelbyville',
             },
           },
         }
@@ -47,6 +49,18 @@ RSpec.describe Api::JourneyEventsController do
         do_post
         event = GenericEvent.last
         expect(event.created_by).to eq('TEST_USER')
+      end
+
+      it 'sets the correct vehicle_reg' do
+        do_post
+        event = GenericEvent.last
+        expect(event.vehicle_reg).to eq('B0RT')
+      end
+
+      it 'sets the correct vehicle_depot' do
+        do_post
+        event = GenericEvent.last
+        expect(event.vehicle_depot).to eq('Shelbyville')
       end
     end
 

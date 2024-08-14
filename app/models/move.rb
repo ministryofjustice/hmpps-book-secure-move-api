@@ -316,6 +316,9 @@ class Move < VersionedModel
     feed_attributes.merge!(to_location.for_feed(prefix: :to)) if to_location
     feed_attributes.merge!(supplier.for_feed) if supplier
 
+    feed_attributes['person_escort_record_id'] = person_escort_record_id if person_escort_record_id.present?
+    feed_attributes['youth_risk_assessment_id'] = youth_risk_assessment_id if youth_risk_assessment_id.present?
+
     feed_attributes
   end
 
@@ -380,6 +383,10 @@ class Move < VersionedModel
     # Process in memory to avoid n+1 queries in serializers
     # TODO: use GenericEvent::MoveNotifyPremisesOfPickupEta when it is available
     generic_events.select { |event| event.type == 'GenericEvent::MoveNotifyPremisesOfExpectedCollectionTime' }.max_by(&:occurred_at)&.expected_at
+  end
+
+  def cross_supplier?
+    from_location&.suppliers != to_location&.suppliers
   end
 
 private

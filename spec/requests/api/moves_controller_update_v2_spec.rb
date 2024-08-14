@@ -9,7 +9,7 @@ RSpec.describe Api::MovesController do
   let(:response_json) { JSON.parse(response.body) }
   let(:schema) { load_yaml_schema('patch_move_responses.yaml', version: 'v2') }
   let(:access_token) { 'spoofed-token' }
-  let(:supplier) { create(:supplier) }
+  let(:supplier) { create(:supplier, :serco) }
 
   let(:resource_to_json) do
     JSON.parse(V2::MoveSerializer.new(move.reload, serializer: V2::MoveSerializer).serializable_hash.to_json)
@@ -22,6 +22,14 @@ RSpec.describe Api::MovesController do
       'Authorization' => "Bearer #{access_token}",
       'Idempotency-Key' => SecureRandom.uuid,
     }
+  end
+
+  let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+  around do |example|
+    ClimateControl.modify(**envs) do
+      example.run
+    end
   end
 
   describe 'PATCH /moves' do
@@ -337,6 +345,62 @@ RSpec.describe Api::MovesController do
 
           expect(notification.attributes).to include_json(expected_notification)
         end
+      end
+    end
+
+    context 'when it is a cross-supplier move' do
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
+      let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
+      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
+      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
+      let!(:move) { create :move, :proposed, :prison_recall, from_location:, to_location:, profile:, supplier: }
+
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+
+      let(:expected_notification_attributes) do
+        {
+          'topic_id' => move.id,
+          'topic_type' => 'Move',
+          'delivery_attempts' => 1,
+          'delivery_attempted_at' => be_within(5.seconds).of(Time.zone.now),
+          'delivered_at' => be_within(5.seconds).of(Time.zone.now),
+          'discarded_at' => nil,
+          'response_id' => nil,
+          'notification_type_id' => 'webhook',
+        }
+      end
+
+      before do
+        create(:notification_type, :webhook)
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+        create(:notification, topic: move, event_type: 'create_move')
+        create(:notification, topic: move, event_type: 'cross_supplier_move_add')
+      end
+
+      it 'notifies the initial supplier' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          do_patch
+        end
+
+        expect(subscription.notifications.last.attributes).to include_json(
+          expected_notification_attributes.merge({ 'event_type' => 'update_move_status' }),
+        )
+      end
+
+      it 'notifies the receiving supplier' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          do_patch
+        end
+
+        expect(subscription2.notifications.last.attributes).to include_json(
+          expected_notification_attributes.merge({ 'event_type' => 'cross_supplier_move_update_status' }),
+        )
       end
     end
 

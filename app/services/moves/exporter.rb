@@ -18,6 +18,7 @@ module Moves
       'To location code',
       'Additional information',
       'Date of travel',
+      'Cancelled at',
       'PNC number',
       'Prison number',
       'Last name',
@@ -38,8 +39,6 @@ module Moves
       'Concealed items details',
       'Any other risks',
       'Any other risks details',
-      'Special diet or allergy',
-      'Special diet or allergy details',
       'Health issue',
       'Health issue details',
       'Medication',
@@ -50,17 +49,12 @@ module Moves
       'Pregnant details',
       'Any other requirements',
       'Any other requirements details',
-      'Solicitor or other legal representation',
-      'Solicitor or other legal representation details',
       'Sign or other language interpreter',
       'Sign or other language interpreter details',
-      'Any other information',
-      'Any other information details',
       'Not to be released',
       'Not to be released details',
       'Requires special vehicle',
       'Requires special vehicle details',
-      'Uploaded documents',
     ].freeze
 
     def initialize(moves)
@@ -74,7 +68,7 @@ module Moves
         headings = STATIC_HEADINGS
         headings += flags_by_section if alert_columns
         csv << headings
-        moves.find_each do |move|
+        moves.includes(:generic_events).find_each do |move|
           csv << attributes_row(move)
         end
         file.flush
@@ -100,6 +94,7 @@ module Moves
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
+        move.generic_events.select { _1.type == 'GenericEvent::MoveCancel' }.last&.occurred_at, # Cancelled at
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
@@ -114,18 +109,14 @@ module Moves
         answer_details(answers, 'self_harm'), # Self harm details
         answer_details(answers, 'concealed_items'), # Concealed items details
         answer_details(answers, 'other_risks'), # Any other risks details
-        answer_details(answers, 'special_diet_or_allergy'), # Special diet or allergy details
         answer_details(answers, 'health_issue'), # Health issue details
         answer_details(answers, 'medication'), # Medication details
         answer_details(answers, 'wheelchair'), # Wheelchair user details
         answer_details(answers, 'pregnant'), # Pregnant details
         answer_details(answers, 'other_health'), # Any other details
-        answer_details(answers, 'solicitor'), # Solicitor or other legal representation details
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
-        answer_details(answers, 'other_court'), # Any other information details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details
-        profile&.documents&.size || 0, # 'Uploaded documents',
       ]
 
       if alert_columns
