@@ -16,7 +16,7 @@ class GenericEventSerializer
   attribute :details do |record, _params|
     record.details.deep_dup.tap do |details|
       if record.class.instance_variable_defined?(:@relationship_attributes)
-        record.class.relationship_attributes.each do |attribute_key, _attribute_type|
+        record.class.relationship_attributes.each_key do |attribute_key|
           details.delete(attribute_key)
         end
       end

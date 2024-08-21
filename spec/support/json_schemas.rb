@@ -2,7 +2,7 @@
 
 RSpec.configure do |config|
   def load_schema(file_name, version: 'v1')
-    return unless File.file?("#{Rails.root}/swagger/#{version}/#{file_name}")
+    return unless File.file?(Rails.root.join("swagger/#{version}/#{file_name}").to_s)
 
     schema = load_yaml_schema(file_name, version:)
 
@@ -12,7 +12,7 @@ RSpec.configure do |config|
   end
 
   def load_yaml_schema(file_name, version: 'v1')
-    File.open("#{Rails.root}/swagger/#{version}/#{file_name}") do |file|
+    File.open(Rails.root.join("swagger/#{version}/#{file_name}").to_s) do |file|
       YAML.safe_load(file.read)
     rescue Psych::SyntaxError => e
       # Include original filename in exception to make debugging a less cryptic affair

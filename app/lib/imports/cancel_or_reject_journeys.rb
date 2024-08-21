@@ -63,7 +63,7 @@ private
       [GenericEvent::JourneyCancel]
     when 'completed'
       [GenericEvent::JourneyUncomplete, GenericEvent::JourneyCancel]
-    else  # cancelled or rejected, nothing to do
+    else # cancelled or rejected, nothing to do
       []
     end
   end

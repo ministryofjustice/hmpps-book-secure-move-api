@@ -144,7 +144,6 @@ RSpec.describe FrameworkResponses::BulkUpdater do
       response1 = create(:string_response, assessmentable: per, value: nil)
       response2 = create(:string_response, assessmentable: per, value: nil)
       described_class.new(assessment: per, response_values_hash: { response1.id => 'Foo', response2.id => 'No' }).call
-
     rescue FrameworkResponses::BulkUpdateError
       expect(response1.reload.value).to be_nil
       expect(response2.reload.value).to be_nil

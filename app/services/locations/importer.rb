@@ -37,7 +37,7 @@ module Locations
           updated_locations << location.nomis_agency_id
         end
 
-        location.save  # rubocop:disable Rails/SaveBang
+        location.save # rubocop:disable Rails/SaveBang
       end
     end
 

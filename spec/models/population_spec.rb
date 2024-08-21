@@ -281,7 +281,7 @@ RSpec.describe Population do
     let!(:population4) { create(:population, location: prison2, date: Date.tomorrow) } # Included
 
     before do
-      create(:population, location: prison1, date: Time.zone.today - 2)  # Falls outside scope of dates, so not included
+      create(:population, location: prison1, date: Time.zone.today - 2) # Falls outside scope of dates, so not included
 
       create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)
       create(:move, :prison_transfer, from_location: prison1, date: Date.yesterday)

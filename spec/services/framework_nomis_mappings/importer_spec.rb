@@ -308,7 +308,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
       return_values = [:raise, true]
       allow(person_escort_record).to receive(:update!).twice do
         return_value = return_values.shift
-        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : person_escort_record.update(nomis_sync_status:)  # rubocop:disable Rails/SaveBang
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : person_escort_record.update(nomis_sync_status:) # rubocop:disable Rails/SaveBang
       end
 
       described_class.new(assessmentable: person_escort_record).call
