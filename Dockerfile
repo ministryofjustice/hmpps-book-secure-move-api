@@ -67,4 +67,4 @@ COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v1/swagger.yaml 
 COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v2/swagger.yaml /app/swagger/v2/swagger.yaml
 
 USER $APPUID
-CMD ["bundle", "exec", "puma", "-p", "$PUMA_PORT"]
+CMD bundle exec puma -p $PUMA_PORT
