@@ -45,7 +45,7 @@ private
       end
 
       move.state_machine.restore!(find_pre_trigger_status(new_status)) # to ensure event state transition is valid
-      event.eventable = move  # to ensure we are modifying the same object
+      event.eventable = move # to ensure we are modifying the same object
 
       event.trigger(dry_run: true)
 

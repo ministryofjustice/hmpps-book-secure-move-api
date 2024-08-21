@@ -209,7 +209,7 @@ RSpec.describe FrameworkResponse do
       return_values = [:raise, true]
       allow(response).to receive(:update!).twice do
         return_value = return_values.shift
-        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes')  # rubocop:disable Rails/SaveBang
+        return_value == :raise ? raise(ActiveRecord::PreparedStatementCacheExpired) : response.update(value: 'Yes') # rubocop:disable Rails/SaveBang
       end
 
       response.update_with_flags!(new_value: 'Yes')

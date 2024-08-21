@@ -17,7 +17,7 @@ module FrameworkNomisMappings
       ApplicationRecord.retriable_transaction do
         return unless persist_framework_nomis_mappings.any?
 
-        framework_responses.includes(:framework_nomis_mappings).each do |response|
+        framework_responses.includes(:framework_nomis_mappings).find_each do |response|
           nomis_code_ids = responses_to_codes[response.id]&.pluck(:nomis_code_id)
           response.framework_nomis_mappings = nomis_code_ids_to_mappings.slice(*nomis_code_ids).values.flatten
         end

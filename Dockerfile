@@ -1,4 +1,4 @@
-FROM ruby:3.2.5-alpine as build-stage
+FROM ruby:3.3.4-alpine AS build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -13,15 +13,13 @@ RUN gem update bundler --no-document
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
 COPY Gemfile Gemfile.lock .ruby-version /app/
 
-RUN gem install bundler -v '2.1.4'
-
-RUN bundle _2.1.4_ install --jobs 4 --retry 3 \
+RUN bundle install --jobs 4 --retry 3 \
      && rm -rf /usr/local/bundle/cache/*.gem \
      && find /usr/local/bundle/gems/ -name "*.c" -delete \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:3.2.5-alpine as swagger-build
+FROM ruby:3.3.4-alpine AS swagger-build
 
 WORKDIR /app
 RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata
@@ -34,24 +32,27 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:3.2.5-alpine
+FROM ruby:3.3.4-alpine
 
 ARG APP_BUILD_DATE
-ENV APP_BUILD_DATE ${APP_BUILD_DATE}
+ENV APP_BUILD_DATE=${APP_BUILD_DATE}
 
 ARG APP_BUILD_TAG
-ENV APP_BUILD_TAG ${APP_BUILD_TAG}
+ENV APP_BUILD_TAG=${APP_BUILD_TAG}
 
 ARG APP_GIT_COMMIT
-ENV APP_GIT_COMMIT ${APP_GIT_COMMIT}
-ENV SENTRY_RELEASE ${APP_GIT_COMMIT}
+ENV APP_GIT_COMMIT=${APP_GIT_COMMIT}
+ENV SENTRY_RELEASE=${APP_GIT_COMMIT}
 
-ENV APPUID 1000
+ENV APPUID=1000
 
-ENV RAILS_ENV production
-ENV RACK_ENV production
+ENV RAILS_ENV=production
+ENV RACK_ENV=production
 
-ENV PUMA_PORT 3000
+ENV BUNDLE_WITHOUT="development:test"
+ENV BUNDLE_FROZEN="true"
+
+ENV PUMA_PORT=3000
 EXPOSE $PUMA_PORT
 
 RUN addgroup -g $APPUID -S appgroup && \
@@ -66,4 +67,4 @@ COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v1/swagger.yaml 
 COPY --chown=appuser:appgroup --from=swagger-build /app/swagger/v2/swagger.yaml /app/swagger/v2/swagger.yaml
 
 USER $APPUID
-CMD bundle exec puma -p $PUMA_PORT
+CMD ["bundle", "exec", "puma", "-p", "$PUMA_PORT"]

@@ -46,7 +46,7 @@ private
       end
 
       journey.state_machine.restore!(find_pre_trigger_state(new_state)) # to ensure event state transition is valid
-      event.eventable = journey  # to ensure we are modifying the same object
+      event.eventable = journey # to ensure we are modifying the same object
 
       event.trigger(dry_run: true)
 

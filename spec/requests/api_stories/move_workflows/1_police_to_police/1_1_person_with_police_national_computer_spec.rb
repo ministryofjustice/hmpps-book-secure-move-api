@@ -6,7 +6,6 @@ require 'rack/test'
 # 1.1 Police to Police police_transfer move for a person with a PNC identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-# rubocop:disable Rails/HttpPositionalArguments
 RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
@@ -191,4 +190,3 @@ RSpec.describe 'police-to-police transfer', type: :request, api_story: true do
     end
   end
 end
-# rubocop:enable Rails/HttpPositionalArguments

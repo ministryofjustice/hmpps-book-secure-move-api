@@ -13,7 +13,7 @@ namespace :assessments do
   desc 'Populate moves on assessments'
   task populate_moves: :environment do
     PersonEscortRecord.where(move: nil).in_batches(of: 10).each do |batch|
-      updated_batch = batch.includes(profile: :moves).each do |assessment|
+      updated_batch = batch.includes(profile: :moves).find_each do |assessment|
         moves = assessment.profile.moves
         if moves.size > 1
           print "PersonEscortRecord with id: #{assessment.id} has multiple moves\n"
