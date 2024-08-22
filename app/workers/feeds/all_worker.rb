@@ -10,7 +10,7 @@ module Feeds
       Sidekiq.logger.info('Generating analytics feeds...')
       time_since = TimeSince.new
 
-      feeds = Feeds::Jpc.new(date.beginning_of_day, date.end_of_day).call
+      feeds = Feeds::All.new(date.beginning_of_day, date.end_of_day).call
       feeds.each do |feed_name, feed_data|
         CloudData::AnalyticalPlatformFeed.new.write(feed_data, feed_name.to_s.pluralize, date)
       end
