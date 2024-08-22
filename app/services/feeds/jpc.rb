@@ -31,6 +31,10 @@ module Feeds
         .or(::Journey.where('moves.date' => ...@date_from, 'moves.updated_at' => @date_from..@date_to))
     end
 
+    def profiles
+      ::Profile.updated_at_range(@date_from, @date_to)
+    end
+
     def move_feed
       [].tap do |feed|
         moves.find_each do |move|
@@ -64,7 +68,7 @@ module Feeds
 
     def profile_feed
       [].tap do |feed|
-        ::Profile.updated_at_range(@date_from, @date_to).find_each do |profile|
+        profiles.find_each do |profile|
           feed << profile.for_feed.to_json
         end
       end
