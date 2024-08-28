@@ -137,7 +137,7 @@ RSpec.describe Api::AllocationsController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => "Date can't be blank",
             'source' => { 'pointer' => '/data/attributes/date' },
             'code' => 'blank',
@@ -166,7 +166,7 @@ RSpec.describe Api::AllocationsController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => 'Moves count is invalid',
             'source' => { 'pointer' => '/data/attributes/moves_count' },
             'code' => 'invalid',
@@ -229,7 +229,7 @@ RSpec.describe Api::AllocationsController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => 'Date has already been taken',
             'source' => { 'pointer' => '/data/attributes/date' },
             'code' => 'taken',

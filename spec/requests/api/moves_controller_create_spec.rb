@@ -486,7 +486,7 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => "Date can't be blank",
             'source' => { 'pointer' => '/data/attributes/date' },
             'code' => 'blank',

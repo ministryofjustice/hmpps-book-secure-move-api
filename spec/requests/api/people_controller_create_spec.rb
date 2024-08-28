@@ -174,7 +174,7 @@ RSpec.describe Api::PeopleController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => "Last name can't be blank",
             'source' => { 'pointer' => '/data/attributes/last_name' },
             'code' => 'blank',

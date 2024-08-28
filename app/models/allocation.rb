@@ -31,6 +31,7 @@ class Allocation < VersionedModel
     other_estate: 'Other',
   }
 
+  attribute :states, :string
   enum states: {
     unfilled: ALLOCATION_STATUS_UNFILLED,
     filled: ALLOCATION_STATUS_FILLED,

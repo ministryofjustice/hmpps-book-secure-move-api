@@ -226,7 +226,7 @@ RSpec.describe Api::PersonEscortRecordsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Profile has already been taken',
               'source' => { 'pointer' => '/data/attributes/profile' },
               'code' => 'taken',
@@ -246,7 +246,7 @@ RSpec.describe Api::PersonEscortRecordsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Profile has already been taken',
               'source' => { 'pointer' => '/data/attributes/profile' },
               'code' => 'taken',

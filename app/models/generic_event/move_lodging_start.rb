@@ -9,6 +9,7 @@ class GenericEvent
     include LocationValidations
     include LocationFeed
 
+    attribute :reason, :string
     enum reason: {
       overnight_lodging: 'overnight_lodging',
       lockout: 'lockout',

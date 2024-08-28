@@ -10,6 +10,7 @@ class GenericEvent
       child.details_attributes :supplier_personnel_numbers, :police_personnel_numbers, :vehicle_reg, :reported_at, :fault_classification
       child.relationship_attributes location_id: :locations
       child.eventable_types 'Move', 'Person'
+      attribute :fault_classification, :string
       child.enum fault_classification: {
         was_not_supplier: 'was_not_supplier',
         supplier: 'supplier',

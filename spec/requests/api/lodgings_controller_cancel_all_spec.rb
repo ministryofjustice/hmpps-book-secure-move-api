@@ -95,7 +95,7 @@ RSpec.describe Api::LodgingsController do
           before { do_post }
 
           let(:errors_422) do
-            [{ 'title' => 'Unprocessable entity',
+            [{ 'title' => 'Unprocessable content',
                'detail' => 'Cancellation reason is not included in the list' }]
           end
         end

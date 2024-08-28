@@ -502,7 +502,7 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => 'Date has already been taken',
             'source' => { 'pointer' => '/data/attributes/date' },
             'code' => 'taken',
@@ -598,7 +598,7 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
             'source' => { 'pointer' => '/data/attributes/profile' },
             'code' => 'unsupported_prisoner_category',

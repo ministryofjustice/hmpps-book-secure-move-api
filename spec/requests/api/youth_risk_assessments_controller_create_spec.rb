@@ -223,7 +223,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => "Move 'from location' must be from either a secure training centre or a secure children's home",
               'source' => { 'pointer' => '/data/attributes/move' },
             },
@@ -237,7 +237,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Profile has already been taken',
               'source' => { 'pointer' => '/data/attributes/profile' },
               'code' => 'taken',
@@ -257,7 +257,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Profile has already been taken',
               'source' => { 'pointer' => '/data/attributes/profile' },
               'code' => 'taken',

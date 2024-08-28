@@ -508,7 +508,7 @@ RSpec.describe Api::MovesController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Move type extradition is only valid if extradition capable is true for destination location',
               'source' => { 'pointer' => '/data/attributes/move_type' },
               'code' => 'exclusion',
@@ -590,7 +590,7 @@ RSpec.describe Api::MovesController do
 
       let(:errors_422) do
         [
-          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+          { 'title' => 'Unprocessable content', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
         ]
       end
 
@@ -618,7 +618,7 @@ RSpec.describe Api::MovesController do
 
       let(:errors_422) do
         [
-          { 'title' => 'Unprocessable entity', 'detail' => "Date can't be blank", 'source' => { 'pointer' => '/data/attributes/date' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable content', 'detail' => "Date can't be blank", 'source' => { 'pointer' => '/data/attributes/date' }, 'code' => 'blank' },
         ]
       end
 
@@ -631,8 +631,8 @@ RSpec.describe Api::MovesController do
       let(:move_attributes) { nil }
       let(:errors_422) do
         [
-          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
-          { 'title' => 'Unprocessable entity', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
+          { 'title' => 'Unprocessable content', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable content', 'detail' => 'Move type is not included in the list', 'source' => { 'pointer' => '/data/attributes/move_type' }, 'code' => 'inclusion' },
         ]
       end
 
@@ -645,8 +645,8 @@ RSpec.describe Api::MovesController do
       let(:data) { { type: 'moves' } }
       let(:errors_422) do
         [
-          { 'title' => 'Unprocessable entity', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
-          { 'title' => 'Unprocessable entity', 'detail' => 'From location must exist', 'source' => { 'pointer' => '/data/attributes/from_location' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable content', 'detail' => 'Supplier must exist', 'source' => { 'pointer' => '/data/attributes/supplier' }, 'code' => 'blank' },
+          { 'title' => 'Unprocessable content', 'detail' => 'From location must exist', 'source' => { 'pointer' => '/data/attributes/from_location' }, 'code' => 'blank' },
         ]
       end
 
@@ -671,7 +671,7 @@ RSpec.describe Api::MovesController do
         let(:errors_422) do
           [
             {
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'Date has already been taken',
               'source' => { 'pointer' => '/data/attributes/date' },
               'code' => 'taken',
@@ -691,7 +691,7 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => 'To location must be an active location',
             'source' => { 'pointer' => '/data/attributes/to_location' },
             'code' => 'inactive_location',
@@ -718,7 +718,7 @@ RSpec.describe Api::MovesController do
       let(:errors_422) do
         [
           {
-            'title' => 'Unprocessable entity',
+            'title' => 'Unprocessable content',
             'detail' => "Profile person is a category '#{category_key}' prisoner and cannot be moved using this service",
             'source' => { 'pointer' => '/data/attributes/profile' },
             'code' => 'unsupported_prisoner_category',

@@ -75,7 +75,7 @@ RSpec.describe Api::YouthRiskAssessmentsController do
           let(:errors_422) do
             [
               {
-                'title' => 'Unprocessable entity',
+                'title' => 'Unprocessable content',
                 'detail' => "Status can't update to 'confirmed' from 'in progress'",
                 'source' => { 'pointer' => '/data/attributes/status' },
                 'code' => 'invalid_status',

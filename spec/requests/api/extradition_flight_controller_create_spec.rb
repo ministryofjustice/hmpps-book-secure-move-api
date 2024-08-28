@@ -101,7 +101,7 @@ RSpec.describe Api::ExtraditionFlightController do
           let(:errors_422) do
             [
               {
-                'title' => 'Unprocessable entity',
+                'title' => 'Unprocessable content',
                 'detail' => 'Flight time must be formatted as a valid iso-8601 date',
               },
             ]

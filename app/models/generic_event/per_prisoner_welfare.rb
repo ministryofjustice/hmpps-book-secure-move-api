@@ -6,11 +6,13 @@ class GenericEvent
     relationship_attributes location_id: :locations
     eventable_types 'PersonEscortRecord'
 
+    attribute :outcome, :string
     enum outcome: {
       accepted: 'accepted',
       refused: 'refused',
     }
 
+    attribute :subtype, :string
     enum subtype: {
       comfort_break: 'comfort_break',
       food: 'food',

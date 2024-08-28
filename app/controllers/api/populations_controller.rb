@@ -126,7 +126,7 @@ module Api
           title: 'Invalid date',
           detail: 'Date is not a valid date',
         }] },
-        status: :unprocessable_entity,
+        status: :unprocessable_content,
       )
     end
   end

@@ -6,6 +6,7 @@ class GenericEvent
     relationship_attributes to_location_id: :locations
     eventable_types 'Move'
 
+    attribute :reason, :string
     enum reason: {
       no_space: 'no_space',
       serious_incident: 'serious_incident',

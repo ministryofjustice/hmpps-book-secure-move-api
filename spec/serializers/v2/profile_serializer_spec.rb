@@ -82,7 +82,9 @@ RSpec.describe V2::ProfileSerializer do
     let(:serialized_document) do
       serializer = DocumentSerializer.new(profile.documents.first)
 
-      JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys
+      JSON.parse(serializer.serializable_hash.to_json).deep_symbolize_keys.tap do |doc|
+        doc[:data][:attributes][:url] = /http:\/\/www\.example\.com\/rails\/active_storage\/disk\/.+/
+      end
     end
 
     let(:serialized_category) do

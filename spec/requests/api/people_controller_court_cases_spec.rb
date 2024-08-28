@@ -87,7 +87,7 @@ RSpec.describe Api::PeopleController do
         get("/api/v1/people/#{person.id}/court_cases", headers:)
 
         expect(response_json['errors'][0]['detail']).to eq("Validation failed: Latest nomis booking can't be blank")
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 

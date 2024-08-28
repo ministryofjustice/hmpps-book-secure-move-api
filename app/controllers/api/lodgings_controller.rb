@@ -197,7 +197,7 @@ module Api
     end
 
     def find_location(location_id)
-      # Finds the referenced location or throws an ActiveModel::ValidationError (which will render as 422 Unprocessable Entity)
+      # Finds the referenced location or throws an ActiveModel::ValidationError (which will render as 422 Unprocessable Content)
       location = Location.find_or_initialize_by(id: location_id)
       unless location.persisted?
         location.errors.add(:location, "reference was not found id=#{location_id}")

@@ -4,6 +4,7 @@ module AuthoriserValidations
   extend ActiveSupport::Concern
 
   included do
+    attribute :authorised_by, :string
     enum authorised_by: {
       PMU: 'PMU',
       CDM: 'CDM',
