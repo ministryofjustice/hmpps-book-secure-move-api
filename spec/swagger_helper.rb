@@ -31,17 +31,17 @@ RSpec.configure do |config|
 
   swagger_doc_v2_integration.deep_merge!(swagger_doc_v2)
 
-  config.swagger_docs = {
+  config.openapi_specs = {
     'v1/swagger.yaml' => swagger_doc_v1,
     'v2/swagger.yaml' => swagger_doc_v2_integration,
     'base/swagger.yaml' => swagger_doc_base,
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
-  # The swagger_docs configuration option has the filename including format in
+  # The openapi_specs configuration option has the filename including format in
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
-  config.swagger_format = :yaml
+  config.openapi_format = :yaml
 
   config.after do |example|
     # if there's no response metadata, we can assume we're not in RSwag territory

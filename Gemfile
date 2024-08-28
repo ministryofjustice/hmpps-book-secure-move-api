@@ -14,6 +14,7 @@ gem 'aws-sdk-s3'
 gem 'bcrypt', require: false
 gem 'bootsnap', require: false
 gem 'cancancan'
+gem 'csv'
 gem 'discard'
 gem 'doorkeeper', '5.5.4'
 gem 'faraday'
