@@ -83,6 +83,7 @@ end
 
 group :test do
   gem 'climate_control'
+  gem 'database_cleaner-active_record'
   gem 'rack-test'
   gem 'service_mock'
   gem 'simplecov', require: false
