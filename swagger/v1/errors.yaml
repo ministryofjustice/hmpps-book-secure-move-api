@@ -61,7 +61,7 @@ UnprocessableEntity:
   properties:
     title:
       type: string
-      example: Unprocessable entity
+      example: Unprocessable content
     meta:
       type: object
       properties:

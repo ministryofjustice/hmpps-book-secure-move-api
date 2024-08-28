@@ -88,7 +88,7 @@ RSpec.describe Mock::IdempotentController, type: :request do
     end
 
     it 'returns a bad request error' do
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it 'returns a valid JSON response' do
@@ -105,7 +105,7 @@ RSpec.describe Mock::IdempotentController, type: :request do
     end
 
     it 'returns a bad request error' do
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it 'returns a valid JSON response' do

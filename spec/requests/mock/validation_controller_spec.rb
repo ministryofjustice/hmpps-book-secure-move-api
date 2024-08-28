@@ -63,32 +63,32 @@ RSpec.describe Mock::ValidationController, type: :request do
     let(:errors) do
       [
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: "Name can't be blank",
           source: { pointer: '/data/attributes/name' },
           code: :blank,
         },
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: 'Name has already been taken',
           source: { pointer: '/data/attributes/name' },
           code: :taken,
           meta: { existing_id: model.existing_id },
         },
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: 'Status is not included in the list',
           source: { pointer: '/data/attributes/status' },
           code: :inclusion,
         },
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: "Email can't be blank",
           source: { pointer: '/data/attributes/email' },
           code: :blank,
         },
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: 'Email is invalid',
           source: { pointer: '/data/attributes/email' },
           code: :invalid,

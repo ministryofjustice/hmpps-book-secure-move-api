@@ -10,6 +10,7 @@ class GenericEvent
     include LocationValidations
     include LocationFeed
 
+    attribute :subtype, :string
     enum subtype: {
       making_prisoner_available_for_loading: 'making_prisoner_available_for_loading',
       access_to_or_from_location_when_collecting_dropping_off_prisoner: 'access_to_or_from_location_when_collecting_dropping_off_prisoner',

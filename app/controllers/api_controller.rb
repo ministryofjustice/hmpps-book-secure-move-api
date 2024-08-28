@@ -39,7 +39,7 @@ class ApiController < ApplicationController
   EXTRA_RESCUE_RESPONSES = {
     'ActiveRecord::ReadOnlyRecord' => :forbidden,
     'CanCan::AccessDenied' => :unauthorized,
-    'ActiveModel::ValidationError' => :unprocessable_entity,
+    'ActiveModel::ValidationError' => :unprocessable_content,
     'IncludeParamsValidator::ValidationError' => :bad_request,
     'NotSupportedInOldVersionError' => :not_acceptable,
     'Faraday::ConnectionFailed' => :service_unavailable,
@@ -161,7 +161,7 @@ private
   def render_unprocessable_entity_error(exception)
     render(
       json: { errors: validation_errors(exception.record) },
-      status: :unprocessable_entity,
+      status: :unprocessable_content,
     )
   end
 
@@ -220,7 +220,7 @@ private
     errors.attribute_names.flat_map do |field|
       Array.new(errors[field].size) do |index|
         {
-          title: 'Unprocessable entity',
+          title: 'Unprocessable content',
           detail: "#{field} #{errors[field][index]}".humanize,
           source: { pointer: "/data/attributes/#{field}" },
           code: errors.details[field][index][:error],
@@ -244,7 +244,7 @@ private
         title: "Invalid #{exception.model.errors.attribute_names.join(', ')}",
         detail: exception.to_s,
       }] },
-      status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
+      status: :unprocessable_content, # NB: 422 (Unprocessable Content) means syntactically correct but semantically incorrect
     )
   end
 

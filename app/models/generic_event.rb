@@ -127,7 +127,7 @@ class GenericEvent < ApplicationRecord
   # of any attributes of the eventable and for reporting purposes.
   scope :applied_order, -> { order(occurred_at: :asc) }
 
-  serialize :details, HashWithIndifferentAccessSerializer
+  serialize :details, coder: HashWithIndifferentAccessSerializer
 
   before_validation :set_classification
 

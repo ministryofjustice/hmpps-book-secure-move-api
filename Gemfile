@@ -5,15 +5,16 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.1.4'
 
 gem 'activerecord-import'
 gem 'auto_strip_attributes'
 gem 'aws-sdk-athena'
-gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-s3'
 gem 'bcrypt', require: false
 gem 'bootsnap', require: false
 gem 'cancancan'
+gem 'csv'
 gem 'discard'
 gem 'doorkeeper', '5.5.4'
 gem 'faraday'
@@ -36,7 +37,7 @@ gem 'pg'
 gem 'prometheus-client'
 gem 'puma'
 gem 'redis'
-gem 'routing-filter'
+gem 'routing-filter', github: 'nduitz/routing-filter', ref: '7ada2f1854563852c615eec681c67f80f135ade5'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
@@ -83,6 +84,7 @@ end
 
 group :test do
   gem 'climate_control'
+  gem 'database_cleaner-active_record'
   gem 'rack-test'
   gem 'service_mock'
   gem 'simplecov', require: false

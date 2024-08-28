@@ -39,6 +39,7 @@ class Journey < VersionedModel
 
   has_many :generic_events, as: :eventable, dependent: :destroy
 
+  attribute :states, :string
   enum states: {
     proposed: 'proposed',
     rejected: 'rejected',

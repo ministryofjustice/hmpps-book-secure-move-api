@@ -239,7 +239,7 @@ RSpec.describe Api::FrameworkResponsesController do
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
-            [{ 'title' => 'Unprocessable entity',
+            [{ 'title' => 'Unprocessable content',
                'detail' => 'Value is not included in the list' }]
           end
         end
@@ -275,7 +275,7 @@ RSpec.describe Api::FrameworkResponsesController do
 
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
-            [{ 'title' => 'Unprocessable entity',
+            [{ 'title' => 'Unprocessable content',
                'detail' => 'Items[1].responses[0].value level 3 are not valid options' }]
           end
         end

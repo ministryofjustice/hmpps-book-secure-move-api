@@ -14,6 +14,7 @@ class GenericEvent
       eventable.is_lockout = true
     end
 
+    attribute :reason, :string
     enum reason: {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
       no_space: 'no_space', # (PECS)

@@ -99,7 +99,7 @@ RSpec.describe Api::AllocationEventsController do
         let(:cancellation_reason) { 'raining' }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) { [{ 'title' => 'Unprocessable entity', 'detail' => 'Cancellation reason is not included in the list' }] }
+          let(:errors_422) { [{ 'title' => 'Unprocessable content', 'detail' => 'Cancellation reason is not included in the list' }] }
         end
       end
 
@@ -107,7 +107,7 @@ RSpec.describe Api::AllocationEventsController do
         let(:cancellation_reason) { nil }
 
         it_behaves_like 'an endpoint that responds with error 422' do
-          let(:errors_422) { [{ 'title' => 'Unprocessable entity', 'detail' => 'Cancellation reason is not included in the list' }] }
+          let(:errors_422) { [{ 'title' => 'Unprocessable content', 'detail' => 'Cancellation reason is not included in the list' }] }
         end
       end
     end

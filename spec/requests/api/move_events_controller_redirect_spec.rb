@@ -187,7 +187,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'To location must be a hospital or high security hospital location for hospital move',
               'source' => { 'pointer' => '/data/attributes/to_location' },
               'code' => 'invalid_location',
@@ -208,7 +208,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'To location must be a hospital or high security hospital location for hospital move',
               'source' => { 'pointer' => '/data/attributes/to_location' },
               'code' => 'invalid_location',
@@ -223,7 +223,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'To location must be an active location',
               'source' => { 'pointer' => '/data/attributes/to_location' },
               'code' => 'inactive_location',
@@ -238,7 +238,7 @@ RSpec.describe Api::MoveEventsController do
         it_behaves_like 'an endpoint that responds with error 422' do
           let(:errors_422) do
             [{
-              'title' => 'Unprocessable entity',
+              'title' => 'Unprocessable content',
               'detail' => 'To location id should be different to the from location',
             }]
           end

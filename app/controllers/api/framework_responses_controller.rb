@@ -45,7 +45,7 @@ module Api
           title: 'Invalid arguments',
           detail: e.to_s,
         }] },
-        status: :unprocessable_entity, # NB: 422 (Unprocessable Entity) means syntactically correct but semantically incorrect
+        status: :unprocessable_content, # NB: 422 (Unprocessable Content) means syntactically correct but semantically incorrect
       )
     end
 
@@ -98,7 +98,7 @@ module Api
           detail: "Value: #{exception.message} is incorrect type",
           source: { pointer: '/data/attributes/value' },
         }] },
-        status: :unprocessable_entity,
+        status: :unprocessable_content,
       )
     end
 
@@ -114,7 +114,7 @@ module Api
 
       render(
         json: { errors: },
-        status: :unprocessable_entity,
+        status: :unprocessable_content,
       )
     end
 
