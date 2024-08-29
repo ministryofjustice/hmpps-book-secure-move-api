@@ -41,7 +41,7 @@ read -p "Press enter to continue... (Ctrl+C to cancel)" go
 git tag -a ${NEXT_VERSION} -m "Deploying on ${DATE}"
 git push origin $NEXT_VERSION
 
-read -p Generate changelog? Enter to contine or Ctrl+C to quit
+read -p 'Generate changelog? Enter to contine or Ctrl+C to quit'
 
 git checkout -b changelog-$NEXT_VERSION
 bundle
