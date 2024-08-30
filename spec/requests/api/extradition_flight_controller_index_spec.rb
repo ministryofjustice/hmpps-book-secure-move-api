@@ -73,7 +73,6 @@ RSpec.describe Api::ExtraditionFlightController do
 
         it 'includes the requested includes in the response' do
           do_get
-          pp response_json
           returned_types = response_json['data']['relationships']
           expect(returned_types).to eq({
             'move' => {
