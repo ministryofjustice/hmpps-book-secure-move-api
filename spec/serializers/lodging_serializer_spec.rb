@@ -10,7 +10,6 @@ RSpec.describe LodgingSerializer do
   let(:adapter_options) { {} }
 
   it 'contains a type property' do
-    pp result[:data]
     expect(result[:data][:type]).to eql 'lodgings'
   end
 
