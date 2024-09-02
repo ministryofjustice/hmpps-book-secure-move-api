@@ -14,10 +14,13 @@ class ReportMailer < ApplicationMailer
 
     csv = Reports::PersonEscortRecordQuality.call(start_date:, end_date:)
 
+    base_filename = "per_quality_report_#{start_date}"
+    filename = end_date ? "#{base_filename}_to_#{end_date}.csv" : "#{base_filename}.csv"
+
     set_personalisation(
       'report-title': 'Person Escort Record Quality',
       'report-description': "#{start_date} - #{end_date}",
-      'report-file': Notifications.prepare_upload(StringIO.new(csv), true),
+      'report-file': Notifications.prepare_upload(StringIO.new(csv), filename:),
     )
 
     mail
