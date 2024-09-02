@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Movements, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::Movements, :with_nomis_client_authentication do
   describe '.get' do
     let(:response) { described_class.get(agency_id:, date:) }
     let(:date) { Time.zone.today }

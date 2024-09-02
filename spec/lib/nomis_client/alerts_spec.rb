@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Alerts, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::Alerts, :with_nomis_client_authentication do
   describe '.get' do
     let(:prison_numbers) { %w[G3239GV A8348EC] }
     let(:response) { described_class.get(prison_numbers) }

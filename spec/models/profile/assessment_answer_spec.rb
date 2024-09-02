@@ -200,7 +200,7 @@ RSpec.describe Profile::AssessmentAnswer, type: :model do
         end_date: '2010-06-21',
       }
     end
-    let(:assessment_question) { instance_double('AssessmentQuestion', category: 'foo', id: 'bar', key: 'baz') }
+    let(:assessment_question) { instance_double(AssessmentQuestion, category: 'foo', id: 'bar', key: 'baz') }
     let(:alert_type_description) { 'foo' }
 
     let(:expected_assessment_answer) do

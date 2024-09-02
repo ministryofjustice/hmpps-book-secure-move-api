@@ -81,6 +81,6 @@ RSpec.describe LocationsSerializer do
   end
 
   it 'contains an extradition_capable attribute' do
-    expect(attributes[:extradition_capable]).to be nil
+    expect(attributes[:extradition_capable]).to be_nil
   end
 end

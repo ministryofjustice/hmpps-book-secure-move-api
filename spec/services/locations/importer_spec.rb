@@ -222,7 +222,7 @@ RSpec.describe Locations::Importer do
 
     it 'does not change the extradition_capable attribute of the existing record' do
       importer.call
-      expect(custody_suite.reload.extradition_capable).to eq(true)
+      expect(custody_suite.reload.extradition_capable).to be(true)
     end
 
     it 'returns the existing record in the list of updated records' do

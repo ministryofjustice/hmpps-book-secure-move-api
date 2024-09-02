@@ -82,7 +82,7 @@ RSpec.describe NomisClient::People do
       ]
       JSON
     end
-    let(:nomis_response) { instance_double('response', parsed: JSON.parse(json_response)) }
+    let(:nomis_response) { instance_double(OAuth2::Response, parsed: JSON.parse(json_response)) }
     let(:nomis_offender_numbers) { %w[A1378MN A138MNO A1389MN] }
     let(:response) { described_class.get_response(nomis_offender_numbers:) }
 
@@ -105,7 +105,7 @@ RSpec.describe NomisClient::People do
     end
   end
 
-  describe '.get', with_nomis_client_authentication: true do
+  describe '.get', :with_nomis_client_authentication do
     let(:prison_numbers) { %w[G3239GV GV345VG G3325XX] }
     let(:response) { described_class.get(prison_numbers) }
     let(:client_response) do

@@ -276,7 +276,7 @@ RSpec.describe Move do
 
   context 'without automatic reference generation' do
     before do
-      service = instance_double('Moves::ReferenceGenerator', call: nil)
+      service = instance_double(Moves::ReferenceGenerator, call: nil)
       allow(Moves::ReferenceGenerator).to receive(:new).and_return(service)
     end
 
@@ -739,7 +739,7 @@ RSpec.describe Move do
 
     context 'when the move has not changed' do
       it 'returns false' do
-        expect(move.handle_event_run).to eq(false)
+        expect(move.handle_event_run).to be(false)
       end
 
       it 'does not trigger a move notification' do
@@ -755,7 +755,7 @@ RSpec.describe Move do
       end
 
       it 'returns true' do
-        expect(move.handle_event_run).to eq(true)
+        expect(move.handle_event_run).to be(true)
       end
 
       it 'saves the move' do
@@ -793,7 +793,7 @@ RSpec.describe Move do
       let(:new_date) { move.date + 1.day }
 
       it 'returns true' do
-        expect(move.handle_event_run).to eq(true)
+        expect(move.handle_event_run).to be(true)
       end
 
       it 'saves the move' do

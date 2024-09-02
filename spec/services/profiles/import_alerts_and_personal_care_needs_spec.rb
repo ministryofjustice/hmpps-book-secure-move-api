@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_authentication: true do
+RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_nomis_client_authentication do
   let(:person) { create :person, :nomis_synced }
   let(:prison_number) { person.prison_number }
   let(:profile) { create(:profile, person:) }
@@ -11,7 +11,7 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_aut
 
   let(:alerts_response) do
     instance_double(
-      'OAuth2::Response',
+      OAuth2::Response,
       body: alerts_response_body.to_json,
       parsed: alerts_response_body,
       status: 200,
@@ -19,7 +19,7 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, with_nomis_client_aut
   end
   let(:personal_care_needs_response) do
     instance_double(
-      'OAuth2::Response',
+      OAuth2::Response,
       body: personal_care_needs_response_body.to_json,
       parsed: personal_care_needs_response_body,
       status: 200,

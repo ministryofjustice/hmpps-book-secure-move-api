@@ -52,7 +52,7 @@ RSpec.describe Api::MovesController do
         it 'delegates the query execution to Moves::Finder with the correct filters' do
           allow(Ability).to receive(:new).and_return(ability)
 
-          moves_finder = instance_double('Moves::Finder', call: Move.all)
+          moves_finder = instance_double(Moves::Finder, call: Move.all)
           allow(Moves::Finder).to receive(:new).and_return(moves_finder)
 
           get_moves

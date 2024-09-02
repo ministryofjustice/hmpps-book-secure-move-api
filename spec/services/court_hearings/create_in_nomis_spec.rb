@@ -38,7 +38,7 @@ RSpec.describe CourtHearings::CreateInNomis do
             'comments': comments,
           },
         })
-        .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: { 'id' => 123 }.to_json))
+        .and_return(instance_double(OAuth2::Response, status: nomis_response_status, body: { 'id' => 123 }.to_json))
       move.person.update!(latest_nomis_booking_id: booking_id)
     end
 
@@ -67,7 +67,7 @@ RSpec.describe CourtHearings::CreateInNomis do
         create_hearing_in_nomis
 
         court_hearing = court_hearings.first
-        expect(court_hearing.saved_to_nomis).to eq true
+        expect(court_hearing.saved_to_nomis).to be true
         expect(court_hearing.nomis_hearing_id).to eq 123
       end
     end
@@ -79,7 +79,7 @@ RSpec.describe CourtHearings::CreateInNomis do
         create_hearing_in_nomis
 
         court_hearing = court_hearings.first
-        expect(court_hearing.saved_to_nomis).to eq false
+        expect(court_hearing.saved_to_nomis).to be false
         expect(court_hearing.nomis_hearing_id).to be_nil
       end
     end

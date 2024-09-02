@@ -188,7 +188,7 @@ RSpec.describe Api::Reference::LocationsController do
       let(:params) { { filter: filters } }
 
       before do
-        locations_finder = instance_double('Locations::Finder', call: Location.all)
+        locations_finder = instance_double(Locations::Finder, call: Location.all)
         allow(Locations::Finder).to receive(:new).and_return(locations_finder)
 
         get '/api/v1/reference/locations', params:, headers:

@@ -38,10 +38,10 @@ RSpec.describe Api::MovesController do
       let(:params) { { filter: filters } }
 
       it 'delegates the query execution to Moves::Finder with the correct filters' do
-        ability = instance_double('Ability')
+        ability = instance_double(Ability)
         allow(Ability).to receive(:new).and_return(ability)
 
-        moves_finder = instance_double('Moves::Finder', call: Move.all)
+        moves_finder = instance_double(Moves::Finder, call: Move.all)
         allow(Moves::Finder).to receive(:new).and_return(moves_finder)
 
         do_get

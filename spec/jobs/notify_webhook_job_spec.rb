@@ -34,7 +34,7 @@ RSpec.describe NotifyWebhookJob, type: :job do
       end
 
       it 'returns nil' do
-        expect(perform!).to be nil
+        expect(perform!).to be_nil
       end
 
       it 'does not set delivered_at' do

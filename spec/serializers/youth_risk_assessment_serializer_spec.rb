@@ -34,7 +34,7 @@ RSpec.describe YouthRiskAssessmentSerializer do
   context 'with a prefill source' do
     let(:youth_risk_assessment) { create(:youth_risk_assessment, :prefilled) }
 
-    it 'contains a`prefill_source` relationship ' do
+    it 'contains a`prefill_source` relationship' do
       expect(result[:data][:relationships][:prefill_source][:data]).to eq(
         id: youth_risk_assessment.prefill_source.id,
         type: 'youth_risk_assessments',

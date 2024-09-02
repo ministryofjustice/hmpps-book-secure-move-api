@@ -64,7 +64,7 @@ RSpec.describe Api::PopulationsController do
 
     describe 'finding results' do
       before do
-        locations_finder = instance_double('Locations::Finder', call: Location.all)
+        locations_finder = instance_double(Locations::Finder, call: Location.all)
         allow(Locations::Finder).to receive(:new).and_return(locations_finder)
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Api::PopulationsController do
       context 'when not including the include query param' do
         let(:params) { {} }
 
-        it 'returns no included relationships ' do
+        it 'returns no included relationships' do
           expect(response_json).not_to include('included')
         end
       end

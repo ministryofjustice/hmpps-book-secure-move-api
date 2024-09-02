@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Rake::Task['import:journeys_missing_vehicle:serco'] do
-  let(:results) { instance_double('Imports::Results') }
+  let(:results) { instance_double(Imports::Results) }
 
   before do
     allow(results).to receive(:summary).and_return('Summary')

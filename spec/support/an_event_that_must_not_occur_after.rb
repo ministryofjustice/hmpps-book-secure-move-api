@@ -58,14 +58,14 @@ RSpec.shared_examples 'an event that must not occur after' do |*types|
 
           it 'saves' do
             expect(Sentry).not_to receive(:capture_message)
-            expect(generic_event.save).to eq(true)
+            expect(generic_event.save).to be(true)
           end
         end
 
         context "when a #{type} event does not occur" do
           it 'saves' do
             expect(Sentry).not_to receive(:capture_message)
-            expect(generic_event.save).to eq(true)
+            expect(generic_event.save).to be(true)
           end
         end
       end

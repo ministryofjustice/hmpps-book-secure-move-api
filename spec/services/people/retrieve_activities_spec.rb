@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe People::RetrieveActivities do
-  let(:person) { instance_double('Person', latest_nomis_booking_id: '12345') }
+  let(:person) { instance_double(Person, latest_nomis_booking_id: '12345') }
   let(:response_json) { JSON.parse(file_fixture('nomis/get_activities_200.json').read) }
   let(:date_from) { Time.zone.today }
   let(:date_to) { Date.tomorrow }
@@ -38,7 +38,7 @@ RSpec.describe People::RetrieveActivities do
     end
 
     let(:oauth2_response) do
-      instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
+      instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
     end
 
     it 'returns a struct indicating calling to Nomis failed' do

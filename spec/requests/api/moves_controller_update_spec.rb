@@ -121,11 +121,11 @@ RSpec.describe Api::MovesController do
         end
 
         it 'does not update the cancellation_reason of a move' do
-          expect(result.cancellation_reason).to be nil
+          expect(result.cancellation_reason).to be_nil
         end
 
         it 'does not update the cancellation_reason_comment of a move' do
-          expect(result.cancellation_reason_comment).to be nil
+          expect(result.cancellation_reason_comment).to be_nil
         end
 
         it 'returns the correct data' do
@@ -212,7 +212,7 @@ RSpec.describe Api::MovesController do
             it 'removes the documents from the move' do
               expect(move.profile.documents).to match_array(before_documents)
               do_patch
-              expect(move.reload.profile.documents).to match_array([])
+              expect(move.reload.profile.documents).to be_empty
             end
           end
 
@@ -681,12 +681,12 @@ RSpec.describe Api::MovesController do
 
         it_behaves_like 'an endpoint that responds with success 200'
 
-        it 'updates the status of a move', skip_before: true do
+        it 'updates the status of a move', :skip_before do
           do_patch
           expect(move.reload.status).to eq 'cancelled'
         end
 
-        it 'does NOT update the reference of a move', skip_before: true do
+        it 'does NOT update the reference of a move', :skip_before do
           expect { do_patch }.not_to(
             change { move.reload.reference },
           )

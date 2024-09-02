@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe NomisClient::Base do
-  let(:oauth2_client) { instance_double('OAuth2::Client', client_credentials:) }
-  let(:client_credentials) { instance_double('OAuth2::Strategy::ClientCredentials', get_token: token) }
+  let(:oauth2_client) { instance_double(OAuth2::Client, client_credentials:) }
+  let(:client_credentials) { instance_double(OAuth2::Strategy::ClientCredentials, get_token: token) }
   let(:token) do
     instance_double(
-      'OAuth2::AccessToken',
+      OAuth2::AccessToken,
       get: oauth2_response,
       post: oauth2_response,
       put: oauth2_response,
@@ -15,7 +15,7 @@ RSpec.describe NomisClient::Base do
       expires_at: token_expires_at,
     )
   end
-  let(:oauth2_response) { instance_double('OAuth2::Response', body: response_body, status: response_status) }
+  let(:oauth2_response) { instance_double(OAuth2::Response, body: response_body, status: response_status) }
 
   before do
     # NB: the NomisClient uses class methods which persist for lifetime of the test suite and can cause problems; clearing
@@ -324,7 +324,7 @@ RSpec.describe NomisClient::Base do
 
         before do
           allow(oauth2_error).to receive(:message).and_return('Test error text')
-          allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
+          allow(Rails).to receive(:logger).and_return(instance_spy(Logger))
         end
 
         %i[post put get].each do |method|

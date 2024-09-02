@@ -47,10 +47,10 @@ RSpec.describe Api::MovesController do
       let(:params) { { filter: filters } }
 
       it 'delegates the query execution to Moves::Finder with the correct filters' do
-        ability = instance_double('Ability')
+        ability = instance_double(Ability)
         allow(Ability).to receive(:new).and_return(ability)
 
-        moves_finder = instance_double('Moves::Finder', call: Move.all)
+        moves_finder = instance_double(Moves::Finder, call: Move.all)
         allow(Moves::Finder).to receive(:new).and_return(moves_finder)
 
         post_moves_csv
@@ -65,7 +65,7 @@ RSpec.describe Api::MovesController do
     end
 
     it 'delegates the CSV generation to Moves::Exporter with the correct moves' do
-      moves_exporter = instance_double('Moves::Exporter', call: Tempfile.new)
+      moves_exporter = instance_double(Moves::Exporter, call: Tempfile.new)
       allow(Moves::Exporter).to receive(:new).and_return(moves_exporter)
 
       post_moves_csv

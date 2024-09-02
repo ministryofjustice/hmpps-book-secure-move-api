@@ -105,14 +105,14 @@ RSpec.describe Imports::MissingMoveEndingEvents do
       end
 
       it 'sets the cancellation reasons' do
-        expect(completed_move.cancellation_reason).to be(nil)
+        expect(completed_move.cancellation_reason).to be_nil
         expect(cancelled_move.cancellation_reason).to eq('made_in_error')
         expect(rejected_move.cancellation_reason).to eq('rejected')
       end
 
       it 'sets the rejection reasons' do
-        expect(completed_move.rejection_reason).to be(nil)
-        expect(cancelled_move.rejection_reason).to be(nil)
+        expect(completed_move.rejection_reason).to be_nil
+        expect(cancelled_move.rejection_reason).to be_nil
         expect(rejected_move.rejection_reason).to eq('no_space_at_receiving_prison')
       end
     end

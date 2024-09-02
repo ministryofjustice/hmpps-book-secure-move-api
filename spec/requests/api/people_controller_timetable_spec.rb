@@ -81,7 +81,7 @@ RSpec.describe Api::PeopleController do
 
         get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
-        expect(response_json['included']).to be_a_kind_of Array
+        expect(response_json['included']).to be_a Array
         expect(response_json['included'].first['type']).to eq 'locations'
       end
 
@@ -99,7 +99,7 @@ RSpec.describe Api::PeopleController do
           expect(response_json['included'].first['type']).to eq('locations')
         end
 
-        it 'throws an error if query param invalid ' do
+        it 'throws an error if query param invalid' do
           get("/api/v1/people/#{person.id}/timetable?include=foo.bar", headers:, params:)
 
           expect(response).to have_http_status(:bad_request)

@@ -106,7 +106,7 @@ RSpec.describe FrameworkNomisMappings::Assessments do
 
     context 'when the request fails' do
       before do
-        oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
+        oauth2_response = instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
         allow(NomisClient::Assessments).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
       end
 
