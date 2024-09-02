@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::PersonalCareNeeds, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::PersonalCareNeeds, :with_nomis_client_authentication do
   describe '.get' do
     let(:nomis_offender_numbers) { [321, 123] }
     let(:response) { described_class.get(nomis_offender_numbers:) }

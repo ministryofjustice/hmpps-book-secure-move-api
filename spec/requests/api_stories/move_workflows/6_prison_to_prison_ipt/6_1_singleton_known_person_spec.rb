@@ -6,7 +6,7 @@ require 'rack/test'
 # 6.1 IPT Prison to Prison prison_transfer move for a person with a PN identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-RSpec.describe 'singleton', type: :request, api_story: true do
+RSpec.describe 'singleton', :api_story, type: :request do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'

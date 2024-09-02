@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Allocations, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::Allocations, :with_nomis_client_authentication do
   describe '.post' do
     subject(:prison_transfer_post) do
       described_class.post(booking_id:, body_params: {})

@@ -33,7 +33,7 @@ RSpec.describe Api::PeopleController do
       it 'returns non compressed response' do
         get('/api/people', headers:)
 
-        expect(response.headers['Content-Encoding']).to be nil
+        expect(response.headers['Content-Encoding']).to be_nil
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe Api::PeopleController do
 
     context 'when prison_numbers is present in query' do
       let(:query) { '?filter[prison_number]=G3239GV,GV345VG' }
-      let(:import_from_nomis) { instance_double('People::ImportFromNomis', call: nil) }
+      let(:import_from_nomis) { instance_double(People::ImportFromNomis, call: nil) }
 
       before do
         create(:person, prison_number: 'G3239GV')

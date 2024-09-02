@@ -14,7 +14,7 @@ RSpec.describe People::RetrieveImage do
       end
 
       it 'returns false' do
-        expect(retrieve_image).to eq(false)
+        expect(retrieve_image).to be(false)
       end
     end
 

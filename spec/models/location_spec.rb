@@ -143,7 +143,7 @@ RSpec.describe Location do
     it 'has an extradition_capable field' do
       location.extradition_capable = true
       location.save!
-      expect(location.reload.extradition_capable).to eq(true)
+      expect(location.reload.extradition_capable).to be(true)
     end
   end
 end

@@ -6,7 +6,7 @@ require 'rack/test'
 # 5.1 Court to Prison prison_remand move for a person with a PN identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-RSpec.describe 'court to prison move', type: :request, api_story: true do
+RSpec.describe 'court to prison move', :api_story, type: :request do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'

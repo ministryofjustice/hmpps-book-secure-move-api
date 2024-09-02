@@ -52,6 +52,6 @@ RSpec.describe Metrics::PersonEscortRecords::PercentHandoverByLocation do
     it { expect(calculate_table["location__#{other_prison.nomis_agency_id}"]).to eql other_prison.title }
     it { expect(calculate_table["type__#{other_prison.nomis_agency_id}"]).to eql 'prison' }
     it { expect(calculate_table["number_of_PERs__#{other_prison.nomis_agency_id}"]).to be 0 }
-    it { expect(calculate_table["handover_percent__#{other_prison.nomis_agency_id}"]).to be nil }
+    it { expect(calculate_table["handover_percent__#{other_prison.nomis_agency_id}"]).to be_nil }
   end
 end

@@ -6,7 +6,7 @@ require 'rack/test'
 # 2.1 Police to unspecified Prison prison_recall move for a person with a PNC identifier
 # https://github.com/ministryofjustice/hmpps-book-secure-move-api/wiki/API-Walkthroughs
 
-RSpec.describe 'police to unknown prison recall', type: :request, api_story: true do
+RSpec.describe 'police to unknown prison recall', :api_story, type: :request do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
   include_context 'with Nomis alerts reference data'

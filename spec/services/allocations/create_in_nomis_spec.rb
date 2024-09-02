@@ -26,7 +26,7 @@ RSpec.describe Allocations::CreateInNomis do
 
     before do
       allow(NomisClient::Allocations).to receive(:post)
-                                     .and_return(instance_double('OAuth2::Response', status: nomis_response_status, body: response_body))
+                                     .and_return(instance_double(OAuth2::Response, status: nomis_response_status, body: response_body))
       move.person.update!(latest_nomis_booking_id: booking_id)
     end
 

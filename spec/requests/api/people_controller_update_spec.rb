@@ -106,7 +106,7 @@ RSpec.describe Api::PeopleController do
       it 'updates an existing person' do
         expect {
           put "/api/v1/people/#{person.id}", params: person_params, headers:, as: :json
-        }.to change(Person, :count).by(0)
+        }.not_to change(Person, :count)
       end
 
       it 'changes the first_names' do

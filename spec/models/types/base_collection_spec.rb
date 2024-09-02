@@ -13,7 +13,7 @@ RSpec.describe Types::BaseCollection, type: :model do
 
   describe '#remove_empty_items?' do
     it 'is disabled unless overridden in descendant class' do
-      expect(base_collection.remove_empty_items?).to eq false
+      expect(base_collection.remove_empty_items?).to be false
     end
   end
 end

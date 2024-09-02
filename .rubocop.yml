@@ -28,3 +28,13 @@ Style/StringLiterals:
 # is referenced elsewhere such as in shared examples.
 RSpec/LetSetup:
   Enabled: false
+
+# The autocorrect for this cop generates horrendously long lines. I think
+# we're better off just disabling it as it's only for test styles anyway.
+RSpec/MatchArray:
+  Enabled: false
+
+# There would be no value in going through and updating the 100+ violations of
+# this puritanical cop
+RSpec/IndexedLet:
+  Enabled: false

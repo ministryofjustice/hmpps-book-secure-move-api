@@ -67,7 +67,7 @@ RSpec.describe Api::ProfilesController do
 
         before do
           allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
-                                            .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds', call: true))
+                                            .and_return(instance_double(Profiles::ImportAlertsAndPersonalCareNeeds, call: true))
 
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         end
@@ -111,7 +111,7 @@ RSpec.describe Api::ProfilesController do
 
         before do
           allow(Profiles::ImportAlertsAndPersonalCareNeeds).to receive(:new)
-                                                                 .and_return(instance_double('Profiles::ImportAlertsAndPersonalCareNeeds'))
+                                                                 .and_return(instance_double(Profiles::ImportAlertsAndPersonalCareNeeds))
 
           post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
         end

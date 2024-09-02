@@ -8,7 +8,7 @@ RSpec.describe People::RetrieveTimetable do
     allow(People::RetrieveActivities).to receive(:call).and_return(nomis_activities_struct)
   end
 
-  let(:person) { instance_double('Person') }
+  let(:person) { instance_double(Person) }
   let(:date_from) { Time.zone.today }
   let(:date_to) { Date.tomorrow }
 

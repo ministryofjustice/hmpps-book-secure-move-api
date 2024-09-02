@@ -50,7 +50,7 @@ RSpec.describe PersonEscortRecordSerializer do
   context 'with a prefill source' do
     let(:person_escort_record) { create(:person_escort_record, :prefilled) }
 
-    it 'contains a`prefill_source` relationship ' do
+    it 'contains a`prefill_source` relationship' do
       expect(result[:data][:relationships][:prefill_source][:data]).to eq(
         id: person_escort_record.prefill_source.id,
         type: 'person_escort_records',

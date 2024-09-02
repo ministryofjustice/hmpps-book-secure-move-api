@@ -11,7 +11,7 @@ RSpec.describe Frameworks::Question do
       question = FrameworkQuestion.new(section: 'health', key: 'medical-details-information')
       described_class.new(filepath:, questions: { 'medical-details-information' => question }).call
 
-      expect(question.required).to eq(true)
+      expect(question.required).to be(true)
     end
 
     it 'sets a question as not required if no validation available' do
@@ -19,7 +19,7 @@ RSpec.describe Frameworks::Question do
       question = FrameworkQuestion.new(section: 'health', key: 'medical-professional-referral')
       described_class.new(filepath:, questions: { 'medical-professional-referral' => question }).call
 
-      expect(question.required).to eq(false)
+      expect(question.required).to be(false)
     end
 
     it 'sets the type on a question' do
@@ -160,7 +160,7 @@ RSpec.describe Frameworks::Question do
         question = FrameworkQuestion.new(section: 'property-information', key: 'property-bags')
         described_class.new(filepath:, questions: { 'property-bags' => question }).call
 
-        expect(question.required).to eq(true)
+        expect(question.required).to be(true)
       end
 
       it 'does not set dependent questions values' do

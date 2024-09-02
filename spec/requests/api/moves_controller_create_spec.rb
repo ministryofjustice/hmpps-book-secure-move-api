@@ -130,7 +130,7 @@ RSpec.describe Api::MovesController do
 
       it 'does not provide a default value for move_agreed' do
         post_moves
-        expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq nil
+        expect(response_json.dig('data', 'attributes', 'move_agreed')).to be_nil
       end
 
       it 'sets the additional_information' do
@@ -296,7 +296,7 @@ RSpec.describe Api::MovesController do
         end
 
         it 'sets move_agreed' do
-          expect(response_json.dig('data', 'attributes', 'move_agreed')).to eq true
+          expect(response_json.dig('data', 'attributes', 'move_agreed')).to be true
         end
 
         it 'sets move_agreed_by' do

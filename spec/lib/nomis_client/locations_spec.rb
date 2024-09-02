@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::Locations, :with_nomis_client_authentication do
   describe '.get' do
     let(:response) { described_class.get }
     let(:api_endpoint) { '/agencies' }
@@ -33,11 +33,11 @@ RSpec.describe NomisClient::Locations, with_nomis_client_authentication: true do
     end
 
     it 'sets can_upload_documents for an STC' do
-      expect(response.detect { |item| item[:nomis_agency_id] == 'STC1' }.fetch(:can_upload_documents)).to eq(true)
+      expect(response.detect { |item| item[:nomis_agency_id] == 'STC1' }.fetch(:can_upload_documents)).to be(true)
     end
 
     it 'sets can_upload_documents for an SCH' do
-      expect(response.detect { |item| item[:nomis_agency_id] == 'SCH1' }.fetch(:can_upload_documents)).to eq(true)
+      expect(response.detect { |item| item[:nomis_agency_id] == 'SCH1' }.fetch(:can_upload_documents)).to be(true)
     end
   end
 end

@@ -172,7 +172,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
   end
 
   it 'persists other NOMIS mappings if one import fails' do
-    oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
+    oauth2_response = instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
     allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
@@ -223,7 +223,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
   end
 
   it 'sets different sync statuses per NOMIS client attribute on the person escort record' do
-    oauth2_response = instance_double('OAuth2::Response', body: '{}', parsed: {}, status: '')
+    oauth2_response = instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
     allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
 
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)

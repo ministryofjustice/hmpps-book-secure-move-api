@@ -56,7 +56,7 @@ RSpec.describe Api::AllocationsController do
 
     describe 'finding results' do
       before do
-        allocations_finder = instance_double('Allocations::Finder', call: Allocation.all)
+        allocations_finder = instance_double(Allocations::Finder, call: Allocation.all)
         allow(Allocations::Finder).to receive(:new).and_return(allocations_finder)
       end
 
@@ -210,7 +210,7 @@ RSpec.describe Api::AllocationsController do
 
         let(:params) { {} }
 
-        it 'returns no included relationships ' do
+        it 'returns no included relationships' do
           expect(response_json).not_to include('included')
         end
       end

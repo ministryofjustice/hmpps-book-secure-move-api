@@ -9,10 +9,10 @@ RSpec.describe Api::PeopleController do
   let(:response_json) { JSON.parse(response.body) }
   let(:booking_id) { '1150262' }
 
-  context 'when person is present ' do
+  context 'when person is present' do
     let(:person) { create(:person, :nomis_synced, latest_nomis_booking_id: booking_id) }
 
-    context 'when the court cases are present in Nomis ' do
+    context 'when the court cases are present in Nomis' do
       let(:court_cases_from_nomis) do
         OpenStruct.new(
           success?: true,
@@ -37,7 +37,7 @@ RSpec.describe Api::PeopleController do
 
         get("/api/v1/people/#{person.id}/court_cases", headers:)
 
-        expect(response_json['included']).to be_a_kind_of Array
+        expect(response_json['included']).to be_a Array
         expect(response_json['included'].first['type']).to eq 'locations'
       end
 
@@ -60,7 +60,7 @@ RSpec.describe Api::PeopleController do
           expect(response_json['included'].first['type']).to eq('locations')
         end
 
-        it 'throws an error if query param invalid ' do
+        it 'throws an error if query param invalid' do
           get("/api/v1/people/#{person.id}/court_cases?include=foo.bar", headers:)
 
           expect(response).to have_http_status(:bad_request)
@@ -101,7 +101,7 @@ RSpec.describe Api::PeopleController do
 
         get("/api/v1/people/#{person.id}/court_cases", headers:)
 
-        expect(response_json['errors']).to be_a_kind_of Array
+        expect(response_json['errors']).to be_a Array
       end
     end
   end

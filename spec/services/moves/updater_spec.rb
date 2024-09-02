@@ -83,7 +83,7 @@ RSpec.describe Moves::Updater do
       end
     end
 
-    context 'when date changes ' do
+    context 'when date changes' do
       let(:date) { '2019-08-23' }
 
       it 'sets `date_changed` to `true`' do
@@ -92,7 +92,7 @@ RSpec.describe Moves::Updater do
       end
     end
 
-    context 'when date is not updated ' do
+    context 'when date is not updated' do
       let(:date) { move.date }
 
       it 'sets `date_changed` to `false`' do

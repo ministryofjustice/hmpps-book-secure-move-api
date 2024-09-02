@@ -51,8 +51,8 @@ RSpec.describe Api::PeopleController do
         expect(response_json['data'].size).to eq(5)
       end
 
-      it 'delegates the query execution to People::Finder with correct filter', skip_before: true do
-        people_finder = instance_double('People::Finder', call: Person.all)
+      it 'delegates the query execution to People::Finder with correct filter', :skip_before do
+        people_finder = instance_double(People::Finder, call: Person.all)
         allow(People::Finder).to receive(:new).and_return(people_finder)
 
         get_people
@@ -75,7 +75,7 @@ RSpec.describe Api::PeopleController do
       let(:ethnicity) { create(:ethnicity) }
 
       let(:params) { { filter: { prison_number: } } }
-      let(:people_finder) { instance_double('People::Finder', call: Person.all) }
+      let(:people_finder) { instance_double(People::Finder, call: Person.all) }
 
       before { create_list :person, 5, gender:, ethnicity: }
 
@@ -83,7 +83,7 @@ RSpec.describe Api::PeopleController do
         before do
           allow(People::Finder).to receive(:new).and_return(people_finder)
           allow(Moves::ImportPeople).to receive(:new).with([prison_number.upcase])
-                                            .and_return(instance_double('Moves::ImportPeople', call: nil))
+                                            .and_return(instance_double(Moves::ImportPeople, call: nil))
           get_people
         end
 

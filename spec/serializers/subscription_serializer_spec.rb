@@ -26,14 +26,14 @@ RSpec.describe SubscriptionSerializer do
   end
 
   it 'does not contains a username' do
-    expect(result[:data][:attributes][:username]).to be nil
+    expect(result[:data][:attributes][:username]).to be_nil
   end
 
   it 'does not contains a password' do
-    expect(result[:data][:attributes][:password]).to be nil
+    expect(result[:data][:attributes][:password]).to be_nil
   end
 
   it 'does not contains a secret' do
-    expect(result[:data][:attributes][:secret]).to be nil
+    expect(result[:data][:attributes][:secret]).to be_nil
   end
 end

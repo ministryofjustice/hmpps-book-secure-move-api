@@ -14,7 +14,7 @@ RSpec.describe NotifyUnnotifiedMovesWorker, type: :worker do
   before do
     create(:move, date: Time.zone.tomorrow, reference: 'TEST3', supplier:)
 
-    allow(Rails).to receive(:logger).and_return(instance_spy('logger'))
+    allow(Rails).to receive(:logger).and_return(instance_spy(logger))
 
     GenericEvent::MoveRequested.create!(
       eventable: unnotified1,

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Ethnicities, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::Ethnicities, :with_nomis_client_authentication do
   describe '.get' do
     let(:response) { described_class.get }
     let(:api_endpoint) { '/reference-domains/domains/ETHNICITY' }

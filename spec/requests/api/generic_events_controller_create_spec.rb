@@ -8,7 +8,7 @@ RSpec.describe Api::GenericEventsController do
   let(:supplier) { create(:supplier, name: 'serco') }
   let(:access_token) { 'spoofed-token' }
   let(:content_type) { ApiController::CONTENT_TYPE }
-  let(:runner) { instance_double('GenericEvents::Runner') }
+  let(:runner) { instance_double(GenericEvents::Runner) }
 
   let(:headers) do
     {

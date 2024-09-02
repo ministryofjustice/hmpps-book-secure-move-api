@@ -20,7 +20,7 @@ RSpec.describe CloudData::ReportsFeed do
   context 'when a report date is specified' do
     let(:report_date) { Date.new(2020, 1, 15) }
 
-    it 'creates a file and names it base on the report date ' do
+    it 'creates a file and names it base on the report date' do
       full_name = described_class.new('bucket_name')
                                  .write('some content', 'report.json', report_date)
 

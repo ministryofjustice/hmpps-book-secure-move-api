@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::AlertTypes, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::AlertTypes, :with_nomis_client_authentication do
   describe '.get' do
     let(:response) { described_class.get }
     let(:client_response) do

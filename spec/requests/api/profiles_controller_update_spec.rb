@@ -149,7 +149,7 @@ RSpec.describe Api::ProfilesController do
 
           patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
 
-          expect(profile.reload.documents).to match_array([])
+          expect(profile.reload.documents).to be_empty
         end
       end
 
@@ -257,7 +257,7 @@ RSpec.describe Api::ProfilesController do
       it_behaves_like 'an endpoint that responds with success 200'
 
       it 'updates the assessment_answers on the profile' do
-        expect(profile.reload.requires_youth_risk_assessment).to eq(true)
+        expect(profile.reload.requires_youth_risk_assessment).to be(true)
       end
 
       it 'returns the correct data' do

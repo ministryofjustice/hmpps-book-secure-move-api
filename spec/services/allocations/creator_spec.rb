@@ -6,7 +6,7 @@ RSpec.describe Allocations::Creator do
   subject(:call_creator) { creator.call }
 
   before do
-    allow(SupplierChooser).to receive(:new).and_return(instance_double('SupplierChooser', call: supplier))
+    allow(SupplierChooser).to receive(:new).and_return(instance_double(SupplierChooser, call: supplier))
   end
 
   let(:creator) do

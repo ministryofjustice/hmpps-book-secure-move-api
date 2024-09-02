@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: true do
+RSpec.describe NomisClient::CourtHearings, :with_nomis_client_authentication do
   describe '.get' do
     subject(:court_hearings_get) { described_class.get(booking_id, start_date, end_date) }
 
@@ -36,7 +36,7 @@ RSpec.describe NomisClient::CourtHearings, with_nomis_client_authentication: tru
     let(:response_status) { 201 }
     let(:response_body) { '{}' }
 
-    it 'creates prison-to-court-hearing in Nomis ' do
+    it 'creates prison-to-court-hearing in Nomis' do
       court_hearing_post
 
       expect(token)
