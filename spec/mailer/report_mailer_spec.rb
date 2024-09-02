@@ -21,12 +21,13 @@ RSpec.describe ReportMailer, type: :mailer do
     let(:recipients) { ['test@example.com'] }
     let(:start_date) { Date.new(2020, 1, 1) }
     let(:end_date) { nil }
+    let(:filename) { 'per_quality_report_2020-01-01.csv' }
 
     let(:file_params) do
       {
         confirm_email_before_download: nil,
         file: Base64.strict_encode64('csv'),
-        is_csv: true,
+        filename:,
         retention_period: nil,
       }
     end
@@ -53,6 +54,7 @@ RSpec.describe ReportMailer, type: :mailer do
 
     context 'with an end date' do
       let(:end_date) { Date.new(2021, 1, 1) }
+      let(:filename) { 'per_quality_report_2020-01-01_to_2021-01-01.csv' }
 
       describe 'govuk_notify_personalisation' do
         subject(:govuk_notify_personalisation) { mail.govuk_notify_personalisation }
