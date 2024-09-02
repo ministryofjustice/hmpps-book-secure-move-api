@@ -324,7 +324,7 @@ RSpec.describe NomisClient::Base do
 
         before do
           allow(oauth2_error).to receive(:message).and_return('Test error text')
-          allow(Rails).to receive(:logger).and_return(instance_spy(logger))
+          allow(Rails).to receive(:logger).and_return(instance_spy(Logger))
         end
 
         %i[post put get].each do |method|
