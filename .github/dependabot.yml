@@ -8,3 +8,8 @@ updates:
     timezone: Europe/London
   open-pull-requests-limit: 10
   versioning-strategy: lockfile-only
+  groups:
+    production-dependencies:
+      dependency-type: "production"
+    development-dependencies:
+      dependency-type: "development"
