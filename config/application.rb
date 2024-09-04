@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module BookASecureMoveApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -53,12 +53,6 @@ module BookASecureMoveApi
     # Needed for PaperTrail to be able to deserialise saved versions
     config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]
 
-    config.active_support.cache_format_version = 7.0
-
     config.add_autoload_paths_to_load_path = false
-
-    # Only change this value after your application is fully deployed to Rails 7.1
-    # and you have no plans to rollback.
-    # config.active_support.cache_format_version = 7.1
   end
 end
