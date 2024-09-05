@@ -1,5 +1,88 @@
 # Changelog
 
+## [v3.52.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.3) (2024-09-04)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.2...v3.52.3)
+
+**Merged pull requests:**
+
+- MAP-1477: Finish off Rails 7.1 upgrade [\#2334](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2334) ([jimbali](https://github.com/jimbali))
+- chore\(deps-dev\): Bump rspec-rails from 7.0.0 to 7.0.1 in the development-dependencies group [\#2333](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2333) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2332](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2332) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.52.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.2) (2024-09-03)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.1...v3.52.2)
+
+**Merged pull requests:**
+
+- chore\(deps-dev\): Bump rspec-rails from 6.1.5 to 7.0.0 in the development-dependencies group [\#2331](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2331) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group across 1 directory with 3 updates [\#2330](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2330) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 10 updates [\#2328](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2328) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Group Dependabot updates [\#2327](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2327) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump pg from 1.5.6 to 1.5.7 [\#2326](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2326) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.52.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.1) (2024-09-02)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.0...v3.52.1)
+
+**Merged pull requests:**
+
+- Rails 7.1 pt2 [\#2316](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2316) ([jimbali](https://github.com/jimbali))
+- MAP-890: Update deps flagged by Dependabot, and fix release.sh [\#2315](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2315) ([jimbali](https://github.com/jimbali))
+
+## [v3.52.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.0) (2024-08-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.51.3...v3.52.0)
+
+**Merged pull requests:**
+
+- Make release.sh executable, and change code owner to map-developers [\#2312](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2312) ([jimbali](https://github.com/jimbali))
+- chore: Upgrade Rails to 7.1 - first pass [\#2311](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2311) ([jimbali](https://github.com/jimbali))
+- Script release commands [\#2308](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2308) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.51.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.51.3) (2024-08-22)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.51.2...v3.51.3)
+
+**Merged pull requests:**
+
+- MAP-1582 - Add PER/YRA events to all feed for AP [\#2307](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2307) ([Thource](https://github.com/Thource))
+
+## [v3.51.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.51.2) (2024-08-21)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.51.1...v3.51.2)
+
+**Merged pull requests:**
+
+- MAP-370: Revert using JSON args in dockerfile as they don't work with env vars [\#2306](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2306) ([jimbali](https://github.com/jimbali))
+- MAP-370: Upgrade Ruby to 3.3.4 and Bundler to 2.5.17 [\#2305](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2305) ([jimbali](https://github.com/jimbali))
+
+## [v3.51.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.51.1) (2024-08-13)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.51.0...v3.51.1)
+
+**Merged pull requests:**
+
+- MAP-676 Add cron job to run nomis location sync [\#2299](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2299) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+
+## [v3.51.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.51.0) (2024-08-12)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.50.1...v3.51.0)
+
+**Merged pull requests:**
+
+- MAP-1485 - Add PER/YRA id to move/profile feeds [\#2298](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2298) ([Thource](https://github.com/Thource))
+
+## [v3.50.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.50.1) (2024-08-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.50.0...v3.50.1)
+
+**Merged pull requests:**
+
+- \[MAP-1479\] Improve performance of CSV download [\#2297](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2297) ([jimbali](https://github.com/jimbali))
+- Generated changelog for v3.50.0 [\#2285](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2285) ([jimbali](https://github.com/jimbali))
+
 ## [v3.50.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.50.0) (2024-07-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.49.1...v3.50.0)
@@ -266,7 +349,7 @@
 
 ## [v3.39.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.39.0) (2023-10-13)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.37.0...v3.39.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.38.0...v3.39.0)
 
 **Merged pull requests:**
 
@@ -276,13 +359,13 @@
 - \[MAP-253\] Rails 7 upgrade [\#2173](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2173) ([jimbali](https://github.com/jimbali))
 - chore\(deps\): Bump puma from 6.3.0 to 6.4.0 [\#2168](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2168) ([dependabot[bot]](https://github.com/apps/dependabot))
 
-## [v3.37.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.37.0) (2023-09-27)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.38.0...v3.37.0)
-
 ## [v3.38.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.38.0) (2023-09-27)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.7...v3.38.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.37.0...v3.38.0)
+
+## [v3.37.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.37.0) (2023-09-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.7...v3.37.0)
 
 **Merged pull requests:**
 
