@@ -124,7 +124,7 @@ module Tasks
         elsif to_location.hospital?
           'hospital'
         else
-          'UNKNOWN'
+          'approved_premises'
         end
       end
 
