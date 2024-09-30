@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.52.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.4) (2024-09-30)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.3...v3.52.4)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 12 updates [\#2351](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2351) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group across 1 directory with 2 updates [\#2343](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2343) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.52.3 [\#2336](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2336) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2335](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2335) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.52.3](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.3) (2024-09-04)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.2...v3.52.3)
@@ -349,7 +360,7 @@
 
 ## [v3.39.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.39.0) (2023-10-13)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.38.0...v3.39.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.37.0...v3.39.0)
 
 **Merged pull requests:**
 
@@ -359,13 +370,13 @@
 - \[MAP-253\] Rails 7 upgrade [\#2173](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2173) ([jimbali](https://github.com/jimbali))
 - chore\(deps\): Bump puma from 6.3.0 to 6.4.0 [\#2168](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2168) ([dependabot[bot]](https://github.com/apps/dependabot))
 
-## [v3.38.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.38.0) (2023-09-27)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.37.0...v3.38.0)
-
 ## [v3.37.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.37.0) (2023-09-27)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.7...v3.37.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.38.0...v3.37.0)
+
+## [v3.38.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.38.0) (2023-09-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.6...v3.38.0)
 
 **Merged pull requests:**
 
@@ -373,13 +384,13 @@
 - MAP-319: Fix JPC feed [\#2171](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2171) ([jimbali](https://github.com/jimbali))
 - MAP-319: Add new feed for JPC with more useful data [\#2169](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2169) ([jimbali](https://github.com/jimbali))
 
-## [v3.36.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.7) (2023-09-07)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.6...v3.36.7)
-
 ## [v3.36.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.6) (2023-09-07)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.5...v3.36.6)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.7...v3.36.6)
+
+## [v3.36.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.36.7) (2023-09-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.36.5...v3.36.7)
 
 **Merged pull requests:**
 
@@ -1693,7 +1704,7 @@
 
 - \[P4-2653\] Change people\#image 422 to 404 [\#1474](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1474) ([Thource](https://github.com/Thource))
 - P4 2919 per handover report [\#1473](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1473) ([martyn-w](https://github.com/martyn-w))
-- Update the tracing setup to only be used in prod and ignore health [\#1472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1472) ([Nimphal](https://github.com/Nimphal))
+- Update the tracing setup to only be used in prod and ignore health [\#1472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1472) ([nimphal](https://github.com/nimphal))
 - Change eta classification [\#1471](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1471) ([martyn-w](https://github.com/martyn-w))
 - Bump aws-sdk-s3 from 1.95.1 to 1.96.0 [\#1470](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1470) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github\_changelog\_generator from 1.16.3 to 1.16.4 [\#1469](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1469) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -1711,7 +1722,7 @@
 - Bump cancancan from 3.2.1 to 3.2.2 [\#1464](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1464) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump climate\_control from 1.0.0 to 1.0.1 [\#1463](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1463) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump aws-sdk-s3 from 1.95.0 to 1.95.1 [\#1461](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1461) ([dependabot[bot]](https://github.com/apps/dependabot))
-- chore: Enable Sentry performance tracking [\#1460](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1460) ([Nimphal](https://github.com/Nimphal))
+- chore: Enable Sentry performance tracking [\#1460](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1460) ([nimphal](https://github.com/nimphal))
 - Bump puma from 5.3.1 to 5.3.2 [\#1459](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1459) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump faraday from 1.4.1 to 1.4.2 [\#1458](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1458) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump aws-sdk-s3 from 1.94.1 to 1.95.0 [\#1457](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1457) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -1738,7 +1749,7 @@
 **Merged pull requests:**
 
 - P4-2831: Add created\_at to locations + filter [\#1448](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1448) ([Thource](https://github.com/Thource))
-- feat: Update discharges number to reflect releases from agency [\#1446](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1446) ([Nimphal](https://github.com/Nimphal))
+- feat: Update discharges number to reflect releases from agency [\#1446](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1446) ([nimphal](https://github.com/nimphal))
 - Update CHANGELOG.md  [\#1445](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1445) ([martyn-w](https://github.com/martyn-w))
 
 ## [v3.0.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.9) (2021-05-10)
@@ -1762,7 +1773,7 @@
 - bump rexml to 3.2.5 [\#1431](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1431) ([martyn-w](https://github.com/martyn-w))
 - Bump ruby to 2.7.3 [\#1430](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1430) ([martyn-w](https://github.com/martyn-w))
 - Bump github\_changelog\_generator from 1.16.1 to 1.16.2 [\#1429](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1429) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Create LICENSE [\#1428](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1428) ([Nimphal](https://github.com/Nimphal))
+- Create LICENSE [\#1428](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1428) ([nimphal](https://github.com/nimphal))
 - P4-2817 relax agreed\_at attrib [\#1427](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1427) ([martyn-w](https://github.com/martyn-w))
 - Bump aws-sdk-s3 from 1.93.1 to 1.94.0 [\#1426](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1426) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Remove status validation on index moves [\#1425](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1425) ([martyn-w](https://github.com/martyn-w))
@@ -1796,9 +1807,9 @@
 - P4-2737 disable webhooks for proposed moves [\#1411](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1411) ([martyn-w](https://github.com/martyn-w))
 - Bump nokogiri from 1.11.2 to 1.11.3 [\#1410](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1410) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump sidekiq from 6.2.0 to 6.2.1 [\#1409](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1409) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Fix security audit executor to use the test executor [\#1408](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1408) ([Nimphal](https://github.com/Nimphal))
+- Fix security audit executor to use the test executor [\#1408](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1408) ([nimphal](https://github.com/nimphal))
 - Bump doorkeeper from 5.5.0 to 5.5.1 [\#1407](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1407) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Add bundler audit scheduled job to circle [\#1406](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1406) ([Nimphal](https://github.com/Nimphal))
+- Add bundler audit scheduled job to circle [\#1406](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1406) ([nimphal](https://github.com/nimphal))
 - Bump listen from 3.5.0 to 3.5.1 [\#1405](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1405) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump paper\_trail from 11.1.0 to 12.0.0 [\#1404](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1404) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump rails from 6.0.3.5 to 6.0.3.6 [\#1403](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1403) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -1849,8 +1860,8 @@
 - Bump jsonapi-serializer from 2.1.0 to 2.2.0 [\#1381](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1381) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump nokogiri from 1.11.1 to 1.11.2 [\#1380](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1380) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump faker from 2.16.0 to 2.17.0 [\#1379](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1379) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Fix the name of the env var holding the slack mentions [\#1378](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1378) ([Nimphal](https://github.com/Nimphal))
-- Rename master to main [\#1377](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1377) ([Nimphal](https://github.com/Nimphal))
+- Fix the name of the env var holding the slack mentions [\#1378](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1378) ([nimphal](https://github.com/nimphal))
+- Rename master to main [\#1377](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1377) ([nimphal](https://github.com/nimphal))
 - Update CHANGELOG.md [\#1376](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1376) ([martyn-w](https://github.com/martyn-w))
 
 ## [v3.0.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.2) (2021-03-11)
@@ -1862,15 +1873,15 @@
 - Bump aws-sdk-s3 from 1.89.0 to 1.91.0 [\#1375](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1375) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add include support to move journeys endpoint [\#1374](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1374) ([smoothcontract](https://github.com/smoothcontract))
 - Fix sentry pii scrubbing [\#1373](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1373) ([martyn-w](https://github.com/martyn-w))
-- refactor: Revert exception handling changes and tracing config for sentry [\#1372](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1372) ([Nimphal](https://github.com/Nimphal))
+- refactor: Revert exception handling changes and tracing config for sentry [\#1372](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1372) ([nimphal](https://github.com/nimphal))
 - Bump rspec-rails from 4.1.0 to 5.0.0 [\#1371](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1371) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add new rake task to import postcodes.csv file and perform location geocoding [\#1370](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1370) ([smoothcontract](https://github.com/smoothcontract))
-- refactor: Simplify slack message mentions [\#1368](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1368) ([Nimphal](https://github.com/Nimphal))
+- refactor: Simplify slack message mentions [\#1368](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1368) ([nimphal](https://github.com/nimphal))
 - Bump rspec-rails from 4.0.2 to 4.1.0 [\#1367](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1367) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump flipper-active\_record from 0.20.3 to 0.20.4 [\#1366](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1366) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump climate\_control from 0.2.0 to 1.0.0 [\#1365](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1365) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump geocoder from 1.6.5 to 1.6.6 [\#1364](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1364) ([dependabot[bot]](https://github.com/apps/dependabot))
-- refactor: Replace sentry-raven with new Ruby and Rails SDKs. Update config and tests [\#1362](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1362) ([Nimphal](https://github.com/Nimphal))
+- refactor: Replace sentry-raven with new Ruby and Rails SDKs. Update config and tests [\#1362](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1362) ([nimphal](https://github.com/nimphal))
 - Extend move diagnostics [\#1358](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1358) ([martyn-w](https://github.com/martyn-w))
 
 ## [v3.0.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.1) (2021-03-04)
@@ -1880,7 +1891,7 @@
 **Merged pull requests:**
 
 - Add geocoder gem and mixin to support geocoding location postcodes [\#1363](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1363) ([smoothcontract](https://github.com/smoothcontract))
-- refactor: Fix slack fields definition to match accepted format [\#1361](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1361) ([Nimphal](https://github.com/Nimphal))
+- refactor: Fix slack fields definition to match accepted format [\#1361](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1361) ([nimphal](https://github.com/nimphal))
 - Update CHANGELOG.md [\#1360](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1360) ([martyn-w](https://github.com/martyn-w))
 
 ## [v3.0.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.0.0) (2021-03-04)
@@ -1889,12 +1900,12 @@
 
 **Merged pull requests:**
 
-- refactor: Fix errors in slack message template [\#1359](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1359) ([Nimphal](https://github.com/Nimphal))
-- refactor: Update Slack messages template to show mentions, fix buttons [\#1357](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1357) ([Nimphal](https://github.com/Nimphal))
+- refactor: Fix errors in slack message template [\#1359](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1359) ([nimphal](https://github.com/nimphal))
+- refactor: Update Slack messages template to show mentions, fix buttons [\#1357](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1357) ([nimphal](https://github.com/nimphal))
 - Bump puma from 5.2.1 to 5.2.2 [\#1356](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1356) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add support for importing prison addresses from Nomis [\#1355](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1355) ([smoothcontract](https://github.com/smoothcontract))
 - Bump aws-sdk-s3 from 1.88.1 to 1.89.0 [\#1354](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1354) ([dependabot[bot]](https://github.com/apps/dependabot))
-- refactor: Update circle config to use new Slack orb [\#1352](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1352) ([Nimphal](https://github.com/Nimphal))
+- refactor: Update circle config to use new Slack orb [\#1352](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1352) ([nimphal](https://github.com/nimphal))
 - Update CHANGELOG.md [\#1351](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1351) ([martyn-w](https://github.com/martyn-w))
 - Add a new webhook when an assessment is completed [\#1349](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1349) ([smoothcontract](https://github.com/smoothcontract))
 
@@ -2157,9 +2168,9 @@
 - Bump rspec-rails from 4.0.1 to 4.0.2 [\#1233](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1233) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump faraday from 1.1.0 to 1.2.0 [\#1232](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1232) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump elastic-apm from 3.12.1 to 3.13.0 [\#1231](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1231) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Add Journey controller tests for events [\#1229](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1229) ([Nimphal](https://github.com/Nimphal))
+- Add Journey controller tests for events [\#1229](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1229) ([nimphal](https://github.com/nimphal))
 - Bump aws-sdk-s3 from 1.86.2 to 1.87.0 [\#1228](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1228) ([dependabot[bot]](https://github.com/apps/dependabot))
-- feature: Populate created\_by on events with current user or supplier [\#1227](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1227) ([Nimphal](https://github.com/Nimphal))
+- feature: Populate created\_by on events with current user or supplier [\#1227](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1227) ([nimphal](https://github.com/nimphal))
 - Bump flipper-active\_record from 0.19.1 to 0.20.0 [\#1226](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1226) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update CHANGELOG.md [\#1225](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1225) ([martyn-w](https://github.com/martyn-w))
 - Bump paper\_trail from 11.0.0 to 11.1.0 [\#1220](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1220) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -2383,7 +2394,7 @@
 
 **Merged pull requests:**
 
-- Ensure the right version of tzdata is used in the docker container [\#1110](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1110) ([Nimphal](https://github.com/Nimphal))
+- Ensure the right version of tzdata is used in the docker container [\#1110](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1110) ([nimphal](https://github.com/nimphal))
 - Remove inclusion test for boolean column on categories [\#1108](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1108) ([cwrw](https://github.com/cwrw))
 - Bump bootsnap from 1.4.9 to 1.5.0 [\#1106](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1106) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Remove unused category [\#1105](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1105) ([smoothcontract](https://github.com/smoothcontract))
