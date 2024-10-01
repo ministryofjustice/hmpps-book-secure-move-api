@@ -30,7 +30,30 @@ After setup should then be able to run the local Web server:
 bundle exec rails server
 ```
 
+### Create reference data
+
+To create reference data (seed data) needed in production run the
+following rake task:
+
+```bash
+bundle exec rake reference_data:create_all
+```
+
+Some of these tasks pull data from NOMIS and therefore require
+environment variables configured with the relevant security credentials.
+
+These tasks are designed to be non-destructive. They can be run multiple
+times and will only modify data if the original data source has changed.
+
+Note: Locations are cached in Redis. If the frontend errors with a 404 'Location could not be found', clear out the Redis cache:
+```
+redis-cli flushall
+```
+
+
 ### Creating client credentials
+
+Note: This task asks for the supplier key ("geoamey", "serco" or "none"), so ensure that the reference data has been loaded first.
 
 The application implements OAuth2 client credentials flow. To generate new application client credentials, use the following Rake task:
 
@@ -74,21 +97,6 @@ We use Rubocop for code linting, to run the checks:
 bundle exec rubocop
 ```
 
-### Create reference data
-
-To create reference data (seed data) needed in production run the
-following rake task:
-
-```bash
-bundle exec rake reference_data:create_all
-```
-
-Some of these tasks pull data from NOMIS and therefore require
-environment variables configured with the relevant security credentials.
-
-These tasks are designed to be non-destructive. They can be run multiple
-times and will only modify data if the original data source has changed.
-
 ### Create fake transactional data
 
 To optionally create fake transactional data to use for testing and in a development environment run:
@@ -116,6 +124,8 @@ bundle exec rake frameworks:populate_data['/path/to/hmpps-book-secure-move-frame
 ```
 
 The path to the frameworks folder and the semantic version can be specified.
+
+Note: The active Framework is assigned to the Person Escort Record on create. When a new Framework is loaded, it will only be available for newly created records.
 
 ## Documentation
 
