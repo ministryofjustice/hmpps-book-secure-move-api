@@ -48,3 +48,5 @@ These dates and the current day's date are also available to be used in the emai
 
 This report shouldn't be used as a template for creating any one-file reports as it is scripted differently to allow for multiple queries to be run before being combined as sheets in an xlsx.
 It still uses parts of the scripts in `00-reporting-scripts` so changes to those will affect all reports.
+If changes are made to the columns for any of the sheets in this report, it is important to update the template to reflect the expect column headings.
+To do this, `cat template.xlsx | base64 > template.b64` and copy the content of `template.b64` to the `template` entry in the configmap
