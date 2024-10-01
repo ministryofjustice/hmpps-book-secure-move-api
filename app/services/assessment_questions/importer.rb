@@ -5,6 +5,7 @@ module AssessmentQuestions
     ASSESSMENT_QUESTIONS = [
       { key: :violent, category: :risk, title: 'Violent' },
       { key: :escape, category: :risk, title: 'Escape' },
+      { key: :civil_disorder, category: :risk, title: 'Civil disorder' },
       { key: :hold_separately, category: :risk, title: 'Must be held separately' },
       { key: :self_harm, category: :risk, title: 'Self harm' },
       { key: :concealed_items, category: :risk, title: 'Concealed items' },
