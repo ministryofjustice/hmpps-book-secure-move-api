@@ -7,7 +7,7 @@ RSpec.describe AssessmentQuestions::Importer do
 
   context 'with no existing records' do
     it 'creates all the input items' do
-      expect { importer.call }.to change(AssessmentQuestion, :count).by(17)
+      expect { importer.call }.to change(AssessmentQuestion, :count).by(18)
     end
 
     it 'creates `Violent`' do
@@ -34,7 +34,7 @@ RSpec.describe AssessmentQuestions::Importer do
     end
 
     it 'creates only the missing item' do
-      expect { importer.call }.to change(AssessmentQuestion, :count).by(16)
+      expect { importer.call }.to change(AssessmentQuestion, :count).by(17)
     end
   end
 
