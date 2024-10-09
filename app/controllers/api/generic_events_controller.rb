@@ -82,10 +82,16 @@ module Api
     end
 
     def eventable
-      type = eventable_params.dig('data', 'type')
       id = eventable_params.dig('data', 'id')
+      type = eventable_params.dig('data', 'type')
 
-      type.singularize.camelize.constantize.find(id)
+      eventable_klass(type).singularize.camelcase.constantize.find(id)
+    end
+
+    def eventable_klass(klass_type)
+      GenericEvents::CommonParamsValidator::EVENTABLE_TYPES.detect do |k|
+        k == klass_type
+      end
     end
 
     def event_type
