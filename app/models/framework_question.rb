@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FrameworkQuestion < VersionedModel
-  enum question_type: {
+  enum :question_type, {
     radio: 'radio',
     checkbox: 'checkbox',
     text: 'text',

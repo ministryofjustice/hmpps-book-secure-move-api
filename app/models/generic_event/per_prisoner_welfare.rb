@@ -7,13 +7,13 @@ class GenericEvent
     eventable_types 'PersonEscortRecord'
 
     attribute :outcome, :string
-    enum outcome: {
+    enum :outcome, {
       accepted: 'accepted',
       refused: 'refused',
     }
 
     attribute :subtype, :string
-    enum subtype: {
+    enum :subtype, {
       comfort_break: 'comfort_break',
       food: 'food',
       beverage: 'beverage',

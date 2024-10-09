@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FrameworkNomisMapping < VersionedModel
-  enum code_type: {
+  enum :code_type, {
     alert: 'alert',
     assessment: 'assessment',
     contact: 'contact',

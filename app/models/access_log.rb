@@ -13,7 +13,7 @@ class AccessLog < ApplicationRecord
     HTTP_TRACE = 'TRACE'.freeze,
   ].freeze
 
-  enum verb: {
+  enum :verb, {
     GET: HTTP_GET,
     PUT: HTTP_PUT,
     POST: HTTP_POST,

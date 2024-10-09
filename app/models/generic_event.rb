@@ -105,7 +105,7 @@ class GenericEvent < ApplicationRecord
     PersonMoveVehicleSystemsFailed
   ].freeze
 
-  enum classification: {
+  enum :classification, {
     default: 'default',
     incident: 'incident',
     medical: 'medical',

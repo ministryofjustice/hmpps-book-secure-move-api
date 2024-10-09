@@ -21,7 +21,7 @@ class Location < ApplicationRecord
   LOCATION_TYPE_HOSPITAL = 'hospital'
   LOCATION_TYPE_IMMIGRATION_DETENTION_CENTRE = 'immigration_detention_centre'
 
-  enum location_type: {
+  enum :location_type, {
     court: LOCATION_TYPE_COURT,
     police: LOCATION_TYPE_POLICE,
     prison: LOCATION_TYPE_PRISON,

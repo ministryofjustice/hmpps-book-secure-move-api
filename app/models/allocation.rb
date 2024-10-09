@@ -7,7 +7,7 @@ class Allocation < VersionedModel
   ALLOCATION_STATUS_FILLED = 'filled'
   ALLOCATION_STATUS_CANCELLED = 'cancelled'
 
-  enum prisoner_category: {
+  enum :prisoner_category, {
     b: 'B',
     c: 'C',
     d: 'D',
@@ -15,13 +15,13 @@ class Allocation < VersionedModel
     closed: 'Closed',
   }
 
-  enum sentence_length: {
+  enum :sentence_length, {
     short: '16_or_less',
     long: 'more_than_16',
     other: 'other',
   }
 
-  enum estate: {
+  enum :estate, {
     adult_female: 'Adult Female',
     adult_male: 'Adult Male',
     juvenile_female: 'Juvenile Female',
@@ -32,7 +32,7 @@ class Allocation < VersionedModel
   }
 
   attribute :states, :string
-  enum states: {
+  enum :states, {
     unfilled: ALLOCATION_STATUS_UNFILLED,
     filled: ALLOCATION_STATUS_FILLED,
     cancelled: ALLOCATION_STATUS_CANCELLED,

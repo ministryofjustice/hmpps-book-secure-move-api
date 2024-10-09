@@ -40,7 +40,7 @@ class Move < VersionedModel
     'COMP' => MOVE_STATUS_COMPLETED,
   }.freeze
 
-  enum status: {
+  enum :status, {
     proposed: MOVE_STATUS_PROPOSED,
     requested: MOVE_STATUS_REQUESTED,
     booked: MOVE_STATUS_BOOKED,
@@ -49,7 +49,7 @@ class Move < VersionedModel
     cancelled: MOVE_STATUS_CANCELLED,
   }
 
-  enum move_type: {
+  enum :move_type, {
     court_appearance: 'court_appearance',
     court_other: 'court_other',
     hospital: 'hospital',
