@@ -10,7 +10,7 @@ class GenericEvent
     include LocationFeed
 
     attribute :reason, :string
-    enum reason: {
+    enum :reason, {
       overnight_lodging: 'overnight_lodging',
       lockout: 'lockout',
       operation_hmcts: 'operation_hmcts',

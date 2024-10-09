@@ -7,7 +7,7 @@ class GenericEvent
     eventable_types 'Move'
 
     attribute :reason, :string
-    enum reason: {
+    enum :reason, {
       no_space: 'no_space',
       serious_incident: 'serious_incident',
       covid: 'covid',
