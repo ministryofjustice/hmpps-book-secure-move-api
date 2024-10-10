@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'rails', '~> 7.1.4'
+gem 'rails', '8.0.0.beta1'
 
 gem 'activerecord-import'
 gem 'auto_strip_attributes'
