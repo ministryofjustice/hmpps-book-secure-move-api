@@ -6,14 +6,13 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_nomis_client_au
   let(:person) { create :person, :nomis_synced }
   let(:prison_number) { person.prison_number }
   let(:profile) { create(:profile, person:) }
-  let(:alerts_response_body) { [] }
+  let(:alerts_response_body) { { 'content': [] } }
   let(:personal_care_needs_response_body) { [{ 'offenderNo' => prison_number, 'personalCareNeeds' => [] }] }
 
   let(:alerts_response) do
     instance_double(
       OAuth2::Response,
       body: alerts_response_body.to_json,
-      parsed: alerts_response_body,
       status: 200,
     )
   end
@@ -30,11 +29,20 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_nomis_client_au
     create :assessment_question, :care_needs_fallback
     create :assessment_question, :alerts_fallback
 
-    allow(token).to receive(:post).and_return(alerts_response, personal_care_needs_response)
+    allow(token).to receive(:get).and_return(alerts_response, personal_care_needs_response)
   end
 
   context 'when alert is present' do
-    let(:alerts_response_body) { [{ 'offenderNo' => person.prison_number, 'alertCode' => 'ACCU9', 'alertType' => 'MATSTAT' }] }
+    let(:alerts_response_body) do
+      {
+        'content': [
+          {
+            'prisonNumber': person.prison_number,
+            'alertCode': { 'code': 'ACCU9', 'alertTypeCode': 'MATSTAT' },
+          },
+        ],
+      }
+    end
 
     it 'updates the profile' do
       described_class.new(profile, prison_number).call
