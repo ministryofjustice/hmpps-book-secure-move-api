@@ -4,6 +4,7 @@ With the exception of the Monthly Incomplete PER Report (see below) new jobs can
 
 ***Note: Where possible, use the read-replica database.*** The SQL in the configuration is executed directly against the database.
 
+
 # CronJob File
 Most of the cronjob can be copied wholesale when adding new reports, replacing the following as required:
 
@@ -12,6 +13,7 @@ The name of the configmap in the `configMapKeyRef` for each of the environment v
 The name of the configmap should match that of the `metadata.name` in the respective config file.
 
 `spec.schedule` should be changed as needed. This is in UTC and as such will run at eg 8.30 AM in Summer when defined as `30 7 * * *` 
+
 
 # Config file:
 
@@ -28,7 +30,6 @@ Fields in the config file define the report and the content of the email.
 - report_sql: The SQL to run against the database. Use the placeholders `[FROM]` and `[TO]` to have the dates defined in the `from-date` and `to-date` keys subsituted in in the format `'YYY-MM-DD'`
 
 
-
 # Placeholders
 
 As described above, the SQL script will have any `[FROM]` or `[TO]` placeholders replaced by the date interpeted from the `from-date` and `to-date` keys in the config.
@@ -43,8 +44,34 @@ These dates and the current day's date are also available to be used in the emai
 - `[LAST_MONTH]`  Last month's name and year eg `April 2023`
 
 
-
 # Monthly Incomplete PER report
 
 This report shouldn't be used as a template for creating any one-file reports as it is scripted differently to allow for multiple queries to be run before being combined as sheets in an xlsx.
 It still uses parts of the scripts in `00-reporting-scripts` so changes to those will affect all reports.
+
+
+# Required function
+
+For the weekly cancelled move reports to work, this function must exist in the database:
+
+```
+CREATE OR REPLACE FUNCTION public.beforeafter(
+	interval)
+    RETURNS character varying
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+BEGIN
+	if $1 > interval '0 seconds' then
+	   return 'Before cutoff ('|| $1 || ')';
+	else
+	   return 'After cutoff (' || ($1 * -1)  || ')';
+	   end if;
+
+END;
+$BODY$;
+
+ALTER FUNCTION public.beforeafter(interval)
+    OWNER TO "cpLOUozNLn";
+```
