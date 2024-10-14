@@ -76,7 +76,7 @@ namespace :reference_data do
 
   desc 'create NOMIS alert mappings'
   task create_nomis_alerts: :environment do
-    NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
+    NomisAlerts::Importer.new.call
   end
 
   desc 'create regions'
