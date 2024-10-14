@@ -391,7 +391,7 @@ RSpec.shared_examples 'a framework assessment' do |assessment_type, assessment_c
 
   describe '#import_nomis_mappings!' do
     before do
-      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+      allow(AlertsApiClient::Alerts).to receive(:get).and_return([nomis_alert])
     end
 
     it 'does nothing if move is not from a prison' do
