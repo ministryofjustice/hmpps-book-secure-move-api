@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AlertsApiClient
-  class Base < NomisClient::Base
+  class Base < DpsApiClient
     class << self
     protected
 
