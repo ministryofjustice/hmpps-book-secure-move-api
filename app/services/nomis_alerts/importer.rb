@@ -4,8 +4,6 @@ require 'csv'
 
 module NomisAlerts
   class Importer
-    attr_accessor :alert_codes
-
     ALERT_CODE_TO_ASSESSMENT_QUESTION_KEY_MAPPINGS = {
       'HA' => :self_harm,
       'HA1' => :self_harm,
@@ -158,32 +156,15 @@ module NomisAlerts
       'XXRAY' => nil,
     }.freeze
 
-    def initialize(alert_codes:)
-      @alert_codes = alert_codes
-    end
+    def initialize; end
 
     def call
-      alert_codes.each do |alert_code|
-        import_alert(alert_code)
+      AlertsApiClient::AlertTypes.get.each do |alert_type|
+        save_or_create_nomis_alert(alert_type)
       end
     end
 
   private
-
-    def nomis_alert_types
-      @nomis_alert_types ||= NomisClient::AlertTypes.as_hash
-    end
-
-    def import_alert(alert)
-      alert_type = alert_type_for(alert)
-
-      if alert_type.nil?
-        Rails.logger.info "Missing alert type #{alert[:parent_code]}"
-        return
-      end
-
-      save_or_create_nomis_alert(alert, alert_type[:description])
-    end
 
     def assessment_question_mapping(alert_code)
       key = ALERT_CODE_TO_ASSESSMENT_QUESTION_KEY_MAPPINGS[alert_code]
@@ -191,14 +172,11 @@ module NomisAlerts
       key ? AssessmentQuestion.find_by(key:) : nil
     end
 
-    def alert_type_for(alert)
-      nomis_alert_types[alert[:parent_code]]
-    end
-
-    def save_or_create_nomis_alert(alert, type_description)
+    def save_or_create_nomis_alert(alert)
       code = alert[:code]
-      type_code = alert[:parent_code]
+      type_code = alert[:type_code]
       description = alert[:description]
+      type_description = alert[:type_description]
 
       nomis_alert = NomisAlert.find_or_initialize_by(code:, type_code:)
       nomis_alert.update!(
