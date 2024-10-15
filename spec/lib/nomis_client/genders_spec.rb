@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Genders, :with_nomis_client_authentication do
+RSpec.describe NomisClient::Genders, :with_hmpps_authentication do
   describe '.get' do
     let(:response) { described_class.get }
     let(:api_endpoint) { '/reference-domains/domains/ETHNICITY' }

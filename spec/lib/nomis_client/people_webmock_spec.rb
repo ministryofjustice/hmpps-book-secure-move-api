@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe NomisClient::People do
-  describe '.get', :with_nomis_client_authentication do
+  describe '.get', :with_hmpps_authentication do
     let(:prison_numbers) { %w[G3239GV GV345VG G3325XX] }
 
     context 'when resources are found' do

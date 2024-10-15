@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Populations::DefaultsFromNomis, :with_nomis_client_authentication do
+RSpec.describe Populations::DefaultsFromNomis, :with_hmpps_authentication do
   subject(:defaults) { described_class.call(location, date) }
 
   let(:agency_id) { 'PRI' }
