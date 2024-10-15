@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AlertsApiClient
-  class Base < DpsApiClient
+  class Base < HmppsApiClient
     class << self
     protected
 
