@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_nomis_client_authentication do
+RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_hmpps_authentication do
   let(:person) { create :person, :nomis_synced }
   let(:prison_number) { person.prison_number }
   let(:profile) { create(:profile, person:) }
@@ -29,7 +29,10 @@ RSpec.describe Profiles::ImportAlertsAndPersonalCareNeeds, :with_nomis_client_au
     create :assessment_question, :care_needs_fallback
     create :assessment_question, :alerts_fallback
 
-    allow(token).to receive(:get).and_return(alerts_response, personal_care_needs_response)
+    # GET AlertsApiClient::Alerts
+
+    # POST to NomisClient::PersonalCareNeeds
+    allow(token).to receive_messages(get: alerts_response, post: personal_care_needs_response)
   end
 
   context 'when alert is present' do

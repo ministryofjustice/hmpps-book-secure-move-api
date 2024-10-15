@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::CourtCases, :with_nomis_client_authentication do
+RSpec.describe NomisClient::CourtCases, :with_hmpps_authentication do
   describe '.get' do
     let(:booking_id) { '1495077' }
     let(:filter_params) { nil }

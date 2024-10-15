@@ -105,7 +105,7 @@ RSpec.describe NomisClient::People do
     end
   end
 
-  describe '.get', :with_nomis_client_authentication do
+  describe '.get', :with_hmpps_authentication do
     let(:prison_numbers) { %w[G3239GV GV345VG G3325XX] }
     let(:response) { described_class.get(prison_numbers) }
     let(:client_response) do

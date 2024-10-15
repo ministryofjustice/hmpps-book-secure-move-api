@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::ReasonableAdjustments, :with_nomis_client_authentication do
+RSpec.describe NomisClient::ReasonableAdjustments, :with_hmpps_authentication do
   describe '.get' do
     let(:booking_id) { 321 }
     let(:reasonable_adjustment_types) { 'DA,LEARN SUPP' }

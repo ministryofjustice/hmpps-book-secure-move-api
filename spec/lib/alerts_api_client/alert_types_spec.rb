@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe AlertsApiClient::AlertTypes, :with_nomis_client_authentication do
+RSpec.describe AlertsApiClient::AlertTypes, :with_hmpps_authentication do
   describe '.get' do
     let(:response) { described_class.get }
     let(:client_response) do
