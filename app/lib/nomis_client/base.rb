@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module NomisClient
-  class Base < DpsApiClient
+  class Base < HmppsApiClient
     class << self
     protected
 

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-class DpsApiClient
-  NOMIS_TIMEOUT = 10 # in seconds
-  FIXTURE_DIRECTORY = Rails.root.join 'db/fixtures/nomis'
+class HmppsApiClient
+  HMPPS_TIMEOUT = 10 # in seconds
 
   class << self
     def get(path, params = {})
@@ -36,10 +35,10 @@ class DpsApiClient
     def token_request(method, path, params)
       token.send(method, "#{token_request_path_prefix}#{path}", params)
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-      Rails.logger.warn "Nomis Connection Error: #{e.message}"
+      Rails.logger.warn "HMPPS Connection Error: #{e.message}"
       raise e
     rescue OAuth2::Error => e
-      Rails.logger.warn "Nomis OAuth Client Error: #{e.message}"
+      Rails.logger.warn "HMPPS OAuth Client Error: #{e.message}"
       raise e
     end
 
@@ -57,7 +56,7 @@ class DpsApiClient
         auth_scheme: ENV['NOMIS_AUTH_SCHEME'],
         token_url: "#{ENV['NOMIS_SITE_FOR_AUTH']}/oauth/token",
         raise_errors: true,
-        connection_opts: { request: { timeout: NOMIS_TIMEOUT, open_timeout: NOMIS_TIMEOUT } },
+        connection_opts: { request: { timeout: HMPPS_TIMEOUT, open_timeout: HMPPS_TIMEOUT } },
       )
     end
 
