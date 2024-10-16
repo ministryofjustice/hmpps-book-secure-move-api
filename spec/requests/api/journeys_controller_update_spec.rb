@@ -163,7 +163,7 @@ RSpec.describe Api::JourneysController do
 
         it 'does not update the underlying journey vehicle' do
           do_patch
-          expect(journey.vehicle).to eql('id' => '12345678ABC', 'registration' => 'AB12 CDE')
+          expect(journey.vehicle).to eql('id' => '12345678ABC', 'registration' => 'AB12 CDE', 'depot' => 'Depot 1')
         end
       end
 
@@ -218,7 +218,7 @@ RSpec.describe Api::JourneysController do
 
         it 'does not update the underlying journey vehicle' do
           do_patch
-          expect(journey.vehicle).to eql('id' => '12345678ABC', 'registration' => 'AB12 CDE')
+          expect(journey.vehicle).to eql('id' => '12345678ABC', 'registration' => 'AB12 CDE', 'depot' => 'Depot 1')
         end
       end
 

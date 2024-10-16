@@ -160,6 +160,7 @@ RSpec.describe Journey, type: :model do
         'date': be_a(Date),
         'state': 'proposed',
         'vehicle_registration': 'AB12 CDE',
+        'vehicle_depot': 'Depot 1',
         'client_timestamp': be_a(Time),
         'created_at': be_a(Time),
         'updated_at': be_a(Time),

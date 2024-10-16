@@ -34,7 +34,7 @@ RSpec.describe JourneysSerializer do
   end
 
   it 'contains vehicle attributes' do
-    expect(result[:data][:attributes][:vehicle]).to eql(id: '12345678ABC', registration: 'AB12 CDE')
+    expect(result[:data][:attributes][:vehicle]).to eql(id: '12345678ABC', registration: 'AB12 CDE', depot: 'Depot 1')
   end
 
   it 'contains a `from_location` relationship' do
