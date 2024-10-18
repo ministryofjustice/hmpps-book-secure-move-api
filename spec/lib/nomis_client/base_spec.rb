@@ -313,9 +313,9 @@ RSpec.describe NomisClient::Base do
     let(:token_expires_at) { 1.hour.from_now.to_i }
 
     [
-      { error: OAuth2::Error, log_text: 'Nomis OAuth Client Error:' },
-      { error: Faraday::ConnectionFailed, log_text: 'Nomis Connection Error:' },
-      { error: Faraday::TimeoutError, log_text: 'Nomis Connection Error:' },
+      { error: OAuth2::Error, log_text: 'HMPPS OAuth Client Error:' },
+      { error: Faraday::ConnectionFailed, log_text: 'HMPPS Connection Error:' },
+      { error: Faraday::TimeoutError, log_text: 'HMPPS Connection Error:' },
     ].each do |error_data|
       context "when an #{error_data[:error]} is raised" do
         let(:response_body) { 'Test error text' }

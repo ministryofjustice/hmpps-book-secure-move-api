@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PersonEscortRecord do
   let(:from_location) { create(:location, :prison) }
-  let(:nomis_alert) do
+  let(:alert) do
     {
       alert_id: 2,
       alert_code: 'VI',
@@ -14,7 +14,7 @@ RSpec.describe PersonEscortRecord do
       expires_at: '2100-06-08',
       expired: false,
       active: true,
-      offender_no: 'A9127EK',
+      prison_number: 'A9127EK',
     }
   end
 
@@ -26,7 +26,7 @@ RSpec.describe PersonEscortRecord do
     framework = create(:framework)
     alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
     create(:framework_question, framework:, framework_nomis_codes: [alert_code])
-    allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    allow(AlertsApiClient::Alerts).to receive(:get).and_return([alert])
     person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
     expect(person_escort_record.framework_responses.first.framework_nomis_mappings.count).to eq(1)
@@ -37,7 +37,7 @@ RSpec.describe PersonEscortRecord do
     framework = create(:framework)
     alert_code = create(:framework_nomis_code, code: 'VI', code_type: 'alert')
     create(:framework_question, framework:, framework_nomis_codes: [alert_code])
-    allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+    allow(AlertsApiClient::Alerts).to receive(:get).and_return([alert])
     person_escort_record = described_class.save_with_responses!(move_id: move.id, version: framework.version)
 
     expect(person_escort_record.nomis_sync_status).to include_json(
@@ -79,7 +79,7 @@ RSpec.describe PersonEscortRecord do
 
   describe '#import_nomis_mappings!' do
     before do
-      allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+      allow(AlertsApiClient::Alerts).to receive(:get).and_return([alert])
     end
 
     it 'imports nomis mappings if move is a prison' do

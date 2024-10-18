@@ -38,7 +38,7 @@ RSpec.describe Moves::ImportPeople do
 
   before do
     allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
-    allow(NomisClient::Alerts).to receive(:get).and_return(alerts_response)
+    allow(AlertsApiClient::Alerts).to receive(:get).and_return(alerts_response)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
 
     create(:assessment_question, :care_needs_fallback)

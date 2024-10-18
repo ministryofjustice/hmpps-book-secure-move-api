@@ -9,6 +9,6 @@ RSpec.shared_context 'with Nomis alerts reference data' do
     Genders::Importer.new(NomisClient::Genders.get).call
     IdentifierTypes::Importer.new.call
     AssessmentQuestions::Importer.new.call
-    NomisAlerts::Importer.new(alert_codes: NomisClient::AlertCodes.get).call
+    # NomisAlerts::Importer.new.call
   end
 end

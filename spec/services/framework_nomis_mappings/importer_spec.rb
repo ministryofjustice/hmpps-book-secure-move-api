@@ -118,7 +118,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
   end
 
   before do
-    allow(NomisClient::Alerts).to receive(:get).and_return(nomis_alerts)
+    allow(AlertsApiClient::Alerts).to receive(:get).and_return(nomis_alerts)
     allow(NomisClient::Assessments).to receive(:get).and_return(nomis_assessments)
     allow(NomisClient::Contacts).to receive(:get).and_return(nomis_contacts)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(nomis_personal_care_needs)
@@ -173,14 +173,14 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'persists other NOMIS mappings if one import fails' do
     oauth2_response = instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
-    allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
+    allow(AlertsApiClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
     expect { described_class.new(assessmentable: person_escort_record).call }.to change(FrameworkNomisMapping, :count).by(6)
   end
 
   it 'does nothing if no NOMIS mappings present for a person' do
-    allow(NomisClient::Alerts).to receive(:get).and_return([])
+    allow(AlertsApiClient::Alerts).to receive(:get).and_return([])
     allow(NomisClient::Assessments).to receive(:get).and_return([])
     allow(NomisClient::Contacts).to receive(:get).and_return([])
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
@@ -224,7 +224,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
 
   it 'sets different sync statuses per NOMIS client attribute on the person escort record' do
     oauth2_response = instance_double(OAuth2::Response, body: '{}', parsed: {}, status: '')
-    allow(NomisClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
+    allow(AlertsApiClient::Alerts).to receive(:get).and_raise(OAuth2::Error, oauth2_response)
 
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
     described_class.new(assessmentable: person_escort_record).call
@@ -257,7 +257,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     context 'when validation fails on persisting NOMIS mappings' do
       before do
         nomis_alert = { comment: 'Some comment', expired: false, active: true }
-        allow(NomisClient::Alerts).to receive(:get).and_return([nomis_alert])
+        allow(AlertsApiClient::Alerts).to receive(:get).and_return([nomis_alert])
       end
 
       include_examples 'captures a message in Sentry' do
