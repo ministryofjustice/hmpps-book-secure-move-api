@@ -1,0 +1,23 @@
+{
+  "id" : "ed4bf823-5579-3b04-856f-73c547d4dcc0",
+  "request" : {
+    "url" : "/alert-types",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-alert-types-CU48p.json",
+    "headers" : {
+      "Date" : "Fri, 18 Oct 2024 12:46:48 GMT",
+      "Content-Type" : "application/json",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "0",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=15724800; includeSubDomains",
+      "X-Frame-Options" : "SAMEORIGIN"
+    }
+  },
+  "uuid" : "ed4bf823-5579-3b04-856f-73c547d4dcc0"
+}
