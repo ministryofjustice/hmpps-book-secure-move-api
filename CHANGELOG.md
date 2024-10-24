@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.52.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.5) (2024-10-17)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.4...v3.52.5)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump aws-sdk-s3 from 1.167.0 to 1.168.0 in the production-dependencies group [\#2370](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2370) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1645: Send van depots to the analytical platform [\#2369](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2369) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump rails from 7.1.4 to 7.1.4.1 in the production-dependencies group [\#2368](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2368) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1676: Document beforeafter SQL function [\#2364](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2364) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 8 updates [\#2361](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2361) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[MAP-166\] Restore Veracode policy scans to CircleCI [\#2360](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2360) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1565 Migrate CI Security pipeline [\#2356](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2356) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1565 Add Civil disorder to the list of assessment questions [\#2353](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2353) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.52.4 [\#2352](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2352) ([jimbali](https://github.com/jimbali))
+- Installation updates [\#2350](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2350) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.52.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.4) (2024-09-30)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.3...v3.52.4)
@@ -659,15 +676,15 @@
 
 ## [v3.29.2c](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2c) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...v3.29.2c)
-
-## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2b)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2c)
 
 ## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...log-test)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...log-test)
+
+## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.29.2b)
 
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
