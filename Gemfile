@@ -60,6 +60,7 @@ gem 'logstash-event'
 gem 'logstash-logger'
 
 group :development, :test do
+  gem 'bullet'
   gem 'dotenv'
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
