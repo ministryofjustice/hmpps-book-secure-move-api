@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Rollcount, :with_nomis_client_authentication do
+RSpec.describe NomisClient::Rollcount, :with_hmpps_authentication do
   describe '.get' do
     let(:response) { described_class.get(agency_id:) }
     let(:agency_id) { 'PRI' }

@@ -3,52 +3,29 @@
 require 'rails_helper'
 
 RSpec.describe NomisAlerts::Importer do
-  subject(:importer) { described_class.new(alert_codes:) }
+  subject(:importer) { described_class.new }
 
   let(:alert_types) do
     [
       {
-        parent_code: nil,
-        code: 'R',
-        description: 'Risk',
-        domain: 'ALERT',
-        parent_domain: nil,
-        active_flag: 'Y',
-      },
-      {
-        parent_code: nil,
-        code: 'S',
-        description: 'Security',
-        domain: 'ALERT',
-        parent_domain: nil,
-        active_flag: 'Y',
-      },
-    ]
-  end
-
-  let(:alert_codes) do
-    [
-      {
-        parent_code: 'R',
         code: 'RDP',
+        type_code: 'R',
         description: 'Risk to people',
-        domain: 'ALERT_CODE',
-        parent_domain: 'ALERT',
-        active_flag: 'Y',
+        type_description: 'Risk',
+        active_flag: true,
       },
       {
-        parent_code: 'R',
         code: 'RDA',
+        type_code: 'R',
         description: 'Risk to animals',
-        domain: 'ALERT_CODE',
-        parent_domain: 'ALERT',
-        active_flag: 'Y',
+        type_description: 'Risk',
+        active_flag: true,
       },
     ]
   end
 
   before do
-    allow(NomisClient::AlertTypes).to receive(:get).and_return(alert_types)
+    allow(AlertsApiClient::AlertTypes).to receive(:get).and_return(alert_types)
   end
 
   context 'with no existing records' do

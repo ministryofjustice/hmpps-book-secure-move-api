@@ -16,7 +16,7 @@ module Moves
 
     def import_people
       people = NomisClient::People.get(prison_numbers).index_by { |p| p.fetch(:prison_number) }
-      alerts = NomisClient::Alerts.get(prison_numbers).group_by { |p| p.fetch(:offender_no) }
+      alerts = AlertsApiClient::Alerts.get(prison_numbers).group_by { |p| p.fetch(:offender_no) }
       personal_care_needs = NomisClient::PersonalCareNeeds
                             .get(nomis_offender_numbers: prison_numbers)
                             .group_by { |p| p.fetch(:offender_no) }

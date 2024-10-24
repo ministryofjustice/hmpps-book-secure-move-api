@@ -16,7 +16,7 @@ module FrameworkNomisMappings
   private
 
     def imported_alerts
-      @imported_alerts ||= NomisClient::Alerts.get([prison_number]).tap { nomis_sync_status.set_success }
+      @imported_alerts ||= AlertsApiClient::Alerts.get(prison_number).tap { nomis_sync_status.set_success }
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e
       Rails.logger.warn "Importing Framework alert mappings Error: #{e.message}"
       nomis_sync_status.set_failure(message: e.message)

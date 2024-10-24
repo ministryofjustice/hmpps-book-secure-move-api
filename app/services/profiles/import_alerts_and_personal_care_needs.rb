@@ -19,7 +19,7 @@ module Profiles
     end
 
     def alerts
-      NomisClient::Alerts.get([@prison_number]).group_by { |p| p.fetch(:offender_no) }
+      AlertsApiClient::Alerts.get(@prison_number).group_by { |p| p.fetch(:prison_number) }
     end
   end
 end

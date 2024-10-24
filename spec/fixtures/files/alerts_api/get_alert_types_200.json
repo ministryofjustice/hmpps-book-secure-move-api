@@ -1,0 +1,69 @@
+[
+    {
+        "code": "B",
+        "description": "End of Custody Temporary Release",
+        "listSequence": 0,
+        "isActive": true,
+        "createdAt": "2024-07-10T12:09:28",
+        "createdBy": "DWINCHURCH",
+        "modifiedAt": "2024-07-10T12:10:01",
+        "modifiedBy": "DWINCHURCH",
+        "deactivatedAt": null,
+        "deactivatedBy": null,
+        "alertCodes": [
+            {
+                "alertTypeCode": "B",
+                "code": "BECTER",
+                "description": "End Of Custody Temporary Release",
+                "listSequence": 0,
+                "isActive": true,
+                "createdAt": "2024-07-11T16:44:31",
+                "createdBy": "DWINCHURCH",
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "deactivatedAt": null,
+                "deactivatedBy": null
+            }
+        ]
+    },
+    {
+        "code": "E",
+        "description": "Financial Exemption",
+        "listSequence": 0,
+        "isActive": true,
+        "createdAt": "2024-07-10T15:19:07",
+        "createdBy": "DWINCHURCH",
+        "modifiedAt": null,
+        "modifiedBy": null,
+        "deactivatedAt": null,
+        "deactivatedBy": null,
+        "alertCodes": [
+            {
+                "alertTypeCode": "E",
+                "code": "ECA",
+                "description": "Exempt to receive cash",
+                "listSequence": 0,
+                "isActive": true,
+                "createdAt": "2024-07-23T22:17:39",
+                "createdBy": "CLAM",
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "deactivatedAt": null,
+                "deactivatedBy": null
+            },
+            {
+                "alertTypeCode": "E",
+                "code": "ECA2",
+                "description": "Exempt to receive cash 2",
+                "listSequence": 0,
+                "isActive": true,
+                "createdAt": "2024-07-23T22:21:57",
+                "createdBy": "CLAM",
+                "modifiedAt": null,
+                "modifiedBy": null,
+                "deactivatedAt": null,
+                "deactivatedBy": null
+            }
+        ]
+    }
+]

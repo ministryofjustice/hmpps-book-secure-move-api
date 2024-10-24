@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Contacts, :with_nomis_client_authentication do
+RSpec.describe NomisClient::Contacts, :with_hmpps_authentication do
   describe '#get' do
     subject(:response) { described_class.get(booking_id:) }
 

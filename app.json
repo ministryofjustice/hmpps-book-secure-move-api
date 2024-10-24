@@ -15,6 +15,10 @@
       "description": "Name of the storage bucket to use on AWS S3",
       "required": true
     },
+    "ALERTS_API_BASE_URL": {
+      "description": "Base URL for Alerts API",
+      "required": true
+    },
     "NOMIS_SITE_FOR_API": {
       "description": "Base URL for NOMIS API",
       "required": true

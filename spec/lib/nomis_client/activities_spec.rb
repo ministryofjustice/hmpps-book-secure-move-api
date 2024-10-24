@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NomisClient::Activities, :with_nomis_client_authentication do
+RSpec.describe NomisClient::Activities, :with_hmpps_authentication do
   describe '.get' do
     subject(:activities_get) { described_class.get(booking_id, start_date, end_date) }
 
