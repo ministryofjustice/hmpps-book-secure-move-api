@@ -473,18 +473,3 @@ workflows:
             - basm-api-production
           requires:
             - hold_production
-
-  security:
-    triggers:
-      - schedule:
-          cron: "0 7 * * 1-5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
