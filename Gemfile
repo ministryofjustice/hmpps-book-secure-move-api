@@ -78,7 +78,7 @@ end
 group :development do
   gem 'listen'
   gem 'rails-erd'
-  gem 'rubocop-govuk'
+  gem 'rubocop-govuk', '5.0.2', git: 'https://github.com/alphagov/rubocop-govuk'
   gem 'spring', '>= 3'
   gem 'spring-watcher-listen'
 end
