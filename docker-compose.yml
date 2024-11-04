@@ -5,7 +5,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-    - './.data/postgres:/var/lib/postgresql/data'
+    - './.data/postgres:/var/lib/postgresql@16/data'
     ports:
     - 5432:5432
   redis:
@@ -20,9 +20,10 @@ services:
       - LOCALSTACK_SERVICES=s3
       - DATA_DIR=/tmp/localstack/data
     volumes:
-      - './.data/localstack:/tmp/localstack'
+      - './localstack:/var/lib/localstack'
       - '/var/run/docker.sock:/var/run/docker.sock'
   web:
+    platform: linux/x86_64
     build: .
     env_file:
       - ./.env
