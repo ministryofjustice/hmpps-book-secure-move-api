@@ -245,6 +245,19 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+Note: The Dockerfile builds a production environment (**not** development). You will need to add production credentials to `config/database/yml`, eg:
+
+```
+production:
+  <<: *default
+  database: hmpps-book-secure-move-api
+```
+
+If `docker compose up` fails with the error: `We could not find your database: hmpps-book-secure-move-api`, setup the database: 
+```
+docker-compose run web bin/rails db:setup
+```
+
 You can force rebuilding the container with:
 
 ```bash
