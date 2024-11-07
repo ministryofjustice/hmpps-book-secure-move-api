@@ -15,8 +15,7 @@ class GenericEvent
       child.include LocationFeed
       child.include LocationValidations
 
-      child.validates :advised_at, presence: true, iso_date_time: true
-      child.validates :advised_by, presence: true
+      child.validates :advised_at, allow_nil: true, iso_date_time: true
       child.validates :treated_at, allow_nil: true, iso_date_time: true
 
       super
