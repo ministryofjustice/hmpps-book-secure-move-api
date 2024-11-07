@@ -13,7 +13,7 @@ data:
   retention: "1 week"
   confirm_email: "true"
   report_sql: |-
-      select m.status,
+      select DISTINCT m.status,
       m.reference,
       m.move_type,
       m.date,
