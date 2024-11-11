@@ -157,7 +157,7 @@ RSpec.describe Api::PeopleController do
       it 'returns an error' do
         get("/api/v1/people/#{person.id}/timetable", headers:, params:)
 
-        expect(response_json['errors'][0]['detail']).to match(/param is missing or the value is empty: filter/)
+        expect(response_json['errors'][0]['detail']).to match(/param is missing or the value is empty or invalid: filter/)
         expect(response).to have_http_status(:bad_request)
       end
     end
