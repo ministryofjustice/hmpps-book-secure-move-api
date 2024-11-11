@@ -54,5 +54,7 @@ module BookASecureMoveApi
     config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]
 
     config.add_autoload_paths_to_load_path = false
+
+    config.active_support.to_time_preserves_timezone = :zone
   end
 end
