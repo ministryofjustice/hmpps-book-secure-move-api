@@ -1,5 +1,46 @@
 # Changelog
 
+## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.6...HEAD)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump aws-sdk-s3 from 1.170.0 to 1.170.1 in the production-dependencies group [\#2399](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2399) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.52.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.6) (2024-11-11)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.5...v3.52.6)
+
+**Merged pull requests:**
+
+- chore\(deps-dev\): Bump the development-dependencies group with 2 updates [\#2398](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2398) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Upgrade ruby to 3.3.6 [\#2397](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2397) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump paper\_trail from 15.2.0 to 16.0.0 in the production-dependencies group [\#2396](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2396) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Select DISTINCT to remove duplicates from report [\#2395](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2395) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1809 PerMedical attributes can be optional [\#2394](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2394) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 3 updates [\#2393](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2393) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from `b6e4ed5` to `31f6341` in the development-dependencies group across 1 directory [\#2392](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2392) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1621 Update docker-compose to build a local production environment [\#2388](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2388) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from `6f00f94` to `b6e4ed5` in the development-dependencies group [\#2387](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2387) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from `28080c6` to `6f00f94` in the development-dependencies group [\#2386](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2386) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump rails from 7.1.4.2 to 7.1.5 in the production-dependencies group [\#2385](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2385) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1778 REXML ReDoS vulnerability [\#2384](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2384) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rexml from 3.3.6 to 3.3.9 [\#2383](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2383) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[MAP-1758\] Upgrade CodeQL and Dependabot auto-merge [\#2382](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2382) ([tobyprivett](https://github.com/tobyprivett))
+- Upgrade to Trivy Scan v1 [\#2381](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2381) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump factory\_bot\_rails from 6.4.3 to 6.4.4 in the development-dependencies group [\#2380](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2380) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1662 Remove veracode policy scan [\#2379](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2379) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump pg from 1.5.8 to 1.5.9 in the production-dependencies group [\#2378](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2378) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.52.5 [\#2377](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2377) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2376](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2376) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAPI-1682 Revert doorkeeper upgrade [\#2375](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2375) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1682 Bump doorkeeper gem [\#2374](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2374) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1664 N+1 Queries [\#2373](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2373) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump faker from 3.4.2 to 3.5.1 in the development-dependencies group [\#2372](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2372) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2371](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2371) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1665 Migrate to the new Alerts API [\#2363](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2363) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.52.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.5) (2024-10-17)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.4...v3.52.5)
@@ -676,15 +717,15 @@
 
 ## [v3.29.2c](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2c) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2c)
-
-## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...log-test)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...v3.29.2c)
 
 ## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.29.2b)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2b)
+
+## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...log-test)
 
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
@@ -725,20 +766,20 @@
 
 ## [v3.28.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.28.0) (2022-12-12)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.28.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.28.0)
 
 **Merged pull requests:**
 
 - \[P4-3910\] Add new endpoint: GET /events/:event\_id [\#1993](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1993) ([Thource](https://github.com/Thource))
 - Generated changelog for v3.27.2 [\#1992](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/1992) ([Thource](https://github.com/Thource))
 
-## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.2...v3.27.1)
-
 ## [v3.27.2](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.2) (2022-11-24)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.2)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.1...v3.27.2)
+
+## [v3.27.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.27.1) (2022-11-24)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.27.0...v3.27.1)
 
 **Merged pull requests:**
 
