@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_02_112955) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_13_160043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -607,6 +607,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_112955) do
     t.string "csra"
     t.index ["category_code"], name: "index_profiles_on_category_code"
     t.index ["category_id"], name: "index_profiles_on_category_id"
+    t.index ["person_id"], name: "index_profiles_on_person_id"
     t.index ["updated_at"], name: "index_profiles_on_updated_at"
   end
 
