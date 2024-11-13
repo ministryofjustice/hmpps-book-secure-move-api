@@ -58,6 +58,8 @@ module Locations
     end
 
     def apply_supplier_filters(scope)
+      scope = scope.includes(:suppliers)
+
       return scope unless filter_params.key?(:supplier_id)
 
       scope = scope.includes(:suppliers).where(suppliers: { id: split_params(:supplier_id) })
