@@ -1,11 +1,15 @@
 # Changelog
 
-## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+## [v3.52.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.7) (2024-11-13)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.6...HEAD)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.6...v3.52.7)
 
 **Merged pull requests:**
 
+- MAP-1837 Index profiles\#person\_id to improve SAR performance [\#2403](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2403) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-304 Eager load location\#suppliers to improve performance [\#2402](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2402) ([tobyprivett](https://github.com/tobyprivett))
+- Generated CHANGELOG for v3.52.6 [\#2401](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2401) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from `31f6341` to `5bd5d52` in the development-dependencies group [\#2400](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2400) ([dependabot[bot]](https://github.com/apps/dependabot))
 - chore\(deps\): Bump aws-sdk-s3 from 1.170.0 to 1.170.1 in the production-dependencies group [\#2399](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2399) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v3.52.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.6) (2024-11-11)
