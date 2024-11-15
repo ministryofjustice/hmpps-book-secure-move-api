@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :access_log do
-    id { '35cc6a19-0d88-453a-a0cb-970e161b5cbb' }
     request_id { 'b68c0883-540c-426a-a9a4-daf586eb5c78' }
     timestamp { Time.zone.now }
     whodunnit { 'AUSER01' }
