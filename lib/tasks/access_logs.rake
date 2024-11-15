@@ -1,7 +1,7 @@
 namespace :access_logs do
-  desc 'Cleanup access_logs older than 6 months'
+  desc 'Cleanup access_logs older than 1 year'
   task cleanup: [:environment] do
-    cutoff_date = 6.months.ago
+    cutoff_date = 1.year.ago
     access_logs_count = AccessLog.where('timestamp < ?', cutoff_date).count
     number_of_iterations = (access_logs_count.to_f / 1000).ceil
 
