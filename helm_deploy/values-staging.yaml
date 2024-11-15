@@ -63,6 +63,9 @@ sidekiq:
         GOVUK_NOTIFY_API_KEY: govuk_notify_api_key
 
 cronJobs:
+  - name: access-log-cleanup
+    schedule: "0 2 * * *"
+    command: ["bundle", "exec", "rake", "access_logs:cleanup"]
   - name: token-cleanup
     schedule: "0 1 * * 0"
     command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]

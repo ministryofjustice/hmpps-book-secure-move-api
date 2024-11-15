@@ -49,6 +49,9 @@ generic-service:
       REDIS_URL: url
 
 cronJobs:
+  - name: access-log-cleanup
+    schedule: "0 2 * * *"
+    command: ["bundle", "exec", "rake", "access_logs:cleanup"]
   - name: token-cleanup
     schedule: "0 1 * * 0"
     command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]
