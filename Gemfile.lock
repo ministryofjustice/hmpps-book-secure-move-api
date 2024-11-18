@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/alphagov/rubocop-govuk
-  revision: 80f979de42c0cc7c5e0454ea454412e58b3d1970
+  revision: a822e10cb691810446aa416223236ac54ad31e63
   specs:
     rubocop-govuk (5.0.2)
       rubocop (= 1.68.0)
-      rubocop-ast (= 1.35.0)
+      rubocop-ast (= 1.36.1)
       rubocop-capybara (= 2.21.0)
       rubocop-rails (= 2.27.0)
       rubocop-rake (= 0.6.0)
@@ -456,7 +456,7 @@ GEM
       rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.35.0)
+    rubocop-ast (1.36.1)
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
