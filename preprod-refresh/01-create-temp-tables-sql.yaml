@@ -27,8 +27,6 @@ data:
     CREATE TABLE categories_temp (LIKE categories);
     CREATE TABLE documents_temp (LIKE documents);
     CREATE TABLE ethnicities_temp (LIKE ethnicities);
-    CREATE TABLE flipper_features_temp (LIKE flipper_features);
-    CREATE TABLE flipper_gates_temp (LIKE flipper_gates);
     CREATE TABLE genders_temp (LIKE genders);
     CREATE TABLE locations_regions_temp (LIKE locations_regions);
     CREATE TABLE nationalities_temp (LIKE nationalities);

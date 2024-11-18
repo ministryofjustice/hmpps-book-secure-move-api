@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_13_160043) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_18_095830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
 
   create_table "access_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "request_id"
@@ -151,22 +151,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_13_160043) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["move_id"], name: "index_extradition_flights_on_move_id"
-  end
-
-  create_table "flipper_features", force: :cascade do |t|
-    t.string "key", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["key"], name: "index_flipper_features_on_key", unique: true
-  end
-
-  create_table "flipper_gates", force: :cascade do |t|
-    t.string "feature_key", null: false
-    t.string "key", null: false
-    t.string "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
   create_table "framework_flags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

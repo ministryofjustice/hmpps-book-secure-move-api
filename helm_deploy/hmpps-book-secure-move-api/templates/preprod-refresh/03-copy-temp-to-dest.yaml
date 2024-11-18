@@ -346,23 +346,6 @@ data:
     documentable_id = EXCLUDED.documentable_id;
     --
     
-    INSERT INTO flipper_features SELECT * FROM flipper_features_temp ON CONFLICT (id) DO UPDATE
-    SET
-    key = EXCLUDED.key,
-    created_at = EXCLUDED.created_at,
-    updated_at = EXCLUDED.updated_at;
-    --
-    
-    INSERT INTO flipper_gates SELECT * FROM flipper_gates_temp ON CONFLICT (id) DO UPDATE
-    SET
-    feature_key = EXCLUDED.feature_key,
-    key = EXCLUDED.key,
-    value = EXCLUDED.value,
-    created_at = EXCLUDED.created_at,
-    updated_at = EXCLUDED.updated_at;
-    --
-    
-    
     INSERT INTO subscriptions SELECT * FROM subscriptions_temp ON CONFLICT DO NOTHING;
     --
     

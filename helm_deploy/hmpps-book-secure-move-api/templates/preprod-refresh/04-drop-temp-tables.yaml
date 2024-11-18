@@ -29,8 +29,6 @@ data:
     DROP TABLE IF EXISTS categories_temp CASCADE;
     DROP TABLE IF EXISTS documents_temp CASCADE;
     DROP TABLE IF EXISTS ethnicities_temp CASCADE;
-    DROP TABLE IF EXISTS flipper_features_temp CASCADE;
-    DROP TABLE IF EXISTS flipper_gates_temp CASCADE;
     DROP TABLE IF EXISTS genders_temp CASCADE;
     DROP TABLE IF EXISTS locations_regions_temp CASCADE;
     DROP TABLE IF EXISTS nationalities_temp CASCADE;

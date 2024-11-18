@@ -83,8 +83,6 @@ data:
     temp categories
     temp documents
     temp ethnicities
-    temp flipper_features
-    temp flipper_gates
     
     temp genders
     
