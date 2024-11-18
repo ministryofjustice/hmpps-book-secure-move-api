@@ -1,6 +1,7 @@
 GIT
-  remote: https://github.com/alphagov/rubocop-govuk
+  remote: https://github.com/alphagov/rubocop-govuk.git
   revision: a822e10cb691810446aa416223236ac54ad31e63
+  ref: a822e10cb691810446aa416223236ac54ad31e63
   specs:
     rubocop-govuk (5.0.2)
       rubocop (= 1.68.0)
@@ -586,7 +587,7 @@ DEPENDENCIES
   rswag-api
   rswag-specs
   rswag-ui
-  rubocop-govuk (= 5.0.2)!
+  rubocop-govuk!
   sentry-rails
   sentry-ruby
   sentry-sidekiq
