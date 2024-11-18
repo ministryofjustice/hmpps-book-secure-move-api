@@ -578,7 +578,7 @@ DEPENDENCIES
   puma
   rack-cors
   rack-test
-  rails (~> 8.0)
+  rails (~> 8.0.0)
   rails-erd
   redis
   routing-filter!
