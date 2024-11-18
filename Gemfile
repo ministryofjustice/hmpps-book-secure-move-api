@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version')
 
-gem 'rails', '~> 7.1.4'
+gem 'rails', '~> 8.0'
 
 gem 'activerecord-import'
 gem 'auto_strip_attributes'
@@ -21,7 +21,6 @@ gem 'faraday'
 gem 'faraday-net_http_persistent'
 gem 'faraday-retry'
 gem 'finite_machine'
-gem 'flipper-active_record'
 gem 'geocoder'
 gem 'git'
 gem 'govuk_notify_rails'
@@ -78,7 +77,7 @@ end
 group :development do
   gem 'listen'
   gem 'rails-erd'
-  gem 'rubocop-govuk', '5.0.2', git: 'https://github.com/alphagov/rubocop-govuk'
+  gem 'rubocop-govuk', github: 'alphagov/rubocop-govuk', ref: 'a822e10cb691810446aa416223236ac54ad31e63'
   gem 'spring', '>= 3'
   gem 'spring-watcher-listen'
 end

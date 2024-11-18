@@ -15,7 +15,7 @@ class GenericEvent
     end
 
     attribute :reason, :string
-    enum reason: {
+    enum :reason, {
       unachievable_ptr_request: 'unachievable_ptr_request', # (PECS - police only)
       no_space: 'no_space', # (PECS)
       unachievable_redirection: 'unachievable_redirection', # (PECS)

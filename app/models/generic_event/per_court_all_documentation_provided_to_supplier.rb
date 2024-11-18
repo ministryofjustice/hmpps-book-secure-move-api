@@ -10,7 +10,7 @@ class GenericEvent
     include LocationFeed
 
     attribute :subtype, :string
-    enum subtype: {
+    enum :subtype, {
       extradition_order: 'extradition_order',
       warrant: 'warrant',
       placement_confirmation: 'placement_confirmation',

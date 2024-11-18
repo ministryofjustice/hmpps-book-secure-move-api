@@ -5,7 +5,7 @@ module VehicleTypeValidations
 
   included do
     attribute :vehicle_type, :string
-    enum vehicle_type: {
+    enum :vehicle_type, {
       'c4': 'c4',
       'pro_cab': 'pro_cab',
       'mpv': 'mpv',

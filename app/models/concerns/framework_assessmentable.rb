@@ -11,7 +11,7 @@ module FrameworkAssessmentable
     attribute :statuses, :string
     # "not_started" cannot be used as the name of the enum due to warnings in the model
     # that it starts with a "not_".
-    enum statuses: {
+    enum :statuses, {
       unstarted: ASSESSMENT_NOT_STARTED,
       in_progress: ASSESSMENT_IN_PROGRESS,
       completed: ASSESSMENT_COMPLETED,
