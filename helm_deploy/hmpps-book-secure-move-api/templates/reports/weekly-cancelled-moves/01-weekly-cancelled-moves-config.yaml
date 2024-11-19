@@ -13,14 +13,14 @@ data:
   retention: "1 week"
   confirm_email: "true"
   report_sql: |-
-      select DISTINCT m.status,
+      select m.status,
       m.reference,
       m.move_type,
       m.date,
       f.title as from_loc,
       t.title as to_loc,
       COALESCE(person.nomis_prison_number, person.prison_number) as prison_number,
-      
+
       COALESCE(person.last_name, '(Allocation)') as last_name,
       m.created_at,
       m.updated_at,
@@ -34,10 +34,10 @@ data:
       left join profiles pro on m.profile_id = pro.id
       left join person_escort_records per on pro.id = per.profile_id
       left join people person on  pro.person_id = person.id
-      left join locations f on  m.from_location_id = f.id
-      left join locations t on  m.to_location_id = t.id
-      left join generic_events e on e.eventable_type = 'Move' and e.eventable_id = m.id and type = 'GenericEvent::MoveCancel'
       left join journeys j on j.move_id = m.id
+      left join locations f on  j.from_location_id = f.id
+      left join locations t on  j.to_location_id = t.id
+      left join generic_events e on e.eventable_type = 'Move' and e.eventable_id = m.id and type = 'GenericEvent::MoveCancel'
       left join suppliers s on j.supplier_id = s.id
       where m.date between '[FROM]' and '[TO]'
       and m.status = 'cancelled'
