@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.52.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.8) (2024-11-20)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.7...v3.52.8)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump git from 2.3.1 to 2.3.2 in the production-dependencies group [\#2414](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2414) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1812 Resolve duplicates on the Weekly Cancellation report [\#2413](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2413) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2412](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2412) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1672 Rails 8 PR comments [\#2411](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2411) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1672 Upgrade to Rails 8 [\#2409](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2409) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1781 Cleanup Access Logs more than 3 months old [\#2408](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2408) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2407](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2407) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.52.7 [\#2406](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2406) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump the development-dependencies group with 2 updates [\#2405](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2405) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2404](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2404) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.52.7](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.7) (2024-11-13)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.6...v3.52.7)
