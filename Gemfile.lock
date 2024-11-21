@@ -1,17 +1,4 @@
 GIT
-  remote: https://github.com/alphagov/rubocop-govuk.git
-  revision: a822e10cb691810446aa416223236ac54ad31e63
-  ref: a822e10cb691810446aa416223236ac54ad31e63
-  specs:
-    rubocop-govuk (5.0.2)
-      rubocop (= 1.68.0)
-      rubocop-ast (= 1.36.1)
-      rubocop-capybara (= 2.21.0)
-      rubocop-rails (= 2.27.0)
-      rubocop-rake (= 0.6.0)
-      rubocop-rspec (= 3.2.0)
-
-GIT
   remote: https://github.com/nduitz/routing-filter.git
   revision: 7ada2f1854563852c615eec681c67f80f135ade5
   ref: 7ada2f1854563852c615eec681c67f80f135ade5
@@ -458,6 +445,13 @@ GEM
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
+    rubocop-govuk (5.0.3)
+      rubocop (= 1.68.0)
+      rubocop-ast (= 1.36.1)
+      rubocop-capybara (= 2.21.0)
+      rubocop-rails (= 2.27.0)
+      rubocop-rake (= 0.6.0)
+      rubocop-rspec (= 3.2.0)
     rubocop-rails (2.27.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -587,7 +581,7 @@ DEPENDENCIES
   rswag-api
   rswag-specs
   rswag-ui
-  rubocop-govuk!
+  rubocop-govuk
   sentry-rails
   sentry-ruby
   sentry-sidekiq
