@@ -244,7 +244,7 @@ GEM
       reline (>= 0.4.2)
     jmespath (1.6.2)
     json (2.8.2)
-    json-schema (5.0.1)
+    json-schema (5.1.0)
       addressable (~> 2.8)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
@@ -487,7 +487,7 @@ GEM
       childprocess (~> 0.5)
     shoulda-matchers (6.4.0)
       activesupport (>= 5.2.0)
-    sidekiq (7.3.5)
+    sidekiq (7.3.6)
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)
