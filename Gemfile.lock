@@ -288,7 +288,7 @@ GEM
     metrics (0.12.1)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.1)
+    minitest (5.25.2)
     msgpack (1.7.5)
     multi_json (1.15.0)
     multi_xml (0.7.1)
