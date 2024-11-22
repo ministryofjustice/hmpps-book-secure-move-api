@@ -14,7 +14,7 @@ RSpec.describe Moves::Exporter do
   let(:from_location) { create(:location, title: 'From Location', nomis_agency_id: 'FROM1') }
   let(:to_location) { create(:location, title: 'To Location', nomis_agency_id: 'TO1') }
   let(:person) { create(:person) }
-  let!(:move) { create(:move, from_location:, to_location:, person:) }
+  let!(:move) { create(:move, :cancelled, from_location:, to_location:, person:) }
   let(:moves) { Move.where(id: move.id) }
   let!(:cancel_event) { create(:event_move_cancel, eventable: move) }
 
@@ -23,11 +23,11 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(48)
+    expect(header.count).to eq(54)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(48)
+    expect(row.count).to eq(54)
   end
 
   it 'includes move details' do
@@ -68,6 +68,25 @@ RSpec.describe Moves::Exporter do
 
   it 'includes FALSE flag and empty comments when no alerts are present' do
     expect(row).to include('false', '')
+  end
+
+  context 'with a cancelled event that occurred_at a a specific time' do
+    before do
+      move.cancel!(cancellation_reason: 'cancelled_by_pmu', cancellation_reason_comment: 'cancelled early')
+      cancel_event.update!(occurred_at: move.date.to_time.advance(hours: -24.5))
+    end
+
+    it 'includes the cancellation_reason' do
+      expect(row).to include('cancelled_by_pmu')
+    end
+
+    it 'includes the cancellation_reason_comment' do
+      expect(row).to include('cancelled early')
+    end
+
+    it 'includes the `difference` between cancellation date and 9am cutoff on the day of the move' do
+      expect(row).to include('Before cutoff (1d 09h 30m)')
+    end
   end
 
   %w[violent escape hold_separately self_harm concealed_items other_risks health_issue medication wheelchair pregnant other_health interpreter not_to_be_released special_vehicle].each do |alert_type|
@@ -125,11 +144,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(50)
+        expect(header.count).to eq(56)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(50)
+        expect(row.count).to eq(56)
       end
 
       it 'has the correct rows' do
@@ -149,11 +168,11 @@ RSpec.describe Moves::Exporter do
       end
 
       it 'has correct number of header columns' do
-        expect(header.count).to eq(48)
+        expect(header.count).to eq(54)
       end
 
       it 'has correct number of body columns' do
-        expect(row.count).to eq(48)
+        expect(row.count).to eq(54)
       end
     end
   end
