@@ -1066,4 +1066,20 @@ RSpec.describe Move do
       it { expect(move.cross_supplier?).to be true }
     end
   end
+
+  describe '#billable?' do
+    let!(:move) { create(:move, :with_journey) }
+
+    it 'is not billable' do
+      expect(move).not_to be_billable
+    end
+
+    context 'with a billable journey' do
+      before { create(:journey, move: move, billable: true) }
+
+      it 'is not billable' do
+        expect(move).to be_billable
+      end
+    end
+  end
 end
