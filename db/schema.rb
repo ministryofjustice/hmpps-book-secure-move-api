@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_18_095830) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_25_114943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -284,6 +284,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_18_095830) do
     t.index ["occurred_at"], name: "index_generic_events_on_occurred_at"
     t.index ["recorded_at"], name: "index_generic_events_on_recorded_at"
     t.index ["supplier_id"], name: "index_generic_events_on_supplier_id"
+    t.index ["type"], name: "index_generic_events_on_type"
     t.index ["updated_at"], name: "index_generic_events_on_updated_at"
   end
 
