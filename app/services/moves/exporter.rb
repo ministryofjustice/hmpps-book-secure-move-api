@@ -18,7 +18,6 @@ module Moves
       'To location code',
       'Additional information',
       'Date of travel',
-      'Cancelled at',
       'PNC number',
       'Prison number',
       'Last name',
@@ -55,12 +54,13 @@ module Moves
       'Not to be released details',
       'Requires special vehicle',
       'Requires special vehicle details',
-      'cancellation_reason',
-      'cancellation_reason_comment',
-      'cancelled_by',
-      'journey_billable',
-      'difference',
-      'journey_supplier',
+      'Cancelled at',
+      'Cancelled by',
+      'Cancellation reason',
+      'cancellation reason comment',
+      'Journey billable',
+      'Difference',
+      'Supplier',
     ].freeze
 
     def initialize(moves)
@@ -101,7 +101,6 @@ module Moves
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
-        cancellation_event&.occurred_at, # Cancelled at
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
@@ -124,9 +123,10 @@ module Moves
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
         answer_details(answers, 'special_vehicle'), # Requires special vehicle details,
+        cancellation_event&.occurred_at, # Cancelled at
+        cancellation_event&.created_by,
         move.cancellation_reason,
         move.cancellation_reason_comment,
-        cancellation_event&.created_by,
         move.billable?,
         cancellation_difference(move, cancellation_event),
         move.supplier&.name,
