@@ -55,6 +55,12 @@ module Moves
       'Not to be released details',
       'Requires special vehicle',
       'Requires special vehicle details',
+      'cancellation_reason',
+      'cancellation_reason_comment',
+      'cancelled_by',
+      'journey_billable',
+      'difference',
+      'journey_supplier',
     ].freeze
 
     def initialize(moves)
@@ -68,7 +74,7 @@ module Moves
         headings = STATIC_HEADINGS
         headings += flags_by_section if alert_columns
         csv << headings
-        moves.includes(:generic_events).find_each do |move|
+        moves.includes(:cancellation_events).find_each do |move|
           csv << attributes_row(move)
         end
         file.flush
@@ -81,6 +87,7 @@ module Moves
       person = move.person
       profile = move.profile
       answers = profile&.assessment_answers
+      cancellation_event = move.cancellation_events.first
 
       row = [
         move.status, # Status
@@ -94,7 +101,7 @@ module Moves
         move.to_location&.nomis_agency_id, # To location code
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
-        move.generic_events.select { _1.type == 'GenericEvent::MoveCancel' }.last&.occurred_at, # Cancelled at
+        cancellation_event&.occurred_at, # Cancelled at
         person&.police_national_computer, # PNC number
         person&.prison_number, # Prison number
         person&.last_name, # Last name
@@ -116,7 +123,13 @@ module Moves
         answer_details(answers, 'other_health'), # Any other details
         answer_details(answers, 'interpreter'), # Sign or other language interpreter details
         answer_details(answers, 'not_to_be_released'), # Not to be released details
-        answer_details(answers, 'special_vehicle'), # Requires special vehicle details
+        answer_details(answers, 'special_vehicle'), # Requires special vehicle details,
+        move.cancellation_reason,
+        move.cancellation_reason_comment,
+        cancellation_event&.created_by,
+        move.billable?,
+        cancellation_difference(move, cancellation_event),
+        move.supplier&.name,
       ]
 
       if alert_columns
@@ -146,6 +159,20 @@ module Moves
           a.framework_question.section <=> b.framework_question.section
         }
         .pluck(:title)
+    end
+
+    def cancellation_difference(move, cancellation_event)
+      return if !move.cancelled? || cancellation_event.blank?
+
+      difference_in_seconds = (move.date.to_time.advance(hours: 6) - cancellation_event&.occurred_at)
+      cutoff = "#{difference_in_seconds.positive? ? 'Before' : 'After'} cutoff"
+
+      minutes = (difference_in_seconds.abs / 60).floor
+      hours = (minutes / 60).floor
+
+      "#{cutoff} (#{(hours / 24).floor}d "\
+      "#{sprintf('%02d', (hours % 24))}h "\
+      "#{sprintf('%02d', (minutes % 60))}m)"
     end
   end
 end

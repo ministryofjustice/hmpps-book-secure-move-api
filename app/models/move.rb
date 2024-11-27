@@ -98,6 +98,7 @@ class Move < VersionedModel
   has_many :generic_events, as: :eventable, dependent: :destroy
   has_many :incident_events, -> { where classification: :incident }, as: :eventable, class_name: 'GenericEvent'
   has_many :notification_events, -> { where classification: :notification }, as: :eventable, class_name: 'GenericEvent'
+  has_many :cancellation_events, as: :eventable, class_name: 'GenericEvent::MoveCancel'
 
   validates :from_location, presence: true
   validates :to_location, presence: true, unless: -> { prison_recall? || video_remand? }
@@ -387,6 +388,10 @@ class Move < VersionedModel
 
   def cross_supplier?
     from_location&.suppliers != to_location&.suppliers
+  end
+
+  def billable?
+    journeys.select(&:billable?).any?
   end
 
 private

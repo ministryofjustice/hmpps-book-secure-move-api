@@ -9,7 +9,7 @@ module Api
     before_action :validate_idempotency_key, only: %i[create update]
     around_action :idempotent_action, only: %i[create update]
 
-    CSV_INCLUDES = [:from_location, :to_location, { profile: :documents }, { person: %i[gender ethnicity] }].freeze
+    CSV_INCLUDES = [:from_location, :to_location, :journeys, :profile, :supplier, { person: %i[gender ethnicity] }].freeze
 
     def index
       index_and_render

@@ -13,33 +13,37 @@ data:
   retention: "1 week"
   confirm_email: "true"
   report_sql: |-
-      select m.status,
+    SELECT m.status,
       m.reference,
       m.move_type,
       m.date,
-      f.title as from_loc,
-      t.title as to_loc,
-      COALESCE(person.nomis_prison_number, person.prison_number) as prison_number,
-
-      COALESCE(person.last_name, '(Allocation)') as last_name,
+      f.title AS FROM_loc,
+      t.title AS to_loc,
+      COALESCE(person.nomis_prison_number, person.prison_number) AS prison_number,
+      COALESCE(person.last_name, '(Allocation)') AS last_name,
       m.created_at,
       m.updated_at,
       m.cancellation_reason,
       m.cancellation_reason_comment,
-      e.created_at as cancelled_at, e.created_by as cancelled_by,
-      j.billable as journey_billable,
-      beforeafter((m.date::timestamp -  interval '9 hours') - e.created_at) as difference,
-      s.name as journey_supplier
-      from moves m
-      left join profiles pro on m.profile_id = pro.id
-      left join person_escort_records per on pro.id = per.profile_id
-      left join people person on  pro.person_id = person.id
-      left join journeys j on j.move_id = m.id
-      left join locations f on  j.from_location_id = f.id
-      left join locations t on  j.to_location_id = t.id
-      left join generic_events e on e.eventable_type = 'Move' and e.eventable_id = m.id and type = 'GenericEvent::MoveCancel'
-      left join suppliers s on j.supplier_id = s.id
-      where m.date between '[FROM]' and '[TO]'
-      and m.status = 'cancelled'
-      order by date, last_name, prison_number
+      e.created_at AS cancelled_at, e.created_by AS cancelled_by,
+      (SELECT EXISTS
+        (select * FROM journeys where move_id = m.id AND billable = true limit 1)::boolean)
+          AS journey_billable,
+      beforeafter((m.date::timestamp + interval '6 hours') - e.created_at) AS difference,
+      s.name AS journey_supplier
+
+    FROM moves m
+      LEFT JOIN profiles pro ON m.profile_id = pro.id
+      LEFT JOIN person_escort_records per ON pro.id = per.profile_id
+      LEFT JOIN people person ON  pro.person_id = person.id
+      LEFT JOIN locations f ON  m.FROM_location_id = f.id
+      LEFT JOIN locations t ON  m.to_location_id = t.id
+      LEFT JOIN generic_events e ON e.eventable_type = 'Move'
+        AND e.eventable_id = m.id AND type = 'GenericEvent::MoveCancel'
+      LEFT JOIN suppliers s ON m.supplier_id = s.id
+
+    WHERE m.date BETWEEN '[FROM]' AND '[TO]'
+      AND m.status = 'cancelled'
+
+    ORDER BY date, last_name, prison_number
 {{- end }}
