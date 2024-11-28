@@ -1,5 +1,20 @@
 # Changelog
 
+## [v3.52.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.9) (2024-11-27)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.8...v3.52.9)
+
+**Merged pull requests:**
+
+- MAP-520 Group cancellation fields and title-ize headers [\#2425](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2425) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-530 Add cancellation fields to CSV Download [\#2424](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2424) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump aws-sdk-s3 from 1.173.0 to 1.174.0 in the production-dependencies group [\#2423](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2423) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump puma from 6.4.3 to 6.5.0 in the production-dependencies group [\#2422](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2422) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2419](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2419) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Pin application to Rails 8 and remove new\_framework\_defaults [\#2418](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2418) ([tobyprivett](https://github.com/tobyprivett))
+- Update rubocop-govuk  [\#2417](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2417) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.52.8 [\#2415](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2415) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.52.8](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.8) (2024-11-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.7...v3.52.8)
