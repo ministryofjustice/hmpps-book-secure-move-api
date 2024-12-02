@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.52.10](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.10) (2024-12-02)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.9...v3.52.10)
+
+**Merged pull requests:**
+
+- MAP-1920 Fix weekly report [\#2428](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2428) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.52.9 [\#2426](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2426) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.52.9](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.9) (2024-11-27)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.8...v3.52.9)
