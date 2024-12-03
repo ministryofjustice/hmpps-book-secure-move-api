@@ -87,6 +87,7 @@ class GenericEvent < ApplicationRecord
     PerPrisonerWelfare
     PerPropertyChange
     PerSelfHarm
+    PerSuicideAndSelfHarm
     PerUpdated
     PerViolentDangerous
     PerWeapons
@@ -110,6 +111,7 @@ class GenericEvent < ApplicationRecord
     incident: 'incident',
     medical: 'medical',
     notification: 'notification',
+    suicide_and_self_harm: 'suicide_and_self_harm',
   }
 
   belongs_to :eventable, polymorphic: true, touch: true
