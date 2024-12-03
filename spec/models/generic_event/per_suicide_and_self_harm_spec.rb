@@ -14,6 +14,6 @@ RSpec.describe GenericEvent::PerSuicideAndSelfHarm do
   describe '#event_classification' do
     subject(:event_classification) { per_suicide_and_self_harm_event.event_classification }
 
-    it { is_expected.to eq(:incident) }
+    it { is_expected.to eq(:medical) }
   end
 end

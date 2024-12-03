@@ -8,7 +8,7 @@ class GenericEvent
     eventable_types 'PersonEscortRecord'
 
     def event_classification
-      :incident
+      :medical
     end
   end
 end
