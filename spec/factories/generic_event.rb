@@ -669,6 +669,27 @@ FactoryBot.define do
   factory :event_per_self_harm, parent: :per_incident, class: 'GenericEvent::PerSelfHarm' do
   end
 
+  factory :event_per_suicide_and_self_harm, parent: :per_incident, class: 'GenericEvent::PerSuicideAndSelfHarm' do
+    eventable { association(:person_escort_record, :confirmed) }
+    details do
+      {
+        concerns: 'They have said they will self-harm',
+        history: 'Previous incident in 2024',
+        method: 'Cutting, ligatgure - picked at a scab',
+        source: 'Third party',
+        source_summary: 'Police officer stated he would self-harm',
+        source_observations: 'Something was observed',
+        safety_actions: 'Referred to a medical professional',
+        observation_level: 'Every 10 minutes',
+        comments: 'A comment was recorded',
+        reporting_officer: 'PCO Roberts',
+        reporting_officer_signed_at: 1.hour.ago,
+        reception_officer: 'PCO Smith',
+        reception_officer_signed_at: 55.minutes.ago,
+      }
+    end
+  end
+
   factory :event_per_violent_dangerous, parent: :per_incident, class: 'GenericEvent::PerViolentDangerous' do
   end
 
