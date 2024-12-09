@@ -9,7 +9,7 @@
               "code": "XCDO",
               "description": "Involved in 2024 civil disorder"
           },
-          "description": "Put this one back, yes it was missing",
+          "description": "Details about the riot",
           "authorisedBy": "Michael Willis ",
           "activeFrom": "2024-09-06",
           "activeTo": null,
@@ -34,7 +34,7 @@
               "code": "XA",
               "description": "Arsonist"
           },
-          "description": "The first one in dev",
+          "description": "Further details about the riot",
           "authorisedBy": null,
           "activeFrom": "2024-09-05",
           "activeTo": null,

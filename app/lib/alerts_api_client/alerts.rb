@@ -22,7 +22,7 @@ module AlertsApiClient
           alert_type_description: alert['alertCode']['alertTypeDescription'],
           alert_code: alert['alertCode']['code'],
           alert_code_description: alert['alertCode']['description'],
-          comment: (alert['comments'] || []).join('. '),
+          comment: alert['description'],
           created_at: alert['createdAt'],
           expires_at: alert['activeTo'],
           expired: !alert['isActive'],
