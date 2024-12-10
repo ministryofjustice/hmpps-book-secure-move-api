@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.52.11](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.11) (2024-12-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.10...v3.52.11)
+
+**Merged pull requests:**
+
+- MAP-1958 Alerts API has `description`, not `comments` [\#2437](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2437) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump nokogiri from 1.16.8 to 1.17.0 in the production-dependencies group [\#2436](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2436) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.0.4 to 5.0.5 in the development-dependencies group [\#2435](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2435) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 6 updates [\#2434](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2434) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2433](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2433) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 2 updates [\#2432](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2432) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump rails-html-sanitizer from 1.6.0 to 1.6.1 [\#2430](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2430) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.52.10 [\#2429](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2429) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.0.3 to 5.0.4 in the development-dependencies group [\#2427](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2427) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.52.10](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.10) (2024-12-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.9...v3.52.10)
