@@ -119,7 +119,7 @@ dashboards:
 
 scripts:
   preprodRefresh:
-    enabled: false
+    enabled: true
     schedule: "15 6 * * *"
   reports:
     enabled: true
