@@ -62,8 +62,14 @@ dashboards:
 
 scripts:
   preprodRefresh:
-    enabled: false
-    # schedule: "15 6 * * *"
+    main:
+      enabled: false
+      # schedule: "0 */4 * * *"
+      # dataSince: "6 hours ago"
+    versions:
+      enabled: false
+      # schedule: "15 7 * * *"
+      # dataSince: "26 hours ago"
   reports:
     enabled: false
     dailyIpt:

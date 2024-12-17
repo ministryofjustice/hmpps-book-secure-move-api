@@ -1,11 +1,13 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions-script" | trunc 52 }}
+{{- if .Values.scripts.preprodRefresh.versions.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: preprod-refresh-versions-script
+  name: {{ $fullName }}
 data:
   entrypoint.sh: |-
     #!/bin/bash
-    from=$(date --date="26 hours ago" '+%Y-%m-%d %T')
+    from=$(date --date="{{ .Values.scripts.preprodRefresh.versions.dataSince }}" '+%Y-%m-%d %T')
     to=$(date '+%Y-%m-%d %T')
     echo "Refreshing versions from ${from} to ${to}" 
         
@@ -39,3 +41,4 @@ data:
     execDest "DROP TABLE IF EXISTS versions_temp CASCADE;"
     execSource "DROP TABLE IF EXISTS versions_temp CASCADE;"
     echo "All done!"
+{{- end }}
