@@ -1,4 +1,4 @@
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions-script" | trunc 52 }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-vers-scrp" | trunc 52 }}
 {{- if .Values.scripts.preprodRefresh.versions.enabled }}
 apiVersion: v1
 kind: ConfigMap
