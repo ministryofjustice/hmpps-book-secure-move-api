@@ -1,5 +1,29 @@
 # Changelog
 
+## [v3.53.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.0) (2024-12-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.12...v3.53.0)
+
+**Merged pull requests:**
+
+- MAP-1975: Add the preprod refresh versions script [\#2449](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2449) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2448](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2448) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1917 Add a PerSuicideAndSelfHarm event [\#2443](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2443) ([tobyprivett](https://github.com/tobyprivett))
+
+## [v3.52.12](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.12) (2024-12-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.11...v3.52.12)
+
+**Merged pull requests:**
+
+- MAP-1975: Enable preprod refresh script via Helm chart [\#2446](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2446) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2445](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2445) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group across 1 directory with 2 updates [\#2444](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2444) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2441](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2441) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2440](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2440) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.52.11 [\#2439](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2439) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2438](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2438) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.52.11](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.11) (2024-12-09)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.10...v3.52.11)
