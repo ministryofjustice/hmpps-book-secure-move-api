@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.53.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.0) (2024-12-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.12...v3.53.0)
+
+**Merged pull requests:**
+
+- MAP-1975: Add the preprod refresh versions script [\#2449](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2449) ([jimbali](https://github.com/jimbali))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2448](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2448) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-1917 Add a PerSuicideAndSelfHarm event [\#2443](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2443) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.52.12](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.52.12) (2024-12-16)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.52.11...v3.52.12)

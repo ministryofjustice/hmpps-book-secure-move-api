@@ -1,5 +1,5 @@
 {{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-script" | trunc 52 }}
-{{- if .Values.scripts.preprodRefresh.enabled }}
+{{- if .Values.scripts.preprodRefresh.main.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,8 +7,8 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/bash
-    from=$(date --date="2 days ago" '+%Y-%m-%d')
-    to=$(date '+%Y-%m-%d')
+    from=$(date --date="{{ .Values.scripts.preprodRefresh.main.dataSince }}" '+%Y-%m-%d %T')
+    to=$(date '+%Y-%m-%d %T')
     echo "Refreshing data from ${from} to ${to}" 
         
     createTemp='/tmp/sql/createTables.sql'

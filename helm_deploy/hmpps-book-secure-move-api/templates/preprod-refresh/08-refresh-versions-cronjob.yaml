@@ -1,10 +1,14 @@
+{{- $genericService := index .Values "generic-service" -}}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions" | trunc 52 }}
+{{- $script1 := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions-script" | trunc 52 }}
+{{- if .Values.scripts.preprodRefresh.versions.enabled }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: preprod-refresh-versions-job
+  name: {{ $fullName }}
 spec:
-  schedule: "15 7 * * *"
+  schedule: {{ .Values.scripts.preprodRefresh.versions.schedule }}
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3
@@ -43,5 +47,6 @@ spec:
           volumes:
             - name: preprod-refresh-versions-script
               configMap:
-                name: preprod-refresh-versions-script
+                name: {{ $script1 }}
                 defaultMode: 0755
+{{- end }}
