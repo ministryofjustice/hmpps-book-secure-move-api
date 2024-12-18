@@ -4,14 +4,14 @@
 {{- $script2 := printf "%s-%s" (include "generic-service.fullname" $) "copy-from-temp-sql" | trunc 52 }}
 {{- $script3 := printf "%s-%s" (include "generic-service.fullname" $) "drop-temp-tables" | trunc 52 }}
 {{- $script4 := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-script" | trunc 52 }}
-{{- if .Values.scripts.preprodRefresh.enabled }}
+{{- if .Values.scripts.preprodRefresh.main.enabled }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ $fullName }}
 spec:
-  schedule: {{ .Values.scripts.preprodRefresh.schedule }}
+  schedule: {{ .Values.scripts.preprodRefresh.main.schedule }}
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3
