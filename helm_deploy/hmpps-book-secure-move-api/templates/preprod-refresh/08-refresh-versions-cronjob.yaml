@@ -1,12 +1,12 @@
 {{- $genericService := index .Values "generic-service" -}}
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh" | trunc 52 }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions" | trunc 52 }}
 {{- $script1 := printf "%s-%s" (include "generic-service.fullname" $) "preprod-refresh-versions-script" | trunc 52 }}
 {{- if .Values.scripts.preprodRefresh.versions.enabled }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: preprod-refresh-versions-job
+  name: {{ $fullName }}
 spec:
   schedule: {{ .Values.scripts.preprodRefresh.versions.schedule }}
   concurrencyPolicy: "Forbid"
