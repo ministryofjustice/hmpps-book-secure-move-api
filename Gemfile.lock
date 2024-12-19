@@ -197,7 +197,7 @@ GEM
     finite_machine (0.14.1)
       concurrent-ruby (~> 1.0)
       sync (~> 0.5)
-    geocoder (1.8.4)
+    geocoder (1.8.5)
       base64 (>= 0.1.0)
       csv (>= 3.0.0)
     git (2.3.3)
