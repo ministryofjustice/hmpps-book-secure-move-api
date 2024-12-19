@@ -10,7 +10,6 @@ generic-service:
     annotations:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-staging-green
     hosts:
-      - hmpps-book-secure-move-api-staging.apps.live-1.cloud-platform.service.justice.gov.uk
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
   env:

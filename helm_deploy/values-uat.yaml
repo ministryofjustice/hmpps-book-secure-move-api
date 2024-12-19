@@ -11,7 +11,6 @@ generic-service:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-uat-green
       nginx.ingress.kubernetes.io/server-snippet: add_header X-Robots-Tag "noindex, nofollow";
     hosts:
-      - hmpps-book-secure-move-api-uat.apps.live-1.cloud-platform.service.justice.gov.uk
       - hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk
 
   env:
