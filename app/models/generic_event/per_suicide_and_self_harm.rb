@@ -10,6 +10,7 @@ class GenericEvent
                        :history_of_self_harm_details,
                        :actions_of_self_harm_undertaken,
                        :observation_level,
+                       :source,
                        :comments,
                        :reporting_officer,
                        :reporting_officer_signed_at,

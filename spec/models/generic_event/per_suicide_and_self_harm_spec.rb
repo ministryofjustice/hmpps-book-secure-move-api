@@ -12,6 +12,7 @@ RSpec.describe GenericEvent::PerSuicideAndSelfHarm do
                   :actions_of_self_harm_undertaken,
                   :observation_level,
                   :comments,
+                  :source,
                   :reporting_officer,
                   :reporting_officer_signed_at,
                   :reception_officer,
