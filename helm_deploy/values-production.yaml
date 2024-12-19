@@ -11,7 +11,6 @@ generic-service:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-production-green
     hosts:
       - api.bookasecuremove.service.justice.gov.uk
-      - hmpps-book-secure-move-api-production.apps.live-1.cloud-platform.service.justice.gov.uk
       - hmpps-book-secure-move-api-production.apps.cloud-platform.service.justice.gov.uk
     tlsSecretName: hmpps-book-secure-move-api-production-cert
 
