@@ -91,7 +91,7 @@ private
   end
 
   def serialize_location(location)
-    LocationSerializer.new(location).serializable_hash
+    LocationSerializer.new(location).serializable_hash.except(:disabled_at, :can_upload_documents, :extradition_capable)
   end
 
   def serialize_ptr(ptr)
