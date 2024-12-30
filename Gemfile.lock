@@ -151,7 +151,7 @@ GEM
       fiber-local (~> 1.1)
       json
     crass (1.0.6)
-    csv (3.3.1)
+    csv (3.3.2)
     database_cleaner-active_record (2.2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -295,7 +295,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.17.2)
+    nokogiri (1.18.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     notifications-ruby-client (6.2.0)
