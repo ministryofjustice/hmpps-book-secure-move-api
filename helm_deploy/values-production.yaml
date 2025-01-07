@@ -123,7 +123,7 @@ scripts:
       schedule: "0 */4 * * *"
       dataSince: "6 hours ago"
     versions:
-      enabled: true
+      enabled: false # disabled: there is no need to migrate audit-trail data to pre-prod
       schedule: "15 7 * * *"
       dataSince: "26 hours ago"
   reports:
