@@ -4,7 +4,7 @@ require 'csv'
 
 module Moves
   class Exporter
-    attr_reader :alert_columns, :moves
+    attr_reader :moves
 
     STATIC_HEADINGS = [
       'Status',
@@ -65,16 +65,15 @@ module Moves
 
     def initialize(moves)
       @moves = moves
-      @alert_columns = ENV.fetch('FEATURE_FLAG_CSV_ALERT_COLUMNS', 'false') == 'true'
     end
 
     def call
       Tempfile.new('export', Rails.root.join('tmp')).tap do |file|
         csv = CSV.new(file)
         headings = STATIC_HEADINGS
-        headings += flags_by_section if alert_columns
+        headings += flags_by_section
         csv << headings
-        moves.includes(:cancellation_events).find_each do |move|
+        moves.includes(:cancellation_events, :person_escort_record, :youth_risk_assessment).find_each do |move|
           csv << attributes_row(move)
         end
         file.flush
@@ -132,10 +131,11 @@ module Moves
         move.supplier&.name,
       ]
 
-      if alert_columns
-        move_flags = move.person_escort_record&.framework_flags&.pluck(:title)
-        row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
-      end
+      move_flags = []
+      move_flags += Array(move.person_escort_record&.framework_flags&.pluck(:title))
+      move_flags += Array(move.youth_risk_assessment&.framework_flags&.pluck(:title))
+
+      row += flags_by_section.map { (move_flags&.include?(_1) ? 'TRUE' : '') }
 
       row.flatten # Expand answer_details column pairs into individual columns
     end
@@ -154,6 +154,7 @@ module Moves
     def flags_by_section
       @flags_by_section ||= FrameworkFlag
         .select('DISTINCT ON (title) *')
+        .includes(:framework_question)
         .joins(:framework_question)
         .sort { |a, b|
           a.framework_question.section <=> b.framework_question.section
