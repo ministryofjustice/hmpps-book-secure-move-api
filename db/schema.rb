@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_25_114943) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -161,6 +161,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_25_114943) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["framework_question_id"], name: "index_framework_flags_on_framework_question_id"
+    t.index ["title"], name: "index_framework_flags_on_title"
   end
 
   create_table "framework_flags_responses", id: false, force: :cascade do |t|
