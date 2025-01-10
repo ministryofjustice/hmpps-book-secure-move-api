@@ -109,7 +109,8 @@ RSpec.describe Moves::Exporter do
     expect(row).to include("Yikes!\n\nBam!")
   end
 
-  context 'with PER' do
+  context 'with PER and YRA' do
+    let(:from_location) { create(:location, :stc) }
     let(:framework_questions) do
       [
         create(:framework_question, section: 'risk-information'),
@@ -125,55 +126,36 @@ RSpec.describe Moves::Exporter do
       person_escort_record = create(:person_escort_record)
       create(:string_response, framework_question: framework_questions.first, responded: true, assessmentable: person_escort_record)
       create(:string_response, framework_question: framework_questions.second, responded: true, framework_flags: [flag], assessmentable: person_escort_record)
-      create(:string_response, framework_question: framework_questions.third, responded: true, framework_flags: [flag2], assessmentable: person_escort_record)
 
       person_escort_record
     end
 
-    before { move.person_escort_record = person_escort_record }
+    let(:youth_risk_assessment) do
+      youth_risk_assessment = create(:youth_risk_assessment)
+      create(:string_response, framework_question: framework_questions.third, responded: true, framework_flags: [flag2], assessmentable: youth_risk_assessment)
 
-    context 'when feature flag enabled' do
-      around do |example|
-        ClimateControl.modify(FEATURE_FLAG_CSV_ALERT_COLUMNS: 'true') do
-          example.run
-        end
-      end
-
-      it 'includes correct header names' do
-        expect(header).to eq(described_class::STATIC_HEADINGS + ['Flag 2', 'Flag 1'])
-      end
-
-      it 'has correct number of header columns' do
-        expect(header.count).to eq(56)
-      end
-
-      it 'has correct number of body columns' do
-        expect(row.count).to eq(56)
-      end
-
-      it 'has the correct rows' do
-        expect(row.last(2)).to eq(%w[TRUE TRUE])
-      end
+      youth_risk_assessment
     end
 
-    context 'when feature flag disabled' do
-      around do |example|
-        ClimateControl.modify(FEATURE_FLAG_CSV_ALERT_COLUMNS: 'false') do
-          example.run
-        end
-      end
+    before do
+      move.person_escort_record = person_escort_record
+      move.youth_risk_assessment = youth_risk_assessment
+    end
 
-      it 'includes correct header names' do
-        expect(header).to eq(described_class::STATIC_HEADINGS)
-      end
+    it 'includes correct header names' do
+      expect(header).to eq(described_class::STATIC_HEADINGS + ['Flag 2', 'Flag 1'])
+    end
 
-      it 'has correct number of header columns' do
-        expect(header.count).to eq(54)
-      end
+    it 'has correct number of header columns' do
+      expect(header.count).to eq(56)
+    end
 
-      it 'has correct number of body columns' do
-        expect(row.count).to eq(54)
-      end
+    it 'has correct number of body columns' do
+      expect(row.count).to eq(56)
+    end
+
+    it 'has the correct rows' do
+      expect(row.last(2)).to eq(%w[TRUE TRUE])
     end
   end
 end
