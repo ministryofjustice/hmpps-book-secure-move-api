@@ -92,8 +92,8 @@ private
 
   def serialize_location(location)
     LocationSerializer.new(location).serializable_hash.tap do |data|
-      [:disabled_at, :can_upload_documents, :extradition_capable].each do |k|
-        data[:data][:attributes].delete(k)
+      %i[disabled_at can_upload_documents extradition_capable].each do |k|
+        data.dig(:data, :attributes).delete(k)
       end
     end
   end
