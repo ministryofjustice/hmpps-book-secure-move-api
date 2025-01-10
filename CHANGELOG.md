@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.53.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.5) (2025-01-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.4...v3.53.5)
+
+**Merged pull requests:**
+
+- Restore framework flags to CSV downloads [\#2467](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2467) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.53.4 [\#2466](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2466) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.53.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.4) (2025-01-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.3...v3.53.4)
