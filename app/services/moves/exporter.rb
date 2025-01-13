@@ -73,7 +73,17 @@ module Moves
         headings = STATIC_HEADINGS
         headings += flags_by_section
         csv << headings
-        moves.includes(:cancellation_events, :person_escort_record, :youth_risk_assessment).find_each do |move|
+        moves.includes(
+          :cancellation_events,
+          :journeys,
+          :from_location,
+          :to_location,
+          :profile,
+          :supplier,
+          person: %i[ethnicity gender],
+          person_escort_record: :framework_flags,
+          youth_risk_assessment: :framework_flags,
+        ).find_each do |move|
           csv << attributes_row(move)
         end
         file.flush
