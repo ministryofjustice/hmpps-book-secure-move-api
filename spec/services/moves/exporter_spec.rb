@@ -109,7 +109,13 @@ RSpec.describe Moves::Exporter do
     expect(row).to include("Yikes!\n\nBam!")
   end
 
-  context 'with PER and YRA' do
+  context 'when feature flag enabled' do
+    around do |example|
+      ClimateControl.modify(FEATURE_FLAG_CSV_ALERT_COLUMNS: 'true') do
+        example.run
+      end
+    end
+
     let(:from_location) { create(:location, :stc) }
     let(:framework_questions) do
       [
@@ -119,6 +125,7 @@ RSpec.describe Moves::Exporter do
         create(:framework_question, section: 'health-information'),
       ]
     end
+
     let(:flag) { build(:framework_flag, title: 'Flag 1', framework_question: framework_questions.second) }
     let(:flag2) { build(:framework_flag, title: 'Flag 2', framework_question: framework_questions.third) }
     let(:framework) { create(:framework, framework_questions:) }
@@ -156,6 +163,20 @@ RSpec.describe Moves::Exporter do
 
     it 'has the correct rows' do
       expect(row.last(2)).to eq(%w[TRUE TRUE])
+    end
+  end
+
+  context 'when feature flag disabled' do
+    it 'includes correct header names' do
+      expect(header).to eq(described_class::STATIC_HEADINGS)
+    end
+
+    it 'has correct number of header columns' do
+      expect(header.count).to eq(54)
+    end
+
+    it 'has correct number of body columns' do
+      expect(row.count).to eq(54)
     end
   end
 end
