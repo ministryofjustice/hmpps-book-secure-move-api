@@ -91,7 +91,11 @@ private
   end
 
   def serialize_location(location)
-    LocationSerializer.new(location).serializable_hash.except(:disabled_at, :can_upload_documents, :extradition_capable)
+    LocationSerializer.new(location).serializable_hash.tap do |data|
+      %i[disabled_at can_upload_documents extradition_capable].each do |k|
+        data.dig(:data, :attributes).delete(k)
+      end
+    end
   end
 
   def serialize_ptr(ptr)
