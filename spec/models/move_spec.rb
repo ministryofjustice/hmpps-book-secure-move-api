@@ -889,8 +889,9 @@ RSpec.describe Move do
       let(:person_escort_record) { move.profile.person_escort_record }
       let!(:first_event) { create(:event_person_move_assault, eventable: move) }
       let!(:second_event) { create(:event_per_medical_aid, eventable: person_escort_record) }
+      let!(:third_event) { create(:event_per_suicide_and_self_harm, eventable: person_escort_record) }
 
-      it { is_expected.to match_array([first_event, second_event]) }
+      it { is_expected.to match_array([first_event, second_event, third_event]) }
     end
 
     context 'when there are PER property change events' do
