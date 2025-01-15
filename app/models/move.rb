@@ -354,7 +354,7 @@ class Move < VersionedModel
 
     events = GenericEvent.where(eventable_type: eventable_types, eventable_id: eventable_ids)
 
-    medical_or_incident_events = events.where(classification: %w[medical incident])
+    medical_or_incident_events = events.where(classification: %w[medical incident suicide_and_self_harm])
     other_events = events.where(type: [
       GenericEvent::PerHandover,
       GenericEvent::PerPropertyChange,
