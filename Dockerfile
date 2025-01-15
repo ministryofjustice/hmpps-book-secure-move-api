@@ -7,7 +7,7 @@ ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info yaml-dev
 RUN gem update bundler --no-document
 
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
@@ -22,7 +22,7 @@ RUN bundle install --jobs 4 --retry 3 \
 FROM ruby:3.3.6-alpine AS swagger-build
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata yaml-dev
 RUN gem update bundler --no-document
 
 COPY Gemfile Gemfile.lock .ruby-version /app/
@@ -58,7 +58,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
