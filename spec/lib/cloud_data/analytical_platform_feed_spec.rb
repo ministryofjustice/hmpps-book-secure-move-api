@@ -64,6 +64,7 @@ RSpec.describe CloudData::AnalyticalPlatformFeed do
         bucket: bucket_name,
         key: full_path,
         server_side_encryption: 'AES256',
+        checksum_algorithm: 'CRC32',
       },
     })
   end
