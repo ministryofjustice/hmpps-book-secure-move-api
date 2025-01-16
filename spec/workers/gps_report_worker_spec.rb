@@ -116,6 +116,7 @@ RSpec.describe GPSReportWorker, type: :worker do
           bucket: 'moj-reg-dev',
           key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_geoamey/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
           server_side_encryption: 'AES256',
+          checksum_algorithm: 'CRC32',
         },
       })
       expect(s3_client.api_requests.second.slice(:operation_name, :params)).to eq(
@@ -126,6 +127,7 @@ RSpec.describe GPSReportWorker, type: :worker do
           bucket: 'moj-reg-dev',
           key: 'landing/hmpps-book-secure-move-api/data/database_name=gps_report/table_name=gps_reports_serco/extraction_timestamp=20201226000000Z/2020-12-26-2021-01-01-gps-report.csv',
           server_side_encryption: 'AES256',
+          checksum_algorithm: 'CRC32',
         },
       )
     end
