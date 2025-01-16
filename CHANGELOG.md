@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.53.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.5) (2025-01-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.4...v3.53.5)
+
+**Merged pull requests:**
+
+- MAP-2064 aws gem upgrade [\#2476](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2476) ([tobyprivett](https://github.com/tobyprivett))
+- Prevent prisons access to preprod [\#2474](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2474) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- Add yaml-dev to satisfy missing libyaml dependency [\#2473](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2473) ([tobyprivett](https://github.com/tobyprivett))
+- Add suicide\_and\_self\_harm to move\#medical\_or\_incident\_events [\#2472](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2472) ([tobyprivett](https://github.com/tobyprivett))
+- Disable CSV Download Framework Flags with a Feature Flag [\#2471](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2471) ([tobyprivett](https://github.com/tobyprivett))
+- Extend eager loading to improve CSV download performance [\#2470](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2470) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-1987 - Remove some fields from SAR Locations export [\#2469](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2469) ([Thource](https://github.com/Thource))
+- Restore framework flags to CSV downloads [\#2467](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2467) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.53.4 [\#2466](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2466) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.53.4](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.4) (2025-01-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.3...v3.53.4)
