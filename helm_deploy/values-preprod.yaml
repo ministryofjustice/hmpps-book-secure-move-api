@@ -11,12 +11,7 @@ generic-service:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-preprod-green
     hosts:
       - hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk
-      
-  allowlist: 
-    groups:
-      - circleci
-      - internal
-      
+
   env:
     SENTRY_ENVIRONMENT: "preprod"
     SERVE_API_DOCS: "false"
