@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.53.6](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.6) (2025-01-21)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.5...v3.53.6)
+
+**Merged pull requests:**
+
+- Revert "Prevent prisons access to preprod \(\#2474\)" [\#2481](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2481) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump sidekiq from 7.3.7 to 7.3.8 in the production-dependencies group [\#2480](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2480) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.0.7 to 5.0.8 in the development-dependencies group [\#2479](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2479) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump nokogiri from 1.18.1 to 1.18.2 in the production-dependencies group [\#2478](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2478) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.53.5 [\#2477](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2477) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.53.5](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.53.5) (2025-01-16)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.4...v3.53.5)
