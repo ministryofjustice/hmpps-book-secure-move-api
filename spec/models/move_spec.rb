@@ -1032,23 +1032,45 @@ RSpec.describe Move do
   end
 
   describe '#update_proposed_journey_dates' do
-    let(:journey1) { create(:journey, :proposed, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '12345', registration: 'AB12 CDE' }) }
-    let(:journey2) { create(:journey, :in_progress, client_timestamp: Time.zone.now - 2.days, vehicle: { id: '6789', registration: 'CD12 ABC' }) }
-    let(:journey3) { create(:journey, :proposed, date: Time.zone.today + 1, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '123443', registration: 'AB16 CDE' }) }
-    let(:move) { create(:move, date: Time.zone.today, journeys: [journey1, journey2, journey3]) }
+    context 'with a single journey' do
+      let!(:journey) { create(:journey, :proposed, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '12345', registration: 'AB12 CDE' }) }
+      let!(:move) { create(:move, date: Time.zone.today, journeys: [journey]) }
 
-    it 'updates the date of proposed moves' do
-      expect(journey1.date).to eq(Time.zone.today)
-      expect(journey2.date).to eq(Time.zone.today)
-      expect(journey3.date).to eq(Time.zone.today + 1)
-      expect(move.date).to eq(Time.zone.today)
+      before do
+        # ensure the journey#date is out of sync with the move#date
+        journey.update(date: Time.zone.today - 30)
+      end
 
-      move.date = Time.zone.today + 6
-      move.save!
+      it 'updates the date of the proposed journey to match the move date' do
+        expect(journey.date).to eq(Time.zone.today - 30)
+        expect(move.date).to eq(Time.zone.today)
 
-      expect(journey1.date).to eq(Time.zone.today + 6)
-      expect(journey2.date).to eq(Time.zone.today)
-      expect(journey3.date).to eq(Time.zone.today + 7)
+        move.date = Time.zone.today + 6
+        move.save!
+
+        expect(journey.date).to eq(Time.zone.today + 6)
+      end
+    end
+
+    context 'with multiple journeys' do
+      let(:journey1) { create(:journey, :proposed, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '12345', registration: 'AB12 CDE' }) }
+      let(:journey2) { create(:journey, :in_progress, client_timestamp: Time.zone.now - 2.days, vehicle: { id: '6789', registration: 'CD12 ABC' }) }
+      let(:journey3) { create(:journey, :proposed, date: Time.zone.today + 1, client_timestamp: Time.zone.now - 1.day, vehicle: { id: '123443', registration: 'AB16 CDE' }) }
+      let(:move) { create(:move, date: Time.zone.today, journeys: [journey1, journey2, journey3]) }
+
+      it 'updates the date of proposed journeys' do
+        expect(journey1.date).to eq(Time.zone.today)
+        expect(journey2.date).to eq(Time.zone.today)
+        expect(journey3.date).to eq(Time.zone.today + 1)
+        expect(move.date).to eq(Time.zone.today)
+
+        move.date = Time.zone.today + 6
+        move.save!
+
+        expect(journey1.date).to eq(Time.zone.today + 6)
+        expect(journey2.date).to eq(Time.zone.today)
+        expect(journey3.date).to eq(Time.zone.today + 7)
+      end
     end
   end
 
