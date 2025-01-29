@@ -453,13 +453,18 @@ private
   def update_proposed_journey_dates
     return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
 
-    journeys.each do |journey|
-      next if journey.state != 'proposed' || journey.date.blank?
+    if journeys.count == 1
+      journey = journeys.first
+      journey.update!(date: date) if journey.state == 'proposed'
+    else
+      journeys.each do |journey|
+        next if journey.state != 'proposed' || journey.date.blank?
 
-      day_difference = journey.date - date_before_last_save
+        day_difference = journey.date - date_before_last_save
 
-      journey.date = date + day_difference
-      journey.save!
+        journey.date = date + day_difference
+        journey.save!
+      end
     end
   end
 end
