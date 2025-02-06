@@ -66,6 +66,70 @@ RSpec.describe GenericEvent::MoveReject do
     end
   end
 
+  describe 'after_create' do
+    subject(:move_reject) { create(:event_move_reject, eventable: move) }
+
+    let(:move) { create(:move) }
+    let(:mailer_double) { instance_double(ActionMailer::MessageDelivery, deliver_now!: nil) }
+    let(:username) { 'a_user_name' }
+    let(:email) { 'user@example.com' }
+
+    context 'when a booking user can be found' do
+      before do
+        # Create a MoveProposed event with a creator
+        create(:event_move_proposed, eventable: move, created_by: username)
+        allow(move).to receive_messages(cancelled?: false, generic_events: move.generic_events)
+        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(email)
+        allow(MoveRejectMailer).to receive(:notify).with(email, move, an_instance_of(described_class)).and_return(mailer_double)
+      end
+
+      it 'sends a notification email' do
+        expect(mailer_double).to receive(:deliver_now!)
+        move_reject
+      end
+    end
+
+    context 'when there is no booking user email' do
+      before do
+        create(:event_move_proposed, eventable: move, created_by: username)
+        allow(move).to receive_messages(cancelled?: false, generic_events: move.generic_events)
+        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(nil)
+      end
+
+      it 'does not send a notification email' do
+        expect(MoveRejectMailer).not_to receive(:notify)
+
+        move_reject
+      end
+    end
+
+    context 'when there is no MoveProposed event' do
+      before do
+        # Return an empty relation
+        empty_relation = Move.none
+        allow(move).to receive_messages(cancelled?: false, generic_events: empty_relation)
+      end
+
+      it 'does not send a notification email' do
+        expect(MoveRejectMailer).not_to receive(:notify)
+
+        move_reject
+      end
+    end
+
+    context 'when the move is already cancelled/rejected' do
+      before do
+        allow(move).to receive(:cancelled?).and_return(true)
+      end
+
+      it 'does not send a notification email' do
+        expect(MoveRejectMailer).not_to receive(:notify)
+
+        move_reject
+      end
+    end
+  end
+
   describe '#for_feed' do
     subject(:generic_event) { create(:event_move_reject) }
 

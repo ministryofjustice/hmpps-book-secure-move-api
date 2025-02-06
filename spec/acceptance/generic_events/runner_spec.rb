@@ -38,7 +38,7 @@ RSpec.describe GenericEvents::Runner do
         nil
       end
 
-      it 'calls the Notifier with update' do
+      it 'does not call the Notifier with update' do
         expect(Notifier).not_to have_received(:prepare_notifications)
       end
     end
