@@ -33,6 +33,8 @@ RSpec.shared_context 'with HmppsAuthClient', shared_context: :metadata do
     # these class instance variables before and after tests helps prevent cross-contamination
     AlertsApiClient::Base.instance_variable_set(:@client, nil)
     AlertsApiClient::Base.instance_variable_set(:@token, nil)
+    ManageUsersApiClient::Base.instance_variable_set(:@client, nil)
+    ManageUsersApiClient::Base.instance_variable_set(:@token, nil)
     NomisClient::Base.instance_variable_set(:@client, nil)
     NomisClient::Base.instance_variable_set(:@token, nil)
 
@@ -44,6 +46,8 @@ RSpec.shared_context 'with HmppsAuthClient', shared_context: :metadata do
     # these class instance variables before and after tests helps prevent cross-contamination
     AlertsApiClient::Base.instance_variable_set(:@client, nil)
     AlertsApiClient::Base.instance_variable_set(:@token, nil)
+    ManageUsersApiClient::Base.instance_variable_set(:@client, nil)
+    ManageUsersApiClient::Base.instance_variable_set(:@token, nil)
     NomisClient::Base.instance_variable_set(:@client, nil)
     NomisClient::Base.instance_variable_set(:@token, nil)
   end
