@@ -24,11 +24,15 @@ private
   end
 
   def move_count_gauge
-    @move_count_gauge ||= registry.gauge(
-      :app_move_count_total,
-      docstring: 'The total count of the number of moves.',
-      labels: %i[status],
-      store_settings: { aggregation: :max },
-    )
+    @move_count_gauge ||= if registry.exist?(:app_move_count_total)
+                            registry.get(:app_move_count_total)
+                          else
+                            registry.gauge(
+                              :app_move_count_total,
+                              docstring: 'The total count of the number of moves.',
+                              labels: %i[status],
+                              store_settings: { aggregation: :max },
+                            )
+                          end
   end
 end
