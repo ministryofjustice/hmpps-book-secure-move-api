@@ -69,16 +69,19 @@ RSpec.describe GenericEvent::MoveReject do
   describe 'after_create' do
     subject(:move_reject) { create(:event_move_reject, eventable: move) }
 
+    before do
+      # Create a MoveProposed event with a creator
+      create(:event_move_proposed, eventable: move, created_by: username)
+      allow(move).to receive_messages(cancelled?: false, generic_events: move.generic_events)
+    end
+
     let(:move) { create(:move) }
     let(:mailer_double) { instance_double(ActionMailer::MessageDelivery, deliver_now!: nil) }
     let(:username) { 'a_user_name' }
     let(:email) { 'user@example.com' }
 
-    context 'when a booking user can be found' do
+    context 'when there is a username for the person who proposed the move' do
       before do
-        # Create a MoveProposed event with a creator
-        create(:event_move_proposed, eventable: move, created_by: username)
-        allow(move).to receive_messages(cancelled?: false, generic_events: move.generic_events)
         allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(email)
         allow(MoveRejectMailer).to receive(:notify).with(email, move, an_instance_of(described_class)).and_return(mailer_double)
       end
@@ -87,12 +90,23 @@ RSpec.describe GenericEvent::MoveReject do
         expect(mailer_double).to receive(:deliver_now!)
         move_reject
       end
+
+      context 'and that username is an email address' do
+        let(:username) { 'alice@example.com' }
+
+        before do
+          allow(MoveRejectMailer).to receive(:notify).with('alice@example.com', move, an_instance_of(described_class)).and_return(mailer_double)
+        end
+
+        it 'sends a notification email to the username' do
+          expect(mailer_double).to receive(:deliver_now!)
+          move_reject
+        end
+      end
     end
 
-    context 'when there is no booking user email' do
+    context 'when there is no email address for that username' do
       before do
-        create(:event_move_proposed, eventable: move, created_by: username)
-        allow(move).to receive_messages(cancelled?: false, generic_events: move.generic_events)
         allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(nil)
       end
 

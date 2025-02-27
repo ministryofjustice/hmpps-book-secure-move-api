@@ -21,23 +21,31 @@ class GenericEvent
   private
 
     def notify_move_proposer
-      # If a move is already rejected/cancelled, we don't send the notification
       # The move status changes *after* this generic_event is created
+      # So if a move is already cancelled, we don't send a notification
       return if move.cancelled?
 
-      email = move_proposed_by_email
-      return unless email
+      if move_proposed_by_email
+        MoveRejectMailer.notify(move_proposed_by_email, move, self).deliver_now!
+      end
+    end
 
-      MoveRejectMailer.notify(email, move, self).deliver_now!
+    def move_proposed_by
+      @move_proposed_by ||= move.generic_events
+          .where(type: 'GenericEvent::MoveProposed')
+          .first&.created_by
     end
 
     def move_proposed_by_email
-      username =
-        move.generic_events
-          .where(type: 'GenericEvent::MoveProposed')
-          .first&.created_by
+      @move_proposed_by_email ||=
 
-      ManageUsersApiClient::UserEmail.get(username) if username
+        if move_proposed_by =~ URI::MailTo::EMAIL_REGEXP
+          # If move_proposed_by is an email address,
+          # there is no need to perform a lookup
+          move_proposed_by
+        elsif move_proposed_by
+          ManageUsersApiClient::UserEmail.get(move_proposed_by)
+        end
     end
   end
 end
