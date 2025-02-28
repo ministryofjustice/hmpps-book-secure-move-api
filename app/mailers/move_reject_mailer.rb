@@ -25,7 +25,7 @@ private
     when 'no_transport_available'
       'no transport is available for this move'
     when 'no_space_at_receiving_prison'
-      "there are no spaces at #{move.to_location.title} on the dates you requested."
+      "there are no spaces at #{move.to_location.title} on the dates you requested"
     end
   end
 end
