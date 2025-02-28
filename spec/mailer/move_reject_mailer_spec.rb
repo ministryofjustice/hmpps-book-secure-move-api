@@ -58,7 +58,7 @@ RSpec.describe MoveRejectMailer, type: :mailer do
     context 'when rejection reason is no_space_at_receiving_prison' do
       let(:rejection_reason) { 'no_space_at_receiving_prison' }
 
-      it { is_expected.to include('rejection-reason': "there are no spaces at #{move.to_location.title} on the dates you requested.") }
+      it { is_expected.to include('rejection-reason': "there are no spaces at #{move.to_location.title} on the dates you requested") }
     end
 
     context 'when rejection reason is no_transport_available' do
