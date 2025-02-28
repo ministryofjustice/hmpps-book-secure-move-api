@@ -26,7 +26,7 @@ class GenericEvent
       return if move.cancelled?
 
       if move_proposed_by_email
-        MoveRejectMailer.notify(move_proposed_by_email, move, self).deliver_now!
+        MoveRejectMailer.notify(move_proposed_by_email, move, self).deliver_later
       end
     end
 

@@ -87,7 +87,7 @@ RSpec.describe GenericEvent::MoveReject do
       end
 
       it 'sends a notification email' do
-        expect(mailer_double).to receive(:deliver_now!)
+        expect(mailer_double).to receive(:deliver_later)
         move_reject
       end
 
@@ -99,7 +99,7 @@ RSpec.describe GenericEvent::MoveReject do
         end
 
         it 'sends a notification email to the username' do
-          expect(mailer_double).to receive(:deliver_now!)
+          expect(mailer_double).to receive(:deliver_later)
           move_reject
         end
       end
