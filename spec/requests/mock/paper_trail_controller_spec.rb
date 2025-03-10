@@ -7,9 +7,7 @@ module Mock
   class PaperTrailController < ApiController
     def self.current_user; end
 
-    def current_user
-      self.class.current_user
-    end
+    delegate :current_user, to: :class
 
     def authentication_enabled?
       false # NB: disable authentication to simplify tests (it is tested elsewhere)
