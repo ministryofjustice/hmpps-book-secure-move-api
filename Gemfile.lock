@@ -162,7 +162,7 @@ GEM
     discard (1.4.0)
       activerecord (>= 4.2, < 9.0)
     docile (1.4.1)
-    doorkeeper (5.8.1)
+    doorkeeper (5.5.4)
       railties (>= 5)
     dotenv (3.1.7)
     dotenv-rails (3.1.7)
@@ -514,7 +514,7 @@ GEM
     spring-watcher-listen (2.1.0)
       listen (>= 2.7, < 4.0)
       spring (>= 4)
-    stringio (3.1.5)
+    stringio (3.1.2)
     sync (0.5.0)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
@@ -538,7 +538,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.7.2)
+    zeitwerk (2.7.1)
 
 PLATFORMS
   ruby
@@ -556,7 +556,7 @@ DEPENDENCIES
   csv
   database_cleaner-active_record
   discard
-  doorkeeper
+  doorkeeper (= 5.5.4)
   dotenv
   dotenv-rails
   factory_bot_rails
