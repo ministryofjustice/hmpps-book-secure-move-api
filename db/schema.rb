@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_25_111637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -28,7 +28,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
     t.string "path"
     t.string "params"
     t.text "body"
+    t.string "client_ip"
     t.index ["client"], name: "index_access_logs_on_client"
+    t.index ["client_ip"], name: "index_access_logs_on_client_ip"
     t.index ["controller_name"], name: "index_access_logs_on_controller_name"
     t.index ["timestamp"], name: "index_access_logs_on_timestamp"
   end
