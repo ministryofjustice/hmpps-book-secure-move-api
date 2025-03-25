@@ -365,6 +365,7 @@ private
       timestamp: Time.zone.now,
       whodunnit: created_by,
       client: current_user&.name,
+      client_ip: request.headers['X-Client-IP'],
       verb: request.method,
       controller_name:,
       path: request.path,
