@@ -52,6 +52,10 @@ gem 'rack-cors'
 gem 'rswag-api'
 gem 'rswag-ui'
 
+# Ruby 3.4 introduces a deprecation warning for rswag
+# https://github.com/rswag/rswag/issues/789
+gem 'ostruct'
+
 # Augments Rails logging to output JSON for Fluentd/Kibana
 # on Cloud Platform
 gem 'lograge'
