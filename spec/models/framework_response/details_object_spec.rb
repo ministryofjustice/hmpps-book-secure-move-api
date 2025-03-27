@@ -92,7 +92,7 @@ RSpec.describe FrameworkResponse::DetailsObject, type: :model do
       }
       details_object = described_class.new(attributes:)
 
-      expect(details_object.as_json).to eq(details: '["Level 1", {:option=>"details"}]', option: nil)
+      expect(details_object.as_json).to eq(details: '["Level 1", {option: "details"}]', option: nil)
     end
   end
 end
