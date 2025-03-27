@@ -51,7 +51,7 @@ RSpec.describe Types::Jsonb, type: :model do
     end
 
     context 'with other types' do
-      let(:value) { Hash.new(foo: :bar) }
+      let(:value) { Hash.new({ foo: :bar }) }
 
       it 'returns an empty concrete class instance' do
         expect(deserialized.key).to be_blank

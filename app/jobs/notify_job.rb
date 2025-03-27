@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NotifyJob < ApplicationJob
+  class NotificationFailedResponseError < StandardError; end
+
   def perform(notification_id:, **_)
     notification = notification_scope.kept.includes(:subscription).find(notification_id)
 

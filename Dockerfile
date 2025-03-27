@@ -1,4 +1,4 @@
-FROM ruby:3.3.6-alpine AS build-stage
+FROM ruby:3.4.2-alpine AS build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -7,7 +7,7 @@ ENV BUNDLE_WITHOUT="development:test"
 ENV BUNDLE_FROZEN="true"
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info yaml-dev
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info yaml-dev libffi-dev
 RUN gem update bundler --no-document
 
 # NB: its more efficient not to copy the full app folder until after the gems are installed (reduces unnecessary rebuilds)
@@ -19,10 +19,10 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:3.3.6-alpine AS swagger-build
+FROM ruby:3.4.2-alpine AS swagger-build
 
 WORKDIR /app
-RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata yaml-dev
+RUN apk --update --no-cache add git build-base postgresql-dev shared-mime-info gcompat tzdata yaml-dev libffi-dev
 RUN gem update bundler --no-document
 
 COPY Gemfile Gemfile.lock .ruby-version /app/
@@ -32,7 +32,7 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:3.3.6-alpine
+FROM ruby:3.4.2-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE=${APP_BUILD_DATE}
@@ -58,7 +58,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle
