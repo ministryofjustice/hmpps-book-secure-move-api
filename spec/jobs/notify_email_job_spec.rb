@@ -27,7 +27,7 @@ RSpec.describe NotifyEmailJob, type: :job do
     let(:govuk_notify_api_key) { nil }
 
     it 'raises an NoMethodError' do
-      expect { perform! }.to raise_error(RetryJobError, /undefined method `length' for nil/)
+      expect { perform! }.to raise_error(RetryJobError, /undefined method 'length' for nil/)
     end
   end
 
