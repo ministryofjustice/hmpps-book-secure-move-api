@@ -360,19 +360,20 @@ private
   ensure
     create_doc = controller_name == 'documents' && request.params['action'] == 'create'
     body = request.raw_post unless create_doc
-    AccessLog.create!(
-      request_id: request.request_id,
-      timestamp: Time.zone.now,
-      whodunnit: created_by,
-      client: current_user&.name,
-      client_ip: request.headers['X-Client-IP'],
-      verb: request.method,
-      controller_name:,
-      path: request.path,
-      params: request.query_parameters,
-      code: status_code,
-      idempotency_key: request.headers['Idempotency-Key'],
-      body:,
-    )
+    # Disable while we debug production issues
+    # AccessLog.create!(
+    #   request_id: request.request_id,
+    #   timestamp: Time.zone.now,
+    #   whodunnit: created_by,
+    #   client: current_user&.name,
+    #   client_ip: request.headers['X-Client-IP'],
+    #   verb: request.method,
+    #   controller_name:,
+    #   path: request.path,
+    #   params: request.query_parameters,
+    #   code: status_code,
+    #   idempotency_key: request.headers['Idempotency-Key'],
+    #   body:,
+    # )
   end
 end
