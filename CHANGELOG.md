@@ -1,8 +1,36 @@
 # Changelog
 
-## [Unreleased](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/HEAD)
+## [v3.55.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.55.0) (2025-04-01)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.6...HEAD)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.54.0...v3.55.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2529](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2529) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump pry-byebug from 3.10.1 to 3.11.0 in the development-dependencies group [\#2528](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2528) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump faraday-retry from 2.2.1 to 2.3.0 in the production-dependencies group [\#2527](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2527) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update to Ruby 3.4.2 [\#2526](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2526) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-2308 Audit off-network users by storing the Client IP address [\#2525](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2525) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.1.0 to 5.1.1 in the development-dependencies group [\#2524](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2524) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump nokogiri from 1.18.5 to 1.18.6 in the production-dependencies group [\#2523](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2523) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2522](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2522) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.0.10 to 5.1.0 in the development-dependencies group [\#2520](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2520) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump nokogiri from 1.18.3 to 1.18.4 in the production-dependencies group [\#2519](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2519) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group with 2 updates [\#2518](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2518) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump json from 2.10.1 to 2.10.2 [\#2517](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2517) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 4 updates [\#2515](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2515) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump rack from 3.1.11 to 3.1.12 [\#2514](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2514) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Revert "Update Doorkeeper configuration to fix 401 errors \(\#2511\)" [\#2513](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2513) ([tobyprivett](https://github.com/tobyprivett))
+- Update security\_trivy.yml [\#2512](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2512) ([tobyprivett](https://github.com/tobyprivett))
+- Update Doorkeeper configuration to fix 401 errors [\#2511](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2511) ([tobyprivett](https://github.com/tobyprivett))
+- Update Rubocop [\#2510](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2510) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump sidekiq from 7.3.9 to 8.0.1 in the production-dependencies group across 1 directory [\#2509](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2509) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.54.0 [\#2506](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2506) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump rack from 3.1.10 to 3.1.11 [\#2505](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2505) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v3.54.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.54.0) (2025-03-05)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.53.6...v3.54.0)
 
 **Merged pull requests:**
 
