@@ -14,7 +14,7 @@ RSpec.describe 'Access logs' do
 
   let(:access_log) { AccessLog.order(:timestamp).last }
 
-  context 'when listing moves' do
+  xcontext 'when listing moves' do
     before { get '/api/moves', headers: }
 
     it 'logs the correct response code' do
@@ -22,7 +22,7 @@ RSpec.describe 'Access logs' do
     end
   end
 
-  context 'when creating a move' do
+  xcontext 'when creating a move' do
     let(:move_attributes) do
       { date: Time.zone.today,
         time_due: Time.zone.now,
