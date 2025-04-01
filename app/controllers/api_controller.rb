@@ -352,14 +352,14 @@ private
 
   def write_access_log
     yield
-    status_code = response.code
+    response.code
   rescue StandardError => e
     rescue_responses = ActionDispatch::ExceptionWrapper.rescue_responses.merge(EXTRA_RESCUE_RESPONSES)
-    status_code = Rack::Utils.status_code(rescue_responses[e.class.to_s])
+    Rack::Utils.status_code(rescue_responses[e.class.to_s])
     raise
   ensure
     create_doc = controller_name == 'documents' && request.params['action'] == 'create'
-    body = request.raw_post unless create_doc
+    request.raw_post unless create_doc
     # Disable while we debug production issues
     # AccessLog.create!(
     #   request_id: request.request_id,
