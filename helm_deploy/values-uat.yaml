@@ -61,6 +61,9 @@ cronJobs:
   - name: token-cleanup
     schedule: "0 1 * * 0"
     command: ["bundle", "exec", "rake", "doorkeeper:db:cleanup"]
+  - name: user-audit-log-cleanup
+    schedule: "30 2 * * *"
+    command: ["bundle", "exec", "rake", "user_audit_logs:cleanup"]
   - name: metrics
     schedule: "*/30 * * * *"
     command: ["bundle", "exec", "rake", "metrics:export"]
