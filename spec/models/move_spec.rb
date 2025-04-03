@@ -54,7 +54,7 @@ RSpec.describe Move do
             prisoner_unfit_to_travel
             ptr_unachievable
             receiver_unable_to_accept_prisoner
-            receiver_unable_to_fulfil_draft
+            sender_unable_to_fulfil_draft
             rejected
             sender_cancelled_request
             supplier_declined_to_move

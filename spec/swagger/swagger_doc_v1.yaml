@@ -739,7 +739,7 @@
                 - prisoner_unfit_to_travel
                 - ptr_unachievable
                 - receiver_unable_to_accept_prisoner
-                - receiver_unable_to_fulfil_draft
+                - sender_unable_to_fulfil_draft
                 - sender_cancelled_request
                 - supplier_no_resource
                 - tornado_event
