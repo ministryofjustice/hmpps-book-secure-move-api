@@ -16,6 +16,7 @@ class ApiController < ApplicationController
   before_action :set_paper_trail_whodunnit
   before_action :set_sentry_transaction_id
   before_action :validate_include_params
+  before_action :write_user_audit_log
 
   CONTENT_TYPE = 'application/vnd.api+json'
   REGEXP_API_VERSION = %r{.*version=(?<version>\d+)}
@@ -373,5 +374,13 @@ private
       idempotency_key: request.headers['Idempotency-Key'],
       body:,
     )
+  end
+
+  def write_user_audit_log
+    ip_address = request.headers['X-Client-IP']
+
+    if created_by.present? && ip_address.present?
+      UserAuditLog.find_or_create_by!(name: created_by, ip_address: ip_address)
+    end
   end
 end

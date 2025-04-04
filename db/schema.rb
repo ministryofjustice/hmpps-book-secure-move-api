@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_03_134331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -640,6 +640,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["key"], name: "index_suppliers_on_key"
+  end
+
+  create_table "user_audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip_address"], name: "index_user_audit_logs_on_ip_address"
+    t.index ["name"], name: "index_user_audit_logs_on_name"
   end
 
   create_table "versions", force: :cascade do |t|
