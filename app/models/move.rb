@@ -204,7 +204,7 @@ class Move < VersionedModel
   def start
     # if the move is being started and the PER is completed but not yet confirmed, then auto-confirm it
     # move started
-    if state_machine.start && (person_escort_record.present? && person_escort_record.completed?)
+    if state_machine.start && person_escort_record.present? && person_escort_record.completed?
       now = Time.zone.now
 
       person_escort_record.generic_events << GenericEvent::PerConfirmation.new(
