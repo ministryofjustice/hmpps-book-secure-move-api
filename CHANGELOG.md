@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.57.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.57.0) (2025-04-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.56.0...v3.57.0)
+
+**Merged pull requests:**
+
+- MAP-1001 Enable cross supplier notifications for Serco in UAT [\#2547](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2547) ([danbenton-mojdt](https://github.com/danbenton-mojdt))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 2 updates [\#2546](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2546) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group across 1 directory with 4 updates [\#2545](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2545) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump Rubocop and fix an error [\#2541](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2541) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump faraday-retry from 2.3.0 to 2.3.1 in the production-dependencies group [\#2539](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2539) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump bullet from 8.0.1 to 8.0.2 in the development-dependencies group [\#2537](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2537) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.56.0 [\#2536](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2536) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.56.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.56.0) (2025-04-02)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.55.0...v3.56.0)
