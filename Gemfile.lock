@@ -153,7 +153,7 @@ GEM
       fiber-local (~> 1.1)
       json
     crass (1.0.6)
-    csv (3.3.3)
+    csv (3.3.4)
     database_cleaner-active_record (2.2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -178,7 +178,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    faraday (2.12.2)
+    faraday (2.13.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
