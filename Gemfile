@@ -59,8 +59,6 @@ gem 'ostruct'
 # Augments Rails logging to output JSON for Fluentd/Kibana
 # on Cloud Platform
 gem 'lograge'
-gem 'logstash-event'
-gem 'logstash-logger'
 
 group :development, :test do
   gem 'bullet'
