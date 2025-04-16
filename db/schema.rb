@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_16_133729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -397,6 +397,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_09_102311) do
     t.uuid "supplier_id"
     t.boolean "is_lockout", default: false
     t.date "recall_date"
+    t.string "date_changed_reason"
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"
