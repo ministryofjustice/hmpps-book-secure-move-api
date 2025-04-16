@@ -37,7 +37,13 @@ module Api::V1
       move.present? # verify the move exists before validations
       updater.call
 
-      create_automatic_event!(eventable: updater.move, event_class: GenericEvent::MoveDateChanged, details: { date: updater.move.date.iso8601 }) if updater.date_changed
+      if updater.date_changed
+        create_automatic_event!(
+          eventable: move,
+          event_class: GenericEvent::MoveDateChanged,
+          details: { date: move.date.iso8601, date_changed_reason: move.date_changed_reason },
+        )
+      end
 
       Notifier.prepare_notifications(topic: updater.move, action_name: updater.status_changed ? 'update_status' : 'update')
       render_move(updater.move, :ok)
@@ -73,7 +79,8 @@ module Api::V1
                        move_agreed
                        move_agreed_by
                        date_from
-                       date_to],
+                       date_to
+                       date_changed_reason],
         relationships: {} },
     ].freeze
 
