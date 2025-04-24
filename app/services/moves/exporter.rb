@@ -192,8 +192,8 @@ module Moves
       hours = (minutes / 60).floor
 
       "#{cutoff} (#{(hours / 24).floor}d "\
-      "#{sprintf('%02d', (hours % 24))}h "\
-      "#{sprintf('%02d', (minutes % 60))}m)"
+      "#{sprintf('%02d', hours % 24)}h "\
+      "#{sprintf('%02d', minutes % 60)}m)"
     end
   end
 end
