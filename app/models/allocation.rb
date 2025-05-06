@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Allocation < VersionedModel
+  include CancellationReasons
   include StateMachineable
 
   ALLOCATION_STATUS_UNFILLED = 'unfilled'
@@ -37,14 +38,6 @@ class Allocation < VersionedModel
     filled: ALLOCATION_STATUS_FILLED,
     cancelled: ALLOCATION_STATUS_CANCELLED,
   }
-
-  CANCELLATION_REASONS = [
-    CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
-    CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
-    CANCELLATION_REASON_LACK_OF_SPACE = 'lack_of_space_at_receiving_establishment',
-    CANCELLATION_REASON_FAILED_TO_FILL_ALLOCATION = 'sending_establishment_failed_to_fill_allocation',
-    CANCELLATION_REASON_OTHER = 'other',
-  ].freeze
 
   belongs_to :from_location, class_name: 'Location'
   belongs_to :to_location, class_name: 'Location'
