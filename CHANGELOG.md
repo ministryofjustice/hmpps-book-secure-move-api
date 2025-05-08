@@ -1,5 +1,26 @@
 # Changelog
 
+## [v3.58.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.58.0) (2025-05-08)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.57.0...v3.58.0)
+
+**Merged pull requests:**
+
+- chore\(deps-dev\): Bump bullet from 8.0.5 to 8.0.6 in the development-dependencies group [\#2564](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2564) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.1.6 to 5.1.7 in the development-dependencies group [\#2563](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2563) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2562](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2562) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix RSpec configuration for rspec-rails 8.0.0 upgrade [\#2561](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2561) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump aws-sdk-s3 from 1.183.0 to 1.184.0 in the production-dependencies group [\#2559](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2559) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump net-imap from 0.5.6 to 0.5.7 [\#2558](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2558) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump shoulda-matchers from 6.4.0 to 6.5.0 in the development-dependencies group [\#2557](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2557) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump faraday from 2.13.0 to 2.13.1 in the production-dependencies group [\#2556](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2556) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump sidekiq from 8.0.2 to 8.0.3 in the production-dependencies group [\#2555](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2555) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rubocop-govuk and fix errors [\#2554](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2554) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump nokogiri from 1.18.7 to 1.18.8 in the production-dependencies group [\#2552](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2552) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump bullet from 8.0.3 to 8.0.4 in the development-dependencies group [\#2551](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2551) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove unused logstash gems [\#2549](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2549) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.57.0 [\#2548](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2548) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.57.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.57.0) (2025-04-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.56.0...v3.57.0)
