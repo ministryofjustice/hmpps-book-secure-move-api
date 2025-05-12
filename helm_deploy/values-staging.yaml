@@ -37,6 +37,7 @@ generic-service:
       NOMIS_PRISON_API_PATH_PREFIX: nomis_prison_api_path_prefix_key
       ALERTS_API_BASE_URL: alerts_api_base_url_key
       MANAGE_USERS_API_BASE_URL: manage_users_api_base_url_key
+      PRISONER_SEARCH_API_BASE_URL: prisoner_search_api_base_url_key
       NOMIS_AUTH_PATH_PREFIX: nomis_auth_path_prefix_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
