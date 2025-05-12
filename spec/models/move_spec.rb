@@ -1105,4 +1105,33 @@ RSpec.describe Move do
       end
     end
   end
+
+  describe '#prisoner_location_description' do
+    let(:prison_number) { 'A1234BC' }
+    let(:person) { create(:person, prison_number: prison_number) }
+    let(:profile) { create(:profile, person: person) }
+    let(:move) { create(:move, profile: profile) }
+
+    context 'when the API returns a location description' do
+      let(:location_description) { 'HMP Leeds' }
+
+      before do
+        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number).and_return(location_description)
+      end
+
+      it 'returns the location description from the API' do
+        expect(move.prisoner_location_description).to eq(location_description)
+      end
+    end
+
+    context 'when the API returns nil' do
+      before do
+        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number).and_return(nil)
+      end
+
+      it 'returns nil' do
+        expect(move.prisoner_location_description).to be_nil
+      end
+    end
+  end
 end

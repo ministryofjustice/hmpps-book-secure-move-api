@@ -56,6 +56,10 @@ RSpec.describe MoveSerializer do
     it 'contains an additional_information attribute' do
       expect(attributes[:additional_information]).to eql move.additional_information
     end
+
+    it 'contains a prisoner_location_description attribute' do
+      expect(attributes[:prisoner_location_description]).to eql move.prisoner_location_description
+    end
   end
 
   context 'with main options' do

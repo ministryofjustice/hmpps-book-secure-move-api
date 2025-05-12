@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe PrisonerSearchApiClient::LocationDescription, :with_hmpps_authentication do
+RSpec.describe PrisonerSearchApiClient::LocationDescription, :with_hmpps_authentication, :with_location_description_api do
   describe '.get' do
     let(:response) { described_class.get('A1234AA') }
 

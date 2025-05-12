@@ -33,6 +33,7 @@ RSpec.describe V2::MoveSerializer do
             updated_at: move.updated_at.iso8601,
             is_lockout: false,
             recall_date: move.recall_date.iso8601,
+            prisoner_location_description: move.prisoner_location_description,
           },
           relationships: {
             profile: { data: { id: move.profile.id, type: 'profiles' } },

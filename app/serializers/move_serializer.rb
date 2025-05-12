@@ -20,7 +20,8 @@ class MoveSerializer
              :move_agreed,
              :move_agreed_by,
              :date_from,
-             :date_to
+             :date_to,
+             :prisoner_location_description
 
   has_one :person
   belongs_to :profile
