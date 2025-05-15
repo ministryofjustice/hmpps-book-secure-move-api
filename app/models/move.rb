@@ -394,6 +394,10 @@ class Move < VersionedModel
     journeys.select(&:billable?).any?
   end
 
+  def prisoner_location_description
+    PrisonerSearchApiClient::LocationDescription.get(person.prison_number) if person
+  end
+
 private
 
   def date_to_after_date_from

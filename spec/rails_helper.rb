@@ -92,6 +92,32 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include RSpec::JsonExpectations::Matchers
   config.include ActiveSupport::Testing::TimeHelpers
+
+  config.before do |example|
+    # The PrisonerSearchApiClient makes external HTTP calls to fetch prisoner location data
+    # whenever a Move is serialized. This creates test dependencies on external services
+    # and slows down the test suite. We stub these calls by default for all specs.
+    #
+    # If you need to test the actual API client behavior, tag your spec with
+    # `with_location_description_api` to bypass this stubbing.
+    #
+    unless example.metadata[:with_location_description_api]
+      location_description_double = class_double(
+        PrisonerSearchApiClient::LocationDescription,
+        get: '[STUBBED API] Location description from stub',
+      )
+
+      response_double = instance_double(
+        OAuth2::Response,
+        body: { locationDescription: '[STUBBED API] Location from response' }.to_json,
+      )
+
+      allow(location_description_double).to receive(:fetch_response).and_return(response_double)
+
+      # Replace the real class with our verified double
+      stub_const('PrisonerSearchApiClient::LocationDescription', location_description_double)
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|

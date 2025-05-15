@@ -39,4 +39,5 @@ MoveIncludeParameter:
       - timeline_events
       - timeline_events.eventable
       - lodgings
+      - prisoner_location_description
   example: from_location

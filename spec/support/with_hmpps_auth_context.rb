@@ -37,6 +37,8 @@ RSpec.shared_context 'with HmppsAuthClient', shared_context: :metadata do
     ManageUsersApiClient::Base.instance_variable_set(:@token, nil)
     NomisClient::Base.instance_variable_set(:@client, nil)
     NomisClient::Base.instance_variable_set(:@token, nil)
+    PrisonerSearchApiClient::Base.instance_variable_set(:@client, nil)
+    PrisonerSearchApiClient::Base.instance_variable_set(:@token, nil)
 
     allow(OAuth2::Client).to receive(:new).and_return(oauth2_client)
   end
@@ -50,6 +52,8 @@ RSpec.shared_context 'with HmppsAuthClient', shared_context: :metadata do
     ManageUsersApiClient::Base.instance_variable_set(:@token, nil)
     NomisClient::Base.instance_variable_set(:@client, nil)
     NomisClient::Base.instance_variable_set(:@token, nil)
+    PrisonerSearchApiClient::Base.instance_variable_set(:@client, nil)
+    PrisonerSearchApiClient::Base.instance_variable_set(:@token, nil)
   end
 end
 

@@ -21,7 +21,8 @@ module V2
                 :time_due,
                 :updated_at,
                 :is_lockout,
-                :recall_date
+                :recall_date,
+                :prisoner_location_description
 
     set_type :moves
 

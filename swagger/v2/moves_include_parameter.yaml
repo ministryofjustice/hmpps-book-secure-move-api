@@ -19,4 +19,5 @@ MovesIncludeParameter:
       - to_location
       - important_events
       - timeline_events
+      - prisoner_location_description
   example: from_location
