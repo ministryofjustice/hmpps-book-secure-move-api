@@ -1,5 +1,23 @@
 # Changelog
 
+## [v3.59.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.59.0) (2025-05-19)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.58.0...v3.59.0)
+
+**Merged pull requests:**
+
+- Upgrade net-imap to v0.5.8 and ruby to v3.4.4 [\#2575](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2575) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2574](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2574) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump bullet from 8.0.6 to 8.0.7 in the development-dependencies group [\#2573](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2573) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 6 updates [\#2572](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2572) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2571](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2571) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-2387 Add prisoner location to moves api [\#2570](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2570) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump database\_cleaner-active\_record from 2.2.0 to 2.2.1 in the development-dependencies group [\#2569](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2569) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2568](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2568) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump aws-sdk-athena from 1.102.0 to 1.103.0 in the production-dependencies group [\#2567](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2567) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump rack-session from 2.1.0 to 2.1.1 [\#2566](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2566) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update CHANGELOG v3.58.0 [\#2565](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2565) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.58.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.58.0) (2025-05-08)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.57.0...v3.58.0)
