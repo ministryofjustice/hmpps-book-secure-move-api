@@ -286,7 +286,7 @@ GEM
       uri
     net-http-persistent (4.0.5)
       connection_pool (~> 2.2)
-    net-imap (0.5.7)
+    net-imap (0.5.8)
       date
       net-protocol
     net-pop (0.1.2)
@@ -618,7 +618,7 @@ DEPENDENCIES
   validate_url
 
 RUBY VERSION
-   ruby 3.4.2p28
+   ruby 3.4.4p28
 
 BUNDLED WITH
-   2.5.23
+   2.6.9
