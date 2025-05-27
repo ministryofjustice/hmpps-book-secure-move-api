@@ -1,0 +1,53 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "weekly-prison-recall-config" | trunc 52 }}
+{{- if .Values.scripts.reports.weeklyPrisonRecalls.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+data:
+  from-date: "7 days ago"
+  to-date: "1 day ago"
+  subject: "BaSM Prison Recall Report [TODAY_DATE]"
+  body: "BaSM Prison Recall report for last week ([FROM_DATE_FULL] to [TO_DATE_FULL]) is available at the link below."
+  filename: "basm-prison-recall-report-[TODAY_DATE]"
+  retention: "1 week"
+  confirm_email: "true"
+  report_sql: |-
+    SELECT
+        moves.status AS "Status",
+        moves.move_type AS "Move type",
+        from_location.title AS "From location name",
+        from_location.nomis_agency_id AS "From location code",
+        to_location.title AS "To location name",
+        to_location.nomis_agency_id AS "To location code",
+        moves.additional_information AS "Additional information",
+        TO_CHAR(moves.date, 'YYYY-MM-DD') AS "Date of travel",
+        people.prison_number AS "Prison number",
+        people.last_name AS "Last name",
+        people.first_names AS "First name",
+        TO_CHAR(people.date_of_birth, 'YYYY-MM-DD') AS "Date of birth",
+        genders.title AS "Gender",
+        CASE WHEN EXISTS (
+            SELECT 1 FROM journeys
+            WHERE journeys.move_id = moves.id
+            AND journeys.billable = true
+        ) THEN true ELSE false END AS "Journey billable",
+        suppliers.name AS "Supplier"
+    FROM
+        moves
+    LEFT JOIN
+        locations AS from_location ON moves.from_location_id = from_location.id
+    LEFT JOIN
+        locations AS to_location ON moves.to_location_id = to_location.id
+    LEFT JOIN
+        profiles ON moves.profile_id = profiles.id
+    LEFT JOIN
+        people ON profiles.person_id = people.id
+    LEFT JOIN
+        genders ON people.gender_id = genders.id
+    LEFT JOIN
+        suppliers ON moves.supplier_id = suppliers.id
+    WHERE moves.move_type = 'prison_recall'
+        AND moves.date BETWEEN '[FROM]' AND '[TO]'
+    ORDER BY moves.date, people.last_name, people.prison_number
+{{- end }}

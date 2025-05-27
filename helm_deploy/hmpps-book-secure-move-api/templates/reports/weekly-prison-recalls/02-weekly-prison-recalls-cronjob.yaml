@@ -1,0 +1,107 @@
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "weekly-prison-recall-report" | trunc 52 }}
+{{- $script := printf "%s-%s" (include "generic-service.fullname" $) "automated-reports-scripts" | trunc 52 }}
+{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "weekly-prison-recall-config" | trunc 52 }}
+{{- if .Values.scripts.reports.weeklyPrisonRecalls.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $fullName }}
+spec:
+  schedule: {{ .Values.scripts.reports.weeklyPrisonRecalls.schedule }}
+  concurrencyPolicy: "Forbid"
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 7200
+      template:
+        spec:
+          serviceAccountName: "book-a-secure-move-api"
+          containers:
+            - name: weekly-prison-recall
+              image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
+              command: ["bash", "/scripts/run-report.sh"]
+              volumeMounts:
+                - name: report-scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: report-sql
+                  mountPath: /report
+                  readOnly: false
+              env:
+                - name: DB_INSTANCE
+                  valueFrom:
+                    secretKeyRef:
+                      name: read-rds-instance-hmpps-book-secure-move-api-production
+                      key: url
+                - name: NOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: hmpps-book-secure-move-api-secrets-production
+                      key: govuk_notify_api_key
+                - name: REPORT_START
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: from-date
+                - name: REPORT_END
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: to-date
+                - name: EMAIL_SUBJECT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: subject
+                - name: EMAIL_BODY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: body
+                - name: FILENAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: filename
+                - name: RETENTION_PERIOD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: retention
+                - name: EMAIL_ADDRESSEES
+                  valueFrom:
+                    secretKeyRef:
+                      name: automated-report-recipients
+                      key: weekly-recalls
+                - name: CONFIRM_EMAIL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: {{ $config }}
+                      key: confirm_email
+                - name: AWS_DEFAULT_REGION
+                  value: "eu-west-2"
+          restartPolicy: "Never"
+          volumes:
+            - name: report-scripts
+              configMap:
+                name: {{ $script }}
+                defaultMode: 0755
+                items:
+                  - key: "notify-token.sh"
+                    path: "notify-token.sh"
+                  - key: "run-report.sh"
+                    path: "run-report.sh"
+                  - key: "placeholders"
+                    path: "placeholders.sh"
+            - name: report-sql
+              configMap:
+                name: {{ $config }}
+                defaultMode: 0755
+                items:
+                  - key: "report_sql"
+                    path: "report.sql"
+{{- end }}
