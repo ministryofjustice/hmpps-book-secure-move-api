@@ -142,3 +142,6 @@ scripts:
     weeklyCanCourtMoves:
       enabled: true
       schedule: "30 6 * * 1"
+    weeklyPrisonRecalls:
+      enabled: true
+      schedule: "30 7 * * 1"
