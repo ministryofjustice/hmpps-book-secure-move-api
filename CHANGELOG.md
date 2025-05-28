@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.60.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.60.0) (2025-05-28)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.59.0...v3.60.0)
+
+**Merged pull requests:**
+
+- chore\(deps-dev\): Bump rubocop-govuk from 5.1.9 to 5.1.10 in the development-dependencies group [\#2583](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2583) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add weekly prison recall report [\#2581](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2581) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.1.8 to 5.1.9 in the development-dependencies group [\#2579](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2579) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v3.59.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.59.0) (2025-05-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.58.0...v3.59.0)
