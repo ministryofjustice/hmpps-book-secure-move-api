@@ -34,12 +34,34 @@ RSpec.describe Move do
       it {
         expect(move).to validate_inclusion_of(:cancellation_reason)
           .in_array(%w[
-            made_in_error
-            supplier_declined_to_move
             cancelled_by_pmu
-            rejected
+            case_not_court_ready
+            combined_with_another_request
+            court_closure
+            court_no_capacity
+            court_not_dda_compliant
             incomplete_per
+            incorrect_collection_location
+            incorrect_final_location
+            list_received_after_5_pm
+            made_in_error
+            operational_issues_prison
             other
+            police_transported_prisoner
+            prison_transported_prisoner
+            prisoner_refusal
+            prisoner_to_be_released_on_bail
+            prisoner_unfit_to_travel
+            ptr_unachievable
+            receiver_unable_to_accept_prisoner
+            sender_unable_to_fulfil_draft
+            rejected
+            sender_cancelled_request
+            supplier_declined_to_move
+            supplier_no_resource
+            tornado_event
+            unsuitable_vehicle
+            video_link_to_be_used
           ])
       }
     end
