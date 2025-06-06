@@ -56,7 +56,13 @@ module Api::V2
       move_date_changed = move.date_changed?
       move.save!
 
-      create_automatic_event!(eventable: move, event_class: GenericEvent::MoveDateChanged, details: { date: move.date.iso8601 }) if move_date_changed
+      if move_date_changed
+        create_automatic_event!(
+          eventable: move,
+          event_class: GenericEvent::MoveDateChanged,
+          details: { date: move.date.iso8601, date_changed_reason: move.date_changed_reason },
+        )
+      end
 
       move.allocation&.refresh_status_and_moves_count!
 
@@ -84,6 +90,7 @@ module Api::V2
           date_from
           date_to
           recall_date
+          date_changed_reason
         ],
         relationships: {} },
     ].freeze
