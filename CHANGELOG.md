@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.61.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.61.0) (2025-06-06)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.60.0...v3.61.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump rack from 3.1.15 to 3.1.16 [\#2592](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2592) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 3 updates [\#2591](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2591) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group across 1 directory with 2 updates [\#2589](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2589) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove erroneous SECRET\_KEY\_BASE from docker-compose file [\#2586](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2586) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2585](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2585) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.60.0 [\#2584](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2584) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump activerecord-import from 2.1.0 to 2.2.0 in the production-dependencies group [\#2582](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2582) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.59.0 [\#2580](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2580) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-2008 Add new cancellation reasons and move to a rails concern [\#2521](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2521) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.60.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.60.0) (2025-05-28)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.59.0...v3.60.0)
