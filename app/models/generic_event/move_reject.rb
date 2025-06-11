@@ -37,15 +37,7 @@ class GenericEvent
     end
 
     def move_proposed_by_email
-      @move_proposed_by_email ||=
-
-        if move_proposed_by =~ URI::MailTo::EMAIL_REGEXP
-          # If move_proposed_by is an email address,
-          # there is no need to perform a lookup
-          move_proposed_by
-        elsif move_proposed_by
-          ManageUsersApiClient::UserEmail.get(move_proposed_by)
-        end
+      @move_proposed_by_email ||= ManageUsersApiClient::UserEmail.get(move_proposed_by)
     end
   end
 end

@@ -4,26 +4,79 @@ require 'rails_helper'
 
 RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
   describe '.get' do
-    let(:response) { described_class.get('ALICE_APPLE') }
+    context 'when username is already an email address' do
+      it 'returns the email address directly without making an API call' do
+        expect(described_class).not_to receive(:fetch_response)
+        response = described_class.get('alice.apple@example.com')
+        expect(response).to eq('alice.apple@example.com')
+      end
 
-    let(:response_body) { file_fixture('manage_users_api/get_user_email_200.json').read }
+      it 'handles various email formats correctly' do
+        email_addresses = [
+          'user@example.com',
+          'user.name@example.com',
+          'user+tag@example.co.uk',
+          'user123@subdomain.example.org',
+        ]
 
-    let(:response_status) { 200 }
+        email_addresses.each do |email|
+          expect(described_class).not_to receive(:fetch_response)
+          response = described_class.get(email)
+          expect(response).to eq(email)
+        end
+      end
+    end
 
-    it 'returns the expected email' do
-      expect(response).to eq('alice.apple@example.com')
+    context 'when username is not an email address' do
+      let(:response) { described_class.get('ALICE_APPLE') }
+      let(:response_body) { file_fixture('manage_users_api/get_user_email_200.json').read }
+      let(:response_status) { 200 }
+
+      it 'makes an API call and returns the expected email' do
+        expect(response).to eq('alice.apple@example.com')
+      end
+
+      it 'calls fetch_response for username lookup' do
+        expect(described_class).to receive(:fetch_response).with('ALICE_APPLE').and_call_original
+        described_class.get('ALICE_APPLE')
+      end
+    end
+
+    context 'when username is nil or empty' do
+      it 'returns nil for nil username' do
+        expect(described_class).not_to receive(:fetch_response)
+        response = described_class.get(nil)
+        expect(response).to be_nil
+      end
+
+      it 'returns nil for empty string' do
+        expect(described_class).not_to receive(:fetch_response)
+        response = described_class.get('')
+        expect(response).to be_nil
+      end
     end
   end
 
   describe '.get with errors' do
-    let(:response) { described_class.get('UN_KNOWN') }
+    context 'when API returns an error for username lookup' do
+      let(:response) { described_class.get('UN_KNOWN') }
+      let(:response_body) { file_fixture('manage_users_api/get_user_email_404.json').read }
+      let(:response_status) { 404 }
 
-    let(:response_body) { file_fixture('manage_users_api/get_user_email_404.json').read }
+      it 'returns nil' do
+        expect(response).to be_nil
+      end
+    end
 
-    let(:response_status) { 404 }
+    context 'when OAuth2::Error is raised' do
+      before do
+        allow(described_class).to receive(:fetch_response).and_raise(OAuth2::Error.new('Unauthorized'))
+      end
 
-    it 'returns nil' do
-      expect(response).to be_nil
+      it 'returns nil' do
+        response = described_class.get('SOME_USER')
+        expect(response).to be_nil
+      end
     end
   end
 end
