@@ -646,6 +646,7 @@ RSpec.describe Api::MovesController do
               type: 'moves',
               attributes: {
                 date: '2019-08-23',
+                date_changed_reason: 'operational_issues',
               },
             }
           end
@@ -657,10 +658,16 @@ RSpec.describe Api::MovesController do
             expect(move.reload.date).to eql Date.parse('2019-08-23')
           end
 
+          it 'saves the move date_changed_reason' do
+            do_patch
+            expect(move.reload.date_changed_reason).to eql 'operational_issues'
+          end
+
           it 'creates a GenericEvent::MoveDateChanged event' do
             do_patch
             expect(move_date_changed_event).to be_present
             expect(move_date_changed_event.date).to eql '2019-08-23'
+            expect(move_date_changed_event.date_changed_reason).to eql 'operational_issues'
           end
         end
       end
