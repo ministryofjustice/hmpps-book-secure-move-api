@@ -10,7 +10,7 @@ module Api
     around_action :idempotent_action, only: %i[create update]
 
     CSV_INCLUDES = [:from_location, :to_location, :journeys, :profile, :supplier, { person: %i[gender ethnicity] }].freeze
-    STREAM_CSV_MOVES_THRESHOLD = 5000
+    STREAM_CSV_MOVES_THRESHOLD = ENV.fetch('MOVES_CSV_ASYNC_THRESHOLD', 5000).to_i
 
     def index
       index_and_render
