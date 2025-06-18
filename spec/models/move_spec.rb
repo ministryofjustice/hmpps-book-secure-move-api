@@ -1155,5 +1155,13 @@ RSpec.describe Move do
         expect(move.prisoner_location_description).to be_nil
       end
     end
+
+    context 'when the prison_number is nil' do
+      let(:prison_number) { nil }
+
+      it 'returns nil' do
+        expect(move.prisoner_location_description).to be_nil
+      end
+    end
   end
 end
