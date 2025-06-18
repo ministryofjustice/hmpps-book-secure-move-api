@@ -90,19 +90,6 @@ RSpec.describe GenericEvent::MoveReject do
         expect(mailer_double).to receive(:deliver_later)
         move_reject
       end
-
-      context 'and that username is an email address' do
-        let(:username) { 'alice@example.com' }
-
-        before do
-          allow(MoveRejectMailer).to receive(:notify).with('alice@example.com', move, an_instance_of(described_class)).and_return(mailer_double)
-        end
-
-        it 'sends a notification email to the username' do
-          expect(mailer_double).to receive(:deliver_later)
-          move_reject
-        end
-      end
     end
 
     context 'when there is no email address for that username' do

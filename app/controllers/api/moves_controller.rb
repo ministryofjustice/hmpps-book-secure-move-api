@@ -10,6 +10,7 @@ module Api
     around_action :idempotent_action, only: %i[create update]
 
     CSV_INCLUDES = [:from_location, :to_location, :journeys, :profile, :supplier, { person: %i[gender ethnicity] }].freeze
+    STREAM_CSV_MOVES_THRESHOLD = ENV.fetch('MOVES_CSV_ASYNC_THRESHOLD', 5000).to_i
 
     def index
       index_and_render
@@ -17,6 +18,21 @@ module Api
 
     def csv
       csv_moves = find_moves(active_record_relationships: CSV_INCLUDES)
+      if (params[:async] == 'allow') && csv_moves.size > STREAM_CSV_MOVES_THRESHOLD
+
+        recipient_email = ManageUsersApiClient::UserEmail.get(created_by)
+        if recipient_email
+          MovesExportEmailWorker.perform_async(
+            recipient_email,
+            csv_moves.pluck(:id),
+          )
+          render json: {
+            success: true,
+            message: 'Your CSV export is being prepared and will be emailed to you shortly',
+          }, status: :accepted and return
+        end
+      end
+
       send_file(Moves::Exporter.new(csv_moves).call, type: 'text/csv', disposition: :inline)
     end
 
