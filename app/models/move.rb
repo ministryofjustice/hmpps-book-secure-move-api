@@ -386,7 +386,7 @@ class Move < VersionedModel
   end
 
   def prisoner_location_description
-    PrisonerSearchApiClient::LocationDescription.get(person.prison_number) if person
+    PrisonerSearchApiClient::LocationDescription.get(person.prison_number) if person&.prison_number
   end
 
 private

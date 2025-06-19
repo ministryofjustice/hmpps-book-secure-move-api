@@ -26,4 +26,12 @@ RSpec.describe PrisonerSearchApiClient::LocationDescription, :with_hmpps_authent
       expect(response).to be_nil
     end
   end
+
+  describe '.get without a prison_number' do
+    let(:response) { described_class.get(nil) }
+
+    it 'returns nil' do
+      expect(response).to be_nil
+    end
+  end
 end
